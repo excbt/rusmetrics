@@ -57,7 +57,7 @@ angular.module('portalNMC')
         
         $scope.data = {};
         $scope.data.currentTempSch = {};
-        $scope.data.currentTempSch.schedules = [];
+        $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         
         $scope.data.tempSchedules = [
             {
@@ -84,7 +84,7 @@ angular.module('portalNMC')
         
         $scope.addTempSch = function(){
             $scope.data.currentTempSch = {};
-            $scope.data.currentTempSch.schedules = [];
+            $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         };
         
         $scope.addSchedule = function(tempSch){          
@@ -128,9 +128,9 @@ angular.module('portalNMC')
         var inputTOutFocusHandler = function(){
                isInputTOutFocus = true;
         };
-        var inputTOutBlurHandler = function(){                                       
+        var inputTOutBlurHandler = function(event){                                               
             isInputTOutFocus = false;
-            $("#inputTOut" + index).off("focus", inputTOutFocusHandler);
+            $("#"+event.currentTarget.id).off("focus", inputTOutFocusHandler);
         };
         
         var tempSchModalKeydownHandler = function(e){

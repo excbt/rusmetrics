@@ -124,7 +124,7 @@
      role="dialog"
 	aria-labelledby="showTempSchLabel" 
      tabindex="-1">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
+	<div class="modal-dialog  modal-content nmc-modal-dialog-temp-sch">
 		<div class="modal-header nmc-modal-header">
             <button type="button" 
                     class="close nmc-close-button" 
@@ -228,9 +228,11 @@
                                 </td>                                
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputName">График:</label>
+                                <td class="col-sm-3">
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <label for="tempSchTable">Температурный график:</label>
+<!--
                                     <p class="btn btn-default btn-xs pull-right"
                                        ng-click="data.currentTempSch.schedules = []">
                                         Очистить
@@ -239,9 +241,11 @@
                                        ng-click="addSchedule(data.currentTempSch)">
                                         Добавить
                                     </p>
+-->
                                     <p class="btn btn-default btn-xs marginRight5 pull-right"
-                                       ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
-                                        Отсортировать по Токр
+                                       ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)"
+                                       ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
+                                        Отсортировать по Т<sub>окр</sub>
                                     </p>
                                 </td>
                             </tr>
@@ -249,20 +253,16 @@
                                 <td colspan="3" class="col-sm-12">
                                   <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-child-table">
                                        <tr>
-                                        <th class="col-sm-3 nmc-button-sort" ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
+                                        <th class="col-sm-3">
                                             <strong>Т<sub>окр</sub></strong>
-                                            <i title="Отсортировать график" 
-                                            class="btn btn-default btn-xs glyphicon glyphicon-sort-by-alphabet-alt"
-                                            ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
-                                            </i>
                                         </th>
-                                        <th class="col-sm-4">
+                                        <th class="col-sm-3">
                                             <strong>Т<sub>вход</sub></strong>
                                         </th>
-                                        <th class="col-sm-4">
+                                        <th class="col-sm-3">
                                             <strong>Т<sub>обр</sub></strong>
                                         </th>
-                                        <th class="col-sm-1">
+                                        <th class="col-sm-3">
 
                                         </th>
 
@@ -278,13 +278,13 @@
                                                     ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
                                                     </i>
                                                 </th>
-                                                <th class="col-sm-4">
+                                                <th class="col-sm-3">
                                                     <strong>Т<sub>вход</sub></strong>
                                                 </th>
-                                                <th class="col-sm-4">
+                                                <th class="col-sm-3">
                                                     <strong>Т<sub>обр</sub></strong>
                                                 </th>
-                                                <th class="col-sm-1">
+                                                <th class="col-sm-3">
 
                                                 </th>
 
@@ -301,7 +301,7 @@
                                                                />
                                                     </div>
                                                 </td>
-                                                <td class="col-sm-4 noPaddingI">
+                                                <td class="col-sm-3 noPaddingI">
                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tIn>'')}">
                                                         <input class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                                type="text" 
@@ -311,7 +311,7 @@
                                                                data-inputmask="'alias': 'numeric'"/>
                                                     </div>
                                                 </td>
-                                                <td class="col-sm-4 noPaddingI">
+                                                <td class="col-sm-3 noPaddingI">
                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tOut>'')}">
                                                         <input class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                                type="text" 
@@ -321,8 +321,16 @@
                                                                data-inputmask="'alias': 'numeric'"/>
                                                     </div>
                                                 </td>
+                                                <td class="col-sm-2 noPaddingI">
+                                                    <p ng-if="$index == (data.currentTempSch.schedules.length - 1)" 
+                                                       class="btn btn-default btn-primary btn-xs"
+                                                       ng-click="addSchedule(data.currentTempSch)">
+                                                        Добавить
+                                                    </p>
+                                                </td>
                                                 <td class="col-sm-1 noPaddingI">
-                                                    <i class="btn btn-xs nmc-remove-button"
+                                                    <i ng-if="data.currentTempSch.schedules.length > 1" 
+                                                       class="btn btn-xs nmc-remove-button"                                                     
                                                        ng-click="deleteSchedule($index, data.currentTempSch.schedules)">
                                                     </i>
                                                 </td>
