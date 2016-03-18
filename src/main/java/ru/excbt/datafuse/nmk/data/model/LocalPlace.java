@@ -7,11 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
-public class LocalPlace extends AbstractAuditableModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class LocalPlace extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
@@ -51,6 +59,13 @@ public class LocalPlace extends AbstractAuditableModel {
 	@Column(name = "fias_uuid")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID fiasUuid;
+
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getLocalPlaceName() {
 		return localPlaceName;
@@ -138,6 +153,24 @@ public class LocalPlace extends AbstractAuditableModel {
 
 	public void setFiasUuid(UUID fiasUuid) {
 		this.fiasUuid = fiasUuid;
+	}
+
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }
