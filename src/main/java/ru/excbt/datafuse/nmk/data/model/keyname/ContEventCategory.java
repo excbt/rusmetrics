@@ -42,7 +42,7 @@ public class ContEventCategory extends AbstractKeynameEntity implements Deletabl
 	private int version;
 
 	@Column(name = "category_order")
-	private int categoryOrder;
+	private Integer categoryOrder;
 
 	public String getCaption() {
 		return caption;
@@ -86,11 +86,11 @@ public class ContEventCategory extends AbstractKeynameEntity implements Deletabl
 		this.deleted = deleted;
 	}
 
-	public int getCategoryOrder() {
+	public Integer getCategoryOrder() {
 		return categoryOrder;
 	}
 
-	public void setCategoryOrder(int categoryOrder) {
+	public void setCategoryOrder(Integer categoryOrder) {
 		this.categoryOrder = categoryOrder;
 	}
 
