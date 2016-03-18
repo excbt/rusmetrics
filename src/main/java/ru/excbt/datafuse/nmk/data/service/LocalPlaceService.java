@@ -29,4 +29,14 @@ public class LocalPlaceService {
 		return localPlaceRepository.selectLocalPlaces();
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public LocalPlace findLocalPlace(Long id) {
+		return localPlaceRepository.findOne(id);
+	}
+
 }

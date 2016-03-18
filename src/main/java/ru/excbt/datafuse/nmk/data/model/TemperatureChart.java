@@ -8,33 +8,43 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "temperature_chart")
-public class TemperatureChart extends AbstractAuditableModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class TemperatureChart extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1684076198823551659L;
+	private static final long serialVersionUID = -3468789788450905535L;
 
 	@Column(name = "local_place_id", updatable = false, insertable = false)
 	private Long localPlaceId;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "local_place_id")
 	private LocalPlace localPlace;
 
-	@Column(name = "rso_organization_id")
+	@Column(name = "rso_organization_id", updatable = false, insertable = false)
 	private Long rsoOrganizationId;
 
-	@Column(name = "chart_title")
-	private String chartTitle;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rso_organization_id")
+	private Organization rsoOrganization;
+
+	@Column(name = "chart_name")
+	private String chartName;
 
 	@Column(name = "is_default")
 	private Boolean isDefault;
@@ -50,6 +60,13 @@ public class TemperatureChart extends AbstractAuditableModel {
 
 	@Column(name = "flag_elevator")
 	private Boolean flagElevator;
+
+	@Version
+	private int version;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	public Long getLocalPlaceId() {
 		return localPlaceId;
@@ -67,12 +84,12 @@ public class TemperatureChart extends AbstractAuditableModel {
 		this.rsoOrganizationId = rsoOrganizationId;
 	}
 
-	public String getChartTitle() {
-		return chartTitle;
+	public String getChartName() {
+		return chartName;
 	}
 
-	public void setChartTitle(String chartTitle) {
-		this.chartTitle = chartTitle;
+	public void setChartName(String chartName) {
+		this.chartName = chartName;
 	}
 
 	public Boolean getIsDefault() {
@@ -113,6 +130,40 @@ public class TemperatureChart extends AbstractAuditableModel {
 
 	public void setFlagElevator(Boolean flagElevator) {
 		this.flagElevator = flagElevator;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	public LocalPlace getLocalPlace() {
+		return localPlace;
+	}
+
+	public void setLocalPlace(LocalPlace localPlace) {
+		this.localPlace = localPlace;
+	}
+
+	public Organization getRsoOrganization() {
+		return rsoOrganization;
+	}
+
+	public void setRsoOrganization(Organization rsoOrganization) {
+		this.rsoOrganization = rsoOrganization;
 	}
 
 }
