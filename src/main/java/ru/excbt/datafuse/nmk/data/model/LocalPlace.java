@@ -6,25 +6,18 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
-public class LocalPlace extends AbstractAuditableModel implements DeletableObjectId {
+public class LocalPlace extends AbstractAuditableModel {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1222063526022230660L;
+	private static final long serialVersionUID = -2419941585129491457L;
 
 	@Column(name = "local_place_name")
 	private String localPlaceName;
@@ -56,14 +49,16 @@ public class LocalPlace extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "geo_lon")
 	private BigDecimal geoLon;
 
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
+
 	@Column(name = "fias_uuid")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID fiasUuid;
 
-	@Column(name = "is_disabled")
-	private Boolean isDisabled;
+	@Version
+	private int version;
 
-	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 
@@ -147,14 +142,6 @@ public class LocalPlace extends AbstractAuditableModel implements DeletableObjec
 		this.geoLon = geoLon;
 	}
 
-	public UUID getFiasUuid() {
-		return fiasUuid;
-	}
-
-	public void setFiasUuid(UUID fiasUuid) {
-		this.fiasUuid = fiasUuid;
-	}
-
 	public Boolean getIsDisabled() {
 		return isDisabled;
 	}
@@ -163,12 +150,26 @@ public class LocalPlace extends AbstractAuditableModel implements DeletableObjec
 		this.isDisabled = isDisabled;
 	}
 
-	@Override
+	public UUID getFiasUuid() {
+		return fiasUuid;
+	}
+
+	public void setFiasUuid(UUID fiasUuid) {
+		this.fiasUuid = fiasUuid;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
 	public int getDeleted() {
 		return deleted;
 	}
 
-	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
 	}

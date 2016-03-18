@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -16,7 +17,7 @@ public class WeatherPlace extends AbstractAuditableModel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 367848099658663164L;
+	private static final long serialVersionUID = -8897127583985211173L;
 
 	@Column(name = "place_name")
 	private String placeName;
@@ -63,6 +64,18 @@ public class WeatherPlace extends AbstractAuditableModel {
 	@Column(name = "fias_uuid")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID fiasUuid;
+
+	@Column(name = "fias_sc_name")
+	private String fiasScName;
+
+	@Column(name = "fias_level")
+	private Integer fiasLevel;
+
+	@Version
+	private int version;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getPlaceName() {
 		return placeName;
@@ -182,6 +195,38 @@ public class WeatherPlace extends AbstractAuditableModel {
 
 	public void setFiasUuid(UUID fiasUuid) {
 		this.fiasUuid = fiasUuid;
+	}
+
+	public String getFiasScName() {
+		return fiasScName;
+	}
+
+	public void setFiasScName(String fiasScName) {
+		this.fiasScName = fiasScName;
+	}
+
+	public Integer getFiasLevel() {
+		return fiasLevel;
+	}
+
+	public void setFiasLevel(Integer fiasLevel) {
+		this.fiasLevel = fiasLevel;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public int getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }
