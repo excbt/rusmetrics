@@ -4,7 +4,12 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -17,8 +22,13 @@ public class TemperatureChart extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = -1684076198823551659L;
 
-	@Column(name = "local_place_id")
+	@Column(name = "local_place_id", updatable = false, insertable = false)
 	private Long localPlaceId;
+
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "local_place_id")
+	private LocalPlace localPlace;
 
 	@Column(name = "rso_organization_id")
 	private Long rsoOrganizationId;
