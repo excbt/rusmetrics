@@ -26,6 +26,8 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
+import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -256,6 +258,38 @@ public class SubscrContObjectService implements SecuredRoles {
 				j.loadLazyProps();
 			});
 		});
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContZPointShortInfo> selectSubscriberContZPointShortInfo(Long subscriberId) {
+		checkNotNull(subscriberId);
+		List<ContZPointShortInfo> result = new ArrayList<>();
+
+		String[] QUERY_COLUMNS = new String[] { "id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
+				"caption" };
+
+		ColumnHelper columnHelper = new ColumnHelper(QUERY_COLUMNS);
+
+		List<Object[]> queryResult = subscrContObjectRepository.selectContZPointShortInfo(subscriberId);
+
+		for (Object[] row : queryResult) {
+
+			Long contZPointId = columnHelper.getResultAsClass(row, "id", Long.class);
+			Long contObjectId = columnHelper.getResultAsClass(row, "contObjectId", Long.class);
+			String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
+			String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
+			String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
+			ContZPointShortInfo info = new ContZPointShortInfo(contZPointId, contObjectId, customServiceName, contServiceType,
+					contServiceTypeCaption);
+			result.add(info);
+		}
+
 		return result;
 	}
 

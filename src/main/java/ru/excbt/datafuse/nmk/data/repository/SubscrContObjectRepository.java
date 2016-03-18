@@ -94,6 +94,17 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	 * @param subscriberId
 	 * @return
 	 */
+	@Query("SELECT zp.id, zp.contObjectId, zp.customServiceName, zp.contServiceTypeKeyname, st.caption "
+			+ " FROM ContZPoint zp INNER JOIN zp.contServiceType st WHERE zp.contObjectId IN "
+			+ " (SELECT sco.contObjectId FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL) AND zp.deleted = 0")
+	public List<Object[]> selectContZPointShortInfo(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
 	@Query("SELECT do FROM DeviceObject do LEFT JOIN do.contObject dco "
 			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL AND sco.deleted = 0)"

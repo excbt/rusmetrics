@@ -28,10 +28,17 @@ public class ColumnHelper {
 		this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
 	}
 
+	public ColumnHelper(String[] columns) {
+		checkNotNull(columns);
+		this.columns = columns;
+		this.operator = null;
+		this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
+	}
+
 	public String build() {
 		StringBuilder sb = new StringBuilder();
 		for (String col : columns) {
-			sb.append(String.format(operator, col));
+			sb.append(operator != null ? String.format(operator, col) : col);
 			sb.append(" as ");
 			sb.append(col);
 			sb.append(',');
@@ -49,6 +56,30 @@ public class ColumnHelper {
 		checkState(idx >= 0, "Invalid column index");
 		Object value = results[idx];
 		return DBRowUtils.asBigDecimal(value);
+	}
 
+	/**
+	 * 
+	 * @param results
+	 * @param column
+	 * @param valueClass
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getResultAsClass(Object[] results, String column, Class<T> valueClass) {
+		int idx = indexOf(column);
+		checkNotNull(valueClass);
+		checkState(idx >= 0, "Invalid column index");
+		Object value = results[idx];
+
+		if (value == null) {
+			return null;
+		}
+
+		if (!(valueClass.isInstance(value))) {
+			throw new IllegalArgumentException(String.format("Column %s is not type of String", column));
+		}
+
+		return (T) value;
 	}
 }

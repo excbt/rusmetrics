@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -145,6 +146,20 @@ public class SubscrContZPointController extends SubscrApiController {
 	public ResponseEntity<?> getContZPoints() {
 
 		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getCurrentSubscriberId());
+
+		return responseOK(contZPoints);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/zpoints/shortInfo", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointsInfo() {
+
+		List<ContZPointShortInfo> contZPoints = subscrContObjectService
+				.selectSubscriberContZPointShortInfo(getCurrentSubscriberId());
 
 		return responseOK(contZPoints);
 	}
