@@ -391,6 +391,7 @@ body{
 .nmc-dropdown-menu-filter{
     min-width: 280px;
     max-width: 600px;
+    width: 350px;
 }
 /*
 .nmc-dropdown-menu-filter > li{
@@ -1516,7 +1517,12 @@ tr.nmc-inactive-price > td{
     margin-top: 10%;
     min-width: 341px;
 }
-
+    /* Размер окошка для Температурного графика*/
+.nmc-modal-dialog-temp-sch{
+    margin-top: 10%;
+    min-width: 341px;
+    width: 500px;
+}
     /* Контейнер для шапки, тела и футера - для диалогов удаления, перемещения и т.д. - чтобы они распологались визиульно по центру экрана*/
 .nmc-modal-dialog-low{
     margin-top: 20%;
@@ -1605,9 +1611,10 @@ tr.nmc-inactive-price > td{
     max-height: 520px;
 }
 
-.nmc-object-filter-in-notices, .nmc-types-filter-in-notices{
+.nmc-object-filter-in-notices, .nmc-types-filter-in-notices, .nmc-filter-list-items{
     overflow-y: auto;
     max-height: 520px;
+    top: 400%;
 }
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {

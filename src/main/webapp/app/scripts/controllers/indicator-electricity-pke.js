@@ -132,7 +132,17 @@ angular.module('portalNMC')
     
     getPkeTypes();
     
+    var closeFilter = function(){
+                //close filter list
+        var btnGroup = document.getElementsByClassName("btn-group open");   
+        if (!mainSvc.checkUndefinedNull(btnGroup) && (btnGroup.length != 0)){            
+            btnGroup[0].classList.remove("open");
+        };
+        $scope.states.isSelectElement = false;
+    };
+    
     $scope.getDataWithSelectedTypes = function(){
+        closeFilter();
         if (!angular.isArray($scope.pkeTypesInWindow)){
             getPke();
         };
@@ -153,6 +163,7 @@ angular.module('portalNMC')
     };
     
     $scope.selectPkeTypesClick = function(){
+        $scope.states.isSelectElement = false;
         //Create the copy of categories
         $scope.pkeTypesInWindow = angular.copy($scope.pkeTypes);
         $scope.states.isSelectedAllPkeTypesInWindow = angular.copy($scope.states.isSelectedAllPkeTypes);
@@ -166,13 +177,15 @@ angular.module('portalNMC')
         $scope.getDataWithSelectedTypes();
     };
     
-    $scope.selectAllElements = function(elements){           
+    $scope.selectAllElements = function(elements){
+        $scope.states.isSelectElement = true;
         elements.forEach(function(elem){
             elem.selected = false;
         });
     };
         
     $scope.selectElement = function(flagName){
+        $scope.states.isSelectElement = true;
         $scope.states[flagName] = false;        
         return false;
     };
