@@ -51,6 +51,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
     $scope.zpointListUrl = $scope.objectsUrl+"/zpoints";//"../api/subscr/contObjects/zpoints";
+    $scope.zpointShortInfoUrl = $scope.objectsUrl+"/zpoints/shortInfo";
     
     $scope.noticeCategoriesUrl = "../api/subscr/contEvent/categories";//url к котегориям уведомлений
     $scope.noticeDeviationsUrl = "../api/subscr/contEvent/deviations";//url к отклонениям
@@ -264,7 +265,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         var result = null;
         if ($scope.zpointList!=null){
             $scope.zpointList.some(function(elem){
-                if (zpId === elem.id){
+                if (zpId === elem.contZPointId){
                     result = elem;
                     return true;
                 };
@@ -315,8 +316,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 
             oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
             oneNotice.contEventLevelColor = el.contEventLevelColor;
-            oneNotice.imgpath = $scope.imgPathTmpl+el.contEventLevelColor.toLowerCase()+".png";
-            oneNotice.imgclass = el.contEventLevelColor==="GREEN"?"":"nmc-img-critical-indicator";
+            oneNotice.imgpath = $scope.imgPathTmpl + el.contEventLevelColor.toLowerCase() + ".png";
+            oneNotice.imgclass = el.contEventLevelColor === "GREEN" ? "" : "nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
             
             switch (el.contEvent.contServiceType)
@@ -342,11 +343,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
                 case null :// oneNotice.noticeZpoint = ""; 
                     oneNotice.imgSTPath = "null";
                     break;
-                default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
-                    oneNotice.imgSTPath = ""+el.contServiceType+"";
+                default: oneNotice.noticeZpoint = "" + el.contServiceType + "";
+                    oneNotice.imgSTPath = "" + el.contServiceType + "";
              };
-            if (oneNotice.zpoint!=null){
-                oneNotice.noticeZpoint = oneNotice.zpoint.contServiceType.caption;
+            if (oneNotice.zpoint != null){
+                oneNotice.noticeZpoint = oneNotice.zpoint.customServiceName || oneNotice.zpoint.contServiceTypeCaption;
             };
 //console.log(oneNotice);            
             return oneNotice;
@@ -726,7 +727,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     var successCallbackGetObjects = function(response){        
         $scope.objects = response.data;
         objectSvc.sortObjectsByFullName($scope.objects);
-        if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){
+        if (angular.isDefined($scope.zpointList) && angular.isArray($scope.zpointList)){
             $scope.$broadcast('notices:getNoticeTypes');   
         }else{
             $scope.$broadcast('notices:getZpointList');   
@@ -805,10 +806,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $http.get(url)
         .success(function(data){
             $scope.zpointList = data;
-//console.log("geted zpoint list.");            
-//console.log(data);
             $scope.getNoticeCategories($scope.noticeCategoriesUrl);
-            
         })
         .error(function(e){
             console.log(e);
@@ -817,11 +815,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     $scope.$on('notices:getNoticeTypes',function(){
         $scope.getNoticeTypes($scope.noticeTypesUrl);
-//        $scope.getResultsPage(1);
     });
     
     $scope.$on('notices:getZpointList',function(){
-        $scope.getZpointList($scope.zpointListUrl);
+        $scope.getZpointList($scope.zpointShortInfoUrl);
     });
     
     $scope.$on('notices:selectObjects', function(){        
