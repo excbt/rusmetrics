@@ -1122,7 +1122,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         return $scope.ctrlSettings.loading;        
     };
     
-    $rootScope.$on('navPlayerDatesChanged', function(){
+    $scope.$on('navPlayerDatesChanged', function(){
 //console.log("Notices. Get event 'navPlayerDatesChanged'"); 
         //watch changes of date interval
         $scope.getResultsPage(1);

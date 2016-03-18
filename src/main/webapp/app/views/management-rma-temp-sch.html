@@ -1,5 +1,4 @@
 <div role="tabpanel" class="nmc-main-tab-panel">
-
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
         <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
@@ -19,7 +18,13 @@
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
         <li id="temp_sch_2nd_menu_item" role="presentation" class="active">
-            <a class="nmc-main-tab-button" href="" aria-controls="temp_sch" role="tab" data-target="#temp_sch" data-toggle="tab">Темп. графики</a>
+            <a class="nmc-main-tab-button" 
+               href="" 
+               aria-controls="temp_sch" 
+               role="tab" 
+               data-target="#temp_sch" 
+               data-toggle="tab">Температурные графики
+            </a>
         </li>
 
     </ul>
@@ -38,11 +43,21 @@
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-        <a class="nmc-tab-button" href="" aria-controls="temp_sch" role="tab" data-target="#temp_sch" data-toggle="tab">Графики
+        <a class="nmc-tab-button" 
+           href="" 
+           aria-controls="temp_sch" 
+           role="tab" 
+           data-target="#temp_sch" 
+           data-toggle="tab">Графики
         </a>
     </li>      
     <li role="presentation">
-        <a class="nmc-tab-button" href="" aria-controls="temp_ssts" data-target="#temp_sst" role="tab" data-toggle="tab">ССТ
+        <a class="nmc-tab-button" 
+           href="" 
+           aria-controls="temp_ssts" 
+           data-target="#temp_sst" 
+           role="tab" 
+           data-toggle="tab">ССТ
         </a>
     </li>        
   </ul>
@@ -50,12 +65,35 @@
   <!-- реализация вкладок -->
   <div class="tab-content">
 <!--      Шаблоны отчетов-->
-    <div role="tabpanel" class="tab-pane fade in active" id="temp_sch">
+    <div role="tabpanel" 
+         class="tab-pane fade in active" 
+         id="temp_sch">
     </div>
   </div>
 </div>
-<div class="btn-toolbar marginBottom10 marginTop5">
-    <button class="btn nmc-main-add-button" ng-click="addTempSch()" data-target="#showTempSchModal" data-toggle="modal">Добавить график</button>
+<!--
+<div class="btn-toolbar marginBottom5 marginTop5">
+    <button class="btn nmc-main-add-button" 
+            ng-click="addTempSch()" 
+            data-target="#showTempSchModal" 
+            data-toggle="modal">Добавить график
+    </button>
+</div>
+-->
+<div class="row nmc-main-workspace-header">
+    <div class="col-xs-3 col-md-3 marginBottom5 marginTop5">
+        <button class="btn nmc-main-add-button" 
+                ng-click="addTempSch()" 
+                data-target="#showTempSchModal" 
+                data-toggle="modal">Добавить график</button>
+    </div>
+    <div class="col-xs-7 col-md-7"></div>
+    <div class="input-group col-xs-4 col-md-4 filter marginTop5 pull-left nmc-search-form">   
+        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+        <input title="Введите текст для поиска" type="text" class="form-control nmc-text-input-form" ng-model="filter">
+    </div>
+    <div class="col-md-offset-2 col-xs-2 col-md-2">
+    </div>
 </div>
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
@@ -89,17 +127,23 @@
             <td class="nmc-td-for-button">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <i title="Свойства" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(schedule)" data-target="#showTempSchModal" data-toggle="modal"></i>
-                        
+                        <i title="Свойства" 
+                           class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                           ng-click="selectedItem(schedule)" 
+                           data-target="#showTempSchModal" 
+                           data-toggle="modal"></i>                        
                     </div>
                 </div>
             </td>
             <td ng-repeat="column in ctrlSettings.tempSchColumns" ng-class="column.class">
                 <div ng-switch on="column.type">
-                    <span ng-switch-when="name" ng-class="">{{schedule[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{schedule['id']}})</span>
+                    <span ng-switch-when="name" 
+                          ng-class="">{{schedule[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{schedule['id']}})</span>
                     </span>
-                    <span ng-switch-when="checkbox" ng-class="">
-                        <input type="checkbox" ng-model="schedule[column.name]" disabled/>
+                    <span ng-switch-when="checkbox" 
+                          ng-class="">
+                        <input type="checkbox" 
+                               ng-model="schedule[column.name]" disabled/>
                     </span>
                     <span ng-switch-default >
                         {{schedule[column.name]}}
@@ -110,7 +154,12 @@
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i title="Удалить" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(schedule)" data-target="#showTempSchModal" data-toggle="modal"></i>
+                        <i title="Удалить" 
+                           class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                           ng-click="deleteObjectInit(schedule)" 
+                           data-target="#showTempSchModal" 
+                           data-toggle="modal">
+                        </i>
                     </div>
                 </div>
             </td>
@@ -204,11 +253,6 @@
                                 </td>
                             </tr>
                             <tr >
-<!--
-                                <td class="col-sm-3">
-                                   <input type="checkbox" class="nmc-checkbox-form">Наличие корректирующего насоса
-                                </td>
--->
                                 <td colspan="3" class="col-sm-12">
                                     <input type="checkbox" class="nmc-checkbox-form"
                                            ng-model="data.currentTempSch.isAdjusmentPump">
@@ -216,11 +260,6 @@
                                 </td>                                
                             </tr>
                             <tr >
-<!--
-                                <td class="col-sm-3">
-                                   <input type="checkbox" class="nmc-checkbox-form">Наличие корректирующего насоса
-                                </td>
--->
                                 <td colspan="3" class="col-sm-12">
                                     <input type="checkbox" class="nmc-checkbox-form"
                                            ng-model="data.currentTempSch.isElevator">
@@ -232,16 +271,6 @@
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <label for="tempSchTable">Температурный график:</label>
-<!--
-                                    <p class="btn btn-default btn-xs pull-right"
-                                       ng-click="data.currentTempSch.schedules = []">
-                                        Очистить
-                                    </p>
-                                    <p class="btn btn-default btn-primary btn-xs marginRight5 pull-right"
-                                       ng-click="addSchedule(data.currentTempSch)">
-                                        Добавить
-                                    </p>
--->
                                     <p class="btn btn-default btn-xs marginRight5 pull-right"
                                        ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)"
                                        ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
@@ -274,8 +303,8 @@
                                                 <th class="col-sm-3 nmc-button-sort" ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
                                                     <strong>Т<sub>окр</sub></strong>
                                                     <i title="Отсортировать график" 
-                                                    class="btn btn-default btn-xs glyphicon glyphicon-sort-by-alphabet-alt"
-                                                    ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
+                                                        class="btn btn-default btn-xs glyphicon glyphicon-sort-by-alphabet-alt"
+                                                        ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
                                                     </i>
                                                 </th>
                                                 <th class="col-sm-3">
@@ -302,7 +331,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="col-sm-3 noPaddingI">
-                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tIn>'')}">
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkSchRow(schedule)}">
                                                         <input class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                                type="text" 
                                                                ng-attr-id={{"inputTIn"+$index}} 
@@ -312,7 +341,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="col-sm-3 noPaddingI">
-                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tOut>'')}">
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkSchRow(schedule)}">
                                                         <input class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                                type="text" 
                                                                ng-attr-id={{"inputTOut"+$index}}
@@ -328,7 +357,7 @@
                                                         Добавить
                                                     </p>
                                                 </td>
-                                                <td class="col-sm-1 noPaddingI">
+                                                <td class="col-sm-1">
                                                     <i ng-if="data.currentTempSch.schedules.length > 1" 
                                                        class="btn btn-xs nmc-remove-button"                                                     
                                                        ng-click="deleteSchedule($index, data.currentTempSch.schedules)">
@@ -345,27 +374,23 @@
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid  ">
-
-					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="sendOrganizationToServer(data.currentOrganization)"
-								value="Сохранить" />
-						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
-							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#data.currentOrganization')">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-offset-6 col-md-3">
+                        <input type="submit" 
+                               class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                ng-click="saveTempSch(data.currentTempSch)"
+                                value="Сохранить" />
+                    </div>
+                    <div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+                        <button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
+                                data-dismiss="modal"
+                                ng-click="exit('#data.currentTempSch')">
+                            Отменить
+                        </button>
+                    </div>
+                </div>
+            </div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>

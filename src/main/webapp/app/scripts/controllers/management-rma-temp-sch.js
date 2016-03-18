@@ -115,6 +115,65 @@ angular.module('portalNMC')
             };
         };
         
+        $scope.checkSchRow = function(schRow){
+            return schRow.tEnv > '' && 
+                schRow.tIn > '' && 
+                schRow.tOut > '' && 
+                Number(schRow.tIn) > 0 &&
+                Number(schRow.tOut) > 0 &&
+                Number(schRow.tIn) >= Number(schRow.tOut)
+        };
+        
+        var checkTempSch = function(tempSch){
+console.log(tempSch);            
+            var result = true;
+            //Check tMax, tMin, name, localePlace, rso and schedules
+            if (!mainSvc.checkPositiveNumberValue(tempSch.tMax)){
+                notificationFactory.errorInfo("Ошибка", "Максимальная температура должна быть положительным числом!");
+                result = false;
+            };
+            if (!mainSvc.checkPositiveNumberValue(tempSch.tMin)){
+                notificationFactory.errorInfo("Ошибка", "Минимальная температура должна быть положительным числом!");
+                result = false;
+            };
+            if (Number(tempSch.tMax) < Number(tempSch.tMin)){
+                notificationFactory.errorInfo("Ошибка", "Максимальная температура должна быть больше минимальной!");
+                result = false;
+            };
+            if (mainSvc.checkUndefinedEmptyNullValue(tempSch.name)){
+                notificationFactory.errorInfo("Ошибка", "Поле \"Наименование\" должно быть заполнено!");
+                result = false;
+            };
+            if (mainSvc.checkUndefinedNull(tempSch.localePlace)){
+                notificationFactory.errorInfo("Ошибка", "Поле \"Населенный пункт\" должно быть заполнено!");
+                result = false;
+            };
+            if (mainSvc.checkUndefinedNull(tempSch.rso)){
+                notificationFactory.errorInfo("Ошибка", "Поле \"РСО\" должно быть заполнено!");
+                result = false;
+            };
+            tempSch.schedules.some(function(sch){
+                if ($scope.checkSchRow(sch) == false){
+                    notificationFactory.errorInfo("Ошибка", "Неправильно заполнен температурный график!");
+                    result = false;
+                    return true;
+                }
+            });
+            return result;
+            
+        };
+        
+        $scope.saveTempSch = function(tempSch){
+            //check tempSch
+            var isTempSchChecked = checkTempSch(tempSch);
+            if (isTempSchChecked == false){
+                notificationFactory.successInfo("Проверка не пройдена.");
+            }else{
+                notificationFactory.successInfo("Проверка пройдена.");
+            };
+            //save
+        };
+        
         $scope.inputTempBlur =  function(sch){            
             if (mainSvc.checkUndefinedNull(sch.tMax) || mainSvc.checkUndefinedNull(sch.tMin)){
                 return "Tmax or Tmin is null or undefined";

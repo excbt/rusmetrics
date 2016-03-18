@@ -89,7 +89,9 @@ app
         format : 'DD.MM.YYYY'
     };
     
-    $scope.$watch('navPlayerDates', function(newDates, oldDates) {       
+    $scope.$watch('navPlayerDates', function(newDates, oldDates) { 
+//console.log(newDates);
+//console.log(oldDates); 
         if (newDates === oldDates){
             return;
         };
