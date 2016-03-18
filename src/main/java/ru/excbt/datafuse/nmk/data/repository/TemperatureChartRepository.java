@@ -13,7 +13,7 @@ public interface TemperatureChartRepository extends CrudRepository<TemperatureCh
 	 * 
 	 * @return
 	 */
-	@Query("SELECT c FROM TemperatureChart c "
+	@Query("SELECT c FROM TemperatureChart c WHERE c.deleted = 0 "
 			+ " ORDER BY c.localPlace.localPlaceName, c.rsoOrganization.organizationName, c.chartName")
 	public List<TemperatureChart> selectTemperatureCharts();
 

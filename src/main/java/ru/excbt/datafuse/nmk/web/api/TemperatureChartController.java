@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -62,8 +63,7 @@ public class TemperatureChartController extends SubscrApiController {
 
 			@Override
 			public TemperatureChart processAndReturnResult() {
-				// TODO Auto-generated method stub
-				return null;
+				return temperatureChartService.saveTemperatureChart(entity);
 			}
 		};
 		return WebApiHelper.processResponceApiActionCreate(action);
@@ -81,11 +81,29 @@ public class TemperatureChartController extends SubscrApiController {
 			@RequestBody TemperatureChart requestEntity) {
 
 		ApiAction action = new ApiActionEntityAdapter<TemperatureChart>(requestEntity) {
-
 			@Override
 			public TemperatureChart processAndReturnResult() {
+				return temperatureChartService.saveTemperatureChart(entity);
+			}
+		};
 
-				return null;
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param temperatureChartId
+	 * @return
+	 */
+	@RequestMapping(value = "/temperatureChart/{temperatureChartId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteTemperatureChart(@PathVariable("temperatureChartId") Long temperatureChartId) {
+
+		ApiAction action = new ApiActionAdapter() {
+
+			@Override
+			public void process() {
+				temperatureChartService.deleteTemperatureChart(temperatureChartId);
 			}
 		};
 

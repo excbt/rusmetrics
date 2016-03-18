@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,11 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class TemperatureChartService implements SecuredRoles {
+public class TemperatureChartService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartService.class);
 
@@ -43,6 +46,16 @@ public class TemperatureChartService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public TemperatureChart selectTemperatureChart(Long id) {
+		return temperatureChartRepository.findOne(id);
+	}
+
+	/**
+	 * 
 	 * @param entity
 	 * @return
 	 */
@@ -54,10 +67,12 @@ public class TemperatureChartService implements SecuredRoles {
 		checkNotNull(entity.getRsoOrganizationId());
 		checkNotNull(entity.getLocalPlaceId());
 
-		Organization org = organizationService.selectOrganization(entity.getRsoOrganizationId());
-		if (org == null || !Boolean.TRUE.equals(org.getFlagRso())) {
+		Organization rsoOrg = organizationService.selectOrganization(entity.getRsoOrganizationId());
+		if (rsoOrg == null || !Boolean.TRUE.equals(rsoOrg.getFlagRso())) {
 			throw new IllegalArgumentException("Invalid rsoOrganizationId: " + entity.getRsoOrganizationId());
 		}
+
+		entity.setRsoOrganization(rsoOrg);
 
 		LocalPlace localPlace = localPlaceService.findLocalPlace(entity.getLocalPlaceId());
 
@@ -67,6 +82,20 @@ public class TemperatureChartService implements SecuredRoles {
 		entity.setLocalPlace(localPlace);
 
 		return temperatureChartRepository.save(entity);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 */
+	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteTemperatureChart(Long id) {
+		TemperatureChart entity = temperatureChartRepository.findOne(id);
+		if (entity == null) {
+			throw new PersistenceException(String.format("TemperatureChart (id=%d) is not found", id));
+		}
+		temperatureChartRepository.save(softDelete(entity));
 	}
 
 }

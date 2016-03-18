@@ -12,8 +12,6 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
@@ -21,7 +19,6 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "temperature_chart")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
 public class TemperatureChart extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
@@ -32,6 +29,7 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "local_place_id", updatable = false, insertable = false)
 	private Long localPlaceId;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "local_place_id")
 	private LocalPlace localPlace;
@@ -39,12 +37,19 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "rso_organization_id", updatable = false, insertable = false)
 	private Long rsoOrganizationId;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rso_organization_id")
 	private Organization rsoOrganization;
 
 	@Column(name = "chart_name")
 	private String chartName;
+
+	@Column(name = "chart_description")
+	private String chartDescaription;
+
+	@Column(name = "chart_comment")
+	private String chartComment;
 
 	@Column(name = "is_default")
 	private Boolean isDefault;
@@ -164,6 +169,22 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 
 	public void setRsoOrganization(Organization rsoOrganization) {
 		this.rsoOrganization = rsoOrganization;
+	}
+
+	public String getChartDescaription() {
+		return chartDescaription;
+	}
+
+	public void setChartDescaription(String chartDescaription) {
+		this.chartDescaription = chartDescaription;
+	}
+
+	public String getChartComment() {
+		return chartComment;
+	}
+
+	public void setChartComment(String chartComment) {
+		this.chartComment = chartComment;
 	}
 
 }
