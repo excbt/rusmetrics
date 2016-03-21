@@ -9,10 +9,12 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_place")
-public class WeatherPlace extends AbstractAuditableModel {
+public class WeatherPlace extends AbstractAuditableModel implements DisabledObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -181,6 +183,7 @@ public class WeatherPlace extends AbstractAuditableModel {
 		this.geoLon = geoLon;
 	}
 
+	@Override
 	public Boolean getIsDisabled() {
 		return isDisabled;
 	}
@@ -221,10 +224,12 @@ public class WeatherPlace extends AbstractAuditableModel {
 		this.version = version;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
 	}
