@@ -4,10 +4,11 @@ angular.module('portalNMC')
         $scope.ctrlSettings = {};
         $scope.ctrlSettings.ctxId = "temp_sch_page";
 
+        $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
         $scope.ctrlSettings.isTempSchSort = true;
         
         $scope.ctrlSettings.localPlacesUrl = "../api/subscr/localPlaces/all";
-        $scope.ctrlSettings.tempSchUrl = "../api/subscr/temperatureChart";
+        $scope.ctrlSettings.tempSchUrl = "../api/subscr/temperatureCharts";
         
         $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "place", "nameColumnName" : "name"}; 
         $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
@@ -274,9 +275,27 @@ console.log(tempSch);
             $('#showTempSchModal').off("keydown", tempSchModalKeydownHandler);
         });
         
+                //date picker
+        $scope.dateOptsParamsetRu ={
+            locale : {
+                daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+                firstDay : 1,
+                monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                        'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                        'Октябрь', 'Ноябрь', 'Декабрь' ]
+            },
+            singleDatePicker: true,
+            format: $scope.ctrlSettings.dateFormat
+        };
             //set mask for price value
         $(document).ready(function(){
             $(':input').inputmask();
+            $('#inputSSTDate').datepicker({
+              dateFormat: "dd.mm.yy",
+              firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+              dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+              monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+            });
         });
         
         var initCtrl = function(){

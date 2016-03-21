@@ -20,9 +20,9 @@
         <li id="temp_sch_2nd_menu_item" role="presentation" class="active">
             <a class="nmc-main-tab-button" 
                href="" 
-               aria-controls="temp_sch" 
+               aria-controls="temperature_schedules" 
                role="tab" 
-               data-target="#temp_sch" 
+               data-target="#temperature_schedules" 
                data-toggle="tab">Температурные графики
             </a>
         </li>
@@ -30,7 +30,7 @@
     </ul>
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="temp_sch">
+      <div role="tabpanel" class="tab-pane fade in active" id="temperature_schedules">
       </div>
     </div>
 </div>
@@ -52,9 +52,10 @@
         </a>
     </li>      
     <li role="presentation">
-        <a class="nmc-tab-button" 
+        <a class="nmc-tab-button"
+           title="Среднесуточная температура"
            href="" 
-           aria-controls="temp_sst" 
+           aria-controls="temp_ssts" 
            data-target="#temp_sst" 
            role="tab" 
            data-toggle="tab">ССТ
@@ -68,7 +69,6 @@
     <div role="tabpanel" 
          class="tab-pane fade in active" 
          id="temp_sch">
-
             <div class="row nmc-main-workspace-header">
                 <div class="col-xs-3 col-md-3 marginBottom5 marginTop5">
                     <button class="btn nmc-main-add-button" 
@@ -155,29 +155,39 @@
                     </tr>
                 </table>
             </div>
-        
-      </div>
-      <div role="tabpanel" 
+    </div>
+    <div role="tabpanel" 
          class="tab-pane fade" 
-         id="temp_sst">
-          
-         <div class="row nmc-main-workspace-header">
-            <div class="col-xs-3 col-md-3 marginBottom5 marginTop5">
-                <button class="btn nmc-main-add-button" 
-                        ng-click="addTempSch()" 
-                        data-target="#showTempSchModal" 
-                        data-toggle="modal">ССТ</button>
+         id="temp_sst">        
+        <div class="row nmc-main-workspace-header marginTop5">
+            <div class="col-xs-4 col-md-4 marginBottom5 nmc-search-form">
+                <div class="col-xs-4 col-md-4 noPadding" style="min-width: 71px;">
+                    <label class="nmc-form-label marginTop5">Населенный пункт:</label>
+                </div>
+                <div class="col-xs-8 col-md-8">
+                    <select class="form-control  nmc-select-form" 
+                            ng-model="data.currentLocalPlace.id" 
+                            ng-options="place.id as place.localPlaceName for place in data.localPlaces" 
+                            ng-change="">
+                    </select>
+                </div>
             </div>
-            <div class="col-xs-7 col-md-7"></div>
-            <div class="input-group col-xs-4 col-md-4 filter marginTop5 pull-left nmc-search-form">   
-                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-                <input title="Введите текст для поиска" type="text" class="form-control nmc-text-input-form" ng-model="filter">
-            </div>
-            <div class="col-md-offset-2 col-xs-2 col-md-2">
+            <div class="col-xs-2 col-md-2">
+                <div class="col-xs-2 col-md-2 ">
+                    <label class="nmc-form-label marginTop5">Дата:</label>
+                </div>
+                <div class="col-xs-10 col-md-10 ">
+                    <input  
+                           id="inputSSTDate" 
+                           class="form-control date-picker nmc-date-input-form"
+                           type="text" 
+                           ng-model="date.currentDate"/>
+                </div> 
+            </div>            
+            <div class="col-xs-6 col-md-6">
             </div>
         </div>
-          
-      </div>
+    </div>
   </div>
 </div>
 
