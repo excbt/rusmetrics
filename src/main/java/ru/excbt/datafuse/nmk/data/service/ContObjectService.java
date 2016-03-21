@@ -77,6 +77,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	@Autowired
 	private FiasService fiasService;
 
+	@Autowired
+	private LocalPlaceService localPlaceService;
+
 	/**
 	 * 
 	 * @param id
@@ -190,6 +193,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				contObjectFias.setCityFiasUUID(cityUUID);
 				String cityName = fiasService.getCityName(cityUUID);
 				contObjectFias.setShortAddress2(cityName);
+
+				localPlaceService.checkLocalPlace(cityUUID);
+
 			}
 			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
 			contObjectFias.setShortAddress1(shortAddr);
