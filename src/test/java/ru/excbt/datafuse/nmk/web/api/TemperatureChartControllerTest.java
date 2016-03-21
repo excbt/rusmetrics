@@ -31,6 +31,7 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 		newEntity.setChartName("TEST Name " + (new Date()));
 		newEntity.setRsoOrganizationId(25201856L);
 		newEntity.setLocalPlaceId(490041188L);
+		newEntity.setIsOk(true);
 		Long id = _testCreateJson("/api/subscr/temperatureCharts", newEntity);
 
 		newEntity = temperatureChartService.selectTemperatureChart(id);

@@ -66,6 +66,9 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "flag_elevator")
 	private Boolean flagElevator;
 
+	@Column(name = "is_ok")
+	private Boolean isOk;
+
 	@Version
 	private int version;
 
@@ -185,6 +188,14 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 
 	public void setChartComment(String chartComment) {
 		this.chartComment = chartComment;
+	}
+
+	public Boolean getIsOk() {
+		return isOk;
+	}
+
+	public void setIsOk(Boolean isOk) {
+		this.isOk = isOk;
 	}
 
 }
