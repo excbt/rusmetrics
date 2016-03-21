@@ -26,6 +26,11 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testTemperatureChartContObjectId() throws Exception {
+		_testGetJson("/api/subscr/temperatureCharts/byContObject/" + 18811504);
+	}
+
+	@Test
 	public void testTemperatureChartCRUD() throws Exception {
 		TemperatureChart newEntity = new TemperatureChart();
 		newEntity.setChartName("TEST Name " + (new Date()));

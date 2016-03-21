@@ -209,4 +209,28 @@ public class TemperatureChartController extends SubscrApiController {
 		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/temperatureCharts/byContZPoint/{contZPointId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getTemperatureChartsByContZPointId(@PathVariable("contZPointId") Long contZPointId) {
+		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsByContZPointId(contZPointId);
+		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/temperatureCharts/byContObject/{contObjectId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getTemperatureChartsByContObjectId(@PathVariable("contObjectId") Long contObjectId) {
+		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsByContObjectId(contObjectId);
+		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
 }

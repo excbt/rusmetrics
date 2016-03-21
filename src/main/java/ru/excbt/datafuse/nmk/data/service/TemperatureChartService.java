@@ -2,7 +2,9 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.PersistenceException;
 
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
@@ -41,6 +44,15 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	@Autowired
 	private LocalPlaceService localPlaceService;
 
+	@Autowired
+	private ContZPointService contZPointService;
+
+	@Autowired
+	private ContObjectService contObjectService;
+
+	@Autowired
+	private FiasService fiasService;
+
 	/**
 	 * 
 	 * @return
@@ -61,6 +73,55 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 			i.initLocalPlaceInfo();
 			i.initRsoOrganizationInfo();
 		});
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<TemperatureChart> selectTemperatureChartsByContZPointId(Long contZPointId) {
+
+		Long contObjectId = contZPointService.selectContObjectId(contZPointId);
+		if (contObjectId == null) {
+			throw new PersistenceException(String.format("ContZPoint (id=%d) is invalid", contZPointId));
+		}
+
+		return selectTemperatureChartsByContObjectId(contObjectId);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<TemperatureChart> selectTemperatureChartsByContObjectId(Long contObjectId) {
+
+		checkNotNull(contObjectId);
+
+		List<TemperatureChart> result = new ArrayList<>();
+
+		ContObjectFias fias = contObjectService.findContObjectFias(contObjectId);
+
+		if (fias == null || fias.getFiasUUID() == null) {
+			return result;
+		}
+
+		UUID cityFiasUUID = fiasService.getCityUUID(fias.getFiasUUID());
+
+		if (cityFiasUUID == null) {
+			return result;
+		}
+
+		result = temperatureChartRepository.selectTemperatureChartsByFias(cityFiasUUID);
+		result.forEach(i -> {
+			i.initLocalPlaceInfo();
+			i.initRsoOrganizationInfo();
+		});
+
 		return result;
 	}
 

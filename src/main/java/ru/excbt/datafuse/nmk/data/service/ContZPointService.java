@@ -96,8 +96,8 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		private final String contServiceType;
 		private final String contServiceTypeCaption;
 
-		public ContZPointShortInfo(Long contZPointId, Long contObjectId, String customServiceName, String contServiceType,
-				String contServiceTypeCaption) {
+		public ContZPointShortInfo(Long contZPointId, Long contObjectId, String customServiceName,
+				String contServiceType, String contServiceTypeCaption) {
 			this.contZPointId = contZPointId;
 			this.contObjectId = contObjectId;
 			this.customServiceName = customServiceName;
@@ -549,6 +549,17 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Long> selectDeviceObjectIds(long contZPointId) {
 		return contZPointRepository.selectDeviceObjectIds(contZPointId);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public Long selectContObjectId(long contZPointId) {
+		List<Long> ids = contZPointRepository.selectContObjectByContZPointId(contZPointId);
+		return ids.isEmpty() ? null : ids.get(0);
 	}
 
 }

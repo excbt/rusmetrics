@@ -32,4 +32,7 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 	@Query("SELECT do.id FROM ContZPoint zp INNER JOIN zp.deviceObjects do WHERE zp.id = :contZPointId ")
 	public List<Long> selectDeviceObjectIds(@Param("contZPointId") long contZPointId);
 
+	@Query("SELECT zp.contObjectId FROM ContZPoint zp WHERE zp.id = :contZPointId ")
+	public List<Long> selectContObjectByContZPointId(@Param("contZPointId") Long contZPointId);
+
 }
