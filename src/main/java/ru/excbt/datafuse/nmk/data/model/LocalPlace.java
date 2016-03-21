@@ -14,6 +14,33 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
 public class LocalPlace extends AbstractAuditableModel {
 
+	public static class LocalPlaceInfo {
+		private Long id;
+		private String localPlaceName;
+
+		public LocalPlaceInfo(LocalPlace localPlace) {
+			this.id = localPlace.getId();
+			this.localPlaceName = localPlace.getLocalPlaceName();
+		}
+
+		public String getLocalPlaceName() {
+			return localPlaceName;
+		}
+
+		public void setLocalPlaceName(String localPlaceName) {
+			this.localPlaceName = localPlaceName;
+		}
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+	}
+
 	/**
 	 * 
 	 */

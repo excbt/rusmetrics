@@ -29,6 +29,25 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Organization extends AbstractAuditableModel implements KeynameObject, DevModeObject, DeletableObject {
 
+	public static class OrganizationInfo {
+
+		private final Long id;
+		private final String organizationName;
+
+		public OrganizationInfo(Organization organization) {
+			this.id = organization.getId();
+			this.organizationName = organization.getOrganizationName();
+		}
+
+		public Long getId() {
+			return id;
+		}
+
+		public String getOrganizationName() {
+			return organizationName;
+		}
+	}
+
 	/**
 	 * 
 	 */
@@ -182,4 +201,5 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	public void setOrganizationDecription(String organizationDescription) {
 		this.organizationDescription = organizationDescription;
 	}
+
 }

@@ -8,12 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.LocalPlace.LocalPlaceInfo;
+import ru.excbt.datafuse.nmk.data.model.Organization.OrganizationInfo;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
@@ -51,6 +54,9 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "chart_comment")
 	private String chartComment;
 
+	@Column(name = "chart_deviation_value")
+	private BigDecimal chartDeviationValue;
+
 	@Column(name = "is_default")
 	private Boolean isDefault;
 
@@ -75,6 +81,12 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
+
+	@Transient
+	private OrganizationInfo rsoOrganizationInfo;
+
+	@Transient
+	private LocalPlaceInfo localPlaceInfo;
 
 	public Long getLocalPlaceId() {
 		return localPlaceId;
@@ -196,6 +208,32 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 
 	public void setIsOk(Boolean isOk) {
 		this.isOk = isOk;
+	}
+
+	public LocalPlaceInfo getLocalPlaceInfo() {
+		return localPlaceInfo;
+	}
+
+	public OrganizationInfo getRsoOrganizationInfo() {
+		return rsoOrganizationInfo;
+	}
+
+	public void initLocalPlaceInfo() {
+		LocalPlaceInfo lpi = new LocalPlaceInfo(this.getLocalPlace());
+		this.localPlaceInfo = lpi;
+	}
+
+	public void initRsoOrganizationInfo() {
+		OrganizationInfo oi = new OrganizationInfo(this.getRsoOrganization());
+		this.rsoOrganizationInfo = oi;
+	}
+
+	public BigDecimal getChartDeviationValue() {
+		return chartDeviationValue;
+	}
+
+	public void setChartDeviationValue(BigDecimal chartDeviationValue) {
+		this.chartDeviationValue = chartDeviationValue;
 	}
 
 }

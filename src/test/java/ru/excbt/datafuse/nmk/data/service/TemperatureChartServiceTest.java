@@ -21,7 +21,7 @@ public class TemperatureChartServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testSelectAll() throws Exception {
-		List<TemperatureChart> result = temperatureChartService.selectTemperatureChartAll();
+		List<TemperatureChart> result = temperatureChartService.selectTemperatureCharts();
 		assertNotNull(result);
 	}
 }

@@ -40,7 +40,7 @@ public class TemperatureChartController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsAll() {
-		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartAll();
+		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsInfo();
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 

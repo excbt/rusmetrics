@@ -46,8 +46,22 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<TemperatureChart> selectTemperatureChartAll() {
+	public List<TemperatureChart> selectTemperatureCharts() {
 		return temperatureChartRepository.selectTemperatureCharts();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<TemperatureChart> selectTemperatureChartsInfo() {
+		List<TemperatureChart> result = temperatureChartRepository.selectTemperatureCharts();
+		result.forEach(i -> {
+			i.initLocalPlaceInfo();
+			i.initRsoOrganizationInfo();
+		});
+		return result;
 	}
 
 	/**
