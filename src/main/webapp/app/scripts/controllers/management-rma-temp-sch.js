@@ -1,10 +1,13 @@
 angular.module('portalNMC')
-    .controller('TempSchCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc', '$timeout', function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc, $timeout){
+    .controller('TempSchCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc', '$timeout', 'objectSvc', function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc, $timeout, objectSvc){
         //The temperatures schedule    
         $scope.ctrlSettings = {};
         $scope.ctrlSettings.ctxId = "temp_sch_page";
 
         $scope.ctrlSettings.isTempSchSort = true;
+        
+        $scope.ctrlSettings.localPlacesUrl = "../api/subscr/localPlaces/all";
+        $scope.ctrlSettings.tempSchUrl = "../api/subscr/temperatureChart";
         
         $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "place", "nameColumnName" : "name"}; 
         $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
@@ -12,35 +15,35 @@ angular.module('portalNMC')
         //organization columns
         $scope.ctrlSettings.tempSchColumns =[
             {
-                "name": "place",
+                "name": "localPlaceName",
                 "caption": "Населенный пункт",
                 "class": "col-xs-3 col-md-3",
                 "type": "name",
                 "sortable": true
             },
             {
-                "name": "rso",
+                "name": "rsoOrganizationName",
                 "caption": "РСО",
                 "class": "col-xs-2 col-md-2",
                 "type": "name",
                 "sortable": true
             },
             {
-                "name": "name",
+                "name": "chartName",
                 "caption": "Наименование",
                 "class": "col-xs-3 col-md-3",
                 "type": "name",
                 "sortable": true
             },
             {
-                "name": "correctivePump",
+                "name": "flagAdjPump",
                 "caption": "Кор. нас",
                 "class": "col-xs-1 col-md-1",
                 "type": "checkbox",
                 "sortable": false
             },
             {
-                "name": "elevator",
+                "name": "flagElevator",
                 "caption": "Элеватор",
                 "class": "col-xs-1 col-md-1",
                 "type": "checkbox",
@@ -59,22 +62,65 @@ angular.module('portalNMC')
         $scope.data.currentTempSch = {};
         $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         
-        $scope.data.tempSchedules = [
-            {
-                place: "Москва",
-                rso: "Первая столичная РСО",
-                name: "График 1",
-                correctivePump: true,
-                elevator: true
-            },
-            {
-                place: "Москва",
-                rso: "Первая столичная РСО",
-                name: "105 / 70",
-                correctivePump: false,
-                elevator: false
-            }
-        ];
+        $scope.data.tempSchedules = [];
+        
+        $scope.data.rsoOrganizations = [];
+        $scope.data.localPlaces = [];
+        
+        var successCallback = function(){
+            
+        };
+        
+        var errorCallback = function (e) {
+            console.log(e);
+            var errorCode = "-1";
+            if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                errorCode = e.resultCode || e.data.resultCode;
+            };
+            var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+            notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+        };
+        
+        var getOrganizations = function(){        
+            objectSvc.getRsoOrganizations().then(function(resp){
+                $scope.data.rsoOrganizations = resp.data;
+                getTempSchedules();
+            }, errorCallback);
+        };
+        
+        var getLocalPlaces = function(){
+            $http.get($scope.ctrlSettings.localPlacesUrl).then(function(resp){
+                $scope.data.localPlaces = resp.data;
+                getOrganizations();
+            }, errorCallback);
+        };
+        
+        var findItemById = function(itemId, sourceArray){
+            var item = null;
+            sourceArray.some(function(elem){
+                if (elem.id == itemId){
+                    item = angular.copy(elem);
+                    return true;
+                };
+            });
+            return item;
+        };
+        
+        var getTempSchedules = function(){
+            $http.get($scope.ctrlSettings.tempSchUrl).then(function(resp){
+                resp.data.forEach(function(elem){
+                    var localPlace = findItemById(elem.localPlaceId, $scope.data.localPlaces);
+                    elem.localPlaceName = (localPlace == null) ? "Неопределено" : localPlace.localPlaceName;
+                    var rso = findItemById(elem.rsoOrganizationId, $scope.data.rsoOrganizations)
+                    elem.rsoOrganizationName = (rso == null) ? "Неопределено" : rso.organizationName;
+                });
+                $scope.data.tempSchedules = angular.copy(resp.data);                
+            }, errorCallback);
+        };
+        
+        $scope.selectedItem = function(item){
+            $scope.data.currentTempSch = angular.copy(item);           
+        };
                 
         $scope.setOrderBy = function(field){    
             if (field.sortable == false){return "The field is not sortable."};
@@ -127,28 +173,28 @@ angular.module('portalNMC')
         var checkTempSch = function(tempSch){
 console.log(tempSch);            
             var result = true;
-            //Check tMax, tMin, name, localePlace, rso and schedules
-            if (!mainSvc.checkPositiveNumberValue(tempSch.tMax)){
+            //Check tMax, tMin, name, localPlace, rso and schedules
+            if (!mainSvc.checkPositiveNumberValue(tempSch.maxT)){
                 notificationFactory.errorInfo("Ошибка", "Максимальная температура должна быть положительным числом!");
                 result = false;
             };
-            if (!mainSvc.checkPositiveNumberValue(tempSch.tMin)){
+            if (!mainSvc.checkPositiveNumberValue(tempSch.minT)){
                 notificationFactory.errorInfo("Ошибка", "Минимальная температура должна быть положительным числом!");
                 result = false;
             };
-            if (Number(tempSch.tMax) < Number(tempSch.tMin)){
+            if (Number(tempSch.maxT) < Number(tempSch.minT)){
                 notificationFactory.errorInfo("Ошибка", "Максимальная температура должна быть больше минимальной!");
                 result = false;
             };
-            if (mainSvc.checkUndefinedEmptyNullValue(tempSch.name)){
+            if (mainSvc.checkUndefinedEmptyNullValue(tempSch.chartName)){
                 notificationFactory.errorInfo("Ошибка", "Поле \"Наименование\" должно быть заполнено!");
                 result = false;
             };
-            if (mainSvc.checkUndefinedNull(tempSch.localePlace)){
+            if (mainSvc.checkUndefinedNull(tempSch.localPlaceId)){
                 notificationFactory.errorInfo("Ошибка", "Поле \"Населенный пункт\" должно быть заполнено!");
                 result = false;
             };
-            if (mainSvc.checkUndefinedNull(tempSch.rso)){
+            if (mainSvc.checkUndefinedNull(tempSch.rsoOrganizationId)){
                 notificationFactory.errorInfo("Ошибка", "Поле \"РСО\" должно быть заполнено!");
                 result = false;
             };
@@ -233,4 +279,11 @@ console.log(tempSch);
             $(':input').inputmask();
         });
         
+        var initCtrl = function(){
+            getLocalPlaces();
+//            getOrganizations();
+//            getTempSchedules();
+        };
+        
+        initCtrl();
     }]);

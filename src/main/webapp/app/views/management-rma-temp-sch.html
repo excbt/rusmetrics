@@ -196,13 +196,13 @@
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <div class="nmc-input-tmax-tmin">
                                         <div class="form-group noMarginBottom" 
-                                             ng-class="{'has-error':!(data.currentTempSch.tMax>'')}"
+                                             ng-class="{'has-error':!(data.currentTempSch.maxT>'')}"
                                              >
                                             <input class="form-control nmc-text-input-form" 
                                                    type="text" 
                                                    id="inputTmax" 
                                                    placeholder="Макс. темп." 
-                                                   ng-model="data.currentTempSch.tMax"
+                                                   ng-model="data.currentTempSch.maxT"
                                                    data-inputmask="'alias': 'numeric'"
                                                    ng-blur="inputTempBlur(data.currentTempSch)"/>
                                         </div>
@@ -210,13 +210,13 @@
                                             /
                                         </div>
                                         <div class="form-group noMarginBottom" 
-                                             ng-class="{'has-error':!(data.currentTempSch.tMin>'')}"
+                                             ng-class="{'has-error':!(data.currentTempSch.minT>'')}"
                                              >
                                             <input class="form-control nmc-text-input-form" 
                                                    type="text" 
                                                    id="inputTmin" 
                                                    placeholder="Мин. темп." 
-                                                   ng-model="data.currentTempSch.tMin"
+                                                   ng-model="data.currentTempSch.minT"
                                                    data-inputmask="'alias': 'numeric'"
                                                    ng-blur="inputTempBlur(data.currentTempSch)"/>
                                         </div>
@@ -227,8 +227,12 @@
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.name>'')}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder=""  ng-model="data.currentTempSch.name"/>
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.chartName>'')}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputName" 
+                                               placeholder=""  
+                                               ng-model="data.currentTempSch.chartName"/>
                                     </div>
                                 </td>
                             </tr>
@@ -236,8 +240,14 @@
                                 <td class="col-sm-3"><label for="inputName">Населенный пункт</label>
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.place>'')}">
-                                        <select class="form-control nmc-text-input-form" type="text" id="inputPlace" placeholder=""  ng-model="data.currentTempSch.place">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.localPlaceId>'')}">
+                                        <select class="form-control nmc-text-input-form" 
+                                                type="text" 
+                                                id="inputPlace" 
+                                                placeholder="" 
+                                                ng-model="data.currentTempSch.localPlaceId"
+                                                ng-options="place.id as place.localPlaceName for place in data.localPlaces"
+                                                >
                                         </select>
                                     </div>
                                 </td>
@@ -246,8 +256,13 @@
                                 <td class="col-sm-3"><label for="inputName">РСО</label>
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <select class="form-control nmc-text-input-form" type="text" id="inputRso" placeholder=""  ng-model="data.currentTempSch.rso">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.rsoOrganizationId>'')}">
+                                        <select class="form-control nmc-text-input-form" 
+                                                type="text" 
+                                                id="inputRso" 
+                                                placeholder=""  
+                                                ng-model="data.currentTempSch.rsoOrganizationId"
+                                                ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations">
                                         </select>
                                     </div>
                                 </td>
@@ -255,14 +270,14 @@
                             <tr >
                                 <td colspan="3" class="col-sm-12">
                                     <input type="checkbox" class="nmc-checkbox-form"
-                                           ng-model="data.currentTempSch.isAdjusmentPump">
+                                           ng-model="data.currentTempSch.flagAdjPump">
                                     <label>Наличие корректирующего насоса</label>
                                 </td>                                
                             </tr>
                             <tr >
                                 <td colspan="3" class="col-sm-12">
                                     <input type="checkbox" class="nmc-checkbox-form"
-                                           ng-model="data.currentTempSch.isElevator">
+                                           ng-model="data.currentTempSch.flagElevator">
                                     <label>Наличие элеватора</label>
                                 </td>                                
                             </tr>
