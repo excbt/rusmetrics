@@ -29,6 +29,8 @@ public class AnyControllerTest extends AbstractControllerTest {
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;
 
+	public final static String EDITED_BY_REST = "Edited By REST";
+
 	@Before
 	public void setup() {
 		setupAuditor(TEST_AUDIT_USER, DEV_SUBSCR_ORG_ID);

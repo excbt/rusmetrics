@@ -4,31 +4,45 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "temperature_chart_item")
-public class TemperatureChartItem extends AbstractAuditableModel {
+public class TemperatureChartItem extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5278021673344286068L;
 
-	@Column(name = "temperature_chart_id")
+	@Column(name = "temperature_chart_id", insertable = false, updatable = false)
 	private Long temperatureChartId;
 
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "temperature_chart_id")
+	private TemperatureChart temperatureChart;
+
 	@Column(name = "t_ambience")
-	private BigDecimal tAmbience;
+	private BigDecimal t_Ambience;
 
 	@Column(name = "t_in")
-	private BigDecimal tIn;
+	private BigDecimal t_In;
 
 	@Column(name = "t_out")
-	private BigDecimal tOut;
+	private BigDecimal t_Out;
+
+	@Column(name = "item_comment")
+	private String itemComment;
 
 	@Version
 	private int version;
@@ -44,28 +58,36 @@ public class TemperatureChartItem extends AbstractAuditableModel {
 		this.temperatureChartId = temperatureChartId;
 	}
 
-	public BigDecimal gettAmbience() {
-		return tAmbience;
+	public TemperatureChart getTemperatureChart() {
+		return temperatureChart;
 	}
 
-	public void settAmbience(BigDecimal tAmbience) {
-		this.tAmbience = tAmbience;
+	public void setTemperatureChart(TemperatureChart temperatureChart) {
+		this.temperatureChart = temperatureChart;
 	}
 
-	public BigDecimal gettIn() {
-		return tIn;
+	public BigDecimal getT_Ambience() {
+		return t_Ambience;
 	}
 
-	public void settIn(BigDecimal tIn) {
-		this.tIn = tIn;
+	public void setT_Ambience(BigDecimal t_Ambience) {
+		this.t_Ambience = t_Ambience;
 	}
 
-	public BigDecimal gettOut() {
-		return tOut;
+	public BigDecimal getT_In() {
+		return t_In;
 	}
 
-	public void settOut(BigDecimal tOut) {
-		this.tOut = tOut;
+	public void setT_In(BigDecimal t_In) {
+		this.t_In = t_In;
+	}
+
+	public BigDecimal getT_Out() {
+		return t_Out;
+	}
+
+	public void setT_Out(BigDecimal t_Out) {
+		this.t_Out = t_Out;
 	}
 
 	public int getVersion() {
@@ -76,12 +98,22 @@ public class TemperatureChartItem extends AbstractAuditableModel {
 		this.version = version;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getItemComment() {
+		return itemComment;
+	}
+
+	public void setItemComment(String itemComment) {
+		this.itemComment = itemComment;
 	}
 
 }
