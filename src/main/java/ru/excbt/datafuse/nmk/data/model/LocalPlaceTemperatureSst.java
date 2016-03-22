@@ -38,11 +38,15 @@ public class LocalPlaceTemperatureSst extends AbstractAuditableModel {
 	@Column(name = "sst_date")
 	private Date sstDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "sst_date_time")
+	private Date sstDateTime;
+
 	@Column(name = "sst_value")
 	private BigDecimal sstValue;
 
-	@Column(name = "sst_calc")
-	private BigDecimal sstCalc;
+	@Column(name = "sst_calc_value")
+	private BigDecimal sstCalcValue;
 
 	@Column(name = "sst_comment")
 	private String sstComment;
@@ -85,14 +89,6 @@ public class LocalPlaceTemperatureSst extends AbstractAuditableModel {
 		this.sstValue = sstValue;
 	}
 
-	public BigDecimal getSstCalc() {
-		return sstCalc;
-	}
-
-	public void setSstCalc(BigDecimal sstCalc) {
-		this.sstCalc = sstCalc;
-	}
-
 	public int getVersion() {
 		return version;
 	}
@@ -115,6 +111,22 @@ public class LocalPlaceTemperatureSst extends AbstractAuditableModel {
 
 	public void setSstComment(String sstComment) {
 		this.sstComment = sstComment;
+	}
+
+	public Date getSstDateTime() {
+		return sstDateTime;
+	}
+
+	public void setSstDateTime(Date sstDateTime) {
+		this.sstDateTime = sstDateTime;
+	}
+
+	public BigDecimal getSstCalcValue() {
+		return sstCalcValue;
+	}
+
+	public void setSstCalcValue(BigDecimal sstCalcValue) {
+		this.sstCalcValue = sstCalcValue;
 	}
 
 }

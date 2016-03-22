@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +29,13 @@ public class LocalPlaceTemperatureSstService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<LocalPlaceTemperatureSst> selectByLocalPlace(Long localPlaceId) {
-		return localPlaceTemperatureSstRepository.selectByLocalPlace(localPlaceId);
+	public List<LocalPlaceTemperatureSst> selectByLocalPlace(Long localPlaceId, LocalDate sstDate) {
+		checkNotNull(localPlaceId);
+		checkNotNull(sstDate);
+		LocalDate beginDate = sstDate.withDayOfMonth(1);
+		LocalDate endDate = beginDate.plusMonths(1).minusDays(1);
+		return localPlaceTemperatureSstRepository.selectByLocalPlace(localPlaceId, beginDate.toDate(),
+				endDate.toDate());
 	}
 
 }
