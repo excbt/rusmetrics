@@ -54,9 +54,10 @@ angular.module('portalNMC')
         ];
         
         $scope.ctrlSettings.emptySchedule = {
-            tEnv: "",
-            tIn: "",
-            tOut: ""
+            t_Ambience: "",
+            t_In: "",
+            t_Out: "",
+            isDeleted: false
         };
         
         $scope.data = {};
@@ -69,7 +70,9 @@ angular.module('portalNMC')
         $scope.data.localPlaces = [];
         
         var successCallback = function(){
-            
+            $('#showTempSchModal').modal('hide');
+            $('#deleteWindowModal').modal('hide');
+            getTempSchedules();
         };
         
         var errorCallback = function (e) {
@@ -107,19 +110,31 @@ angular.module('portalNMC')
             return item;
         };
         
+        var getTempSchedulesItems = function(sch){
+            $http.get($scope.ctrlSettings.tempSchUrl + "/" + sch.id + "/items").then(function(resp){
+                sch.schedules = resp.data;
+                sch.schedules.forEach(function(sch){
+                    sch.isDeleted = false;
+                });
+            }, errorCallback);
+        };
+        
         var getTempSchedules = function(){
             $http.get($scope.ctrlSettings.tempSchUrl).then(function(resp){
-                resp.data.forEach(function(elem){
+                $scope.data.tempSchedules = angular.copy(resp.data);                
+                $scope.data.tempSchedules.forEach(function(elem){
                     var localPlace = findItemById(elem.localPlaceId, $scope.data.localPlaces);
                     elem.localPlaceName = (localPlace == null) ? "Неопределено" : localPlace.localPlaceName;
                     var rso = findItemById(elem.rsoOrganizationId, $scope.data.rsoOrganizations)
                     elem.rsoOrganizationName = (rso == null) ? "Неопределено" : rso.organizationName;
+                    getTempSchedulesItems(elem);
                 });
-                $scope.data.tempSchedules = angular.copy(resp.data);                
+                
             }, errorCallback);
         };
         
-        $scope.selectedItem = function(item){
+        $scope.selectedItem = function(item){           
+            setConfirmCode();
             $scope.data.currentTempSch = angular.copy(item);           
         };
                 
@@ -134,20 +149,38 @@ angular.module('portalNMC')
             $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         };
         
-        $scope.addSchedule = function(tempSch){          
+        var postItem = function(tempSchId, item){
+            var url = $scope.ctrlSettings.tempSchUrl + "/" + tempSchId + "/items";
+            $http.post(url, item).then(function(resp){                                  
+            }, errorCallback);
+        };
+        
+        var putItem = function(tempSchId, item){
+            var url = $scope.ctrlSettings.tempSchUrl + "/" + tempSchId + "/items/" + item.id;
+            $http.put(url, item).then(function(resp){                                    
+            }, errorCallback);
+        };
+        
+        var deleteItem = function(tempSchId, item){
+            var url = $scope.ctrlSettings.tempSchUrl + "/" + tempSchId + "/items/" + item.id;
+            $http.delete(url).then(function(resp){                                   
+            }, errorCallback);
+        };
+        
+        $scope.addSchedule = function(tempSch){ 
             tempSch.schedules.push(angular.copy($scope.ctrlSettings.emptySchedule));
             $scope.ctrlSettings.isTempSchSort = false;
         };
         
-        $scope.sortSchedulesByTEnv = function(schedules){          
+        $scope.sortSchedulesByTAmbience = function(schedules){          
             if (!angular.isArray(schedules)){
                 return "Schedules is not array;";
             };
             schedules.sort(function(a, b){
-                if (Number(a.tEnv) > Number(b.tEnv)){
+                if (Number(a.t_Ambience) > Number(b.t_Ambience)){
                     return -1;
                 };
-                if (Number(a.tEnv) < Number(b.tEnv)){
+                if (Number(a.t_Ambience) < Number(b.t_Ambience)){
                     return 1;
                 };
                 return 0;
@@ -162,17 +195,49 @@ angular.module('portalNMC')
             };
         };
         
+        $scope.delSchItem = function(item){
+            item.isDeleted = true;
+        };
+        
         $scope.checkSchRow = function(schRow){
-            return schRow.tEnv > '' && 
-                schRow.tIn > '' && 
-                schRow.tOut > '' && 
-                Number(schRow.tIn) > 0 &&
-                Number(schRow.tOut) > 0 &&
-                Number(schRow.tIn) >= Number(schRow.tOut)
+            return schRow.t_Ambience > '' && 
+                schRow.t_In > '' && 
+                schRow.t_Out > '' && 
+                Number(schRow.t_In) > 0 &&
+                Number(schRow.t_Out) > 0 &&
+                Number(schRow.t_In) >= Number(schRow.t_Out)
+        };
+        
+        $scope.isAddButtonEnabled = function(pos, schedules){
+            var result = false;
+            var lenSchedulesWitoutDeleted = 0;
+            schedules.forEach(function(elem){
+                if (elem.isDeleted != true){
+                    lenSchedulesWitoutDeleted++;
+                };
+            });
+//console.log(pos);            
+//console.log(lenSchedulesWitoutDeleted);
+//console.log(schedules.length);            
+            return pos == (lenSchedulesWitoutDeleted - 1);
+        };
+        
+        $scope.isRemoveButtonEnabled = function(schedules){
+            var result = false;
+            var lenSchedulesWitoutDeleted = 0;
+            schedules.forEach(function(elem){
+                if (elem.isDeleted != true){
+                    lenSchedulesWitoutDeleted++;
+                };
+            });
+            if (lenSchedulesWitoutDeleted > 1){
+                result = true;
+            };
+            return result;
         };
         
         var checkTempSch = function(tempSch){
-console.log(tempSch);            
+//console.log(tempSch);            
             var result = true;
             //Check tMax, tMin, name, localPlace, rso and schedules
             if (!mainSvc.checkPositiveNumberValue(tempSch.maxT)){
@@ -200,7 +265,7 @@ console.log(tempSch);
                 result = false;
             };
             tempSch.schedules.some(function(sch){
-                if ($scope.checkSchRow(sch) == false){
+                if (sch.isDeleted != true && $scope.checkSchRow(sch) == false){
                     notificationFactory.errorInfo("Ошибка", "Неправильно заполнен температурный график!");
                     result = false;
                     return true;
@@ -210,23 +275,101 @@ console.log(tempSch);
             
         };
         
-        $scope.saveTempSch = function(tempSch){
+        var convertTempSchItemFromStrToNum = function(sch){
+            sch.t_Ambience = Number(sch.t_Ambience);
+            sch.t_In = Number(sch.t_In);
+            sch.t_Out = Number(sch.t_Out);
+        };
+        
+        var successPostCallback = function(resp){            
+            var tempSchId = resp.data.id;
+            if (angular.isArray($scope.data.currentTempSch.schedules)){
+                $scope.sortSchedulesByTAmbience($scope.data.currentTempSch.schedules);
+                $scope.data.currentTempSch.schedules.forEach(function(sch){
+                    if (sch.isDeleted != true) {
+                        convertTempSchItemFromStrToNum(sch);
+                        postItem(tempSchId, sch);
+                    };
+                });
+            };
+            successCallback();
+        };
+        
+        var successPutCallback = function(resp){            
+            var tempSchId = resp.data.id;
+            if (angular.isArray($scope.data.currentTempSch.schedules)){
+                $scope.sortSchedulesByTAmbience($scope.data.currentTempSch.schedules);
+                $scope.data.currentTempSch.schedules.forEach(function(sch){
+                    if ((sch.isDeleted == true)){
+                        deleteItem(tempSchId, sch);
+                        return "Item (id = " + sch.id + ") of tempSch ("+ tempSchId +") was deleted!";
+                    };
+                    convertTempSchItemFromStrToNum(sch);
+                    if (mainSvc.checkUndefinedNull(sch.id)){                        
+                        postItem(tempSchId, sch);
+                    }else{
+                        putItem(tempSchId, sch);
+                    };                    
+                });
+            };
+            successCallback();
+        };
+        
+        $scope.saveTempSch = function(tempSch, isOk){
             //check tempSch
             var isTempSchChecked = checkTempSch(tempSch);
             if (isTempSchChecked == false){
                 notificationFactory.successInfo("Проверка не пройдена.");
             }else{
                 notificationFactory.successInfo("Проверка пройдена.");
+                //convert temperature schedule from string to numeric
+                
+                var url = $scope.ctrlSettings.tempSchUrl;
+                //tempSch.id - null (post) or not (put)
+                var method = 'POST';
+                var sucCallback = successPostCallback;
+                if (!mainSvc.checkUndefinedNull(tempSch.id)){
+                    method = 'PUT';
+                    sucCallback = successPutCallback;                    
+                    url += "/" + tempSch.id;
+                    tempSch.localPlaceInfo = null;
+                    tempSch.rsoOrganizationInfo = null;
+                };
+                //prop 'isOk' = true
+                if (!mainSvc.checkUndefinedNull(isOk)){
+                    tempSch.isOk = isOk;
+                };
+//                $http.put(url, tempSch).then(successCallback, errorCallback);
+                $http({
+                    url: url,
+                    method: method,
+                    data: tempSch,
+                }).then(sucCallback, errorCallback);
             };
-            //save
+        };
+        
+                // Проверка пользователя - системный/ не системный
+        $scope.isSystemuser = function(){
+            return mainSvc.isSystemuser();
+        };
+        
+        var setConfirmCode = function(){
+            $scope.confirmCode = null;
+            var tmpCode = mainSvc.getConfirmCode();
+            $scope.confirmLabel = tmpCode.label;
+            $scope.sumNums = tmpCode.result;                    
+        };
+        
+        $scope.deleteTempSch = function(tempSch){
+            $http.delete($scope.ctrlSettings.tempSchUrl + "/" + tempSch.id).then(successCallback, errorCallback);
         };
         
         $scope.inputTempBlur =  function(sch){            
-            if (mainSvc.checkUndefinedNull(sch.tMax) || mainSvc.checkUndefinedNull(sch.tMin)){
+            if (mainSvc.checkUndefinedNull(sch.maxT) || mainSvc.checkUndefinedNull(sch.minT)){
                 return "Tmax or Tmin is null or undefined";
             };            
-            if (mainSvc.checkUndefinedNull(sch.name) || (sch.name == "")){
-                sch.name = sch.tMax + "/" + sch.tMin;
+            if (mainSvc.checkUndefinedNull(sch.chartName) || (sch.chartName == "")){
+                sch.chartName = sch.maxT + "/" + sch.minT;
             };
         };
         
@@ -256,8 +399,8 @@ console.log(tempSch);
         
         $scope.initSchedule = function(index){
             $timeout(function(){
-                $("#inputTEnv" + index).inputmask();
-                $("#inputTEnv" + index).focus();//set focus on t env input
+                $("#inputtAmbience" + index).inputmask();
+                $("#inputtAmbience" + index).focus();//set focus on t env input
                 $("#inputTIn" + index).inputmask();
                 $("#inputTOut" + index).inputmask();
                 // set focus flag
@@ -289,12 +432,34 @@ console.log(tempSch);
         };
             //set mask for price value
         $(document).ready(function(){
-            $(':input').inputmask();
+            $(':input').inputmask();                       
             $('#inputSSTDate').datepicker({
-              dateFormat: "dd.mm.yy",
+              dateFormat: "MM, yy",
               firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
               dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-              monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+              monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                closeText: "Готово",
+                currentText: "Сегодня",
+                onClose: function(dateText, inst) { 
+                    $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    setTimeout(function(){
+                        $('.ui-datepicker-calendar').addClass("nmc-hide");
+                    }, 1);
+                },
+                beforeShow: function(){
+                    setTimeout(function(){
+                        $('.ui-datepicker-calendar').addClass("nmc-hide");
+                    }, 1);
+                },
+                onChangeMonthYear: function(){
+                    setTimeout(function(){
+                        $('.ui-datepicker-calendar').addClass("nmc-hide");
+                    }, 1);
+                }
             });
         });
         

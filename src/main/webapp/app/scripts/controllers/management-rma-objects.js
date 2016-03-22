@@ -518,6 +518,10 @@ angular.module('portalNMC')
                         $scope.currentObject.zpoints.some(function(element){
                             if (element.id === zpointId){
                                 curZpoint = angular.copy(element);
+                                //getTempSchedules
+                                $http.get("../api/subscr/temperatureCharts/byContObject/" + objId).then(function(resp){
+                                    curZpoint.tempSchedules = resp.data;
+                                }, errorCallback);
                                 return true;
                             }
                         });
@@ -832,8 +836,7 @@ angular.module('portalNMC')
                                         //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
                     var table = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(table).query(function (data) {
-                        for(var i = 0; i < data.length; i++){
-                                                    
+                        for(var i = 0; i < data.length; i++){                                                    
                             if(data[i].settingMode == "winter"){
                                 winterSet = data[i];
                             }else if(data[i].settingMode == "summer"){

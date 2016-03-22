@@ -145,8 +145,8 @@
                                 <div class="btn-group pull-right">                   
                                     <i title="Удалить" 
                                        class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
-                                       ng-click="deleteObjectInit(schedule)" 
-                                       data-target="#showTempSchModal" 
+                                       ng-click="selectedItem(schedule)" 
+                                       data-target="#deleteWindowModal" 
                                        data-toggle="modal">
                                     </i>
                                 </div>
@@ -311,7 +311,7 @@
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <label for="tempSchTable">Температурный график:</label>
                                     <p class="btn btn-default btn-xs marginRight5 pull-right"
-                                       ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)"
+                                       ng-click="sortSchedulesByTAmbience(data.currentTempSch.schedules)"
                                        ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
                                         Отсортировать по Т<sub>окр</sub>
                                     </p>
@@ -339,12 +339,8 @@
                                     <div class="nmc-temp-sch-schedules-modal">
                                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-child-table">
                                             <tr class="nmc-hide">
-                                                <th class="col-sm-3 nmc-button-sort" ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
+                                                <th class="col-sm-3 nmc-button-sort">
                                                     <strong>Т<sub>окр</sub></strong>
-                                                    <i title="Отсортировать график" 
-                                                        class="btn btn-default btn-xs glyphicon glyphicon-sort-by-alphabet-alt"
-                                                        ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
-                                                    </i>
                                                 </th>
                                                 <th class="col-sm-3">
                                                     <strong>Т<sub>вход</sub></strong>
@@ -357,14 +353,14 @@
                                                 </th>
 
                                             </tr>
-                                            <tr ng-repeat="schedule in data.currentTempSch.schedules" ng-init="initSchedule($index)">
+                                            <tr ng-repeat="schedule in data.currentTempSch.schedules | propsFilter: {isDeleted: 'false'}" ng-init="initSchedule($index)" >
                                                 <td class="col-sm-3 noPaddingI">
-                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tEnv>'')}">
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.t_Ambience>'')}">
                                                         <input class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                                type="text" 
-                                                               ng-attr-id={{"inputTEnv"+$index}}
+                                                               ng-attr-id={{"inputtAmbience"+$index}}
                                                                placeholder=""  
-                                                               ng-model="schedule.tEnv" 
+                                                               ng-model="schedule.t_Ambience" 
                                                                data-inputmask="'alias': 'numeric'"
                                                                />
                                                     </div>
@@ -375,7 +371,7 @@
                                                                type="text" 
                                                                ng-attr-id={{"inputTIn"+$index}} 
                                                                placeholder=""  
-                                                               ng-model="schedule.tIn"
+                                                               ng-model="schedule.t_In"
                                                                data-inputmask="'alias': 'numeric'"/>
                                                     </div>
                                                 </td>
@@ -385,21 +381,21 @@
                                                                type="text" 
                                                                ng-attr-id={{"inputTOut"+$index}}
                                                                placeholder=""  
-                                                               ng-model="schedule.tOut"
+                                                               ng-model="schedule.t_Out"
                                                                data-inputmask="'alias': 'numeric'"/>
                                                     </div>
                                                 </td>
                                                 <td class="col-sm-2 noPaddingI">
-                                                    <p ng-if="$index == (data.currentTempSch.schedules.length - 1)" 
+                                                    <p ng-if="isAddButtonEnabled($index, data.currentTempSch.schedules)" 
                                                        class="btn btn-default btn-primary btn-xs"
                                                        ng-click="addSchedule(data.currentTempSch)">
                                                         Добавить
                                                     </p>
                                                 </td>
                                                 <td class="col-sm-1">
-                                                    <i ng-if="data.currentTempSch.schedules.length > 1" 
+                                                    <i ng-if="isRemoveButtonEnabled(data.currentTempSch.schedules)" 
                                                        class="btn btn-xs nmc-remove-button"                                                     
-                                                       ng-click="deleteSchedule($index, data.currentTempSch.schedules)">
+                                                       ng-click="delSchItem(schedule)">
                                                     </i>
                                                 </td>
                                             </tr>
@@ -418,7 +414,7 @@
                     <div class="col-xs-offset-6 col-md-3">
                         <input type="submit" 
                                class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                ng-click="saveTempSch(data.currentTempSch)"
+                                ng-click="saveTempSch(data.currentTempSch, true)"
                                 value="Сохранить" />
                     </div>
                     <div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
@@ -432,4 +428,12 @@
             </div>		
 		</div>
 	</div>
+</div>
+
+<div nmc-view-delete-modal-window 
+     message = "{{data.currentTempSch.chartName || data.currentTempSch.id}}"      
+     confirm-label = "{{confirmLabel}}"
+     control-code = "{{sumNums}}"
+     is-systemuser = "isSystemuser()"
+     delete-item-click = "deleteTempSch(data.currentTempSch)">
 </div>
