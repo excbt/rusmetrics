@@ -42,6 +42,8 @@ public class DBColumnTools extends JpaSupportTest {
 		m.put("boolean", "Boolean");
 		m.put("timestamp without time zone", "Date");
 		m.put("uuid", "UUID");
+		m.put("date", "Date");
+
 		DB_TYPE_MAP = Collections.unmodifiableMap(m);
 	}
 
@@ -300,7 +302,7 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "temperature_chart";
+		String tableName = "local_place_temperature_sst";
 
 		List<EntityColumn> entityColumns = getTableEntityProp("portal", tableName);
 		assertTrue(entityColumns.size() > 0);

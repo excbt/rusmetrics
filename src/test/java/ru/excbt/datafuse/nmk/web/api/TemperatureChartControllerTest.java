@@ -22,12 +22,12 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testTemperatureChartAll() throws Exception {
-		_testGetJson("/api/subscr/temperatureCharts");
+		_testGetJson(API_RMA + "/temperatureCharts");
 	}
 
 	@Test
 	public void testTemperatureChartContObjectId() throws Exception {
-		_testGetJson("/api/subscr/temperatureCharts/byContObject/" + 18811504);
+		_testGetJson(API_RMA + "/temperatureCharts/byContObject/" + 18811504);
 	}
 
 	@Test
@@ -37,18 +37,18 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 		newEntity.setRsoOrganizationId(25201856L);
 		newEntity.setLocalPlaceId(490041188L);
 		newEntity.setIsOk(true);
-		Long id = _testCreateJson("/api/subscr/temperatureCharts", newEntity);
+		Long id = _testCreateJson(API_RMA + "/temperatureCharts", newEntity);
 
 		newEntity = temperatureChartService.selectTemperatureChart(id);
 		newEntity.setChartComment(EDITED_BY_REST);
 		newEntity.setRsoOrganization(null);
 		newEntity.setLocalPlace(null);
 
-		_testUpdateJson("/api/subscr/temperatureCharts/" + id, newEntity);
+		_testUpdateJson(API_RMA + "/temperatureCharts/" + id, newEntity);
 
 		testTemperatureChartItems(id);
 
-		_testDeleteJson("/api/subscr/temperatureCharts/" + id);
+		_testDeleteJson(API_RMA + "/temperatureCharts/" + id);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 	 * @param temperatureChartId
 	 */
 	private void testTemperatureChartItems(Long temperatureChartId) throws Exception {
-		String itemsUrl = "/api/subscr/temperatureCharts/" + temperatureChartId + "/items";
+		String itemsUrl = API_RMA + "/temperatureCharts/" + temperatureChartId + "/items";
 		_testGetJson(itemsUrl);
 		TemperatureChartItem newItem = new TemperatureChartItem();
 		newItem.setTemperatureChartId(temperatureChartId);

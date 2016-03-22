@@ -12,7 +12,7 @@ public class LocalPlaceControllerTest extends SubscrControllerTest {
 
 	@Test
 	public void testLocalPlacesAll() throws Exception {
-		_testGetJson("/api/subscr/localPlaces/all");
+		_testGetJson(API_RMA + "/localPlaces/all");
 	}
 
 }

@@ -31,6 +31,9 @@ public class AnyControllerTest extends AbstractControllerTest {
 
 	public final static String EDITED_BY_REST = "Edited By REST";
 
+	public final static String API_RMA = "/api/rma";
+	public final static String API_SUBSCR = "/api/subscr";
+
 	@Before
 	public void setup() {
 		setupAuditor(TEST_AUDIT_USER, DEV_SUBSCR_ORG_ID);

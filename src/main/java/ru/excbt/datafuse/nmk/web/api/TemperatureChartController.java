@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
-@RequestMapping(value = "/api/subscr")
+@RequestMapping(value = "/api/rma")
 public class TemperatureChartController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartController.class);

@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
-@RequestMapping(value = "/api/subscr")
+@RequestMapping(value = "/api/rma")
 public class LocalPlaceController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceController.class);
