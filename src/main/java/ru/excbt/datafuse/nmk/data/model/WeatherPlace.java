@@ -73,6 +73,9 @@ public class WeatherPlace extends AbstractAuditableModel implements DisabledObje
 	@Column(name = "fias_level")
 	private Integer fiasLevel;
 
+	@Column(name = "place_priority")
+	private Integer placePriority;
+
 	@Version
 	private int version;
 
@@ -232,6 +235,14 @@ public class WeatherPlace extends AbstractAuditableModel implements DisabledObje
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Integer getPlacePriority() {
+		return placePriority;
+	}
+
+	public void setPlacePriority(Integer placePriority) {
+		this.placePriority = placePriority;
 	}
 
 }

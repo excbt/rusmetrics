@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
 public interface WeatherPlaceRepository extends JpaRepository<WeatherPlace, Long> {
 
 	@Query("SELECT wp FROM WeatherPlace wp WHERE (wp.isDisabled = null OR wp.isDisabled = FALSE) AND wp.deleted = 0 "
-			+ " AND wp.fiasUuid = :fiasUUID " + " ORDER BY wp.placeName NULLS LAST")
+			+ " AND wp.fiasUuid = :fiasUUID " + " ORDER BY wp.placeName NULLS LAST, wp.placePriority")
 	public List<WeatherPlace> selectWeatherPlacesByFias(@Param("fiasUUID") UUID fiasUUID);
 
 }
