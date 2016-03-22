@@ -5,8 +5,13 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -15,28 +20,36 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 public class LocalPlace extends AbstractAuditableModel {
 
 	public static class LocalPlaceInfo {
-		private Long id;
-		private String localPlaceName;
+		private final Long id;
+		private final String localPlaceName;
+		private final Long weatherPlaceId;
+		private final String weatherPlaceName;
 
 		public LocalPlaceInfo(LocalPlace localPlace) {
 			this.id = localPlace.getId();
 			this.localPlaceName = localPlace.getLocalPlaceName();
+			this.weatherPlaceId = localPlace.getWeatherPlaceId();
+			this.weatherPlaceName = localPlace.getWeatherPlace().getPlaceName();
 		}
 
 		public String getLocalPlaceName() {
 			return localPlaceName;
 		}
 
-		public void setLocalPlaceName(String localPlaceName) {
-			this.localPlaceName = localPlaceName;
-		}
-
 		public Long getId() {
 			return id;
 		}
 
-		public void setId(Long id) {
-			this.id = id;
+		public Long getWeatherPlaceId() {
+			return weatherPlaceId;
+		}
+
+		public String getWeatherPlaceName() {
+			return weatherPlaceName;
+		}
+
+		public boolean haveWeatherPlace() {
+			return this.weatherPlaceId != null;
 		}
 
 	}
@@ -67,8 +80,13 @@ public class LocalPlace extends AbstractAuditableModel {
 	@Column(name = "local_place_comment")
 	private String localPlaceComment;
 
-	@Column(name = "weather_place_id")
+	@Column(name = "weather_place_id", insertable = false, updatable = false)
 	private Long weatherPlaceId;
+
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "weather_place_id")
+	private WeatherPlace weatherPlace;
 
 	@Column(name = "geo_lat")
 	private BigDecimal geoLat;
@@ -199,6 +217,14 @@ public class LocalPlace extends AbstractAuditableModel {
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public WeatherPlace getWeatherPlace() {
+		return weatherPlace;
+	}
+
+	public void setWeatherPlace(WeatherPlace weatherPlace) {
+		this.weatherPlace = weatherPlace;
 	}
 
 }

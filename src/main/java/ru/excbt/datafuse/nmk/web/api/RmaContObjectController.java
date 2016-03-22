@@ -61,7 +61,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.createOne(entity, getCurrentSubscriberId(), rmaBeginDate, cmOrganizationId);
+				return contObjectService.createContObject(entity, getCurrentSubscriberId(), rmaBeginDate, cmOrganizationId);
 			}
 
 			@Override
@@ -96,7 +96,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 			@Override
 			public void process() {
-				contObjectService.deleteOne(contObjectId, subscrEndDate);
+				contObjectService.deleteContObject(contObjectId, subscrEndDate);
 			}
 		};
 
@@ -124,7 +124,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 			@Override
 			public void process() {
-				contObjectService.deleteMany(contObjectIds, subscrEndDate);
+				contObjectService.deleteManyContObjects(contObjectIds, subscrEndDate);
 			}
 		};
 

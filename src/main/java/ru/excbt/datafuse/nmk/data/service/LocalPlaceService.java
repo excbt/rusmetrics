@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
+import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -25,6 +26,9 @@ public class LocalPlaceService implements SecuredRoles {
 
 	@Autowired
 	private FiasService fiasService;
+
+	@Autowired
+	private WeatherPlaceService weatherPlaceService;
 
 	/**
 	 * 
@@ -77,8 +81,15 @@ public class LocalPlaceService implements SecuredRoles {
 	public LocalPlace checkLocalPlace(UUID fiasUuid) {
 		LocalPlace localPlace = selectLocalPlaceByFias(fiasUuid);
 		if (localPlace == null) {
+
+			List<WeatherPlace> weatherPlaces = weatherPlaceService.selectWeatherPlaceByFias(fiasUuid);
+			if (weatherPlaces.size() != 1) {
+				return null;
+			}
+
 			localPlace = new LocalPlace();
 			localPlace.setFiasUuid(fiasUuid);
+			localPlace.setWeatherPlace(weatherPlaces.get(0));
 			String cityName = fiasService.getCityName(fiasUuid);
 			localPlace.setLocalPlaceName(cityName);
 			return saveLocalPlace(localPlace);

@@ -268,7 +268,7 @@ public class ContObjectHWaterDeltaService {
 		if (contObjectId == null) {
 			contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
 		} else {
-			ContObject contObject = contObjectService.findOne(contObjectId);
+			ContObject contObject = contObjectService.findContObject(contObjectId);
 
 			if (contObject == null) {
 				throw new PersistenceException(String.format("ContObject (id=%d) is not found", contObjectId));

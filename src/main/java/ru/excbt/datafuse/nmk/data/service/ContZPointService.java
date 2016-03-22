@@ -471,7 +471,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initContObject(ContZPoint contZPoint) {
-		ContObject contObject = contObjectService.findOne(contZPoint.getContObjectId());
+		ContObject contObject = contObjectService.findContObject(contZPoint.getContObjectId());
 		if (contObject == null) {
 			throw new PersistenceException(
 					String.format("ContObject(id=%d) is not found", contZPoint.getContObjectId()));

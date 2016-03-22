@@ -87,7 +87,7 @@ public class SubscrContObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		ContObject result = contObjectService.findOne(contObjectId);
+		ContObject result = contObjectService.findContObject(contObjectId);
 		return responseOK(result);
 	}
 
@@ -139,7 +139,7 @@ public class SubscrContObjectController extends SubscrApiController {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.updateOne(entity, cmOrganizationId);
+				return contObjectService.updateContObject(entity, cmOrganizationId);
 			}
 
 		};

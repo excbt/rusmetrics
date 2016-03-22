@@ -86,7 +86,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObject findOne(Long contObjectId) {
+	public ContObject findContObject(Long contObjectId) {
 		ContObject result = contObjectRepository.findOne(contObjectId);
 		if (result == null) {
 			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
@@ -111,7 +111,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public ContObject updateOne(ContObject contObject, Long cmOrganizationId) {
+	public ContObject updateContObject(ContObject contObject, Long cmOrganizationId) {
 		checkNotNull(contObject);
 		checkArgument(!contObject.isNew());
 
@@ -232,7 +232,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
-	public ContObject createOne(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
+	public ContObject createContObject(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
 
 		checkNotNull(contObject);
@@ -287,6 +287,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				contObjectFias.setCityFiasUUID(cityUUID);
 				String cityName = fiasService.getCityName(cityUUID);
 				contObjectFias.setShortAddress2(cityName);
+
+				localPlaceService.checkLocalPlace(cityUUID);
 			}
 			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
 			contObjectFias.setShortAddress1(shortAddr);
@@ -319,7 +321,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOne(Long contObjectId, LocalDate subscrEndDate) {
+	public void deleteContObject(Long contObjectId, LocalDate subscrEndDate) {
 		checkNotNull(contObjectId);
 
 		ContObject contObject = contObjectRepository.findOne(contObjectId);
@@ -350,10 +352,10 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteMany(Long[] contObjects, LocalDate subscrEndDate) {
+	public void deleteManyContObjects(Long[] contObjects, LocalDate subscrEndDate) {
 		checkNotNull(contObjects);
 		for (Long i : contObjects) {
-			deleteOne(i, subscrEndDate);
+			deleteContObject(i, subscrEndDate);
 		}
 	}
 
@@ -363,7 +365,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOnePermanent(Long contObjectId) {
+	public void deleteContObjectPermanent(Long contObjectId) {
 		checkNotNull(contObjectId);
 
 		ContObject contObject = contObjectRepository.findOne(contObjectId);

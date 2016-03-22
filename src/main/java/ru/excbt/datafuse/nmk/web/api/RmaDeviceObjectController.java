@@ -70,7 +70,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		ContObject contObject = contObjectService.findOne(contObjectId);
+		ContObject contObject = contObjectService.findContObject(contObjectId);
 		deviceObject.setContObject(contObject);
 		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
 		deviceObject.setDeviceModel(deviceModel);
@@ -153,7 +153,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		ContObject contObject = contObjectService.findOne(contObjectId);
+		ContObject contObject = contObjectService.findContObject(contObjectId);
 		deviceObject.setContObject(contObject);
 		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
 		deviceObject.setDeviceModel(deviceModel);
