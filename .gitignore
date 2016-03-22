@@ -19,6 +19,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
+.factorypath
 
 .tern-project
 .eclipse-pmd
@@ -70,3 +71,4 @@ release.properties
 /out/
 /app.hwaters.csv.in/
 /app.hwaters.csv.out/
+src/test/java/ru/excbt/datafuse/nmk/data/support/DBColumnTools.java

@@ -130,6 +130,8 @@ angular.module('portalNMC')
                     objectSvc.getCmOrganizations()
                     .then(function(response){
                         $scope.data.cmOrganizations = response.data;
+                        //sort cm by organizationName
+                        mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
                     });
                 };
                 getCmOrganizations();
@@ -498,10 +500,7 @@ angular.module('portalNMC')
                 $scope.selectedObject = function(objId){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
-                        $scope.currentObject = resp.data;
-                    
-                    // $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
-console.log($scope.currentObject);                    
+                        $scope.currentObject = resp.data;                    
                         if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                         };
@@ -938,6 +937,21 @@ console.log($scope.currentObject);
                         return;
                     };
                     
+                                          //close all opened objects zpoints
+                    $scope.objectsOnPage.forEach(function(obj){
+                        if (obj.showGroupDetailsFlag == true){
+                            var trObj = document.getElementById("obj" + obj.id);
+                            if (!mainSvc.checkUndefinedNull(trObj)){                                    
+                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
+                                trObjZp.innerHTML = "";
+                                var btnDetail = document.getElementById("btnDetail" + obj.id);
+                                btnDetail.classList.remove("glyphicon-chevron-down");
+                                btnDetail.classList.add("glyphicon-chevron-right");
+                            };
+                        };
+                        obj.showGroupDetailsFlag = false;
+                    });
+                    
                     if (angular.isUndefined(searchString) || (searchString === '')){                      
                         var tempArr = [];
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
@@ -954,6 +968,24 @@ console.log($scope.currentObject);
                         $scope.objectsOnPage = tempArr;
                     };
 //console.log($scope.objectsOnPage);                    
+                };
+                
+                $scope.changeServiceType = function(zpSettings){
+                    if ($scope.emptyString(zpSettings.customServiceName)){
+                        switch (zpSettings.contServiceTypeKeyname){
+                            case "heat": 
+                                zpSettings.customServiceName = "Система отопления";
+                                break;
+                            default:
+                                $scope.data.serviceTypes.some(function(svType){
+                                    if (svType.keyname == zpSettings.contServiceTypeKeyname){
+                                        zpSettings.customServiceName = svType.caption;
+                                        return true;
+                                    };
+                                });
+                                 
+                        };
+                    };
                 };
                 
                 $scope.$on('$destroy', function() {

@@ -67,14 +67,43 @@ public class ReportService {
 
 	private final static Map<ReportOutputFileType, FileType> NMK_REPORTS_TYPE_CONVERTER;
 
+	private final static Map<ReportTypeKey, ReportType> REPORTS_TYPE_KEYNAME_CONVERTER;
+
 	static {
+		/**
+		 * Инициализация типов файлов
+		 */
 		Map<ReportOutputFileType, FileType> typeMap = new HashMap<>();
 		typeMap.put(ReportOutputFileType.HTML, FileType.HTML);
 		typeMap.put(ReportOutputFileType.PDF, FileType.PDF);
 		typeMap.put(ReportOutputFileType.XLSX, FileType.XLSX);
 		typeMap.put(ReportOutputFileType.XLS, FileType.XLSX);
-
 		NMK_REPORTS_TYPE_CONVERTER = Collections.unmodifiableMap(typeMap);
+
+		/**
+		 * Инициализация типов отчетов для NMK Reports
+		 */
+		Map<ReportTypeKey, ReportType> reportTypeMap = new HashMap<>();
+		reportTypeMap.put(ReportTypeKey.COMMERCE_REPORT, ReportType.RPT_COMMERCE);
+		reportTypeMap.put(ReportTypeKey.COMMERCE_REPORT_M_V, ReportType.RPT_COMMERCE_M_V);
+		reportTypeMap.put(ReportTypeKey.CONS_T1_REPORT, ReportType.RPT_CONSOLIDATED_1);
+		reportTypeMap.put(ReportTypeKey.CONS_T2_REPORT, ReportType.RPT_CONSOLIDATED_2);
+		reportTypeMap.put(ReportTypeKey.EVENT_REPORT, ReportType.RPT_EVENT);
+		reportTypeMap.put(ReportTypeKey.METROLOGICAL_REPORT, ReportType.RPT_METROLOGICAL);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT, ReportType.RPT_CONSUMPTION);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT, ReportType.RPT_CONSUMPTION_HISTORY);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_ETALON_REPORT, ReportType.RPT_CONSUMPTION_ETALON);
+		reportTypeMap.put(ReportTypeKey.LOG_JOURNAL_REPORT, ReportType.RPT_LOG_JOURNAL);
+		reportTypeMap.put(ReportTypeKey.PARTNER_SERVICE_REPORT, ReportType.RPT_PARTNER_SERVICE);
+		reportTypeMap.put(ReportTypeKey.ABONENT_SERVICE_REPORT, ReportType.RPT_ABONENT_SERVICE);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2, ReportType.RPT_CONSUMPTION_HISTORY_V2);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2,
+				ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2);
+		reportTypeMap.put(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT, ReportType.RPT_RMA_ABONENT_SERVICE);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT_V1_1, ReportType.RPT_CONSUMPTION_V1_1);
+		reportTypeMap.put(ReportTypeKey.ELECTRIC_READINGS_REPORT, ReportType.RPT_ELECTRIC_READINGS);
+		reportTypeMap.put(ReportTypeKey.HW_QUALITY_REPORT, ReportType.RPT_HW_QUALITY);
+		REPORTS_TYPE_KEYNAME_CONVERTER = Collections.unmodifiableMap(reportTypeMap);
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
@@ -93,9 +122,6 @@ public class ReportService {
 
 	@Autowired
 	private JasperDatabaseConnectionSettings jasperConfig;
-
-	@Autowired
-	private SubscriberService subscriberService;
 
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
@@ -361,84 +387,7 @@ public class ReportService {
 	 * @return
 	 */
 	private ReportType reportTypeConverter(ReportTypeKey reportTypeKey) {
-		ReportType result = null;
-		switch (reportTypeKey) {
-		case COMMERCE_REPORT: {
-			result = ReportType.RPT_COMMERCE;
-			break;
-		}
-		case CONS_T1_REPORT: {
-			result = ReportType.RPT_CONSOLIDATED_1;
-			break;
-		}
-		case CONS_T2_REPORT: {
-			result = ReportType.RPT_CONSOLIDATED_2;
-			break;
-		}
-		case EVENT_REPORT: {
-			result = ReportType.RPT_EVENT;
-			break;
-		}
-		case METROLOGICAL_REPORT: {
-			result = ReportType.RPT_METROLOGICAL;
-			break;
-		}
-		case CONSUMPTION_REPORT: {
-			result = ReportType.RPT_CONSUMPTION;
-			break;
-		}
-		case CONSUMPTION_HISTORY_REPORT: {
-			result = ReportType.RPT_CONSUMPTION_HISTORY;
-			break;
-		}
-		case CONSUMPTION_ETALON_REPORT: {
-			result = ReportType.RPT_CONSUMPTION_ETALON;
-			break;
-		}
-		case LOG_JOURNAL_REPORT: {
-			result = ReportType.RPT_LOG_JOURNAL;
-			break;
-		}
-		case PARTNER_SERVICE_REPORT: {
-			result = ReportType.RPT_PARTNER_SERVICE;
-			break;
-		}
-		case ABONENT_SERVICE_REPORT: {
-			result = ReportType.RPT_ABONENT_SERVICE;
-			break;
-		}
-		case CONSUMPTION_HISTORY_REPORT_V2: {
-			result = ReportType.RPT_CONSUMPTION_HISTORY_V2;
-			break;
-		}
-		case CONSUMPTION_HISTORY_ETALON_REPORT_V2: {
-			result = ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2;
-			break;
-		}
-		case RMA_ABONENT_SERVICE_REPORT: {
-			result = ReportType.RPT_RMA_ABONENT_SERVICE;
-			break;
-		}
-		case CONSUMPTION_REPORT_V1_1: {
-			result = ReportType.RPT_CONSUMPTION_V1_1;
-			break;
-		}
-		case ELECTRIC_READINGS_REPORT: {
-			result = ReportType.RPT_ELECTRIC_READINGS;
-			break;
-		}
-		case HW_QUALITY_REPORT: {
-			result = ReportType.RPT_HW_QUALITY;
-			break;
-		}
-		case COMMERCE_REPORT_M_V: {
-			result = ReportType.RPT_COMMERCE_M_V;
-			break;
-		}
-		default: {
-			break;
-		}
-		}
+		ReportType result = REPORTS_TYPE_KEYNAME_CONVERTER.get(reportTypeKey);
 		checkNotNull(result);
 		return result;
 	}

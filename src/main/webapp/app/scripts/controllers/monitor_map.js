@@ -9,8 +9,8 @@ angular.module('portalNMC')
     
     var noticesUrl = "#/notices/list/";
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
-    var objectUrl = notificationsUrl+"/contObject";//"resource/objects.json";  
-    var monitorUrl = notificationsUrl+"/monitorColor";
+    var objectUrl = notificationsUrl + "/contObject";//"resource/objects.json";  
+    var monitorUrl = notificationsUrl + "/monitorColor";
     
     var markers = new Array();
     var markersForCities = new Array();

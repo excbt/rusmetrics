@@ -6,6 +6,15 @@
 <!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
         <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li id="organizations_edit_2nd_menu_item" role="presentation" class="" >
+            <a class="nmc-main-tab-button" 
+               href="#/management/organizations/" 
+               aria-controls="organizations" 
+               role="tab" 
+               data-target="#organizations" 
+               data-toggle="tab">Организации
+            </a>
+        </li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
@@ -21,12 +30,22 @@
 
 <div class="container-fluid">
     <div class="row nmc-main-workspace-header">  
-        <div class="col-md-4 noPadding marginBottom10 nmc-search-form">
-                <select class="form-control nmc-select-form-for-price" ng-model="data.currentMode.id" ng-options="mode.id as mode.subscriberName for mode in data.priceModes" ng-change="changeMode(data.currentMode.id)"></select>
+        <div class="col-xs-4 col-md-4 noPadding marginBottom10 nmc-search-form">
+                <select class="form-control nmc-select-form-for-price" 
+                        ng-model="data.currentMode.id" 
+                        ng-options="mode.id as mode.subscriberName for mode in data.priceModes" 
+                        ng-change="changeMode(data.currentMode.id)">
+            </select>
         </div>
-        <div class="col-md-8">            
+        <div class="col-xs-8 col-md-8">            
             <label>
-                <input id="history-view" ng-model="ctrlSettings.viewHistoryFlag" data-toggle="toggle" data-size="small" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;">
+                <input id="history-view" 
+                       ng-model="ctrlSettings.viewHistoryFlag" 
+                       data-toggle="toggle" 
+                       data-size="small" 
+                       type="checkbox" 
+                       class="marginRight2" 
+                       style="vertical-align: middle; margin-right: 7px;">
                 Показывать историю
             </label>
         </div>

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
@@ -28,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
@@ -79,21 +81,8 @@ public class ReportParamsetService implements SecuredRoles {
 	@Autowired
 	private ReportTypeService reportTypeService;
 
-	/**
-	 * 
-	 * @param reportParamset
-	 * @return
-	 */
-	//	@Deprecated
-	//	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	//	protected ReportParamset createOne(ReportParamset reportParamset) {
-	//		checkNotNull(reportParamset);
-	//		checkArgument(reportParamset.isNew());
-	//
-	//		ReportParamset result = reportParamsetRepository.save(reportParamset);
-	//
-	//		return result;
-	//	}
+	@Autowired
+	private ReportMetaParamDirectoryItemRepository reportMetaParamDirectoryItemRepository;
 
 	/**
 	 * 
@@ -717,6 +706,16 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		return resultList;
+	}
+
+	/**
+	 * 
+	 * @param paramDirectoryKeyname
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ReportMetaParamDirectoryItem> selectReportMetaParamItems(String paramDirectoryKeyname) {
+		return reportMetaParamDirectoryItemRepository.selectDirectoryItems(paramDirectoryKeyname);
 	}
 
 }

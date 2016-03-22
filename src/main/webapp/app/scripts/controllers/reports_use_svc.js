@@ -171,7 +171,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
             type.paramsetsCount = data.length;
-            type.checkedParamsets = 0;
+            type.checkedParamsetsCount = 0;
             var tmp = angular.copy(data);
             tmp.forEach(function(el){
                 var currentSign = el.reportPeriod.sign;
@@ -273,14 +273,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
         //Проверка параметра - ссылочный параметр или нет
     function isParamSpecialTypeDirectory(element){
-        var result=  (element.paramSpecialType.specialTypeDirectoryUrl!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryUrl!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryKey!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryKey!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryCaption!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryCaption!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryValue!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryValue!='undefined');       
+        var result = (element.paramSpecialType.specialTypeDirectoryUrl != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryUrl != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryKey != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryKey != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryCaption != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryCaption != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryValue != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryValue != 'undefined');       
         return result;
     };
     
@@ -294,15 +294,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
             if (isParamSpecialTypeDirectory(element))
             {
-                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
-                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                result.specialTypeDirectoryUrl = element.paramSpecialType.specialTypeDirectoryUrl;
+                result.specialTypeDirectoryKey = element.paramSpecialType.specialTypeDirectoryKey;
                 result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
+                result.specialTypeDirectoryValue = element.paramSpecialType.specialTypeDirectoryValue;
                 $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
             };
             //Ищем значение этого параметра в массиве параметров варианта отчета
-            if (reportParamset.paramSpecialList.length==0){
+            if (reportParamset.paramSpecialList.length == 0){
                 result.textValue = null;
+                result.boolValue = null;
                 result.numericValue = null;
                 result.oneDateValue = null;
                 result.startDateValue = null;
@@ -325,6 +326,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             if (elementIndex!=-1){
                 result.id = reportParamset.paramSpecialList[elementIndex].id || null;
                 result.textValue = reportParamset.paramSpecialList[elementIndex].textValue || null;
+                result.boolValue = reportParamset.paramSpecialList[elementIndex].boolValue || null;
                 result.numericValue = reportParamset.paramSpecialList[elementIndex].numericValue || null;
                 result.oneDateValue = reportParamset.paramSpecialList[elementIndex].oneDateValue || null;
                 result.startDateValue = reportParamset.paramSpecialList[elementIndex].startDateValue || null;
@@ -337,6 +339,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             }else{
                 result.id = null;
                 result.textValue = null;
+                result.boolValue = null;
                 result.numericValue = null;
                 result.oneDateValue = null;
                 result.startDateValue = null;
@@ -439,7 +442,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
-            type.checkedParamsets += 1;
+            type.checkedParamsetsCount += 1;
         });
     };
     
@@ -629,12 +632,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         };
               
     }, false);
-    
-    
-    $scope.isSystemuser = function(){
-        $scope.userInfo = $rootScope.userInfo;
-        return $scope.userInfo._system;
-    };
     
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
@@ -1194,11 +1191,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };    
     
     $scope.previewContextReport = function(paramset){
-console.log(paramset);        
+//console.log(paramset);        
         if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
             return "Entity is category";//exit function
         };
-        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT'){
+        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT' || paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT_M_V'){
             notificationFactory.errorInfo("Внимание!", "Предварительный просмотр для коммерческих отчетов невозможен.");
             return "Preview for the commercial reports is not available.";
         };

@@ -148,23 +148,19 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
-        var activeStartDate = new Date(curObject.activeStartDate);
-//console.log(curObject);        
-        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
-        
+        var activeStartDate = new Date(curObject.activeStartDate);       
+        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);        
         $scope.getTemplates();       
     };
     
-    $scope.checkAndSaveParamset = function(paramsets, object){
-//console.log($scope.currentParamSpecialList);        
-//return;        
+    $scope.checkAndSaveParamset = function(paramsets, object){       
         if (!object.name || object.name == ''){
             notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");
             return "Add / edit paramset: no name";
         };
         if (!mainSvc.checkUndefinedNull(paramsets) && angular.isArray(paramsets)){
             for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
-                if ((object.id != paramsets[psCounter].id) && (object.name.localeCompare(paramsets[psCounter].name) == 0)){
+                if ((object.id != paramsets[psCounter].id) && (object.name.localeCompare(paramsets[psCounter].name) == 0)){                   
                     notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
                     return "Add / edit paramset: name is not unique.";
                 };
@@ -343,6 +339,20 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $http.get(url)
             .success(function(data){
                 obj.specialTypeDirectoryValues = data;
+                //set default directory value
+                if (!mainSvc.checkUndefinedNull(obj.directoryValue)){
+                    return;
+                };
+                obj.directoryValue = null;
+                if (angular.isArray(data) && (data.length > 0)){
+                    data.some(function(elem){
+                        if (elem.isDefault == true){
+                            obj.directoryValue = elem[obj.specialTypeDirectoryValue];
+                            return true;
+                        };
+                    });
+                };
+                
             })
             .error(function(e){
                 console.log(e);
@@ -369,6 +379,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);
             };
             result.textValue = null;
+            result.boolValue = null;
             result.numericValue = null;
             result.oneDateValue = null;
             
@@ -376,8 +387,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             result.endDateValue = null;
             result.oneDateValueFormatted = null;
             result.startDateValueFormatted = null;
-            result.endDateValueFormatted = null;
-            result.directoryValue = null;
+            result.endDateValueFormatted = null;            
             return result;
         });
 //        $scope.paramsetStartDateFormat = (new Date());        
@@ -446,6 +456,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 //Ищем значение этого параметра в массиве параметров варианта отчета
                 if (paramsetObj.paramSpecialList.length == 0){
                     result.textValue = null;
+                    result.boolValue = null;
                     result.numericValue = null;
                     result.oneDateValue = null;
                     result.startDateValue = null;
@@ -468,6 +479,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 if (elementIndex != -1){
                     result.id = paramsetObj.paramSpecialList[elementIndex].id || null;
                     result.textValue = paramsetObj.paramSpecialList[elementIndex].textValue || null;
+                    result.boolValue = paramsetObj.paramSpecialList[elementIndex].boolValue || null;
                     result.numericValue = paramsetObj.paramSpecialList[elementIndex].numericValue || null;
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
@@ -480,6 +492,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 }else{
                     result.id = null;
                     result.textValue = null;
+                    result.boolValue = null;
                     result.numericValue = null;
                     result.oneDateValue = null;
                     result.startDateValue = null;

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -32,9 +33,9 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -426,19 +427,6 @@ public class ReportParamsetController extends SubscrApiController {
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
 
-		//		ReportParamsetUnit resultEntity = null;
-		//
-		//		try {
-		//			resultEntity = reportParamsetService.addUnitToParamset(reportParamsetId, contObjectId);
-		//		} catch (AccessDeniedException e) {
-		//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		//		} catch (TransactionSystemException | PersistenceException e) {
-		//			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
-		//					reportParamsetId, e);
-		//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		//		}
-		//
-		//		return ResponseEntity.accepted().body(resultEntity);
 	}
 
 	/**
@@ -559,6 +547,25 @@ public class ReportParamsetController extends SubscrApiController {
 	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamsetContextLaunch() {
 		List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getCurrentSubscriberId());
+		return responseOK(ObjectFilters.deletedFilter(xList));
+	}
+
+	/**
+	 * 
+	 * @param paramDirectoryKeyname
+	 * @return
+	 */
+	@RequestMapping(value = "/directoryParamItems/{paramDirectoryKeyname}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportParamDirectoryItems(
+			@PathVariable("paramDirectoryKeyname") String paramDirectoryKeyname) {
+		List<ReportMetaParamDirectoryItem> xList = reportParamsetService
+				.selectReportMetaParamItems(paramDirectoryKeyname);
+
+		if (xList.isEmpty()) {
+			return responseBadRequest();
+		}
+
 		return responseOK(ObjectFilters.deletedFilter(xList));
 	}
 

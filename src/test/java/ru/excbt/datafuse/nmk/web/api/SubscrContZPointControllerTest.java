@@ -96,6 +96,15 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	 * @throws Exception
 	 */
 	@Test
+	public void testContZPointsShortInfo() throws Exception {
+		_testGetJson(apiSubscrUrl("/contObjects/zpoints/shortInfo"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
 	public void testServiceTypes() throws Exception {
 		_testGetJson(apiSubscrUrl("/contObjects/contServiceTypes"));
 	}

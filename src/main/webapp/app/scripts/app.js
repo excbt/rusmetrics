@@ -61,6 +61,7 @@ console.log("Run routeProviderConfig");
       .when('/notices/list', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl',
+        reloadOnSearch: false,
         resolve:{
             permissions: ['mainSvc', function(mainSvc){
                 return mainSvc.getLoadedServicePermission();
@@ -211,6 +212,14 @@ console.log("Run routeProviderConfig");
       .when('/management/price', {
         templateUrl: 'views/management-rma-price.html',
         controller: 'MngmtPriceCtrl'
+      })
+      .when('/management/organizations', {
+        templateUrl: 'views/management-rma-organizations.html',
+        controller: 'MngmtOrganizationsCtrl'
+      })
+      .when('/management/temp-sch', {
+        templateUrl: 'views/management-rma-temp-sch.html',
+        controller: 'TempSchCtrl'
       })
       .otherwise({
         redirectTo: '/'

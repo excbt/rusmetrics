@@ -82,6 +82,51 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	private ContZPointSettingModeService contZPointSettingModeService;
 
 	/**
+	 * Краткая информация по точке учета
+	 * 
+	 * @author A.Kovtonyuk
+	 * @version 1.0
+	 * @since 17.03.2016
+	 *
+	 */
+	public static class ContZPointShortInfo {
+		private final Long contZPointId;
+		private final Long contObjectId;
+		private final String customServiceName;
+		private final String contServiceType;
+		private final String contServiceTypeCaption;
+
+		public ContZPointShortInfo(Long contZPointId, Long contObjectId, String customServiceName, String contServiceType,
+				String contServiceTypeCaption) {
+			this.contZPointId = contZPointId;
+			this.contObjectId = contObjectId;
+			this.customServiceName = customServiceName;
+			this.contServiceType = contServiceType;
+			this.contServiceTypeCaption = contServiceTypeCaption;
+		}
+
+		public Long getContZPointId() {
+			return contZPointId;
+		}
+
+		public Long getContObjectId() {
+			return contObjectId;
+		}
+
+		public String getCustomServiceName() {
+			return customServiceName;
+		}
+
+		public String getContServiceType() {
+			return contServiceType;
+		}
+
+		public String getContServiceTypeCaption() {
+			return contServiceTypeCaption;
+		}
+	}
+
+	/**
 	 * /**
 	 * 
 	 * @param contZPointId
@@ -464,7 +509,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initRso(ContZPoint contZPoint) {
-		Organization organization = organizationService.findOne(contZPoint.getRsoId());
+		Organization organization = organizationService.selectOrganization(contZPoint.getRsoId());
 		if (organization == null) {
 			throw new PersistenceException(
 					String.format("RSO organization (id=%d) is not found", contZPoint.getRsoId()));
@@ -484,6 +529,26 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	public List<ContServiceType> selectContServiceTypes() {
 		List<ContServiceType> serviceTypes = contServiceTypeRepository.selectAll();
 		return serviceTypes;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<DeviceObject> selectDeviceObjects(long contZPointId) {
+		return contZPointRepository.selectDeviceObjects(contZPointId);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> selectDeviceObjectIds(long contZPointId) {
+		return contZPointRepository.selectDeviceObjectIds(contZPointId);
 	}
 
 }
