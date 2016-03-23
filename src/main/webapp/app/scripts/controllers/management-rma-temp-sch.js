@@ -200,6 +200,7 @@ angular.module('portalNMC')
         };
         
         $scope.checkSchRow = function(schRow){
+//console.log(schRow);            
             return schRow.t_Ambience > '' && 
                 schRow.t_In > '' && 
                 schRow.t_Out > '' && 
@@ -300,7 +301,7 @@ angular.module('portalNMC')
             if (angular.isArray($scope.data.currentTempSch.schedules)){
                 $scope.sortSchedulesByTAmbience($scope.data.currentTempSch.schedules);
                 $scope.data.currentTempSch.schedules.forEach(function(sch){
-                    if ((sch.isDeleted == true)){
+                    if ((sch.isDeleted == true) && !mainSvc.checkUndefinedNull(sch.id)){
                         deleteItem(tempSchId, sch);
                         return "Item (id = " + sch.id + ") of tempSch ("+ tempSchId +") was deleted!";
                     };

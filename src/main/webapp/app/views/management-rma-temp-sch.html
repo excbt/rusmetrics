@@ -126,18 +126,16 @@
                         </td>
                         <td ng-repeat="column in ctrlSettings.tempSchColumns" ng-class="column.class">
                             <div ng-switch on="column.type">
-                                <span ng-switch-when="name" 
-                                      ng-class="">{{schedule[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{schedule['id']}})</span>
-                                </span>
                                 <span ng-switch-when="checkbox" 
                                       ng-class="">
                                     <input type="checkbox" 
                                            ng-model="schedule[column.name]" disabled/>
                                 </span>
-                                <span ng-switch-default >
-                                    {{schedule[column.name]}}
+                                <span ng-switch-default>
+                                    {{schedule[column.name] || "Неопределено"}}
+                                    <span ng-show="isSystemuser() && column.name == 'localPlaceName'"> (id = {{schedule['id']}})</span>
                                 </span>
-                            </div>
+                            </div>                                                        
                         </td>
 
                         <td class="col-md-1">
