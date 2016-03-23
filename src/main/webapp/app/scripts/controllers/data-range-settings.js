@@ -11,8 +11,8 @@ app
         };
     }else{
         $scope.navPlayerDates = {
-            startDate :  moment().subtract(6, 'days').startOf('day'),
-            endDate :  moment().endOf('day')
+            startDate :   $rootScope.reportStart || moment().subtract(6, 'days').startOf('day'),
+            endDate :   $rootScope.reportEnd || moment().endOf('day')
         };
     };
     
