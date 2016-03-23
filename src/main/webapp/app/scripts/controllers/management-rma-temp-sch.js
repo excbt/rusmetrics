@@ -13,7 +13,7 @@ angular.module('portalNMC')
         $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "place", "nameColumnName" : "name"}; 
         $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
         
-        //organization columns
+        //temperature schedules columns
         $scope.ctrlSettings.tempSchColumns =[
             {
                 "name": "localPlaceName",
@@ -53,6 +53,38 @@ angular.module('portalNMC')
 
         ];
         
+                //average envirment temperature columns
+        $scope.ctrlSettings.sstColumns =[
+            {
+                "name": "date",
+                "caption": "Дата",
+                "class": "col-xs-3 col-md-3",
+                "type": "name",
+                "sortable": true
+            },
+            {
+                "name": "autoVal",
+                "caption": "Расчитанное значение",
+                "class": "col-xs-5 col-md-5",
+                "type": "name",
+                "sortable": true
+            },
+            {
+                "name": "manualVal",
+                "caption": "Внесенное значение",
+                "class": "col-xs-4 col-md-4",
+                "type": "input",
+                "editable": true
+            }
+//            ,
+//            {
+//                "name": "",
+//                "caption": "",
+//                "class": "col-xs-7 col-md-7",
+//                "type": "hidden"
+//            }
+        ];
+        
         $scope.ctrlSettings.emptySchedule = {
             t_Ambience: "",
             t_In: "",
@@ -65,6 +97,25 @@ angular.module('portalNMC')
         $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         
         $scope.data.tempSchedules = [];
+        
+        //the average temperature - среднесуточная температура
+        $scope.data.aveTemps = [
+            {
+                date: "1",
+                autoVal: 15,
+                manualVal: null
+            },
+            {
+                date: "2",
+                autoVal: 15,
+                manualVal: 13
+            },
+            {
+                date: "3",
+                autoVal: 10
+            }
+                
+        ];
         
         $scope.data.rsoOrganizations = [];
         $scope.data.localPlaces = [];
@@ -199,9 +250,19 @@ angular.module('portalNMC')
             item.isDeleted = true;
         };
         
+        $scope.isNumeric = function(num){
+            return mainSvc.isNumeric(num);
+        };
+        
         $scope.checkSchRow = function(schRow){
 //console.log(schRow);            
-            return schRow.t_Ambience > '' && 
+//console.log($scope.isNumeric(schRow.t_Ambience));            
+//console.log(schRow.t_In > '');            
+//console.log(schRow.t_Out > '');
+//console.log(Number(schRow.t_In) > 0);
+//console.log(Number(schRow.t_Out) > 0);
+//console.log(Number(schRow.t_In) >= Number(schRow.t_Out));            
+            return $scope.isNumeric(schRow.t_Ambience) && 
                 schRow.t_In > '' && 
                 schRow.t_Out > '' && 
                 Number(schRow.t_In) > 0 &&
@@ -320,33 +381,30 @@ angular.module('portalNMC')
             //check tempSch
             var isTempSchChecked = checkTempSch(tempSch);
             if (isTempSchChecked == false){
-                notificationFactory.successInfo("Проверка не пройдена.");
-            }else{
-                notificationFactory.successInfo("Проверка пройдена.");
-                //convert temperature schedule from string to numeric
-                
-                var url = $scope.ctrlSettings.tempSchUrl;
-                //tempSch.id - null (post) or not (put)
-                var method = 'POST';
-                var sucCallback = successPostCallback;
-                if (!mainSvc.checkUndefinedNull(tempSch.id)){
-                    method = 'PUT';
-                    sucCallback = successPutCallback;                    
-                    url += "/" + tempSch.id;
-                    tempSch.localPlaceInfo = null;
-                    tempSch.rsoOrganizationInfo = null;
-                };
-                //prop 'isOk' = true
-                if (!mainSvc.checkUndefinedNull(isOk)){
-                    tempSch.isOk = isOk;
-                };
-//                $http.put(url, tempSch).then(successCallback, errorCallback);
-                $http({
-                    url: url,
-                    method: method,
-                    data: tempSch,
-                }).then(sucCallback, errorCallback);
+                return "Temperature schedule is not valid!";
             };
+                
+            var url = $scope.ctrlSettings.tempSchUrl;
+            //tempSch.id - null (post) or not (put)
+            var method = 'POST';
+            var sucCallback = successPostCallback;
+            if (!mainSvc.checkUndefinedNull(tempSch.id)){
+                method = 'PUT';
+                sucCallback = successPutCallback;                    
+                url += "/" + tempSch.id;
+                tempSch.localPlaceInfo = null;
+                tempSch.rsoOrganizationInfo = null;
+            };
+            //prop 'isOk' = true
+            if (!mainSvc.checkUndefinedNull(isOk)){
+                tempSch.isOk = isOk;
+            };
+//                $http.put(url, tempSch).then(successCallback, errorCallback);
+            $http({
+                url: url,
+                method: method,
+                data: tempSch,
+            }).then(sucCallback, errorCallback);            
         };
         
                 // Проверка пользователя - системный/ не системный

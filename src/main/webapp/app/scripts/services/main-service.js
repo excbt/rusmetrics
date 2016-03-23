@@ -470,6 +470,7 @@ angular.module('portalNMC')
         getServerErrorByResultCode,
         getUserServicesPermissions,
         isAdmin,
+        isNumeric,
         isRma,
         isReadonly,
         isSystemuser,
