@@ -12,11 +12,13 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocalPlace extends AbstractAuditableModel {
 
 	public static class LocalPlaceInfo {
