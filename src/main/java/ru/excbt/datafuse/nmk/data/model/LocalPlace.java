@@ -31,7 +31,8 @@ public class LocalPlace extends AbstractAuditableModel {
 			this.id = localPlace.getId();
 			this.localPlaceName = localPlace.getLocalPlaceName();
 			this.weatherPlaceId = localPlace.getWeatherPlaceId();
-			this.weatherPlaceName = localPlace.getWeatherPlace().getPlaceName();
+			this.weatherPlaceName = localPlace.getWeatherPlaceId() != null ? localPlace.getWeatherPlace().getPlaceName()
+					: null;
 		}
 
 		public String getLocalPlaceName() {
