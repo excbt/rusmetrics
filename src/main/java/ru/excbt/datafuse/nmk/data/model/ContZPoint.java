@@ -75,8 +75,8 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private Date endDate;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id") ,
-			inverseJoinColumns = @JoinColumn(name = "device_object_id") )
+	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"),
+			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
 	private List<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version
@@ -122,6 +122,13 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	@Column(name = "is_drools_disable")
 	private Boolean isDroolsDisable;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "temperature_chart_id")
+	private TemperatureChart temperatureChart;
+
+	@Column(name = "temperature_chart_id", insertable = false, updatable = false)
+	private Long temperatureChartId;
 
 	@Transient
 	private Long _activeDeviceObjectId;
@@ -321,6 +328,22 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	public void setIsDroolsDisable(Boolean isDroolsDisable) {
 		this.isDroolsDisable = isDroolsDisable;
+	}
+
+	public TemperatureChart getTemperatureChart() {
+		return temperatureChart;
+	}
+
+	public void setTemperatureChart(TemperatureChart temperatureChart) {
+		this.temperatureChart = temperatureChart;
+	}
+
+	public Long getTemperatureChartId() {
+		return temperatureChartId;
+	}
+
+	public void setTemperatureChartId(Long temperatureChartId) {
+		this.temperatureChartId = temperatureChartId;
 	}
 
 }

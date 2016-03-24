@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
@@ -80,6 +81,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private ContZPointSettingModeService contZPointSettingModeService;
+
+	@Autowired
+	private TemperatureChartService temperatureChartService;
 
 	/**
 	 * Краткая информация по точке учета
@@ -457,6 +461,15 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		initDeviceObject(contZPoint);
 		initContServiceType(contZPoint);
 		initRso(contZPoint);
+
+		if (contZPoint.getTemperatureChartId() != null) {
+			TemperatureChart chart = temperatureChartService.selectTemperatureChart(contZPoint.getTemperatureChartId());
+			if (chart == null) {
+				throw new PersistenceException(
+						String.format("TemperatureChart (id=%d) is not found", contZPoint.getTemperatureChartId()));
+			}
+			contZPoint.setTemperatureChart(chart);
+		}
 
 		contZPoint.setIsManual(true);
 
