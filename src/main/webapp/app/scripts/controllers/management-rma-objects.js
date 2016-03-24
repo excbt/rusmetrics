@@ -514,6 +514,14 @@ angular.module('portalNMC')
                 var getTemperatureSchedulesByObjectForZpoint = function(objId, zp){
                     $http.get($scope.objectCtrlSettings.tempSchBaseUrl + "/" + objId).then(function(resp){
                         zp.tempSchedules = resp.data;
+                        if (mainSvc.checkUndefinedNull(zp.temperatureChartId)){
+                            return "temperatureChartId is null";
+                        };
+                        zp.tempSchedules.some(function(sch){
+                            if (sch.id == zp.temperatureChartId){
+                                zp.temperatureChart = sch;
+                            };
+                        });
                     }, errorCallback);
                 };
                 
@@ -911,6 +919,11 @@ angular.module('portalNMC')
 //                    if ($scope.zpointSettings.singlePipe){
 //                        $scope.zpointSettings.doublePipe = false;
 //                    };
+                        //perform temperature schedule
+                    if (!mainSvc.checkUndefinedNull($scope.zpointSettings.temperatureChart)){
+                        $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.temperatureChart.id;
+                        $scope.zpointSettings.temperatureChart = null;
+                    };
                     var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)){
                         url = url + "/" + $scope.zpointSettings.id;
