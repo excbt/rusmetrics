@@ -168,7 +168,7 @@
                     <select class="form-control  nmc-select-form" 
                             ng-model="data.currentLocalPlace.id" 
                             ng-options="place.id as place.localPlaceName for place in data.localPlaces" 
-                            ng-change="">
+                            ng-change="getSST(data.currentLocalPlace.id, data.currentSSTDate);">
                     </select>
                 </div>
             </div>
@@ -181,11 +181,11 @@
                            id="inputSSTDate" 
                            class="form-control date-picker nmc-date-input-form"
                            type="text" 
-                           ng-model="date.currentDate"/>
+                           ng-model="date.currentSSTDate"/>
                 </div> 
             </div>            
             <div class="col-xs-6 col-md-6">
-                <button class="btn nmc-main-add-button" 
+                <button class="btn btn-xs nmc-main-add-button" 
                             >Сохранить ССТ</button>
                 <i class="btn btn-xs glyphicon glyphicon-download-alt gly-rotate-180 pull-right" 
                    title="Загрузить данные из CSV файла">
@@ -212,7 +212,7 @@
                     </tr>
             </table>
             <div class="nmc-data-sources-main-div">
-                <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+                <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
                     <tr class="nmc-main-table-header nmc-hide">
 <!--
                         <th class="col-md-1 nmc-td-for-buttons">

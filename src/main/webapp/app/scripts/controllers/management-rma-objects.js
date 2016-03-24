@@ -519,7 +519,7 @@ angular.module('portalNMC')
                             if (element.id === zpointId){
                                 curZpoint = angular.copy(element);
                                 //getTempSchedules
-                                $http.get("../api/subscr/temperatureCharts/byContObject/" + objId).then(function(resp){
+                                $http.get("../api/rma/temperatureCharts/byContObject/" + objId).then(function(resp){
                                     curZpoint.tempSchedules = resp.data;
                                 }, errorCallback);
                                 return true;
@@ -577,6 +577,7 @@ angular.module('portalNMC')
                     result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
                     result.zpointLastDataDate  = zpoint.lastDataDate;  
                     result.isDroolsDisable = zpoint.isDroolsDisable;
+                    result.tempSchedules = zpoint.tempSchedules;
                     return result;
                 };
                 
@@ -823,6 +824,7 @@ angular.module('portalNMC')
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
                     zps.isDroolsDisable = object.isDroolsDisable;
+                    zps.tempSchedules = object.tempSchedules;
                     zps.winter = {};
                     zps.summer = {};
                     $scope.zpointSettings = zps;

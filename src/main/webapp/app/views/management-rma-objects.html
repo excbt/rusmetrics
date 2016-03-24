@@ -298,8 +298,8 @@
                                                    ng-model="zpointSettings.tempSch" 
                                                    theme="bootstrap" 
                                                    ng-disabled="disabled">
-                                            <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
-                                            <ui-select-choices group-by="'chartName'" repeat="sch in zpointSettings.tempSchedules | propsFilter: {chartName: $select.search, localPlaceInfo: $select.search}">
+                                            <ui-select-match placeholder="">{{$select.selected.chartName}}</ui-select-match>
+                                            <ui-select-choices group-by="'chartName'" repeat="sch in zpointSettings.tempSchedules | propsFilter: {chartName: $select.search}">
                                               <div ng-bind-html="sch.chartName | highlight: $select.search"></div>
 <!--
                                               <small>

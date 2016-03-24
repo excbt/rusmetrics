@@ -5,10 +5,11 @@ angular.module('portalNMC')
         $scope.ctrlSettings.ctxId = "temp_sch_page";
 
         $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+        $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD"; //date format
         $scope.ctrlSettings.isTempSchSort = true;
         
-        $scope.ctrlSettings.localPlacesUrl = "../api/subscr/localPlaces/all";
-        $scope.ctrlSettings.tempSchUrl = "../api/subscr/temperatureCharts";
+        $scope.ctrlSettings.localPlacesUrl = "../api/rma/localPlaces";
+        $scope.ctrlSettings.tempSchUrl = "../api/rma/temperatureCharts";
         
         $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "place", "nameColumnName" : "name"}; 
         $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
@@ -56,21 +57,21 @@ angular.module('portalNMC')
                 //average envirment temperature columns
         $scope.ctrlSettings.sstColumns =[
             {
-                "name": "date",
+                "name": "sstDate",
                 "caption": "Дата",
                 "class": "col-xs-3 col-md-3",
                 "type": "name",
                 "sortable": true
             },
             {
-                "name": "autoVal",
+                "name": "sstCalcValue",
                 "caption": "Расчитанное значение",
                 "class": "col-xs-5 col-md-5",
                 "type": "name",
                 "sortable": true
             },
             {
-                "name": "manualVal",
+                "name": "sstValue",
                 "caption": "Внесенное значение",
                 "class": "col-xs-4 col-md-4",
                 "type": "input",
@@ -99,21 +100,23 @@ angular.module('portalNMC')
         $scope.data.tempSchedules = [];
         
         //the average temperature - среднесуточная температура
+        $scope.data.currentLocalPlace = {};
+//        $scope.date.currentSSTDate = moment().format();
         $scope.data.aveTemps = [
-            {
-                date: "1",
-                autoVal: 15,
-                manualVal: null
-            },
-            {
-                date: "2",
-                autoVal: 15,
-                manualVal: 13
-            },
-            {
-                date: "3",
-                autoVal: 10
-            }
+//            {
+//                date: "1",
+//                autoVal: 15,
+//                manualVal: null
+//            },
+//            {
+//                date: "2",
+//                autoVal: 15,
+//                manualVal: 13
+//            },
+//            {
+//                date: "3",
+//                autoVal: 10
+//            }
                 
         ];
         
@@ -143,9 +146,12 @@ angular.module('portalNMC')
             }, errorCallback);
         };
         
-        var getLocalPlaces = function(){
-            $http.get($scope.ctrlSettings.localPlacesUrl).then(function(resp){
+        var getAllLocalPlaces = function(){
+            $http.get($scope.ctrlSettings.localPlacesUrl + "/all").then(function(resp){
                 $scope.data.localPlaces = resp.data;
+                if ($scope.data.localPlaces.length > 0){
+                    $scope.data.currentLocalPlace = $scope.data.localPlaces[0];
+                };
                 getOrganizations();
             }, errorCallback);
         };
@@ -159,6 +165,13 @@ angular.module('portalNMC')
                 };
             });
             return item;
+        };
+        
+        $scope.getSST = function(localPlaceId, dateString){
+            var url = $scope.ctrlSettings.localPlacesUrl + "/" + localPlaceId + "/sst?sstDateStr=" + dateString;
+            $http.get(url).then(function(resp){
+                $scope.data.aveTemps = resp.data;
+            }, errorCallback);
         };
         
         var getTempSchedulesItems = function(sch){
@@ -505,6 +518,8 @@ angular.module('portalNMC')
                 currentText: "Сегодня",
                 onClose: function(dateText, inst) { 
                     $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+                    $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
+                    $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
                     setTimeout(function(){
                         $('.ui-datepicker-calendar').addClass("nmc-hide");
                     }, 1);
@@ -523,7 +538,7 @@ angular.module('portalNMC')
         });
         
         var initCtrl = function(){
-            getLocalPlaces();
+            getAllLocalPlaces();
 //            getOrganizations();
 //            getTempSchedules();
         };
