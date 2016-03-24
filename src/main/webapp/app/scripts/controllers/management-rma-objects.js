@@ -49,6 +49,7 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings.rmaUrl = "../api/rma";
                 $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
                 $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
+                $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();
@@ -510,6 +511,12 @@ angular.module('portalNMC')
                     });
                 };
                 
+                var getTemperatureSchedulesByObjectForZpoint = function(objId, zp){
+                    $http.get($scope.objectCtrlSettings.tempSchBaseUrl + "/" + objId).then(function(resp){
+                        zp.tempSchedules = resp.data;
+                    }, errorCallback);
+                };
+                
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedItem(objectSvc.findObjectById(objId, $scope.objects));
 //console.log($scope.currentObject);                     
@@ -518,12 +525,7 @@ angular.module('portalNMC')
                         $scope.currentObject.zpoints.some(function(element){
                             if (element.id === zpointId){
                                 curZpoint = angular.copy(element);
-                                //getTempSchedules
-                                $http.get("../api/rma/temperatureCharts/byContObject/" + objId).then(function(resp){
-                                    curZpoint.tempSchedules = resp.data;
-                                }, errorCallback);
-                                return true;
-                            }
+                            };
                         });
                     };
                     $scope.currentZpoint = curZpoint;
@@ -577,7 +579,8 @@ angular.module('portalNMC')
                     result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
                     result.zpointLastDataDate  = zpoint.lastDataDate;  
                     result.isDroolsDisable = zpoint.isDroolsDisable;
-                    result.tempSchedules = zpoint.tempSchedules;
+                    result.temperatureChartId = zpoint.temperatureChartId;
+//                    result.tempSchedules = zpoint.tempSchedules;
                     return result;
                 };
                 
@@ -824,11 +827,13 @@ angular.module('portalNMC')
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
                     zps.isDroolsDisable = object.isDroolsDisable;
-                    zps.tempSchedules = object.tempSchedules;
+                    zps.temperatureChartId = object.temperatureChartId;
                     zps.winter = {};
                     zps.summer = {};
                     $scope.zpointSettings = zps;
+//console.log($scope.zpointSettings);                    
                     $scope.getDevices($scope.currentObject, false);
+                    getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
                 };
                 
                 $scope.getZpointSettingsExpl = function(objId, zpointId){

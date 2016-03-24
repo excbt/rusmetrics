@@ -58,7 +58,8 @@
            aria-controls="temp_ssts" 
            data-target="#temp_sst" 
            role="tab" 
-           data-toggle="tab">ССТ
+           data-toggle="tab"
+           >ССТ
         </a>
     </li>        
   </ul>
@@ -185,8 +186,9 @@
                 </div> 
             </div>            
             <div class="col-xs-6 col-md-6">
-                <button class="btn btn-xs nmc-main-add-button" 
-                            >Сохранить ССТ</button>
+                <p class="btn btn-xs nmc-main-add-button"
+                        ng-click="saveSST(data.currentLocalPlace.id, data.currentSSTDate)"
+                            >Сохранить ССТ</p>
                 <i class="btn btn-xs glyphicon glyphicon-download-alt gly-rotate-180 pull-right" 
                    title="Загрузить данные из CSV файла">
                 </i>
@@ -254,9 +256,14 @@
                                 </span>
                                 <span ng-switch-when="input" 
                                       ng-class="">
-                                    <input type="text" 
-                                           class="form-control nmc-text-input-form"
-                                           ng-model="schedule[column.name]"/>
+                                    <input ng-attr-id={{"input"+column.name+schedule['id']}}
+                                           type="text" 
+                                           class="form-control nmc-text-input-form nmc-input-numeric"
+                                           ng-model="schedule[column.name]"
+                                           data-inputmask="'alias':'numeric'"/>
+                                </span>
+                                <span ng-switch-when="outnumber">
+                                    {{schedule[column.name].toFixed(3)}}                                    
                                 </span>
                                 <span ng-switch-default>
                                     {{schedule[column.name]}}

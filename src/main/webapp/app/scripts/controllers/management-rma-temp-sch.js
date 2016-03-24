@@ -67,7 +67,7 @@ angular.module('portalNMC')
                 "name": "sstCalcValue",
                 "caption": "Расчитанное значение",
                 "class": "col-xs-5 col-md-5",
-                "type": "name",
+                "type": "outnumber",
                 "sortable": true,
                 "temperature": true
             },
@@ -173,6 +173,17 @@ angular.module('portalNMC')
             var url = $scope.ctrlSettings.localPlacesUrl + "/" + localPlaceId + "/sst?sstDateStr=" + dateString;
             $http.get(url).then(function(resp){
                 $scope.data.aveTemps = resp.data;
+                $timeout(function(){            
+                    $('.nmc-input-numeric').inputmask();
+                }, 10);
+            }, errorCallback);
+        };
+        
+        $scope.saveSST = function(localPlaceId, dateString){
+            var url = $scope.ctrlSettings.localPlacesUrl + "/" + localPlaceId + "/sst/array?sstDateStr=" + dateString;
+            $http.put(url, $scope.data.aveTemps).then(function(resp){
+                notificationFactory.success();
+                $scope.getSST(localPlaceId, dateString);                
             }, errorCallback);
         };
         
