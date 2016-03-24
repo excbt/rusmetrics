@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -100,7 +101,16 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<LocalPlaceTemperatureSst> saveSstList(List<LocalPlaceTemperatureSst> entityList) {
 		checkNotNull(entityList);
+
+		Date checkDate = !entityList.isEmpty() ? entityList.get(0).getSstDate() : null;
+
 		for (LocalPlaceTemperatureSst sst : entityList) {
+			if (checkDate == null || !checkDate.equals(sst.getSstDate())) {
+				new IllegalArgumentException(
+						String.format("sstDate is not consistence. Required sstDate = %s, actual sstDate = %s ",
+								sst.getSstDate() != null ? sst.getSstDate().toString() : "null"));
+			}
+
 			saveSst(sst);
 		}
 		return entityList;
