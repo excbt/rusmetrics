@@ -519,7 +519,8 @@ angular.module('portalNMC')
                         };
                         zp.tempSchedules.some(function(sch){
                             if (sch.id == zp.temperatureChartId){
-                                zp.temperatureChart = sch;
+                                zp.tChart = sch;
+                                return true;
                             };
                         });
                     }, errorCallback);
@@ -920,9 +921,9 @@ angular.module('portalNMC')
 //                        $scope.zpointSettings.doublePipe = false;
 //                    };
                         //perform temperature schedule
-                    if (!mainSvc.checkUndefinedNull($scope.zpointSettings.temperatureChart)){
-                        $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.temperatureChart.id;
-                        $scope.zpointSettings.temperatureChart = null;
+                    if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)){
+                        $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
+                        $scope.zpointSettings.tChart = null;
                     };
                     var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)){

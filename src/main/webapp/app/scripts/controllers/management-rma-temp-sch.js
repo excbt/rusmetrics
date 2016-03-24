@@ -1,3 +1,21 @@
+angular.module('portalNMC').directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                    });
+                }                
+                reader.readAsText(changeEvent.target.files[0]);
+            });
+        }
+    }
+}]);
 angular.module('portalNMC')
     .controller('TempSchCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc', '$timeout', 'objectSvc', function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc, $timeout, objectSvc){
         //The temperatures schedule    
@@ -66,7 +84,7 @@ angular.module('portalNMC')
             {
                 "name": "sstCalcValue",
                 "caption": "Расчитанное значение",
-                "class": "col-xs-5 col-md-5",
+                "class": "col-xs-4 col-md-4",
                 "type": "outnumber",
                 "sortable": true,
                 "temperature": true
@@ -172,7 +190,8 @@ angular.module('portalNMC')
         $scope.getSST = function(localPlaceId, dateString){
             var url = $scope.ctrlSettings.localPlacesUrl + "/" + localPlaceId + "/sst?sstDateStr=" + dateString;
             $http.get(url).then(function(resp){
-                $scope.data.aveTemps = resp.data;
+                $scope.data.aveTemps = resp.data;                
+                $scope.orderBy = {'field' : "sstDate", 'asc' : true}; //set order by for SST
                 $timeout(function(){            
                     $('.nmc-input-numeric').inputmask();
                 }, 10);
@@ -548,7 +567,42 @@ angular.module('portalNMC')
                     }, 1);
                 }
             });
-        });
+        });     
+        
+                //Upload file 
+        $scope.uploadFile = function(){
+//console.log($scope.data.dataFile);             
+//console.log(typeof $scope.data.dataFile);            
+            var strArray = $scope.data.dataFile.split('\n');
+//console.log(strArray);                                    
+            strArray.forEach(function(dataStr){
+                var strWords = dataStr.split(',');
+                if (!angular.isArray(strWords)){
+                    console.log(dataStr + " is not a correct data string!");
+                    return dataStr + " is not a correct data string!";
+                };
+                var dataDate = strWords[0];                    
+                var fd = new Date("\""+dataDate+"\"");          
+//console.log(fd);                                        
+                $scope.data.aveTemps.some(function(sst){                                                       
+                    var td = new Date("\""+sst.sstDate+"\"");
+                    if (fd.getTime() == td.getTime()){
+//console.log(td);                        
+                        var dataValue = strWords[1];
+                        if (mainSvc.isNumeric(dataValue)){
+                            sst.sstValue = Number(dataValue);
+                            sst.isChanged = true;
+                        }else{                                                      
+                            console.log(dataValue + " is not a number");
+                        };
+                        return true;
+                    };
+                });
+                
+                
+            });
+            $('#upLoadFileModal').modal('hide');
+        };
         
         var initCtrl = function(){
             getAllLocalPlaces();
