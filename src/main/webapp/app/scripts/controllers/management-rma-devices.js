@@ -220,7 +220,10 @@ angular.module('portalNMC')
                 return true;
             };
         });
-        $scope.data.currentObject.curDatasource = curDataSource;       
+        $scope.data.currentObject.curDatasource = curDataSource;
+        $timeout(function(){
+            $('#inputNetAddr').inputmask();
+        }, 10);
     };
     
     var successCallback = function(response){
@@ -487,6 +490,7 @@ angular.module('portalNMC')
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
           monthNames: $scope.dateOptsParamsetRu.locale.monthNames
         });
-        $('#inputAttemptsNumberShd').inputmask();
+        $('#inputAttemptsNumberShd').inputmask();        
+        $('#inputNetAddr').inputmask();
     });
 }]);

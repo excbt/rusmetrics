@@ -163,7 +163,7 @@
                         Первичная загрузка - 
                         <span ng-switch on="device.exSystemKeyname">
                             <span ng-switch-when = 'LERS'>
-                                ЛЕРС
+                                ЛЭРС
                             </span>
                             <span ng-switch-when = 'VZLET'>
                                 ВЗЛЕТ
@@ -245,7 +245,7 @@
                                             Первичная загрузка - 
                                             <span ng-switch on="data.currentObject.exSystemKeyname">
                                                 <span ng-switch-when = 'LERS'>
-                                                    ЛЕРС
+                                                    ЛЭРС
                                                 </span>
                                                 <span ng-switch-when = 'VZLET'>
                                                     ВЗЛЕТ
@@ -257,15 +257,17 @@
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
                                 <td>
-                                    <label for="inputDescription" >Адрес прибора</label>
+                                    <label for="inputNetAddr" >Сетевой адрес прибора</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" 
+                                    <input class="form-control nmc-text-input-form nmc-input-data" 
                                            type="text" 
-                                           id="inputAddr" 
+                                           id="inputNetAddr" 
+                                           data-inputmask="'alias':'numeric', 'greedy': false"
                                            placeholder="" 
                                            ng-model="data.currentObject.subscrDataSourceAddr" 
-                                           ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                           />
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
