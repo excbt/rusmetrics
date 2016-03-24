@@ -68,14 +68,16 @@ angular.module('portalNMC')
                 "caption": "Расчитанное значение",
                 "class": "col-xs-5 col-md-5",
                 "type": "name",
-                "sortable": true
+                "sortable": true,
+                "temperature": true
             },
             {
                 "name": "sstValue",
                 "caption": "Внесенное значение",
                 "class": "col-xs-4 col-md-4",
                 "type": "input",
-                "editable": true
+                "editable": true,
+                "temperature": true
             }
 //            ,
 //            {

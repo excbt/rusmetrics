@@ -205,6 +205,7 @@
 -->
                         <th ng-repeat="column in ctrlSettings.sstColumns" ng-class="column.class" ng-click="setOrderBy(column)">
                             {{column.caption}}
+                            <span ng-if="column.temperature == true">,&deg;C</span>
                             <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                         </th>
                         <th class="col-md-1">
