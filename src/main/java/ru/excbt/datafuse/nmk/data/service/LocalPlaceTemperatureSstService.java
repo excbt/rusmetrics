@@ -104,8 +104,13 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 
 		Date checkDate = !entityList.isEmpty() ? entityList.get(0).getSstDate() : null;
 
+		LocalDate checkMonth = checkDate != null ? (new LocalDate(checkDate)).withDayOfMonth(1) : null;
+
 		for (LocalPlaceTemperatureSst sst : entityList) {
-			if (checkDate == null || !checkDate.equals(sst.getSstDate())) {
+
+			LocalDate sstMonth = sst.getSstDate() != null ? (new LocalDate(sst.getSstDate())).withDayOfMonth(1) : null;
+
+			if (sstMonth == null || checkMonth == null || !checkMonth.equals(sstMonth)) {
 				new IllegalArgumentException(
 						String.format("sstDate is not consistence. Required sstDate = %s, actual sstDate = %s ",
 								sst.getSstDate() != null ? sst.getSstDate().toString() : "null"));
