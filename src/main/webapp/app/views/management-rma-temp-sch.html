@@ -17,7 +17,7 @@
         <li id="clients_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-        <li id="temp_sch_2nd_menu_item" role="presentation" class="active">
+        <li id="temperature_schedules_2nd_menu_item" role="presentation" class="active">
             <a class="nmc-main-tab-button" 
                href="" 
                aria-controls="temperature_schedules" 
@@ -239,7 +239,8 @@
                         </th>
                     </tr>
 
-                    <tr ng-repeat="sst in data.aveTemps | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+                    <tr ng-repeat="sst in data.aveTemps | orderBy:orderBy.field:!orderBy.asc | filter: filter" 
+                        ng-keydown="sstKeydown($event, data.aveTemps, $index)">
 <!--
                         <td class="nmc-td-for-button">
                             <div class="btn-toolbar">
@@ -465,7 +466,9 @@
                                                 </th>
 
                                             </tr>
-                                            <tr ng-repeat="schedule in data.currentTempSch.schedules | propsFilter: {isDeleted: 'false'}" ng-init="initSchedule($index)" >
+                                            <tr ng-repeat="schedule in data.currentTempSch.schedules | propsFilter: {isDeleted: 'false'}" 
+                                                ng-init="initSchedule($index)" 
+                                                ng-keydown="scheduleKeydown($event, $index, data.currentTempSch.schedules.length)">
                                                 <td class="col-sm-3 noPaddingI">
                                                     <div class="form-group noMarginBottom" 
                                                          ng-class="{'has-error': !isNumeric(schedule.t_Ambience)}">

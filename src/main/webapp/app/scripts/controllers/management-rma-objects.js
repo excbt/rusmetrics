@@ -337,6 +337,8 @@ angular.module('portalNMC')
                 
                 var successCallbackUpdateObject = function(e){ 
                     $rootScope.$broadcast('objectSvc:requestReloadData');
+//console.log(e);
+//console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
                     var objIndex = null;
                     objIndex = findObjectIndexInArray(e.id, $scope.objects);
@@ -528,7 +530,7 @@ angular.module('portalNMC')
                 
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedItem(objectSvc.findObjectById(objId, $scope.objects));
-//console.log($scope.currentObject);                     
+console.log($scope.currentObject);                     
                     var curZpoint = null;
                     if (angular.isDefined($scope.currentObject.zpoints) && angular.isArray($scope.currentObject.zpoints)){
                         $scope.currentObject.zpoints.some(function(element){
@@ -538,7 +540,7 @@ angular.module('portalNMC')
                         });
                     };
                     $scope.currentZpoint = curZpoint;
-//console.log($scope.currentZpoint);                                        
+console.log($scope.currentZpoint);                                        
                 };
                 
                 var mapZpointProp = function(zpoint){
@@ -803,7 +805,10 @@ angular.module('portalNMC')
                 };
                 
                 $scope.getZpointSettings = function(objId, zpointId){
-                    $scope.selectedZpoint(objId, zpointId);          
+                    $scope.selectedZpoint(objId, zpointId);
+                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
+                        return "currentZpoint is undefined or null.";
+                    };
 //console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
@@ -1611,7 +1616,7 @@ angular.module('portalNMC')
                         count: 10,
                         /* Вызывается, когда пользователь выбирает одну из подсказок */
                         onSelect: function(suggestion) {
-                            console.log(suggestion);
+//                            console.log(suggestion);
                             $scope.currentObject.fullAddress = suggestion.value;
                             $scope.currentSug = suggestion;
                             $scope.currentObject.isAddressAuto = true;

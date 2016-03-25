@@ -122,23 +122,7 @@ angular.module('portalNMC')
         //the average temperature - среднесуточная температура
         $scope.data.currentLocalPlace = {};
 //        $scope.date.currentSSTDate = moment().format();
-        $scope.data.aveTemps = [
-//            {
-//                date: "1",
-//                autoVal: 15,
-//                manualVal: null
-//            },
-//            {
-//                date: "2",
-//                autoVal: 15,
-//                manualVal: 13
-//            },
-//            {
-//                date: "3",
-//                autoVal: 10
-//            }
-                
-        ];
+        $scope.data.aveTemps = [];
         
         $scope.data.rsoOrganizations = [];
         $scope.data.localPlaces = [];
@@ -204,6 +188,14 @@ angular.module('portalNMC')
                 notificationFactory.success();
                 $scope.getSST(localPlaceId, dateString);                
             }, errorCallback);
+        };
+        
+        $scope.sstKeydown = function(ev, arr, index){
+            if (ev.keyCode == 13 /* Enter */){                
+                if (index < (arr.length-1)){
+                    $('#inputsstValue'+arr[index+1].id).focus();
+                };
+            };           
         };
         
         var getTempSchedulesItems = function(sch){
@@ -487,7 +479,8 @@ angular.module('portalNMC')
         };
         
         var tempSchModalKeydownHandler = function(e){
-//console.log(e);                
+//console.log(e);    
+            //keyCode = 13 - Enter
             if (e.keyCode == 107 || e.keyCode == 187/*нажата кнопка "+" или "="*/){
                 $scope.addSchedule($scope.data.currentTempSch);
                 $scope.$apply();
@@ -499,6 +492,23 @@ angular.module('portalNMC')
                     $scope.$apply();
                 };
             };
+//            if (e.keyCode == 13 /* Enter*/){                    
+//                //Если текущее редактируемое поле "Тобр", то добавляем следующую строку графика
+//                if (isInputTOutFocus == true){                       
+//                    $scope.addSchedule($scope.data.currentTempSch);
+//                    $scope.$apply();
+//                };
+//            };
+        };
+        
+        $scope.scheduleKeydown = function(ev, index, length){
+            if (ev.keyCode == 13 /* Enter */){                
+                if (index == (length-1)){
+                    $scope.addSchedule($scope.data.currentTempSch);
+                }else{
+                    $('#inputtAmbience'+(index+1)).focus();
+                };
+            };           
         };
         
         $scope.initSchedule = function(index){
