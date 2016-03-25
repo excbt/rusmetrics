@@ -158,6 +158,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 			i.getDeviceObjects().forEach(j -> {
 				j.loadLazyProps();
 			});
+
+			if (i.getTemperatureChart() != null) {
+				i.getTemperatureChart().getId();
+				i.getTemperatureChart().getChartComment();
+			}
+
 		});
 
 		return result;
@@ -183,6 +189,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 			i.getObject().getDeviceObjects().forEach(j -> {
 				j.loadLazyProps();
 			});
+
+			if (i.getObject().getTemperatureChart() != null) {
+				i.getObject().getTemperatureChart().getId();
+				i.getObject().getTemperatureChart().getChartComment();
+			}
+
 		});
 
 		return result;

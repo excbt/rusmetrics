@@ -123,7 +123,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "is_drools_disable")
 	private Boolean isDroolsDisable;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "temperature_chart_id")
 	private TemperatureChart temperatureChart;
 
