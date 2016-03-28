@@ -194,6 +194,26 @@ angular.module('portalNMC')
                     ,{"keyname":"winter", "caption":"Зимний режим"}
                 ];
                 
+                $scope.data.metadataSchema = [
+                    {
+                        header: 'Поле источник',
+                        headClass : 'col-xs-2 col-md-2',
+                        name: 'srcProp',
+                        type: 'input/text'
+                    },{
+                        header: 'Поле приемник',
+                        headClass : 'col-xs-2 col-md-2',
+                        name: 'destProp',
+                        type: 'input/text'
+                    },{
+                        header: 'Единици измерения',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'srcMeasureUnit',
+                        type: 'select',
+                        disabled: false
+                    }
+                ];
+                
 
                 $scope.toggleAddMode = function () {
                     $scope.addMode = !$scope.addMode;

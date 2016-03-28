@@ -1608,6 +1608,12 @@ tr.nmc-inactive-price > td{
     max-height: 250px;
 }
 
+    /* Настройка списка мета свойств у точки учета*/
+.nmc-metadata-list-in-zpoint{
+    overflow-y: auto;
+    min-height: 471px;
+    max-height: 493px;    
+}
     /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
     /* Настройка списка мета свойств у прибора*/
 .nmc-object-list-in-notices, .nmc-metadata-list-in-devices{
