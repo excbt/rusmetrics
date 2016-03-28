@@ -372,6 +372,10 @@ angular.module('portalNMC')
                 notificationFactory.errorInfo("Ошибка", "Поле \"РСО\" должно быть заполнено!");
                 result = false;
             };
+//            if (!mainSvc.checkPositiveNumberValue(tempSch.chartDeviationValue)){
+//                notificationFactory.errorInfo("Ошибка", "Поле \"Допустимое отклонение\" должно быть заполнено!");
+//                result = false;
+//            };
             tempSch.schedules.some(function(sch){
                 if (sch.isDeleted != true && $scope.checkSchRow(sch) == false){
                     notificationFactory.errorInfo("Ошибка", "Неправильно заполнен температурный график!");
@@ -527,6 +531,10 @@ angular.module('portalNMC')
                 $("#inputTIn" + index).inputmask();
                 $("#inputTOut" + index).inputmask();
                 // set focus flag
+                    //if it is not last row - then exit
+                if (index < ($scope.data.currentTempSch.schedules.length-1)){
+                    return;
+                };
                 $("#inputTOut" + index).focus(inputTOutFocusHandler);
                 $("#inputTOut" + index).blur(inputTOutBlurHandler);
             }, 10);
@@ -534,7 +542,8 @@ angular.module('portalNMC')
         
         $('#showTempSchModal').on('shown.bs.modal', function(){
             $('#inputTmax').focus();
-            $('#showTempSchModal').keydown(tempSchModalKeydownHandler);
+            $('#showTempSchModal').keydown(tempSchModalKeydownHandler);            
+            $('#inputChartDeviation').inputmask();
         });
         
         $('#showTempSchModal').on('hidden.bs.modal', function(){            
