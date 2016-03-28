@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
+import ru.excbt.datafuse.nmk.data.model.types.DeviceMetadataTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -111,6 +112,36 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 			}
 		};
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectMetadataByContZPoint(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId,
+			@RequestParam(value = "deviceMetadataType", required = false) String deviceMetadataType) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		if (deviceMetadataType == null) {
+			deviceMetadataType = DeviceMetadataTypeKeyname.DEVICE.getKeyname();
+		} else {
+			if (DeviceMetadataTypeKeyname.searchKeyname(deviceMetadataType) == null) {
+				return responseForbidden();
+			}
+		}
+
+		List<DeviceObjectMetadata> resultList = deviceObjectMetadataService.selectByContZPoint(contZPointId,
+				deviceMetadataType);
+
+		return responseOK(resultList);
 	}
 
 }

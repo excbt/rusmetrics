@@ -50,6 +50,9 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	@Autowired
 	private DeviceObjectService deviceObjectService;
 
+	@Autowired
+	private ContZPointService contZPointService;
+
 	/**
 	 * 
 	 * @return
@@ -234,6 +237,27 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 		});
 
 		return Lists.newArrayList(deviceObjectMetadataRepository.save(newMetadata));
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param deviceMetadataType
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId, String deviceMetadataType) {
+		List<DeviceObjectMetadata> result = new ArrayList<>();
+		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
+		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
+			return result;
+		}
+
+		DeviceObject deviceObject = deviceObjects.get(0);
+
+		result = deviceObjectMetadataRepository.selectDeviceObjectMetadata(deviceObject.getId(), deviceMetadataType);
+
+		return result;
 	}
 
 }
