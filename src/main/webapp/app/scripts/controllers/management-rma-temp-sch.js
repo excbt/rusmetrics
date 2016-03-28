@@ -600,7 +600,11 @@ angular.module('portalNMC')
                 //Upload file 
         $scope.uploadFile = function(){
 //console.log($scope.data.dataFile);             
-//console.log(typeof $scope.data.dataFile); 
+//console.log(typeof $scope.data.dataFile);
+            if (mainSvc.checkUndefinedNull($scope.data.dataFile)){
+                notificationFactory.errorInfo("Загрузка файла", "Файл не выбран.");
+                return "Management temperature schedules. File loading is failed";
+            };
             var fileLoadedFlag = false;
             var strArray = $scope.data.dataFile.split('\n');
 //console.log(strArray);                                    
