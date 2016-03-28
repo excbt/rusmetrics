@@ -126,6 +126,7 @@ angular.module('portalNMC')
         
         $scope.data.rsoOrganizations = [];
         $scope.data.localPlaces = [];
+        $scope.data.currentLocalPlace = {};
         
         var successCallback = function(){
             $('#showTempSchModal').modal('hide');
@@ -154,7 +155,7 @@ angular.module('portalNMC')
             $http.get($scope.ctrlSettings.localPlacesUrl + "/all").then(function(resp){
                 $scope.data.localPlaces = resp.data;
                 if ($scope.data.localPlaces.length > 0){
-                    $scope.data.currentLocalPlace = $scope.data.localPlaces[0];
+                    $scope.data.currentLocalPlace.id = $scope.data.localPlaces[0].id;
                 };
                 getOrganizations();
             }, errorCallback);
@@ -172,6 +173,14 @@ angular.module('portalNMC')
         };
         
         $scope.getSST = function(localPlaceId, dateString){
+//console.log(localPlaceId);
+//console.log(dateString);            
+            if (mainSvc.checkUndefinedNull(dateString)){
+                return "dateString is undefined or null!";
+            };
+            if (mainSvc.checkUndefinedNull(localPlaceId)){
+                return "localPlaceId is undefined or null!";
+            };
             var url = $scope.ctrlSettings.localPlacesUrl + "/" + localPlaceId + "/sst?sstDateStr=" + dateString;
             $http.get(url).then(function(resp){
                 $scope.data.aveTemps = resp.data;                
@@ -485,7 +494,7 @@ angular.module('portalNMC')
                 $scope.addSchedule($scope.data.currentTempSch);
                 $scope.$apply();
             };
-            if (e.keyCode == 9 /* Tab*/){                    
+            if (e.shiftKey == false && e.keyCode == 9 /* no shift && Tab*/){                    
                 //Если текущее редактируемое поле "Тобр", то добавляем следующую строку графика
                 if (isInputTOutFocus == true){                       
                     $scope.addSchedule($scope.data.currentTempSch);
@@ -582,7 +591,8 @@ angular.module('portalNMC')
                 //Upload file 
         $scope.uploadFile = function(){
 //console.log($scope.data.dataFile);             
-//console.log(typeof $scope.data.dataFile);            
+//console.log(typeof $scope.data.dataFile); 
+            var fileLoadedFlag = false;
             var strArray = $scope.data.dataFile.split('\n');
 //console.log(strArray);                                    
             strArray.forEach(function(dataStr){
@@ -602,19 +612,24 @@ angular.module('portalNMC')
                         if (mainSvc.isNumeric(dataValue)){
                             sst.sstValue = Number(dataValue);
                             sst.isChanged = true;
+                            fileLoadedFlag = true;
                         }else{                                                      
                             console.log(dataValue + " is not a number");
                         };
                         return true;
                     };
-                });
-                
-                
+                });                
             });
+            if (fileLoadedFlag == true){
+                notificationFactory.successInfo("Файл успешно загружен.");
+            }else{
+                notificationFactory.errorInfo("Загрузка файла", "Некорректный формат файла");
+            };
             $('#upLoadFileModal').modal('hide');
         };
         
         var initCtrl = function(){
+//console.log(new Date());            
             getAllLocalPlaces();
 //            getOrganizations();
 //            getTempSchedules();

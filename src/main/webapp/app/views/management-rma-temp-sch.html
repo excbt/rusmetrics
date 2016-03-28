@@ -169,7 +169,9 @@
                     <select class="form-control  nmc-select-form" 
                             ng-model="data.currentLocalPlace.id" 
                             ng-options="place.id as place.localPlaceName for place in data.localPlaces" 
-                            ng-change="getSST(data.currentLocalPlace.id, data.currentSSTDate);">
+                            ng-change="getSST(data.currentLocalPlace.id, data.currentSSTDate)"
+                            >
+                        
                     </select>
                 </div>
             </div>
@@ -569,7 +571,12 @@
 		<div class="modal-body nmc-modal-body">
 			<form name="confirmActionForm" novalidate>
 				<p class="marginLeft15">
-                    <input type="file" fileread="data.dataFile"/><br/>
+                    <input type="file" fileread="data.dataFile"/><br/>                    
+                </p>
+                <p class="marginLeft15">
+                    Внимание!<br/>
+                    1. Формат строки файла: гггг-мм-дд, температура<br/>
+                    2. Из файла будут загружены только данные за установленный месяц.
                 </p>
 			</form>
 		</div>

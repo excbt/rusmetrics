@@ -340,13 +340,39 @@ angular.module('portalNMC')
 //console.log(e);
 //console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
+                                        //update zpoints info
+                    var mode = "Ex";
+                    objectSvc.getZpointsDataByObject(e, mode).then(function(response){
+                        var tmp = [];
+                        var copyTmp = angular.copy(response.data);
+//console.log(copyTmp);                              
+                        if (mode == "Ex"){
+                            tmp = response.data.map(function(el){
+                                var result = {};
+                                result = el.object;
+                                result.lastDataDate = el.lastDataDate;
+//console.log(el.lastDataDate);                                    
+                                return result;
+                            });
+                        }else{
+                            tmp = data;
+                        };
+                        var zPointsByObject = tmp;                          
+                        var zpoints = [];
+                        for(var i = 0; i < zPointsByObject.length; i++){
+                            var zpoint = mapZpointProp(zPointsByObject[i]);
+                            zpoints[i] = zpoint;                  
+                        }
+                        e.zpoints = zpoints;
+
+                    });
                     var objIndex = null;
                     objIndex = findObjectIndexInArray(e.id, $scope.objects);
                     if (objIndex != null) {$scope.objects[objIndex] = e};
                     objIndex = null;
                     objIndex = findObjectIndexInArray(e.id, $scope.objectsOnPage);
                     if (objIndex != null) {$scope.objectsOnPage[objIndex] = e};
-                    $scope.currentObject = {};
+//                    $scope.currentObject = {};
                     successCallback(e, null);
                 };
                 
@@ -503,8 +529,10 @@ angular.module('portalNMC')
                 $scope.selectedObject = function(objId){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
-                        $scope.currentObject = resp.data;                    
-                        if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement != null)){
+                        $scope.currentObject = resp.data;
+//console.log($scope.currentObject);                        
+                        if (angular.isDefined($scope.currentObject._activeContManagement) && 
+                            ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                         };
                         checkGeo();
@@ -530,7 +558,7 @@ angular.module('portalNMC')
                 
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedItem(objectSvc.findObjectById(objId, $scope.objects));
-console.log($scope.currentObject);                     
+//console.log($scope.currentObject);                     
                     var curZpoint = null;
                     if (angular.isDefined($scope.currentObject.zpoints) && angular.isArray($scope.currentObject.zpoints)){
                         $scope.currentObject.zpoints.some(function(element){
@@ -540,7 +568,7 @@ console.log($scope.currentObject);
                         });
                     };
                     $scope.currentZpoint = curZpoint;
-console.log($scope.currentZpoint);                                        
+//console.log($scope.currentZpoint);                                        
                 };
                 
                 var mapZpointProp = function(zpoint){
@@ -608,7 +636,7 @@ console.log($scope.currentZpoint);
                     if ((curObject.showGroupDetails == true) && (zpTable == null)){                        
                         curObject.showGroupDetails = true;
                     }else{                       
-                        curObject.showGroupDetails =!curObject.showGroupDetails;
+                        curObject.showGroupDetails = !curObject.showGroupDetails;
                     };                                           
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
                     if (curObject.showGroupDetails === true){
