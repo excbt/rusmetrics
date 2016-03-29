@@ -927,6 +927,7 @@ tr.nmc-inactive-price > td{
 .nmc-input-tmax-tmin > .nmc-tmax-tmin-divider{
     display: table-cell;
     padding: 0 5px;
+    vertical-align: middle;
 }
 
     /* Приписка перед интервалом дат - изначально там буква "с"*/
@@ -1611,8 +1612,8 @@ tr.nmc-inactive-price > td{
     /* Настройка списка мета свойств у точки учета*/
 .nmc-metadata-list-in-zpoint{
     overflow-y: auto;
-    min-height: 471px;
-    max-height: 493px;    
+    min-height: 441px;
+    max-height: 463px;    
 }
     /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
     /* Настройка списка мета свойств у прибора*/

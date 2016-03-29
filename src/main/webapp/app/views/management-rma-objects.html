@@ -26,170 +26,283 @@
     </ul>
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="monitor">
+      <div role="tabpanel" class="tab-pane fade in active" id="objects_edition">
       </div>
     </div>
-</div>    
-
-<div class="container-fluid" ng-hide="loading">
- 
-<div class="row nmc-main-workspace-header">
-    <div class="col-md-3 noPadding marginBottom10">
-        <button class="btn nmc-main-add-button" ng-click="addObjectInit()">Добавить объект</button>
-    </div>
-    <div class="col-md-7"></div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
-        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-        <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
-    </div>
-    <div class="col-md-offset-2 col-md-2">
-            <label class="nmc-form-label">Всего:</label>
-             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
-            <span id="timeOutput"></span>
-    </div>
 </div>
-</div> 
+<div role="tabpanel" class="nmc-tab-panel" ng-hide="loading">
+    <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a class="nmc-tab-button" 
+           href="" 
+           aria-controls="objects_edition_list" 
+           role="tab" 
+           data-target="#objects_edition_list" 
+           data-toggle="tab">Список объектов
+        </a>
+    </li>      
+    <li role="presentation">
+        <a class="nmc-tab-button"
+           title=""
+           href="" 
+           aria-controls="objects_edition_tree" 
+           data-target="#objects_edition_tree" 
+           role="tab" 
+           data-toggle="tab"
+           >Дерево объектов
+        </a>
+    </li>        
+  </ul>
 
-<div class="row" class="nmc-hide" ng-show="objectsOnPage.length == 0" ng-hide="loading || (objectsOnPage.length > 0)">
-    <h3 class="nmc-h3">Объектов нет.</h3>
-</div>
+  <!-- реализация вкладок -->
+  <div class="tab-content">
+<!--      Список объектов-->
+    <div role="tabpanel" 
+         class="tab-pane fade in active" 
+         id="objects_edition_list">
+        <div class="container-fluid" ng-hide="loading">
+            <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+                <div class="col-md-3 noPadding">
+                    <button class="btn nmc-main-add-button" ng-click="addObjectInit()">Добавить объект</button>
+                </div>
+                <div class="col-md-7"></div>
+                <div class="input-group col-md-4 filter pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                </div>
+                <div class="col-md-offset-2 col-md-2">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                        <span id="timeOutput"></span>
+                </div>
+            </div>
+            </div> 
 
-<!-- Шапка для таблицы-->
-<table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
-        <thead>
-            <tr>
-                <th style="padding: 0; border-bottom-width: 0px;">
-                    <table class="crud-grid table table-lighter table-condensed noMargin">
-                        <thead>
-                            <tr class="nmc-child-table-header">
-                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 0 3px;">
-                                    
-                                    <div class="btn-group">
-                                        <button ng-disabled="!objectCtrlSettings.anySelected" title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
-                                        <span class="caret"></span>
-                                        </button>
-<!--
-                                      <i title="Действия над объектами" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="">
-                                        </i>
--->
-                                      <ul class="dropdown-menu">
-                                        <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
-                                        <li role="separator" class="divider"></li>  
-                                        <li><a href="" ng-click="deleteObjectsInit()">{{messages.deleteObjects}}</a></li>
-                                      </ul>
-                                    </div>
-                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
-                                </th>
-                                <th class="nmc-td-for-button"></th>
-                                <th>Название объекта
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </thead>
-                    </table>
-                </th>
-            </tr>
-        </thead>
-</table>
+            <div class="row" class="nmc-hide" ng-show="objectsOnPage.length == 0" ng-hide="loading || (objectsOnPage.length > 0)">
+                <h3 class="nmc-h3">Объектов нет.</h3>
+            </div>
 
-<div>
-    <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
-        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-        <thead>
-            <tr class="nmc-hide">
-                <th style="padding: 0; border-bottom-width: 0px;">
-                    <table class="crud-grid table table-lighter table-condensed noMargin">
-                        <thead>
-                            <tr class="nmc-child-table-header">
-                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 5px;">
-                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
-                                    <div class="btn-group" style="vertical-align: initial;">
+            <!-- Шапка для таблицы-->
+            <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" 
+                                                class="nmc-td-for-button-object-control" 
+                                                style="padding: 0 0 3px;">
 
-                                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
-                                        <span class="caret"></span>
-                                      </button>
-                                      <ul class="dropdown-menu">
-                                        <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
-<!--                                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li> -->
-                                      </ul>
-                                    </div>
-                                </th>
-                                <th class="nmc-td-for-button"></th>
-                                <th>Название объекта
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </thead>
-                    </table>
-                </th>
-            </tr>
-        </thead>
+                                                <div class="btn-group">
+                                                    <button ng-disabled="!objectCtrlSettings.anySelected" title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
+                                                    <span class="caret"></span>
+                                                    </button>
+            <!--
+                                                  <i title="Действия над объектами" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="">
+                                                    </i>
+            -->
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
+                                                    <li role="separator" class="divider"></li>  
+                                                    <li><a href="" ng-click="deleteObjectsInit()">{{messages.deleteObjects}}</a></li>
+                                                  </ul>
+                                                </div>
+                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
+                                            </th>
+                                            <th class="nmc-td-for-button"></th>
+                                            <th>Название объекта
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+            </table>
 
-        <tbody>
-        <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
-            <td>
-                <table>
-                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
-        
-                        <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control">
-<!--                            <span>{{$index}}</span>-->
-                            <div class="btn-group">
-                              <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
-                                </i>
-                              <ul class="dropdown-menu">
-                                <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>
-<!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
-                                <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>
-<!--                                <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>-->
-                                <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
-                              </ul>
-                            </div>
-<!--                            ng-click="toggleObject(object)"-->
-                            <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
+            <div>
+                <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+                    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                    <thead>
+                        <tr class="nmc-hide">
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 5px;">
+                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                                <div class="btn-group" style="vertical-align: initial;">
 
+                                                  <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                                    <span class="caret"></span>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
+            <!--                                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li> -->
+                                                  </ul>
+                                                </div>
+                                            </th>
+                                            <th class="nmc-td-for-button"></th>
+                                            <th>Название объекта
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
 
-                        </td>
-        
-                        <td class="nmc-td-for-button"> 
-
-                            <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>                            
-                            
-                        </td>
-
-                        <td ng-click="toggleShowGroupDetails(object.id)">
-<!--                            <span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>-->
-                            <span ng-show="!object._haveSubscr">
-                                <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
-                            </span>
-                            {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
-                        </td>
+                    <tbody>
+                    <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
                         <td>
-                            <div class="btn-toolbar">
-                                <div class="btn-group pull-right">                   
-                                    <i title="Удалить объект" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
-                                </div>
-                            </div>
-                        </td>
+                            <table>
+                                <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+
+                                    <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control">
+            <!--                            <span>{{$index}}</span>-->
+                                        <div class="btn-group">
+                                          <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                                            </i>
+                                          <ul class="dropdown-menu">
+                                            <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>
+            <!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
+                                            <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>
+            <!--                                <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>-->
+                                            <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
+                                          </ul>
+                                        </div>
+            <!--                            ng-click="toggleObject(object)"-->
+                                        <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
+
+
+                                    </td>
+
+                                    <td class="nmc-td-for-button"> 
+
+                                        <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>                            
+
+                                    </td>
+
+                                    <td ng-click="toggleShowGroupDetails(object.id)">
+            <!--                            <span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>-->
+                                        <span ng-show="!object._haveSubscr">
+                                            <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
+                                        </span>
+                                        {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-toolbar">
+                                            <div class="btn-group pull-right">                   
+                                                <i title="Удалить объект" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
+                                </tr>
+                            </table>
+                         </td>        
+                     </tr>
+            <!--
+                    <tr class="nmc-hide">
+                        <td>{{onTableLoad()}}</td>
                     </tr>
-                    <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
-                    </tr>
+            -->
+                    </tbody>
                 </table>
-             </td>        
-         </tr>
+            <!--        </div>-->
+            </div>
+            </div><!-- end of scrolling table div -->
+      </div>
+<!--      Дерево объектов-->
+     <div role="tabpanel" 
+         class="tab-pane fade" 
+         id="objects_edition_tree">
+         <div class="col-xs-6 col-md-6 nmc-table-with-fixed-header">
+                 <!--            Кнопки управления деревом: создать узел, редактировать узел, удалить дерево, -->
 <!--
-        <tr class="nmc-hide">
-            <td>{{onTableLoad()}}</td>
-        </tr>
+            <div>
+                <i class="btn btn-xs glyphicon glyphicon-plus" ng-click="newNode()" title="Добавить узел"></i>
 -->
-        </tbody>
-    </table>
-<!--        </div>-->
+<!--                        <i class="pull-right btn btn-default btn-xs glyphicon glyphicon-trash" ng-click="removeTree()" title="Удалить дерево"></i>-->
+<!--            </div>-->
+            <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+                <div class="col-xs-3 col-md-3 noPadding">
+                    <button class="btn nmc-main-add-button" ng-click="newNode()">Добавить узел</button>
+                </div>
+<!--                <div class="col-xs-7 col-md-7"></div>-->
+                <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                </div>
+                <div class="col-xs-3 col-md-3">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                        <span id="timeOutput"></span>
+                </div>
+            </div>
+
+            <script type="text/ng-template" id="items_renderer.html">
+                <div ui-tree-handle ng-click="selectNode(item)">
+                  <a class="btn btn-xs" 
+                     data-nodrag ng-click="toggle(this)">
+                      <span class="glyphicon" 
+                            ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}">
+                      </span>
+                    </a>
+                  {{item.fullName || item.customServiceName}}
+                  <a class="pull-right btn btn-xs" 
+                     data-nodrag 
+                     ng-click="remove(this)" 
+                     ng-disabled="item.zpoints.length!=0">
+                      <span class="glyphicon glyphicon-trash">
+                      </span>
+                    </a>
+                  <a class="pull-right btn btn-xs" 
+                     data-nodrag 
+                     ng-click="openNode(this)">
+                      <span class="glyphicon glyphicon-list">
+                      </span>
+                    </a>
+                  <a class="pull-right btn btn-xs" 
+                     data-nodrag 
+                     ng-click="newSubItem(this)" 
+                     style="margin-right: 8px;">
+                      <span class="glyphicon glyphicon-plus">
+                      </span>
+                    </a>
+                </div>
+                <ol ui-tree-nodes="options" ng-model="item.zpoints" ng-class="{hidden: collapsed}">
+                  <li ng-repeat="item in item.zpoints" ui-tree-node ng-include="'items_renderer.html'">
+                  </li>
+                </ol>
+              </script>
+              <div ui-tree="options" data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="objectsOnPage" >
+                  <li ng-repeat="item in objectsOnPage" ui-tree-node ng-include="'items_renderer.html'"></li>
+                </ol>
+              </div>
+         </div>
+         <div class="col-xs-6 col-md-6 nmc-table-with-fixed-header">
+             <div ng-repeat="item in data.selectedNode.zpoints">
+                 <div class="col-xs-4 col-md-4">{{item.zpointName}}</div>
+                 <div class="col-xs-4 col-md-4">{{item.zpointNumber}}</div>
+                 <div class="col-xs-4 col-md-4">{{item.zpointModel}}</div>
+             </div>
+         </div>
+      </div> 
+    </div>
 </div>
-</div><!-- end of scrolling table div -->
+
+
 
 <!--********************* ZPoint section *************-->
 <!--**************************************************-->
@@ -228,15 +341,6 @@
                            data-target="#zpoint-metadata"
                            data-toggle="tab"
                            aria-controls="profile">Метаданные</a>
-                      </li>
-                      <li role="presentation">
-                        <a href=""
-                           class="nmc-tab-button"
-                           role="tab"
-                           id="zpoint-metadata-abs-tab"
-                           data-target="#zpoint-metadata-abs"
-                           data-toggle="tab"
-                           aria-controls="profile">Метаданные для интеграторов</a>
                       </li>
                     </ul>
                       <div id="zpointPropTabContent" class="tab-content">
@@ -386,95 +490,130 @@
                                class="tab-pane fade" 
                                id="zpoint-metadata" 
                                aria-labelledBy="zpoint-metadata-tab">
-                              <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
-                                   style=""> 
-                                Тут должны быть метаданные
-                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                    <tr class="nmc-child-table-header">
-                                        <th ng-repeat="column in data.metadataSchema" 
-                                            ng-class="column.headClass">
-                                            {{column.header}}
-                                        </th>
-                                    </tr>     
-                                    <tr ng-repeat="field in data.currentObject.metadata">
-                                        <td ng-repeat="column in data.metadataSchema" 
-                                            ng-class="column.dataClass || column.headClass">
-                                            <span ng-switch on="column.type">
-                                                <span ng-switch-when="input/text" 
-                                                      class="form-group" 
-                                                      ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
-                                                    <input ng-attr-name = {{"inputField"+field.id+column.name}} 
-                                                           type="text" 
-                                                           class="form-control nmc-text-input-form" 
-                                                           ng-model="field[column.name]" 
-                                                           ng-disabled="column.disabled" 
-                                                           required/>
-                                                </span>
-                                                <span ng-switch-when="select" 
-                                                      class="form-group" 
-                                                      ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
-                                                    <select class="form-control nmc-select-form"
-                                                            ng-model="field[column.name]" 
-                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
-                                                            ng-disabled="column.disabled">
-                                                    </select>
-                                                </span>
-                                                <span ng-switch-default>
-                                                    {{field[column.name]}}
-                                                </span>
-                                            </span>
+                                  <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
+                                    <!--       Потребление / Интеграторы -->
+                                    <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
+                                        <li role="presentation" 
+                                            class="active nmc-toggle-active">
+                                            <a class="nmc-toggle-button" 
+                                               href="" 
+                                               aria-controls="meta_cons" 
+                                               data-target="#meta_cons" 
+                                               role="tab" 
+                                               data-toggle="tab" 
+                                               >Потребление</a>
+                                        </li>
+                                        <li role="presentation" 
+                                            class="nmc-toggle-archive">
+                                            <a class="nmc-toggle-button" 
+                                               href="" 
+                                               aria-controls="meta_abs" 
+                                               data-target="#meta_abs" 
+                                               role="tab" 
+                                               data-toggle="tab"
+                                               >Интеграторы</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                            <!--            Метаданные потребления-->
+                                        <div role="tabpanel" 
+                                             class="tab-pane fade in active nmc-main-tab-panel" 
+                                             id="meta_cons">
+<!--                                            ===================-->
+                                            Тут должны быть метаданные потребления
+                                          <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
+                                               style="">                                             
+                                            <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                                <tr class="nmc-child-table-header">
+                                                    <th ng-repeat="column in data.metadataSchema" 
+                                                        ng-class="column.headClass">
+                                                        {{column.header}}
+                                                    </th>
+                                                </tr>     
+                                                <tr ng-repeat="field in data.currentObject.metadata">
+                                                    <td ng-repeat="column in data.metadataSchema" 
+                                                        ng-class="column.dataClass || column.headClass">
+                                                        <span ng-switch on="column.type">
+                                                            <span ng-switch-when="input/text" 
+                                                                  class="form-group" 
+                                                                  ng-class="{'has-error': field[column.name] == ''}">
+                                                                <input ng-attr-name = {{"inputZpMetaField"+field.id+column.name}} 
+                                                                       type="text" 
+                                                                       class="form-control nmc-text-input-form" 
+                                                                       ng-model="field[column.name]" 
+                                                                       ng-disabled="column.disabled" 
+                                                                       required/>
+                                                            </span>
+                                                            <span ng-switch-when="select" 
+                                                                  class="form-group" 
+                                                                  ng-class="{'has-error': field[column.name] == ''}">
+                                                                <select class="form-control nmc-select-form"
+                                                                        ng-model="field[column.name]" 
+                                                                        ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
+                                                                        ng-disabled="column.disabled">
+                                                                </select>
+                                                            </span>
+                                                            <span ng-switch-default>
+                                                                {{field[column.name]}}
+                                                            </span>
+                                                        </span>
 
-                                        </td>
-                                    </tr>     
-                                </table> 
-                              </div>
-                          </div>
-                          <div role="tabpanel" 
-                               class="tab-pane fade" 
-                               id="zpoint-metadata-abs" 
-                               aria-labelledBy="zpoint-metadata-abs-tab">
-                              <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
-                                   style=""> 
-                                Тут должны быть метаданные для интеграторов
-                                  <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                    <tr class="nmc-child-table-header">
-                                        <th ng-repeat="column in data.metadataSchema" 
-                                            ng-class="column.headClass">
-                                            {{column.header}}
-                                        </th>
-                                    </tr>     
-                                    <tr ng-repeat="field in data.currentObject.metadata">
-                                        <td ng-repeat="column in data.metadataSchema" 
-                                            ng-class="column.dataClass || column.headClass">
-                                            <span ng-switch on="column.type">
-                                                <span ng-switch-when="input/text" 
-                                                      class="form-group" 
-                                                      ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
-                                                    <input ng-attr-name = {{"inputField"+field.id+column.name}} 
-                                                           type="text" 
-                                                           class="form-control nmc-text-input-form" 
-                                                           ng-model="field[column.name]" 
-                                                           ng-disabled="column.disabled" 
-                                                           required/>
-                                                </span>
-                                                <span ng-switch-when="select" 
-                                                      class="form-group" 
-                                                      ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
-                                                    <select class="form-control nmc-select-form"
-                                                            ng-model="field[column.name]" 
-                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
-                                                            ng-disabled="column.disabled">
-                                                    </select>
-                                                </span>
-                                                <span ng-switch-default>
-                                                    {{field[column.name]}}
-                                                </span>
-                                            </span>
+                                                    </td>
+                                                </tr>     
+                                            </table> 
+                                          </div>
+<!--                                            ++++++++++++++++-->
+                                        </div>
+                                        <!--            Метаданные интеграторов-->
+                                        <div role="tabpanel" 
+                                             class="tab-pane fade nmc-main-tab-panel" 
+                                             id="meta_abs">
+                                            Тут должны быть метаданные интеграторов
+                                            <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
+                                               style="">
+                                              <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                                <tr class="nmc-child-table-header">
+                                                    <th ng-repeat="column in data.metadataSchema" 
+                                                        ng-class="column.headClass">
+                                                        {{column.header}}
+                                                    </th>
+                                                </tr>     
+                                                <tr ng-repeat="field in data.currentObject.metadata">
+                                                    <td ng-repeat="column in data.metadataSchema" 
+                                                        ng-class="column.dataClass || column.headClass">
+                                                        <span ng-switch on="column.type">
+                                                            <span ng-switch-when="input/text" 
+                                                                  class="form-group" 
+                                                                  ng-class="{'has-error': field[column.name] == ''}">
+                                                                <input ng-attr-name = {{"inputZpMetaAbsField"+field.id+column.name}} 
+                                                                       type="text" 
+                                                                       class="form-control nmc-text-input-form" 
+                                                                       ng-model="field[column.name]" 
+                                                                       ng-disabled="column.disabled" 
+                                                                       required/>
+                                                            </span>
+                                                            <span ng-switch-when="select" 
+                                                                  class="form-group" 
+                                                                  ng-class="{'has-error': field[column.name] == ''}">
+                                                                <select class="form-control nmc-select-form"
+                                                                        ng-model="field[column.name]" 
+                                                                        ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
+                                                                        ng-disabled="column.disabled">
+                                                                </select>
+                                                            </span>
+                                                            <span ng-switch-default>
+                                                                {{field[column.name]}}
+                                                            </span>
+                                                        </span>
 
-                                        </td>
-                                    </tr>     
-                                </table>
+                                                    </td>
+                                                </tr>     
+                                            </table>
+                                            </div>
+                                        </div>
+                                      </div>
                               </div>
+
                           </div>
                         </div>
                     </div>

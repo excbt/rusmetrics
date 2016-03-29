@@ -29,7 +29,7 @@ angular.module('portalNMC')
             name: 'destProp',
             type: 'input/text'
         },{
-            header: 'Единици измерения',
+            header: 'Единицы измерения',
             headClass : 'col-xs-1 col-md-1',
             name: 'srcMeasureUnit',
             type: 'select',

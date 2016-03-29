@@ -206,7 +206,7 @@ angular.module('portalNMC')
                         name: 'destProp',
                         type: 'input/text'
                     },{
-                        header: 'Единици измерения',
+                        header: 'Единицы измерения',
                         headClass : 'col-xs-1 col-md-1',
                         name: 'srcMeasureUnit',
                         type: 'select',
@@ -692,7 +692,9 @@ angular.module('portalNMC')
                             };
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
-                        });
+                        }, 
+                                                                               errorCallback
+                                                                              );
                     }//else if curObject.showGroupDetails = false => hide child zpoint table
                     else{
                         var trObj = document.getElementById("obj" + curObject.id);
@@ -1699,5 +1701,17 @@ angular.module('portalNMC')
                 $('#showObjOptionModal').on('hidden.bs.modal', function(){
                     $scope.currentObject.isSaving = false;
                 });
+                
+                
+// ********************************************************************************************
+                //  TREEVIEW
+//*********************************************************************************************
+                $scope.selectNode = function(item){
+                    $scope.data.selectedNode = angular.copy(item);
+                };
+// ********************************************************************************************
+                //  end TREEVIEW
+//*********************************************************************************************
+                
 //            }]
 }]);

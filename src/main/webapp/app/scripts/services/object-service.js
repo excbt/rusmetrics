@@ -186,6 +186,11 @@ angular.module('portalNMC')
             return $http.get(url);
         };
                  
+        var getRmaZpointMetadata = function(objId, zpId){
+            var url = urlRmaContObjects + "/" + objId + "/contZPoints/" + zpId + urlDeviceMetaDataSuffix;
+            return $http.get(url);
+        };
+                 
         //get time zones
         var getTimezones = function(){
             return getData(urlTimezones);
