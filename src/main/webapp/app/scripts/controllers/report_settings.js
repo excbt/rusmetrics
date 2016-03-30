@@ -97,6 +97,9 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
         console.log(e);
         var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
         if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
             errorCode = e.resultCode || e.data.resultCode;
         };

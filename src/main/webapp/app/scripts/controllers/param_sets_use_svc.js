@@ -85,6 +85,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
 
     var errorCallback = function (e) {
         var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
         if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
             errorCode = e.resultCode || e.data.resultCode;
         };
@@ -152,7 +155,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);        
         $scope.getTemplates();       
     };
-    
+    29863766
     $scope.checkAndSaveParamset = function(paramsets, object){       
         if (!object.name || object.name == ''){
             notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");
@@ -161,7 +164,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         if (!mainSvc.checkUndefinedNull(paramsets) && angular.isArray(paramsets)){
             for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
                 if ((object.id != paramsets[psCounter].id) && (object.name.localeCompare(paramsets[psCounter].name) == 0)){                   
-                    notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
+                    notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Измените поле 'Наименование'.");
                     return "Add / edit paramset: name is not unique.";
                 };
             };

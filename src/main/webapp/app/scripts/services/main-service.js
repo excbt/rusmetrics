@@ -414,10 +414,16 @@ angular.module('portalNMC')
             "resultCode": "ERR_USER_ALREADY_EXISTS",
             "caption": "Пользователь уже существует",
             "description": "Пользователь с таким логином уже существует. Проверьте правильность набора."
+        },
+        {
+            "resultCode": "ERR_CONNECTION",
+            "caption": "Ошибка подключения",
+            "description": "Не удалось получить данные от сервера. Проверьте соединение с сервером."
         }
     ];
     
-    var getServerErrorByResultCode = function(resultCode){        
+    var getServerErrorByResultCode = function(resultCode){
+console.log(resultCode);
         var result = DEFAULT_ERROR_MESSAGE;
         if (checkUndefinedEmptyNullValue(resultCode)){return result};
         serverErrors.some(function(serror){
