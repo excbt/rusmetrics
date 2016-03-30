@@ -70,4 +70,9 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 		assertTrue(measureUnits.size() > 0);
 	}
 
+	@Test
+	public void testMetadataTransform() throws Exception {
+		deviceObjectMetadataService.deviceObjectMetadataTransform(512075328L);
+	}
+
 }

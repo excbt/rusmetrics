@@ -2,12 +2,16 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -20,9 +24,14 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransform;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransformHistory;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataRepository;
+import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataTransformHistoryRepository;
+import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataTransformRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.MeasureUnitRepository;
+import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -36,13 +45,23 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class DeviceObjectMetadataService implements SecuredRoles {
 
+	private static final Logger logger = LoggerFactory.getLogger(DeviceObjectMetadataService.class);
+
 	public final static String DEVICE_METADATA_TYPE = DeviceMetadataService.DEVICE_METADATA_TYPE;
+
+	public final static String PROP_VARS_SPLITTER = ",";
 
 	@Autowired
 	private MeasureUnitRepository measureUnitRepository;
 
 	@Autowired
 	private DeviceObjectMetadataRepository deviceObjectMetadataRepository;
+
+	@Autowired
+	private DeviceObjectMetadataTransformHistoryRepository deviceObjectMetadataTransformHistoryRepository;
+
+	@Autowired
+	private DeviceObjectMetadataTransformRepository deviceObjectMetadataTransformRepository;
 
 	@Autowired
 	private DeviceMetadataService deviceMetadataService;
@@ -258,6 +277,153 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 		result = deviceObjectMetadataRepository.selectDeviceObjectMetadata(deviceObject.getId(), deviceMetadataType);
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectMetadataList
+	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deviceObjectMetadataTransform(List<DeviceObjectMetadata> deviceObjectMetadataList) {
+		checkNotNull(deviceObjectMetadataList);
+
+		List<DeviceObjectMetadata> deleteMetadataList = new ArrayList<>();
+		List<DeviceObjectMetadata> newDeviceMetadataList = new ArrayList<>();
+		List<DeviceObjectMetadataTransform> transformMetadataList = new ArrayList<>();
+		List<DeviceObjectMetadataTransformHistory> tranformHistoryList = new ArrayList<>();
+
+		for (DeviceObjectMetadata metadata : deviceObjectMetadataList) {
+			checkState(!metadata.isNew());
+
+			if (metadata.getPropVars() != null) {
+				String[] propVars = metadata.getPropVars().split(PROP_VARS_SPLITTER);
+				if (propVars.length > 1) {
+					deleteMetadataList.add(metadata);
+
+					DeviceObjectMetadataTransform metadataTransform = metadataTransformCopy(metadata);
+					transformMetadataList.add(metadataTransform);
+
+					for (String propVar : propVars) {
+
+						Integer metaNumber = Integer.valueOf(propVar);
+
+						DeviceObjectMetadata transformedMetadata = metadataDeepCopy(metadata);
+						transformedMetadata.setPropVars(null);
+						transformedMetadata.setMetaNumber(metaNumber);
+						transformedMetadata.setIsTransformed(true);
+
+						String srcPropComplete = metadata.getSrcProp();
+
+						Matcher m = JsonMetadataParser.META_VAR_PATTERN.matcher(metadata.getSrcProp());
+						if (m.find()) {
+							srcPropComplete = m.replaceAll(propVar);
+						}
+
+						transformedMetadata.setSrcProp(srcPropComplete);
+
+						newDeviceMetadataList.add(transformedMetadata);
+
+						DeviceObjectMetadataTransformHistory tranformHistory = new DeviceObjectMetadataTransformHistory();
+						tranformHistory.setDeviceObjectMetadataTransform(metadataTransform);
+						tranformHistory.setDeviceObjectMetadata(transformedMetadata);
+
+						tranformHistoryList.add(tranformHistory);
+
+					}
+
+				}
+
+			}
+		}
+
+		logger.debug("transform count: {}", transformMetadataList.size());
+		logger.debug("new metadata count: {}", newDeviceMetadataList.size());
+		logger.debug("transform history count: {}", tranformHistoryList.size());
+		logger.debug("deleted count: {}", deleteMetadataList.size());
+
+		deviceObjectMetadataRepository.save(newDeviceMetadataList);
+		deviceObjectMetadataTransformRepository.save(transformMetadataList);
+		deviceObjectMetadataTransformHistoryRepository.save(tranformHistoryList);
+		deviceObjectMetadataRepository.delete(deleteMetadataList);
+
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectId
+	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deviceObjectMetadataTransform(Long deviceObjectId) {
+		List<DeviceObjectMetadata> deviceObjectMetadataList = selectDeviceObjectMetadata(deviceObjectId);
+		deviceObjectMetadataTransform(deviceObjectMetadataList);
+	}
+
+	/**
+	 * 
+	 * @param src
+	 * @return
+	 */
+	private DeviceObjectMetadata metadataDeepCopy(DeviceObjectMetadata src) {
+		DeviceObjectMetadata dst = new DeviceObjectMetadata();
+
+		dst.setDeviceMetadataType(src.getDeviceMetadataType());
+		dst.setDeviceObjectId(src.getDeviceObjectId());
+		dst.setContServiceType(src.getContServiceType());
+		dst.setSrcProp(src.getSrcProp());
+		dst.setDestProp(src.getDestProp());
+		dst.setIsIntegrator(src.getIsIntegrator());
+		dst.setSrcPropDivision(src.getSrcPropDivision());
+		dst.setDestPropCapacity(src.getDestPropCapacity());
+		dst.setSrcMeasureUnit(src.getSrcMeasureUnit());
+		dst.setDestMeasureUnit(src.getDestMeasureUnit());
+		dst.setMetaNumber(src.getMetaNumber());
+		dst.setMetaOrder(src.getMetaOrder());
+		dst.setMetaDescription(src.getMetaDescription());
+		dst.setMetaComment(src.getMetaComment());
+		dst.setPropVars(src.getPropVars());
+		dst.setPropFunc(src.getPropFunc());
+		dst.setDestDbType(src.getDestDbType());
+		dst.setVersion(src.getVersion());
+		dst.setDeleted(src.getDeleted());
+		dst.setMetaVersion(src.getMetaVersion());
+
+		return dst;
+	}
+
+	/**
+	 * 
+	 * @param src
+	 * @return
+	 */
+	private DeviceObjectMetadataTransform metadataTransformCopy(DeviceObjectMetadata src) {
+		DeviceObjectMetadataTransform dst = new DeviceObjectMetadataTransform();
+
+		dst.setDeviceMetadataType(src.getDeviceMetadataType());
+		dst.setDeviceObjectId(src.getDeviceObjectId());
+		dst.setDeviceObjectId(src.getDeviceObjectId());
+		dst.setContServiceType(src.getContServiceType());
+		dst.setSrcProp(src.getSrcProp());
+		dst.setDestProp(src.getDestProp());
+		dst.setIsIntegrator(src.getIsIntegrator());
+		dst.setSrcPropDivision(src.getSrcPropDivision());
+		dst.setDestPropCapacity(src.getDestPropCapacity());
+		dst.setSrcMeasureUnit(src.getSrcMeasureUnit());
+		dst.setDestMeasureUnit(src.getDestMeasureUnit());
+		dst.setMetaNumber(src.getMetaNumber());
+		dst.setMetaOrder(src.getMetaOrder());
+		dst.setMetaDescription(src.getMetaDescription());
+		dst.setMetaComment(src.getMetaComment());
+		dst.setPropVars(src.getPropVars());
+		dst.setPropFunc(src.getPropFunc());
+		dst.setDestDbType(src.getDestDbType());
+		dst.setVersion(src.getVersion());
+		dst.setDeleted(src.getDeleted());
+		dst.setMetaVersion(src.getMetaVersion());
+		dst.setDeviceObjectMetadataId(src.getId());
+
+		return dst;
 	}
 
 }

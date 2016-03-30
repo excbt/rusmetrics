@@ -7,40 +7,24 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
-/**
- * Метаданные прибора
- * 
- * @author A.Kovtonyuk
- * @version 1.0
- * @since 22.01.2016
- *
- */
 @Entity
-@Table(name = "device_object_metadata")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
-public class DeviceObjectMetadata extends AbstractAuditableModel implements DeletableObjectId {
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "device_object_metadata_transform")
+public class DeviceObjectMetadataTransform extends AbstractAuditableModel {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7749595409266133751L;
+	private static final long serialVersionUID = -2174143740110324563L;
 
-	@Column(name = "device_metadata_type", updatable = false)
+	@Column(name = "device_metadata_type")
 	private String deviceMetadataType;
 
-	@Column(name = "device_object_id", updatable = false)
+	@Column(name = "device_object_id")
 	private Long deviceObjectId;
 
-	@Column(name = "cont_service_type", updatable = false)
+	@Column(name = "cont_service_type")
 	private String contServiceType;
 
 	@Column(name = "src_prop")
@@ -49,7 +33,7 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "dest_prop")
 	private String destProp;
 
-	@Column(name = "is_integrator", updatable = false)
+	@Column(name = "is_integrator")
 	private Boolean isIntegrator;
 
 	@Column(name = "src_prop_division")
@@ -64,39 +48,38 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "dest_measure_unit")
 	private String destMeasureUnit;
 
-	@Column(name = "meta_number", updatable = false)
+	@Column(name = "meta_number")
 	private Integer metaNumber;
 
-	@Column(name = "meta_order", updatable = false)
+	@Column(name = "meta_order")
 	private Integer metaOrder;
 
-	@Column(name = "meta_description", updatable = false)
+	@Column(name = "meta_description")
 	private String metaDescription;
 
 	@Column(name = "meta_comment")
 	private String metaComment;
 
-	@Column(name = "prop_vars", updatable = false)
+	@Column(name = "prop_vars")
 	private String propVars;
 
-	@Column(name = "prop_func", updatable = false)
+	@Column(name = "prop_func")
 	private String propFunc;
 
-	@Column(name = "dest_db_type", updatable = false)
+	@Column(name = "dest_db_type")
 	private String destDbType;
 
 	@Version
 	private int version;
 
-	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 
 	@Column(name = "meta_version")
-	private Integer metaVersion = 1;
+	private Integer metaVersion;
 
-	@Column(name = "is_transformed")
-	private Boolean isTransformed;
+	@Column(name = "device_object_metadata_id")
+	private Long deviceObjectMetadataId;
 
 	public String getDeviceMetadataType() {
 		return deviceMetadataType;
@@ -242,12 +225,10 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 		this.version = version;
 	}
 
-	@Override
 	public int getDeleted() {
 		return deleted;
 	}
 
-	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
 	}
@@ -260,12 +241,12 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 		this.metaVersion = metaVersion;
 	}
 
-	public Boolean getIsTransformed() {
-		return isTransformed;
+	public Long getDeviceObjectMetadataId() {
+		return deviceObjectMetadataId;
 	}
 
-	public void setIsTransformed(Boolean isTransformed) {
-		this.isTransformed = isTransformed;
+	public void setDeviceObjectMetadataId(Long deviceObjectMetadataId) {
+		this.deviceObjectMetadataId = deviceObjectMetadataId;
 	}
 
 }
