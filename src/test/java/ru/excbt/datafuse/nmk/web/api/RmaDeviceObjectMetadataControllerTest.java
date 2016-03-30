@@ -82,4 +82,10 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 		_testUpdateJson(url, metadata);
 	}
 
+	@Test
+	public void testDeviceObjectMetadataByContObject() throws Exception {
+		_testGetJson("/api/rma/contObjects/725/deviceObjects/byContZPoint/512084866/metadata");
+		///contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}/metadata
+	}
+
 }

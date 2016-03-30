@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
-import ru.excbt.datafuse.nmk.data.model.types.DeviceMetadataTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -120,28 +119,31 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 	 * @param contZPointId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}",
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}/metadata",
 			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectMetadataByContZPoint(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("contZPointId") Long contZPointId,
-			@RequestParam(value = "deviceMetadataType", required = false) String deviceMetadataType) {
+			@PathVariable("contZPointId") Long contZPointId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return responseForbidden();
 		}
 
-		if (deviceMetadataType == null) {
-			deviceMetadataType = DeviceMetadataTypeKeyname.DEVICE.getKeyname();
-		} else {
-			if (DeviceMetadataTypeKeyname.searchKeyname(deviceMetadataType) == null) {
-				return responseForbidden();
+		ApiAction action = new ApiActionEntityAdapter<List<DeviceObjectMetadata>>() {
+
+			@Override
+			public List<DeviceObjectMetadata> processAndReturnResult() {
+				List<DeviceObjectMetadata> resultList = deviceObjectMetadataService.selectByContZPoint(contZPointId);
+
+				boolean checkTransform = deviceObjectMetadataService.deviceObjectMetadataTransform(resultList);
+
+				if (checkTransform) {
+					resultList = deviceObjectMetadataService.selectByContZPoint(contZPointId);
+				}
+				return resultList;
 			}
-		}
+		};
 
-		List<DeviceObjectMetadata> resultList = deviceObjectMetadataService.selectByContZPoint(contZPointId,
-				deviceMetadataType);
-
-		return responseOK(resultList);
+		return WebApiHelper.processResponceApiActionOkBody(action);
 	}
 
 }

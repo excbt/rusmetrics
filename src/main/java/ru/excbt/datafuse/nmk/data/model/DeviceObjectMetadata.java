@@ -98,6 +98,9 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "is_transformed")
 	private Boolean isTransformed;
 
+	@Column(name = "cont_zpoint_id")
+	private Long contZPointId;
+
 	public String getDeviceMetadataType() {
 		return deviceMetadataType;
 	}

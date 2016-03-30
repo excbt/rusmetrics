@@ -71,4 +71,5 @@ public class DeviceMetadataType extends AbstractKeynameEntity implements Disable
 	public void setIsDisabled(Boolean isDisabled) {
 		this.isDisabled = isDisabled;
 	}
+
 }

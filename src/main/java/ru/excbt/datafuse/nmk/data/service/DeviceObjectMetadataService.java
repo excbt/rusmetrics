@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransform;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransformHistory;
@@ -51,6 +52,8 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 	public final static String PROP_VARS_SPLITTER = ",";
 
+	//public final static DEVICE_METADATA_MAPPER	
+
 	@Autowired
 	private MeasureUnitRepository measureUnitRepository;
 
@@ -71,6 +74,9 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 	@Autowired
 	private ContZPointService contZPointService;
+
+	@Autowired
+	private DeviceObjectDataSourceService deviceObjectDataSourceService;
 
 	/**
 	 * 
@@ -265,6 +271,41 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId) {
+		List<DeviceObjectMetadata> result = new ArrayList<>();
+		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
+		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
+			return result;
+		}
+
+		DeviceObject deviceObject = deviceObjects.get(0);
+
+		// select deviceMetadataType from DeviceObjectDataSource 
+		List<DeviceObjectDataSource> deviceDataSourceList = deviceObjectDataSourceService
+				.selectActiveDeviceObjectDataSource(deviceObject.getId());
+
+		if (deviceDataSourceList.isEmpty() || deviceDataSourceList.size() > 1) {
+			return result;
+		}
+
+		DeviceObjectDataSource deviceDataSource = deviceDataSourceList.get(0);
+
+		String deviceMetadataType = deviceDataSource.getSubscrDataSource().getDataSourceType().getDeviceMetadataType();
+
+		// get result
+
+		result = deviceObjectMetadataRepository.selectDeviceObjectMetadata(deviceObject.getId(), deviceMetadataType);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param deviceMetadataType
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId, String deviceMetadataType) {
 		List<DeviceObjectMetadata> result = new ArrayList<>();
 		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
@@ -285,8 +326,10 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deviceObjectMetadataTransform(List<DeviceObjectMetadata> deviceObjectMetadataList) {
+	public boolean deviceObjectMetadataTransform(List<DeviceObjectMetadata> deviceObjectMetadataList) {
 		checkNotNull(deviceObjectMetadataList);
+
+		boolean result = false;
 
 		List<DeviceObjectMetadata> deleteMetadataList = new ArrayList<>();
 		List<DeviceObjectMetadata> newDeviceMetadataList = new ArrayList<>();
@@ -337,15 +380,20 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 			}
 		}
 
-		logger.debug("transform count: {}", transformMetadataList.size());
-		logger.debug("new metadata count: {}", newDeviceMetadataList.size());
-		logger.debug("transform history count: {}", tranformHistoryList.size());
-		logger.debug("deleted count: {}", deleteMetadataList.size());
+		logger.trace("transform count: {}", transformMetadataList.size());
+		logger.trace("new metadata count: {}", newDeviceMetadataList.size());
+		logger.trace("transform history count: {}", tranformHistoryList.size());
+		logger.trace("deleted count: {}", deleteMetadataList.size());
 
 		deviceObjectMetadataRepository.save(newDeviceMetadataList);
 		deviceObjectMetadataTransformRepository.save(transformMetadataList);
 		deviceObjectMetadataTransformHistoryRepository.save(tranformHistoryList);
 		deviceObjectMetadataRepository.delete(deleteMetadataList);
+
+		result = !transformMetadataList.isEmpty() || !newDeviceMetadataList.isEmpty() || !tranformHistoryList.isEmpty()
+				|| !deleteMetadataList.isEmpty();
+
+		return result;
 
 	}
 
