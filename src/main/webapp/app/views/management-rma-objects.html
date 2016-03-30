@@ -235,14 +235,17 @@
 <!--                        <i class="pull-right btn btn-default btn-xs glyphicon glyphicon-trash" ng-click="removeTree()" title="Удалить дерево"></i>-->
 <!--            </div>-->
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+<!--
                 <div class="col-xs-3 col-md-3 noPadding">
                     <button class="btn nmc-main-add-button" ng-click="newNode()">Добавить узел</button>
                 </div>
+-->
 <!--                <div class="col-xs-7 col-md-7"></div>-->
                 <div class="input-group col-xs-4 col-md-4 filter pull-left nmc-search-form">   
                     <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                     <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                 </div>
+<!--
                 <div class="col-xs-5 col-md-5">
                     <div class="btn-group" 
                          ng-init="visibleText='Все уровни'">
@@ -264,43 +267,70 @@
                         <li><a href="" ng-click="visibleText='Уровень этажа'">Уровень этажа</a></li>
                       </ul>
                     </div>
+-->
 <!--
                         <label class="nmc-form-label">Всего:</label>
                          <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
                         <span id="timeOutput"></span>
 -->
-                </div>
+<!--                </div>-->
             </div>
 
             <script type="text/ng-template" id="items_renderer.html">
-                <div ui-tree-handle ng-click="selectNode(item)">
-                  <a class="btn btn-xs" 
+                <div ui-tree-handle ng-click="selectNode(item)"
+                     ng-mouseover = "item.isHover = true"
+                     ng-mouseleave = "item.isHover = false"
+                     ng-class="{'nmc-bg-distinguish': item.isHover}">
+                  <i class="btn btn-xs" 
                      data-nodrag ng-click="toggle(this)">
                       <span class="glyphicon" 
-                            ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}">
+                            ng-class="{'glyphicon-plus': collapsed, 'glyphicon-minus': !collapsed}">
                       </span>
-                    </a>
+                    </i>
                   {{item.fullName || item.customServiceName}}
-                  <a class="pull-right btn btn-xs" 
+<!--
+                  <i class="pull-right btn btn-xs" 
                      data-nodrag 
                      ng-click="remove(this)" 
-                     ng-disabled="item.zpoints.length!=0">
+                     ng-disabled="item.zpoints.length!=0"
+                     ng-show="item.isHover">
                       <span class="glyphicon glyphicon-trash">
                       </span>
-                    </a>
-                  <a class="pull-right btn btn-xs" 
+                    </i>
+                  <i class="pull-right btn btn-xs" 
                      data-nodrag 
-                     ng-click="openNode(this)">
+                     ng-click="openNode(this)"
+                     ng-show="item.isHover">
                       <span class="glyphicon glyphicon-list">
                       </span>
-                    </a>
-                  <a class="pull-right btn btn-xs" 
+                    </i>
+                  <i class="pull-right btn btn-xs" 
                      data-nodrag 
-                     ng-click="newSubItem(this)" 
+                     ng-click="newSubItem(this)"
+                     ng-show="item.isHover"
                      style="margin-right: 8px;">
                       <span class="glyphicon glyphicon-plus">
                       </span>
-                    </a>
+                    </i>
+-->
+                    <div class="btn-group pull-right"
+                         ng-show="item.isHover">
+                      <i type="button" 
+                              class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                              data-toggle="dropdown" 
+                              aria-haspopup="true" 
+                              aria-expanded="false"
+                              ng-disabled=false
+                         >
+<!--                         <span class="caret"></span>-->
+                      </i>
+                      <ul class="dropdown-menu">
+                        <li><a href="">Добавить узел</a></li>
+                        <li><a href="" >Свойства узла</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li><a href="" >Удалить узел</a></li>                        
+                      </ul>
+                    </div>
                 </div>
                 <ol ui-tree-nodes="options" ng-model="item.zpoints" ng-class="{hidden: collapsed}">
                   <li ng-repeat="item in item.zpoints" ui-tree-node ng-include="'items_renderer.html'">
