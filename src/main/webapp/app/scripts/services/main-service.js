@@ -291,10 +291,10 @@ angular.module('portalNMC')
         return result;
     };
     
-    var checkPositiveNumberValue = function(numvalue){                    
+    var checkPositiveNumberValue = function(numvalue){        
         var result = true;
         result = checkNumericValue(numvalue)
-        if (!result){
+        if (!result){          
             //if numvalue is not number -> return false
             return result;
         };
@@ -470,6 +470,7 @@ angular.module('portalNMC')
         getServerErrorByResultCode,
         getUserServicesPermissions,
         isAdmin,
+        isNumeric,
         isRma,
         isReadonly,
         isSystemuser,

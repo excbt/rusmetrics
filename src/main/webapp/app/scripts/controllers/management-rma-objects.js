@@ -49,6 +49,7 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings.rmaUrl = "../api/rma";
                 $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
                 $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
+                $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();
@@ -336,14 +337,42 @@ angular.module('portalNMC')
                 
                 var successCallbackUpdateObject = function(e){ 
                     $rootScope.$broadcast('objectSvc:requestReloadData');
+//console.log(e);
+//console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
+                                        //update zpoints info
+                    var mode = "Ex";
+                    objectSvc.getZpointsDataByObject(e, mode).then(function(response){
+                        var tmp = [];
+                        var copyTmp = angular.copy(response.data);
+//console.log(copyTmp);                              
+                        if (mode == "Ex"){
+                            tmp = response.data.map(function(el){
+                                var result = {};
+                                result = el.object;
+                                result.lastDataDate = el.lastDataDate;
+//console.log(el.lastDataDate);                                    
+                                return result;
+                            });
+                        }else{
+                            tmp = data;
+                        };
+                        var zPointsByObject = tmp;                          
+                        var zpoints = [];
+                        for(var i = 0; i < zPointsByObject.length; i++){
+                            var zpoint = mapZpointProp(zPointsByObject[i]);
+                            zpoints[i] = zpoint;                  
+                        }
+                        e.zpoints = zpoints;
+
+                    });
                     var objIndex = null;
                     objIndex = findObjectIndexInArray(e.id, $scope.objects);
                     if (objIndex != null) {$scope.objects[objIndex] = e};
                     objIndex = null;
                     objIndex = findObjectIndexInArray(e.id, $scope.objectsOnPage);
                     if (objIndex != null) {$scope.objectsOnPage[objIndex] = e};
-                    $scope.currentObject = {};
+//                    $scope.currentObject = {};
                     successCallback(e, null);
                 };
                 
@@ -500,14 +529,31 @@ angular.module('portalNMC')
                 $scope.selectedObject = function(objId){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
-                        $scope.currentObject = resp.data;                    
-                        if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement != null)){
+                        $scope.currentObject = resp.data;
+//console.log($scope.currentObject);                        
+                        if (angular.isDefined($scope.currentObject._activeContManagement) && 
+                            ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                         };
                         checkGeo();
                     }, function(error){
                         console.log(error);
                     });
+                };
+                
+                var getTemperatureSchedulesByObjectForZpoint = function(objId, zp){
+                    $http.get($scope.objectCtrlSettings.tempSchBaseUrl + "/" + objId).then(function(resp){
+                        zp.tempSchedules = resp.data;
+                        if (mainSvc.checkUndefinedNull(zp.temperatureChartId)){
+                            return "temperatureChartId is null";
+                        };
+                        zp.tempSchedules.some(function(sch){
+                            if (sch.id == zp.temperatureChartId){
+                                zp.tChart = sch;
+                                return true;
+                            };
+                        });
+                    }, errorCallback);
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){
@@ -518,8 +564,7 @@ angular.module('portalNMC')
                         $scope.currentObject.zpoints.some(function(element){
                             if (element.id === zpointId){
                                 curZpoint = angular.copy(element);
-                                return true;
-                            }
+                            };
                         });
                     };
                     $scope.currentZpoint = curZpoint;
@@ -573,6 +618,8 @@ angular.module('portalNMC')
                     result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
                     result.zpointLastDataDate  = zpoint.lastDataDate;  
                     result.isDroolsDisable = zpoint.isDroolsDisable;
+                    result.temperatureChartId = zpoint.temperatureChartId;
+//                    result.tempSchedules = zpoint.tempSchedules;
                     return result;
                 };
                 
@@ -589,7 +636,7 @@ angular.module('portalNMC')
                     if ((curObject.showGroupDetails == true) && (zpTable == null)){                        
                         curObject.showGroupDetails = true;
                     }else{                       
-                        curObject.showGroupDetails =!curObject.showGroupDetails;
+                        curObject.showGroupDetails = !curObject.showGroupDetails;
                     };                                           
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
                     if (curObject.showGroupDetails === true){
@@ -786,7 +833,10 @@ angular.module('portalNMC')
                 };
                 
                 $scope.getZpointSettings = function(objId, zpointId){
-                    $scope.selectedZpoint(objId, zpointId);          
+                    $scope.selectedZpoint(objId, zpointId);
+                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
+                        return "currentZpoint is undefined or null.";
+                    };
 //console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
@@ -819,10 +869,13 @@ angular.module('portalNMC')
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
                     zps.isDroolsDisable = object.isDroolsDisable;
+                    zps.temperatureChartId = object.temperatureChartId;
                     zps.winter = {};
                     zps.summer = {};
                     $scope.zpointSettings = zps;
+//console.log($scope.zpointSettings);                    
                     $scope.getDevices($scope.currentObject, false);
+                    getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
                 };
                 
                 $scope.getZpointSettingsExpl = function(objId, zpointId){
@@ -832,8 +885,7 @@ angular.module('portalNMC')
                                         //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
                     var table = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(table).query(function (data) {
-                        for(var i = 0; i < data.length; i++){
-                                                    
+                        for(var i = 0; i < data.length; i++){                                                    
                             if(data[i].settingMode == "winter"){
                                 winterSet = data[i];
                             }else if(data[i].settingMode == "summer"){
@@ -901,6 +953,11 @@ angular.module('portalNMC')
 //                    if ($scope.zpointSettings.singlePipe){
 //                        $scope.zpointSettings.doublePipe = false;
 //                    };
+                        //perform temperature schedule
+                    if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)){
+                        $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
+                        $scope.zpointSettings.tChart = null;
+                    };
                     var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)){
                         url = url + "/" + $scope.zpointSettings.id;
@@ -1587,7 +1644,7 @@ angular.module('portalNMC')
                         count: 10,
                         /* Вызывается, когда пользователь выбирает одну из подсказок */
                         onSelect: function(suggestion) {
-                            console.log(suggestion);
+//                            console.log(suggestion);
                             $scope.currentObject.fullAddress = suggestion.value;
                             $scope.currentSug = suggestion;
                             $scope.currentObject.isAddressAuto = true;

@@ -11,8 +11,8 @@ app
         };
     }else{
         $scope.navPlayerDates = {
-            startDate :  moment().subtract(6, 'days').startOf('day'),
-            endDate :  moment().endOf('day')
+            startDate :   $rootScope.reportStart || moment().subtract(6, 'days').startOf('day'),
+            endDate :   $rootScope.reportEnd || moment().endOf('day')
         };
     };
     
@@ -89,7 +89,9 @@ app
         format : 'DD.MM.YYYY'
     };
     
-    $scope.$watch('navPlayerDates', function(newDates, oldDates) {       
+    $scope.$watch('navPlayerDates', function(newDates, oldDates) { 
+//console.log(newDates);
+//console.log(oldDates); 
         if (newDates === oldDates){
             return;
         };

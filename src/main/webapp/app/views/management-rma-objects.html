@@ -22,10 +22,8 @@
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-<!--
-        <li id="users_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Темп. графики</a></li>
+        <li id="temperature_schedules_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
     </ul>
--->
 
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
@@ -284,37 +282,34 @@
                                     </div>
                                 </td>
                             </tr>
-<!--
                             <tr>
                                 <td class="col-sm-3">
                                 	<label for="inputTempSch">Температурный график</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom">
--->
 <!--
                                         <select class="form-control nmc-input-data nmc-select-form" 
                                                 ng-model="zpointSettings.tempSch" 
                                                 ng-options="sch.id as sch.name for sch in data.tempSchedules">
                                         </select>
 -->
-<!--
                                         <ui-select class="nmc-ui-select-form" 
-                                                   ng-model="zpointSettings.tempSch" 
+                                                   ng-model="zpointSettings.tChart" 
                                                    theme="bootstrap" 
                                                    ng-disabled="disabled">
-                                            <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
-                                            <ui-select-choices group-by="'organizationName'" repeat="rso in data.rsoOrganizations | propsFilter: {organizationName: $select.search, organizationDescription: $select.search}">
-                                              <div ng-bind-html="rso.organizationName | highlight: $select.search"></div>
+                                            <ui-select-match placeholder="">{{$select.selected.chartName}}</ui-select-match>
+                                            <ui-select-choices repeat="sch in zpointSettings.tempSchedules | propsFilter: {chartName: $select.search}">
+                                              <div ng-bind-html="sch.chartName | highlight: $select.search"></div>
                                               <small>
-                                                описание: <span ng-bind-html="rso.organizationDescription | highlight: $select.search"></span>
+                                                макс. / мин. : <span ng-bind-html="sch.maxT | highlight: $select.search"></span> / 
+                                                <span ng-bind-html="sch.minT | highlight: $select.search"></span>  
                                               </small>
                                             </ui-select-choices>
                                           </ui-select>
                                     </div>
                                 </td>
                             </tr>
--->
                             <tr>
                                 <td class="col-sm-3">
                                     <label for="inputTSNumber">Номер теплосистемы</label>

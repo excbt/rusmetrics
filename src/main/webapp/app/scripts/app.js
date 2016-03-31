@@ -295,8 +295,10 @@ app.filter('propsFilter', function() {
         var itemMatches = false;
         var keys = Object.keys(props);                  
         for (var i = 0; i < keys.length; i++) {
-          var prop = keys[i];
-          var text = props[prop].toLowerCase();            
+          var prop = keys[i];    
+          var text = props[prop].toLowerCase(); 
+//console.log(prop);                        
+//console.log(item);            
           if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
             itemMatches = true;
             break;

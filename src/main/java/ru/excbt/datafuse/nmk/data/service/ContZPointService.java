@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
@@ -81,6 +82,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Autowired
 	private ContZPointSettingModeService contZPointSettingModeService;
 
+	@Autowired
+	private TemperatureChartService temperatureChartService;
+
 	/**
 	 * Краткая информация по точке учета
 	 * 
@@ -96,8 +100,8 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		private final String contServiceType;
 		private final String contServiceTypeCaption;
 
-		public ContZPointShortInfo(Long contZPointId, Long contObjectId, String customServiceName, String contServiceType,
-				String contServiceTypeCaption) {
+		public ContZPointShortInfo(Long contZPointId, Long contObjectId, String customServiceName,
+				String contServiceType, String contServiceTypeCaption) {
 			this.contZPointId = contZPointId;
 			this.contObjectId = contObjectId;
 			this.customServiceName = customServiceName;
@@ -154,6 +158,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 			i.getDeviceObjects().forEach(j -> {
 				j.loadLazyProps();
 			});
+
+			if (i.getTemperatureChart() != null) {
+				i.getTemperatureChart().getId();
+				i.getTemperatureChart().getChartComment();
+			}
+
 		});
 
 		return result;
@@ -179,6 +189,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 			i.getObject().getDeviceObjects().forEach(j -> {
 				j.loadLazyProps();
 			});
+
+			if (i.getObject().getTemperatureChart() != null) {
+				i.getObject().getTemperatureChart().getId();
+				i.getObject().getTemperatureChart().getChartComment();
+			}
+
 		});
 
 		return result;
@@ -458,6 +474,15 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		initContServiceType(contZPoint);
 		initRso(contZPoint);
 
+		if (contZPoint.getTemperatureChartId() != null) {
+			TemperatureChart chart = temperatureChartService.selectTemperatureChart(contZPoint.getTemperatureChartId());
+			if (chart == null) {
+				throw new PersistenceException(
+						String.format("TemperatureChart (id=%d) is not found", contZPoint.getTemperatureChartId()));
+			}
+			contZPoint.setTemperatureChart(chart);
+		}
+
 		contZPoint.setIsManual(true);
 
 		ContZPoint result = contZPointRepository.save(contZPoint);
@@ -471,7 +496,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initContObject(ContZPoint contZPoint) {
-		ContObject contObject = contObjectService.findOne(contZPoint.getContObjectId());
+		ContObject contObject = contObjectService.findContObject(contZPoint.getContObjectId());
 		if (contObject == null) {
 			throw new PersistenceException(
 					String.format("ContObject(id=%d) is not found", contZPoint.getContObjectId()));
@@ -549,6 +574,17 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Long> selectDeviceObjectIds(long contZPointId) {
 		return contZPointRepository.selectDeviceObjectIds(contZPointId);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public Long selectContObjectId(long contZPointId) {
+		List<Long> ids = contZPointRepository.selectContObjectByContZPointId(contZPointId);
+		return ids.isEmpty() ? null : ids.get(0);
 	}
 
 }

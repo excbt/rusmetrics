@@ -914,6 +914,10 @@ tr.nmc-inactive-price > td{
     float: none !important;
     border-radius: 0;
 }
+/* Настройки календаря у jQuery Datepicker*/
+.ui-datepicker-calendar {
+    display: none;
+}
 
 /* Ввод значений через "/" - например ввод Тмакс / Тмин для температурных графиков*/
 .nmc-input-tmax-tmin > .form-group{

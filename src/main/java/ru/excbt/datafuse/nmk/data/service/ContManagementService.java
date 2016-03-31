@@ -69,7 +69,7 @@ public class ContManagementService implements SecuredRoles {
 			}
 		});
 
-		ContObject co = contObjectService.findOne(contObjectId);
+		ContObject co = contObjectService.findContObject(contObjectId);
 		if (co == null) {
 			throw new PersistenceException(String.format("ContObject(id=%d) not found", contObjectId));
 		}

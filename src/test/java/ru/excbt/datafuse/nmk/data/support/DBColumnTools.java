@@ -41,6 +41,9 @@ public class DBColumnTools extends JpaSupportTest {
 		m.put("numeric", "BigDecimal");
 		m.put("boolean", "Boolean");
 		m.put("timestamp without time zone", "Date");
+		m.put("uuid", "UUID");
+		m.put("date", "Date");
+
 		DB_TYPE_MAP = Collections.unmodifiableMap(m);
 	}
 
@@ -185,7 +188,11 @@ public class DBColumnTools extends JpaSupportTest {
 
 		sb.append(NEW_LINE);
 		sb.append(NEW_LINE);
+		sb.append("import java.util.UUID;");
+		sb.append(NEW_LINE);
 		sb.append("import java.util.Date;");
+		sb.append(NEW_LINE);
+		sb.append("import java.math.BigDecimal;");
 		sb.append(NEW_LINE);
 		sb.append(NEW_LINE);
 		sb.append("import javax.persistence.Column;");
@@ -204,7 +211,7 @@ public class DBColumnTools extends JpaSupportTest {
 		sb.append(NEW_LINE);
 		sb.append("@Entity");
 		sb.append(NEW_LINE);
-		sb.append(String.format("@Table(name = \"%s\")", tableName));
+		sb.append(String.format("@Table(schema = DBMetadata.SCHEME_PORTAL, name = \"%s\")", tableName));
 		sb.append(NEW_LINE);
 		sb.append(String.format("public class %s extends AbstractAuditableModel {", parseDBName(tableName, true)));
 		sb.append(NEW_LINE);
@@ -237,6 +244,10 @@ public class DBColumnTools extends JpaSupportTest {
 			String t = DB_TYPE_MAP.get(i.dataType);
 
 			sb.append(String.format("@Column(name = \"%s\")", i.columnName));
+			if ("UUID".equals(t)) {
+				sb.append(NEW_LINE);
+				sb.append("@org.hibernate.annotations.Type(type = \"org.hibernate.type.PostgresUUIDType\")");
+			}
 			sb.append(NEW_LINE);
 			sb.append("private ");
 			sb.append(t != null ? t : ("!!!!!" + i.dataType));
@@ -291,7 +302,7 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "device_object_pke_type";
+		String tableName = "local_place_temperature_sst";
 
 		List<EntityColumn> entityColumns = getTableEntityProp("portal", tableName);
 		assertTrue(entityColumns.size() > 0);

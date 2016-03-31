@@ -135,7 +135,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 		//
 		// assertTrue(subscriberContObject.size() > 0);
 
-		ContObject testCO = contObjectService.findOne(20118693L);
+		ContObject testCO = contObjectService.findContObject(20118693L);
 		assertNotNull(testCO);
 		return testCO;
 	}
@@ -154,7 +154,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 		logger.info("daDataJson: {}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
 
-		ContObject testCO = contObjectService.findOne(id);
+		ContObject testCO = contObjectService.findContObject(id);
 		String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 
 		testCO.set_daDataSraw(daDataJson);

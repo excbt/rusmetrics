@@ -512,13 +512,33 @@ angular.module('portalNMC')
           dateFormat: "yy-mm-dd",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+            beforeShow: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            },
+          onChangeMonthYear: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            }
         });
         $('#inputPlanEndDate').datepicker({
           dateFormat: "yy-mm-dd",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+            beforeShow: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            },
+          onChangeMonthYear: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            }
         });                  
     });
     

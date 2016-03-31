@@ -306,8 +306,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
             
             oneNotice.contObjectId = el.contObjectId;
 //            oneNotice.zpointId = el.contEvent.contZPointId;
-            oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);
-            for (var i=0; i<$scope.objects.length; i++){                       
+            oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);            
+            for (var i=0; i < $scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
                     oneNotice.noticeObjectName = $scope.objects[i].fullName;  
                     break;
@@ -1122,7 +1122,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         return $scope.ctrlSettings.loading;        
     };
     
-    $rootScope.$on('navPlayerDatesChanged', function(){
+    $scope.$on('navPlayerDatesChanged', function(){
 //console.log("Notices. Get event 'navPlayerDatesChanged'"); 
         //watch changes of date interval
         $scope.getResultsPage(1);

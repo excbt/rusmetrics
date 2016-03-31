@@ -162,7 +162,7 @@ public class TariffPlanController extends SubscrApiController {
 		if (contObjectIds != null) {
 
 			for (long contObjectId : contObjectIds) {
-				ContObject co = contObjectService.findOne(contObjectId);
+				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
 					return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid ContObjectId"));
 				}
@@ -224,7 +224,7 @@ public class TariffPlanController extends SubscrApiController {
 		if (contObjectIds != null) {
 
 			for (long contObjectId : contObjectIds) {
-				ContObject co = contObjectService.findOne(contObjectId);
+				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
 					return ResponseEntity.badRequest().body("Invalid ContObjectId");
 				}

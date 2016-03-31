@@ -662,19 +662,49 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                        beforeShow: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        },
+                      onChangeMonthYear: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        }
                   });
                   $('#inputSingleDateEnd').datepicker({
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                        beforeShow: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        },
+                      onChangeMonthYear: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        }
                   });
                   $('#inputStartDate').datepicker({
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                        beforeShow: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        },
+                      onChangeMonthYear: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        }
                   });
 
     });

@@ -351,7 +351,7 @@ public class SubscrContObjectService implements SecuredRoles {
 		checkNotNull(subscriber);
 		checkNotNull(subscrBeginDate);
 
-		ContObject contObject = contObjectService.findOne(contObjectId);
+		ContObject contObject = contObjectService.findContObject(contObjectId);
 
 		SubscrContObject subscrContObject = new SubscrContObject();
 		subscrContObject.setContObject(contObject);

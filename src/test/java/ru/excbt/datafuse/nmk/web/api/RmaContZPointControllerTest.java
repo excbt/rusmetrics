@@ -80,4 +80,10 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 		return o == null ? null : o.getId();
 	}
 
+	@Ignore
+	@Test
+	public void testContZPointTemperatureChart() throws Exception {
+		_testGetJson("/api/subscr/contObjects/488501788/contZPointsEx");
+	}
+
 }
