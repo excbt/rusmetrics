@@ -91,4 +91,19 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata");
 	}
 
+	@Test
+	public void testContZPointMetadataSrcProp() throws Exception {
+		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata/srcProp");
+	}
+
+	@Test
+	public void testContZPointMetadataDestProp() throws Exception {
+		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata/destProp");
+	}
+
+	@Test
+	public void testContZPointMetadataDestDb() throws Exception {
+		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata/destDb");
+	}
+
 }

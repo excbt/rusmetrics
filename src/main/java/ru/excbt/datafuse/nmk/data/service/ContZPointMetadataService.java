@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,11 +16,24 @@ import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.MeasureUnitRepository;
 
 @Service
 public class ContZPointMetadataService {
+
+	private static final List<String> HWATER_COLUMNS;
+	private static final List<String> HWATER_SERVICES;
+
+	static {
+		HWATER_COLUMNS = Collections.unmodifiableList(
+				Arrays.asList("t_in", "t_out", "t_cold", "t_outdoor", "m_in", "m_out", "m_delta", "v_in", "v_out",
+						"v_delta", "h_in", "h_out", "h_delta", "p_in", "p_out", "p_delta", "work_time", "fail_time"));
+		HWATER_SERVICES = Collections.unmodifiableList(Arrays.asList(ContServiceTypeKey.HEAT.getKeyname(),
+				ContServiceTypeKey.CW.getKeyname(), ContServiceTypeKey.HW.getKeyname()));
+	}
 
 	@Autowired
 	private ContZPointMetadataRepository contZPointMetadataRepository;
@@ -60,7 +75,6 @@ public class ContZPointMetadataService {
 
 		DeviceObject deviceObject = deviceObjects.get(0);
 
-		// select deviceMetadataType from DeviceObjectDataSource 
 		List<DeviceObjectDataSource> deviceDataSourceList = deviceObjectDataSourceService
 				.selectActiveDeviceObjectDataSource(deviceObject.getId());
 
@@ -84,13 +98,7 @@ public class ContZPointMetadataService {
 				.filter(i -> i.getMetaNumber() == null || (metaNumber != null && i.getMetaNumber().equals(metaNumber)))
 				.collect(Collectors.toList());
 
-		for (DeviceMetadata m : tsMetadataList) {
-			ContZPointMetadata contZPointMetadata = contZPointMetadataFactory(m);
-			contZPointMetadata.setContZPoint(zpoint);
-			contZPointMetadata.setContZPointId(zpoint.getId());
-			contZPointMetadata.setDeviceObjectId(deviceObject.getId());
-			result.add(contZPointMetadata);
-		}
+		result = contZPointMetadataFactory(tsMetadataList, zpoint, deviceObject);
 
 		return result;
 	};
@@ -100,7 +108,8 @@ public class ContZPointMetadataService {
 	 * @param src
 	 * @return
 	 */
-	private ContZPointMetadata contZPointMetadataFactory(DeviceMetadata src) {
+	public ContZPointMetadata contZPointMetadataFactory(DeviceMetadata src, ContZPoint contZPoint,
+			DeviceObject deviceObject) {
 
 		ContZPointMetadata dst = new ContZPointMetadata();
 
@@ -121,7 +130,86 @@ public class ContZPointMetadataService {
 		dst.setDestDbType(src.getDestDbType());
 		dst.setMetaVersion(src.getMetaVersion());
 
+		if (contZPoint != null) {
+			dst.setContZPoint(contZPoint);
+			dst.setContZPointId(contZPoint.getId());
+		}
+		if (deviceObject != null) {
+			dst.setDeviceObject(deviceObject);
+			dst.setDeviceObjectId(deviceObject.getId());
+		}
+
 		return dst;
+	}
+
+	/**
+	 * 
+	 * @param src
+	 * @return
+	 */
+	public ContZPointMetadata contZPointMetadataFactory(DeviceMetadata src) {
+		return contZPointMetadataFactory(src, null, null);
+	}
+
+	/**
+	 * 
+	 * @param srcList
+	 * @return
+	 */
+	public List<ContZPointMetadata> contZPointMetadataFactory(List<DeviceMetadata> srcList, ContZPoint contZPoint,
+			DeviceObject deviceObject) {
+		List<ContZPointMetadata> result = new ArrayList<>();
+		for (DeviceMetadata m : srcList) {
+			ContZPointMetadata contZPointMetadata = contZPointMetadataFactory(m, contZPoint, deviceObject);
+			result.add(contZPointMetadata);
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param metadataList
+	 * @return
+	 */
+	public List<EntityColumn> buildSrcProps(List<ContZPointMetadata> metadataList) {
+
+		List<EntityColumn> result = metadataList.stream().filter(i -> i.getMetaNumber() != null).map(i -> {
+			return new EntityColumn(i.getSrcProp());
+		}).sorted().collect(Collectors.toList());
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param metadataList
+	 * @return
+	 */
+	public List<EntityColumn> buildDestProps(List<ContZPointMetadata> metadataList) {
+
+		List<EntityColumn> result = metadataList.stream().filter(i -> i.getMetaNumber() != null).map(i -> {
+			return new EntityColumn(i.getDestProp(), i.getDestDbType());
+		}).sorted().collect(Collectors.toList());
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	public List<EntityColumn> selectContZPointDestColumns(Long contZPointId) {
+
+		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+
+		if (zpoint != null && HWATER_SERVICES.contains(zpoint.getContServiceTypeKeyname())) {
+			return HWATER_COLUMNS.stream().sorted().map(i -> {
+				return new EntityColumn(i, "NUMERIC");
+			}).collect(Collectors.toList());
+		}
+
+		return new ArrayList<EntityColumn>();
 	}
 
 }
