@@ -20,6 +20,9 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 	@Autowired
 	private DeviceObjectMetadataService deviceObjectMetadataService;
 
+	@Autowired
+	private MeasureUnitService measureUnitService;
+
 	/**
 	 * 
 	 * @throws Exception
@@ -66,7 +69,7 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSameMeasureUnits() throws Exception {
-		List<MeasureUnit> measureUnits = deviceObjectMetadataService.selectMeasureUnitsSame("P_MPA");
+		List<MeasureUnit> measureUnits = measureUnitService.selectMeasureUnitsSame("P_MPA");
 		assertTrue(measureUnits.size() > 0);
 	}
 

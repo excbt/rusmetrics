@@ -18,13 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.service.ContZPointMetadataService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 /**
  * Контроллер для работы с точками учета для РМА
@@ -42,6 +44,9 @@ public class RmaContZPointController extends SubscrContZPointController {
 
 	@Autowired
 	private OrganizationService organizationService;
+
+	@Autowired
+	private ContZPointMetadataService contZPointMetadataService;
 
 	/**
 	 * 
@@ -143,4 +148,27 @@ public class RmaContZPointController extends SubscrContZPointController {
 		return responseOK(resultList);
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		if (!canAccessContObject(contObjectId)) {
+			responseForbidden();
+		}
+
+		List<ContZPointMetadata> result = contZPointMetadataService.selectNewMetadata(contZPointId);
+
+		return responseOK(result);
+
+	}
 }

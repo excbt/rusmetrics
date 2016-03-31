@@ -27,11 +27,9 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransform;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransformHistory;
-import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataTransformHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataTransformRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.MeasureUnitRepository;
 import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -55,7 +53,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	//public final static DEVICE_METADATA_MAPPER	
 
 	@Autowired
-	private MeasureUnitRepository measureUnitRepository;
+	private MeasureUnitService measureUnitService;
 
 	@Autowired
 	private DeviceObjectMetadataRepository deviceObjectMetadataRepository;
@@ -77,32 +75,6 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 	@Autowired
 	private DeviceObjectDataSourceService deviceObjectDataSourceService;
-
-	/**
-	 * 
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MeasureUnit> selectMeasureUnits() {
-
-		List<MeasureUnit> resultList = measureUnitRepository.findAll();
-
-		return ObjectFilters.deletedFilter(resultList);
-
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MeasureUnit> selectMeasureUnitsSame(String measureUnit) {
-
-		List<MeasureUnit> resultList = measureUnitRepository.selectMeasureUnitsSame(measureUnit);
-
-		return ObjectFilters.deletedFilter(resultList);
-
-	}
 
 	/**
 	 * 
