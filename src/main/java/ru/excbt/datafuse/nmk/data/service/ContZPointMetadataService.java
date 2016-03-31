@@ -35,6 +35,14 @@ public class ContZPointMetadataService {
 				ContServiceTypeKey.CW.getKeyname(), ContServiceTypeKey.HW.getKeyname()));
 	}
 
+	private class ContZPointMetadataKey {
+		private Long contZPointId;
+		private Long deviceObjectId;
+		private ContZPoint contZPoint;
+		private DeviceObject deviceObject;
+		private Integer tsNumber;
+	}
+
 	@Autowired
 	private ContZPointMetadataRepository contZPointMetadataRepository;
 
@@ -60,23 +68,13 @@ public class ContZPointMetadataService {
 
 		List<ContZPointMetadata> result = new ArrayList<>();
 
-		ContZPoint zpoint = contZPointService.findOne(contZPointId);
-
-		if (zpoint == null) {
-			return null;
+		ContZPointMetadataKey key = findContZPointMetadataKey(contZPointId);
+		if (key == null) {
+			return new ArrayList<>();
 		}
-
-		Integer metaNumber = zpoint.getTsNumber();
-
-		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
-		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
-			return result;
-		}
-
-		DeviceObject deviceObject = deviceObjects.get(0);
 
 		List<DeviceObjectDataSource> deviceDataSourceList = deviceObjectDataSourceService
-				.selectActiveDeviceObjectDataSource(deviceObject.getId());
+				.selectActiveDeviceObjectDataSource(key.deviceObjectId);
 
 		if (deviceDataSourceList.isEmpty() || deviceDataSourceList.size() > 1) {
 			return result;
@@ -86,7 +84,7 @@ public class ContZPointMetadataService {
 
 		String deviceMetadataType = deviceDataSource.getSubscrDataSource().getDataSourceType().getDeviceMetadataType();
 
-		Long deviceModelId = deviceObject.getDeviceModelId();
+		Long deviceModelId = key.deviceObject.getDeviceModelId();
 
 		List<DeviceMetadata> deviceMetadataList = deviceMetadataService.selectDeviceMetadata(deviceModelId,
 				deviceMetadataType);
@@ -95,10 +93,11 @@ public class ContZPointMetadataService {
 				.transformDeviceMetadata(deviceMetadataList);
 
 		List<DeviceMetadata> tsMetadataList = transformedMetadataList.stream()
-				.filter(i -> i.getMetaNumber() == null || (metaNumber != null && i.getMetaNumber().equals(metaNumber)))
+				.filter(i -> i.getMetaNumber() == null
+						|| (key.tsNumber != null && i.getMetaNumber().equals(key.tsNumber)))
 				.collect(Collectors.toList());
 
-		result = contZPointMetadataFactory(tsMetadataList, zpoint, deviceObject);
+		result = contZPointMetadataFactory(tsMetadataList, key.contZPoint, key.deviceObject);
 
 		return result;
 	};
@@ -210,6 +209,51 @@ public class ContZPointMetadataService {
 		}
 
 		return new ArrayList<EntityColumn>();
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContZPointMetadata> selectContZPointMetadata(Long contZPointId) {
+		ContZPointMetadataKey key = findContZPointMetadataKey(contZPointId);
+		if (key == null) {
+			return new ArrayList<>();
+		}
+
+		return contZPointMetadataRepository.selectZOntZPointMetadata(key.contZPointId, key.deviceObjectId);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	private ContZPointMetadataKey findContZPointMetadataKey(Long contZPointId) {
+
+		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+
+		if (zpoint == null) {
+			return null;
+		}
+
+		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
+		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
+			return null;
+		}
+
+		DeviceObject deviceObject = deviceObjects.get(0);
+
+		ContZPointMetadataKey result = new ContZPointMetadataKey();
+		result.tsNumber = zpoint.getTsNumber();
+		result.contZPoint = zpoint;
+		result.deviceObjectId = deviceObject.getId();
+		result.deviceObject = deviceObject;
+
+		return result;
+
 	}
 
 }
