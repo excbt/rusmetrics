@@ -34,7 +34,7 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "device_object_id")
-	private DeviceObject DeviceObject;
+	private DeviceObject deviceObject;
 
 	@Column(name = "device_object_id", insertable = false, updatable = false)
 	private Long deviceObjectId;
@@ -113,11 +113,11 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 	}
 
 	public DeviceObject getDeviceObject() {
-		return DeviceObject;
+		return deviceObject;
 	}
 
 	public void setDeviceObject(DeviceObject deviceObject) {
-		DeviceObject = deviceObject;
+		this.deviceObject = deviceObject;
 	}
 
 	public Long getDeviceObjectId() {

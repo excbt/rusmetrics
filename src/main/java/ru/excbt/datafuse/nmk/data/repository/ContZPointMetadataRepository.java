@@ -16,7 +16,7 @@ public interface ContZPointMetadataRepository extends CrudRepository<ContZPointM
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Query("SELECT FROM ContZPointMetadata m WHERE m.contZPointId = :contZPointId AND m.deviceObjectId = :deviceObjectId")
+	@Query("SELECT m FROM ContZPointMetadata m WHERE m.contZPointId = :contZPointId AND m.deviceObjectId = :deviceObjectId")
 	public List<ContZPointMetadata> selectZOntZPointMetadata(@Param("contZPointId") Long contZPointId,
 			@Param("deviceObjectId") Long deviceObjectId);
 }
