@@ -45,18 +45,30 @@ public class SubscrApiController extends WebApiController {
 
 	/**
 	 * 
+	 * @param checkIds
+	 * @param availableIds
+	 * @return
+	 */
+	protected boolean checkIds(Long[] checkIds, List<Long> availableIds) {
+
+		if (availableIds == null || availableIds.isEmpty()) {
+			return false;
+		}
+
+		boolean result = true;
+		for (Long id : checkIds) {
+			result = result && availableIds.contains(id);
+		}
+		return result;
+	}
+
+	/**
+	 * 
 	 * @param contObjectId
 	 * @return
 	 */
 	protected boolean canAccessContObject(Long contObjectId) {
-		if (contObjectId == null) {
-			return false;
-		}
-
-		if (currentUserService.isSystem()) {
-			return true;
-		}
-
+		checkNotNull(contObjectId);
 		Long[] contObjectIds = new Long[] { contObjectId };
 		return canAccessContObject(contObjectIds);
 	}
@@ -78,12 +90,37 @@ public class SubscrApiController extends WebApiController {
 		List<Long> subscrContObjectIds = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 
-		boolean result = true;
-		for (Long id : contObjectIds) {
-			result = result && subscrContObjectIds.contains(id);
+		return checkIds(contObjectIds, subscrContObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param contZPointIds
+	 * @return
+	 */
+	protected boolean canAccessContZPoint(Long[] contZPointIds) {
+		if (contZPointIds == null || contZPointIds.length == 0) {
+			return false;
 		}
 
-		return result;
+		if (currentUserService.isSystem()) {
+			return true;
+		}
+
+		List<Long> availableIds = subscrContObjectService.selectSubscriberContZPointIds(getCurrentSubscriberId());
+
+		return checkIds(contZPointIds, availableIds);
+	}
+
+	/**
+	 * 
+	 * @param contZPointIds
+	 * @return
+	 */
+	protected boolean canAccessContZPoint(Long contZPointId) {
+		checkNotNull(contZPointId);
+		Long[] contObjectIds = new Long[] { contZPointId };
+		return canAccessContObject(contObjectIds);
 	}
 
 	/**

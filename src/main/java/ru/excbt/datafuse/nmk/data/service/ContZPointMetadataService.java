@@ -6,9 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.PersistenceException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -19,10 +25,11 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.MeasureUnitRepository;
 
 @Service
 public class ContZPointMetadataService {
+
+	private static final Logger logger = LoggerFactory.getLogger(ContZPointMetadataService.class);
 
 	private static final List<String> HWATER_COLUMNS;
 	private static final List<String> HWATER_SERVICES;
@@ -48,9 +55,6 @@ public class ContZPointMetadataService {
 
 	@Autowired
 	private DeviceMetadataService deviceMetadataService;
-
-	@Autowired
-	private MeasureUnitRepository measureUnitRepository;
 
 	@Autowired
 	private ContZPointService contZPointService;
@@ -198,7 +202,7 @@ public class ContZPointMetadataService {
 	 * @param contZPointId
 	 * @return
 	 */
-	public List<EntityColumn> selectContZPointDestColumns(Long contZPointId) {
+	public List<EntityColumn> selectContZPointDestDB(Long contZPointId) {
 
 		ContZPoint zpoint = contZPointService.findOne(contZPointId);
 
@@ -220,10 +224,14 @@ public class ContZPointMetadataService {
 	public List<ContZPointMetadata> selectContZPointMetadata(Long contZPointId) {
 		ContZPointMetadataKey key = findContZPointMetadataKey(contZPointId);
 		if (key == null) {
+			logger.warn("No Metadata KEY Found");
 			return new ArrayList<>();
 		}
 
-		return contZPointMetadataRepository.selectZOntZPointMetadata(key.contZPointId, key.deviceObjectId);
+		logger.trace("SELECT contZPoint metadata for contZPointId: {}, deviceObjectId: {}", key.contZPointId,
+				key.deviceObjectId);
+
+		return contZPointMetadataRepository.selectContZPointMetadata(key.contZPointId, key.deviceObjectId);
 	}
 
 	/**
@@ -239,21 +247,81 @@ public class ContZPointMetadataService {
 			return null;
 		}
 
-		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
+		DeviceObject deviceObject = findDeviceObject(zpoint);
+		if (deviceObject == null) {
+			return null;
+		}
+
+		ContZPointMetadataKey result = new ContZPointMetadataKey();
+		result.tsNumber = zpoint.getTsNumber();
+		result.contZPoint = zpoint;
+		result.contZPointId = zpoint.getId();
+		result.deviceObject = deviceObject;
+		result.deviceObjectId = deviceObject.getId();
+
+		return result;
+
+	}
+
+	/**
+	 * 
+	 * @param contZPoint
+	 * @return
+	 */
+	private DeviceObject findDeviceObject(ContZPoint contZPoint) {
+		if (contZPoint == null) {
+			return null;
+		}
+
+		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPoint.getId());
 		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
 			return null;
 		}
 
 		DeviceObject deviceObject = deviceObjects.get(0);
 
-		ContZPointMetadataKey result = new ContZPointMetadataKey();
-		result.tsNumber = zpoint.getTsNumber();
-		result.contZPoint = zpoint;
-		result.deviceObjectId = deviceObject.getId();
-		result.deviceObject = deviceObject;
+		return deviceObject;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public int deleteOtherContZPointMetadata(Long contZPointId, Long deviceObjectId) {
+		return contZPointMetadataRepository.deleteOtherContZPointMetadata(contZPointId, deviceObjectId);
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<ContZPointMetadata> saveContZPointMetadata(List<ContZPointMetadata> entityList, Long contZPointId) {
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		if (contZPoint == null) {
+			throw new PersistenceException(String.format("ContZPoint (id=%d) is not found", contZPointId));
+		}
+
+		DeviceObject deviceObject = findDeviceObject(contZPoint);
+		if (deviceObject == null) {
+			throw new PersistenceException(
+					String.format("ContZPoint (id=%d) DeviceObject is not configured properly", contZPointId));
+		}
+
+		for (ContZPointMetadata e : entityList) {
+			e.setContZPoint(contZPoint);
+			e.setDeviceObject(deviceObject);
+		}
+
+		List<ContZPointMetadata> result = Lists.newArrayList(contZPointMetadataRepository.save(entityList));
+
+		deleteOtherContZPointMetadata(contZPointId, deviceObject.getId());
 
 		return result;
-
 	}
 
 }

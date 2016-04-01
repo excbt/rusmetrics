@@ -11,11 +11,16 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_zpoint_metadata")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class ContZPointMetadata extends AbstractAuditableModel {
 
 	/**
@@ -89,6 +94,9 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 
 	@Column(name = "meta_version")
 	private Integer metaVersion;
+
+	@Column(name = "dev_comment")
+	private String devComment;
 
 	@Version
 	private int version;
@@ -278,6 +286,14 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getDevComment() {
+		return devComment;
+	}
+
+	public void setDevComment(String devComment) {
+		this.devComment = devComment;
 	}
 
 }

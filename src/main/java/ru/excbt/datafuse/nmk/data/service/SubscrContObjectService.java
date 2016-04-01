@@ -267,6 +267,18 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Long> selectSubscriberContZPointIds(Long subscriberId) {
+		checkNotNull(subscriberId);
+		List<Long> result = subscrContObjectRepository.selectContZPointIds(subscriberId);
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointShortInfo> selectSubscriberContZPointShortInfo(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContZPointShortInfo> result = new ArrayList<>();
@@ -285,8 +297,8 @@ public class SubscrContObjectService implements SecuredRoles {
 			String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
 			String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
 			String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
-			ContZPointShortInfo info = new ContZPointShortInfo(contZPointId, contObjectId, customServiceName, contServiceType,
-					contServiceTypeCaption);
+			ContZPointShortInfo info = new ContZPointShortInfo(contZPointId, contObjectId, customServiceName,
+					contServiceType, contServiceTypeCaption);
 			result.add(info);
 		}
 

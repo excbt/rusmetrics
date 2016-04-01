@@ -1,13 +1,21 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
@@ -15,6 +23,8 @@ import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class RmaContZPointControllerTest extends AnyControllerTest {
+
+	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointControllerTest.class);
 
 	private final static long MANUAL_HW_CONT_ZPOINT_ID = 49492462;
 	private final static long MANUAL_CONT_OBJECT_ID = 733;
@@ -104,6 +114,27 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	@Test
 	public void testContZPointMetadataDestDb() throws Exception {
 		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata/destDb");
+	}
+
+	@Test
+	public void testContZPointMetadataCRUD() throws Exception {
+		final String content = _testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata");
+
+		List<ContZPointMetadata> metadata = fromJSON(new TypeReference<List<ContZPointMetadata>>() {
+		}, content);
+
+		assertNotNull(metadata);
+
+		logger.info("Found {} records", metadata.size());
+
+		for (ContZPointMetadata m : metadata) {
+			if (!m.isNew()) {
+				m.setDevComment("Updated by REST at: " + System.currentTimeMillis());
+			}
+		}
+
+		_testUpdateJson("/api/rma/contObjects/725/zpoints/512084866/metadata", metadata);
+
 	}
 
 }

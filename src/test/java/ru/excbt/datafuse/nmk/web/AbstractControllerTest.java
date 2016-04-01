@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -84,7 +85,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void _testGetJson(String url) throws Exception {
+	protected String _testGetJson(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -97,7 +98,9 @@ public class AbstractControllerTest {
 					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 		};
 
-		_testGet(url, requestExtraInitializer, resultActionsTester);
+		ResultActions resultActions = _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
+
+		return resultActions.andReturn().getResponse().getContentAsString();
 
 	}
 
@@ -172,6 +175,19 @@ public class AbstractControllerTest {
 	protected void _testGet(String url, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
+		_testGetResultActions(url, requestExtraInitializer, resultActionsTester);
+
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param resultActionsTester
+	 * @throws Exception
+	 */
+	protected ResultActions _testGetResultActions(String url, RequestExtraInitializer requestExtraInitializer,
+			ResultActionsTester resultActionsTester) throws Exception {
+
 		MockHttpServletRequestBuilder request = get(url).with(testSecurityContext());
 
 		if (requestExtraInitializer != null) {
@@ -184,6 +200,7 @@ public class AbstractControllerTest {
 			resultActionsTester.testResultActions(resultActions);
 		}
 
+		return resultActions;
 	}
 
 	/**
@@ -241,6 +258,25 @@ public class AbstractControllerTest {
 				return b.toString();
 			b.append(", ");
 		}
+	}
+
+	/**
+	 * 
+	 * @param type
+	 * @param jsonPacket
+	 * @return
+	 */
+	public static <T> T fromJSON(final TypeReference<T> type, final String jsonPacket) {
+		T data = null;
+
+		try {
+			data = new ObjectMapper().readValue(jsonPacket, type);
+		} catch (Exception e) {
+			logger.error("Can't read JSON:");
+			logger.error(jsonPacket);
+			logger.error("exception: ", e);
+		}
+		return data;
 	}
 
 	/**
