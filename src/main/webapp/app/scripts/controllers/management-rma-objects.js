@@ -1742,19 +1742,36 @@ angular.module('portalNMC')
                         function(resp){
                             $scope.currentZpoint.metaData = {};
                             $scope.currentZpoint.metaData.srcProp = resp.data;
+                            $scope.currentZpoint.metaData.srcProp.push({columnName: ""});
                             objectSvc.getZpointMetaDestProp(coId, zpId).then(
                                 function(resp){
                                     $scope.currentZpoint.metaData.destProp = resp.data;
-                                    objectSvc.getZpointMetadata(coId, zpId).then(
-                                        function(resp){
-                                            $scope.currentZpoint.metaData.metaData = resp.data;
-                                            $('#metaDataEditorModal').modal();
-console.log($scope.currentZpoint);                                            
-                                        }, errorCallback
-                                    );
+                                    objectSvc.getZpointMetaMeasureUnits(coId, zpId);
                                 }, errorCallback                                
                             );
                         }, errorCallback
+                    );
+                };
+                
+                $scope.$on('objectSvc:zpointMetadataMeasuresLoaded', function(){
+                    $scope.currentZpoint.metaData.measures = objectSvc.getZpointMetadataMeasures();
+                    objectSvc.getZpointMetadata($scope.currentZpoint.contObjectId, $scope.currentZpoint.id).then(
+                        function(resp){
+                            $scope.currentZpoint.metaData.metaData = resp.data;
+                            $('#metaDataEditorModal').modal();
+//console.log($scope.currentZpoint);                                            
+                        }, errorCallback
+                    );
+                });
+                
+                $scope.updateZpointMetaData = function(zpoint){
+//console.log(zpoint);                    
+                    objectSvc.saveZpointMetadata(zpoint.contObjectId, zpoint.id, zpoint.metaData.metaData).then(
+                        function(resp){
+                            $('#metaDataEditorModal').modal('hide');
+                            notificationFactory.success();
+                        },
+                        errorCallback
                     );
                 };
                 

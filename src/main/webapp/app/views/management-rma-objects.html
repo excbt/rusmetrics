@@ -1721,12 +1721,12 @@
                             <div role="tabpanel" 
                                  class="tab-pane fade in active nmc-main-tab-panel" 
                                  id="meta_cons">
-                                Тут должны быть метаданные потребления
+<!--                                Тут должны быть метаданные потребления-->
                             </div>
                             <div role="tabpanel" 
                                  class="tab-pane fade in nmc-main-tab-panel" 
                                  id="meta_abs">
-                                Тут должны быть метаданные интеграторов
+<!--                                Тут должны быть метаданные интеграторов-->
                             </div>
                         </div>
 <!--                                            ===================-->
@@ -1759,7 +1759,7 @@
                                                       ng-class="{'has-error': field[column.name] == ''}">
                                                     <select class="form-control nmc-select-form"
                                                             ng-model="field[column.name]" 
-                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
+                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in currentZpoint.metaData.measures[field[column.name]]" 
                                                             ng-disabled="column.disabled || field.isIntegrator == null">
                                                     </select>
                                                 </span>
@@ -1776,8 +1776,7 @@
                                                             ng-model="field[column.name]" 
                                                             ng-options="srcProp.columnName as srcProp.columnName for srcProp in currentZpoint.metaData.srcProp" 
                                                             ng-disabled="column.disabled || field.isIntegrator == null"
-                                                            
-                                                            ng-change="log(currentZpoint)">
+                                                            >
                                                     </select>
                                                 </span>
                                                 <span ng-switch-default>
@@ -1789,59 +1788,7 @@
                                     </tr>     
                                 </table> 
                               </div>
-<!--                                            ++++++++++++++++-->
-<!--                            </div>-->
-                            <!--            Метаданные интеграторов-->
-<!--
-                            <div role="tabpanel" 
-                                 class="tab-pane fade nmc-main-tab-panel" 
-                                 id="meta_abs">
-                                Тут должны быть метаданные интеграторов
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
-                                   style="">
-                                  <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                    <tr class="nmc-child-table-header">
-                                        <th ng-repeat="column in data.metadataSchema" 
-                                            ng-class="column.headClass">
-                                            {{column.header}}
-                                        </th>
-                                    </tr>     
-                                    <tr ng-repeat="field in data.currentObject.metadata">
-                                        <td ng-repeat="column in data.metadataSchema" 
-                                            ng-class="column.dataClass || column.headClass">
-                                            <span ng-switch on="column.type">
-                                                <span ng-switch-when="input/text" 
-                                                      class="form-group" 
-                                                      ng-class="{'has-error': field[column.name] == ''}">
-                                                    <input ng-attr-name = {{"inputZpMetaAbsField"+field.id+column.name}} 
-                                                           type="text" 
-                                                           class="form-control nmc-text-input-form" 
-                                                           ng-model="field[column.name]" 
-                                                           ng-disabled="column.disabled" 
-                                                           required/>
-                                                </span>
-                                                <span ng-switch-when="select" 
-                                                      class="form-group" 
-                                                      ng-class="{'has-error': field[column.name] == ''}">
-                                                    <select class="form-control nmc-select-form"
-                                                            ng-model="field[column.name]" 
-                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
-                                                            ng-disabled="column.disabled">
-                                                    </select>
-                                                </span>
-                                                <span ng-switch-default>
-                                                    {{field[column.name]}}
-                                                </span>
-                                            </span>
-
-                                        </td>
-                                    </tr>     
-                                </table>
-                                </div>
-                            </div>
-                          </div>
--->
-                                                    
+<!--                                            ++++++++++++++++-->                                                  
                     </div>    
                 </div>  
             </div>        
@@ -1851,8 +1798,8 @@
 					<div class="row">
                         <div class="col-xs-offset-6 col-xs-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click = "updateDeviceMetaData(data.currentObject)"
-                                ng-disabled="metadataForm.$invalid || data.currentObject.isSaving == true"
+								ng-click = "updateZpointMetaData(currentZpoint)"
+                                
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">

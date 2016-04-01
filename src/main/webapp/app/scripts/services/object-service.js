@@ -31,6 +31,7 @@ angular.module('portalNMC')
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
                  
         var deviceMetadataMeasures = {};
+        var zpointMetadataMeasures = {};
                  
         var currentObject = null; //the current selected object at interface
 
@@ -49,6 +50,10 @@ angular.module('portalNMC')
                  
         var getDeviceMetadataMeasures = function(){
             return deviceMetadataMeasures;
+        };
+                 
+        var getZpointMetadataMeasures = function(){
+            return zpointMetadataMeasures;
         };
         
         var setObjectSettings = function(objectSettings){
@@ -154,8 +159,8 @@ angular.module('portalNMC')
         };
         
                  //get device measures
-        var getRmaDeviceMetadataMeasureUnit = function(measU, dmm){
-            var url = urlDeviceMetadataMeasures + "?measureUnit=" + dmm.all[measU].keyname;
+        var getRmaMetadataMeasureUnit = function(url, measU, dmm){
+            var url = url + "?measureUnit=" + dmm.all[measU].keyname;
             $http.get(url)
             .then(function(resp){
                 dmm[dmm.all[measU].keyname] = resp.data;
@@ -171,7 +176,7 @@ angular.module('portalNMC')
                 .then(function(resp){                
                 deviceMetadataMeasures.all = resp.data;
                 for (var measU in deviceMetadataMeasures.all){
-                    getRmaDeviceMetadataMeasureUnit(measU, deviceMetadataMeasures);
+                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, measU, deviceMetadataMeasures);
                 };
 //console.log(deviceMetadataMeasures);                
                 $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
@@ -375,16 +380,37 @@ angular.module('portalNMC')
                  
         //zpoint metadata
         var getZpointMetaSrcProp = function(objId, zpId){
-            var url = urlRmaContObjects + "/" + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
             return $http.get(url);
         };                 
         var getZpointMetaDestProp = function(objId, zpId){
-            var url = urlRmaContObjects + "/" + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
             return $http.get(url);
         };        
         var getZpointMetadata = function(objId, zpId){
-            var url = urlRmaContObjects + "/" + objId + "/zpoints/" + zpId + urlZpointMetaDataSuffix;
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
             return $http.get(url);
+        };
+        var getZpointMetaMeasureUnits = function(objId, zpId){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
+            return $http.get(url).then(
+                function(resp){
+                    zpointMetadataMeasures = {};
+                    zpointMetadataMeasures.all = resp.data;
+                    for (var measU in zpointMetadataMeasures.all){
+                        getRmaMetadataMeasureUnit(url, measU, zpointMetadataMeasures);
+                    };
+                    $rootScope.$broadcast('objectSvc:zpointMetadataMeasuresLoaded');
+                }, 
+                function(e){
+                    console.log(e);
+                }
+            );
+        };
+                 
+        var saveZpointMetadata = function(objId, zpId, metadata){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
+            return $http.put(url, metadata);
         };
                     
         return {
@@ -409,6 +435,7 @@ angular.module('portalNMC')
             getObjectsUrl,
             getPromise,
             getRmaDeviceMetaDataVzlet,
+            getRmaMetadataMeasureUnit,
             getRmaObject,
             getRmaObjectsData,
             getRmaObjectsUrl,
@@ -420,6 +447,8 @@ angular.module('portalNMC')
             getTimezones,
             getVzletSystemList,            
             getZpointMetaDestProp,
+            getZpointMetadataMeasures,
+            getZpointMetaMeasureUnits,
             getZpointMetaSrcProp,
             getZpointMetadata,
             getZpointsDataByObject,
@@ -429,6 +458,7 @@ angular.module('portalNMC')
             putDeviceMetaDataVzlet,
             putDeviceSchedulerSettings,
             rmaPromise,
+            saveZpointMetadata,
             sendDeviceToServer,
             setObjectSettings,
             setCurrentObject,
