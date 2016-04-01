@@ -20,6 +20,7 @@ angular.module('portalNMC')
         var urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels';
         var urlDeviceMetaDataVzlet = '/metaVzlet';
         var urlDeviceMetaDataSuffix = '/metadata';
+        var urlZpointMetaDataSuffix = '/metadata';                 
         var urlDeviceMetaDataVzletSystemList = urlSubscr + '/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaDataVzlet+'/system';
         var urlCitiesData = urlSubscr + '/service/hwater/contObjects/serviceTypeInfo';  
         var urlTimezones = urlApi + '/timezoneDef/all';
@@ -183,11 +184,6 @@ angular.module('portalNMC')
                  
         var getRmaDeviceMetadata = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
-            return $http.get(url);
-        };
-                 
-        var getRmaZpointMetadata = function(objId, zpId){
-            var url = urlRmaContObjects + "/" + objId + "/contZPoints/" + zpId + urlDeviceMetaDataSuffix;
             return $http.get(url);
         };
                  
@@ -376,6 +372,20 @@ angular.module('portalNMC')
             };
             return null;
         };
+                 
+        //zpoint metadata
+        var getZpointMetaSrcProp = function(objId, zpId){
+            var url = urlRmaContObjects + "/" + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
+            return $http.get(url);
+        };                 
+        var getZpointMetaDestProp = function(objId, zpId){
+            var url = urlRmaContObjects + "/" + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
+            return $http.get(url);
+        };        
+        var getZpointMetadata = function(objId, zpId){
+            var url = urlRmaContObjects + "/" + objId + "/zpoints/" + zpId + urlZpointMetaDataSuffix;
+            return $http.get(url);
+        };
                     
         return {
             getAllDevices,
@@ -408,7 +418,10 @@ angular.module('portalNMC')
             getServiceTypes,
             getSubscrUrl,
             getTimezones,
-            getVzletSystemList,
+            getVzletSystemList,            
+            getZpointMetaDestProp,
+            getZpointMetaSrcProp,
+            getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
             loading,

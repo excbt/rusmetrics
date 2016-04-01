@@ -317,3 +317,22 @@ app.filter('propsFilter', function() {
     return out;
   }
 });
+
+// Filter for zpoint metadata editor
+app.filter('isIntegrators', function() {
+  return function(items, propVal) {
+    var out = [];     
+    if (angular.isArray(items)) {
+      items.forEach(function(item) {
+        if (angular.isUndefined(item.isIntegrator) || item.isIntegrator == null || item.isIntegrator == propVal) {
+          out.push(item);
+        }
+      });
+    } else {
+      // Let the output be the input untouched
+      out = items;
+    }
+
+    return out;
+  }
+});

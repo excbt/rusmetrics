@@ -199,18 +199,38 @@ angular.module('portalNMC')
                         header: 'Поле источник',
                         headClass : 'col-xs-2 col-md-2',
                         name: 'srcProp',
-                        type: 'input/text'
+                        type: 'select_src_field'
                     },{
+                        header: 'Делитель',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'srcPropDivision',
+                        type: 'input/text',
+                        disabled: false
+                    },{
+                        header: 'Единицы измерения источника',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'srcMeasureUnit',
+                        type: 'select_measure_units',
+                        disabled: false
+                    },{
+                        header: 'Единицы измерения приемника',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'destMeasureUnit',
+                        type: 'select_measure_units',
+                        disabled: false
+                    }
+                    ,{
                         header: 'Поле приемник',
                         headClass : 'col-xs-2 col-md-2',
                         name: 'destProp',
-                        type: 'input/text'
+                        type: 'input/text',
+                        disabled: true
                     },{
-                        header: 'Единицы измерения',
+                        header: 'Функция',
                         headClass : 'col-xs-1 col-md-1',
-                        name: 'srcMeasureUnit',
-                        type: 'select',
-                        disabled: false
+                        name: 'propFunc',
+                        type: 'input/text',
+                        disabled: true
                     }
                 ];
                 
@@ -754,10 +774,10 @@ angular.module('portalNMC')
                                         "title=\"Эксплуатационные параметры точки учёта\">" +
                                         "Эксплуатационные параметры" +
                                     "</a></li>" +                                    
-                                    "<li><a ng-click=\"selectedZpoint(" + object.id + "," + zpoint.id + ")\"" +
-                                        "data-target=\"#metaDataEditorModal\""+
-                                        "data-toggle=\"modal\"" +
-                                        "data-placement=\"bottom\"" +
+                                    "<li><a ng-click=\"openZpointMetadata(" + object.id + "," + zpoint.id + ")\"" +
+//                                        "data-target=\"#metaDataEditorModal\""+
+//                                        "data-toggle=\"modal\"" +
+//                                        "data-placement=\"bottom\"" +
                                         "title=\"Метаданные точки учета\">" +
                                         "Метаданные" +
                                     "</a></li>" +
@@ -1710,6 +1730,40 @@ angular.module('portalNMC')
                     $scope.currentObject.isSaving = false;
                 });
                 
+// *****************************************************************************************
+//                Zpoint metadata
+// ******************************************************************************************
+                $scope.zpointMetadataIntegratorsFlag = false;
+                    
+                $scope.openZpointMetadata = function(coId, zpId){
+                    $scope.selectedZpoint(coId, zpId);
+                    //get srcProp
+                    objectSvc.getZpointMetaSrcProp(coId, zpId).then(
+                        function(resp){
+                            $scope.currentZpoint.metaData = {};
+                            $scope.currentZpoint.metaData.srcProp = resp.data;
+                            objectSvc.getZpointMetaDestProp(coId, zpId).then(
+                                function(resp){
+                                    $scope.currentZpoint.metaData.destProp = resp.data;
+                                    objectSvc.getZpointMetadata(coId, zpId).then(
+                                        function(resp){
+                                            $scope.currentZpoint.metaData.metaData = resp.data;
+                                            $('#metaDataEditorModal').modal();
+console.log($scope.currentZpoint);                                            
+                                        }, errorCallback
+                                    );
+                                }, errorCallback                                
+                            );
+                        }, errorCallback
+                    );
+                };
+                
+                $scope.log = function(logObj){
+                    console.log(logObj);
+                };
+// *****************************************************************************************
+//                end Zpoint metadata
+// ******************************************************************************************                
                 
 // ********************************************************************************************
                 //  TREEVIEW

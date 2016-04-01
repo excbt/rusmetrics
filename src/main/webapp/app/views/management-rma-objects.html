@@ -1688,8 +1688,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 noPaddingBottom marginBottom10" style=""> 
-                                
+                    <div class="col-md-12 noPadding">                                 
                         <!--       Потребление / Интеграторы -->
                         <ul class="nav nav-pills nmc-toggle" role="tablist">
                             <li role="presentation" 
@@ -1699,8 +1698,10 @@
                                    aria-controls="meta_cons" 
                                    data-target="#meta_cons" 
                                    role="tab" 
-                                   data-toggle="tab" 
-                                   >Потребление</a>
+                                   data-toggle="tab"
+                                   ng-click="zpointMetadataIntegratorsFlag = false"
+                                   >Потребление
+                                </a>
                             </li>
                             <li role="presentation" 
                                 class="nmc-toggle-archive">
@@ -1710,7 +1711,9 @@
                                    data-target="#meta_abs" 
                                    role="tab" 
                                    data-toggle="tab"
-                                   >Интеграторы</a>
+                                   ng-click="zpointMetadataIntegratorsFlag = true"
+                                   >Интеграторы
+                                </a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -1718,9 +1721,17 @@
                             <div role="tabpanel" 
                                  class="tab-pane fade in active nmc-main-tab-panel" 
                                  id="meta_cons">
-<!--                                            ===================-->
                                 Тут должны быть метаданные потребления
-                              <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
+                            </div>
+                            <div role="tabpanel" 
+                                 class="tab-pane fade in nmc-main-tab-panel" 
+                                 id="meta_abs">
+                                Тут должны быть метаданные интеграторов
+                            </div>
+                        </div>
+<!--                                            ===================-->
+                                
+                              <div class="col-md-12 well noPadding marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
                                    style="">                                             
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr class="nmc-child-table-header">
@@ -1729,7 +1740,7 @@
                                             {{column.header}}
                                         </th>
                                     </tr>     
-                                    <tr ng-repeat="field in data.currentObject.metadata">
+                                    <tr ng-repeat="field in currentZpoint.metaData.metaData | isIntegrators: zpointMetadataIntegratorsFlag">
                                         <td ng-repeat="column in data.metadataSchema" 
                                             ng-class="column.dataClass || column.headClass">
                                             <span ng-switch on="column.type">
@@ -1740,16 +1751,33 @@
                                                            type="text" 
                                                            class="form-control nmc-text-input-form" 
                                                            ng-model="field[column.name]" 
-                                                           ng-disabled="column.disabled" 
+                                                           ng-disabled="column.disabled || field.isIntegrator == null" 
                                                            required/>
                                                 </span>
-                                                <span ng-switch-when="select" 
+                                                <span ng-switch-when="select_measure_units" 
                                                       class="form-group" 
                                                       ng-class="{'has-error': field[column.name] == ''}">
                                                     <select class="form-control nmc-select-form"
                                                             ng-model="field[column.name]" 
                                                             ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
-                                                            ng-disabled="column.disabled">
+                                                            ng-disabled="column.disabled || field.isIntegrator == null">
+                                                    </select>
+                                                </span>
+                                                <span ng-switch-when="select_src_field" 
+                                                      class="form-group" 
+                                                      >
+                                                    <input ng-if="field.isIntegrator == null" 
+                                                           type="text" 
+                                                           class="form-control nmc-text-input-form" 
+                                                           ng-model="field[column.name]"
+                                                           ng-disabled="column.disabled || field.isIntegrator == null"/>
+                                                    <select ng-if="field.isIntegrator != null"
+                                                            class="form-control nmc-select-form"
+                                                            ng-model="field[column.name]" 
+                                                            ng-options="srcProp.columnName as srcProp.columnName for srcProp in currentZpoint.metaData.srcProp" 
+                                                            ng-disabled="column.disabled || field.isIntegrator == null"
+                                                            
+                                                            ng-change="log(currentZpoint)">
                                                     </select>
                                                 </span>
                                                 <span ng-switch-default>
@@ -1762,8 +1790,9 @@
                                 </table> 
                               </div>
 <!--                                            ++++++++++++++++-->
-                            </div>
+<!--                            </div>-->
                             <!--            Метаданные интеграторов-->
+<!--
                             <div role="tabpanel" 
                                  class="tab-pane fade nmc-main-tab-panel" 
                                  id="meta_abs">
@@ -1811,6 +1840,7 @@
                                 </div>
                             </div>
                           </div>
+-->
                                                     
                     </div>    
                 </div>  
