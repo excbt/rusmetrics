@@ -534,15 +534,15 @@ angular.module('portalNMC')
                         notificationFactory.errorInfo("Ошибка", "Не задано наименование объекта!");
                         result = false;
                     };
-                    if ($scope.emptyString(obj.timezoneDefKeyname)){
+                    if ($scope.emptyString(obj.timezoneDefKeyname) && (obj.isLightForm != true)){
                         notificationFactory.errorInfo("Ошибка", "Не задан часовой пояс объекта!");
                         result = false;
                     };
-                    if ($scope.checkUndefinedNull(obj.contManagementId)){
+                    if ($scope.checkUndefinedNull(obj.contManagementId) && (obj.isLightForm != true)){
                         notificationFactory.errorInfo("Ошибка", "Не задана управляющая компания!");
                         result = false;
                     };
-                    if ($scope.emptyString(obj.currentSettingMode)){
+                    if ($scope.emptyString(obj.currentSettingMode) && (obj.isLightForm != true)){
                         notificationFactory.errorInfo("Ошибка", "Не задан режим функционирования!");
                         result = false;
                     };
@@ -1331,11 +1331,13 @@ angular.module('portalNMC')
                     $scope.deleteObjectInit($scope.currentObject);
                 };
                 
-                $scope.addObjectInit = function(){
+                $scope.addObjectInit = function(isLightForm){
 //console.log("addObjectInit");                    
                     $scope.currentObject = {};
+                    $scope.currentObject.isLightForm = isLightForm;
                     checkGeo();
                     $('#showObjOptionModal').modal();
+                    $('#showObjOptionModal').css("z-index", "1041");
                 };
                 
 //                work with object devices

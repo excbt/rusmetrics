@@ -64,7 +64,7 @@
         <div class="container-fluid" ng-hide="loading">
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
                 <div class="col-md-3 noPadding">
-                    <button class="btn nmc-main-add-button" ng-click="addObjectInit()">Добавить объект</button>
+                    <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Добавить объект</button>
                 </div>
                 <div class="col-md-7"></div>
                 <div class="input-group col-md-4 filter pull-left nmc-search-form">   
@@ -227,9 +227,22 @@
          class="tab-pane fade" 
          id="objects_edition_tree">
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+                <div class="col-xs-3 col-md-3">
+                    <select class="form-control nmc-select-form"
+                            ng-model="currentObjectName"
+                            ng-options="object as object.fullName for object in objects">
+                    </select>
+                </div>
                 <div class="input-group col-xs-4 col-md-4 filter pull-left nmc-search-form">   
-                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                    <span class="input-group-addon nmc-search-form-addon">
+                        <i class="glyphicon glyphicon-search nmc-search-form-button">
+                        </i>
+                    </span>
+                    <input title="Введите текст для поиска объектов" 
+                           type="text" 
+                           class="form-control nmc-text-input-form" 
+                           ng-model="filter" 
+                           ng-change="searchObjects(filter)">
                 </div>
             </div>
          <div class="col-xs-6 col-md-6 nmc-table-with-fixed-header">
@@ -248,6 +261,25 @@
                       <img ng-if="collapsed" height="12" width="12" src="/public/vendor_components/glyphicons_free/glyphicons/png/glyphicons-435-redo.png"/>
                       <img ng-if="!collapsed" height="12" width="12" src="/public/vendor_components/glyphicons_free/glyphicons/png/glyphicons-436-undo.png"/>
                     </i>
+<!--
+                    <div class="btn-group "
+                         ng-show="item.isHover">
+                      <i type="button" 
+                              class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                              data-toggle="dropdown" 
+                              aria-haspopup="true" 
+                              aria-expanded="false"
+                              ng-disabled=false
+                         >
+                      </i>
+                      <ul class="dropdown-menu">
+                        <li><a href="" data-target="#treeLevelModal" data-toggle="modal">Добавить узел</a></li>
+                        <li><a href="" >Свойства узла</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li><a href="" >Удалить узел</a></li>                        
+                      </ul>
+                    </div>
+-->
                   {{item.fullName || item.customServiceName}}
 <!--
                   <i class="pull-right btn btn-xs" 
@@ -274,7 +306,7 @@
                       </span>
                     </i>
 -->
-                    <div class="btn-group pull-right"
+                    <div class="btn-group "
                          ng-show="item.isHover">
                       <i type="button" 
                               class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
@@ -283,10 +315,9 @@
                               aria-expanded="false"
                               ng-disabled=false
                          >
-<!--                         <span class="caret"></span>-->
                       </i>
-                      <ul class="dropdown-menu">
-                        <li><a href="">Добавить узел</a></li>
+                      <ul class="dropdown-menu noMarginI">
+                        <li><a href="" data-target="#treeLevelModal" data-toggle="modal">Добавить узел</a></li>
                         <li><a href="" >Свойства узла</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="" >Удалить узел</a></li>                        
@@ -1030,7 +1061,7 @@
                                 <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-if="currentObject.isLightForm == false">
                                 <td class="col-sm-3">
                                     <label for="inputAddress">Адрес</label>
 
@@ -1045,7 +1076,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-if="currentObject.isLightForm == false">
                                 <td class="col-sm-3"><label for="inputMode">Часовой пояс</label>
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
@@ -1055,7 +1086,7 @@
                                     </div>
                                 </td>
                             </tr> 
-                            <tr>
+                            <tr ng-if="currentObject.isLightForm == false">
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
@@ -1066,22 +1097,31 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-if="currentObject.isLightForm == false">
                                 <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.currentSettingMode)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': emptyString(currentObject.currentSettingMode)}">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                id="inputMode" 
+                                                ng-model="currentObject.currentSettingMode" 
+                                                ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
                                         </select>
                                     </div>
                                 </td>
                             </tr>       
-                            <tr>
+                            <tr ng-if="currentObject.isLightForm == false">
                                 <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
+                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputThv" 
+                                               placeholder="" 
+                                               ng-model="currentObject.cwTemp"> &deg; C 
                                     </div>
                                 </td>                               
                             </tr>                           
@@ -1089,8 +1129,13 @@
                                 <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
-                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
+                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputSquare" 
+                                           placeholder="" 
+                                           ng-model="currentObject.heatArea"> кв. м.
                                     </div>        
                                 </td>
                             </tr>
@@ -1732,8 +1777,12 @@
 <!--                                            ===================-->
                                 
                               <div class="col-md-12 well noPadding marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
-                                   style="">                                             
-                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                   style="">
+                                  <div ng-show="!(currentZpoint.metaData.metaData.length > 0)">
+                                      <h3>Нет метаданных</h3>
+                                  </div>
+                                <table ng-hide="!(currentZpoint.metaData.metaData.length > 0)" 
+                                       class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr class="nmc-child-table-header">
                                         <th ng-repeat="column in data.metadataSchema" 
                                             ng-class="column.headClass">
@@ -1797,10 +1846,10 @@
 				<div class="container-fluid">
 					<div class="row">
                         <div class="col-xs-offset-6 col-xs-3 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click = "updateZpointMetaData(currentZpoint)"
-                                
-								value="Сохранить" />
+							<input type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                   ng-click = "updateZpointMetaData(currentZpoint)"
+                                   value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
@@ -1813,5 +1862,84 @@
 				</div>		
 		</div>
         </ng-form>
+	</div>
+</div>
+    
+<!--    window: add/change level-->
+<div id="treeLevelModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="treeLevelLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="setClientLabel" class="nmc-h3">
+				Уровень
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputLevelName">Наименование</label>
+                                </td>
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': !(currentLevel.name >'')}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputLevelName" 
+                                               placeholder="" 
+                                               ng-model="currentLevel.name"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputLevelObject" >Связанный объект</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" >
+                                        <select class="form-control nmc-select-form" 
+                                                id="inputLevelObject" 
+                                                ng-model="currentLevel.object" 
+                                                ng-options="object as object.fullName for object in objects" >
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="nmc-td-for-buttons">
+                                    <i class="btn btn-xs glyphicon glyphicon-plus"
+                                       
+                                       ng-click="addObjectInit(true)">
+                                    </i>
+                                    <i class="btn btn-xs nmc-remove-button" 
+                                       ng-click="currentLevel.object = null">
+                                    </i>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <span class="pull-left">
+            <button 
+               type="button" 
+                    class="btn btn-xs nmc-add-button-in-modal"                
+                    title="Сохранить текущий и создать еще один уровень" 
+               >
+                Сохранить и создать
+            </button>
+        </span>
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
 	</div>
 </div>

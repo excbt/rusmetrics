@@ -415,6 +415,10 @@ body{
 .nmc-dropdown-toggle-filter:hover{
     background-color: #fff;
 }
+
+.nmc-dropdown-hover{
+    margin: 0;
+}
     
 .submenu{
     margin-left: 20px;
