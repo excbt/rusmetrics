@@ -1,13 +1,18 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -63,7 +68,7 @@ public class ContObjectNodeTreeService implements SecuredRoles {
 		ContObjectNodeTree root = new ContObjectNodeTree();
 
 		root.setContObjectId(contObject.getId());
-		root.setNodeName(contObject.getName());
+		root.setNodeName(contObject.getName() != null ? contObject.getName() : contObject.getFullName());
 		root.setNodeTreeType(NODE_TREE_TYPE_1);
 
 		return root;
@@ -84,6 +89,45 @@ public class ContObjectNodeTreeService implements SecuredRoles {
 		child.setNodeTreeType(node.getNodeTreeType());
 		node.getChildNodeList().add(child);
 		return child;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContObjectNodeTree findContObjectNodeTree(Long id) {
+		return contObjectNodeTreeRepository.findOne(id);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param nodeTreeType
+	 * @return
+	 */
+	public ContObjectNodeTree initRootNodeTree(ContObjectNodeTree node, String nodeTreeType) {
+		checkNotNull(node);
+		node.setNodeTreeType(nodeTreeType);
+		if (node.getChildNodeList() != null) {
+			node.getChildNodeList().forEach(i -> {
+				i.setParent(node);
+				i.setParentId(node.getId());
+				initRootNodeTree(i, nodeTreeType);
+			});
+		}
+		return node;
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectNodeTree> selectContObjectNodeTreeByContObject(Long contObjectId) {
+		return Lists.newArrayList(contObjectNodeTreeRepository.selectByContObject(contObjectId));
 	}
 
 }
