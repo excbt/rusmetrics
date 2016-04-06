@@ -944,6 +944,10 @@ public class SubscrContEventNotificationService {
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
 
+		if (contObjectIds == null || contObjectIds.isEmpty()) {
+			return new ArrayList<CounterInfo>();
+		}
+
 		List<Object[]> selectResult = null;
 		if (isNew == null) {
 			selectResult = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId,
