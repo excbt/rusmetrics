@@ -44,7 +44,7 @@ angular.module('portalNMC')
             {
                 "name": "rsoOrganizationName",
                 "caption": "РСО",
-                "class": "col-xs-2 col-md-2",
+                "class": "col-xs-4 col-md-4",
                 "type": "name",
                 "sortable": true
             },
@@ -58,14 +58,14 @@ angular.module('portalNMC')
             {
                 "name": "flagAdjPump",
                 "caption": "Кор. нас",
-                "class": "col-xs-1 col-md-1",
+                "class": "nmc-td-for-buttons",
                 "type": "checkbox",
                 "sortable": false
             },
             {
                 "name": "flagElevator",
                 "caption": "Элеватор",
-                "class": "col-xs-1 col-md-1",
+                "class": "nmc-td-for-buttons",
                 "type": "checkbox",
                 "sortable": false
             }
@@ -246,6 +246,7 @@ angular.module('portalNMC')
         
         $scope.addTempSch = function(){
             $scope.data.currentTempSch = {};
+            $scope.data.currentTempSch.chartDeviationValue = 3;//по умолчанию отклонение = 3 - требование заказчика
             $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         };
         
@@ -373,6 +374,10 @@ angular.module('portalNMC')
             };
             if (mainSvc.checkUndefinedNull(tempSch.rsoOrganizationId)){
                 notificationFactory.errorInfo("Ошибка", "Поле \"РСО\" должно быть заполнено!");
+                result = false;
+            };
+            if (mainSvc.checkUndefinedEmptyNullValue(tempSch.chartDeviationValue)){
+                notificationFactory.errorInfo("Ошибка", "Поле \"Допустимое отклонение\" должно быть заполнено!");
                 result = false;
             };
 //            if (!mainSvc.checkPositiveNumberValue(tempSch.chartDeviationValue)){

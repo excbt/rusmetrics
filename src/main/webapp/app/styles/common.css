@@ -798,6 +798,15 @@ tr.nmc-main-table-header-indicator > th {
     min-height: 360px;
     position:relative
 }
+
+/*  Дерево объектов*/
+.nmc-tree-with-fixed-header{
+    overflow: scroll;
+    height: 73vh;
+    min-height: 360px;
+    position:relative
+}
+
 /*  Таблица с непрокручиваемой шапкой для страницы Показания*/
 .nmc-indicator-table-with-fixed-header{
 /*    overflow-y: hidden;*/
@@ -1049,6 +1058,11 @@ tr.nmc-inactive-price > td{
     font-size: 12px;
     height: 25px;
     padding: 5px;
+}
+/* вывод строки*/
+.nmc-text-ouput{
+    min-height: 25px;
+    padding: 3px 0 0 5px;
 }
 
 .nmc-text-input-notice-filter-form {
@@ -1396,6 +1410,10 @@ tr.nmc-inactive-price > td{
 /* недоступная кнопка Запустить*/
 .nmc-button-in-table-run-disabled, .nmc-button-in-table-run-disabled:hover {
     color:rgba(0, 0, 0, 0.65);
+}
+
+.nmc-button-disabled{
+    opacity: 0.4 !important;
 }
 
 .nmc-button-in-table-question{

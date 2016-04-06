@@ -1527,15 +1527,15 @@ angular.module('portalNMC')
                 //инициализируем переменные и интерфейсы для назначения объектов абонентам
                 $scope.setClientsInit = function(object){
                     if (!mainSvc.checkUndefinedNull(object)){
-                        object.selected = true;
+//                        object.selected = true;
+                        $scope.selectedItem(object);
+                        $scope.objectCtrlSettings.isSetClientForOneObject = true;//включаем флаг того, что назначаем абонентов только одному текущему объекту
                     };
                     $scope.data.clientsOnPage = angular.copy($scope.data.clients);
                     $('#setClientModal').modal();
                 };
                 
-                //отправляем запрос на назначение на сервер
-                $scope.setClients = function(){
-                    //собираем идишники выбранных объектов в один массив
+                var prepareObjectsIdsArray = function(){
                     var tmp = [];
                     if ($scope.objectCtrlSettings.allSelected == true){
                         $scope.objects.forEach(function(elem){
@@ -1552,20 +1552,25 @@ angular.module('portalNMC')
                             };
                         });
                     };
+                    return tmp;
+                };
+                
+                //отправляем запрос на назначение на сервер
+                $scope.setClients = function(){
+                    var tmp = [];//массив id объектов, которым назначаются абоненты
+                    if ($scope.objectCtrlSettings.isSetClientForOneObject == true){
+                        tmp.push($scope.currentObject.id);//передать в массив id текущего объекта
+                        $scope.objectCtrlSettings.isSetClientForOneObject = false;//сбросить флаг
+                    }else{
+                    //собираем идишники выбранных объектов в один массив
+                        tmp = prepareObjectsIdsArray();                    
+                    };
                     //для каждого абонента надо вызвать rest для задания объектов, 
                     //передавая полученный массив идишников
                     $scope.data.clientsOnPage.forEach(function(cl){
                        if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
                             var table = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
                             prepareClient(table, tmp);
-//                            $http.get(table).then(function(response){
-//                                var subscrObjs = response.data;
-//                                var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
-//                                $http.put(table, tmp).then(successCallback, errorCallback);
-//                            },
-//                                                  errorCallBack
-//                            );
-                            
                         }; 
                     });                    
                 };
@@ -1787,8 +1792,82 @@ angular.module('portalNMC')
 // ********************************************************************************************
                 //  TREEVIEW
 //*********************************************************************************************
+                $scope.objectCtrlSettings.isTreeView = true;
+                $scope.data.currentTree = {};
+                $scope.data.newTree = {}
+                
                 $scope.selectNode = function(item){
                     $scope.data.selectedNode = angular.copy(item);
+                };
+                
+                $scope.data.trees = [
+                    {
+                        id: 1,
+                        name: "Свободное дерево",
+                        nodes: [
+                            {
+                                name: "",
+                                type: "root",
+                                nodes: []
+                            }
+                        ]
+                    },{
+                        id: 2,
+                        name: "Фиксированное дерево",
+                        nodes: [{
+                                name: "",
+                                type: "root",
+                                nodes: []
+                            }
+                        ]
+                    }
+                    
+                ];
+                
+                $scope.data.treeTypes = [
+                    {
+                        id: 1,
+                        name: "Свободное дерево",
+                    },{
+                        id: 2,
+                        name: "Фиксированное дерево",
+                    }
+                    
+                ];
+                
+                var performNewNode = function(newNode, parent){
+//console.log(newNode);
+//console.log(parent);                    
+                    var trueParentRoot = null;
+                    if (parent.type == 'root'){
+                        trueParentRoot = $scope.data.currentTree;
+                    }else{
+                        trueParentRoot = parent;
+                    };
+                    if (mainSvc.checkUndefinedNull(trueParentRoot) || !angular.isArray(trueParentRoot.nodes)){
+                        return "Parent is incorrect node!"
+                    };
+                    trueParentRoot.nodes.push(newNode);
+                };
+                
+                $scope.saveNode = function(newNode, parent){                 
+                    performNewNode(newNode, parent);
+                    $('#treeLevelModal').modal('hide');
+                };
+                
+                $scope.saveAndCreateNextNode = function(newNode, parent){
+                    performNewNode(newNode, parent);
+                    $scope.data.currentLevel = {parent: parent, nodes: []};                    
+                };
+                
+                $scope.saveTree = function(tree){
+                    tree.nodes = [{
+                                name: "",
+                                type: "root",
+                                nodes: []
+                            }];
+                    $scope.data.trees.push(angular.copy(tree));
+                    $('#showTreeOptionModal').modal('hide');
                 };
 // ********************************************************************************************
                 //  end TREEVIEW

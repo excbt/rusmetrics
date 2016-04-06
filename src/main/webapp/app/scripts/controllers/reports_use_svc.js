@@ -623,6 +623,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
     
     $scope.$watch('currentObject.reportPeriodKey', function (newKey) {
+        if (!angular.isArray($scope.reportPeriods)){
+            return "reportPeriods is no array.";
+        };
         //отслеживаем изменение периода у варианта отчета
         for (var i = 0; i<$scope.reportPeriods.length;i++){
             if (newKey == $scope.reportPeriods[i].keyname){
