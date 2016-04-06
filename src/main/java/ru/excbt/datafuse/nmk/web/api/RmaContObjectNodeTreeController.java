@@ -3,7 +3,10 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.net.URI;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +22,10 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectNodeTree;
 import ru.excbt.datafuse.nmk.data.service.ContObjectNodeTreeService;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -81,6 +87,8 @@ public class RmaContObjectNodeTreeController extends SubscrApiController {
 		List<ContObjectNodeTree> resultList = contObjectNodeTreeService
 				.selectContObjectNodeTreeByContObject(contObjectId);
 
+		resultList = ObjectFilters.deletedFilter(resultList);
+
 		if (resultList.isEmpty()) {
 			ContObject contObject = contObjectService.findContObject(contObjectId);
 			ContObjectNodeTree newNode = contObjectNodeTreeService.newRootContObjectNode(contObject);
@@ -88,6 +96,94 @@ public class RmaContObjectNodeTreeController extends SubscrApiController {
 		}
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contObjectNodeTree
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjectNodeTree", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createContObjectTreeNode(@RequestBody ContObjectNodeTree contObjectNodeTree,
+			HttpServletRequest request) {
+
+		checkNotNull(contObjectNodeTree);
+
+		if (contObjectNodeTree.getContObjectId() == null) {
+			return responseBadRequest();
+		}
+
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectNodeTree, Long>(contObjectNodeTree,
+				request) {
+
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+
+			@Override
+			public ContObjectNodeTree processAndReturnResult() {
+				contObjectNodeTreeService.initRootNodeTree(entity, ContObjectNodeTreeService.NODE_TREE_TYPE_1);
+				return contObjectNodeTreeService.saveRootNode(entity);
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
+	}
+
+	@RequestMapping(value = "/contObjectNodeTree/byContObject/{contObjectId}", method = RequestMethod.POST,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createContObjectTreeNodeByContObject(@PathVariable("contObjectId") Long contObjectId,
+			@RequestBody ContObjectNodeTree contObjectNodeTree, HttpServletRequest request) {
+
+		checkNotNull(contObjectNodeTree);
+
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectNodeTree, Long>(contObjectNodeTree,
+				request) {
+
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+
+			@Override
+			public URI getLocation() {
+				return URI.create("/api/rma/contObjectNodeTree/" + getLocationId());
+			}
+
+			@Override
+			public ContObjectNodeTree processAndReturnResult() {
+				contObjectNodeTreeService.initRootNodeTree(entity, ContObjectNodeTreeService.NODE_TREE_TYPE_1);
+				return contObjectNodeTreeService.saveRootNode(entity);
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
+	}
+
+	/**
+	 * 
+	 * @param contObjectNodeTreeId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjectNodeTree/{contObjectNodeTreeId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteContObjectNodeTree(@PathVariable("contObjectNodeTreeId") Long contObjectNodeTreeId) {
+
+		ApiAction action = new ApiActionAdapter() {
+
+			@Override
+			public void process() {
+				contObjectNodeTreeService.deleteContObjectNodeTree(contObjectNodeTreeId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
+
 	}
 
 }

@@ -18,10 +18,11 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectNodeTree;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectNodeTreeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContObjectNodeTreeService implements SecuredRoles {
+public class ContObjectNodeTreeService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContObjectNodeTreeService.class);
 
@@ -128,6 +129,19 @@ public class ContObjectNodeTreeService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectNodeTree> selectContObjectNodeTreeByContObject(Long contObjectId) {
 		return Lists.newArrayList(contObjectNodeTreeRepository.selectByContObject(contObjectId));
+	}
+
+	/**
+	 * 
+	 * @param contObjectNodeTreeId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteContObjectNodeTree(Long contObjectNodeTreeId) {
+		ContObjectNodeTree node = findContObjectNodeTree(contObjectNodeTreeId);
+
+		checkNotNull(node);
+
+		contObjectNodeTreeRepository.save(softDelete(node));
 	}
 
 }
