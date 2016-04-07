@@ -153,6 +153,9 @@ angular.module('portalNMC')
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceElCons/" + timeDetailType + "/" + $scope.contZPoint;// + "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
          if ($scope.timeDetailType=="1h"){
              var requestDate = moment($scope.ctrlSettings.dataDate, $scope.ctrlSettings.userFormat).format($scope.ctrlSettings.requestFormat);
+             if (requestDate.localeCompare('Invalid date') == 0 || requestDate < '2000-01-01'){
+                    return "requestDate is Invalid date.";
+                };
             paramString= "/?beginDate=" + requestDate + "&endDate=" + requestDate; 
          }else{
             paramString= "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;

@@ -83,7 +83,10 @@ angular.module('portalNMC')
             
             $scope.refreshData = function(){        
 //console.log(moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat));                
-                var requestDate = moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat)
+                var requestDate = moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat);
+                if (requestDate.localeCompare('Invalid date') == 0 || requestDate < '2000-01-01'){
+                    return "requestDate is Invalid date.";
+                };
                 var url = $scope.dataUrl + "/?beginDate=" + requestDate + "&endDate=" + requestDate;
                 getData(url);
             };
