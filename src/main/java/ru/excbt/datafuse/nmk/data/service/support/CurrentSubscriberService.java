@@ -152,7 +152,13 @@ public class CurrentSubscriberService {
 	 */
 	public Long getRmaSubscriberId() {
 		Subscriber subscriber = getSubscriber();
-		return subscriber != null ? subscriber.getRmaSubscriberId() : null;
+		if (subscriber == null) {
+			return null;
+		}
+		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+			return subscriber.getId();
+		}
+		return subscriber.getRmaSubscriberId();
 	}
 
 	/**

@@ -143,6 +143,15 @@ public class SubscrApiController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	protected Long getRmaSubscriberId() {
+		Subscriber subscriber = currentSubscriberService.getSubscriber();
+		return subscriber != null ? subscriber.getRmaSubscriberId() : null;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	protected LocalDate getCurrentSubscriberLocalDate() {
 		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
 		return new LocalDate(d);
