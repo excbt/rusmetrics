@@ -1490,7 +1490,44 @@ angular.module('portalNMC')
                 $scope.isROfield = function(){
                     return ($scope.isReadonly() || !$scope.isAdmin());
                 };
-
+                
+// ********************************************************************************************
+//  TREEVIEW
+//*********************************************************************************************
+                $scope.objectCtrlSettings.isTreeView = true;
+                $scope.data.currentTree = {};
+                $scope.data.newTree = {}
+                
+                $scope.selectNode = function(item){
+                    $scope.data.selectedNode = angular.copy(item);
+                };
+                
+                $scope.data.trees = [
+                    {
+                        id: 1,
+                        name: "Свободное дерево",
+                        nodes: [
+                            {
+                                name: "",
+                                type: "root",
+                                nodes: []
+                            }
+                        ]
+                    },{
+                        id: 2,
+                        name: "Фиксированное дерево",
+                        nodes: [{
+                                name: "",
+                                type: "root",
+                                nodes: []
+                            }
+                        ]
+                    }
+                    
+                ];
+// ********************************************************************************************
+//  END TREEVIEW
+//*********************************************************************************************
                 
             }]
     };

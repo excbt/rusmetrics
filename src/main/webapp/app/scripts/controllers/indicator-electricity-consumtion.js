@@ -4,7 +4,7 @@ angular.module('portalNMC')
     
     $scope.data = [];
     $scope.totals = [];
-    $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page
+    $scope.indicatorsPerPage = $scope.data.length; //default = 25; // this should match however many results your API puts on one page
     $scope.totalIndicators = $scope.data.length;
     $scope.pagination = {
         current: 1
@@ -111,6 +111,7 @@ angular.module('portalNMC')
                     };                    
                 });
                 $scope.data = tmp;
+                $scope.indicatorsPerPage = $scope.data.length;
                 $scope.ctrlSettings.loading = false;
                 if ($scope.ctrlSettings.viewMode=="" && $scope.data.length > 0){
                     getSummary(table+"/summary"+paramString);
@@ -134,6 +135,7 @@ angular.module('portalNMC')
             el.dataDateString = "Итого";
             el.class = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
             $scope.totals = angular.copy(el);
+            $scope.indicatorsPerPage += 1;
 //console.log($scope.totals);            
         }, function(e){
             console.log(e);
@@ -226,7 +228,17 @@ angular.module('portalNMC')
           dateFormat: "dd.mm.yy",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+            beforeShow: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            },
+            onChangeMonthYear: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            }
         });        
     });
 });

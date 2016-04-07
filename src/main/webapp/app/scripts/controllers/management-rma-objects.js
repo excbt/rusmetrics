@@ -1794,9 +1794,37 @@ angular.module('portalNMC')
 //*********************************************************************************************
                 $scope.objectCtrlSettings.isTreeView = true;
                 $scope.data.currentTree = {};
-                $scope.data.newTree = {}
+                $scope.data.newTree = {};
+                
+                var findNodeInTree = function(node, tree){
+                    var result = null;
+                    if (!angular.isArray(tree.nodes)){
+                        return result;
+                    };
+                    tree.nodes.some(function(curNode){
+                        if (node.id == curNode.id && node.name == curNode.name){
+                            result = curNode;
+                            return true;
+                        }else{
+                            result = findNodeInTree(node, curNode);
+                            return result != null;
+                        };
+                    });
+                    return result;
+                };
+                
+                $scope.findNodeInTree = function(node, tree){//wrapper for testing
+                    return findNodeInTree(node, tree);
+                };
                 
                 $scope.selectNode = function(item){
+                    if (!mainSvc.checkUndefinedNull($scope.data.selectedNode)){                        
+//                        $scope.data.selectedNode.isSelected = false;
+                        var preNode = findNodeInTree($scope.data.selectedNode, $scope.data.currentTree);
+                        preNode.isSelected = false;
+                    };
+                    
+                    item.isSelected = true;
                     $scope.data.selectedNode = angular.copy(item);
                 };
                 
@@ -1827,17 +1855,15 @@ angular.module('portalNMC')
                 $scope.data.treeTypes = [
                     {
                         id: 1,
-                        name: "Свободное дерево",
+                        name: "Дерево первого типа",
                     },{
                         id: 2,
-                        name: "Фиксированное дерево",
+                        name: "Дерево второго типа",
                     }
                     
                 ];
                 
-                var performNewNode = function(newNode, parent){
-//console.log(newNode);
-//console.log(parent);                    
+                var performNewNode = function(newNode, parent){                   
                     var trueParentRoot = null;
                     if (parent.type == 'root'){
                         trueParentRoot = $scope.data.currentTree;

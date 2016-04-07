@@ -157,7 +157,7 @@
                         </th>
 
                     </tr>
-                    <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
+                    <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="data.length" current-page="pagination.current">
 <!--                        <td>{{$index+1}}-->
                         </td>
                         <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="indicator.class || column.dataClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">

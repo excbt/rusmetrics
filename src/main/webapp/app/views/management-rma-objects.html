@@ -30,439 +30,285 @@
       </div>
     </div>
 </div>
-<div role="tabpanel" class="nmc-tab-panel" ng-hide="loading">
-    <!-- Навигационная полоса -->
-  <ul class="nav nav-tabs" role="tablist">
-<!--
-    <li role="presentation" class="active">
-        <a class="nmc-tab-button" 
-           href="" 
-           aria-controls="objects_edition_list" 
-           role="tab" 
-           data-target="#objects_edition_list" 
-           data-toggle="tab">Список объектов
-        </a>
-    </li>      
--->
-<!--
-    <li role="presentation">
-        <a class="nmc-tab-button"
-           title=""
-           href="" 
-           aria-controls="objects_edition_tree" 
-           data-target="#objects_edition_tree" 
-           role="tab" 
-           data-toggle="tab"
-           disabled
-           >Дерево объектов (фиктивная вкладка)
-        </a>
-    </li>        
--->
-  </ul>
 
-  <!-- реализация вкладок -->
-  <div class="tab-content">
-<!--      Список объектов-->
-    <div role="tabpanel" 
-         class="tab-pane fade in active" 
-         id="objects_edition_list">
+<div class="container-fluid" ng-hide="loading">
 
-        <div class="container-fluid" ng-hide="loading">
+    <div class="row" class="nmc-hide" ng-show="objectsOnPage.length == 0" ng-hide="loading || (objectsOnPage.length > 0)">
+        <h3 class="nmc-h3">Объектов нет.</h3>
+    </div>
+    <div class="row">
+        <div class="col-xs-3 col-md-3 noPadding paddingRight10" ng-show="objectCtrlSettings.isTreeView == true">                    
+            <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+                <div class="col-xs-6 col-md-6">
+                    <div class="btn-group">
+                          <button ng-init="messages.treeMenuHeader = 'Выберете дерево'"
+                                  title="Действия над объектом" 
+                             type="button" 
+                             class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
+                             data-toggle="dropdown" 
+                             aria-haspopup="true" 
+                             aria-expanded="false" 
 
-            <div class="row" class="nmc-hide" ng-show="objectsOnPage.length == 0" ng-hide="loading || (objectsOnPage.length > 0)">
-                <h3 class="nmc-h3">Объектов нет.</h3>
-            </div>
-            <div class="row">
-                <div class="col-xs-3 col-md-3 noPadding paddingRight10" ng-show="objectCtrlSettings.isTreeView == true">                    
-                    <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
-                        <div class="col-xs-6 col-md-6">
-<!--
-                            <select class="form-control nmc-select-form"
-                                    ng-model="data.currentTree"
-                                    ng-options="tree as tree.name for tree in data.trees"
-                                    >
-                            </select>
--->
-                            <div class="btn-group">
-                                  <button ng-init="messages.treeMenuHeader = 'Выберете дерево'"
-                                          title="Действия над объектом" 
-                                     type="button" 
-                                     class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
-                                     data-toggle="dropdown" 
-                                     aria-haspopup="true" 
-                                     aria-expanded="false" 
-                                      
-                                     style="font-size: .9em;">
-                                      {{messages.treeMenuHeader}} <span class="caret"></span>
-                                  </button>
-                                  <ul class="dropdown-menu nmc-dropdown-menu">
-                                    <li class="menu-item" role="presentation">
+                             style="font-size: .9em;">
+                              {{messages.treeMenuHeader}} <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu nmc-dropdown-menu">
+                            <li class="menu-item" role="presentation">
+                                <a href=""
+                                   class=""
+                                   ng-click="data.newTree = {}"
+                                   data-target="#showTreeOptionModal"
+                                   data-toggle="modal"
+                                   >
+                                    Создать новое дерево                                        
+                                </a>
+                            </li>
+                            <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                <a href="" 
+                                   class="" 
+                                   data-toggle="dropdown" 
+                                   aria-haspopup="true" 
+                                   aria-expanded="false"  
+                                   >
+                                    Создать дерево по шаблону
+                                </a>
+                                <ul class="dropdown-menu nmc-dropdown-menu">
+                                    <li class="menu-item" 
+                                        ng-repeat="tree in data.treeTypes" 
+                                        >                                            
                                         <a href=""
                                            class=""
-                                           ng-click="data.newTree = {}"
+                                           ng-click="data.newTree.type = tree"
                                            data-target="#showTreeOptionModal"
                                            data-toggle="modal"
                                            >
-                                            Создать новое дерево                                        
-                                        </a>
-                                    </li>
-                                    <li class="menu-item dropdown dropdown-submenu" role="presentation">
-                                        <a href="" 
-                                           class="" 
-                                           data-toggle="dropdown" 
-                                           aria-haspopup="true" 
-                                           aria-expanded="false"  
-                                           >
-                                            Создать дерево по шаблону
-                                        </a>
-                                        <ul class="dropdown-menu nmc-dropdown-menu">
-                                            <li class="menu-item" 
-                                                ng-repeat="tree in data.treeTypes" 
-                                                >                                            
-                                                <a href=""
-                                                   class=""
-                                                   ng-click="data.newTree.type = tree"
-                                                   data-target="#showTreeOptionModal"
-                                                   data-toggle="modal"
-                                                   >
-                                                    {{tree.name}}
-                                                </a>                                                
-                                            </li>                                        
-                                        </ul>                                    
-                                      </li>
-                                      <li role="presentation" class="divider"></li>
-                                      <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
-                                          <a href="" class=""
-                                             ng-click="messages.treeMenuHeader = tree.name; data.currentTree = tree">
-                                              {{tree.name}}
-                                          </a>
-                                      </li>
-                                  </ul>
-                                </div>
-                            
-                        </div>
-                        <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
-                            <span class="input-group-addon nmc-search-form-addon">
-                                <i class="glyphicon glyphicon-search nmc-search-form-button">
-                                </i>
-                            </span>
-                            <input title="Введите текст для поиска узла" 
-                                   type="text" 
-                                   class="form-control nmc-text-input-form" 
-                                   ng-model="treefilter" 
-                                   >
-                        </div>
-                    </div>
-                     <div class="row nmc-tree-with-fixed-header">
-                        <script type="text/ng-template" id="object_tree_items_renderer.html">
-                            <div ui-tree-handle ng-click="selectNode(item)"
-                                 ng-mouseover = "item.isHover = true"
-                                 ng-mouseleave = "item.isHover = false"
-                                 ng-class="{'nmc-bg-distinguish': item.isHover}">
-                              <i class="btn btn-xs glyphicon"
-                                 ng-class="{'glyphicon-chevron-right': collapsed && item.nodes.length > 0, 'glyphicon-chevron-down': !collapsed && item.nodes.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.nodes.length > 0)}"
-                                 data-nodrag ng-click="toggle(this)">                                  
-<!--
-                                  <img ng-if="collapsed && item.nodes.length > 0" height="12" width="12" src="/public/vendor_components/glyphicons_free/glyphicons/png/glyphicons-435-redo.png"/>
-                                  <img ng-if="!collapsed && item.nodes.length > 0" height="12" width="12" src="/public/vendor_components/glyphicons_free/glyphicons/png/glyphicons-436-undo.png"/>                       
--->
-                                </i>
-<!--
-                                <span ng-if = "!(item.nodes > 0)">
-                                      &bull; 
-                                </span>
--->
-                                
-                                <span ng-if = "item.type == 'root'">
-                                      <strong>\</strong>
-                                </span>
-
-                                
-                              {{item.name}}
-                                <div class="btn-group "
-                                     ng-show="item.isHover">
-                                  <i type="button" 
-                                          class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
-                                          data-toggle="dropdown" 
-                                          aria-haspopup="true" 
-                                          aria-expanded="false"
-                                          ng-disabled=false
-                                     >
-                                  </i>
-                                  <ul class="dropdown-menu noMarginI">
-                                    <li><a href="" ng-click="data.currentLevel = {parent: item, nodes: []}" data-target="#treeLevelModal" data-toggle="modal">Добавить узел</a></li>
-                                    <li><a href="" >Свойства узла</a></li>
-                                    <li role="presentation" class="divider"></li>
-                                    <li><a href="" >Удалить узел</a></li>                        
-                                  </ul>
-                                </div>
-                            </div>
-                            <ol ui-tree-nodes="options" ng-model="item.nodes" ng-class="{hidden: collapsed}">
-                              <li ng-repeat="item in item.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'">
+                                            {{tree.name}}
+                                        </a>                                                
+                                    </li>                                        
+                                </ul>                                    
                               </li>
-                            </ol>
-                          </script>
-                          <div ui-tree="options" data-drag-enabled="false">
-                            <ol ui-tree-nodes ng-model="data.currentTree" >
-                              <li ng-repeat="item in data.currentTree.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
-                            </ol>
-                          </div>
-                     </div>
-                </div>
-                <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
-                    <div class="container-fluid" ng-hide="loading">
-                        <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
-                            <div class="col-md-3 noPadding">
-                                <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Добавить объект</button>
-                            </div>
-                            <div class="col-md-7"></div>
-                            <div class="input-group col-md-4 filter pull-left nmc-search-form">   
-                                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-                                <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
-                            </div>
-                            <div class="col-md-offset-2 col-md-2">
-                                    <label class="nmc-form-label">Всего:</label>
-                                     <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
-                                    <span id="timeOutput"></span>
-                            </div>
+                              <li role="presentation" 
+                                  class="divider">
+                              </li>
+                              <li class="menu-item" 
+                                  role="presentation" 
+                                  ng-repeat="tree in data.trees">
+                                  <a href="" class=""
+                                     ng-click="messages.treeMenuHeader = tree.name; data.currentTree = tree">
+                                      {{tree.name}}
+                                  </a>
+                              </li>
+                          </ul>
                         </div>
-                     </div>
 
-                    <!-- Шапка для таблицы-->
-                    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 0; border-bottom-width: 0px;">
-                                        <table class="crud-grid table table-lighter table-condensed noMargin">
-                                            <thead>
-                                                <tr class="nmc-child-table-header">
-                                                    <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" 
-                                                        class="nmc-td-for-button-object-control" 
-                                                        style="padding: 0 0 3px;">
-
-                                                        <div class="btn-group">
-                                                            <button ng-disabled="!objectCtrlSettings.anySelected" title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
-                                                            <span class="caret"></span>
-                                                            </button>
-                    <!--
-                                                          <i title="Действия над объектами" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="">
-                                                            </i>
-                    -->
-                                                          <ul class="dropdown-menu">
-                                                            <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
-                                                            <li role="separator" class="divider"></li>  
-                                                            <li><a href="" ng-click="deleteObjectsInit()">{{messages.deleteObjects}}</a></li>
-                                                          </ul>
-                                                        </div>
-                                                        <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
-                                                    </th>
-                                                    <th class="nmc-td-for-button"></th>
-                                                    <th>Название объекта
-                                                        
-                                                    </th>
-                                                    <th>
-                                                        <div class="btn-group pull-right" style="vertical-align: initial;">
-                                                          <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 20x; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">                    
-                                                          </p>
-                                                          <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a href="" ng-click="objectCtrlSettings.isTreeView=!objectCtrlSettings.isTreeView">
-                                                                    Включить/выключить отображение дерева объектов
-                                                                </a>
-                                                            </li>
-                                                          </ul>
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </th>
-                                </tr>
-                            </thead>
-                    </table>
-
-                    <div>
-                        <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
-                            <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-                            <thead>
-                                <tr class="nmc-hide">
-                                    <th style="padding: 0; border-bottom-width: 0px;">
-                                        <table class="crud-grid table table-lighter table-condensed noMargin">
-                                            <thead>
-                                                <tr class="nmc-child-table-header">
-                                                    <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 5px;">
-                                                        <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
-                                                        <div class="btn-group" style="vertical-align: initial;">
-
-                                                          <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
-                                                            <span class="caret"></span>
-                                                          </button>
-                                                          <ul class="dropdown-menu">
-                                                            <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
-                    <!--                                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li> -->
-                                                          </ul>
-                                                        </div>
-                                                    </th>
-                                                    <th class="nmc-td-for-button"></th>
-                                                    <th>Название объекта
-                                                    </th>
-                                                    <th>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
-                                <td>
-                                    <table>
-                                        <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
-
-                                            <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control">
-                    <!--                            <span>{{$index}}</span>-->
-                                                <div class="btn-group">
-                                                  <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
-                                                    </i>
-                                                  <ul class="dropdown-menu">
-                                                    <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>
-                    <!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
-                                                    <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>
-                    <!--                                <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>-->
-                                                    <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
-                                                    <li role="separator" class="divider"></li>
-                                                    <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
-                                                  </ul>
-                                                </div>
-                    <!--                            ng-click="toggleObject(object)"-->
-                                                <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
-
-
-                                            </td>
-
-                                            <td class="nmc-td-for-button"> 
-
-                                                <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>                            
-
-                                            </td>
-
-                                            <td ng-click="toggleShowGroupDetails(object.id)">
-                    <!--                            <span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>-->
-                                                <span ng-show="!object._haveSubscr">
-                                                    <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
-                                                </span>
-                                                {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
-                                            </td>
-                                            <td>
-                                                <div class="btn-toolbar">
-                                                    <div class="btn-group pull-right">                   
-                                                        <i title="Удалить объект" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
-                                        </tr>
-                                    </table>
-                                 </td>        
-                             </tr>
-                    <!--
-                            <tr class="nmc-hide">
-                                <td>{{onTableLoad()}}</td>
-                            </tr>
-                    -->
-                            </tbody>
-                        </table>
-                    <!--        </div>-->
-                      </div>
-                    </div><!-- end of scrolling table div -->
                 </div>
-            </div>
-        </div>
-      </div>
-<!--      Дерево объектов-->
-<!--
-     <div role="tabpanel" 
-         class="tab-pane fade" 
-         id="objects_edition_tree">
-            <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
-                <div class="col-xs-3 col-md-3">
-                    <select class="form-control nmc-select-form"
-                            ng-model="currentObjectName"
-                            ng-options="object as object.fullName for object in objects">
-                    </select>
-                </div>
-                <div class="input-group col-xs-4 col-md-4 filter pull-left nmc-search-form">   
+                <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
                     <span class="input-group-addon nmc-search-form-addon">
                         <i class="glyphicon glyphicon-search nmc-search-form-button">
                         </i>
                     </span>
-                    <input title="Введите текст для поиска объектов" 
+                    <input title="Введите текст для поиска узла" 
                            type="text" 
                            class="form-control nmc-text-input-form" 
-                           ng-model="filter" 
-                           ng-change="searchObjects(filter)">
+                           ng-model="treefilter" 
+                           >
                 </div>
             </div>
-         <div class="col-xs-6 col-md-6 nmc-table-with-fixed-header">
-            <script type="text/ng-template" id="items_renderer.html">
-                <div ui-tree-handle ng-click="selectNode(item)"
-                     ng-mouseover = "item.isHover = true"
-                     ng-mouseleave = "item.isHover = false"
-                     ng-class="{'nmc-bg-distinguish': item.isHover}">
-                  <i class="btn btn-xs" 
-                     data-nodrag ng-click="toggle(this)">
-                      <img ng-if="collapsed && item.zpoints" height="12" width="12" src="/public/vendor_components/glyphicons_free/glyphicons/png/glyphicons-435-redo.png"/>
-                      <img ng-if="!collapsed && item.zpoints" height="12" width="12" src="/public/vendor_components/glyphicons_free/glyphicons/png/glyphicons-436-undo.png"/>
-                      <span ng-if = "!item.zpoints">
-                          &bull; 
-                      </span>
-                    </i>
-                  {{item.fullName || item.customServiceName}}
-                    <div class="btn-group "
-                         ng-show="item.isHover">
-                      <i type="button" 
-                              class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
-                              data-toggle="dropdown" 
-                              aria-haspopup="true" 
-                              aria-expanded="false"
-                              ng-disabled=false
-                         >
-                      </i>
-                      <ul class="dropdown-menu noMarginI">
-                        <li><a href="" data-target="#treeLevelModal" data-toggle="modal">Добавить узел</a></li>
-                        <li><a href="" >Свойства узла</a></li>
-                        <li role="presentation" class="divider"></li>
-                        <li><a href="" >Удалить узел</a></li>                        
-                      </ul>
+             <div class="row nmc-tree-with-fixed-header">
+                <script type="text/ng-template" id="object_tree_items_renderer.html">
+                    <div ui-tree-handle ng-click="selectNode(item)"
+                         ng-mouseover = "item.isHover = true"
+                         ng-mouseleave = "item.isHover = false"
+                         ng-class="{'nmc-bg-distinguish': item.isHover || item.isSelected}"
+                         class="nmc-ui-tree-handle">
+                      <i class="btn btn-xs glyphicon"
+                         ng-class="{'glyphicon-chevron-right': collapsed && item.nodes.length > 0, 'glyphicon-chevron-down': !collapsed && item.nodes.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.nodes.length > 0)}"
+                         data-nodrag ng-click="toggle(this)">                                  
+                        </i>
+                        <span ng-if = "item.type == 'root'">
+                              <strong>\</strong>
+                        </span>
+                      {{item.name}}
+                        <div class="btn-group "
+                             ng-show="item.isHover">
+                          <i type="button" 
+                                  class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                                  data-toggle="dropdown" 
+                                  aria-haspopup="true" 
+                                  aria-expanded="false"
+                                  ng-disabled=false
+                             >
+                          </i>
+                          <ul class="dropdown-menu noMarginI">
+                            <li><a href="" ng-click="data.currentLevel = {parent: item, nodes: []}" 
+                                   data-target="#treeLevelModal" 
+                                   data-toggle="modal">Добавить узел</a></li>                            
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="" >Удалить узел</a></li>                        
+                          </ul>
+                        </div>
+                    </div>
+                    <ol ui-tree-nodes="options" ng-model="item.nodes" ng-class="{hidden: collapsed}">
+                      <li ng-repeat="item in item.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'">
+                      </li>
+                    </ol>
+                  </script>
+                  <div ui-tree="options" data-drag-enabled="false">
+                    <ol ui-tree-nodes ng-model="data.currentTree" >
+                      <li ng-repeat="item in data.currentTree.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
+                    </ol>
+                  </div>
+             </div>
+        </div>
+        <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
+            <div class="container-fluid" ng-hide="loading">
+                <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+                    <div class="col-md-3 noPadding">
+                        <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Добавить объект</button>
+                    </div>
+                    <div class="col-md-7"></div>
+                    <div class="input-group col-md-4 filter pull-left nmc-search-form">   
+                        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                        <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                    </div>
+                    <div class="col-md-offset-2 col-md-2">
+                            <label class="nmc-form-label">Всего:</label>
+                             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                            <span id="timeOutput"></span>
                     </div>
                 </div>
-                <ol ui-tree-nodes="options" ng-model="item.zpoints" ng-class="{hidden: collapsed}">
-                  <li ng-repeat="item in item.zpoints" ui-tree-node ng-include="'items_renderer.html'">
-                  </li>
-                </ol>
-              </script>
-              <div ui-tree="options" data-drag-enabled="false">
-                <ol ui-tree-nodes ng-model="objectsOnPage" >
-                  <li ng-repeat="item in objectsOnPage" ui-tree-node ng-include="'items_renderer.html'"></li>
-                </ol>
-              </div>
-         </div>
-         <div class="col-xs-6 col-md-6 nmc-table-with-fixed-header">
-             <div ng-repeat="item in data.selectedNode.zpoints">
-                 <div class="col-xs-4 col-md-4">{{item.zpointName}}</div>
-                 <div class="col-xs-4 col-md-4">{{item.zpointNumber}}</div>
-                 <div class="col-xs-4 col-md-4">{{item.zpointModel}}</div>
              </div>
-         </div>
-      </div> 
--->
+
+            <!-- Шапка для таблицы-->
+            <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" 
+                                                class="nmc-td-for-button-object-control" 
+                                                style="padding: 0 0 3px;">
+
+                                                <div class="btn-group">
+                                                    <button ng-disabled="!objectCtrlSettings.anySelected" title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
+                                                    <span class="caret"></span>
+                                                    </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
+                                                    <li role="separator" class="divider"></li>  
+                                                    <li><a href="" ng-click="deleteObjectsInit()">{{messages.deleteObjects}}</a></li>
+                                                  </ul>
+                                                </div>
+                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
+                                            </th>
+                                            <th class="nmc-td-for-button"></th>
+                                            <th>Название объекта
+                                            </th>
+                                            <th>
+                                                <div class="btn-group pull-right" style="vertical-align: initial;">
+                                                  <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 20x; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">                    
+                                                  </p>
+                                                  <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="" ng-click="objectCtrlSettings.isTreeView=!objectCtrlSettings.isTreeView">
+                                                            Включить/выключить отображение дерева объектов
+                                                        </a>
+                                                    </li>
+                                                  </ul>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+            </table>
+            <div>
+                <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+                    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                    <thead>
+                        <tr class="nmc-hide">
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 5px;">
+                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                                <div class="btn-group" style="vertical-align: initial;">
+
+                                                  <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                                    <span class="caret"></span>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>            
+                                                  </ul>
+                                                </div>
+                                            </th>
+                                            <th class="nmc-td-for-button"></th>
+                                            <th>Название объекта
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
+                        <td>
+                            <table>
+                                <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+
+                                    <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control">            
+                                        <div class="btn-group">
+                                          <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                                            </i>
+                                          <ul class="dropdown-menu">
+                                            <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
+                                            <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>            
+                                            <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
+                                          </ul>
+                                        </div>            
+                                        <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
+                                    </td>
+                                    <td class="nmc-td-for-button"> 
+                                        <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i> 
+                                    </td>
+
+                                    <td ng-click="toggleShowGroupDetails(object.id)">
+                                        <span ng-show="!object._haveSubscr">
+                                            <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
+                                        </span>
+                                        {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-toolbar">
+                                            <div class="btn-group pull-right">                   
+                                                <i title="Удалить объект" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
+                                </tr>
+                            </table>
+                         </td>        
+                     </tr>            
+                    </tbody>
+                </table>            
+              </div>
+            </div><!-- end of scrolling table div -->
+        </div>
     </div>
 </div>
-
-
 
 <!--********************* ZPoint section *************-->
 <!--**************************************************-->
@@ -510,7 +356,6 @@
                                           <label for="inputType">Тип</label>
                                         </td>
                                         <td class="nmc-text-align-left ">
-        <!--                                    <input class="form-control nmc-text-input-form" type="text" id="inputType"  placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">-->
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(zpointSettings.contServiceTypeKeyname)}">
                                                 <select class="form-control nmc-input-data nmc-select-form" 
                                                         ng-model="zpointSettings.contServiceTypeKeyname" 
@@ -530,8 +375,6 @@
                                             <label for="inputDevice">Прибор</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left ">
-        <!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">-->
-
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(zpointSettings._activeDeviceObjectId)}">
                                                 <select class="form-control nmc-input-data nmc-select-form" 
                                                         ng-model="zpointSettings._activeDeviceObjectId" 
@@ -545,8 +388,6 @@
                                             <label for="inputPCO">РСО</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
-        <!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputType" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">-->
-
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(zpointSettings.rsoId)}">
                                                 <select class="form-control nmc-input-data nmc-select-form" 
                                                         ng-model="zpointSettings.rsoId" 
@@ -561,12 +402,6 @@
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom">
-        <!--
-                                                <select class="form-control nmc-input-data nmc-select-form" 
-                                                        ng-model="zpointSettings.tempSch" 
-                                                        ng-options="sch.id as sch.name for sch in data.tempSchedules">
-                                                </select>
-        -->
                                                 <ui-select class="nmc-ui-select-form" 
                                                            ng-model="zpointSettings.tChart" 
                                                            theme="bootstrap" 
@@ -632,7 +467,6 @@
                                 ng-click="updateZpointCommonSettings()"
 								value="Сохранить" 
                                    ng-disabled="zpointSettings.isSaving == true"/>
-<!--								ng-disabled="!checkZpointSettingsFrom(zpointSettings)" -->
 						</div> 
 						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
@@ -643,11 +477,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
@@ -814,7 +643,7 @@
 
                                         </div>
                                         <div class="col-xs-6 noPadding">
-                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> ГКал/сут </span>
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_max"> ГКал/сут </span>
                                         </div>
                                     </div> 
                                     <div class="row-fluid">
@@ -1148,14 +977,6 @@
                 <div class="row">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-<!--
-                            <tr>
-                                <td class="col-sm-3"><label for="inputCode">Код объекта</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
-                                </td>
-                            </tr>
--->
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
@@ -1206,7 +1027,6 @@
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-<!--                                    <input disabled class="form-control nmc-text-input-form" type="text" ng-model="currentObject._activeContManagement.organization.organizationName">-->
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(currentObject.contManagementId)}">
                                         <select class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
                                         </select>
@@ -1330,11 +1150,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
     
@@ -1433,20 +1248,13 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
     
 <!-- window: delete object-->
 <div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
-
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deleteObjectLabel" class="nmc-h3">
@@ -1464,7 +1272,6 @@
 				</p>
                 <div class="marginLeft15">
                         <label class="nmc-form-label">Введите код подтверждения: 
-<!--                            {{firstNum}} + {{secondNum}} = -->
                             {{confirmLabel}}
                     </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
                 </div>
@@ -1475,7 +1282,6 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-<!--                            -->
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObjects(currentObject);"
 								value="Удалить" />
@@ -1490,20 +1296,13 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
 <!-- window: delete zpoint-->
 <div id="deleteZpointModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteZpointLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
-
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deleteZpointLabel" class="nmc-h3">
@@ -1520,7 +1319,6 @@
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
                 <div class="marginLeft15">
-<!--                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>-->
                     <label class="nmc-form-label">Введите код подтверждения: 
                             {{confirmLabel}}
                     </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
@@ -1529,15 +1327,12 @@
 		</div>
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid">
-
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-<!--                            -->
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteZpoint(currentZpoint);"
 								value="Удалить" />
 						</div>
-
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
@@ -1547,11 +1342,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
     
@@ -1614,21 +1404,11 @@
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-<!--
-            <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
-					ng-click="checkPackages()"
-					value="Сохранить" />
--->
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
 								Ok
 			</button>				
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
     
@@ -1724,20 +1504,13 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
 <!-- window: delete device-->
 <div id="deleteDeviceModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteDeviceLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
-
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deleteDeviceLabel" class="nmc-h3">
@@ -1779,11 +1552,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
@@ -1827,11 +1595,6 @@
 								Отменить
 			</button>				
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
     
@@ -2024,36 +1787,11 @@
                                                ng-model="data.currentLevel.parent.name"
                                                disabled/>
                                         <div ng-if="data.currentLevel.parent.type == 'root'" class="well noMargin nmc-text-ouput">
-<!--                                            <strong>\</strong>-->
                                             {{data.currentTree.name}}
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-<!--
-                            <tr>
-                                <td><label for="inputLevelObject" >Связанный объект</label>
-                                </td>
-                                <td class="nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" >
-                                        <select class="form-control nmc-select-form" 
-                                                id="inputLevelObject" 
-                                                ng-model="data.currentLevel.object" 
-                                                ng-options="object as object.fullName for object in objects" >
-                                        </select>
-                                    </div>
-                                </td>
-                                <td class="nmc-td-for-buttons">
-                                    <i class="btn btn-xs glyphicon glyphicon-plus"
-                                       
-                                       ng-click="addObjectInit(true)">
-                                    </i>
-                                    <i class="btn btn-xs nmc-remove-button" 
-                                       ng-click="data.currentLevel.object = null">
-                                    </i>
-                                </td>
-                            </tr>
--->
                         </table>
                     </div>    
                 </div>  

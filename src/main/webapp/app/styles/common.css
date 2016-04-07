@@ -807,6 +807,10 @@ tr.nmc-main-table-header-indicator > th {
     position:relative
 }
 
+.nmc-ui-tree-handle:focus{
+    background-color: #eee;
+}
+
 /*  Таблица с непрокручиваемой шапкой для страницы Показания*/
 .nmc-indicator-table-with-fixed-header{
 /*    overflow-y: hidden;*/
