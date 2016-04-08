@@ -145,7 +145,13 @@ public class SubscrApiController extends WebApiController {
 	 */
 	protected Long getRmaSubscriberId() {
 		Subscriber subscriber = currentSubscriberService.getSubscriber();
-		return subscriber != null ? subscriber.getRmaSubscriberId() : null;
+		if (subscriber == null) {
+			return null;
+		}
+		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+			return subscriber.getId();
+		}
+		return subscriber.getRmaSubscriberId();
 	}
 
 	/**

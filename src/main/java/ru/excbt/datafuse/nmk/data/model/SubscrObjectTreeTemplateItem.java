@@ -10,11 +10,12 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_object_tree_template_item")
-public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
+public class SubscrObjectTreeTemplateItem extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
@@ -24,6 +25,7 @@ public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
 	@Column(name = "template_id", insertable = false, updatable = false)
 	private Long templateId;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "template_id")
 	private SubscrObjectTreeTemplate template;
@@ -33,6 +35,9 @@ public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
 
 	@Column(name = "item_name")
 	private String itemName;
+
+	@Column(name = "item_name_template")
+	private String itemNameTemplate;
 
 	@Column(name = "item_description")
 	private String itemDescription;
@@ -46,8 +51,8 @@ public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
-	@Column(name = "is_linkable")
-	private Boolean isLinkable;
+	@Column(name = "is_link_deny")
+	private Boolean isLinkDeny;
 
 	@Column(name = "is_single_object")
 	private Boolean isSingleObject;
@@ -55,7 +60,6 @@ public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 
@@ -123,14 +127,6 @@ public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
 		this.isDisabled = isDisabled;
 	}
 
-	public Boolean getIsLinkable() {
-		return isLinkable;
-	}
-
-	public void setIsLinkable(Boolean isLinkable) {
-		this.isLinkable = isLinkable;
-	}
-
 	public Boolean getIsSingleObject() {
 		return isSingleObject;
 	}
@@ -147,12 +143,30 @@ public class SubscrObjectTreeTemplateItem extends AbstractAuditableModel {
 		this.version = version;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Boolean getIsLinkDeny() {
+		return isLinkDeny;
+	}
+
+	public void setIsLinkDeny(Boolean isLinkDeny) {
+		this.isLinkDeny = isLinkDeny;
+	}
+
+	public String getItemNameTemplate() {
+		return itemNameTemplate;
+	}
+
+	public void setItemNameTemplate(String itemNameTemplate) {
+		this.itemNameTemplate = itemNameTemplate;
 	}
 
 }

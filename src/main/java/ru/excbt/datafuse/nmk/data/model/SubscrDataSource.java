@@ -10,11 +10,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
@@ -28,9 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
  */
 @Entity
 @Table(name = "subscr_data_source")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
-public class SubscrDataSource extends AbstractAuditableModel implements DeletableObject {
+public class SubscrDataSource extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 

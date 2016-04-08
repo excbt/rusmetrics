@@ -12,8 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
@@ -70,6 +71,8 @@ public class WebApiHelper {
 		} catch (TransactionSystemException | PersistenceException e) {
 			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
+		} catch (ModelIsNotValidException e) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ApiResult.error(e));
 		}
 
 		return ResponseEntity.status(successStatus).build();

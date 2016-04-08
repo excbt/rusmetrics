@@ -5,14 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_object_tree_template")
-public class SubscrObjectTreeTemplate extends AbstractAuditableModel implements DeletableObjectId {
+public class SubscrObjectTreeTemplate extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
@@ -49,7 +47,6 @@ public class SubscrObjectTreeTemplate extends AbstractAuditableModel implements 
 	@Version
 	private int version;
 
-	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 

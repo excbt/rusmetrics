@@ -617,8 +617,20 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @param args
 	 * @return
 	 */
+	protected String apiSubscrUrlTemplate(String url, Object... args) {
+		checkNotNull(url);
+		return "/api/subscr" + String.format(url, args);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	@Deprecated
 	protected String apiSubscrUrl(String url, Long id) {
 		checkNotNull(url);
 		checkNotNull(id);
@@ -660,9 +672,21 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @param args
+	 * @return
+	 */
+	protected String apiRmaUrlTemplate(String url, Object... args) {
+		checkNotNull(url);
+		return "/api/rma" + String.format(url, args);
+	}
+
+	/**
+	 * 
+	 * @param url
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	protected String apiRmaUrl(String url, Long id) {
 		checkNotNull(url);
 		checkNotNull(id);
