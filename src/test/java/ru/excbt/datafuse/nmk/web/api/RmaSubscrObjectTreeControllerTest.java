@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,9 +21,10 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Autowired
 	private SubscrObjectTreeService subscrObjectTreeService;
 
+	@Ignore
 	@Test
 	public void testSubscrObjectTreeGet() throws Exception {
-		_testGetJson("/api/rma/subscrObjectTree/cont_object_tree_1/1");
+		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/1");
 	}
 
 	/**
