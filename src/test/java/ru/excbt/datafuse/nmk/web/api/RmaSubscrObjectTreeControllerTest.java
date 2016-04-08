@@ -1,7 +1,9 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -12,7 +14,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.api.RmaSubscrObjectTreeController.ObjectNameHolder;
 
@@ -20,6 +24,9 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 	@Autowired
 	private SubscrObjectTreeService subscrObjectTreeService;
+
+	@Autowired
+	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
 
 	@Ignore
 	@Test
@@ -118,4 +125,81 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		_testDeleteJson(url);
 
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSubscrObjectTreeTemplate2CRUD() throws Exception {
+		List<SubscrObjectTreeTemplate> templates = getTemplates();
+
+		SubscrObjectTreeTemplate template = null;
+
+		List<SubscrObjectTreeTemplateItem> items = new ArrayList<>();
+
+		for (SubscrObjectTreeTemplate t : templates) {
+			items = subscrObjectTreeTemplateService.selectSubscrObjectTreeTemplateItems(t.getId());
+			if (items.size() > 1) {
+				template = t;
+				break;
+			}
+		}
+
+		assertTrue(template != null);
+		assertTrue(items.size() > 0);
+
+		ObjectNameHolder tree = new ObjectNameHolder();
+		tree.setObjectName("Поэтажный план 1");
+		tree.setTemplateId(template.getId());
+
+		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
+
+		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
+
+		String content = _testGetJson(url);
+
+		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		}, content);
+
+		SubscrObjectTreeTemplateItem itemlevel1 = items.stream().filter(i -> i.getItemLevel().equals(1)).findFirst()
+				.get();
+		SubscrObjectTreeTemplateItem itemlevel2 = items.stream().filter(i -> i.getItemLevel().equals(2)).findFirst()
+				.get();
+
+		SubscrObjectTree floor1 = subscrObjectTreeService.addChildObject(tree1, "Этаж 1");
+		floor1.setTemplateItemId(itemlevel1.getId());
+		SubscrObjectTree floor2 = subscrObjectTreeService.addChildObject(tree1, "Этаж 2");
+		floor2.setTemplateItemId(itemlevel1.getId());
+		SubscrObjectTree floor3 = subscrObjectTreeService.addChildObject(tree1, "Этаж 3");
+		floor3.setTemplateItemId(itemlevel1.getId());
+
+		_testUpdateJson(url, tree1);
+
+		content = _testGetJson(url);
+		tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		}, content);
+
+		floor2 = subscrObjectTreeService.searchObject(tree1, "Этаж 2");
+		assertNotNull(floor2);
+
+		for (int i = 1; i <= 6; i++) {
+			SubscrObjectTree apt = subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
+			apt.setTemplateItemId(itemlevel2.getId());
+		}
+
+		floor3 = subscrObjectTreeService.searchObject(tree1, "Этаж 3", 1);
+		assertNotNull(floor3);
+
+		for (int i = 7; i <= 12; i++) {
+			SubscrObjectTree apt = subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
+			apt.setTemplateItemId(itemlevel2.getId());
+		}
+
+		_testUpdateJson(url, tree1);
+
+		_testDeleteJson(url);
+
+	}
+
 }

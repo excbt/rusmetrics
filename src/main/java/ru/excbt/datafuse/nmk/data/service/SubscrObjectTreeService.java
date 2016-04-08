@@ -158,6 +158,7 @@ public class SubscrObjectTreeService extends AbstractService {
 		child.setRmaSubscriberId(node.getRmaSubscriberId());
 		child.setIsRma(node.getIsRma());
 		child.setObjectTreeType(node.getObjectTreeType());
+		child.setTemplateId(node.getTemplateId());
 		node.getChildObjectList().add(child);
 		return child;
 	}
