@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * Результат REST запроса
  * 
@@ -14,15 +16,24 @@ public class ApiResult {
 
 	private final ApiResultCode resultCode;
 	private final String description;
+	private final HttpStatus httpStatus;
 
 	public ApiResult(ApiResultCode resultCode, String description) {
 		this.resultCode = resultCode;
 		this.description = description;
+		this.httpStatus = null;
+	}
+
+	public ApiResult(ApiResultCode resultCode, String description, HttpStatus httpStatus) {
+		this.resultCode = resultCode;
+		this.description = description;
+		this.httpStatus = httpStatus;
 	}
 
 	public ApiResult(ApiResultCode resultCode) {
 		this.resultCode = resultCode;
 		this.description = null;
+		this.httpStatus = null;
 	}
 
 	public ApiResultCode getResultCode() {
@@ -56,6 +67,18 @@ public class ApiResult {
 	public static ApiResult build(ApiResultCode code, String description) {
 		checkNotNull(code);
 		return new ApiResult(code, description);
+	}
+
+	/**
+	 * 
+	 * @param code
+	 * @param description
+	 * @param httpStatus
+	 * @return
+	 */
+	public static ApiResult build(ApiResultCode code, String description, HttpStatus httpStatus) {
+		checkNotNull(code);
+		return new ApiResult(code, description, httpStatus);
 	}
 
 	/**
@@ -121,6 +144,10 @@ public class ApiResult {
 		return build(ApiResultCode.describeException(e), e.getMessage());
 	}
 
+	public static ApiResult error(Exception e, HttpStatus httpStatus) {
+		return build(ApiResultCode.describeException(e), e.getMessage(), httpStatus);
+	}
+
 	/**
 	 * 
 	 * @param e
@@ -147,6 +174,10 @@ public class ApiResult {
 	 */
 	public static ApiResult invalidState(String description) {
 		return build(ApiResultCode.ERR_INVALID_STATE, description);
+	}
+
+	public HttpStatus getHttpStatus() {
+		return httpStatus;
 	}
 
 }
