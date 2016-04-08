@@ -60,6 +60,12 @@ public class SubscrObjectTreeService extends AbstractService {
 				i.setDeleted(node.getDeleted());
 
 				// Check props
+
+				if (i.getTemplateId() != null && i.getTemplateItemId() == null) {
+					throw new ModelIsNotValidException(String.format(
+							"SubscrObjectTree is not valid. SubscrObjectTreeTemplate (id=%d)", i.getTemplateId()));
+				}
+
 				if (templateItems != null && !templateItems.isEmpty()) {
 					Optional<SubscrObjectTreeTemplateItem> levelItem = templateItems.stream()
 							.filter((item) -> item.getItemLevel() != null && item.getItemLevel().equals(level))

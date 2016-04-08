@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -17,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
+import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.api.RmaSubscrObjectTreeController.ObjectNameHolder;
 
@@ -75,12 +78,16 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
 
-		String ulr = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
+		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
 
-		_testDeleteJson(ulr);
+		_testDeleteJson(url);
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testSubscrObjectTreeCRUD() throws Exception {
 
@@ -197,6 +204,41 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		}
 
 		_testUpdateJson(url, tree1);
+
+		_testDeleteJson(url);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSubscrObjectTreeTemplateCreateInvalidCheck() throws Exception {
+
+		Long templateId = getAnyTemplate();
+
+		ObjectNameHolder tree = new ObjectNameHolder();
+		tree.setObjectName("Object 1");
+		tree.setTemplateId(templateId);
+
+		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
+
+		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
+
+		String content = _testGetJson(url);
+
+		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		}, content);
+
+		SubscrObjectTree floor1 = subscrObjectTreeService.addChildObject(tree1, "Этаж 1");
+
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().is4xxClientError());
+		};
+
+		_testUpdateJson(url, tree1, null, tester);
 
 		_testDeleteJson(url);
 
