@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +44,7 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @param objectTreeType
 	 * @return
 	 */
-	private SubscrObjectTree initSubscrObjectTree(SubscrObjectTree node, ObjectTreeTypeKeyname objectTreeType,
+	private SubscrObjectTree _initSubscrObjectTree(SubscrObjectTree node, ObjectTreeTypeKeyname objectTreeType,
 			int level, List<SubscrObjectTreeTemplateItem> templateItems) {
 		checkNotNull(node);
 		checkNotNull(objectTreeType);
@@ -73,7 +72,7 @@ public class SubscrObjectTreeService extends AbstractService {
 					}
 				}
 
-				initSubscrObjectTree(i, objectTreeType, level + 1, templateItems);
+				_initSubscrObjectTree(i, objectTreeType, level + 1, templateItems);
 			});
 		}
 		return node;
@@ -109,7 +108,7 @@ public class SubscrObjectTreeService extends AbstractService {
 		List<SubscrObjectTreeTemplateItem> templateItems = node.getTemplateId() != null
 				? subscrObjectTreeTemplateService.selectSubscrObjectTreeTemplateItems(node.getTemplateId()) : null;
 
-		return initSubscrObjectTree(node, objectTreeType, 0, templateItems);
+		return _initSubscrObjectTree(node, objectTreeType, 0, templateItems);
 	}
 
 	/**
@@ -151,8 +150,8 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @param objectName
 	 * @return
 	 */
-	public SubscrObjectTree addChildNode(SubscrObjectTree node, String objectName) {
-		assertNotNull(node);
+	public SubscrObjectTree addChildObject(SubscrObjectTree node, String objectName) {
+		checkNotNull(node);
 		SubscrObjectTree child = new SubscrObjectTree();
 		child.setObjectName(objectName);
 		child.setParent(node);
@@ -165,10 +164,61 @@ public class SubscrObjectTreeService extends AbstractService {
 
 	/**
 	 * 
+	 * @param node
+	 * @param objectName
+	 * @param searchLevel
+	 * @param level
+	 * @return
+	 */
+	private SubscrObjectTree _searchObject(SubscrObjectTree node, String objectName, Integer searchLevel, int level) {
+		checkNotNull(node);
+		checkNotNull(objectName);
+
+		checkArgument(level >= 0);
+
+		if (objectName.equals(node.getObjectName()) && (searchLevel == null || searchLevel.equals(level))) {
+			return node;
+		}
+
+		if (node.getChildObjectList() != null && !node.getChildObjectList().isEmpty()) {
+			for (SubscrObjectTree child : node.getChildObjectList()) {
+				SubscrObjectTree result = _searchObject(child, objectName, searchLevel, level + 1);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param objectName
+	 * @param searchLevel
+	 * @return
+	 */
+	public SubscrObjectTree searchObject(SubscrObjectTree node, String objectName, Integer searchLevel) {
+		return _searchObject(node, objectName, searchLevel, 0);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param objectName
+	 * @return
+	 */
+	public SubscrObjectTree searchObject(SubscrObjectTree node, String objectName) {
+		return _searchObject(node, objectName, null, 0);
+	}
+
+	/**
+	 * 
 	 * @param entity
 	 * @return
 	 */
-	private SubscrObjectTree saveNode(SubscrObjectTree entity) {
+	private SubscrObjectTree saveSubscrObjectTree(SubscrObjectTree entity) {
 		SubscrObjectTree result = subscrObjectTreeRepository.save(entity);
 
 		//		if (result.getChildNodeList() != null) {
@@ -188,7 +238,7 @@ public class SubscrObjectTreeService extends AbstractService {
 	public SubscrObjectTree saveRootSubscrObjectTree(SubscrObjectTree entity) {
 		checkArgument(entity.getParent() == null);
 
-		return saveNode(entity);
+		return saveSubscrObjectTree(entity);
 
 	}
 

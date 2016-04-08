@@ -87,9 +87,29 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
-		SubscrObjectTree floor1 = subscrObjectTreeService.addChildNode(tree1, "Этаж 1");
-		SubscrObjectTree floor2 = subscrObjectTreeService.addChildNode(tree1, "Этаж 2");
-		SubscrObjectTree floor3 = subscrObjectTreeService.addChildNode(tree1, "Этаж 3");
+		SubscrObjectTree floor1 = subscrObjectTreeService.addChildObject(tree1, "Этаж 1");
+		SubscrObjectTree floor2 = subscrObjectTreeService.addChildObject(tree1, "Этаж 2");
+		SubscrObjectTree floor3 = subscrObjectTreeService.addChildObject(tree1, "Этаж 3");
+
+		_testUpdateJson(url, tree1);
+
+		content = _testGetJson(url);
+		tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		}, content);
+
+		floor2 = subscrObjectTreeService.searchObject(tree1, "Этаж 2");
+		assertNotNull(floor2);
+
+		for (int i = 1; i <= 6; i++) {
+			subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
+		}
+
+		floor3 = subscrObjectTreeService.searchObject(tree1, "Этаж 3", 1);
+		assertNotNull(floor3);
+
+		for (int i = 7; i <= 12; i++) {
+			subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
+		}
 
 		_testUpdateJson(url, tree1);
 
