@@ -147,7 +147,7 @@ angular.module('portalNMC')
          //check view mode: if integrators -> precision = 2, else = 3
          ($scope.ctrlSettings.viewMode.indexOf("_abs") >= 0) ? $scope.ctrlSettings.precision = 2 : $scope.ctrlSettings.precision = 3;
          $scope.data = [];
-         var paramString ="";
+         var paramString = "";
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          timeDetailType+=$scope.ctrlSettings.viewMode;
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceElCons/" + timeDetailType + "/" + $scope.contZPoint;// + "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
