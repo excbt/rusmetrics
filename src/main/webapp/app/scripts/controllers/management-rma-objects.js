@@ -455,8 +455,8 @@ angular.module('portalNMC')
                     $scope.loading = true;
                     getObjectsData(e.id);
                 };
-
-                var errorCallback = function (e) { 
+                
+                var errorProtoCallback = function(e){
                     console.log(e);
                     var errorCode = "-1";
                     if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
@@ -466,7 +466,11 @@ angular.module('portalNMC')
                         errorCode = e.resultCode || e.data.resultCode;
                     };
                     var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);                    
+                };
+
+                var errorCallback = function (e) { 
+                    errorProtoCallback(e);
                     //zpoint settings saving flag reset
                     $scope.zpointSettings.isSaving = false;
                     $scope.currentObject.isSaving = false;
@@ -1796,6 +1800,12 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings.treeSettings = {};
                 $scope.objectCtrlSettings.treeSettings.nodesPropName = 'childObjectList'; //'objectName'
 
+                var ROOT_NODE = {
+                    objectName: "",
+                    type: "root",
+                    childObjectList: []
+                };
+                
                 $scope.objectCtrlSettings.isTreeView = true;
                 $scope.data.currentTree = {};
                 $scope.data.newTree = {};
@@ -1822,12 +1832,12 @@ angular.module('portalNMC')
                 };
                 
                 $scope.selectNode = function(item){
-console.log(item);                    
+//console.log(item);                    
                     if (!mainSvc.checkUndefinedNull($scope.data.selectedNode)){                        
 //                        $scope.data.selectedNode.isSelected = false;
                         var preNode = findNodeInTree($scope.data.selectedNode, $scope.data.currentTree);
-console.log(preNode);
-console.log($scope.data.selectedNode);
+//console.log(preNode);
+//console.log($scope.data.selectedNode);
                         preNode.isSelected = false;
                     };
                     
@@ -1861,13 +1871,19 @@ console.log($scope.data.selectedNode);
                 
 //                objectSvc.loadTrees().then(function(resp){
 //                    $scope.data.trees = angular.copy(resp.data);
-//                },errorCallback);
+//                },errorProtoCallback);
                 
                 var getTrees = function(){
-                    for (var i = 0; i < 5; i++){
-                        objectSvc.loadTree(i).then(function(resp){
-                            $scope.data.trees.push(angular.copy(resp.data));
-                        }, errorCallback);
+                    var treeIds = [
+                        512112776,
+                        512112791
+                    ];
+                    for (var i = 0; i < treeIds.length; i++){
+                        objectSvc.loadTree(treeIds[i]).then(function(resp){
+                            var respTree = angular.copy(resp.data);
+                            respTree.childObjectList.unshift(ROOT_NODE);
+                            $scope.data.trees.push(respTree);
+                        }, errorProtoCallback);
                     };
                 };
                 getTrees();
@@ -1885,10 +1901,48 @@ console.log($scope.data.selectedNode);
                     trueParentRoot.childObjectList.push(newNode);
                 };
                 
-                $scope.saveNode = function(newNode, parent){                 
+                $scope.newSubItem = function(scope){
+console.log(scope);                    
+                    
+                    var nodeData = scope.$modelValue;
+console.log(nodeData);                    
+//                    $scope.data.currentLevel = {objectName: "", childObjectList: []};
+//                    nodeData.childObjectList.push({                    
+//                        objectName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+//                        childObjectList: []
+//                    });
+                };
+                
+                $scope.saveNode = function(newNode, parent){
+                    var isCheckTree = checkTree(newNode);      
+                    if (isCheckTree == false){
+                        return "Node is no correct!";
+                    };
                     performNewNode(newNode, parent);
-                    objectSvc.updateTree($scope.data.currentTree);
-                    $('#treeLevelModal').modal('hide');
+                    // remove temporary root node before update tree
+                    if (angular.isArray($scope.data.currentTree.childObjectList) && ($scope.data.currentTree.childObjectList.length > 0) && ($scope.data.currentTree.childObjectList[0].type == "root")){
+                        $scope.data.currentTree.childObjectList.shift();
+                    };
+console.log($scope.data.currentTree);                    
+                    objectSvc.updateTree($scope.data.currentTree).then(function(resp){
+console.log(resp);                        
+                        var respTree = resp.data;
+                        respTree.childObjectList.unshift(ROOT_NODE);
+                        var findIndex = -1;
+                        $('#treeLevelModal').modal('hide');
+                        $scope.data.trees.some(function(tree, index){
+                            if (tree.id == respTree.id){
+                                findIndex = index;
+                                return true;
+                            };
+                        });
+                        if (findIndex != -1){
+                            $scope.data.trees[findIndex] = respTree;
+                            $scope.data.currentTree = respTree;
+                        };
+                        //update tree in array
+                    }, errorProtoCallback);
+                    
                 };
                 
                 $scope.saveAndCreateNextNode = function(newNode, parent){
@@ -1896,16 +1950,35 @@ console.log($scope.data.selectedNode);
                     $scope.data.currentLevel = {parent: parent, childObjectList: []};                    
                 };
                 
+                var checkTree = function(tree){                   
+                    var result = true;
+                    if ($scope.emptyString(tree.objectName)){
+                        notificationFactory.errorInfo("Ошибка", "Не задано наименование узла!");
+                        result = false;
+                    };
+                    return result;
+                };
+                
                 $scope.saveTree = function(tree){
+                    var isCheckTree = checkTree(tree);      
+                    if (isCheckTree == false){
+                        return "Tree is no correct!";
+                    };
 //                    tree.childObjectList = [{
 //                                objectName: "",
 //                                type: "root",
 //                                childObjectList: []
 //                            }];
+                        // remove temporary root node
+                    if (angular.isArray(tree.childObjectList) && (tree.childObjectList.length > 0) && (tree.childObjectList[0].type == "root")){
+                        tree.childObjectList.shift();
+                    };
                     objectSvc.createTree(tree).then(function(resp){
-                        $scope.data.trees.push(angular.copy(resp.data));
+                        var tree = angular.copy(resp.data);
+                        tree.childObjectList.unshift(ROOT_NODE);
+                        $scope.data.trees.push(tree);
                         $('#showTreeOptionModal').modal('hide');
-                    }, errorCallback);                    
+                    }, errorProtoCallback);                    
                 };
 // ********************************************************************************************
                 //  end TREEVIEW

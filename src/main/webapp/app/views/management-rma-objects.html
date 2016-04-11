@@ -95,7 +95,7 @@
                                   ng-repeat="tree in data.trees">
                                   <a href="" class=""
                                      ng-click="messages.treeMenuHeader = tree.objectName; data.currentTree = tree">
-                                      {{tree.objectName}}
+                                      {{tree.objectName || tree.id}}
                                   </a>
                               </li>
                           </ul>
@@ -140,7 +140,7 @@
                              >
                           </i>
                           <ul class="dropdown-menu noMarginI">
-                            <li><a href="" ng-click="data.currentLevel = {parent: item, childObjectList: []}" 
+                            <li><a href="" ng-click="data.parentLevel = item; data.currentLevel = {childObjectList: []};" 
                                    data-target="#treeLevelModal" 
                                    data-toggle="modal">Добавить узел</a></li>                            
                             <li role="presentation" class="divider"></li>
@@ -1780,15 +1780,15 @@
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" 
                                          >
-                                        <input ng-if="data.currentLevel.parent.type != 'root'"
+                                        <input ng-if="data.parentLevel.type != 'root'"
                                                class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputLevelName" 
                                                placeholder="" 
-                                               ng-model="data.currentLevel.parent.objectName"
+                                               ng-model="data.parentLevel.objectName"
                                                disabled/>
-                                        <div ng-if="data.currentLevel.parent.type == 'root'" class="well noMargin nmc-text-ouput">
-                                            {{data.currentTree.name}}
+                                        <div ng-if="data.parentLevel.type == 'root'" class="well noMargin nmc-text-ouput">
+                                            {{data.currentTree.objectName}}
                                         </div>
                                     </div>
                                 </td>
@@ -1804,14 +1804,14 @@
                type="button" 
                     class="btn btn-xs nmc-add-button-in-modal"                
                     title="Сохранить текущий и создать еще один уровень" 
-                    ng-click="saveAndCreateNextNode(data.currentLevel, data.currentLevel.parent)"
+                    ng-click="saveAndCreateNextNode(data.currentLevel, data.parentLevel)"
                >
                 Сохранить и создать еще
             </p>
         </span>
             <input type="submit" 
                    class="btn btn-primary btn-xs nmc-save-button"
-					ng-click="saveNode(data.currentLevel, data.currentLevel.parent)"
+					ng-click="saveNode(data.currentLevel, data.parentLevel)"
 					value="Сохранить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" 
                     data-dismiss="modal"

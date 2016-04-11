@@ -441,7 +441,7 @@ angular.module('portalNMC')
         };
                  
         var updateTree = function(tree){
-            return $http.put(rmaTreesUrl + '/' + treeId, tree);
+            return $http.put(rmaTreesUrl + '/' + tree.id, tree);
         };
         
         //service initialization
@@ -510,8 +510,8 @@ angular.module('portalNMC')
             setCurrentObject,
             sortObjectsByFullName,
             sortObjectsByFullNameEx,            
-            sortObjectsByConObjectFullName
-            
+            sortObjectsByConObjectFullName,
+            updateTree
         };
     
 }]);
