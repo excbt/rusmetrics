@@ -19,6 +19,12 @@ public class ContServiceDataSummary<T> implements Serializable {
 
 	private T average;
 
+	private T firstDataAbs;
+
+	private T lastDataAbs;
+
+	private T diffsAbs;
+
 	public T getTotals() {
 		return totals;
 	}
@@ -57,5 +63,29 @@ public class ContServiceDataSummary<T> implements Serializable {
 
 	public void setAverage(T average) {
 		this.average = average;
+	}
+
+	public T getDiffsAbs() {
+		return diffsAbs;
+	}
+
+	public void setDiffsAbs(T diffsAbs) {
+		this.diffsAbs = diffsAbs;
+	}
+
+	public T getFirstDataAbs() {
+		return firstDataAbs;
+	}
+
+	public void setFirstDataAbs(T firstDataAbs) {
+		this.firstDataAbs = firstDataAbs;
+	}
+
+	public T getLastDataAbs() {
+		return lastDataAbs;
+	}
+
+	public void setLastDataAbs(T lastDataAbs) {
+		this.lastDataAbs = lastDataAbs;
 	}
 }

@@ -87,4 +87,8 @@ public enum TimeDetailKey implements KeynameObject {
 	public boolean isTruncDate() {
 		return truncDate;
 	}
+
+	public boolean isHaveAbs() {
+		return haveAbs;
+	}
 }

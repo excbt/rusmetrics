@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -76,5 +77,15 @@ public abstract class AbstractContServiceDataService {
 		checkNotNull(list);
 		return list.isEmpty() ? null : list.get(0);
 	};
+
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	protected BigDecimal processDelta(BigDecimal a, BigDecimal b) {
+		return a == null || b == null ? null : b.subtract(a);
+	}
 
 }

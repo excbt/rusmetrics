@@ -116,26 +116,85 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ContServiceDataSummary<ContServiceDataElCons> summary = new ContServiceDataSummary<>();
 
+		// Totals
 		ContServiceDataElCons totals = selectCons_Sum(contZPointId, timeDetail, localDatePeriod);
+		totals.setTimeDetailType(timeDetail.getKeyname());
+		totals.setContZPointId(contZPointId);
 
+		// First @ Last Data Data
 		ContServiceDataElCons firstData = getFirstElement(contServiceDataElConsRepository.selectFirstDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
 
 		ContServiceDataElCons lastData = getFirstElement(contServiceDataElConsRepository.selectLastDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateTo(), LIMIT1_PAGE_REQUEST));
 
-		ContServiceDataElCons avg = null;
+		// Abs values
+		ContServiceDataElCons diffsAbs = null;
 
-		ContServiceDataElCons diffs = null;
+		if (timeDetail.isHaveAbs()) {
+
+			String[] timeDetailAbsTypes = new String[] { timeDetail.getAbsPair() };
+
+			ContServiceDataElCons firstDataAbs = getFirstElement(
+					contServiceDataElConsRepository.selectFirstDataByZPoint(contZPointId, timeDetailAbsTypes,
+							localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
+
+			ContServiceDataElCons lastDataAbs = getFirstElement(contServiceDataElConsRepository.selectLastDataByZPoint(
+					contZPointId, timeDetailAbsTypes, localDatePeriod.getDateTo(), LIMIT1_PAGE_REQUEST));
+
+			if (firstDataAbs != null && lastDataAbs != null) {
+
+				diffsAbs = new ContServiceDataElCons();
+
+				diffsAbs.setContZPointId(contZPointId);
+				diffsAbs.setTimeDetailType(timeDetail.getAbsPair());
+
+				processDiffs(diffsAbs, firstDataAbs, lastDataAbs);
+
+			}
+
+			summary.setFirstDataAbs(firstDataAbs);
+			summary.setLastDataAbs(lastDataAbs);
+
+		}
 
 		summary.setTotals(totals);
 		summary.setFirstData(firstData);
 		summary.setLastData(lastData);
-		summary.setAverage(avg);
-		summary.setDiffs(diffs);
+		summary.setDiffsAbs(diffsAbs);
 
 		return summary;
 
+	}
+
+	/**
+	 * 
+	 * @param diffs
+	 * @param firstData
+	 * @param lastData
+	 */
+	private void processDiffs(ContServiceDataElCons diffs, ContServiceDataElCons firstData,
+			ContServiceDataElCons lastData) {
+		diffs.setP_Ap1(processDelta(firstData.getP_Ap1(), lastData.getP_Ap1()));
+		diffs.setP_An1(processDelta(firstData.getP_An1(), lastData.getP_An1()));
+		diffs.setQ_Rp1(processDelta(firstData.getQ_Rp1(), lastData.getQ_Rp1()));
+		diffs.setQ_Rn1(processDelta(firstData.getQ_Rn1(), lastData.getQ_Rn1()));
+		diffs.setP_Ap2(processDelta(firstData.getP_Ap2(), lastData.getP_Ap2()));
+		diffs.setP_An2(processDelta(firstData.getP_An2(), lastData.getP_An2()));
+		diffs.setQ_Rp2(processDelta(firstData.getQ_Rp2(), lastData.getQ_Rp2()));
+		diffs.setQ_Rn2(processDelta(firstData.getQ_Rn2(), lastData.getQ_Rn2()));
+		diffs.setP_Ap3(processDelta(firstData.getP_Ap3(), lastData.getP_Ap3()));
+		diffs.setP_An3(processDelta(firstData.getP_An3(), lastData.getP_An3()));
+		diffs.setQ_Rp3(processDelta(firstData.getQ_Rp3(), lastData.getQ_Rp3()));
+		diffs.setQ_Rn3(processDelta(firstData.getQ_Rn3(), lastData.getQ_Rn3()));
+		diffs.setP_Ap4(processDelta(firstData.getP_Ap4(), lastData.getP_Ap4()));
+		diffs.setP_An4(processDelta(firstData.getP_An4(), lastData.getP_An4()));
+		diffs.setQ_Rp4(processDelta(firstData.getQ_Rp4(), lastData.getQ_Rp4()));
+		diffs.setQ_Rn4(processDelta(firstData.getQ_Rn4(), lastData.getQ_Rn4()));
+		diffs.setP_Ap(processDelta(firstData.getP_Ap(), lastData.getP_Ap()));
+		diffs.setP_An(processDelta(firstData.getP_An(), lastData.getP_An()));
+		diffs.setQ_Rp(processDelta(firstData.getQ_Rp(), lastData.getQ_Rp()));
+		diffs.setQ_Rn(processDelta(firstData.getQ_Rn(), lastData.getQ_Rn()));
 	}
 
 	/**
@@ -191,6 +250,54 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		checkArgument(localDatePeriod.isValidEq());
 
 		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "avg(%s)");
+
+		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElCons.class);
+
+		return consColumnHelperReader(columnHelper, queryResults);
+
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param localDatePeriod
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContServiceDataElCons selectCons_Min(Long contZPointId, TimeDetailKey timeDetail,
+			LocalDatePeriod localDatePeriod) {
+
+		checkNotNull(timeDetail);
+		checkNotNull(localDatePeriod);
+		checkArgument(localDatePeriod.isValidEq());
+
+		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "min(%s)");
+
+		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElCons.class);
+
+		return consColumnHelperReader(columnHelper, queryResults);
+
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param localDatePeriod
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContServiceDataElCons selectCons_Max(Long contZPointId, TimeDetailKey timeDetail,
+			LocalDatePeriod localDatePeriod) {
+
+		checkNotNull(timeDetail);
+		checkNotNull(localDatePeriod);
+		checkArgument(localDatePeriod.isValidEq());
+
+		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "max(%s)");
 
 		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
 				ContServiceDataElCons.class);
