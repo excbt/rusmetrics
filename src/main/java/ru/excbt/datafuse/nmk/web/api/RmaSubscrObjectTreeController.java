@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,25 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		}
 
 		SubscrObjectTree result = subscrObjectTreeService.findSubscrObjectTree(subscrObjectTreeId);
+		return responseOK(ObjectFilters.deletedFilter(result));
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrObjectTreeList(@PathVariable("objectTreeType") String objectTreeType) {
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getRmaSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 

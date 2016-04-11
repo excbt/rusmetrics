@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 
 @Service
 public class SubscrObjectTreeService extends AbstractService {
@@ -258,6 +260,30 @@ public class SubscrObjectTreeService extends AbstractService {
 		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
 		checkNotNull(node);
 		subscrObjectTreeRepository.save(softDeleteSubscrObjectTree(node));
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrObjectTree> selectSubscrObjectTreeShort(Long rmaSubscriberId) {
+		List<Object[]> results = subscrObjectTreeRepository.selectSubscrObjectTreeShort(rmaSubscriberId);
+
+		ColumnHelper helper = new ColumnHelper(new String[] { "id", "objectTreeType", "objectName" });
+
+		List<SubscrObjectTree> resultList = new ArrayList<>();
+
+		for (Object[] row : results) {
+			SubscrObjectTree t = new SubscrObjectTree();
+			t.setId(helper.getResultAsClass(row, "id", Long.class));
+			t.setObjectTreeType(helper.getResultAsClass(row, "objectTreeType", String.class));
+			t.setObjectName(helper.getResultAsClass(row, "objectName", String.class));
+			resultList.add(t);
+		}
+
+		return resultList;
 	}
 
 }

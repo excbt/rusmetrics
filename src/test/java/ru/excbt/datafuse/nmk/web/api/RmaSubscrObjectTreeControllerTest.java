@@ -31,10 +31,22 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Autowired
 	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Ignore
 	@Test
 	public void testSubscrObjectTreeGet() throws Exception {
 		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/1");
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testSubscrObjectTreeListGet() throws Exception {
+		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
 	}
 
 	/**

@@ -10,7 +10,21 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 
 public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectTree, Long> {
 
-	@Query("SELECT t FROM SubscrObjectTree t WHERE t.rmaSubscriberId = :rmaSubscriberId")
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT t FROM SubscrObjectTree t WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL")
 	List<SubscrObjectTree> selectSubscrObjectTree(@Param("rmaSubscriberId") Long rmaSubscriberId);
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT t.id, t.objectTreeType, t.objectName FROM SubscrObjectTree t "
+			+ " WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL AND t.deleted = 0")
+	List<Object[]> selectSubscrObjectTreeShort(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 }
