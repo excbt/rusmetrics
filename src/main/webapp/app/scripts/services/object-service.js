@@ -29,7 +29,11 @@ angular.module('portalNMC')
         var urlServiceTypes = urlRmaContObjects + '/contServiceTypes';//'resource/serviceTypes.json';
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
-                 
+        var rmaTreeTemplatesUrl = urlRma + '/subscrObjectTreeTemplates';
+        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';
+        
+        var rmaTreeTemplates = [];
+
         var deviceMetadataMeasures = {};
         var zpointMetadataMeasures = {};
                  
@@ -54,6 +58,10 @@ angular.module('portalNMC')
                  
         var getZpointMetadataMeasures = function(){
             return zpointMetadataMeasures;
+        };
+                 
+        var getRmaTreeTemplates = function(){
+            return rmaTreeTemplates;
         };
         
         var setObjectSettings = function(objectSettings){
@@ -184,8 +192,7 @@ angular.module('portalNMC')
                      function(err){
                 console.log(err);
             });
-        };
-        getRmaDeviceMetadataMeasures();
+        };        
                  
         var getRmaDeviceMetadata = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
@@ -212,7 +219,7 @@ angular.module('portalNMC')
                 }
             );
         };         
-        getVzletSystemListFromServer();
+        
         var getVzletSystemList = function(){
             return vzletSystemList;
         };
@@ -334,7 +341,6 @@ angular.module('portalNMC')
          promise = getObjectsData();
          rmaPromise = getRmaObjectsData();
        };
-       loadData();
                  
        $rootScope.$on('objectSvc:requestReloadData', function(){
 //console.log("Reload objects data.");           
@@ -412,8 +418,44 @@ angular.module('portalNMC')
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
             return $http.put(url, metadata);
         };
+                 
+        //Objects tree
+        var loadTreeTemplates = function(url){
+            $http.get(url).then(function(resp){
+                rmaTreeTemplates = angular.copy(resp.data);
+            }, function(e){
+                console.log(e);
+            });
+        };
+                 
+        var createTree = function(tree){
+            return $http.post(rmaTreesUrl, tree);
+        };
+        
+        var loadTrees = function(){
+            return $http.get(rmaTreesUrl);
+        };
+        
+        var loadTree = function(treeId){
+            return $http.get(rmaTreesUrl + '/' + treeId);
+        };
+                 
+        var updateTree = function(tree){
+            return $http.put(rmaTreesUrl + '/' + treeId, tree);
+        };
+        
+        //service initialization
+        var initSvc = function(){
+            getVzletSystemListFromServer();
+            getRmaDeviceMetadataMeasures();
+            loadTreeTemplates(rmaTreeTemplatesUrl);
+            loadData();
+        };
+
+        initSvc();
                     
         return {
+            createTree,
             getAllDevices,
             getCityConsumingData,
             getCitiesConsumingData,
@@ -445,6 +487,7 @@ angular.module('portalNMC')
             getServiceTypes,
             getSubscrUrl,
             getTimezones,
+            getRmaTreeTemplates,
             getVzletSystemList,            
             getZpointMetaDestProp,
             getZpointMetadataMeasures,
@@ -454,6 +497,9 @@ angular.module('portalNMC')
             getZpointsDataByObject,
             findObjectById,
             loading,
+            loadTree,            
+            loadTrees,
+            loadTreeTemplates,
             promise,
             putDeviceMetaDataVzlet,
             putDeviceSchedulerSettings,

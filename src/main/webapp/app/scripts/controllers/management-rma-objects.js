@@ -1792,17 +1792,21 @@ angular.module('portalNMC')
 // ********************************************************************************************
                 //  TREEVIEW
 //*********************************************************************************************
+                $scope.data.treeTemplates = objectSvc.getRmaTreeTemplates();
+                $scope.objectCtrlSettings.treeSettings = {};
+                $scope.objectCtrlSettings.treeSettings.nodesPropName = 'childObjectList'; //'objectName'
+
                 $scope.objectCtrlSettings.isTreeView = true;
                 $scope.data.currentTree = {};
                 $scope.data.newTree = {};
                 
                 var findNodeInTree = function(node, tree){
                     var result = null;
-                    if (!angular.isArray(tree.nodes)){
+                    if (!angular.isArray(tree.childObjectList)){
                         return result;
                     };
-                    tree.nodes.some(function(curNode){
-                        if (node.id == curNode.id && node.name == curNode.name){
+                    tree.childObjectList.some(function(curNode){
+                        if (node.id == curNode.id && node.objectName == curNode.objectName){
                             result = curNode;
                             return true;
                         }else{
@@ -1818,9 +1822,12 @@ angular.module('portalNMC')
                 };
                 
                 $scope.selectNode = function(item){
+console.log(item);                    
                     if (!mainSvc.checkUndefinedNull($scope.data.selectedNode)){                        
 //                        $scope.data.selectedNode.isSelected = false;
                         var preNode = findNodeInTree($scope.data.selectedNode, $scope.data.currentTree);
+console.log(preNode);
+console.log($scope.data.selectedNode);
                         preNode.isSelected = false;
                     };
                     
@@ -1829,39 +1836,41 @@ angular.module('portalNMC')
                 };
                 
                 $scope.data.trees = [
-                    {
-                        id: 1,
-                        name: "Свободное дерево",
-                        nodes: [
-                            {
-                                name: "",
-                                type: "root",
-                                nodes: []
-                            }
-                        ]
-                    },{
-                        id: 2,
-                        name: "Фиксированное дерево",
-                        nodes: [{
-                                name: "",
-                                type: "root",
-                                nodes: []
-                            }
-                        ]
-                    }
-                    
+//                    {
+//                        id: 1,
+//                        objectName: "Свободное дерево",
+//                        childObjectList: [
+//                            {
+//                                objectName: "",
+//                                type: "root",
+//                                childObjectList: []
+//                            }
+//                        ]
+//                    },{
+//                        id: 2,
+//                        objectName: "Фиксированное дерево",
+//                        childObjectList: [{
+//                                objectName: "",
+//                                type: "root",
+//                                childObjectList: []
+//                            }
+//                        ]
+//                    }
+//                    
                 ];
                 
-                $scope.data.treeTypes = [
-                    {
-                        id: 1,
-                        name: "Дерево первого типа",
-                    },{
-                        id: 2,
-                        name: "Дерево второго типа",
-                    }
-                    
-                ];
+//                objectSvc.loadTrees().then(function(resp){
+//                    $scope.data.trees = angular.copy(resp.data);
+//                },errorCallback);
+                
+                var getTrees = function(){
+                    for (var i = 0; i < 5; i++){
+                        objectSvc.loadTree(i).then(function(resp){
+                            $scope.data.trees.push(angular.copy(resp.data));
+                        }, errorCallback);
+                    };
+                };
+                getTrees();
                 
                 var performNewNode = function(newNode, parent){                   
                     var trueParentRoot = null;
@@ -1870,30 +1879,33 @@ angular.module('portalNMC')
                     }else{
                         trueParentRoot = parent;
                     };
-                    if (mainSvc.checkUndefinedNull(trueParentRoot) || !angular.isArray(trueParentRoot.nodes)){
+                    if (mainSvc.checkUndefinedNull(trueParentRoot) || !angular.isArray(trueParentRoot.childObjectList)){
                         return "Parent is incorrect node!"
                     };
-                    trueParentRoot.nodes.push(newNode);
+                    trueParentRoot.childObjectList.push(newNode);
                 };
                 
                 $scope.saveNode = function(newNode, parent){                 
                     performNewNode(newNode, parent);
+                    objectSvc.updateTree($scope.data.currentTree);
                     $('#treeLevelModal').modal('hide');
                 };
                 
                 $scope.saveAndCreateNextNode = function(newNode, parent){
                     performNewNode(newNode, parent);
-                    $scope.data.currentLevel = {parent: parent, nodes: []};                    
+                    $scope.data.currentLevel = {parent: parent, childObjectList: []};                    
                 };
                 
                 $scope.saveTree = function(tree){
-                    tree.nodes = [{
-                                name: "",
-                                type: "root",
-                                nodes: []
-                            }];
-                    $scope.data.trees.push(angular.copy(tree));
-                    $('#showTreeOptionModal').modal('hide');
+//                    tree.childObjectList = [{
+//                                objectName: "",
+//                                type: "root",
+//                                childObjectList: []
+//                            }];
+                    objectSvc.createTree(tree).then(function(resp){
+                        $scope.data.trees.push(angular.copy(resp.data));
+                        $('#showTreeOptionModal').modal('hide');
+                    }, errorCallback);                    
                 };
 // ********************************************************************************************
                 //  end TREEVIEW

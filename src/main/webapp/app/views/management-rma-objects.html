@@ -74,15 +74,15 @@
                                 </a>
                                 <ul class="dropdown-menu nmc-dropdown-menu">
                                     <li class="menu-item" 
-                                        ng-repeat="tree in data.treeTypes" 
+                                        ng-repeat="treeTemplate in data.treeTemplates" 
                                         >                                            
                                         <a href=""
                                            class=""
-                                           ng-click="data.newTree.type = tree"
+                                           ng-click="data.newTree.templateId = treeTemplate.id"
                                            data-target="#showTreeOptionModal"
                                            data-toggle="modal"
                                            >
-                                            {{tree.name}}
+                                            {{treeTemplate.templateName}}
                                         </a>                                                
                                     </li>                                        
                                 </ul>                                    
@@ -94,8 +94,8 @@
                                   role="presentation" 
                                   ng-repeat="tree in data.trees">
                                   <a href="" class=""
-                                     ng-click="messages.treeMenuHeader = tree.name; data.currentTree = tree">
-                                      {{tree.name}}
+                                     ng-click="messages.treeMenuHeader = tree.objectName; data.currentTree = tree">
+                                      {{tree.objectName}}
                                   </a>
                               </li>
                           </ul>
@@ -122,13 +122,13 @@
                          ng-class="{'nmc-bg-distinguish': item.isHover || item.isSelected}"
                          class="nmc-ui-tree-handle">
                       <i class="btn btn-xs glyphicon"
-                         ng-class="{'glyphicon-chevron-right': collapsed && item.nodes.length > 0, 'glyphicon-chevron-down': !collapsed && item.nodes.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.nodes.length > 0)}"
+                         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
                          data-nodrag ng-click="toggle(this)">                                  
                         </i>
                         <span ng-if = "item.type == 'root'">
                               <strong>\</strong>
                         </span>
-                      {{item.name}}
+                      {{item.objectName}}
                         <div class="btn-group "
                              ng-show="item.isHover">
                           <i type="button" 
@@ -140,7 +140,7 @@
                              >
                           </i>
                           <ul class="dropdown-menu noMarginI">
-                            <li><a href="" ng-click="data.currentLevel = {parent: item, nodes: []}" 
+                            <li><a href="" ng-click="data.currentLevel = {parent: item, childObjectList: []}" 
                                    data-target="#treeLevelModal" 
                                    data-toggle="modal">Добавить узел</a></li>                            
                             <li role="presentation" class="divider"></li>
@@ -148,14 +148,15 @@
                           </ul>
                         </div>
                     </div>
-                    <ol ui-tree-nodes="options" ng-model="item.nodes" ng-class="{hidden: collapsed}">
-                      <li ng-repeat="item in item.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'">
+                    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
+                      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">
                       </li>
                     </ol>
                   </script>
                   <div ui-tree="options" data-drag-enabled="false">
                     <ol ui-tree-nodes ng-model="data.currentTree" >
-                      <li ng-repeat="item in data.currentTree.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
+<!--                      <li>\</li>-->
+                      <li ng-repeat="item in data.currentTree.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
                     </ol>
                   </div>
              </div>
@@ -1764,12 +1765,12 @@
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error': !(data.currentLevel.name >'')}">
+                                         ng-class="{'has-error': !(data.currentLevel.objectName >'')}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputLevelName" 
                                                placeholder="" 
-                                               ng-model="data.currentLevel.name"/>
+                                               ng-model="data.currentLevel.objectName"/>
                                     </div>
                                 </td>
                             </tr>
@@ -1784,7 +1785,7 @@
                                                type="text" 
                                                id="inputLevelName" 
                                                placeholder="" 
-                                               ng-model="data.currentLevel.parent.name"
+                                               ng-model="data.currentLevel.parent.objectName"
                                                disabled/>
                                         <div ng-if="data.currentLevel.parent.type == 'root'" class="well noMargin nmc-text-ouput">
                                             {{data.currentTree.name}}
@@ -1841,12 +1842,12 @@
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error': !(data.newTree.name >'')}">
+                                         ng-class="{'has-error': !(data.newTree.objectName >'')}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTreeName" 
                                                placeholder="" 
-                                               ng-model="data.newTree.name"/>
+                                               ng-model="data.newTree.objectName"/>
                                     </div>
                                 </td>
                             </tr>
@@ -1857,8 +1858,8 @@
                                     <div class="form-group noMarginBottom" 
                                          >                                        
                                         <select class="form-control nmc-select-form"
-                                                ng-model="data.newTree.type" 
-                                                ng-options="type as type.name for type in data.treeTypes">
+                                                ng-model="data.newTree.templateId" 
+                                                ng-options="template.id as template.templateName for template in data.treeTemplates">
                                         </select>
                                         
                                     </div>

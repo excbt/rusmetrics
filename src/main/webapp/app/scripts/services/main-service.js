@@ -423,7 +423,7 @@ angular.module('portalNMC')
     ];
     
     var getServerErrorByResultCode = function(resultCode){
-console.log(resultCode);
+//console.log(resultCode);
         var result = DEFAULT_ERROR_MESSAGE;
         if (checkUndefinedEmptyNullValue(resultCode)){return result};
         serverErrors.some(function(serror){
