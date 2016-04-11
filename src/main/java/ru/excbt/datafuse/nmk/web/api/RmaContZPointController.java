@@ -176,7 +176,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 		List<ContZPointMetadata> result = contZPointMetadataService.selectContZPointMetadata(contZPointId);
 
 		if (result == null || result.isEmpty()) {
-			result = contZPointMetadataService.selectNewMetadata(contZPointId);
+			result = contZPointMetadataService.selectNewMetadata(contZPointId, true);
 		}
 
 		return responseOK(result);
@@ -201,7 +201,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 			responseForbidden();
 		}
 
-		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId);
+		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
 		List<EntityColumn> result = contZPointMetadataService.buildSrcProps(metadataList);
 
@@ -226,7 +226,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return responseForbidden();
 		}
 
-		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId);
+		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
 		List<EntityColumn> result = contZPointMetadataService.buildDestProps(metadataList);
 

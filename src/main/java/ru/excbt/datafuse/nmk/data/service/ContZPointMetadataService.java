@@ -68,7 +68,7 @@ public class ContZPointMetadataService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointMetadata> selectNewMetadata(Long contZPointId) {
+	public List<ContZPointMetadata> selectNewMetadata(Long contZPointId, boolean isTsFilter) {
 
 		List<ContZPointMetadata> result = new ArrayList<>();
 
@@ -98,7 +98,7 @@ public class ContZPointMetadataService {
 
 		List<DeviceMetadata> tsMetadataList = transformedMetadataList.stream()
 				.filter(i -> i.getMetaNumber() == null
-						|| (key.tsNumber != null && i.getMetaNumber().equals(key.tsNumber)))
+						|| (isTsFilter == false || (key.tsNumber != null && i.getMetaNumber().equals(key.tsNumber))))
 				.collect(Collectors.toList());
 
 		result = contZPointMetadataFactory(tsMetadataList, key.contZPoint, key.deviceObject);
