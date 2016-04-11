@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.VzletSystem;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
@@ -31,6 +32,7 @@ import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingLogService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -77,6 +79,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	protected DeviceMetadataService deviceMetadataService;
+
+	@Autowired
+	protected SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
 
 	/**
 	 * 
@@ -323,6 +328,39 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 		DeviceObjectLoadingSettings result = deviceObjectLoadingSettingsService
 				.getDeviceObjectLoadingSettings(deviceObject);
+
+		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@RequestMapping(
+			value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource/loadingSettings",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectDataSourceLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		if (deviceObject == null) {
+			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+		}
+
+		if (deviceObject.getActiveDataSource() == null) {
+			return responseBadRequest(ApiResult.badRequest("SubscrDataSource is not set"));
+		}
+
+		SubscrDataSource subscrDataSource = deviceObject.getActiveDataSource().getSubscrDataSource();
+
+		SubscrDataSourceLoadingSettings result = subscrDataSourceLoadingSettingsService
+				.getSubscrDataSourceLoadingSettings(subscrDataSource);
 
 		return responseOK(result);
 	}

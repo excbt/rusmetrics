@@ -302,7 +302,7 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "local_place_temperature_sst";
+		String tableName = "subscr_data_source_loading_settings";
 
 		List<EntityColumn> entityColumns = getTableEntityProp("portal", tableName);
 		assertTrue(entityColumns.size() > 0);
@@ -319,7 +319,7 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "device_metadata";
+		String tableName = "cont_service_data_el_cons";
 
 		List<EntityColumn> entityColumns = getTableEntityProp("public", tableName);
 		assertTrue(entityColumns.size() > 0);

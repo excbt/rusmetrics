@@ -24,14 +24,15 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
  * Контроллер для работы с приборами для РМА
@@ -269,6 +270,52 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			@Override
 			public DeviceObjectLoadingSettings processAndReturnResult() {
 				return deviceObjectLoadingSettingsService.saveOne(requestEntity);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param deviceObjectId
+	 * @param requestEntity
+	 * @return
+	 */
+	@RequestMapping(
+			value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource/loadingSettings",
+			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putDeviceObjectDataSourceLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId,
+			@RequestBody SubscrDataSourceLoadingSettings requestEntity) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(deviceObjectId);
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		if (deviceObject == null) {
+			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+		}
+
+		SubscrDataSource subscrDataSource = deviceObject.getActiveDataSource().getSubscrDataSource();
+
+		if (!requestEntity.isNew() && !subscrDataSource.getId().equals(requestEntity.getSubscrDataSourceId())) {
+			return responseBadRequest(ApiResult
+					.badRequest("Wrong subscrDataSourceId (%d) in subscrDataSourceLoadingSettings ", deviceObjectId));
+		}
+
+		requestEntity.setSubscrDataSource(subscrDataSource);
+
+		ApiAction action = new ApiActionEntityAdapter<SubscrDataSourceLoadingSettings>(requestEntity) {
+
+			@Override
+			public SubscrDataSourceLoadingSettings processAndReturnResult() {
+				return subscrDataSourceLoadingSettingsService.saveSubscrDataSourceLoadingSettings(entity);
 			}
 		};
 

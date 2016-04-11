@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
+import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -28,6 +33,9 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
+
+	@Autowired
+	private SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
 
 	/**
 	 * 
@@ -168,6 +176,30 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		settings.setLoadingInterval("12:00");
 		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
 		_testUpdateJson(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectsSubscrDataSourceLoadingSettingsPut() throws Exception {
+		Long deviceObjectId = 65836845L;
+
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		assertNotNull(deviceObject.getActiveDataSource());
+		SubscrDataSource subscrDataSource = deviceObject.getActiveDataSource().getSubscrDataSource();
+
+		assertNotNull(subscrDataSource);
+		SubscrDataSourceLoadingSettings settings = subscrDataSourceLoadingSettingsService
+				.getSubscrDataSourceLoadingSettings(subscrDataSource);
+
+		settings.setLoadingAttempts(10);
+		settings.setLoadingInterval("12:00");
+		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
+		_testUpdateJson(
+				apiRmaUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource/loadingSettings", 725, deviceObjectId),
+				settings);
 	}
 
 	/**
