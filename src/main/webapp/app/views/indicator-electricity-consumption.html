@@ -157,21 +157,38 @@
                         </th>
 
                     </tr>
-                    <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
+                    <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="data.length" current-page="pagination.current">
 <!--                        <td>{{$index+1}}-->
-                        </td>
+<!--                        </td>-->
                         <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="indicator.class || column.dataClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">
                             {{indicator[column.fieldName]}}
                             <span ng-if="column.fieldName==='dataDateString'&&isSystemuser()">(id = {{indicator['id']}})</span>
                         </td>
                     </tr>
 <!--                    Итого-->
-                    <tr ng-hide="totals.onlyCons&&(ctrlSettings.viewMode!='')">
+                    <tr ng-hide="total.onlyCons&&(ctrlSettings.viewMode!='')" ng-repeat="total in totals">
 <!--                        <td></td>-->
-                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="totals.class || column.dataClass" ng-attr-id="{{'totals_td_'+column.fieldName}}">
-                            {{totals[column.fieldName]}}
+                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="total.class || column.dataClass" ng-attr-id="{{'totals_td_'+column.fieldName}}">
+                            {{total[column.fieldName]}}
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
+                        </td>
+                        <td  ng-repeat="column in intotalColumns" 
+                            class="nmc-text-align-right" 
+                            ng-style="{width: column.ngstyle+'px', border: 0}">
+                            <span ng-if="summary.diffs[column.name] != '-' && column.name != 'm_delta' && column.name != 'v_delta'">
+                                 <p ng-attr-id="{{'diffBtn'+column.name}}" 
+                                    class="btn btn-xs" >
+                                     <i title="Показать детали по интеграторам" 
+                                        class="glyphicon glyphicon-eject gly-rotate-180">
+                                     </i> 
+                                </p>
+                            </span>    
+
+                        </td>
+                    </tr> 
                     <tr class="nmc-hide">
                         <td>{{onTableLoad()}}</td>
                     </tr>

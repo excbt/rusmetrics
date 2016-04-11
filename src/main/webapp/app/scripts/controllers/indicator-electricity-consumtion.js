@@ -4,7 +4,7 @@ angular.module('portalNMC')
     
     $scope.data = [];
     $scope.totals = [];
-    $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page
+    $scope.indicatorsPerPage = $scope.data.length; //default = 25; // this should match however many results your API puts on one page
     $scope.totalIndicators = $scope.data.length;
     $scope.pagination = {
         current: 1
@@ -53,8 +53,8 @@ angular.module('portalNMC')
     var tariffPlans = [1,2,3,4];
     var columns = [{
                 header : "Дата",
-                headerClass : "col-md-1 nmc-text-align-center",
-                dataClass : "col-md-1",
+                headerClass : "col-md-2 nmc-text-align-center",
+                dataClass : "col-md-2",
                 fieldName: "dataDateString",
                 type: "string",
                 date: true
@@ -63,10 +63,10 @@ angular.module('portalNMC')
         for (var tariff = 0; tariff < tariffPlans.length; tariff++){
             for (var kind = 0; kind < elecKind.length; kind++){
                 var column = {};
-                column.header = ""+elecType[type].caption+elecKind[kind].caption+" (T"+tariffPlans[tariff]+")";
+                column.header = "" + elecType[type].caption + elecKind[kind].caption + " (T" + tariffPlans[tariff] + ")";
                 column.headerClass = "nmc-view-digital-data";
                 column.dataClass = "nmc-view-digital-data";
-                column.fieldName = ""+elecType[type].name+elecKind[kind].name+""+tariffPlans[tariff]+"";
+                column.fieldName = "" + elecType[type].name + elecKind[kind].name + "" + tariffPlans[tariff] + "";
                 columns.push(column);
             };
         };
@@ -111,6 +111,7 @@ angular.module('portalNMC')
                     };                    
                 });
                 $scope.data = tmp;
+                $scope.indicatorsPerPage = $scope.data.length;
                 $scope.ctrlSettings.loading = false;
                 if ($scope.ctrlSettings.viewMode=="" && $scope.data.length > 0){
                     getSummary(table+"/summary"+paramString);
@@ -131,9 +132,14 @@ angular.module('portalNMC')
                 };
             };                    
             el.onlyCons = true;
-            el.dataDateString = "Итого";
+            el.dataDateString = "Итого:";
             el.class = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
-            $scope.totals = angular.copy(el);
+            $scope.totals[0] = angular.copy(el);
+            var absTotal = {};
+            absTotal.dataDateString = "Итого по интеграторам:";
+            absTotal.onlyCons = true;
+            $scope.totals[1] = angular.copy(absTotal);
+            $scope.indicatorsPerPage += 2;
 //console.log($scope.totals);            
         }, function(e){
             console.log(e);
@@ -145,12 +151,15 @@ angular.module('portalNMC')
          //check view mode: if integrators -> precision = 2, else = 3
          ($scope.ctrlSettings.viewMode.indexOf("_abs") >= 0) ? $scope.ctrlSettings.precision = 2 : $scope.ctrlSettings.precision = 3;
          $scope.data = [];
-         var paramString ="";
+         var paramString = "";
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          timeDetailType+=$scope.ctrlSettings.viewMode;
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceElCons/" + timeDetailType + "/" + $scope.contZPoint;// + "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
          if ($scope.timeDetailType=="1h"){
              var requestDate = moment($scope.ctrlSettings.dataDate, $scope.ctrlSettings.userFormat).format($scope.ctrlSettings.requestFormat);
+             if (requestDate.localeCompare('Invalid date') == 0 || requestDate < '2000-01-01'){
+                    return "requestDate is Invalid date.";
+                };
             paramString= "/?beginDate=" + requestDate + "&endDate=" + requestDate; 
          }else{
             paramString= "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
@@ -226,7 +235,17 @@ angular.module('portalNMC')
           dateFormat: "dd.mm.yy",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+            beforeShow: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            },
+            onChangeMonthYear: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            }
         });        
     });
 });
