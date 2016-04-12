@@ -17,11 +17,6 @@
             </div>    
         </div>
     </div>  
-<!--
-    <div class="col-md-12 noPadding marginBottom10 nmc-main-workspace-header">
-        <hr>
-    </div>
--->
     <div class="container-fluid noPadding nmc-indicator-table-with-fixed-header">
         <div class="container-fluid">
             <div class="row">   
@@ -86,10 +81,6 @@
     <!--            style="margin-bottom: -20px;"-->
                 <table id="indicatorConsTableHeader" class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" ng-class="tableDef.tableClass" >
                     <tr ng-class="tableDef.headerClassTR">
-<!--
-                        <th>
-                        </th>
--->
                         <th>
                         </th>
                         <th colspan="10" class="nmc-text-align-center">
@@ -102,10 +93,6 @@
                         </th>
                     </tr>
                     <tr ng-class="tableDef.headerClassTR">
-<!--
-                        <th>
-                        </th>
--->
                         <th ng-repeat="column in tableDef.columns" 
                             ng-attr-id="{{'indicators_head_'+column.fieldName}}" 
                             ng-class="column.headerClass">
@@ -132,10 +119,6 @@
                 <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus57" ng-class="tableDef.tableClass">
         <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                     <tr ng-class="tableDef.headerClassTR">
-<!--
-                        <th>
-                        </th>
--->
                         <th>
                         </th>
                         <th colspan="10" class="nmc-text-align-center">
@@ -148,38 +131,36 @@
                         </th>
                     </tr>
                     <tr class="" ng-class="tableDef.headerClassTR">
-<!--
-                        <th>
-                        </th>
--->
                         <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
                             {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
                         </th>
 
                     </tr>
                     <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="data.length" current-page="pagination.current">
-<!--                        <td>{{$index+1}}-->
-<!--                        </td>-->
                         <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="indicator.class || column.dataClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">
                             {{indicator[column.fieldName]}}
                             <span ng-if="column.fieldName==='dataDateString'&&isSystemuser()">(id = {{indicator['id']}})</span>
                         </td>
                     </tr>
-<!--                    Итого-->
+<!--                    Итого -->
                     <tr ng-hide="total.onlyCons&&(ctrlSettings.viewMode!='')" ng-repeat="total in totals">
-<!--                        <td></td>-->
-                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="total.class || column.dataClass" ng-attr-id="{{'totals_td_'+column.fieldName}}">
+                        <td ng-repeat="column in tableDef.columns" 
+                            class="nmc-text-align-right" 
+                            ng-class="total.class || column.dataClass"
+                            ng-style="{'background-color': column.diffBgColor}"
+                            ng-attr-id="{{'total'+total.type+column.fieldName}}"
+                            ng-attr-title="{{column.title}}">
                             {{total[column.fieldName]}}
                         </td>
                     </tr>
-                    <tr>
-                        <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
-                        </td>
-                        <td  ng-repeat="column in intotalColumns" 
-                            class="nmc-text-align-right" 
-                            ng-style="{width: column.ngstyle+'px', border: 0}">
-                            <span ng-if="summary.diffs[column.name] != '-' && column.name != 'm_delta' && column.name != 'v_delta'">
-                                 <p ng-attr-id="{{'diffBtn'+column.name}}" 
+<!--                    Доп. информация для интеграторов-->
+                    <tr ng-hide="!(totals.length > 0) || ctrlSettings.viewMode != ''">
+                        <td  ng-repeat="column in tableDef.columns" 
+                            class="nmc-text-align-right"                                                         
+                            >
+<!--                            Отображать кнопку "Детали" для нестроковых колонок и там, где данные больше 0-->
+                            <span ng-if="column.type != 'string' && totals[1][column.fieldName] > 0">
+                                 <p ng-attr-id="{{'diffElBtn'+column.fieldName}}" 
                                     class="btn btn-xs" >
                                      <i title="Показать детали по интеграторам" 
                                         class="glyphicon glyphicon-eject gly-rotate-180">

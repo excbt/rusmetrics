@@ -836,7 +836,7 @@ tr.nmc-main-table-header-indicator > th {
 
 /* Подсветка показаний Итого для электричества*/
 .nmc-el-totals-indicator-highlight{
-    background-color: azure;
+    background-color: aquamarine;/*azure;*/
 }
 /* Подсветка действующего/активного прайса*/
 tr.nmc-active-price > td{

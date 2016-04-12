@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $window){
+.controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $window, $timeout){
 //console.log("Run ConsumptionCtrl.");
     
     $scope.data = [];
@@ -122,25 +122,144 @@ angular.module('portalNMC')
         });
     };
     
-    var getSummary = function(table){       
-        $http.get(table).then(function (response) {
-            var el = angular.copy(response.data.totals);
-            if (mainSvc.checkUndefinedNull(el)){ return "Summary undefined or null."};          
-            for(var i in $scope.columns){
-                if ((el[$scope.columns[i].fieldName]!=null) && ($scope.columns[i].type !== "string")){
-                    el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
+    var setToolTip = function(title, text, elDom, targetDom){
+//console.log(elDom);                
+//console.log(targetDom);    
+//console.log($(elDom));        
+//console.log($(targetDom));        
+        $timeout(function(){
+            $(elDom).qtip({
+                suppress: false,
+                content:{
+                    text: text,
+                    title: title,
+                    button : true
+                },
+                show:{
+                    event: 'click'
+                },
+                style:{
+                    classes: 'qtip-nmc-indicator-tooltip',
+                    width: 1000
+                },
+                hide: {
+                    event: 'unfocus'
+                },
+                position:{
+                    my: 'top right',
+                    at: 'bottom right',
+                    target: $(targetDom)
+                }
+            });
+        }, 1);
+    };
+    
+    var getSummary = function(table){
+        $scope.totals = [];
+        var respData = {};
+        $http.get(table).then(function (response) {                        
+            respData = angular.copy(response.data);
+            var usingProps = [
+                {
+                    name: "totals",
+                    caption: "Итого:", 
+                    type: "Cons"
+                },
+                {
+                    name: "diffsAbs",
+                    caption: "Итого по интеграторам:",
+                    type: "Abs"
+                }
+            ];
+            
+            for (var propInd in usingProps){
+                var el = angular.copy(respData[usingProps[propInd].name]);
+                if (mainSvc.checkUndefinedNull(el)){ console.log(usingProps[propInd].name + " is undefined or null."); continue;};
+                for(var i in $scope.columns){
+                    if ((el[$scope.columns[i].fieldName]!=null) && ($scope.columns[i].type !== "string")){
+                        el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
+                    };
+                };                    
+                el.onlyCons = true;
+                el.type = usingProps[propInd].type;
+                el.dataDateString = usingProps[propInd].caption;//"Итого:";
+                el.class = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
+                $scope.totals.push(angular.copy(el));
+                $scope.indicatorsPerPage += 1;
+            };
+            
+            //mark diffs between cons and abs         
+            if (!respData.hasOwnProperty('diffsAbs') || !respData.hasOwnProperty('totals')){
+                return;
+            };            
+                    //work with fractional part
+            //search the shortest fractional part
+            $scope.tableDef.columns.forEach(function(element, index, array){            
+                var columnName = element.fieldName;                
+                if (angular.isUndefined(respData.firstDataAbs) 
+                    || angular.isUndefined(respData.lastDataAbs) 
+                    || (respData.firstDataAbs===null) 
+                    || (respData.lastDataAbs===null) 
+                    || !respData.firstDataAbs.hasOwnProperty(columnName) 
+                    || !respData.lastDataAbs.hasOwnProperty(columnName)){
+                    return;
+                };                
+                var textDetails = "Начальное значение = "+ respData.firstDataAbs[columnName]+" ";
+//                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
+                var timeSuffix = "";
+                if (respData.firstDataAbs['dataDateString'].length == 10) { timeSuffix = " 00:00"};
+                textDetails += "(Дата = " + respData.firstDataAbs['dataDateString'] + timeSuffix + ");<br><br>";
+                textDetails += "Конечное значение = " + respData.lastDataAbs[columnName] + " ";
+//                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
+                timeSuffix = "";
+                if (respData.lastDataAbs['dataDateString'].length == 10) { timeSuffix = " 00:00"};
+                textDetails += "(Дата = " + respData.lastDataAbs['dataDateString'] + timeSuffix + ");";
+                var titleDetails = "Детальная информация";
+                var elDOM = "#diffElBtn" + columnName;
+                var targetDOM = "#totalAbs" + columnName;
+                setToolTip(titleDetails, textDetails, elDOM, targetDOM);
+                //calculate difference between totals and diffsAbs
+                if (respData.diffsAbs.hasOwnProperty(columnName) && (!isNaN(respData.diffsAbs[columnName])) &&(respData.diffsAbs[columnName] != null)){                                         
+                    respData.diffsAbs[columnName] = Number(respData.diffsAbs[columnName]).toFixed(3);
                 };
-            };                    
-            el.onlyCons = true;
-            el.dataDateString = "Итого:";
-            el.class = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
-            $scope.totals[0] = angular.copy(el);
-            var absTotal = {};
-            absTotal.dataDateString = "Итого по интеграторам:";
-            absTotal.onlyCons = true;
-            $scope.totals[1] = angular.copy(absTotal);
-            $scope.indicatorsPerPage += 2;
-//console.log($scope.totals);            
+                if (respData.totals.hasOwnProperty(columnName) && (!isNaN(respData.totals[columnName]))&&(respData.totals[columnName]!=null)){
+                    respData.totals[columnName] = Number(respData.totals[columnName]).toFixed(3);
+                };
+                if (!respData.diffsAbs.hasOwnProperty(columnName) || !respData.totals.hasOwnProperty(columnName)){
+                    return;
+                }
+                var lengthFractPart = 0;
+                var diff = respData.diffsAbs[columnName];
+                var total = respData.totals[columnName];                                     
+                if((diff==null) || (total==null) || (diff=="-") || (total=="-")){
+                    return;
+                }
+                var diffStr = diff.toString();
+                var tempStrArr = diffStr.split(".");
+                var diffFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
+                var totalStr = total.toString();
+                tempStrArr = totalStr.split(".");
+                var totalFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
+                //29.06.2015 - поступило требование - выводить 3 знака после запятой
+                lengthFractPart = 3;//totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
+                var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
+                var difference = Math.abs((respData.diffsAbs[columnName]-respData.totals[columnName])).toFixed(lengthFractPart);
+                if ((difference >precision)&&(difference <= 1))
+                {
+                   element.diffBgColor = "#FFFFA4";
+                   element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
+                   return;
+
+                };
+                if ((difference >1))
+                {         
+                    element.diffBgColor = "#FF7171";
+                    element.title = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
+                    return;
+                };
+                element.diffBgColor = "aquamarine";
+                element.title = "";   
+            });                        
         }, function(e){
             console.log(e);
         });
