@@ -94,7 +94,7 @@
                                   role="presentation" 
                                   ng-repeat="tree in data.trees">
                                   <a href="" class=""
-                                     ng-click="messages.treeMenuHeader = tree.objectName; data.currentTree = tree">
+                                     ng-click="messages.treeMenuHeader = tree.objectName; loadTree(tree);">
                                       {{tree.objectName || tree.id}}
                                   </a>
                               </li>

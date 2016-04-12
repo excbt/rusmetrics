@@ -1869,24 +1869,33 @@ angular.module('portalNMC')
 //                    
                 ];
                 
-//                objectSvc.loadTrees().then(function(resp){
-//                    $scope.data.trees = angular.copy(resp.data);
-//                },errorProtoCallback);
+                objectSvc.loadTrees().then(function(resp){
+                    $scope.data.trees = angular.copy(resp.data);
+                },errorProtoCallback);
                 
-                var getTrees = function(){
-                    var treeIds = [
-                        512112776,
-                        512112791
-                    ];
-                    for (var i = 0; i < treeIds.length; i++){
-                        objectSvc.loadTree(treeIds[i]).then(function(resp){
+                $scope.loadTree = function(tree){
+                    objectSvc.loadTree(tree.id).then(function(resp){
                             var respTree = angular.copy(resp.data);
                             respTree.childObjectList.unshift(ROOT_NODE);
-                            $scope.data.trees.push(respTree);
+                            $scope.data.currentTree = respTree;
+//                            $scope.data.trees.push(respTree);
                         }, errorProtoCallback);
-                    };
                 };
-                getTrees();
+                
+//                var getTrees = function(){
+//                    var treeIds = [
+//                        512112776,
+//                        512112791
+//                    ];
+//                    for (var i = 0; i < treeIds.length; i++){
+//                        objectSvc.loadTree(treeIds[i]).then(function(resp){
+//                            var respTree = angular.copy(resp.data);
+//                            respTree.childObjectList.unshift(ROOT_NODE);
+//                            $scope.data.trees.push(respTree);
+//                        }, errorProtoCallback);
+//                    };
+//                };
+//                getTrees();
                 
                 var performNewNode = function(newNode, parent){                   
                     var trueParentRoot = null;
