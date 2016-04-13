@@ -179,6 +179,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT_M_V,
 				ReportConstants.Files.COMM_M_V_FILE_COMPILED, isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.ELECTRIC_CONSUMPTION_REPORT,
+				ReportConstants.Files.ELECTRIC_CONSUMPTION_FILE_COMPILED,
+				isCompiled);
+
 	}
 
 	/**
@@ -204,6 +208,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_READINGS_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT_M_V);
+		updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_CONSUMPTION_REPORT);
 
 	}
 

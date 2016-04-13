@@ -97,12 +97,12 @@ public class ReportService {
 		reportTypeMap.put(ReportTypeKey.PARTNER_SERVICE_REPORT, ReportType.RPT_PARTNER_SERVICE);
 		reportTypeMap.put(ReportTypeKey.ABONENT_SERVICE_REPORT, ReportType.RPT_ABONENT_SERVICE);
 		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2, ReportType.RPT_CONSUMPTION_HISTORY_V2);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2,
-				ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2, ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2);
 		reportTypeMap.put(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT, ReportType.RPT_RMA_ABONENT_SERVICE);
 		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT_V1_1, ReportType.RPT_CONSUMPTION_V1_1);
 		reportTypeMap.put(ReportTypeKey.ELECTRIC_READINGS_REPORT, ReportType.RPT_ELECTRIC_READINGS);
 		reportTypeMap.put(ReportTypeKey.HW_QUALITY_REPORT, ReportType.RPT_HW_QUALITY);
+		reportTypeMap.put(ReportTypeKey.ELECTRIC_CONSUMPTION_REPORT, ReportType.RPT_ELECTRIC_CONSUMPTION);
 		REPORTS_TYPE_KEYNAME_CONVERTER = Collections.unmodifiableMap(reportTypeMap);
 	}
 

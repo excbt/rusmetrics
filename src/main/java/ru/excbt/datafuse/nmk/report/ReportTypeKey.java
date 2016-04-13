@@ -32,7 +32,8 @@ public enum ReportTypeKey implements KeynameObject {
 	ABONENT_SERVICE_REPORT("abonent_service"), //
 	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"), //
 	ELECTRIC_READINGS_REPORT("electric_readings", ReportSystem.PENTAHO), //
-	HW_QUALITY_REPORT("hw_quality", ReportSystem.PENTAHO);
+	HW_QUALITY_REPORT("hw_quality", ReportSystem.PENTAHO), //
+	ELECTRIC_CONSUMPTION_REPORT("electric_consumption", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;
@@ -60,8 +61,8 @@ public enum ReportTypeKey implements KeynameObject {
 	 * @return
 	 */
 	public static ReportTypeKey findByUrlName(String urlName) {
-		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values()).filter((i) -> i.urlName.equals(urlName))
-				.findFirst();
+		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values())
+				.filter((i) -> i.urlName.equals(urlName)).findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
 	}
