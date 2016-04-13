@@ -34,6 +34,16 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	/**
 	 * 
 	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Long> selectContObjectIds(Long subscrObjectTreeId) {
+		return subscrObjectTreeContObjectRepository.selectContObjectIds(subscrObjectTreeId);
+	}
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_ADMIN })

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
@@ -253,6 +254,31 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		_testUpdateJson(url, tree1, null, tester);
 
 		_testDeleteJson(url);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSubscrObjectTreeContObjects() throws Exception {
+
+		String content = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/contObjects/free");
+
+		List<ContObject> contObjects = fromJSON(new TypeReference<List<ContObject>>() {
+		}, content);
+
+		assertNotNull(contObjects);
+		assertTrue(contObjects.size() > 0);
+
+		List<Long> contObjectIds = new ArrayList<>();
+
+		for (ContObject co : contObjects) {
+			contObjectIds.add(co.getId());
+		}
+
+		_testUpdateJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111664/contObjects", contObjectIds);
 
 	}
 

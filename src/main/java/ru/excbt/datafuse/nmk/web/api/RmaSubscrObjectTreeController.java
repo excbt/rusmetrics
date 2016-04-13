@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -34,6 +36,9 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 	@Autowired
 	private SubscrObjectTreeService subscrObjectTreeService;
+
+	@Autowired
+	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
 	/**
 	 * 
@@ -212,6 +217,82 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 		return WebApiHelper.processResponceApiActionDelete(action);
 
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}/contObjects",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrObjectTreeContObjects(@PathVariable("objectTreeType") String objectTreeType,
+			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId) {
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		List<ContObject> result = subscrObjectTreeContObjectService.selectContObjects(subscrObjectTreeId);
+
+		return responseOK(ObjectFilters.deletedFilter(result));
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}/contObjects/free",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrObjectTreeContObjectsFree(@PathVariable("objectTreeType") String objectTreeType,
+			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId) {
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		List<ContObject> result = subscrContObjectService.selectSubscriberContObjects(getRmaSubscriberId());
+
+		return responseOK(ObjectFilters.deletedFilter(result));
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @param subscrObjectTreeId
+	 * @param requestEntity
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}/contObjects",
+			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putSubscrObjectTreeContObjects(@PathVariable("objectTreeType") String objectTreeType,
+			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId, @RequestBody final List<Long> contObjectIds) {
+
+		checkNotNull(contObjectIds);
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
+
+			@Override
+			public List<ContObject> processAndReturnResult() {
+				subscrObjectTreeContObjectService.saveContObjects(subscrObjectTreeId, contObjectIds);
+				return subscrObjectTreeContObjectService.selectContObjects(subscrObjectTreeId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }

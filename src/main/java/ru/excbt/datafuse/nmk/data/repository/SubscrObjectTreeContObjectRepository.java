@@ -26,6 +26,14 @@ public interface SubscrObjectTreeContObjectRepository extends CrudRepository<Sub
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
+	@Query("SELECT t.contObjectId FROM SubscrObjectTreeContObject t WHERE t.subscrObjectTreeId = :subscrObjectTreeId")
+	public List<Long> selectContObjectIds(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
 	@Query("SELECT t FROM SubscrObjectTreeContObject t WHERE t.subscrObjectTreeId = :subscrObjectTreeId")
 	public List<SubscrObjectTreeContObject> selectSubscrObjectTreeContObject(
 			@Param("subscrObjectTreeId") Long subscrObjectTreeId);
