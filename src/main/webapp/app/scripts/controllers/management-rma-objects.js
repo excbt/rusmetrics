@@ -2085,6 +2085,19 @@ console.log($scope.data.selectedNodeForMove);
                     $scope.data.selectedNode;
                 };
                 
+                //work with tree templates
+                $scope.createTreeByTemplate = function(treeTmpl){
+                    $scope.loadTreeTemplate(treeTmpl);
+                };
+                
+                $scope.loadTreeTemplate = function(treeTmpl){
+                    objectSvc.loadTreeTemplateItems(treeTmpl.id).then(function(resp){
+console.log(resp);
+                        $scope.data.currentTreeItems = resp.data;
+                        $scope.data.newTree.itemLevel = 0;
+                    }, errorCallback);
+                };
+                
                 $('#viewTreeModal').on('shown.bs.modal', function(){
                     $scope.objectCtrlSettings.isObjectMoving = true;
                     $scope.$apply();
