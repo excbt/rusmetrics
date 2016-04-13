@@ -47,6 +47,17 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 
 	/**
 	 * 
+	 * @return
+	 */
+	@Query("SELECT sco.contObject FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
+			+ " AND sco.deleted = 0 AND sco.contObjectId NOT IN (:idList)"
+			+ " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
+	public List<ContObject> selectContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
+			@Param("idList") List<Long> idList);
+
+	/**
+	 * 
 	 * @param subscriberId
 	 * @return
 	 */

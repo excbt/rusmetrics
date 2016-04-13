@@ -191,12 +191,51 @@ public class SubscrContObjectService implements SecuredRoles {
 	/**
 	 * 
 	 * @param subscriberId
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectSubscriberContObjectsExcludingIds(Long subscriberId, List<Long> contObjectIds) {
+		checkNotNull(subscriberId);
+		List<ContObject> result = null;
+		if (contObjectIds.isEmpty()) {
+			result = subscrContObjectRepository.selectContObjects(subscriberId);
+		} else {
+			result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId, contObjectIds);
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectRmaSubscriberContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
+		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(subscriberId);
+		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+		result.forEach(i -> {
+			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+			i.set_haveSubscr(haveSubscr);
+		});
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long subscriberId, List<Long> contObjectIds) {
+		checkNotNull(subscriberId);
+		checkNotNull(contObjectIds);
+
+		List<ContObject> result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId, contObjectIds);
 		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(subscriberId);
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
 		result.forEach(i -> {

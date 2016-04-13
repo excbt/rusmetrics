@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -25,6 +27,8 @@ import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.api.RmaSubscrObjectTreeController.ObjectNameHolder;
 
 public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
+
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrObjectTreeControllerTest.class);
 
 	@Autowired
 	private SubscrObjectTreeService subscrObjectTreeService;
@@ -264,21 +268,47 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Test
 	public void testSubscrObjectTreeContObjects() throws Exception {
 
-		String content = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/contObjects/free");
+		String freeContent = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/contObjects/free");
 
-		List<ContObject> contObjects = fromJSON(new TypeReference<List<ContObject>>() {
+		List<ContObject> freeContObjects = fromJSON(new TypeReference<List<ContObject>>() {
+		}, freeContent);
+
+		String content = _testGetJson(
+				"/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111664/contObjects");
+
+		List<ContObject> linkedContObjects = fromJSON(new TypeReference<List<ContObject>>() {
 		}, content);
 
-		assertNotNull(contObjects);
-		assertTrue(contObjects.size() > 0);
+		assertNotNull(freeContObjects);
 
-		List<Long> contObjectIds = new ArrayList<>();
+		if (!freeContObjects.isEmpty()) {
 
-		for (ContObject co : contObjects) {
-			contObjectIds.add(co.getId());
+			List<Long> contObjectIds = new ArrayList<>();
+			for (int i = 0; i < freeContObjects.size(); i++) {
+				ContObject contObject = freeContObjects.get(i);
+				contObjectIds.add(contObject.getId());
+			}
+
+			_testUpdateJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111664/contObjects",
+					contObjectIds);
+
+			logger.info("Found {} free contObjects", freeContObjects.size());
+			logger.info("Saved {} contObjects", contObjectIds.size());
+
+		} else {
+
+			List<Long> contObjectIds = new ArrayList<>();
+			for (int i = 0; i < linkedContObjects.size(); i++) {
+				ContObject contObject = linkedContObjects.get(i);
+				contObjectIds.add(contObject.getId());
+			}
+			_testDeleteJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111664/contObjects", null,
+					contObjectIds);
+
+			logger.info("Found {} linked contObjects", linkedContObjects.size());
+			logger.info("Deleted {} contObjects", contObjectIds.size());
+
 		}
-
-		_testUpdateJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111664/contObjects", contObjectIds);
 
 	}
 

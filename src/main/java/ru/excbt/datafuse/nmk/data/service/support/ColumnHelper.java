@@ -21,6 +21,11 @@ public class ColumnHelper {
 	private final String operator;
 	private final List<String> columnList;
 
+	/**
+	 * 
+	 * @param columns
+	 * @param operator
+	 */
 	public ColumnHelper(String[] columns, String operator) {
 		checkNotNull(columns);
 		this.columns = columns;
@@ -28,6 +33,10 @@ public class ColumnHelper {
 		this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
 	}
 
+	/**
+	 * 
+	 * @param columns
+	 */
 	public ColumnHelper(String[] columns) {
 		checkNotNull(columns);
 		this.columns = columns;
@@ -35,6 +44,19 @@ public class ColumnHelper {
 		this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
 	}
 
+	/**
+	 * 
+	 * @param columns
+	 * @return
+	 */
+	public static ColumnHelper newInstance(String[] columns) {
+		return new ColumnHelper(columns);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public String build() {
 		StringBuilder sb = new StringBuilder();
 		for (String col : columns) {
@@ -47,10 +69,21 @@ public class ColumnHelper {
 		return sb.toString();
 	}
 
+	/**
+	 * 
+	 * @param column
+	 * @return
+	 */
 	public int indexOf(String column) {
 		return columnList.indexOf(column);
 	}
 
+	/**
+	 * 
+	 * @param results
+	 * @param column
+	 * @return
+	 */
 	public BigDecimal getResult(Object[] results, String column) {
 		int idx = indexOf(column);
 		checkState(idx >= 0, "Invalid column index");

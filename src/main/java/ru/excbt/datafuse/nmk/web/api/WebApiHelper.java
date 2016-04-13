@@ -214,6 +214,15 @@ public class WebApiHelper {
 	/**
 	 * 
 	 * @param action
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionDeleteBody(ApiAction action) {
+		return _processResponceApiActionBody(action, HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * @param action
 	 * @param successStatus
 	 * @return
 	 */

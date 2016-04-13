@@ -285,14 +285,7 @@ public class AbstractControllerTest {
 	 * @throws Exception
 	 */
 	protected void _testDeleteJson(String urlStr) throws Exception {
-
-		logger.info("Testing DELETE on URL: {}", urlStr);
-
-		ResultActions deleteResultActions = mockMvc
-				.perform(delete(urlStr).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
-
-		deleteResultActions.andDo(MockMvcResultHandlers.print());
-		deleteResultActions.andExpect(status().is2xxSuccessful());
+		_testDeleteJson(urlStr, null, null);
 	}
 
 	/**
@@ -303,10 +296,29 @@ public class AbstractControllerTest {
 	 */
 	protected void _testDeleteJson(String urlStr, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
+		_testDeleteJson(urlStr, requestExtraInitializer, null);
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @param sendObject
+	 * @throws Exception
+	 */
+	protected void _testDeleteJson(String urlStr, RequestExtraInitializer requestExtraInitializer, Object sendObject)
+			throws Exception {
+
 		logger.info("Testing DELETE on URL: {}", urlStr);
 
 		MockHttpServletRequestBuilder request = delete(urlStr).with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON);
+
+		if (sendObject != null) {
+			String jsonBody = objectToJson(sendObject);
+			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
+		}
 
 		if (requestExtraInitializer != null) {
 			requestExtraInitializer.doInit(request);
@@ -352,23 +364,7 @@ public class AbstractControllerTest {
 
 		logger.info("Testing CREATE on URL: {}", url);
 
-		String jsonBody = null;
-		String jsonBodyPretty = null;
-		try {
-			if (!(sendObject instanceof String)) {
-				jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
-				jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(sendObject);
-			} else {
-				jsonBody = (String) sendObject;
-				jsonBodyPretty = (String) sendObject;
-			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			fail();
-		}
-
-		logger.info("Request JSON: {}", jsonBody);
-		logger.info("Request Pretty JSON: {}", jsonBodyPretty);
+		String jsonBody = objectToJson(sendObject);
 
 		MockHttpServletRequestBuilder request = post(url).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
@@ -435,27 +431,9 @@ public class AbstractControllerTest {
 		MockHttpServletRequestBuilder request = put(url).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
-			String jsonBody = null;
-			String jsonBodyPretty = null;
-			try {
-				if (!(sendObject instanceof String)) {
-					jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
-					jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(sendObject);
-				} else {
-					jsonBody = (String) sendObject;
-					jsonBodyPretty = (String) sendObject;
-				}
-			} catch (JsonProcessingException e) {
-				logger.error("Can't create json: {}", e);
-				e.printStackTrace();
-				fail();
-			}
-
-			logger.info("Request JSON: {}", jsonBody);
-			logger.info("Request Pretty JSON: {}", jsonBodyPretty);
+			String jsonBody = objectToJson(sendObject);
 
 			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
-
 		}
 
 		if (requestExtraInitializer != null) {
@@ -716,6 +694,36 @@ public class AbstractControllerTest {
 			sb.append(s);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	private String objectToJson(Object obj) {
+		String jsonBody = null;
+		String jsonBodyPretty = null;
+		try {
+			if (obj instanceof String) {
+				jsonBody = (String) obj;
+				jsonBodyPretty = (String) obj;
+
+			} else {
+				jsonBody = OBJECT_MAPPER.writeValueAsString(obj);
+				jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+			}
+
+			logger.info("Request JSON: {}", jsonBody);
+			logger.info("Request Pretty JSON: {}", jsonBodyPretty);
+
+		} catch (JsonProcessingException e) {
+			logger.error("Can't create json: {}", e);
+			e.printStackTrace();
+			fail();
+		}
+
+		return jsonBody;
 	}
 
 }
