@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -295,6 +296,15 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
+				.selectContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+
+		for (Long id : contObjectIds) {
+			if (existsingContObjectIds.contains(id)) {
+				return responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) already linked", id));
+			}
+		}
+
 		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
 
 			@Override
@@ -329,6 +339,15 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
 			return responseBadRequest();
+		}
+
+		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
+				.selectContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+
+		for (Long id : contObjectIds) {
+			if (!existsingContObjectIds.contains(id)) {
+				return responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) is not linked", id));
+			}
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
