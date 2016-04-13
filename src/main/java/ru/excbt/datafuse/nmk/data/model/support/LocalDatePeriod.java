@@ -163,6 +163,15 @@ public class LocalDatePeriod {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public LocalDatePeriod buildDateToNextMonth() {
+		LocalDateTime startOfNextMonth = dateTimeTo.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1);
+		return LocalDatePeriod.builder(this).dateTo(startOfNextMonth).build();
+	}
+
 	@Override
 	public String toString() {
 		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo=" + dateTimeTo + "]";

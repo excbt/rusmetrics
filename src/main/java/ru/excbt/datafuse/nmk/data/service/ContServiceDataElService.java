@@ -139,8 +139,9 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 					contServiceDataElConsRepository.selectFirstDataByZPoint(contZPointId, timeDetailAbsTypes,
 							localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
 
-			ContServiceDataElCons lastDataAbs = getFirstElement(contServiceDataElConsRepository.selectLastDataByZPoint(
-					contZPointId, timeDetailAbsTypes, localDatePeriod.getDateTo(), LIMIT1_PAGE_REQUEST));
+			ContServiceDataElCons lastDataAbs = getFirstElement(
+					contServiceDataElConsRepository.selectLastDataByZPoint(contZPointId, timeDetailAbsTypes,
+							localDatePeriod.buildDateToNextMonth().getDateTo(), LIMIT1_PAGE_REQUEST));
 
 			if (firstDataAbs != null && lastDataAbs != null) {
 
