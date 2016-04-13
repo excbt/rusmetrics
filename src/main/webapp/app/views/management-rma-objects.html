@@ -94,7 +94,7 @@
                                   role="presentation" 
                                   ng-repeat="tree in data.trees">
                                   <a href="" class=""
-                                     ng-click="messages.treeMenuHeader = tree.objectName; loadTree(tree);">
+                                     ng-click="loadTree(tree);">
                                       {{tree.objectName || tree.id}}
                                   </a>
                               </li>
@@ -115,47 +115,8 @@
                 </div>
             </div>
              <div class="row nmc-tree-with-fixed-header">
-                <script type="text/ng-template" id="object_tree_items_renderer.html">
-                    <div ui-tree-handle ng-click="selectNode(item)"
-                         ng-mouseover = "item.isHover = true"
-                         ng-mouseleave = "item.isHover = false"
-                         ng-class="{'nmc-bg-distinguish': item.isHover || item.isSelected}"
-                         class="nmc-ui-tree-handle">
-                      <i class="btn btn-xs glyphicon"
-                         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
-                         data-nodrag ng-click="toggle(this)">                                  
-                        </i>
-                        <span ng-if = "item.type == 'root'">
-                              <strong>\</strong>
-                        </span>
-                      {{item.objectName}}
-                        <div class="btn-group "
-                             ng-show="item.isHover">
-                          <i type="button" 
-                                  class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
-                                  data-toggle="dropdown" 
-                                  aria-haspopup="true" 
-                                  aria-expanded="false"
-                                  ng-disabled=false
-                             >
-                          </i>
-                          <ul class="dropdown-menu noMarginI">
-                            <li><a href="" ng-click="data.parentLevel = item; data.currentLevel = {childObjectList: []};" 
-                                   data-target="#treeLevelModal" 
-                                   data-toggle="modal">Добавить узел</a></li>                            
-                            <li role="presentation" class="divider"></li>
-                            <li><a href="" >Удалить узел</a></li>                        
-                          </ul>
-                        </div>
-                    </div>
-                    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
-                      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">
-                      </li>
-                    </ol>
-                  </script>
                   <div ui-tree="options" data-drag-enabled="false">
                     <ol ui-tree-nodes ng-model="data.currentTree" >
-<!--                      <li>\</li>-->
                       <li ng-repeat="item in data.currentTree.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
                     </ol>
                   </div>
@@ -193,11 +154,28 @@
                                                 style="padding: 0 0 3px;">
 
                                                 <div class="btn-group">
-                                                    <button ng-disabled="!objectCtrlSettings.anySelected" title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
+                                                    <button ng-disabled="!(objectCtrlSettings.anySelected == true)" 
+                                                            title="Действия над объектами" 
+                                                            type="button" 
+                                                            class="btn btn-default btn-xs dropdown-toggle" 
+                                                            data-toggle="dropdown" 
+                                                            aria-haspopup="true" 
+                                                            aria-expanded="false" 
+                                                            style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
                                                     <span class="caret"></span>
                                                     </button>
                                                   <ul class="dropdown-menu">
                                                     <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
+                                                    <li ng-if="data.selectedNode.type == 'root'"><a href="" 
+                                                           data-target="#viewTreeModal" 
+                                                           data-toggle="modal" 
+                                                           ng-click="moveToNodeInit()">{{messages.moveToNode}}</a>
+                                                    </li>
+                                                    <li ng-if="data.selectedNode.type != 'root'"><a href="" 
+                                                           data-target="#viewTreeModal" 
+                                                           data-toggle="modal" 
+                                                           ng-click="releaseFromNode()">{{messages.releaseFromNode}}</a>
+                                                    </li>
                                                     <li role="separator" class="divider"></li>  
                                                     <li><a href="" ng-click="deleteObjectsInit()">{{messages.deleteObjects}}</a></li>
                                                   </ul>
@@ -274,6 +252,17 @@
                                             <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
                                             <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>            
                                             <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
+                                            <li ng-if="data.selectedNode.type == 'root'"><a href="" 
+                                                   data-target="#viewTreeModal" 
+                                                   data-toggle="modal" 
+                                                   ng-click="moveToNodeInit(object)">{{messages.moveToNode}}
+                                                </a>
+                                            </li>
+                                            <li ng-if="data.selectedNode.type != 'root'"><a href="" 
+                                                   data-target="#viewTreeModal" 
+                                                   data-toggle="modal" 
+                                                   ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
+                                            </li>
                                             <li role="separator" class="divider"></li>
                                             <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
                                           </ul>
@@ -1788,7 +1777,7 @@
                                                ng-model="data.parentLevel.objectName"
                                                disabled/>
                                         <div ng-if="data.parentLevel.type == 'root'" class="well noMargin nmc-text-ouput">
-                                            {{data.currentTree.objectName}}
+                                            {{data.currentTree.objectName || data.currentTree.id}}
                                         </div>
                                     </div>
                                 </td>
@@ -1883,3 +1872,98 @@
 		</div>
 	</div>
 </div>
+    
+<!--    delete tree-->
+<div nmc-view-delete-modal-window 
+     message = "{{data.currentDeleteMessage}}"      
+     confirm-label = "{{confirmLabel}}"
+     control-code = "{{sumNums}}"
+     is-systemuser = "isSystemuser()"
+     delete-item-click = "deleteHandler(data.currentDeleteItem)">
+</div>
+
+    <!--    window: move objects to node-->
+<div id="viewTreeModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="viewTreeLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="viewTreeLabel" class="nmc-h3">
+				Выберете узел дерева "{{data.treeForMove.objectName}}"
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                          <div ui-tree="options" data-drag-enabled="false">
+                            <ol ui-tree-nodes ng-model="data.treeForMove" >
+                              <li ng-repeat="item in data.treeForMove.childObjectList" 
+                                  ui-tree-node 
+                                  ng-include="'object_tree_items_renderer.html'">
+                                </li>
+                            </ol>
+                          </div>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">            
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="moveToNode()"
+					value="Переместить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+	</div>
+</div>
+
+<!--        Object tree view template-->
+<script type="text/ng-template" id="object_tree_items_renderer.html">
+    <div ui-tree-handle ng-click="selectNode(item)"
+         ng-mouseover = "item.isHover = true"
+         ng-mouseleave = "item.isHover = false"
+         ng-class="{'nmc-bg-distinguish': item.isHover || item.isSelected}"
+         class="nmc-ui-tree-handle">
+      <i class="btn btn-xs glyphicon"
+         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
+         data-nodrag ng-click="toggle(this)">                                  
+        </i>
+        <span ng-if = "item.type == 'root'">
+              <strong>\</strong>
+        </span>
+      {{item.objectName}}
+        <div class="btn-group "
+             ng-show="item.isHover && objectCtrlSettings.isObjectMoving != true">
+          <i type="button" 
+                  class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false"
+                  ng-disabled=false
+             >
+          </i>
+          <ul class="dropdown-menu noMarginI">
+            <li><a href="" ng-click="data.parentLevel = item; data.currentLevel = {childObjectList: []};" 
+                   data-target="#treeLevelModal" 
+                   data-toggle="modal">Добавить узел</a></li>                            
+            <li role="presentation" class="divider"></li>
+            <li><a href="" ng-click="removeNodeInit(item)">Удалить 
+                <span ng-if="item.type != 'root'">узел</span>
+                <span ng-if="item.type == 'root'">дерево</span></a></li>
+<!--
+            <li ng-if="item.type != 'root'"><a href="" ng-click="removeNode(item)">Удалить узел</a></li>
+            <li ng-if="item.type == 'root'"><a href="" ng-click="removeNode(data.currentTree)">Удалить дерево</a></li>
+-->
+          </ul>
+        </div>
+    </div>
+    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
+      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">
+      </li>
+    </ol>
+</script>    

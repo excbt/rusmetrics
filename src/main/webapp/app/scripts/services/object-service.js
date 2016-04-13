@@ -443,6 +443,10 @@ angular.module('portalNMC')
         var updateTree = function(tree){
             return $http.put(rmaTreesUrl + '/' + tree.id, tree);
         };
+                 
+        var deleteTreeNode = function(tree){
+            return $http.delete(rmaTreesUrl + '/' + tree.id);
+        };
         
         //service initialization
         var initSvc = function(){
@@ -456,6 +460,7 @@ angular.module('portalNMC')
                     
         return {
             createTree,
+            deleteTreeNode,
             getAllDevices,
             getCityConsumingData,
             getCitiesConsumingData,
