@@ -13,8 +13,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class LdapUserAccount {
 
-	public final static String[] OBJECT_CLASS = new String[] { "top", "person", "organizationalPerson", "inetOrgPerson",
-			"posixAccount", "inetuser" };
+	public final static String[] OBJECT_CLASS = new String[] { "inetOrgPerson", "inetuser", "organizationalPerson",
+			"person", "posixAccount", "sunFMSAML2NameIdentifier", "top" };
 
 	private final static String DEFAULT_EMAIL_DOMAIN = "@rusmetrics.ru";
 	private final static String HOME_DIR = "/home/";
