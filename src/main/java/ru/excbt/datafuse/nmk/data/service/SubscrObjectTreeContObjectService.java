@@ -148,6 +148,20 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	/**
 	 * 
 	 * @param subscrObjectTreeId
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteContObjectsAll(Long subscrObjectTreeId) {
+
+		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
+				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
+
+		subscrObjectTreeContObjectRepository.delete(contObjects);
+	}
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)

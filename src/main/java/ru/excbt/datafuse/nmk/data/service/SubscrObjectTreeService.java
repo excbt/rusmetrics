@@ -7,7 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.PersistenceException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +25,50 @@ import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrObjectTreeService extends AbstractService {
+public class SubscrObjectTreeService extends AbstractService implements SecuredRoles {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeService.class);
 
 	@Autowired
 	private SubscrObjectTreeRepository subscrObjectTreeRepository;
 
 	@Autowired
 	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
+
+	@Autowired
+	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
+
+	/**
+	 * 
+	 * 
+	 * @author A.Kovtonyuk
+	 * @version 1.0
+	 * @since dd.02.2016
+	 *
+	 */
+	private interface CheckConditionOperator {
+		public boolean checkCondition(SubscrObjectTree node);
+	}
+
+	/**
+	 * 
+	 * 
+	 * @author A.Kovtonyuk
+	 * @version 1.0
+	 * @since dd.02.2016
+	 *
+	 */
+	private interface TreeNodeOperator {
+		public void doOperation(SubscrObjectTree node);
+
+		public static enum TYPE {
+			PRE, POST
+		}
+
+	}
 
 	/**
 	 * 
@@ -91,15 +131,36 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @param node
 	 * @return
 	 */
-	private SubscrObjectTree softDeleteSubscrObjectTree(SubscrObjectTree node) {
+	private SubscrObjectTree _softDeleteSubscrObjectTree(SubscrObjectTree node) {
+		checkNotNull(node);
+		TreeNodeOperator operator = (i) -> softDelete(i);
+		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param operator
+	 * @return
+	 */
+	private SubscrObjectTree _subscrObjectTreeOperation(SubscrObjectTree node, TreeNodeOperator operator,
+			TreeNodeOperator.TYPE opType) {
 		checkNotNull(node);
 
-		softDelete(node);
+		if (opType == TreeNodeOperator.TYPE.PRE) {
+			operator.doOperation(node);
+		}
+
 		if (node.getChildObjectList() != null && !node.getChildObjectList().isEmpty()) {
 			node.getChildObjectList().forEach(i -> {
-				softDeleteSubscrObjectTree(i);
+				_subscrObjectTreeOperation(node, operator, opType);
 			});
 		}
+
+		if (opType == TreeNodeOperator.TYPE.POST) {
+			operator.doOperation(node);
+		}
+
 		return node;
 	}
 
@@ -179,19 +240,50 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @param level
 	 * @return
 	 */
-	private SubscrObjectTree _searchObject(SubscrObjectTree node, String objectName, Integer searchLevel, int level) {
+	//	private SubscrObjectTree _searchObject(SubscrObjectTree node, String objectName, Integer searchLevel, int level) {
+	//		checkNotNull(node);
+	//		checkNotNull(objectName);
+	//
+	//		checkArgument(level >= 0);
+	//
+	//		if (objectName.equals(node.getObjectName()) && (searchLevel == null || searchLevel.equals(level))) {
+	//			return node;
+	//		}
+	//
+	//		if (node.getChildObjectList() != null && !node.getChildObjectList().isEmpty()) {
+	//			for (SubscrObjectTree child : node.getChildObjectList()) {
+	//				SubscrObjectTree result = _searchObject(child, objectName, searchLevel, level + 1);
+	//				if (result != null) {
+	//					return result;
+	//				}
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param operator
+	 * @param searchLevel
+	 * @param level
+	 * @return
+	 */
+	private SubscrObjectTree _searchObject(final SubscrObjectTree node, final CheckConditionOperator operator,
+			final Integer searchLevel, final int level) {
 		checkNotNull(node);
-		checkNotNull(objectName);
+		checkNotNull(operator);
 
 		checkArgument(level >= 0);
 
-		if (objectName.equals(node.getObjectName()) && (searchLevel == null || searchLevel.equals(level))) {
+		if (operator.checkCondition(node) && (searchLevel == null || searchLevel.equals(level))) {
 			return node;
 		}
 
 		if (node.getChildObjectList() != null && !node.getChildObjectList().isEmpty()) {
 			for (SubscrObjectTree child : node.getChildObjectList()) {
-				SubscrObjectTree result = _searchObject(child, objectName, searchLevel, level + 1);
+				SubscrObjectTree result = _searchObject(child, operator, searchLevel, level + 1);
 				if (result != null) {
 					return result;
 				}
@@ -209,7 +301,19 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @return
 	 */
 	public SubscrObjectTree searchObject(SubscrObjectTree node, String objectName, Integer searchLevel) {
-		return _searchObject(node, objectName, searchLevel, 0);
+		CheckConditionOperator operator = (n) -> objectName.equals(node.getObjectName());
+		return _searchObject(node, operator, searchLevel, 0);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param objectName
+	 * @param searchLevel
+	 * @return
+	 */
+	public SubscrObjectTree searchObject(SubscrObjectTree node, CheckConditionOperator operator, Integer searchLevel) {
+		return _searchObject(node, operator, searchLevel, 0);
 	}
 
 	/**
@@ -219,7 +323,20 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @return
 	 */
 	public SubscrObjectTree searchObject(SubscrObjectTree node, String objectName) {
-		return _searchObject(node, objectName, null, 0);
+		return searchObject(node, objectName, null);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @param subscrObjectTreeId
+	 * @param searchLevel
+	 * @return
+	 */
+	public SubscrObjectTree searchObject(SubscrObjectTree node, Long subscrObjectTreeId, Integer searchLevel) {
+		checkNotNull(subscrObjectTreeId);
+		CheckConditionOperator operator = (n) -> subscrObjectTreeId.equals(n.getId());
+		return _searchObject(node, operator, searchLevel, 0);
 	}
 
 	/**
@@ -243,6 +360,7 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * @param entity
 	 * @return
 	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrObjectTree saveRootSubscrObjectTree(SubscrObjectTree entity) {
 		checkArgument(entity.getParent() == null);
@@ -255,11 +373,66 @@ public class SubscrObjectTreeService extends AbstractService {
 	 * 
 	 * @param subscrObjectTreeId
 	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteRootSubscrObjectTree(Long subscrObjectTreeId) {
 		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
+		if (node.getParent() != null) {
+			throw new PersistenceException(
+					String.format("Delete not root node (subscrObjectTreeId=%d) is not supported by this method",
+							subscrObjectTreeId));
+		}
 		checkNotNull(node);
-		subscrObjectTreeRepository.save(softDeleteSubscrObjectTree(node));
+		subscrObjectTreeRepository.save(_softDeleteSubscrObjectTree(node));
+	}
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteSubscrObjectTreeChildNode(Long subscrObjectTreeId, Long childSubscrObjectTreeId) {
+		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
+		checkNotNull(node);
+
+		SubscrObjectTree childToDelete = searchObject(node, childSubscrObjectTreeId, null);
+
+		if (childToDelete == null) {
+			throw new PersistenceException(
+					String.format("Child node (subscrObjectTreeId=%d) is not found", childSubscrObjectTreeId));
+		}
+
+		logger.info("Found child node {}", childToDelete.getId());
+
+		_deleteChildTreeContObjects(childToDelete);
+		_deleteChildTreeNode(childToDelete);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private SubscrObjectTree _deleteChildTreeNode(SubscrObjectTree node) {
+		checkNotNull(node);
+		TreeNodeOperator operator = (i) -> {
+			subscrObjectTreeRepository.delete(i);
+		};
+		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private SubscrObjectTree _deleteChildTreeContObjects(SubscrObjectTree node) {
+		checkNotNull(node);
+		TreeNodeOperator operator = (i) -> {
+			subscrObjectTreeContObjectService.deleteContObjectsAll(node.getId());
+		};
+		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
 
 	/**

@@ -273,8 +273,9 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		List<ContObject> freeContObjects = fromJSON(new TypeReference<List<ContObject>>() {
 		}, freeContent);
 
-		String content = _testGetJson(
-				"/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111664/contObjects");
+		String contObjectsUrl = "/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111667/contObjects";
+
+		String content = _testGetJson(contObjectsUrl);
 
 		List<ContObject> linkedContObjects = fromJSON(new TypeReference<List<ContObject>>() {
 		}, content);
@@ -289,8 +290,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 				contObjectIds.add(contObject.getId());
 			}
 
-			_testUpdateJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111664/contObjects",
-					contObjectIds);
+			_testUpdateJson(contObjectsUrl, contObjectIds);
 
 			logger.info("Found {} free contObjects", freeContObjects.size());
 			logger.info("Saved {} contObjects", contObjectIds.size());
@@ -302,14 +302,24 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 				ContObject contObject = linkedContObjects.get(i);
 				contObjectIds.add(contObject.getId());
 			}
-			_testDeleteJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111664/contObjects", null,
-					contObjectIds);
+			_testDeleteJson(contObjectsUrl, contObjectIds);
 
 			logger.info("Found {} linked contObjects", linkedContObjects.size());
 			logger.info("Deleted {} contObjects", contObjectIds.size());
 
 		}
 
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeleteChildNode() throws Exception {
+		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111667";
+
+		_testDeleteJson(url);
 	}
 
 }

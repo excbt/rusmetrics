@@ -291,12 +291,23 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param urlStr
+	 * @param sendObject
+	 * @throws Exception
+	 */
+	protected void _testDeleteJson(String urlStr, Object sendObject) throws Exception {
+		_testDeleteJson(urlStr, sendObject, null);
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
 	protected void _testDeleteJson(String urlStr, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
-		_testDeleteJson(urlStr, requestExtraInitializer, null);
+		_testDeleteJson(urlStr, null, requestExtraInitializer);
 
 	}
 
@@ -307,7 +318,7 @@ public class AbstractControllerTest {
 	 * @param sendObject
 	 * @throws Exception
 	 */
-	protected void _testDeleteJson(String urlStr, RequestExtraInitializer requestExtraInitializer, Object sendObject)
+	protected void _testDeleteJson(String urlStr, Object sendObject, RequestExtraInitializer requestExtraInitializer)
 			throws Exception {
 
 		logger.info("Testing DELETE on URL: {}", urlStr);

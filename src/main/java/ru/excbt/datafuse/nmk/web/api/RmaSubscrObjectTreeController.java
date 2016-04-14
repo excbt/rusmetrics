@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -121,7 +120,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createContObjectTreeNode(@PathVariable("objectTreeType") String objectTreeType,
+	public ResponseEntity<?> createSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@RequestBody ObjectNameHolder requestBody, HttpServletRequest request) {
 
 		checkNotNull(requestBody);
@@ -168,7 +167,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> putContObjectNodeTree(@PathVariable("objectTreeType") String objectTreeType,
+	public ResponseEntity<?> putSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId, @RequestBody SubscrObjectTree requestEntity) {
 
 		checkNotNull(requestEntity);
@@ -200,7 +199,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}", method = RequestMethod.DELETE,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteContObjectNodeTree(@PathVariable("objectTreeType") String objectTreeType,
+	public ResponseEntity<?> deleteSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId) {
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
@@ -214,6 +213,37 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			@Override
 			public void process() {
 				subscrObjectTreeService.deleteRootSubscrObjectTree(subscrObjectTreeId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
+
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @param subscrObjectTreeId
+	 * @param childSubscrObjectTreeId
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}/node/{childSubscrObjectTreeId}",
+			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteSubscrObjectTreeChildNode(@PathVariable("objectTreeType") String objectTreeType,
+			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId,
+			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId) {
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		ApiAction action = new ApiActionAdapter() {
+
+			@Override
+			public void process() {
+				subscrObjectTreeService.deleteSubscrObjectTreeChildNode(subscrObjectTreeId, childSubscrObjectTreeId);
 			}
 		};
 
@@ -264,7 +294,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectContObjectIdAllLevels(getRmaSubscriberId(),
 				rootSubscrObjectTreeId);
-		assertNotNull(contObjectIds);
+		checkNotNull(contObjectIds);
 
 		List<ContObject> result = subscrContObjectService
 				.selectSubscriberContObjectsExcludingIds(getCurrentSubscriberId(), contObjectIds);
