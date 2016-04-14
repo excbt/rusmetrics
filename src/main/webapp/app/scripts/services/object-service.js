@@ -30,7 +30,7 @@ angular.module('portalNMC')
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
         var rmaTreeTemplatesUrl = urlRma + '/subscrObjectTreeTemplates';
-        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';
+        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';                 
         
         var rmaTreeTemplates = [];
 
@@ -428,10 +428,6 @@ angular.module('portalNMC')
             });
         };
                  
-        var loadTreeTemplateItems = function(templateId){
-            return $http.get(rmaTreeTemplatesUrl + "/" + templateId + "/items");
-        };
-                 
         var createTree = function(tree){
             return $http.post(rmaTreesUrl, tree);
         };
@@ -450,6 +446,22 @@ angular.module('portalNMC')
                  
         var deleteTreeNode = function(tree){
             return $http.delete(rmaTreesUrl + '/' + tree.id);
+        };
+                 
+        var loadObjectsByTreeNode = function(treeId, nodeId){            
+            return $http.get(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
+        };
+                 
+        var putObjectsToTreeNode = function(treeId, nodeId, objIds){            
+            return $http.put(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects', objIds);
+        };
+        
+        var releaseObjectsFromTreeNode = function(treeId, nodeId, objIds){            
+            return $http.delete(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects', objIds);
+        };
+                 
+        var loadFreeObjectsByTree = function(treeId){            
+            return $http.get(rmaTreesUrl + '/' + treeId + '/contObjects/free');
         };
         
         //service initialization
@@ -505,14 +517,17 @@ angular.module('portalNMC')
             getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
+            loadFreeObjectsByTree,
+            loadObjectsByTreeNode,
             loading,
             loadTree,            
             loadTrees,
-            loadTreeTemplateItems,
-            loadTreeTemplates,            
+            loadTreeTemplates,
             promise,
             putDeviceMetaDataVzlet,
             putDeviceSchedulerSettings,
+            putObjectsToTreeNode,
+            releaseObjectsFromTreeNode,
             rmaPromise,
             saveZpointMetadata,
             sendDeviceToServer,

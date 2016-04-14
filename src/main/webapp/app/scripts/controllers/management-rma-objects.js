@@ -85,41 +85,44 @@ angular.module('portalNMC')
                         }
                     });        
                     return obj;
-                };
+                };                
                 
 //console.log(objectSvc.promise);
+                
+                var performObjectsData = function(response){
+                    var tempArr = response.data;
+//console.log(tempArr);                    
+                    $scope.objects = response.data;
+                    //sort by name
+                    objectSvc.sortObjectsByFullName($scope.objects);
+
+                    if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
+
+                        $scope.objectsWithoutFilter = $scope.objects;
+                        $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        $scope.objectsOnPage = tempArr;                            
+                        //if we have the contObject id in cookies, then draw the Zpoint table for this object.
+                        if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
+                            $scope.toggleShowGroupDetails(Number($cookies.contObject));
+                            $cookies.contObject = null;          
+                        };
+                        $rootScope.$broadcast('objectSvc:loaded');
+
+                        if (!mainSvc.checkUndefinedNull(objId)){
+                            moveToObject(objId);
+                        };
+                    } else {
+                        $scope.searchObjects($scope.filter);
+                    };
+                    $scope.loading = false;  
+                };
+                
                 var getObjectsData = function(objId){
 //console.log("getObjectsData");                    
-                    objectSvc.getRmaPromise().then(function(response){
-                        var tempArr = response.data;
-    //console.log(tempArr);                    
-                        $scope.objects = response.data;
-                        //sort by name
-                        objectSvc.sortObjectsByFullName($scope.objects);
-                        
-                        if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
-
-                            $scope.objectsWithoutFilter = $scope.objects;
-                            $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
-                            tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
-                            $scope.objectsOnPage = tempArr;                            
-                            //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                            if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
-                                $scope.toggleShowGroupDetails(Number($cookies.contObject));
-                                $cookies.contObject = null;          
-                            };
-                            $rootScope.$broadcast('objectSvc:loaded');
-
-                            if (!mainSvc.checkUndefinedNull(objId)){
-                                moveToObject(objId);
-                            };
-                        } else {
-                            $scope.searchObjects($scope.filter);
-                        };
-                        $scope.loading = false;  
-                    });
+                    objectSvc.getRmaPromise().then(performObjectsData);
                 };
-                getObjectsData();
+                
                 
                 var getRsoOrganizations = function(){
                     objectSvc.getRsoOrganizations()
@@ -127,7 +130,6 @@ angular.module('portalNMC')
                         $scope.data.rsoOrganizations = response.data;
                     });
                 };
-                getRsoOrganizations();
                 
                 var getCmOrganizations = function(){
                     objectSvc.getCmOrganizations()
@@ -137,7 +139,6 @@ angular.module('portalNMC')
                         mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
                     });
                 };
-                getCmOrganizations();
                 
                 var getServiceTypes = function(){
                     objectSvc.getServiceTypes()
@@ -146,7 +147,6 @@ angular.module('portalNMC')
 //console.log(response.data);                        
                     });
                 };
-                getServiceTypes();
                 
                 var getTimezones = function(){
                     objectSvc.getTimezones()
@@ -155,8 +155,7 @@ angular.module('portalNMC')
 //console.log($scope.data.timezones);                        
                     });
                 };
-                getTimezones();
-                
+
 //                $scope.objects = objectSvc.getObjects();
                 $scope.loading = objectSvc.getLoadingStatus();//loading;
                 $scope.columns = [
@@ -1497,8 +1496,6 @@ angular.module('portalNMC')
                     });
                 };
                 
-                getClients();
-                
                                 
                var deleteDoubleElements = function(targetArray){
                     var resultArray = angular.copy(targetArray);
@@ -1861,6 +1858,7 @@ angular.module('portalNMC')
                     }else{
                         $scope.data.selectedNode = angular.copy(item);
                     };
+                    //TODO: get objects by selected node
                 };
                 
                 $scope.data.trees = [
@@ -1893,6 +1891,10 @@ angular.module('portalNMC')
                             var respTree = angular.copy(resp.data);
                             respTree.childObjectList.unshift(ROOT_NODE);
                             $scope.data.currentTree = respTree;
+                            respTree.childObjectList[0].isSelected = true;
+                            $scope.data.selectedNode = angular.copy(respTree.childObjectList[0]);
+console.log(tree);                        
+                            objectSvc.loadFreeObjectsByTree(tree.id).then(performObjectsData);
 //                            $scope.data.trees.push(respTree);
                         }, errorProtoCallback);
                 };
@@ -1905,10 +1907,9 @@ angular.module('portalNMC')
                     objectSvc.loadTrees().then(function(resp){
                         $scope.data.trees = angular.copy(resp.data);
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ return;}
-                        $scope.loadTree($scope.data.trees[0]);                        
+                        $scope.loadTree($scope.data.trees[9]);                        
                     },errorProtoCallback);
-                };
-                loadTrees();
+                };                
                 
                 
 //                var getTrees = function(){
@@ -1961,9 +1962,9 @@ console.log(nodeData);
                     if (angular.isArray($scope.data.currentTree.childObjectList) && ($scope.data.currentTree.childObjectList.length > 0) && ($scope.data.currentTree.childObjectList[0].type == "root")){
                         $scope.data.currentTree.childObjectList.shift();
                     };
-console.log($scope.data.currentTree);                    
+//console.log($scope.data.currentTree);                    
                     objectSvc.updateTree($scope.data.currentTree).then(function(resp){
-console.log(resp);                        
+//console.log(resp);                        
                         var respTree = resp.data;
                         respTree.childObjectList.unshift(ROOT_NODE);
                         var findIndex = -1;
@@ -2085,19 +2086,6 @@ console.log($scope.data.selectedNodeForMove);
                     $scope.data.selectedNode;
                 };
                 
-                //work with tree templates
-                $scope.createTreeByTemplate = function(treeTmpl){
-                    $scope.loadTreeTemplate(treeTmpl);
-                };
-                
-                $scope.loadTreeTemplate = function(treeTmpl){
-                    objectSvc.loadTreeTemplateItems(treeTmpl.id).then(function(resp){
-console.log(resp);
-                        $scope.data.currentTreeItems = resp.data;
-                        $scope.data.newTree.itemLevel = 0;
-                    }, errorCallback);
-                };
-                
                 $('#viewTreeModal').on('shown.bs.modal', function(){
                     $scope.objectCtrlSettings.isObjectMoving = true;
                     $scope.$apply();
@@ -2110,6 +2098,21 @@ console.log(resp);
 // ********************************************************************************************
                 //  end TREEVIEW
 //*********************************************************************************************
-                
+                //controller initialization
+                var initCtrl = function(){
+                    getRsoOrganizations();
+                    getCmOrganizations();
+                    getServiceTypes();
+                    getTimezones();
+                    getClients();
+                    //if tree is off
+                    if ($scope.objectCtrlSettings.isTreeView == false){
+                        getObjectsData();
+                    }else{
+                    //if tree is on
+                        loadTrees();                    
+                    };
+                };
+                initCtrl();
 //            }]
 }]);
