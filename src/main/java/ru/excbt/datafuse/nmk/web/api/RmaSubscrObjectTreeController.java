@@ -35,6 +35,8 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 @RequestMapping(value = "/api/rma")
 public class RmaSubscrObjectTreeController extends SubscrApiController {
 
+	private static final String INVALID_RMA_SUBSCRIBER_MSG = "Invalid rmaSubscriberId (%d)";
+
 	@Autowired
 	private SubscrObjectTreeService subscrObjectTreeService;
 
@@ -75,13 +77,13 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 	/**
 	 * 
-	 * @param subscrObjectTreeId
+	 * @param rootSubscrObjectTreeId
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}", method = RequestMethod.GET,
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId) {
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId) {
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
@@ -89,7 +91,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		SubscrObjectTree result = subscrObjectTreeService.findSubscrObjectTree(subscrObjectTreeId);
+		SubscrObjectTree result = subscrObjectTreeService.findSubscrObjectTree(rootSubscrObjectTreeId);
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
@@ -161,22 +163,28 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	/**
 	 * 
 	 * @param objectTreeType
-	 * @param subscrObjectTreeId
+	 * @param rootSubscrObjectTreeId
 	 * @param requestEntity
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}", method = RequestMethod.PUT,
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId, @RequestBody SubscrObjectTree requestEntity) {
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
+			@RequestBody SubscrObjectTree requestEntity) {
 
 		checkNotNull(requestEntity);
-		checkArgument(subscrObjectTreeId.equals(requestEntity.getId()));
+		checkArgument(rootSubscrObjectTreeId.equals(requestEntity.getId()));
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
 			return responseBadRequest();
+		}
+
+		ResponseEntity<?> checkResponse = checkRmaSubscriberResponse(rootSubscrObjectTreeId);
+		if (checkResponse != null) {
+			return checkResponse;
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<SubscrObjectTree>(requestEntity) {
@@ -194,13 +202,13 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	/**
 	 * 
 	 * @param objectTreeType
-	 * @param subscrObjectTreeId
+	 * @param rootSubscrObjectTreeId
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}",
+			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId) {
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId) {
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
@@ -208,11 +216,16 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		ResponseEntity<?> checkResponse = checkRmaSubscriberResponse(rootSubscrObjectTreeId);
+		if (checkResponse != null) {
+			return checkResponse;
+		}
+
 		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
-				subscrObjectTreeService.deleteRootSubscrObjectTree(subscrObjectTreeId);
+				subscrObjectTreeService.deleteRootSubscrObjectTree(rootSubscrObjectTreeId);
 			}
 		};
 
@@ -223,14 +236,15 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	/**
 	 * 
 	 * @param objectTreeType
-	 * @param subscrObjectTreeId
+	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}/node/{childSubscrObjectTreeId}",
+	@RequestMapping(
+			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}",
 			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteSubscrObjectTreeChildNode(@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId,
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId) {
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
@@ -239,11 +253,17 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		ResponseEntity<?> checkResponse = checkRmaSubscriberResponse(rootSubscrObjectTreeId);
+		if (checkResponse != null) {
+			return checkResponse;
+		}
+
 		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
-				subscrObjectTreeService.deleteSubscrObjectTreeChildNode(subscrObjectTreeId, childSubscrObjectTreeId);
+				subscrObjectTreeService.deleteChildSubscrObjectTreeNode(rootSubscrObjectTreeId,
+						childSubscrObjectTreeId);
 			}
 		};
 
@@ -254,14 +274,14 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	/**
 	 * 
 	 * @param objectTreeType
-	 * @param subscrObjectTreeId
+	 * @param rootSubscrObjectTreeId
 	 * @return
 	 */
 	@RequestMapping(
-			value = "/subscrObjectTree/{objectTreeType}/{subscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects",
+			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects",
 			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeContObjects(@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId,
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId) {
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
@@ -326,6 +346,11 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		ResponseEntity<?> checkResponse = checkRmaSubscriberResponse(rootSubscrObjectTreeId);
+		if (checkResponse != null) {
+			return checkResponse;
+		}
+
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
 				.selectContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
 
@@ -371,6 +396,16 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		ResponseEntity<?> checkResponse = checkRmaSubscriberResponse(rootSubscrObjectTreeId);
+		if (checkResponse != null) {
+			return checkResponse;
+		}
+
+		Long rmaSubscriberId = getRmaSubscriberId();
+		if (!rmaSubscriberId.equals(subscrObjectTreeService.selectRmaSubscriberId(rootSubscrObjectTreeId))) {
+			return responseBadRequest(ApiResult.badRequest(INVALID_RMA_SUBSCRIBER_MSG, rmaSubscriberId));
+		}
+
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
 				.selectContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
 
@@ -390,6 +425,20 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionDeleteBody(action);
+	}
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	private ResponseEntity<?> checkRmaSubscriberResponse(final Long subscrObjectTreeId) {
+		Long rmaSubscriberId = getRmaSubscriberId();
+		if (rmaSubscriberId == null
+				|| !rmaSubscriberId.equals(subscrObjectTreeService.selectRmaSubscriberId(subscrObjectTreeId))) {
+			return responseBadRequest(ApiResult.badRequest(INVALID_RMA_SUBSCRIBER_MSG, rmaSubscriberId));
+		}
+		return null;
 	}
 
 }

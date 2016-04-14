@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -207,7 +208,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		floor2 = subscrObjectTreeService.searchObject(tree1, "Этаж 2");
 		assertNotNull(floor2);
 
-		for (int i = 1; i <= 6; i++) {
+		for (int i = 1; i <= 2; i++) {
 			SubscrObjectTree apt = subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
 			apt.setTemplateItemId(itemlevel2.getId());
 		}
@@ -215,7 +216,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		floor3 = subscrObjectTreeService.searchObject(tree1, "Этаж 3", 1);
 		assertNotNull(floor3);
 
-		for (int i = 7; i <= 12; i++) {
+		for (int i = 3; i <= 4; i++) {
 			SubscrObjectTree apt = subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
 			apt.setTemplateItemId(itemlevel2.getId());
 		}
@@ -268,12 +269,33 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Test
 	public void testSubscrObjectTreeContObjects() throws Exception {
 
-		String freeContent = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/512111663/contObjects/free");
+		String treeListContent = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
+		List<SubscrObjectTree> treeList = fromJSON(new TypeReference<List<SubscrObjectTree>>() {
+		}, treeListContent);
+
+		if (treeList.isEmpty()) {
+			logger.warn("Tree List is empty. Skip test");
+			return;
+		}
+
+		Long treeId = treeList.get(0).getId();
+
+		String treeContent = _testGetJson(String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d", treeId));
+		SubscrObjectTree tree = fromJSON(new TypeReference<SubscrObjectTree>() {
+		}, treeContent);
+
+		Long treeNodeId = tree.getChildObjectList().size() > 0 ? tree.getChildObjectList().get(0).getId() : null;
+
+		assertNotNull(treeNodeId);
+
+		String freeContent = _testGetJson(
+				String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/contObjects/free", treeId));
 
 		List<ContObject> freeContObjects = fromJSON(new TypeReference<List<ContObject>>() {
 		}, freeContent);
 
-		String contObjectsUrl = "/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111667/contObjects";
+		String contObjectsUrl = String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/node/%d/contObjects",
+				treeId, treeNodeId);
 
 		String content = _testGetJson(contObjectsUrl);
 
@@ -315,11 +337,22 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testDeleteChildNode() throws Exception {
-		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/512111663/node/512111667";
+		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/512134227";
 
 		_testDeleteJson(url);
+	}
+
+	@Ignore
+	@Test
+	public void testDeleteContObjects2() throws Exception {
+		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/512133836/node/512133837/contObjects";
+
+		List<Long> ids = Arrays.asList(488501788L);
+
+		_testDeleteJson(url, ids);
 	}
 
 }

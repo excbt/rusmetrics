@@ -31,7 +31,7 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
 	private Long parentId;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "parent_id")
 	private SubscrObjectTree parent;
 

@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,9 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@Autowired
 	private SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository;
 
+	@Autowired
+	private SubscrObjectTreeService subscrObjectTreeService;
+
 	@PersistenceContext(unitName = "nmk-p")
 	protected EntityManager em;
 
@@ -41,7 +46,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectContObjects(Long subscrObjectTreeId) {
+	public List<ContObject> selectContObjects(final Long subscrObjectTreeId) {
 		return subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 	}
 
@@ -51,7 +56,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectContObjectIds(Long subscrObjectTreeId) {
+	public List<Long> selectContObjectIds(final Long subscrObjectTreeId) {
 		return subscrObjectTreeContObjectRepository.selectContObjectIds(subscrObjectTreeId);
 	}
 
@@ -62,7 +67,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void saveContObjects(Long subscrObjectTreeId, List<Long> contObjectIds) {
+	public void saveContObjects(final Long subscrObjectTreeId, final List<Long> contObjectIds) {
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -100,7 +105,14 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void addContObjects(Long subscrObjectTreeId, List<Long> contObjectIds) {
+	public void addContObjects(final Long subscrObjectTreeId, final List<Long> contObjectIds) {
+
+		boolean isLinkDeny = subscrObjectTreeService.selectIsLinkDeny(subscrObjectTreeId);
+
+		if (isLinkDeny) {
+			throw new PersistenceException(
+					String.format("Link ContObjects for subscrObjectTreeId(%d) is not allowed", subscrObjectTreeId));
+		}
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -129,7 +141,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteContObjects(Long subscrObjectTreeId, List<Long> contObjectIds) {
+	public void deleteContObjects(final Long subscrObjectTreeId, final List<Long> contObjectIds) {
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -151,7 +163,9 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteContObjectsAll(Long subscrObjectTreeId) {
+	public void deleteContObjectsAll(final Long subscrObjectTreeId) {
+
+		checkNotNull(subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -165,7 +179,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectContObjectIdAllLevels(Long rmaSubscriberId, Long subscrObjectTreeId) {
+	public List<Long> selectContObjectIdAllLevels(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
 
 		List<Long> resultList = new ArrayList<>();
 

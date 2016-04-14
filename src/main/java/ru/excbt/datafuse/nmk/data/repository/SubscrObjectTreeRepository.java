@@ -27,4 +27,20 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 			+ " WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL AND t.deleted = 0")
 	List<Object[]> selectSubscrObjectTreeShort(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
+	/**
+	 * 
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@Query("SELECT t.rmaSubscriberId FROM SubscrObjectTree t WHERE t.id = :subscrObjectTreeId")
+	public List<Long> selectRmaSubscriberIds(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@Query("SELECT t.isLinkDeny FROM SubscrObjectTree t WHERE t.id = :subscrObjectTreeId")
+	public List<Boolean> selectIsLinkDeny(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
+
 }
