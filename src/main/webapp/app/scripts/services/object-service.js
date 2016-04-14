@@ -444,8 +444,12 @@ angular.module('portalNMC')
             return $http.put(rmaTreesUrl + '/' + tree.id, tree);
         };
                  
-        var deleteTreeNode = function(tree){
-            return $http.delete(rmaTreesUrl + '/' + tree.id);
+        var deleteTree = function(treeId){
+            return $http.delete(rmaTreesUrl + '/' + treeId);
+        };
+                 
+        var deleteTreeNode = function(treeId, nodeId){
+            return $http.delete(rmaTreesUrl + '/' + treeId + '/node/' + nodeId);
         };
                  
         var loadObjectsByTreeNode = function(treeId, nodeId){            
@@ -481,6 +485,7 @@ angular.module('portalNMC')
                     
         return {
             createTree,
+            deleteTree,
             deleteTreeNode,
             getAllDevices,
             getCityConsumingData,

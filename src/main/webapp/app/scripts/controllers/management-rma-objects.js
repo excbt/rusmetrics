@@ -2027,29 +2027,31 @@ console.log(nodeData);
                 
                 $scope.removeNodeInit = function(node){
                     $scope.data.currentDeleteItem = node;
-//console.log(node);                    
-//console.log($scope.data.currentTree);
                     if (node.type == 'root'){
                         $scope.data.currentDeleteMessage = $scope.data.currentTree.objectName || $scope.data.currentTree.id;                     
-//console.log($scope.data.currentDeleteMessage);
                     }else{
                         $scope.data.currentDeleteMessage = node.objectName || node.id;
-//console.log($scope.data.currentDeleteMessage);                        
                     };
-//                    $scope.data.currentDeleteMessage = (node.type == 'root')? node.objectName || node.id : $scope.data.currentTree.objectName ||    $scope.data.currentTree.id;
-//console.log($scope.data.currentDeleteMessage);                    
                     setConfirmCode(true);
                     $scope.deleteHandler = function(delItem){
-//console.log(delItem);                        
-                        if (mainSvc.checkUndefinedNull(delItem) || mainSvc.checkUndefinedNull(delItem.type) || delItem.type != 'root'){
-                            return "Deleting item is no tree.";
+console.log(delItem);               
+                        if (mainSvc.checkUndefinedNull(delItem)){
+                            return "Deleting item is undefined or null."
                         };
-                        objectSvc.deleteTreeNode($scope.data.currentTree).then(function(resp){
-                            loadTrees();
-                            $scope.data.currentTree = {};
-                            $("#deleteWindowModal").modal('hide');
-                            $scope.messages.treeMenuHeader = 'Выберете дерево';
-                        }, errorProtoCallback);
+                        if (!mainSvc.checkUndefinedNull(delItem.type) && delItem.type == 'root'){
+                            objectSvc.deleteTree($scope.data.currentTree.id).then(function(resp){
+                                loadTrees();
+//                                $scope.data.currentTree = {};
+                                
+//                                $scope.messages.treeMenuHeader = 'Выберете дерево';
+                            }, errorProtoCallback);
+                            return "Deleting item is tree.";
+                        }else{
+                            objectSvc.deleteTreeNode($scope.data.currentTree.id, delItem.id).then(function(resp){
+                                $scope.loadTree($scope.data.currentTree);
+                            }, errorCallback);
+                        };
+                        $("#deleteWindowModal").modal('hide');
                     };
                     $("#deleteWindowModal").modal();
                 };
