@@ -338,9 +338,16 @@ angular.module('portalNMC')
     // **************************
 //    var firstNum = Math.round(Math.random()*10);
 //    var secondNum = Math.round(Math.random()*100);
-    var getConfirmCode = function(){
-        var tmpFirst = Math.round(Math.random()*10);
-        var tmpSecond = Math.round(Math.random()*100);
+    var getConfirmCode = function(useImprovedMethodFlag){
+//console.log(useImprovedMethodFlag);        
+        var leftCoef = Math.random()*10;
+        var rightCoef = Math.random()*100;
+        if (!checkUndefinedNull(useImprovedMethodFlag) && useImprovedMethodFlag == true){
+            leftCoef = Math.random()*1000 + 100;
+            rightCoef = Math.random()*1000 + 100;
+        };
+        var tmpFirst = Math.round(leftCoef);
+        var tmpSecond = Math.round(rightCoef);
         var tmpLabel = tmpFirst+" + "+tmpSecond+" = ";
         var result = {
 //            firstNum: tmpFirst,

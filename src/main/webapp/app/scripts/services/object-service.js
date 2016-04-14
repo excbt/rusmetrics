@@ -457,7 +457,12 @@ angular.module('portalNMC')
         };
         
         var releaseObjectsFromTreeNode = function(treeId, nodeId, objIds){            
-            return $http.delete(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects', objIds);
+//            return $http.delete(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects', objIds);
+            return $http({
+                method: "DELETE",
+                url: rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects',
+                data: objIds
+            });
         };
                  
         var loadFreeObjectsByTree = function(treeId){            

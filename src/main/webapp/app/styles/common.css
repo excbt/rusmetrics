@@ -2080,6 +2080,10 @@ tr.nmc-inactive-price > td{
     padding-right: 10px;
 }
 
+.paddingRight20{
+    padding-right: 20px;
+}
+
 .paddingLeftRight15{
     padding-left: 15px;
     padding-right: 15px;
