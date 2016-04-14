@@ -230,9 +230,9 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentObject.curDatasource = curDataSource;
-        $timeout(function(){
-            $('#inputNetAddr').inputmask();
-        }, 10);
+//        $timeout(function(){
+//            $('#inputNetAddr').inputmask();
+//        }, 10);
     };
     
     var successCallback = function(response){
@@ -513,6 +513,6 @@ angular.module('portalNMC')
             }
         });
         $('#inputAttemptsNumberShd').inputmask();        
-        $('#inputNetAddr').inputmask();
+//        $('#inputNetAddr').inputmask();
     });
 }]);
