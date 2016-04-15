@@ -1494,7 +1494,7 @@ angular.module('portalNMC')
 // ********************************************************************************************
 //  TREEVIEW
 //*********************************************************************************************
-                $scope.objectCtrlSettings.isTreeView = true;
+                $scope.objectCtrlSettings.isTreeView = false;
                 $scope.data.currentTree = {};
                 $scope.data.newTree = {}
                 

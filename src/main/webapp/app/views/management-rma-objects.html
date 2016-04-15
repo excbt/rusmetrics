@@ -1,7 +1,5 @@
-<div  ng-show="loading" class="nmc-loading">
-    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
-</div>
-<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+<div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
@@ -31,7 +29,7 @@
     </div>
 </div>
 
-<div class="container-fluid" ng-hide="loading">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-3 col-md-3 noPadding paddingRight20" ng-show="objectCtrlSettings.isTreeView == true">                    
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
@@ -122,10 +120,13 @@
         </div>
         <div class="noPadding" 
              ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
+            <div  ng-show="loading" class="nmc-loading">
+                <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+            </div>
             <div class="container-fluid" ng-hide="loading">
                 <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
                     <div class="col-md-3 noPadding">
-                        <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Добавить объект</button>
+                        <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Создать объект</button>
                     </div>
                     <div class="col-md-7"></div>
                     <div class="input-group col-md-4 filter pull-left nmc-search-form">   
@@ -323,11 +324,17 @@
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr>
                                         <td class="col-sm-3">
-                                            <label for="inputName">Наименование</label>
+                                            <label for="inputZpointName">Наименование</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
-                                            <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(zpointSettings.customServiceName)}">
-                                               <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.customServiceName"/>
+                                            <div class="form-group noMarginBottom" 
+                                                 ng-class="{'has-error': emptyString(zpointSettings.customServiceName)}">
+                                               <input class="form-control nmc-text-input-form" 
+                                                      type="text" 
+                                                      id="inputZpointName" 
+                                                      placeholder="Наименование" 
+                                                      size="70" 
+                                                      ng-model="zpointSettings.customServiceName"/>
                                             </div>
                                         </td>
                                     </tr>
@@ -970,11 +977,16 @@
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                <td class="col-sm-3"><label for="inputContObjectName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.fullName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName"/>
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputContObjectName" 
+                                               placeholder="Наименование" 
+                                               ng-model="currentObject.fullName"
+                                               />
                                     </div>
                                 </td>
                             </tr>
@@ -1761,7 +1773,8 @@
                                                type="text" 
                                                id="inputLevelName" 
                                                placeholder="" 
-                                               ng-model="data.currentLevel.objectName"/>
+                                               ng-model="data.currentLevel.objectName"
+                                               />
                                     </div>
                                 </td>
                             </tr>
@@ -1838,7 +1851,8 @@
                                                type="text" 
                                                id="inputTreeName" 
                                                placeholder="" 
-                                               ng-model="data.newTree.objectName"/>
+                                               ng-model="data.newTree.objectName"
+                                               />
                                     </div>
                                 </td>
                             </tr>
@@ -1930,18 +1944,10 @@
     <div ui-tree-handle ng-click="selectNode(item)"
          ng-mouseover = "item.isHover = true"
          ng-mouseleave = "item.isHover = false"
-         ng-class="{'nmc-bg-distinguish': item.isHover || item.isSelected}"
+         ng-class="{'nmc-bg-distinguish': item.isSelected}"
          class="nmc-ui-tree-handle">
-      <i class="btn btn-xs glyphicon"
-         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
-         data-nodrag ng-click="toggle(this)">                                  
-        </i>
-        <span ng-if = "item.type == 'root'">
-              <strong>\</strong>
-        </span>
-      {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
         <div class="btn-group "
-             ng-show="item.isHover && objectCtrlSettings.isObjectMoving != true">
+             ng-show="objectCtrlSettings.isObjectMoving != true">
           <i type="button" 
                   class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
                   data-toggle="dropdown" 
@@ -1958,12 +1964,18 @@
             <li><a href="" ng-click="removeNodeInit(item)">Удалить 
                 <span ng-if="item.type != 'root'">узел</span>
                 <span ng-if="item.type == 'root'">дерево</span></a></li>
-<!--
-            <li ng-if="item.type != 'root'"><a href="" ng-click="removeNode(item)">Удалить узел</a></li>
-            <li ng-if="item.type == 'root'"><a href="" ng-click="removeNode(data.currentTree)">Удалить дерево</a></li>
--->
           </ul>
         </div>
+        <i class="btn btn-xs glyphicon"
+             ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
+             data-nodrag ng-click="toggle(this)">                                  
+        </i>
+        <span ng-if = "item.type == 'root'">
+              <strong>\</strong>
+        </span>
+        <span class="nmc-valign-middle">
+            {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
+        </span>
     </div>
     <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
       <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">

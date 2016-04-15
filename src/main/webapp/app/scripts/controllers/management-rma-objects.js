@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout) {
+.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
+            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
                 $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
@@ -118,6 +118,8 @@ angular.module('portalNMC')
                 
                 var getObjectsData = function(objId){
 //console.log("getObjectsData");
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $scope.loading = true;
                     objectSvc.getRmaPromise().then(performObjectsData);
                 };
                 
@@ -450,8 +452,6 @@ angular.module('portalNMC')
 
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
-                    $scope.loading = true;
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData(e.id);
                     }else{
@@ -888,7 +888,7 @@ angular.module('portalNMC')
                 $scope.addZpoint = function(object){
                     $scope.selectedItem(object);                    
                     $scope.zpointSettings = {};
-                    $scope.getDevices(object, false);
+                    $scope.getDevices(object, false);                    
                 };
                 
                 $scope.getZpointSettings = function(objId, zpointId){
@@ -1860,7 +1860,9 @@ angular.module('portalNMC')
                     if ($scope.objectCtrlSettings.isObjectMoving == true){
                         $scope.data.selectedNodeForMove = angular.copy(item);
                     }else{
-                        $scope.data.selectedNode = angular.copy(item);                    
+                        $scope.data.selectedNode = angular.copy(item); 
+                        $rootScope.$broadcast('objectSvc:requestReloadData');
+                        $scope.loading = true;
                         if (item.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
@@ -1893,7 +1895,9 @@ angular.module('portalNMC')
 //                    
                 ];
                 
-                $scope.loadTree = function(tree, objId){                                 
+                $scope.loadTree = function(tree, objId){
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $scope.loading = true;
                     objectSvc.loadTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
@@ -1916,7 +1920,7 @@ angular.module('portalNMC')
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
                             getObjectsData();
                             return "Object tree array is empty.";
-                        }
+                        }                        
                         $scope.loadTree($scope.data.trees[0]);                        
                     }, errorProtoCallback);
                 };                
@@ -2085,6 +2089,8 @@ angular.module('portalNMC')
 //                    $scope.data.selectedNodeForMove;
                     objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
 //console.log(resp);                        
+                        $rootScope.$broadcast('objectSvc:requestReloadData');
+                        $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
@@ -2111,6 +2117,8 @@ angular.module('portalNMC')
 //console.log(tmpMovingObjectArr);                    
                     objectSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
 //console.log(resp);                        
+                        $rootScope.$broadcast('objectSvc:requestReloadData');
+                        $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
@@ -2142,6 +2150,22 @@ angular.module('portalNMC')
 // ********************************************************************************************
                 //  end TREEVIEW
 //*********************************************************************************************
+                //set focus on first input element when window will be opened                
+                $('#showTreeOptionModal').on('shown.bs.modal', function(){                   
+                    $('#inputTreeName').focus();
+                });
+                
+                $('#treeLevelModal').on('shown.bs.modal', function(){
+                    $('#inputLevelName').focus();
+                });
+                
+                $('#showObjOptionModal').on('shown.bs.modal', function(){
+                    $('#inputContObjectName').focus();
+                });
+                
+                $('#showZpointOptionModal').on('shown.bs.modal', function(){
+                    $('#inputZpointName').focus();
+                });
                 //controller initialization
                 var initCtrl = function(){
                     getRsoOrganizations();

@@ -14,7 +14,7 @@ angular.module('portalNMC')
         controller: function($scope){
             $scope.confirmCode = null;
             $('#deleteWindowModal').on('shown.bs.modal', function(){
-console.log(deleteItemClick);                
+//console.log(deleteItemClick);                
             });
             $('#deleteWindowModal').on('hidden.bs.modal', function(){
                 $scope.confirmCode = null;                              
