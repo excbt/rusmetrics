@@ -97,7 +97,6 @@ angular.module('portalNMC')
                     objectSvc.sortObjectsByFullName($scope.objects);
 
                     if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
-
                         $scope.objectsWithoutFilter = $scope.objects;
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                         tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
@@ -453,7 +452,13 @@ angular.module('portalNMC')
                     successCallback(e, null);
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
-                    getObjectsData(e.id);
+                    if ($scope.objectCtrlSettings.isTreeView == false){
+                        getObjectsData(e.id);
+                    }else{
+                    //if tree is on
+                        $scope.loadTree($scope.data.currentTree, e.id);                    
+                    };
+                    
                 };
                 
                 var errorProtoCallback = function(e){
@@ -1946,10 +1951,10 @@ angular.module('portalNMC')
                 };
                 
                 $scope.newSubItem = function(scope){
-console.log(scope);                    
+//console.log(scope);                    
                     
                     var nodeData = scope.$modelValue;
-console.log(nodeData);                    
+//console.log(nodeData);                    
 //                    $scope.data.currentLevel = {objectName: "", childObjectList: []};
 //                    nodeData.childObjectList.push({                    
 //                        objectName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
@@ -2034,7 +2039,7 @@ console.log(nodeData);
                     };
                     setConfirmCode(true);
                     $scope.deleteHandler = function(delItem){
-console.log(delItem);               
+//console.log(delItem);               
                         if (mainSvc.checkUndefinedNull(delItem)){
                             return "Deleting item is undefined or null."
                         };
@@ -2072,14 +2077,14 @@ console.log(delItem);
                 }
                 
                 $scope.moveToNode = function(){
-console.log($scope.data.treeForMove.movingObjects);                    
-console.log($scope.data.selectedNodeForMove);                    
+//console.log($scope.data.treeForMove.movingObjects);                    
+//console.log($scope.data.selectedNodeForMove);                    
                     //what?
 //                    $scope.data.treeForMove.movingObjects;
                     //Where?
 //                    $scope.data.selectedNodeForMove;
                     objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
-console.log(resp);                        
+//console.log(resp);                        
                         if ($scope.data.selectedNode.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
@@ -2100,12 +2105,12 @@ console.log(resp);
                         $scope.objectCtrlSettings.anySelected = false;
                     };
                     //from?
-                    $scope.data.selectedNode;
-console.log($scope.data.currentTree);
-console.log($scope.data.selectedNode);
-console.log(tmpMovingObjectArr);                    
+//                    $scope.data.selectedNode;
+//console.log($scope.data.currentTree);
+//console.log($scope.data.selectedNode);
+//console.log(tmpMovingObjectArr);                    
                     objectSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
-console.log(resp);                        
+//console.log(resp);                        
                         if ($scope.data.selectedNode.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
