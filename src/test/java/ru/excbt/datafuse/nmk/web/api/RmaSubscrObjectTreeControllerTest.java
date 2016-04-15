@@ -278,15 +278,24 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 			return;
 		}
 
-		Long treeId = treeList.get(0).getId();
+		Long treeId = null;
+		Long treeNodeId = null;
+		for (SubscrObjectTree t : treeList) {
+			treeId = t.getId();
+			String treeContent = _testGetJson(
+					String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d", treeId));
+			SubscrObjectTree tree = fromJSON(new TypeReference<SubscrObjectTree>() {
+			}, treeContent);
 
-		String treeContent = _testGetJson(String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d", treeId));
-		SubscrObjectTree tree = fromJSON(new TypeReference<SubscrObjectTree>() {
-		}, treeContent);
+			treeNodeId = tree.getChildObjectList().size() > 0 ? tree.getChildObjectList().get(0).getId() : null;
 
-		Long treeNodeId = tree.getChildObjectList().size() > 0 ? tree.getChildObjectList().get(0).getId() : null;
+			if (treeNodeId != null) {
+				break;
+			}
 
-		assertNotNull(treeNodeId);
+		}
+
+		assertNotNull("There is no available nodes", treeNodeId);
 
 		String freeContent = _testGetJson(
 				String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/contObjects/free", treeId));
