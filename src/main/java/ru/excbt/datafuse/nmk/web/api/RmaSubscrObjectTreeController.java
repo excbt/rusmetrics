@@ -331,9 +331,9 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(
-			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects",
+			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/add",
 			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> putSubscrObjectTreeContObjects(@PathVariable("objectTreeType") String objectTreeType,
+	public ResponseEntity<?> putSubscrObjectTreeContObjectsAdd(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
 			@RequestBody final List<Long> contObjectIds) {
@@ -381,9 +381,9 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(
-			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects",
-			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteSubscrObjectTreeContObjects(@PathVariable("objectTreeType") String objectTreeType,
+			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/remove",
+			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putSubscrObjectTreeContObjectsRemove(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
 			@RequestBody final List<Long> contObjectIds) {
@@ -424,7 +424,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDeleteBody(action);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**

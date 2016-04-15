@@ -297,6 +297,9 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		String contObjectsUrl = String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/node/%d/contObjects",
 				treeId, treeNodeId);
 
+		String contObjectsUrlAdd = contObjectsUrl + "/add";
+		String contObjectsUrlRemove = contObjectsUrl + "/remove";
+
 		String content = _testGetJson(contObjectsUrl);
 
 		List<ContObject> linkedContObjects = fromJSON(new TypeReference<List<ContObject>>() {
@@ -312,7 +315,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 				contObjectIds.add(contObject.getId());
 			}
 
-			_testUpdateJson(contObjectsUrl, contObjectIds);
+			_testUpdateJson(contObjectsUrlAdd, contObjectIds);
 
 			logger.info("Found {} free contObjects", freeContObjects.size());
 			logger.info("Saved {} contObjects", contObjectIds.size());
@@ -324,7 +327,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 				ContObject contObject = linkedContObjects.get(i);
 				contObjectIds.add(contObject.getId());
 			}
-			_testDeleteJson(contObjectsUrl, contObjectIds);
+			_testUpdateJson(contObjectsUrlRemove, contObjectIds);
 
 			logger.info("Found {} linked contObjects", linkedContObjects.size());
 			logger.info("Deleted {} contObjects", contObjectIds.size());
