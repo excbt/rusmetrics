@@ -212,15 +212,11 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjects(Long subscriberId) {
-		checkNotNull(subscriberId);
-		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
-		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(subscriberId);
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		result.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
+	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
+		checkNotNull(rmaSubscriberId);
+		List<ContObject> result = subscrContObjectRepository.selectContObjects(rmaSubscriberId);
+
+		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
 		return result;
 	}
 
@@ -231,17 +227,15 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long subscriberId, List<Long> contObjectIds) {
-		checkNotNull(subscriberId);
+	public List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long rmaSubscriberId, List<Long> contObjectIds) {
+		checkNotNull(rmaSubscriberId);
 		checkNotNull(contObjectIds);
 
-		List<ContObject> result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId, contObjectIds);
-		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(subscriberId);
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		result.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
+		List<ContObject> result = subscrContObjectRepository.selectContObjectsExcludingIds(rmaSubscriberId,
+				contObjectIds);
+
+		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+
 		return result;
 	}
 
@@ -469,6 +463,23 @@ public class SubscrContObjectService implements SecuredRoles {
 		});
 
 		return resultContObjects;
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param contObjects
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public void processRmaContObjectsHaveSubscr(final Long rmaSubscriberId, final List<ContObject> contObjects) {
+		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(rmaSubscriberId);
+
+		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+		contObjects.forEach(i -> {
+			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+			i.set_haveSubscr(haveSubscr);
+		});
+
 	}
 
 }

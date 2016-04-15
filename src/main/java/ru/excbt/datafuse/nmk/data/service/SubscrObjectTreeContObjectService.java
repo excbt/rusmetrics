@@ -38,6 +38,9 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@PersistenceContext(unitName = "nmk-p")
 	protected EntityManager em;
 
+	@Autowired
+	protected SubscrContObjectService subscrContObjectService;
+
 	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeContObjectService.class);
 
 	/**
@@ -48,6 +51,21 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectContObjects(final Long subscrObjectTreeId) {
 		return subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
+	}
+
+	/**
+	 * 
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectRmaContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+
+		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
+		subscrContObjectService.processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+
+		return result;
+
 	}
 
 	/**

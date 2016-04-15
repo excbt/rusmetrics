@@ -290,7 +290,8 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<ContObject> result = subscrObjectTreeContObjectService.selectContObjects(childSubscrObjectTreeId);
+		List<ContObject> result = subscrObjectTreeContObjectService.selectRmaContObjects(getRmaSubscriberId(),
+				childSubscrObjectTreeId);
 
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
