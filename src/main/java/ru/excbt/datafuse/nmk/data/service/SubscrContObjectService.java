@@ -214,9 +214,9 @@ public class SubscrContObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
 		checkNotNull(rmaSubscriberId);
-		List<ContObject> result = subscrContObjectRepository.selectContObjects(rmaSubscriberId);
-
+		List<ContObject> result = selectSubscriberContObjects(rmaSubscriberId);
 		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+
 		return result;
 	}
 
@@ -231,8 +231,7 @@ public class SubscrContObjectService implements SecuredRoles {
 		checkNotNull(rmaSubscriberId);
 		checkNotNull(contObjectIds);
 
-		List<ContObject> result = subscrContObjectRepository.selectContObjectsExcludingIds(rmaSubscriberId,
-				contObjectIds);
+		List<ContObject> result = selectSubscriberContObjectsExcludingIds(rmaSubscriberId, contObjectIds);
 
 		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
 
