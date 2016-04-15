@@ -318,7 +318,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		checkNotNull(contObjectIds);
 
 		List<ContObject> result = subscrContObjectService
-				.selectSubscriberContObjectsExcludingIds(getCurrentSubscriberId(), contObjectIds);
+				.selectRmaSubscriberContObjectsExcludingIds(getRmaSubscriberId(), contObjectIds);
 
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
