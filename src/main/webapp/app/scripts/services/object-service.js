@@ -428,6 +428,10 @@ angular.module('portalNMC')
             });
         };
                  
+        var loadTreeTemplateItems = function(templateId){
+            return $http.get(rmaTreeTemplatesUrl + '/' +templateId + '/items');
+        };
+                 
         var createTree = function(tree){
             return $http.post(rmaTreesUrl, tree);
         };
@@ -532,6 +536,7 @@ angular.module('portalNMC')
             loading,
             loadTree,            
             loadTrees,
+            loadTreeTemplateItems,
             loadTreeTemplates,
             promise,
             putDeviceMetaDataVzlet,

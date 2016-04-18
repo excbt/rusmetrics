@@ -72,7 +72,7 @@
                                         >                                            
                                         <a href=""
                                            class=""
-                                           ng-click="data.newTree.templateId = treeTemplate.id; createTreeByTemplate(treeTemplate)"
+                                           ng-click="createTreeByTemplate(treeTemplate)"
                                            data-target="#showTreeOptionModal"
                                            data-toggle="modal"
                                            >
@@ -1958,9 +1958,11 @@
              >
           </i>
           <ul class="dropdown-menu noMarginI">
-            <li><a href="" ng-click="data.parentLevel = item; data.currentLevel = {childObjectList: []};" 
+            <li ng-hide="addNodeDisabled(item)"><a href="" ng-click="createNodeInit(item)" 
                    data-target="#treeLevelModal" 
-                   data-toggle="modal">Добавить узел</a></li>                            
+                   data-toggle="modal"
+                   
+                   >Добавить узел</a></li>                            
             <li role="presentation" class="divider"></li>
             <li><a href="" ng-click="removeNodeInit(item)">Удалить 
                 <span ng-if="item.type != 'root'">узел</span>

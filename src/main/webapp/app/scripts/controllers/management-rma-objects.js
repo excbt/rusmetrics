@@ -1876,11 +1876,19 @@ angular.module('portalNMC')
                     objectSvc.loadTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
-                            respTree.childObjectList.unshift(ROOT_NODE);
+                            respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                             $scope.data.currentTree = respTree;
                             respTree.childObjectList[0].isSelected = true;
                             $scope.data.selectedNode = angular.copy(respTree.childObjectList[0]);
                             objectSvc.loadFreeObjectsByTree(tree.id).then(performObjectsData);
+                            if (mainSvc.checkUndefinedNull($scope.data.currentTree.templateId)){
+                                return "Tree is free";
+                            };
+                            objectSvc.loadTreeTemplateItems($scope.data.currentTree.templateId).then(function(resp){
+                                $scope.data.currentTreeTemplateItems = angular.copy(resp.data);
+                                respTree.childObjectList[0].templateId = $scope.data.currentTree.templateId;
+                                respTree.childObjectList[0].templateItemId = $scope.data.currentTree.templateItemId;
+                            }, errorProtoCallback);
 //                            $scope.data.trees.push(respTree);
                         }, errorProtoCallback);
                 };
@@ -1917,12 +1925,21 @@ angular.module('portalNMC')
                     };
                     performNewNode(newNode, parent);
                     // remove temporary root node before update tree
-                    if (angular.isArray($scope.data.currentTree.childObjectList) && ($scope.data.currentTree.childObjectList.length > 0) && ($scope.data.currentTree.childObjectList[0].type == "root")){
+                    if (angular.isArray($scope.data.currentTree.childObjectList) && 
+                        ($scope.data.currentTree.childObjectList.length > 0) && 
+                        ($scope.data.currentTree.childObjectList[0].type == "root"))
+                    {
                         $scope.data.currentTree.childObjectList.shift();
                     };
                     objectSvc.updateTree($scope.data.currentTree).then(function(resp){                      
                         var respTree = resp.data;
-                        respTree.childObjectList.unshift(ROOT_NODE);
+                        respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
+                        if (!mainSvc.checkUndefinedNull(respTree.templateId)){
+                            respTree.childObjectList[0].templateId = respTree.templateId;
+                        };
+                        if (!mainSvc.checkUndefinedNull(respTree.templateItemId)){
+                            respTree.childObjectList[0].templateItemId = respTree.templateItemId;
+                        };
                         var findIndex = -1;                        
                         $scope.data.trees.some(function(tree, index){
                             if (tree.id == respTree.id){
@@ -1939,6 +1956,16 @@ angular.module('portalNMC')
                         }else{
                             $scope.data.parentLevel = findNodeInTree(parent, $scope.data.currentTree);
                             $scope.data.currentLevel = {childObjectList: []};
+                            if (!mainSvc.checkUndefinedNull($scope.data.parentLevel.templateItemId)){
+                                var parentLevel = findTemplateItemById($scope.data.parentLevel.templateItemId);
+                                var currentLevel = findTemplateItemByItemLevel(parentLevel.itemLevel + 1);
+                                if (currentLevel == null){
+                                    return "Template item is no find.";
+                                };
+                                $scope.data.currentLevel.objectName = currentLevel.itemName;
+                                $scope.data.currentLevel.templateId = currentLevel.templateId;
+                                $scope.data.currentLevel.templateItemId = currentLevel.id;
+                            };
                             $('#inputLevelName').focus();
                         };
                         //update tree in array
@@ -1965,9 +1992,15 @@ angular.module('portalNMC')
                         tree.childObjectList.shift();
                     };
                     objectSvc.createTree(tree).then(function(resp){
-                        var tree = angular.copy(resp.data);
-                        tree.childObjectList.unshift(ROOT_NODE);
-                        $scope.data.trees.push(tree);
+                        var createdTree = angular.copy(resp.data);
+                        createdTree.childObjectList.unshift(angular.copy(ROOT_NODE));
+                        if (!mainSvc.checkUndefinedNull(createdTree.templateId)){
+                            createdTree.childObjectList[0].templateId = createdTree.templateId;
+                        };
+                        if (!mainSvc.checkUndefinedNull(createdTree.templateItemId)){
+                            createdTree.childObjectList[0].templateItemId = createdTree.templateItemId;
+                        };
+                        $scope.data.trees.push(createdTree);
                         $('#showTreeOptionModal').modal('hide');
                     }, errorProtoCallback);                    
                 };
@@ -1980,15 +2013,14 @@ angular.module('portalNMC')
                         $scope.data.currentDeleteMessage = node.objectName || node.id;
                     };
                     setConfirmCode(true);
-                    $scope.deleteHandler = function(delItem){           
+                    $scope.deleteHandler = function(delItem){
                         if (mainSvc.checkUndefinedNull(delItem)){
                             return "Deleting item is undefined or null."
                         };
                         if (!mainSvc.checkUndefinedNull(delItem.type) && delItem.type == 'root'){
                             objectSvc.deleteTree($scope.data.currentTree.id).then(function(resp){
                                 loadTrees();
-                            }, errorProtoCallback);
-                            return "Deleting item is tree.";
+                            }, errorProtoCallback);                            
                         }else{
                             objectSvc.deleteTreeNode($scope.data.currentTree.id, delItem.id).then(function(resp){
                                 $scope.loadTree($scope.data.currentTree);
@@ -2042,7 +2074,7 @@ angular.module('portalNMC')
                         }else{
                             objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
                         };
-                    }, errorCallback);
+                    }, errorProtoCallback);
                 };
                 
                 $scope.toggleTreeView = function(){
@@ -2053,6 +2085,89 @@ angular.module('portalNMC')
                     }else{
                     //if tree is on
                         loadTrees();                    
+                    };
+                };
+                
+                $scope.createTreeByTemplate = function(template){
+                    objectSvc.loadTreeTemplateItems(template.id).then(function(resp){
+                        $scope.data.currentTreeTemplateItems = angular.copy(resp.data);
+                        var treeItemLevel = null;
+                        $scope.data.currentTreeTemplateItems.some(function(item){
+                            if(item.itemLevel == 0){
+                                treeItemLevel = item;
+                                return true;
+                            };
+                        });
+                        if (treeItemLevel == null){
+                            return "Incorrect template. itemLevel == 0 is absent.";
+                        };
+                        $scope.data.newTree = {};
+                        $scope.data.newTree.templateId = template.id;
+                        $scope.data.newTree.templateItemId = treeItemLevel.id;
+                        $scope.data.newTree.objectName = treeItemLevel.itemName;
+                        $("#showTreeOptionModal").modal();
+                        
+                    }, errorProtoCallback);
+                };
+                
+                var findTemplateItemById = function(templId){
+                    var result = null;
+                    $scope.data.currentTreeTemplateItems.some(function(item){
+                        if (templId == item.id){
+                            result = item;
+                            return true;
+                        }
+                    });
+                    return result;
+                };
+                
+                var findTemplateItemByItemLevel = function(level){
+                    var result = null;
+                    $scope.data.currentTreeTemplateItems.some(function(item){
+                        if (level == item.itemLevel){
+                            result = item;
+                            return true;
+                        }
+                    });
+                    return result;
+                };
+                
+                $scope.addNodeDisabled = function(curItem){                
+                    if (mainSvc.checkUndefinedNull(curItem.templateItemId)){                    
+                        return false;
+                    };
+                    if (!angular.isArray($scope.data.currentTreeTemplateItems)){               
+                        return true;
+                    };
+                    var currentLevel = findTemplateItemById(curItem.templateItemId);
+//                    $scope.data.currentTreeTemplateItems.some(function(item){
+//                        if (curItem.templateItemId == item.id){
+//                            currentLevel = item.itemLevel;
+//                            return true;
+//                        }
+//                    });
+                    if (currentLevel == null){                                         
+                        return false;
+                    };
+                    if (currentLevel.itemLevel < ($scope.data.currentTreeTemplateItems.length - 1)){                                             
+                        return false;
+                    };              
+                    return true;
+                };
+                
+                $scope.createNodeInit = function(item){
+console.log(item);                    
+                    $scope.data.parentLevel = item;                    
+                    $scope.data.currentLevel = {childObjectList: []};
+                    if (!mainSvc.checkUndefinedNull(item.templateItemId)){
+                        var parentLevel = findTemplateItemById(item.templateItemId);
+                        var currentLevel = findTemplateItemByItemLevel(parentLevel.itemLevel + 1);
+                        if (currentLevel == null){
+                            return "Template item is no find.";
+                        };
+                        $scope.data.currentLevel.objectName = currentLevel.itemName;
+                        $scope.data.currentLevel.templateId = currentLevel.templateId;
+                        $scope.data.currentLevel.templateItemId = currentLevel.id;
                     };
                 };
                 
