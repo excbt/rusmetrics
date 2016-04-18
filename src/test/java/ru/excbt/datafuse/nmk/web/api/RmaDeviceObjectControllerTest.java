@@ -1,10 +1,14 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
@@ -36,17 +40,26 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	@Ignore
 	public void testDeviceObjectUpdate() throws Exception {
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
-		deviceObject.setContObject(null);
-		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
 		String url = apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
+
+		String deviceObjectContent = _testGetJson(url);
+
+		DeviceObject deviceObject = fromJSON(new TypeReference<DeviceObject>() {
+		}, deviceObjectContent);
+
+		deviceObject.setContObject(null);
+		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
 
 		deviceObject.getEditDataSourceInfo().setSubscrDataSourceId(65523603L);
 		deviceObject.getEditDataSourceInfo().setSubscrDataSourceAddr("РУС Addr 222:" + System.currentTimeMillis());
 		deviceObject.getEditDataSourceInfo().setDataSourceTable("РУС Table 222:" + System.currentTimeMillis());
 		deviceObject.getEditDataSourceInfo().setDataSourceTable1h("РУС Table1h 222:" + System.currentTimeMillis());
 		deviceObject.getEditDataSourceInfo().setDataSourceTable24h("РУС Table24h 222:" + System.currentTimeMillis());
+
+		assertNotNull(deviceObject.getDeviceLoginInfo());
+		deviceObject.getDeviceLoginInfo().setDeviceLogin("login_12345");
+		deviceObject.getDeviceLoginInfo().setDevicePassword("pass_12345");
 
 		RequestExtraInitializer paramInit = (builder) -> {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
@@ -56,6 +69,29 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 			builder.param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis());
 		};
 		_testUpdateJson(url, deviceObject, paramInit);
+	}
+
+	@Test
+	//@Ignore
+	public void testDeviceObjectLoginInfoUpdate() throws Exception {
+		String url = apiRmaUrl(
+				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
+
+		String deviceObjectContent = _testGetJson(url);
+
+		DeviceObject deviceObject = fromJSON(new TypeReference<DeviceObject>() {
+		}, deviceObjectContent);
+
+		assertNotNull(deviceObject);
+
+		assertNotNull(deviceObject.getDeviceLoginInfo());
+		//deviceObject.set
+		deviceObject.getDeviceLoginInfo().setDeviceLogin("login_12345");
+		deviceObject.getDeviceLoginInfo().setDevicePassword("pass_" + System.currentTimeMillis());
+
+		deviceObject.getEditDataSourceInfo().setSubscrDataSourceId(65523603L);
+
+		_testUpdateJson(url, deviceObject);
 	}
 
 	/**
@@ -178,6 +214,18 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	public void testDeviceObjectDataSourceGet() throws Exception {
 		//65836845
 		_testGetJson(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectList() throws Exception {
+		String url = apiRmaUrl(String.format("/contObjects/%d/deviceObjects", DEV_RMA_CONT_OBJECT_ID));
+
+		_testGetJson(url);
+
 	}
 
 }

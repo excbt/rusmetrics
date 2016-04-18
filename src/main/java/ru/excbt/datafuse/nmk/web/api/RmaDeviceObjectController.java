@@ -25,13 +25,13 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
  * Контроллер для работы с приборами для РМА
@@ -46,6 +46,28 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectController.class);
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Override
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
+		for (DeviceObject deviceObject : deviceObjects) {
+			deviceObject.shareDeviceLoginInfo();
+		}
+
+		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
+	}
 
 	/**
 	 * 
@@ -90,10 +112,13 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setIsActive(true);
 		}
 
+		deviceObject.saveDeviceObjectInfo();
+
 		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
 			@Override
 			public void process() {
 				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
+				result.shareDeviceLoginInfo();
 				setResultEntity(result);
 			}
 		};
@@ -172,6 +197,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
 			deviceObjectDataSource.setIsActive(true);
 		}
+
+		deviceObject.saveDeviceObjectInfo();
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
 
