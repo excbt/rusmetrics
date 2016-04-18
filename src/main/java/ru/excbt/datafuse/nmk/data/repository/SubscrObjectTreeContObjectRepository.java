@@ -16,9 +16,8 @@ public interface SubscrObjectTreeContObjectRepository extends CrudRepository<Sub
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
-	@Query("SELECT co FROM ContObject co WHERE co.id IN "
-			+ " (SELECT t.contObjectId FROM SubscrObjectTreeContObject t WHERE t.subscrObjectTreeId = :subscrObjectTreeId) "
-			+ " ORDER BY co.fullAddress, co.id")
+	@Query("SELECT co FROM ContObject co WHERE co.id IN " + " (SELECT t.contObjectId FROM SubscrObjectTreeContObject t "
+			+ " WHERE t.subscrObjectTreeId = :subscrObjectTreeId) " + " ORDER BY co.fullAddress, co.id")
 	public List<ContObject> selectContObjects(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
 
 	/**
@@ -26,7 +25,8 @@ public interface SubscrObjectTreeContObjectRepository extends CrudRepository<Sub
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
-	@Query("SELECT t.contObjectId FROM SubscrObjectTreeContObject t WHERE t.subscrObjectTreeId = :subscrObjectTreeId")
+	@Query("SELECT t.contObjectId FROM SubscrObjectTreeContObject t "
+			+ " WHERE t.subscrObjectTreeId = :subscrObjectTreeId")
 	public List<Long> selectContObjectIds(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
 
 	/**

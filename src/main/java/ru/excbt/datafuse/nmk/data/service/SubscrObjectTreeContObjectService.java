@@ -29,6 +29,8 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
+	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeContObjectService.class);
+
 	@Autowired
 	private SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository;
 
@@ -41,26 +43,43 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeContObjectService.class);
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param subscrObjectTreeId
+	 */
+	private void checkValidRma(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+		checkNotNull(rmaSubscriberId);
+		checkNotNull(subscrObjectTreeId);
+		if (!rmaSubscriberId.equals(subscrObjectTreeService.selectRmaSubscriberId(subscrObjectTreeId))) {
+			throw new PersistenceException(
+					String.format("SubscrObjectTree (id=%d) is not valid for rma", subscrObjectTreeId));
+		}
+		;
+
+	}
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectContObjects(final Long subscrObjectTreeId) {
+	public List<ContObject> selectTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 	}
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
-
+	public List<ContObject> selectRmaTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 		subscrContObjectService.processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
 
@@ -70,22 +89,28 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectContObjectIds(final Long subscrObjectTreeId) {
+	public List<Long> selectTreeContObjectIds(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjectIds(subscrObjectTreeId);
 	}
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void saveContObjects(final Long subscrObjectTreeId, final List<Long> contObjectIds) {
+	public void saveTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId,
+			final List<Long> contObjectIds) {
+
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -118,12 +143,16 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void addContObjects(final Long subscrObjectTreeId, final List<Long> contObjectIds) {
+	public void addTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId,
+			final List<Long> contObjectIds) {
+
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 
 		boolean isLinkDeny = subscrObjectTreeService.selectIsLinkDeny(subscrObjectTreeId);
 
@@ -154,12 +183,16 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteContObjects(final Long subscrObjectTreeId, final List<Long> contObjectIds) {
+	public void deleteTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId,
+			final List<Long> contObjectIds) {
+
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -177,13 +210,14 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteContObjectsAll(final Long subscrObjectTreeId) {
+	public void deleteTreeContObjectsAll(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
 
-		checkNotNull(subscrObjectTreeId);
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -193,11 +227,14 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectContObjectIdAllLevels(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+	public List<Long> selectRmaTreeContObjectIdAllLevels(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+
+		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 
 		List<Long> resultList = new ArrayList<>();
 

@@ -24,7 +24,7 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testGetContObjectIds() throws Exception {
-		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectContObjectIdAllLevels(64166466L, 512111663L);
+		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectRmaTreeContObjectIdAllLevels(64166466L, 512111663L);
 		assertNotNull(contObjectIds);
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(64166466L,

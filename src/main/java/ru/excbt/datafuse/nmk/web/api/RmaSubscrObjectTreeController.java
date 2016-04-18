@@ -225,7 +225,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				subscrObjectTreeService.deleteRootSubscrObjectTree(rootSubscrObjectTreeId);
+				subscrObjectTreeService.deleteRootSubscrObjectTree(getRmaSubscriberId(), rootSubscrObjectTreeId);
 			}
 		};
 
@@ -262,7 +262,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				subscrObjectTreeService.deleteChildSubscrObjectTreeNode(rootSubscrObjectTreeId,
+				subscrObjectTreeService.deleteChildSubscrObjectTreeNode(getRmaSubscriberId(), rootSubscrObjectTreeId,
 						childSubscrObjectTreeId);
 			}
 		};
@@ -290,7 +290,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<ContObject> result = subscrObjectTreeContObjectService.selectRmaContObjects(getRmaSubscriberId(),
+		List<ContObject> result = subscrObjectTreeContObjectService.selectRmaTreeContObjects(getRmaSubscriberId(),
 				childSubscrObjectTreeId);
 
 		return responseOK(ObjectFilters.deletedFilter(result));
@@ -313,8 +313,8 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectContObjectIdAllLevels(getRmaSubscriberId(),
-				rootSubscrObjectTreeId);
+		List<Long> contObjectIds = subscrObjectTreeContObjectService
+				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
 		checkNotNull(contObjectIds);
 
 		List<ContObject> result = subscrContObjectService
@@ -353,7 +353,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		}
 
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
-				.selectContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
 			if (existsingContObjectIds.contains(id)) {
@@ -365,8 +365,10 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {
-				subscrObjectTreeContObjectService.addContObjects(childSubscrObjectTreeId, contObjectIds);
-				return subscrObjectTreeContObjectService.selectContObjects(childSubscrObjectTreeId);
+				subscrObjectTreeContObjectService.addTreeContObjects(getRmaSubscriberId(), childSubscrObjectTreeId,
+						contObjectIds);
+				return subscrObjectTreeContObjectService.selectTreeContObjects(getRmaSubscriberId(),
+						childSubscrObjectTreeId);
 			}
 		};
 
@@ -408,7 +410,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		}
 
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
-				.selectContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
 			if (!existsingContObjectIds.contains(id)) {
@@ -420,8 +422,10 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {
-				subscrObjectTreeContObjectService.deleteContObjects(childSubscrObjectTreeId, contObjectIds);
-				return subscrObjectTreeContObjectService.selectContObjects(childSubscrObjectTreeId);
+				subscrObjectTreeContObjectService.deleteTreeContObjects(getRmaSubscriberId(), childSubscrObjectTreeId,
+						contObjectIds);
+				return subscrObjectTreeContObjectService.selectTreeContObjects(getRmaSubscriberId(),
+						childSubscrObjectTreeId);
 			}
 		};
 

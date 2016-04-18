@@ -383,7 +383,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteRootSubscrObjectTree(Long subscrObjectTreeId) {
+	public void deleteRootSubscrObjectTree(final Long rmaSubscriberId, Long subscrObjectTreeId) {
 		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
 		if (node.getParent() != null) {
 			throw new PersistenceException(
@@ -392,7 +392,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		}
 		checkNotNull(node);
 		//subscrObjectTreeRepository.save(_softDeleteSubscrObjectTree(node));
-		_deleteTreeContObjects(node);
+		_deleteTreeContObjects(rmaSubscriberId, node);
 		_deleteTreeNode(node);
 
 	}
@@ -403,7 +403,8 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteChildSubscrObjectTreeNode(Long subscrObjectTreeId, Long childSubscrObjectTreeId) {
+	public void deleteChildSubscrObjectTreeNode(final Long rmaSubscriberId, Long subscrObjectTreeId,
+			Long childSubscrObjectTreeId) {
 		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
 		checkNotNull(node);
 
@@ -416,7 +417,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 
 		logger.info("Found child node {}", childToDelete.getId());
 
-		_deleteTreeContObjects(childToDelete);
+		_deleteTreeContObjects(rmaSubscriberId, childToDelete);
 		_deleteTreeNode(childToDelete);
 	}
 
@@ -444,13 +445,13 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 * @param node
 	 * @return
 	 */
-	private SubscrObjectTree _deleteTreeContObjects(final SubscrObjectTree node) {
+	private SubscrObjectTree _deleteTreeContObjects(final Long rmaSubscriberId, final SubscrObjectTree node) {
 		checkNotNull(node);
 		TreeNodeOperator operator = (i) -> {
 			if (i == null || node.getId() == null) {
 				return;
 			}
-			subscrObjectTreeContObjectService.deleteContObjectsAll(node.getId());
+			subscrObjectTreeContObjectService.deleteTreeContObjectsAll(rmaSubscriberId, node.getId());
 		};
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
