@@ -120,7 +120,7 @@ public class SubscrApiController extends WebApiController {
 	protected boolean canAccessContZPoint(Long contZPointId) {
 		checkNotNull(contZPointId);
 		Long[] contObjectIds = new Long[] { contZPointId };
-		return canAccessContObject(contObjectIds);
+		return canAccessContZPoint(contObjectIds);
 	}
 
 	/**

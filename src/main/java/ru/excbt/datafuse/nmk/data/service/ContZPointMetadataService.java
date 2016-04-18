@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +26,10 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContZPointMetadataService {
+public class ContZPointMetadataService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointMetadataService.class);
 
@@ -289,6 +291,7 @@ public class ContZPointMetadataService {
 	 * @param deviceObjectId
 	 * @return
 	 */
+	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public int deleteOtherContZPointMetadata(Long contZPointId, Long deviceObjectId) {
 		return contZPointMetadataRepository.deleteOtherContZPointMetadata(contZPointId, deviceObjectId);
@@ -299,6 +302,7 @@ public class ContZPointMetadataService {
 	 * @param entity
 	 * @return
 	 */
+	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<ContZPointMetadata> saveContZPointMetadata(List<ContZPointMetadata> entityList, Long contZPointId) {
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
