@@ -318,10 +318,29 @@ angular.module('portalNMC')
     
     ///////////////// end checkers
     
+    // Sort object array by some string field
+    var sortItemsBy = function(itemArray, sortField){
+        if (!angular.isArray(itemArray)){
+            return "Input value is no array.";
+        };
+        if (checkUndefinedNull(sortField)){
+            return "Field for sort is undefined or null.";
+        };
+        itemArray.sort(function(firstItem, secondItem){
+            if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
+                return 1;
+            };
+            if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
+                return -1;
+            };
+            return 0;
+        });
+    };
+    
     // Sort organizations by organizationName
     var sortOrganizationsByName = function(orgArr){
         if (!angular.isArray(orgArr)){
-            return "Param is not array.";
+            return "Param is no array.";
         };
         orgArr.sort(function(a, b){
             if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
@@ -489,7 +508,8 @@ angular.module('portalNMC')
         isSystemuser,
         setMonitorMapSettings,
         setObjectMapSettings,
-        sortOrganizationsByName,
+        sortItemsBy,
+        sortOrganizationsByName,        
         strDateToUTC
     };
 });

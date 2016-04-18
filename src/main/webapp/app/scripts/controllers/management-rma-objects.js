@@ -1830,27 +1830,24 @@ angular.module('portalNMC')
                         };
                     });
                     return result;
-                };
+                };                
                 
                 $scope.findNodeInTree = function(node, tree){//wrapper for testing
                     return findNodeInTree(node, tree);
                 };
                 
-                $scope.selectNode = function(item){
-//console.log($scope.objectCtrlSettings.isObjectMoving);                    
+                $scope.selectNode = function(item){                    
                     var treeForSearch = $scope.data.currentTree;
                     var selectedNode = $scope.data.selectedNode;
                     if ($scope.objectCtrlSettings.isObjectMoving == true){
                         treeForSearch = $scope.data.treeForMove;
                         selectedNode = $scope.data.selectedNodeForMove;
                     };
-                   
-//console.log(item);                    
+                    if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
+                        return ;
+                    };             
                     if (!mainSvc.checkUndefinedNull(selectedNode)){                        
-//                        $scope.data.selectedNode.isSelected = false;
                         var preNode = findNodeInTree(selectedNode, treeForSearch);
-//console.log(preNode);
-//console.log($scope.data.selectedNode);
                         if (!mainSvc.checkUndefinedNull(preNode)){
                             preNode.isSelected = false;
                         }
@@ -1861,7 +1858,7 @@ angular.module('portalNMC')
                         $scope.data.selectedNodeForMove = angular.copy(item);
                     }else{
                         $scope.data.selectedNode = angular.copy(item); 
-                        $rootScope.$broadcast('objectSvc:requestReloadData');
+//                        $rootScope.$broadcast('objectSvc:requestReloadData');
                         $scope.loading = true;
                         if (item.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
@@ -1871,32 +1868,10 @@ angular.module('portalNMC')
                     };                    
                 };
                 
-                $scope.data.trees = [
-//                    {
-//                        id: 1,
-//                        objectName: "Свободное дерево",
-//                        childObjectList: [
-//                            {
-//                                objectName: "",
-//                                type: "root",
-//                                childObjectList: []
-//                            }
-//                        ]
-//                    },{
-//                        id: 2,
-//                        objectName: "Фиксированное дерево",
-//                        childObjectList: [{
-//                                objectName: "",
-//                                type: "root",
-//                                childObjectList: []
-//                            }
-//                        ]
-//                    }
-//                    
-                ];
+                $scope.data.trees = [];
                 
                 $scope.loadTree = function(tree, objId){
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
+//                    $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     objectSvc.loadTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
@@ -1910,12 +1885,9 @@ angular.module('portalNMC')
                         }, errorProtoCallback);
                 };
                 
-//                objectSvc.loadTrees().then(function(resp){
-//                    $scope.data.trees = angular.copy(resp.data);
-//                },errorProtoCallback);
-                
                 var loadTrees = function(){
                     objectSvc.loadTrees().then(function(resp){
+                        mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
                             getObjectsData();
@@ -1925,23 +1897,7 @@ angular.module('portalNMC')
                     }, errorProtoCallback);
                 };                
                 
-                
-//                var getTrees = function(){
-//                    var treeIds = [
-//                        512112776,
-//                        512112791
-//                    ];
-//                    for (var i = 0; i < treeIds.length; i++){
-//                        objectSvc.loadTree(treeIds[i]).then(function(resp){
-//                            var respTree = angular.copy(resp.data);
-//                            respTree.childObjectList.unshift(ROOT_NODE);
-//                            $scope.data.trees.push(respTree);
-//                        }, errorProtoCallback);
-//                    };
-//                };
-//                getTrees();
-                
-                var performNewNode = function(newNode, parent){                   
+                var performNewNode = function(newNode, parent){
                     var trueParentRoot = null;
                     if (parent.type == 'root'){
                         trueParentRoot = $scope.data.currentTree;
@@ -1951,22 +1907,10 @@ angular.module('portalNMC')
                     if (mainSvc.checkUndefinedNull(trueParentRoot) || !angular.isArray(trueParentRoot.childObjectList)){
                         return "Parent is incorrect node!"
                     };
-                    trueParentRoot.childObjectList.push(newNode);
+                    trueParentRoot.childObjectList.push(newNode);                 
                 };
                 
-                $scope.newSubItem = function(scope){
-//console.log(scope);                    
-                    
-                    var nodeData = scope.$modelValue;
-//console.log(nodeData);                    
-//                    $scope.data.currentLevel = {objectName: "", childObjectList: []};
-//                    nodeData.childObjectList.push({                    
-//                        objectName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
-//                        childObjectList: []
-//                    });
-                };
-                
-                $scope.saveNode = function(newNode, parent){
+                $scope.saveNode = function(newNode, parent, anotherNodeFlag){
                     var isCheckTree = checkTree(newNode);      
                     if (isCheckTree == false){
                         return "Node is no correct!";
@@ -1976,13 +1920,10 @@ angular.module('portalNMC')
                     if (angular.isArray($scope.data.currentTree.childObjectList) && ($scope.data.currentTree.childObjectList.length > 0) && ($scope.data.currentTree.childObjectList[0].type == "root")){
                         $scope.data.currentTree.childObjectList.shift();
                     };
-//console.log($scope.data.currentTree);                    
-                    objectSvc.updateTree($scope.data.currentTree).then(function(resp){
-//console.log(resp);                        
+                    objectSvc.updateTree($scope.data.currentTree).then(function(resp){                      
                         var respTree = resp.data;
                         respTree.childObjectList.unshift(ROOT_NODE);
-                        var findIndex = -1;
-                        $('#treeLevelModal').modal('hide');
+                        var findIndex = -1;                        
                         $scope.data.trees.some(function(tree, index){
                             if (tree.id == respTree.id){
                                 findIndex = index;
@@ -1993,14 +1934,16 @@ angular.module('portalNMC')
                             $scope.data.trees[findIndex] = respTree;
                             $scope.data.currentTree = respTree;
                         };
+                        if (mainSvc.checkUndefinedNull(anotherNodeFlag) || anotherNodeFlag != true){
+                            $('#treeLevelModal').modal('hide');
+                        }else{
+                            $scope.data.parentLevel = findNodeInTree(parent, $scope.data.currentTree);
+                            $scope.data.currentLevel = {childObjectList: []};
+                            $('#inputLevelName').focus();
+                        };
                         //update tree in array
                     }, errorProtoCallback);
                     
-                };
-                
-                $scope.saveAndCreateNextNode = function(newNode, parent){
-                    performNewNode(newNode, parent);
-                    $scope.data.currentLevel = {parent: parent, childObjectList: []};                    
                 };
                 
                 var checkTree = function(tree){                   
@@ -2017,11 +1960,6 @@ angular.module('portalNMC')
                     if (isCheckTree == false){
                         return "Tree is no correct!";
                     };
-//                    tree.childObjectList = [{
-//                                objectName: "",
-//                                type: "root",
-//                                childObjectList: []
-//                            }];
                         // remove temporary root node
                     if (angular.isArray(tree.childObjectList) && (tree.childObjectList.length > 0) && (tree.childObjectList[0].type == "root")){
                         tree.childObjectList.shift();
@@ -2042,17 +1980,13 @@ angular.module('portalNMC')
                         $scope.data.currentDeleteMessage = node.objectName || node.id;
                     };
                     setConfirmCode(true);
-                    $scope.deleteHandler = function(delItem){
-//console.log(delItem);               
+                    $scope.deleteHandler = function(delItem){           
                         if (mainSvc.checkUndefinedNull(delItem)){
                             return "Deleting item is undefined or null."
                         };
                         if (!mainSvc.checkUndefinedNull(delItem.type) && delItem.type == 'root'){
                             objectSvc.deleteTree($scope.data.currentTree.id).then(function(resp){
                                 loadTrees();
-//                                $scope.data.currentTree = {};
-                                
-//                                $scope.messages.treeMenuHeader = 'Выберете дерево';
                             }, errorProtoCallback);
                             return "Deleting item is tree.";
                         }else{
@@ -2081,15 +2015,7 @@ angular.module('portalNMC')
                 }
                 
                 $scope.moveToNode = function(){
-//console.log($scope.data.treeForMove.movingObjects);                    
-//console.log($scope.data.selectedNodeForMove);                    
-                    //what?
-//                    $scope.data.treeForMove.movingObjects;
-                    //Where?
-//                    $scope.data.selectedNodeForMove;
                     objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
-//console.log(resp);                        
-                        $rootScope.$broadcast('objectSvc:requestReloadData');
                         $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
@@ -2101,7 +2027,6 @@ angular.module('portalNMC')
                 };
                 
                 $scope.releaseFromNode = function(object){
-                    //what?
                     var tmpMovingObjectArr = [];
                     if (!mainSvc.checkUndefinedNull(object)){
                         $scope.selectedItem(object);
@@ -2109,15 +2034,8 @@ angular.module('portalNMC')
                     }else{
                         tmpMovingObjectArr = prepareObjectsIdsArray();                        
                         $scope.objectCtrlSettings.anySelected = false;
-                    };
-                    //from?
-//                    $scope.data.selectedNode;
-//console.log($scope.data.currentTree);
-//console.log($scope.data.selectedNode);
-//console.log(tmpMovingObjectArr);                    
+                    };                   
                     objectSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
-//console.log(resp);                        
-                        $rootScope.$broadcast('objectSvc:requestReloadData');
                         $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
