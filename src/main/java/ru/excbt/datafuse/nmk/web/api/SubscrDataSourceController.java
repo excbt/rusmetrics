@@ -21,12 +21,12 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -54,6 +54,17 @@ public class SubscrDataSourceController extends SubscrApiController {
 	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSources() {
 		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getCurrentSubscriberId());
+		return responseOK(ObjectFilters.deletedFilter(result));
+	}
+
+	/**
+	 * 
+	 * @param subscrDataSourceId
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDataSource(@PathVariable("dataSourceId") Long dataSourceId) {
+		SubscrDataSource result = subscrDataSourceService.findOne(dataSourceId);
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 

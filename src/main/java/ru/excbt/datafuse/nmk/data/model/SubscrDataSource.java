@@ -88,6 +88,21 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 	@Transient
 	private Boolean _isAnotherSubscriber;
 
+	@Column(name = "raw_timeout")
+	private Integer rawTimeout;
+
+	@Column(name = "raw_sleep_time")
+	private Integer rawSleepTime;
+
+	@Column(name = "raw_resend_attempts")
+	private Integer rawResendAttempts;
+
+	@Column(name = "raw_reconnect_attempts")
+	private Integer rawReconnectAttempts;
+
+	@Column(name = "raw_reconnect_timeout")
+	private Integer rawReconnectTimeout;
+
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}
@@ -224,6 +239,46 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 
 	public void set_isAnotherSubscriber(Boolean _isAnotherSubscriber) {
 		this._isAnotherSubscriber = _isAnotherSubscriber;
+	}
+
+	public Integer getRawTimeout() {
+		return rawTimeout;
+	}
+
+	public void setRawTimeout(Integer rawTimeout) {
+		this.rawTimeout = rawTimeout;
+	}
+
+	public Integer getRawSleepTime() {
+		return rawSleepTime;
+	}
+
+	public void setRawSleepTime(Integer rawSleepTime) {
+		this.rawSleepTime = rawSleepTime;
+	}
+
+	public Integer getRawResendAttempts() {
+		return rawResendAttempts;
+	}
+
+	public void setRawResendAttempts(Integer rawResendAttempts) {
+		this.rawResendAttempts = rawResendAttempts;
+	}
+
+	public Integer getRawReconnectAttempts() {
+		return rawReconnectAttempts;
+	}
+
+	public void setRawReconnectAttempts(Integer rawReconnectAttempts) {
+		this.rawReconnectAttempts = rawReconnectAttempts;
+	}
+
+	public Integer getRawReconnectTimeout() {
+		return rawReconnectTimeout;
+	}
+
+	public void setRawReconnectTimeout(Integer rawReconnectTimeout) {
+		this.rawReconnectTimeout = rawReconnectTimeout;
 	}
 
 }
