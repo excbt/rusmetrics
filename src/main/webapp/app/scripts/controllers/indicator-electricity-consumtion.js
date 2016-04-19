@@ -194,7 +194,11 @@ angular.module('portalNMC')
             };            
                     //work with fractional part
             //search the shortest fractional part
-            $scope.tableDef.columns.forEach(function(element, index, array){            
+            $scope.tableDef.columns.forEach(function(element, index, array){
+                //reset element style settings
+                element.diffBgColor = "aquamarine";
+                element.title = "";
+                
                 var columnName = element.fieldName;                
                 if (angular.isUndefined(respData.firstDataAbs) 
                     || angular.isUndefined(respData.lastDataAbs) 
@@ -256,9 +260,7 @@ angular.module('portalNMC')
                     element.diffBgColor = "#FF7171";
                     element.title = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
                     return;
-                };
-                element.diffBgColor = "aquamarine";
-                element.title = "";   
+                };  
             });                        
         }, function(e){
             console.log(e);
