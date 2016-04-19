@@ -367,7 +367,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			public List<ContObject> processAndReturnResult() {
 				subscrObjectTreeContObjectService.addTreeContObjects(getRmaSubscriberId(), childSubscrObjectTreeId,
 						contObjectIds);
-				return subscrObjectTreeContObjectService.selectTreeContObjects(getRmaSubscriberId(),
+				return subscrObjectTreeContObjectService.selectRmaTreeContObjects(getRmaSubscriberId(),
 						childSubscrObjectTreeId);
 			}
 		};
