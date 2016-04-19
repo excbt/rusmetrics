@@ -177,9 +177,9 @@ angular.module('portalNMC')
                 $scope.bList = true;//angular.fromJson($attrs.blist) || true; //Признак того, что объекты выводятся только для просмотра        
                 //zpoint column names
                 $scope.oldColumns = [
-                        {"name":"zpointName", "header" : "Наименование", "class":"col-md-5"},
-                        {"name":"zpointModel", "header" : "Модель", "class":"col-md-2"},
-                        {"name":"zpointNumber", "header" : "Номер", "class":"col-md-2"},
+                        {"name":"zpointName", "header" : "Наименование", "class":"col-xs-5 col-md-5"},
+                        {"name":"zpointModel", "header" : "Модель", "class":"col-xs-2 col-md-2"},
+                        {"name":"zpointNumber", "header" : "Номер", "class":"col-xs-2 col-md-2"},
 //                        {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
                     ];//angular.fromJson($attrs.zpointcolumns);
                 // Эталонный интервал
@@ -378,7 +378,7 @@ angular.module('portalNMC')
                 
                 var successCallbackUpdateObject = function(e){ 
                     $rootScope.$broadcast('objectSvc:requestReloadData');
-//console.log(e);
+console.log(e);
 //console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
                                         //update zpoints info
@@ -578,7 +578,7 @@ angular.module('portalNMC')
 			        $scope.currentObject = curObject;                    
 			    };
                 
-                $scope.selectedObject = function(objId){
+                $scope.selectedObject = function(objId, isLightForm){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
                         $scope.currentObject = resp.data;
@@ -586,6 +586,9 @@ angular.module('portalNMC')
                         if (angular.isDefined($scope.currentObject._activeContManagement) && 
                             ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
+                        };
+                        if (!mainSvc.checkUndefinedNull(isLightForm)){
+                            $scope.currentObject.isLightForm = isLightForm;
                         };
                         checkGeo();
                     }, function(error){
@@ -1347,6 +1350,7 @@ angular.module('portalNMC')
                     checkGeo();
                     $('#showObjOptionModal').modal();
                     $('#showObjOptionModal').css("z-index", "1041");
+console.log($scope.currentObject);                    
                 };
                 
 //                work with object devices
@@ -1702,7 +1706,7 @@ angular.module('portalNMC')
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
                     $('#inputEXCode').inputmask();
-                    $("#inputAddress").suggestions({
+                    $("#inputObjAddress").suggestions({
                         serviceUrl: "https://dadata.ru/api/v2",
                         token: "f9879c8518e9c9e794ff06a6e81eebff263f97d5",
                         type: "ADDRESS",
@@ -1725,7 +1729,7 @@ angular.module('portalNMC')
                             // $scope.$apply();
                         }
                     });
-                    $("#inputAddress").change(function(){
+                    $("#inputObjAddress").change(function(){
                         $scope.currentSug = null;
                         $scope.currentObject.isAddressAuto = false;
                         $scope.currentObject.isValidGeoPos = false;
@@ -1743,6 +1747,7 @@ angular.module('portalNMC')
                 
                 $('#showObjOptionModal').on('hidden.bs.modal', function(){
                     $scope.currentObject.isSaving = false;
+                    $scope.currentSug = null;
                 });
                 
 // *****************************************************************************************
@@ -1816,24 +1821,11 @@ angular.module('portalNMC')
                 $scope.data.newTree = {};
                 
                 var findNodeInTree = function(node, tree){
-                    var result = null;
-                    if (!angular.isArray(tree.childObjectList)){
-                        return result;
-                    };
-                    tree.childObjectList.some(function(curNode){
-                        if (node.id == curNode.id && node.objectName == curNode.objectName){
-                            result = curNode;
-                            return true;
-                        }else{
-                            result = findNodeInTree(node, curNode);
-                            return result != null;
-                        };
-                    });
-                    return result;
-                };                
+                    return mainSvc.findNodeInTree(node, tree);
+                };
                 
                 $scope.findNodeInTree = function(node, tree){//wrapper for testing
-                    return findNodeInTree(node, tree);
+                    return mainSvc.findNodeInTree(node, tree);
                 };
                 
                 $scope.selectNode = function(item){                    
@@ -1841,6 +1833,11 @@ angular.module('portalNMC')
                     var selectedNode = $scope.data.selectedNode;
                     if ($scope.objectCtrlSettings.isObjectMoving == true){
                         treeForSearch = $scope.data.treeForMove;
+                        if (mainSvc.checkUndefinedNull($scope.data.selectedNodeForMove)){
+                            item.isSelected = true;                    
+                            $scope.data.selectedNodeForMove = angular.copy(item);
+                            return ;
+                        };
                         selectedNode = $scope.data.selectedNodeForMove;
                     };
                     if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
@@ -1898,6 +1895,7 @@ angular.module('portalNMC')
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
+                            $scope.messages.treeMenuHeader = "Выберете дерево";
                             getObjectsData();
                             return "Object tree array is empty.";
                         }                        
@@ -2156,7 +2154,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.createNodeInit = function(item){
-console.log(item);                    
+//console.log(item);                    
                     $scope.data.parentLevel = item;                    
                     $scope.data.currentLevel = {childObjectList: []};
                     if (!mainSvc.checkUndefinedNull(item.templateItemId)){

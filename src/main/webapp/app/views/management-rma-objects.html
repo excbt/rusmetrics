@@ -35,7 +35,7 @@
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
                 <div class="col-xs-6 col-md-6">
                     <div class="btn-group">
-                          <button ng-init="messages.treeMenuHeader = 'Выберете дерево'"
+                          <button 
                                   title="Действия над объектом" 
                              type="button" 
                              class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
@@ -254,7 +254,7 @@
                                           <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                                             </i>
                                           <ul class="dropdown-menu">
-                                            <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
+                                            <li><a href="" ng-click="selectedObject(object.id, false)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
                                             <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>            
                                             <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
                                             <li ng-if="data.selectedNode.type == 'root'"><a href="" 
@@ -1002,17 +1002,17 @@
                                 <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
                                 </td>
                             </tr>
-                            <tr ng-if="currentObject.isLightForm == false">
+                            <tr ng-show="currentObject.isLightForm == false">
                                 <td class="col-sm-3">
-                                    <label for="inputAddress">Адрес</label>
+                                    <label for="inputObjAddress">Адрес</label>
 
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputObjAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
                                     <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
                                         <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
                                         </small>
-                                        <small><img ng-src="{{'../app/images/geo-state-'+currentObject.geoState+'.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
+                                        <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
                                         </small>
                                     </div>
                                 </td>
@@ -1865,7 +1865,8 @@
                                          >                                        
                                         <select class="form-control nmc-select-form"
                                                 ng-model="data.newTree.templateId" 
-                                                ng-options="template.id as template.templateName for template in data.treeTemplates">
+                                                ng-options="template.id as template.templateName for template in data.treeTemplates"
+                                                disabled>
                                         </select>
                                         
                                     </div>

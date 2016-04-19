@@ -30,7 +30,8 @@ angular.module('portalNMC')
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
         var rmaTreeTemplatesUrl = urlRma + '/subscrObjectTreeTemplates';
-        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';                 
+        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';
+        var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
         
         var rmaTreeTemplates = [];
 
@@ -466,15 +467,26 @@ angular.module('portalNMC')
         
         var releaseObjectsFromTreeNode = function(treeId, nodeId, objIds){            
             return $http.put(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/remove', objIds);
-//            return $http({
-//                method: "DELETE",
-//                url: rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects',
-//                data: objIds
-//            });
         };
                  
         var loadFreeObjectsByTree = function(treeId){            
             return $http.get(rmaTreesUrl + '/' + treeId + '/contObjects/free');
+        };
+                 
+        var loadSubscrTrees = function(){
+            return $http.get(subscrTreesUrl);
+        };
+        
+        var loadSubscrTree = function(treeId){
+            return $http.get(subscrTreesUrl + '/' + treeId);
+        };
+        
+        var loadSubscrFreeObjectsByTree = function(treeId){            
+            return $http.get(subscrTreesUrl + '/' + treeId + '/contObjects/free');
+        };
+                 
+        var loadSubscrObjectsByTreeNode = function(treeId, nodeId){            
+            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
         };
         
         //service initialization
@@ -538,6 +550,10 @@ angular.module('portalNMC')
             loadTrees,
             loadTreeTemplateItems,
             loadTreeTemplates,
+            loadSubscrFreeObjectsByTree,
+            loadSubscrObjectsByTreeNode,
+            loadSubscrTree,
+            loadSubscrTrees,
             promise,
             putDeviceMetaDataVzlet,
             putDeviceSchedulerSettings,

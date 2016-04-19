@@ -482,6 +482,31 @@ angular.module('portalNMC')
     //
     //*******************************************************************************
     
+    // *********************************************************************************************
+    //                      Work with trees
+    // *********************************************************************************************
+            //find node at tree by childObjectList
+    var findNodeInTree = function(node, tree){
+        var result = null;
+        if (!angular.isArray(tree.childObjectList)){
+            return result;
+        };
+        tree.childObjectList.some(function(curNode){
+            if (node.id == curNode.id && node.objectName == curNode.objectName){
+                result = curNode;
+                return true;
+            }else{
+                result = findNodeInTree(node, curNode);
+                return result != null;
+            };
+        });
+        return result;
+    };
+    
+    // *********************************************************************************************
+    //                     end Work with trees
+    // *********************************************************************************************
+    
     return {
         checkContext,
         checkHHmm,
@@ -491,6 +516,7 @@ angular.module('portalNMC')
         checkUndefinedEmptyNullValue,
         checkUndefinedNull,
         dateFormating,
+        findNodeInTree,
         getConfirmCode,
         getContextIds,
         getHtmlLoading,

@@ -1,7 +1,5 @@
-<div  ng-show="loading" class="nmc-loading">
-    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
-</div>
-<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+<div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
@@ -14,43 +12,15 @@
       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
       </div>
     </div>
-</div>    
-
-<div class="container-fluid" ng-hide="loading">
- 
-<div class="row nmc-main-workspace-header">
-    <div class="col-md-3 noPadding">
-        <h2 class="noMargin nmc-h2">Объекты учета
-        </h2>    
-    </div>
-    <div class="col-md-7"></div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
-        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-        <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
-    </div>
-    <div class="col-md-offset-2 col-md-2">
-            <label class="nmc-form-label">Всего:</label>
-             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
-            <span id="timeOutput"></span>
-    </div>
-</div>
-<div class="row ">
-    <div class="col-md-12 noPadding nmc-main-workspace-header">
-        <hr>
-    </div>
-</div>    
-</div>    
+</div>        
 <!--<hr>-->
 
-<div class="row" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
-    <h3 class="nmc-h3">Объектов нет.</h3>
-</div>
 <div class="row">
         <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft10" ng-show="objectCtrlSettings.isTreeView == true">                    
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
                 <div class="col-xs-6 col-md-6">
                     <div class="btn-group">
-                          <button ng-init="messages.treeMenuHeader = 'Выберете дерево'"
+                          <button 
                                   title="Действия над объектом" 
                              type="button" 
                              class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
@@ -64,8 +34,8 @@
                           <ul class="dropdown-menu nmc-dropdown-menu">
                               <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
                                   <a href="" class=""
-                                     ng-click="messages.treeMenuHeader = tree.name; data.currentTree = tree">
-                                      {{tree.name}}
+                                     ng-click="loadTree(tree)">
+                                      {{tree.objectName}}
                                   </a>
                               </li>
                           </ul>
@@ -85,33 +55,32 @@
                 </div>
             </div>
              <div class="row nmc-tree-with-fixed-header">
-                <script type="text/ng-template" id="object_tree_items_renderer.html">
-                    <div ui-tree-handle ng-click="selectNode(item)"
-                         ng-mouseover = "item.isHover = true"
-                         ng-mouseleave = "item.isHover = false"
-                         ng-class="{'nmc-bg-distinguish': item.isHover}">
-                      <i class="btn btn-xs glyphicon"
-                         ng-class="{'glyphicon-chevron-right': collapsed && item.nodes.length > 0, 'glyphicon-chevron-down': !collapsed && item.nodes.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.nodes.length > 0)}"
-                         data-nodrag ng-click="toggle(this)">                                  
-                        </i>
-                        <span ng-if = "item.type == 'root'">
-                              <strong>\</strong>
-                        </span>
-                      {{item.name}}
-                    </div>
-                    <ol ui-tree-nodes="options" ng-model="item.nodes" ng-class="{hidden: collapsed}">
-                      <li ng-repeat="item in item.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'">
-                      </li>
-                    </ol>
-                  </script>
                   <div ui-tree="options" data-drag-enabled="false">
                     <ol ui-tree-nodes ng-model="data.currentTree" >
-                      <li ng-repeat="item in data.currentTree.nodes" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
+                      <li ng-repeat="item in data.currentTree.childObjectList" 
+                          ui-tree-node 
+                          ng-include="'subscr_object_tree_items_renderer.html'"></li>
                     </ol>
                   </div>
              </div>
         </div>
     <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
+        <div  ng-show="loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
+        <div class="container-fluid" ng-hide="loading">
+            <div class="row nmc-main-workspace-header marginTop5">
+                <div class="input-group col-xs-4 col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                </div>
+                <div class="col-md-offset-2 col-xs-2 col-md-2">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                        <span id="timeOutput"></span>
+                </div>
+            </div>
+        </div>
         <!-- Шапка для таблицы-->
         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
                 <thead>
@@ -143,15 +112,13 @@
                                               <ul class="dropdown-menu">
                                                 <li>
                                                     <a href="" 
-                                                       ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">
+                                                       ng-click="objectCtrlSettings.extendedInterfaceFlag = !objectCtrlSettings.extendedInterfaceFlag">
                                                         Включить/выключить расширенный интерфейс</a>
                                                 </li>
-<!--
                                                 <li>
-                                                    <a href="" ng-click="objectCtrlSettings.isTreeView=!objectCtrlSettings.isTreeView">
+                                                    <a href="" ng-click="toggleTreeView()">
                                                         Включить/выключить отображение дерева объектов</a>
                                                 </li>
--->
                                               </ul>
                                             </div>
                                         </th>
@@ -164,7 +131,9 @@
         </table>
 
         <div id="parentDivWithObjectListTable" ng-controller="ReportsCtrl">
-
+            <div class="" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
+                <h3 class="nmc-h3">Объектов нет.</h3>
+            </div>
             <div id="divWithObjectListTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                 <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                 <thead>
@@ -1500,3 +1469,25 @@
 		</div>		
 	</div>
 </div>
+    
+<script type="text/ng-template" id="subscr_object_tree_items_renderer.html">
+    <div ui-tree-handle ng-click="selectNode(item)"
+         ng-mouseover = "item.isHover = true"
+         ng-mouseleave = "item.isHover = false"
+         ng-class="{'nmc-bg-distinguish': item.isSelected}">
+      <i class="btn btn-xs glyphicon"
+         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
+         data-nodrag ng-click="toggle(this)">                                  
+        </i>
+        <span ng-if = "item.type == 'root'">
+              <strong>\</strong>
+        </span>
+        <span class="nmc-valign-middle">
+            {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
+        </span>
+    </div>
+    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
+      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'subscr_object_tree_items_renderer.html'">
+      </li>
+    </ol>
+</script>
