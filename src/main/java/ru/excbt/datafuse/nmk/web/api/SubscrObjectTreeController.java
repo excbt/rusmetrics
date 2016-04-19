@@ -140,8 +140,20 @@ public class SubscrObjectTreeController extends SubscrApiController {
 				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
 		checkNotNull(treeContObjectIds);
 
-		List<ContObject> result = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
-				treeContObjectIds);
+		////
+		List<ContObject> viewContObjects = null;
+		if (currentSubscriberService.isRma()) {
+			List<ContObject> rmaContObjects = subscrContObjectService
+					.selectRmaSubscriberContObjectsExcludingIds(getSubscriberId(), treeContObjectIds);
+			viewContObjects = rmaContObjects.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
+					.collect(Collectors.toList());
+		} else {
+			viewContObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
+					treeContObjectIds);
+		}
+		////		
+
+		List<ContObject> result = viewContObjects;
 
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
