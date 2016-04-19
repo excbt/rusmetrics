@@ -97,15 +97,26 @@ public class SubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		////
+		List<ContObject> viewContObjects = null;
+		if (currentSubscriberService.isRma()) {
+			List<ContObject> rmaContObjects = subscrContObjectService
+					.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+			viewContObjects = rmaContObjects.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
+					.collect(Collectors.toList());
+		} else {
+			viewContObjects = subscrContObjectService
+					.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+		}
+		////
+
 		List<Long> treeContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIds(getRmaSubscriberId(),
 				childSubscrObjectTreeId);
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
-
-		List<ContObject> result = contObjects.stream().filter(i -> treeContObjectIds.contains(i.getId()))
+		List<ContObject> resultList = viewContObjects.stream().filter(i -> treeContObjectIds.contains(i.getId()))
 				.collect(Collectors.toList());
 
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
