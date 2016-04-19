@@ -393,6 +393,15 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		checkNotNull(node);
 		//subscrObjectTreeRepository.save(_softDeleteSubscrObjectTree(node));
 		_deleteTreeContObjects(rmaSubscriberId, node);
+
+		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectRmaTreeContObjectIdAllLevels(rmaSubscriberId,
+				subscrObjectTreeId);
+
+		if (!contObjectIds.isEmpty()) {
+			throw new PersistenceException(String
+					.format("Error during delete ContObjectIds from SubscrObjectTree (id=%d)", subscrObjectTreeId));
+		}
+
 		_deleteTreeNode(node);
 
 	}
@@ -448,10 +457,10 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	private SubscrObjectTree _deleteTreeContObjects(final Long rmaSubscriberId, final SubscrObjectTree node) {
 		checkNotNull(node);
 		TreeNodeOperator operator = (i) -> {
-			if (i == null || node.getId() == null) {
+			if (i == null || i.getId() == null) {
 				return;
 			}
-			subscrObjectTreeContObjectService.deleteTreeContObjectsAll(rmaSubscriberId, node.getId());
+			subscrObjectTreeContObjectService.deleteTreeContObjectsAll(rmaSubscriberId, i.getId());
 		};
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
