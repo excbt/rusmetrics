@@ -124,12 +124,12 @@ angular.module('portalNMC')
                  
         var getDeviceSchedulerSettings = function(objId, devId){
 //            /contObjects/%d/deviceObjects/%d/loadingSettings
-            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/loadingSettings";
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
             return $http.get(url);            
         };
                  
         var putDeviceSchedulerSettings = function(objId, devId, scheduler){
-            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/loadingSettings";
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
             return $http.put(url, scheduler);            
         };
                  
