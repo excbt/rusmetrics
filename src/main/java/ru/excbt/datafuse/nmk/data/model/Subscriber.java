@@ -99,6 +99,10 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "map_zoom_detail")
 	private BigDecimal mapZoomDetail;
 
+	@JsonIgnore
+	@Column(name = "subscr_type", updatable = false)
+	private String subscrType;
+
 	public String getInfo() {
 		return info;
 	}
@@ -243,6 +247,14 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setMapZoomDetail(BigDecimal mapZoomDetail) {
 		this.mapZoomDetail = mapZoomDetail;
+	}
+
+	public String getSubscrType() {
+		return subscrType;
+	}
+
+	public void setSubscrType(String subscrType) {
+		this.subscrType = subscrType;
 	}
 
 }
