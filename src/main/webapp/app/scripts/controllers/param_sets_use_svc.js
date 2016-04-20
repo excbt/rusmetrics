@@ -1117,5 +1117,9 @@ console.log($scope.psEndDateFormatted);
         tab.classList.add("active");
         
     };
+        
+    $("#createParamsetModal").on("shown.bs.modal", function(){
+        $("#inputRSDay").inputmask();
+    });
 
 }]);

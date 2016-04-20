@@ -141,6 +141,15 @@ angular.module('portalNMC')
         return mainSvc.checkPositiveNumberValue(num);
     };
     
+    $("#showDatasourceModal").on("shown.bs.modal", function(){
+//        inputDSTimeout inputDSCheckInterval inputDSRepeatCount inputDSReconnectionCount inputDSReconnectionInterval
+        $("#inputDSTimeout").inputmask();
+        $("#inputDSCheckInterval").inputmask();
+        $("#inputDSRepeatCount").inputmask();
+        $("#inputDSReconnectionCount").inputmask();
+        $("#inputDSReconnectionInterval").inputmask();
+    });
+    
     //set input mask
     //for IP
 //    $(document).ready(function(){

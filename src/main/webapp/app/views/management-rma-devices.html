@@ -197,13 +197,13 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">s/n</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="data.currentObject.number" ng-disabled="isDeviceDisabled(data.currentObject);">
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="data.currentObject.number" ng-disabled="isDeviceDisabled(data.currentObject);">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Модель</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9">
+                                <td colspan="2" class="nmc-text-align-left col-sm-9">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.deviceModelId == null && data.currentObject.isManual}">
                                         <select class="form-control nmc-select-form" 
                                                 id="inputType" 
@@ -217,7 +217,7 @@
                             <tr>
                                 <td><label for="inputComment" >Объект</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td colspan="2" class="nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.contObjectId==null}">
                                         <select class="form-control nmc-select-form" id="inputContObject" ng-model="data.currentObject.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects" ng-disabled="isDeviceDisabled(data.currentObject);">
                                         </select>
@@ -227,7 +227,7 @@
                             <tr>
                                 <td><label for="inputDescription" >Источник данных</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td colspan="2" class="nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
                                         <select ng-show = "!isDeviceDisabled(data.currentObject)" 
                                                 class="form-control nmc-select-form"
@@ -252,25 +252,72 @@
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
-                                <td>
+                                <td colspan="2" class="col-sm-6">
                                     <label for="inputNetAddr" >Сетевой адрес прибора</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td class="col-sm-6" class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form nmc-input-data" 
                                            type="text" 
-                                           id="inputNetAddr" 
-                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                           id="inputNetAddr"                                            
                                            placeholder="" 
                                            ng-model="data.currentObject.subscrDataSourceAddr" 
                                            ng-disabled="isDeviceDisabled(data.currentObject);"
                                            />
                                 </td>
                             </tr>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="2" class="col-sm-6">
+                                    <label for="inputDeviceLogin" >Логин</label>
+                                </td>
+                                <td class="col-sm-6" class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-data" 
+                                           type="text" 
+                                           id="inputDeviceLogin"                                            
+                                           placeholder="" 
+                                           ng-model="data.currentObject.login" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                           />
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="2" class="col-sm-6">
+                                    <label for="inputDevicePassword" >Пароль</label>
+                                </td>
+                                <td class="col-sm-6" class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-data" 
+                                           type="text" 
+                                           id="inputDevicePassword"                                            
+                                           placeholder="" 
+                                           ng-model="data.currentObject.password" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                           />
+                                </td>
+                            </tr>
+<!--
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="2" class="col-sm-6">
+                                    <label for="inputDevicePassword" >Пароль</label>
+                                </td>
+                                <td class="col-sm-6" class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-data" 
+                                           type="text" 
+                                           id="inputDevicePassword"                                            
+                                           placeholder="" 
+                                           ng-model="data.currentObject.password" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                           />
+                                </td>
+                            </tr>
+-->
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="3" ><input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentObject.isHexPassword"/><label for="inputHexPassword">Признак пароля в шестнадцетиричном виде</label>
+                                </td>                                
+                            </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
                                 <td>
                                     <label for="inputDescription" >Таблица часовых данных</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td colspan="2" class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" 
                                            type="text" 
                                            id="inputTable1h" 
@@ -283,7 +330,7 @@
                                 <td>
                                     <label for="inputDescription" >Таблица суточных данных</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td colspan="2" class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" 
                                            type="text" 
                                            id="inputTable24h" 
@@ -296,7 +343,7 @@
                                 <td>
                                     <label for="inputDescription" >Таблица часовых данных</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td colspan="2" class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" 
                                            type="text" 
                                            id="inputTable1h" 
@@ -309,7 +356,7 @@
                                 <td>
                                     <label for="inputDescription" >Таблица суточных данных</label>
                                 </td>
-                                <td class="nmc-text-align-left">
+                                <td colspan="2" class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" 
                                            type="text" 
                                            id="inputTable1h" 
@@ -319,15 +366,43 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
+                                <td colspan="2" class="col-sm-6"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy': false" ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                <td class="col-sm-6 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy': false" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputVerificationDate">Дата очередной плановой поверки</label>
+                                <td colspan="2" class="col-sm-6"><label for="inputVerificationDate">Дата очередной плановой поверки</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString" ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                <td class="col-sm-6 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString" ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="2" class="col-sm-6">
+                                    <label for="inputDevicePassword" >Время по часам прибора</label>
+                                </td>
+                                <td class="col-sm-6" class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-data" 
+                                           type="text" 
+                                           id="inputDevicePassword"                                            
+                                           placeholder="" 
+                                           ng-model="data.currentObject.deviceDatetime" 
+                                           disabled
+                                           />
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="2" class="col-sm-6">
+                                    <label for="inputDevicePassword" >Время по часам драйвера во время снятия текущего времени прибора</label>
+                                </td>
+                                <td class="col-sm-6" class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-data" 
+                                           type="text" 
+                                           id="inputDevicePassword"                                            
+                                           placeholder="" 
+                                           ng-model="data.currentObject.driverTimestamp" 
+                                           disabled
+                                           />
                                 </td>
                             </tr>
                         </table>

@@ -452,7 +452,7 @@ console.log(e);
 
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
-                    if ($scope.objectCtrlSettings.isTreeView == false){
+                    if ($scope.objectCtrlSettings.isTreeView == false || mainSvc.checkUndefinedNull($scope.data.currentTree)){
                         getObjectsData(e.id);
                     }else{
                     //if tree is on
