@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -84,7 +85,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void _testGetJson(String url) throws Exception {
+	protected String _testGetJson(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -97,7 +98,9 @@ public class AbstractControllerTest {
 					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 		};
 
-		_testGet(url, requestExtraInitializer, resultActionsTester);
+		ResultActions resultActions = _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
+
+		return resultActions.andReturn().getResponse().getContentAsString();
 
 	}
 
@@ -172,6 +175,19 @@ public class AbstractControllerTest {
 	protected void _testGet(String url, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
+		_testGetResultActions(url, requestExtraInitializer, resultActionsTester);
+
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param resultActionsTester
+	 * @throws Exception
+	 */
+	protected ResultActions _testGetResultActions(String url, RequestExtraInitializer requestExtraInitializer,
+			ResultActionsTester resultActionsTester) throws Exception {
+
 		MockHttpServletRequestBuilder request = get(url).with(testSecurityContext());
 
 		if (requestExtraInitializer != null) {
@@ -184,6 +200,7 @@ public class AbstractControllerTest {
 			resultActionsTester.testResultActions(resultActions);
 		}
 
+		return resultActions;
 	}
 
 	/**
@@ -245,18 +262,41 @@ public class AbstractControllerTest {
 
 	/**
 	 * 
+	 * @param type
+	 * @param jsonPacket
+	 * @return
+	 */
+	public static <T> T fromJSON(final TypeReference<T> type, final String jsonPacket) {
+		T data = null;
+
+		try {
+			data = new ObjectMapper().readValue(jsonPacket, type);
+		} catch (Exception e) {
+			logger.error("Can't read JSON:");
+			logger.error(jsonPacket);
+			logger.error("exception: ", e);
+		}
+		return data;
+	}
+
+	/**
+	 * 
 	 * @param urlStr
 	 * @throws Exception
 	 */
 	protected void _testDeleteJson(String urlStr) throws Exception {
+		_testDeleteJson(urlStr, null, null);
+	}
 
-		logger.info("Testing DELETE on URL: {}", urlStr);
+	/**
+	 * 
+	 * @param urlStr
+	 * @param sendObject
+	 * @throws Exception
+	 */
+	protected void _testDeleteJson(String urlStr, Object sendObject) throws Exception {
+		_testDeleteJson(urlStr, sendObject, null);
 
-		ResultActions deleteResultActions = mockMvc
-				.perform(delete(urlStr).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
-
-		deleteResultActions.andDo(MockMvcResultHandlers.print());
-		deleteResultActions.andExpect(status().is2xxSuccessful());
 	}
 
 	/**
@@ -267,10 +307,29 @@ public class AbstractControllerTest {
 	 */
 	protected void _testDeleteJson(String urlStr, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
+		_testDeleteJson(urlStr, null, requestExtraInitializer);
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @param sendObject
+	 * @throws Exception
+	 */
+	protected void _testDeleteJson(String urlStr, Object sendObject, RequestExtraInitializer requestExtraInitializer)
+			throws Exception {
+
 		logger.info("Testing DELETE on URL: {}", urlStr);
 
 		MockHttpServletRequestBuilder request = delete(urlStr).with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON);
+
+		if (sendObject != null) {
+			String jsonBody = objectToJson(sendObject);
+			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
+		}
 
 		if (requestExtraInitializer != null) {
 			requestExtraInitializer.doInit(request);
@@ -316,23 +375,7 @@ public class AbstractControllerTest {
 
 		logger.info("Testing CREATE on URL: {}", url);
 
-		String jsonBody = null;
-		String jsonBodyPretty = null;
-		try {
-			if (!(sendObject instanceof String)) {
-				jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
-				jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(sendObject);
-			} else {
-				jsonBody = (String) sendObject;
-				jsonBodyPretty = (String) sendObject;
-			}
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			fail();
-		}
-
-		logger.info("Request JSON: {}", jsonBody);
-		logger.info("Request Pretty JSON: {}", jsonBodyPretty);
+		String jsonBody = objectToJson(sendObject);
 
 		MockHttpServletRequestBuilder request = post(url).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
@@ -399,27 +442,9 @@ public class AbstractControllerTest {
 		MockHttpServletRequestBuilder request = put(url).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
-			String jsonBody = null;
-			String jsonBodyPretty = null;
-			try {
-				if (!(sendObject instanceof String)) {
-					jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
-					jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(sendObject);
-				} else {
-					jsonBody = (String) sendObject;
-					jsonBodyPretty = (String) sendObject;
-				}
-			} catch (JsonProcessingException e) {
-				logger.error("Can't create json: {}", e);
-				e.printStackTrace();
-				fail();
-			}
-
-			logger.info("Request JSON: {}", jsonBody);
-			logger.info("Request Pretty JSON: {}", jsonBodyPretty);
+			String jsonBody = objectToJson(sendObject);
 
 			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
-
 		}
 
 		if (requestExtraInitializer != null) {
@@ -581,8 +606,20 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @param args
 	 * @return
 	 */
+	protected String apiSubscrUrlTemplate(String url, Object... args) {
+		checkNotNull(url);
+		return "/api/subscr" + String.format(url, args);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	@Deprecated
 	protected String apiSubscrUrl(String url, Long id) {
 		checkNotNull(url);
 		checkNotNull(id);
@@ -624,9 +661,21 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @param args
+	 * @return
+	 */
+	protected String apiRmaUrlTemplate(String url, Object... args) {
+		checkNotNull(url);
+		return "/api/rma" + String.format(url, args);
+	}
+
+	/**
+	 * 
+	 * @param url
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	protected String apiRmaUrl(String url, Long id) {
 		checkNotNull(url);
 		checkNotNull(id);
@@ -656,6 +705,36 @@ public class AbstractControllerTest {
 			sb.append(s);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	private String objectToJson(Object obj) {
+		String jsonBody = null;
+		String jsonBodyPretty = null;
+		try {
+			if (obj instanceof String) {
+				jsonBody = (String) obj;
+				jsonBodyPretty = (String) obj;
+
+			} else {
+				jsonBody = OBJECT_MAPPER.writeValueAsString(obj);
+				jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+			}
+
+			logger.info("Request JSON: {}", jsonBody);
+			logger.info("Request Pretty JSON: {}", jsonBodyPretty);
+
+		} catch (JsonProcessingException e) {
+			logger.error("Can't create json: {}", e);
+			e.printStackTrace();
+			fail();
+		}
+
+		return jsonBody;
 	}
 
 }

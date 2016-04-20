@@ -6,6 +6,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
@@ -50,7 +52,13 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 		Long dataSourceId = _testCreateJson(apiRmaUrl("/dataSources"), dataSource);
 		assertNotNull(dataSourceId);
 
-		dataSource = subscrDataSourceService.findOne(dataSourceId);
+		String dataSourceContent = _testGetJson(apiRmaUrl("/dataSources/" + dataSourceId));
+
+		dataSource = fromJSON(new TypeReference<SubscrDataSource>() {
+		}, dataSourceContent);
+
+		dataSource.setRawTimeout(10);
+
 		dataSource.setDataSourceComment("DataSource CRUD test at " + System.currentTimeMillis());
 		_testUpdateJson(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
 		_testDeleteJson(apiRmaUrl("/dataSources/" + dataSourceId.toString()));

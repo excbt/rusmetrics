@@ -8,15 +8,11 @@ angular.module('portalNMC')
         var cityWithObjectsUrl = objectUrl + "/cityStatusCollapse";
         
         var objectsMonitorSvc = [];
-        var citiesMonitorSvc = [];
-        //default date interval settings
-//        $rootScope.monitorStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-//        $rootScope.monitorEnd = moment().endOf('day').format('YYYY-MM-DD');    
+        var citiesMonitorSvc = [];   
 
         //monitor settings
         var monitorSvcSettings = {};
         monitorSvcSettings.refreshPeriod = "180";
-//        monitorSvcSettings.createRoundDiagram = false;
         monitorSvcSettings.loadingFlag = true;
         monitorSvcSettings.noGreenObjectsFlag = false;
         monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
@@ -27,7 +23,6 @@ angular.module('portalNMC')
         };
         
         var setMonitorSettings = function(monitorSettings){
-//            monitorSvcSettings = monitorSettings;
             for (var key in monitorSettings){
                 monitorSvcSettings[key] = monitorSettings[key];
             };
@@ -63,8 +58,6 @@ angular.module('portalNMC')
 //console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
             var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
-//console.log(targetUrl);  
-
             $http.get(targetUrl)
                 .success(function(data){
 //console.log(data);                
@@ -73,33 +66,13 @@ angular.module('portalNMC')
                    
                     //sort objects by name
                     objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
-//                    objectsMonitorSvc.sort(function(a, b){
-//                        if (a.contObject.fullName>b.contObject.fullName){
-//                            return 1;
-//                        };
-//                        if (a.contObject.fullName<b.contObject.fullName){
-//                            return -1;
-//                        };
-//                        return 0;
-//                    }); 
-                
-//console.log(objectsMonitorSvc);                 
-                    //get the list of the events, which set the object color
-//                    objectsMonitorSvc.forEach(function(element){
-//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
-//                            getMonitorEventsByObject(element);
-//                        }
-//                    });
-
-                monitorSvcSettings.loadingFlag = false;//data has been loaded
-                $rootScope.$broadcast('monitorObjects:updated');
-//                if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
-//                    $scope.getEventTypesByObject($rootScope.monitor.objectId, false);
-//                    $rootScope.monitor.objectId = null;
-//                };
+                    monitorSvcSettings.loadingFlag = false;//data has been loaded
+                    $rootScope.$broadcast('monitorObjects:updated');
                 })
                 .error(function(e){
                     console.log(e);
+                    monitorSvcSettings.loadingFlag = false;//data has been loaded
+                    $rootScope.$broadcast('monitorObjects:updated');
                 });
             monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
         };
@@ -110,35 +83,14 @@ angular.module('portalNMC')
             monitorSvcSettings.loadingFlag = true;
             var targetUrl = url + "/statusCollapse?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
 //console.log(targetUrl);  
-
             $http.get(targetUrl)
                 .success(function(data){
                     objectsMonitorSvc = data;
 //    console.log(data);            
                     //sort objects by name
                     objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
-//                    objectsMonitorSvc.sort(function(a, b){
-//                        if (a.contObject.fullName>b.contObject.fullName){
-//                            return 1;
-//                        };
-//                        if (a.contObject.fullName<b.contObject.fullName){
-//                            return -1;
-//                        };
-//                        return 0;
-//                    });  
-                    //get the list of the events, which set the object color
-//                    objectsMonitorSvc.forEach(function(element){
-//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
-//                            getMonitorEventsByObject(element);
-//                        }
-//                    });
-
-                monitorSvcSettings.loadingFlag = false;//data has been loaded
-                $rootScope.$broadcast('monitorObjects:updated');
-//                if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
-//                    $scope.getEventTypesByObject($rootScope.monitor.objectId, false);
-//                    $rootScope.monitor.objectId = null;
-//                };
+                    monitorSvcSettings.loadingFlag = false;//data has been loaded
+                    $rootScope.$broadcast('monitorObjects:updated');
                 })
                 .error(function(e){
                     console.log(e);
@@ -147,18 +99,11 @@ angular.module('portalNMC')
         };
         
         //run getObjects
-//        getObjects(objectUrl, monitorSvcSettings);
         getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
             
         //get monitor events
        var getMonitorEventsByObject = function(obj){ 
 //console.log(obj);           
-//console.log("MonitorSvc. getMonitorEventsByObject");           
-    //        var obj = findObjectById(objId);    
-            //if cur object = null => exit function
-    //        if (obj == null){
-    //            return;
-    //        };
             var url = objectUrl + "/" + obj.contObject.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
             $http.get(url)
                 .success(function(data){
@@ -187,15 +132,6 @@ angular.module('portalNMC')
                         tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
                         tmpMessage += tmpEvent;
                     });
-    //                tmpTypes.sort(function(a, b){
-    //                    if (a.typeEventCount > b.typeEventCount){
-    //                        return -1;
-    //                    };
-    //                    if (a.typeEventCount < b.typeEventCount){
-    //                        return 1;
-    //                    };
-    //                    return 0;
-    //                });
 //console.log(tmpMessage);     
                     if (obj.statusColor === "YELLOW"){
                         obj.monitorEvents = "На объекте нет нештатных ситуаций";
@@ -205,20 +141,6 @@ angular.module('portalNMC')
                     };
 //console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
-                    //Display message
-    //                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
-    //                imgObj.title = obj.monitorEvents;
-
-//                    var imgObj = "#imgObj"+obj.contObject.id;          
-//                    $(imgObj).qtip({
-//                        content:{
-//                            text: obj.monitorEvents
-//                        },
-//                        style:{
-//                            classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-//                        }
-//                    });         
-    //                makeEventTypesByObjectTable(obj);
                 })
                 .error(function(e){
                     console.log(e);
@@ -243,7 +165,6 @@ angular.module('portalNMC')
             //set new interval
             interval = $interval(function(){
                 var time = (new Date()).toLocaleString();
-//console.log(time);
                 monitorSvcSettings.loadingFlag = true;
                 getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
             }, Number(monitorSvcSettings.refreshPeriod) * 1000);
@@ -253,17 +174,13 @@ angular.module('portalNMC')
             //Вызвываем с заданным периодом обновление монитора
         interval = $interval(function(){
             var time = (new Date()).toLocaleString();
-//    console.log(time);
-    //console.log(Number($scope.monitorSvcSettings.refreshPeriod));
             monitorSvcSettings.loadingFlag = true;
-//            getObjects(objectUrl, monitorSvcSettings);
             getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
         },Number(monitorSvcSettings.refreshPeriod) * 1000);
         
         
         $rootScope.$on('monitor:updateObjectsRequest',function(){
 //console.log("MonitorSvc. monitor:updateObjectsRequest");            
-//            getObjects(objectUrl, monitorSvcSettings);
             getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
         });
         

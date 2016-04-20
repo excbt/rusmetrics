@@ -12,6 +12,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
@@ -372,6 +374,11 @@ public class DeviceObjectService implements SecuredRoles {
 		}
 
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceObject> selectDeviceObjectByContZPoint(Long contZPointId) {
+		return Lists.newArrayList(deviceObjectRepository.findAll());
 	}
 
 }

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,8 +22,9 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
@@ -39,14 +41,20 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
  */
 @Entity
 @Table(name = "device_object")
-public class DeviceObject extends AbstractAuditableModel implements ExSystemObject, DeletableObjectId {
+public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -199459403017867220L;
 
-	public class ContObjectInfo {
+	@JsonIgnoreProperties(ignoreUnknown = true, allowSetters = false)
+	public class ContObjectInfo implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1872748374864397365L;
+
 		public ContObjectInfo() {
 
 		}
@@ -61,6 +69,75 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 		public Long getContObjectId() {
 			return contObject == null ? null : contObject.getId();
+		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * @author A.Kovtonyuk
+	 * @version 1.0
+	 * @since dd.02.2016
+	 *
+	 */
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public class DeviceLoginInfo implements Serializable {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3989821130568000219L;
+
+		private String deviceLogin;
+
+		private String devicePassword;
+
+		/**
+		 * 
+		 */
+		public DeviceLoginInfo() {
+
+		}
+
+		/**
+		 * 
+		 * @param deviceObject
+		 */
+		public DeviceLoginInfo(DeviceObject deviceObject) {
+			this.deviceLogin = deviceObject.deviceLogin;
+			this.devicePassword = deviceObject.devicePassword;
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public String getDeviceLogin() {
+			return deviceLogin;
+		}
+
+		/**
+		 * 
+		 * @param deviceLogin
+		 */
+		public void setDeviceLogin(String deviceLogin) {
+			this.deviceLogin = deviceLogin;
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public String getDevicePassword() {
+			return devicePassword;
+		}
+
+		/**
+		 * 
+		 * @param devicePassword
+		 */
+		public void setDevicePassword(String devicePassword) {
+			this.devicePassword = devicePassword;
 		}
 	}
 
@@ -91,8 +168,8 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "cont_device_object", //
-			joinColumns = @JoinColumn(name = "device_object_id") , //
-			inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
+			joinColumns = @JoinColumn(name = "device_object_id"), //
+			inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
 	@JsonIgnore
 	private ContObject contObject;
 
@@ -102,8 +179,8 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@Version
 	private int version;
-
 	@JsonIgnore
+
 	@Column(name = "deleted")
 	private int deleted;
 
@@ -122,6 +199,23 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@Column(name = "meta_version")
 	private Integer metaVersion = 1;
+
+	@JsonIgnore
+	@Column(name = "device_login")
+	private String deviceLogin;
+
+	@JsonIgnore
+	@Column(name = "device_password")
+	private String devicePassword;
+
+	@Column(name = "is_hex_password")
+	private Boolean isHexPassword;
+
+	@Column(name = "is_time_sync_enabled")
+	private Boolean isTimeSyncEnabled;
+
+	@Transient
+	private DeviceLoginInfo deviceLoginInfo = new DeviceLoginInfo();
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -281,6 +375,65 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	public void setMetaVersion(Integer metaVersion) {
 		this.metaVersion = metaVersion;
+	}
+
+	public String getDeviceLogin() {
+		return deviceLogin;
+	}
+
+	public void setDeviceLogin(String deviceLogin) {
+		this.deviceLogin = deviceLogin;
+	}
+
+	public String getDevicePassword() {
+		return devicePassword;
+	}
+
+	public void setDevicePassword(String devicePassword) {
+		this.devicePassword = devicePassword;
+	}
+
+	public Boolean getIsHexPassword() {
+		return isHexPassword;
+	}
+
+	public void setIsHexPassword(Boolean isHexPassword) {
+		this.isHexPassword = isHexPassword;
+	}
+
+	public Boolean getIsTimeSyncEnabled() {
+		return isTimeSyncEnabled;
+	}
+
+	public void setIsTimeSyncEnabled(Boolean isTimeSyncEnabled) {
+		this.isTimeSyncEnabled = isTimeSyncEnabled;
+	}
+
+	public DeviceLoginInfo getDeviceLoginInfo() {
+		return deviceLoginInfo;
+	}
+
+	public void setDeviceLoginInfo(DeviceLoginInfo deviceLoginInfo) {
+		this.deviceLoginInfo = deviceLoginInfo;
+	}
+
+	/**
+	 * 
+	 */
+	@JsonIgnore
+	public void shareDeviceLoginInfo() {
+		this.deviceLoginInfo = new DeviceLoginInfo(this);
+	}
+
+	/**
+	 * 
+	 */
+	@JsonIgnore
+	public void saveDeviceObjectInfo() {
+		if (deviceLoginInfo != null && deviceLoginInfo.deviceLogin != null && deviceLoginInfo.devicePassword != null) {
+			this.deviceLogin = deviceLoginInfo.deviceLogin;
+			this.devicePassword = deviceLoginInfo.devicePassword;
+		}
 	}
 
 }

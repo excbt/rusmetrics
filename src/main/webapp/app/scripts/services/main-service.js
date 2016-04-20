@@ -318,10 +318,29 @@ angular.module('portalNMC')
     
     ///////////////// end checkers
     
+    // Sort object array by some string field
+    var sortItemsBy = function(itemArray, sortField){
+        if (!angular.isArray(itemArray)){
+            return "Input value is no array.";
+        };
+        if (checkUndefinedNull(sortField)){
+            return "Field for sort is undefined or null.";
+        };
+        itemArray.sort(function(firstItem, secondItem){
+            if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
+                return 1;
+            };
+            if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
+                return -1;
+            };
+            return 0;
+        });
+    };
+    
     // Sort organizations by organizationName
     var sortOrganizationsByName = function(orgArr){
         if (!angular.isArray(orgArr)){
-            return "Param is not array.";
+            return "Param is no array.";
         };
         orgArr.sort(function(a, b){
             if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
@@ -338,9 +357,16 @@ angular.module('portalNMC')
     // **************************
 //    var firstNum = Math.round(Math.random()*10);
 //    var secondNum = Math.round(Math.random()*100);
-    var getConfirmCode = function(){
-        var tmpFirst = Math.round(Math.random()*10);
-        var tmpSecond = Math.round(Math.random()*100);
+    var getConfirmCode = function(useImprovedMethodFlag){
+//console.log(useImprovedMethodFlag);        
+        var leftCoef = Math.random()*10;
+        var rightCoef = Math.random()*100;
+        if (!checkUndefinedNull(useImprovedMethodFlag) && useImprovedMethodFlag == true){
+            leftCoef = Math.random()*1000 + 100;
+            rightCoef = Math.random()*1000 + 100;
+        };
+        var tmpFirst = Math.round(leftCoef);
+        var tmpSecond = Math.round(rightCoef);
         var tmpLabel = tmpFirst+" + "+tmpSecond+" = ";
         var result = {
 //            firstNum: tmpFirst,
@@ -414,10 +440,16 @@ angular.module('portalNMC')
             "resultCode": "ERR_USER_ALREADY_EXISTS",
             "caption": "Пользователь уже существует",
             "description": "Пользователь с таким логином уже существует. Проверьте правильность набора."
+        },
+        {
+            "resultCode": "ERR_CONNECTION",
+            "caption": "Ошибка подключения",
+            "description": "Не удалось получить данные от сервера. Проверьте соединение с сервером."
         }
     ];
     
-    var getServerErrorByResultCode = function(resultCode){        
+    var getServerErrorByResultCode = function(resultCode){
+//console.log(resultCode);
         var result = DEFAULT_ERROR_MESSAGE;
         if (checkUndefinedEmptyNullValue(resultCode)){return result};
         serverErrors.some(function(serror){
@@ -450,6 +482,31 @@ angular.module('portalNMC')
     //
     //*******************************************************************************
     
+    // *********************************************************************************************
+    //                      Work with trees
+    // *********************************************************************************************
+            //find node at tree by childObjectList
+    var findNodeInTree = function(node, tree){
+        var result = null;
+        if (!angular.isArray(tree.childObjectList)){
+            return result;
+        };
+        tree.childObjectList.some(function(curNode){
+            if (node.id == curNode.id && node.objectName == curNode.objectName){
+                result = curNode;
+                return true;
+            }else{
+                result = findNodeInTree(node, curNode);
+                return result != null;
+            };
+        });
+        return result;
+    };
+    
+    // *********************************************************************************************
+    //                     end Work with trees
+    // *********************************************************************************************
+    
     return {
         checkContext,
         checkHHmm,
@@ -459,6 +516,7 @@ angular.module('portalNMC')
         checkUndefinedEmptyNullValue,
         checkUndefinedNull,
         dateFormating,
+        findNodeInTree,
         getConfirmCode,
         getContextIds,
         getHtmlLoading,
@@ -476,7 +534,8 @@ angular.module('portalNMC')
         isSystemuser,
         setMonitorMapSettings,
         setObjectMapSettings,
-        sortOrganizationsByName,
+        sortItemsBy,
+        sortOrganizationsByName,        
         strDateToUTC
     };
 });

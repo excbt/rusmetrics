@@ -317,3 +317,52 @@ app.filter('propsFilter', function() {
     return out;
   }
 });
+
+// Filter for zpoint metadata editor
+app.filter('isIntegrators', function() {
+  return function(items, propVal) {
+    var out = [];     
+    if (angular.isArray(items)) {
+      items.forEach(function(item) {
+        if (angular.isUndefined(item.isIntegrator) || item.isIntegrator == null || item.isIntegrator == propVal) {
+          out.push(item);
+        }
+      });
+    } else {
+      // Let the output be the input untouched
+      out = items;
+    }
+
+    return out;
+  }
+});
+
+
+//************************************************************************************
+// Helper directives
+// **********************************************************************************
+app.directive('focusMe', function($timeout, $parse) {
+  return {
+    //scope: true,   // optionally create a child scope
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.focusMe);
+      scope.$watch(model, function(value) {
+console.log('value=',value);
+console.log(element);          
+        if(value === true) { 
+          $timeout(function() {
+console.log(element[0]);
+console.log(element.focus());              
+            element.focus(); 
+          }, 100);
+        }
+      });
+      // to address @blesh's comment, set attribute value to 'false'
+      // on blur event:
+      element.bind('blur', function() {
+         console.log('blur');
+         scope.$apply(model.assign(scope, false));
+      });
+    }
+  };
+});

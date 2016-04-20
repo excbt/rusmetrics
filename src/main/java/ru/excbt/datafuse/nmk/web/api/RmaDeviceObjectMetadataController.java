@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
+import ru.excbt.datafuse.nmk.data.service.MeasureUnitService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -31,6 +32,9 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaDeviceObjectMetadataController extends SubscrApiController {
+
+	@Autowired
+	private MeasureUnitService measureUnitService;
 
 	@Autowired
 	private DeviceObjectMetadataService deviceObjectMetadataService;
@@ -49,9 +53,9 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 
 		List<MeasureUnit> resultList = null;
 		if (measureUnit != null) {
-			resultList = deviceObjectMetadataService.selectMeasureUnitsSame(measureUnit);
+			resultList = measureUnitService.selectMeasureUnitsSame(measureUnit);
 		} else {
-			resultList = deviceObjectMetadataService.selectMeasureUnits();
+			resultList = measureUnitService.selectMeasureUnits();
 		}
 
 		return responseOK(resultList);
@@ -111,6 +115,39 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 			}
 		};
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}/metadata",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectMetadataByContZPoint(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		ApiAction action = new ApiActionEntityAdapter<List<DeviceObjectMetadata>>() {
+
+			@Override
+			public List<DeviceObjectMetadata> processAndReturnResult() {
+				List<DeviceObjectMetadata> resultList = deviceObjectMetadataService.selectByContZPoint(contZPointId);
+
+				boolean checkTransform = deviceObjectMetadataService.deviceObjectMetadataTransform(resultList);
+
+				if (checkTransform) {
+					resultList = deviceObjectMetadataService.selectByContZPoint(contZPointId);
+				}
+				return resultList;
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionOkBody(action);
 	}
 
 }

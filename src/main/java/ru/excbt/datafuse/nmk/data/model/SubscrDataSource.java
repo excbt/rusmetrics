@@ -10,11 +10,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
@@ -28,9 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
  */
 @Entity
 @Table(name = "subscr_data_source")
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
-public class SubscrDataSource extends AbstractAuditableModel implements DeletableObject {
+public class SubscrDataSource extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -92,6 +87,21 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 
 	@Transient
 	private Boolean _isAnotherSubscriber;
+
+	@Column(name = "raw_timeout")
+	private Integer rawTimeout;
+
+	@Column(name = "raw_sleep_time")
+	private Integer rawSleepTime;
+
+	@Column(name = "raw_resend_attempts")
+	private Integer rawResendAttempts;
+
+	@Column(name = "raw_reconnect_attempts")
+	private Integer rawReconnectAttempts;
+
+	@Column(name = "raw_reconnect_timeout")
+	private Integer rawReconnectTimeout;
 
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -229,6 +239,46 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 
 	public void set_isAnotherSubscriber(Boolean _isAnotherSubscriber) {
 		this._isAnotherSubscriber = _isAnotherSubscriber;
+	}
+
+	public Integer getRawTimeout() {
+		return rawTimeout;
+	}
+
+	public void setRawTimeout(Integer rawTimeout) {
+		this.rawTimeout = rawTimeout;
+	}
+
+	public Integer getRawSleepTime() {
+		return rawSleepTime;
+	}
+
+	public void setRawSleepTime(Integer rawSleepTime) {
+		this.rawSleepTime = rawSleepTime;
+	}
+
+	public Integer getRawResendAttempts() {
+		return rawResendAttempts;
+	}
+
+	public void setRawResendAttempts(Integer rawResendAttempts) {
+		this.rawResendAttempts = rawResendAttempts;
+	}
+
+	public Integer getRawReconnectAttempts() {
+		return rawReconnectAttempts;
+	}
+
+	public void setRawReconnectAttempts(Integer rawReconnectAttempts) {
+		this.rawReconnectAttempts = rawReconnectAttempts;
+	}
+
+	public Integer getRawReconnectTimeout() {
+		return rawReconnectTimeout;
+	}
+
+	public void setRawReconnectTimeout(Integer rawReconnectTimeout) {
+		this.rawReconnectTimeout = rawReconnectTimeout;
 	}
 
 }

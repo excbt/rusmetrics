@@ -20,6 +20,7 @@ angular.module('portalNMC')
         var urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels';
         var urlDeviceMetaDataVzlet = '/metaVzlet';
         var urlDeviceMetaDataSuffix = '/metadata';
+        var urlZpointMetaDataSuffix = '/metadata';                 
         var urlDeviceMetaDataVzletSystemList = urlSubscr + '/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaDataVzlet+'/system';
         var urlCitiesData = urlSubscr + '/service/hwater/contObjects/serviceTypeInfo';  
         var urlTimezones = urlApi + '/timezoneDef/all';
@@ -28,8 +29,14 @@ angular.module('portalNMC')
         var urlServiceTypes = urlRmaContObjects + '/contServiceTypes';//'resource/serviceTypes.json';
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
-                 
+        var rmaTreeTemplatesUrl = urlRma + '/subscrObjectTreeTemplates';
+        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';
+        var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
+        
+        var rmaTreeTemplates = [];
+
         var deviceMetadataMeasures = {};
+        var zpointMetadataMeasures = {};
                  
         var currentObject = null; //the current selected object at interface
 
@@ -48,6 +55,14 @@ angular.module('portalNMC')
                  
         var getDeviceMetadataMeasures = function(){
             return deviceMetadataMeasures;
+        };
+                 
+        var getZpointMetadataMeasures = function(){
+            return zpointMetadataMeasures;
+        };
+                 
+        var getRmaTreeTemplates = function(){
+            return rmaTreeTemplates;
         };
         
         var setObjectSettings = function(objectSettings){
@@ -153,8 +168,8 @@ angular.module('portalNMC')
         };
         
                  //get device measures
-        var getRmaDeviceMetadataMeasureUnit = function(measU, dmm){
-            var url = urlDeviceMetadataMeasures + "?measureUnit=" + dmm.all[measU].keyname;
+        var getRmaMetadataMeasureUnit = function(url, measU, dmm){
+            var url = url + "?measureUnit=" + dmm.all[measU].keyname;
             $http.get(url)
             .then(function(resp){
                 dmm[dmm.all[measU].keyname] = resp.data;
@@ -170,7 +185,7 @@ angular.module('portalNMC')
                 .then(function(resp){                
                 deviceMetadataMeasures.all = resp.data;
                 for (var measU in deviceMetadataMeasures.all){
-                    getRmaDeviceMetadataMeasureUnit(measU, deviceMetadataMeasures);
+                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, measU, deviceMetadataMeasures);
                 };
 //console.log(deviceMetadataMeasures);                
                 $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
@@ -178,8 +193,7 @@ angular.module('portalNMC')
                      function(err){
                 console.log(err);
             });
-        };
-        getRmaDeviceMetadataMeasures();
+        };        
                  
         var getRmaDeviceMetadata = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
@@ -206,7 +220,7 @@ angular.module('portalNMC')
                 }
             );
         };         
-        getVzletSystemListFromServer();
+        
         var getVzletSystemList = function(){
             return vzletSystemList;
         };
@@ -328,7 +342,6 @@ angular.module('portalNMC')
          promise = getObjectsData();
          rmaPromise = getRmaObjectsData();
        };
-       loadData();
                  
        $rootScope.$on('objectSvc:requestReloadData', function(){
 //console.log("Reload objects data.");           
@@ -371,8 +384,125 @@ angular.module('portalNMC')
             };
             return null;
         };
+                 
+        //zpoint metadata
+        var getZpointMetaSrcProp = function(objId, zpId){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
+            return $http.get(url);
+        };                 
+        var getZpointMetaDestProp = function(objId, zpId){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
+            return $http.get(url);
+        };        
+        var getZpointMetadata = function(objId, zpId){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
+            return $http.get(url);
+        };
+        var getZpointMetaMeasureUnits = function(objId, zpId){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
+            return $http.get(url).then(
+                function(resp){
+                    zpointMetadataMeasures = {};
+                    zpointMetadataMeasures.all = resp.data;
+                    for (var measU in zpointMetadataMeasures.all){
+                        getRmaMetadataMeasureUnit(url, measU, zpointMetadataMeasures);
+                    };
+                    $rootScope.$broadcast('objectSvc:zpointMetadataMeasuresLoaded');
+                }, 
+                function(e){
+                    console.log(e);
+                }
+            );
+        };
+                 
+        var saveZpointMetadata = function(objId, zpId, metadata){
+            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
+            return $http.put(url, metadata);
+        };
+                 
+        //Objects tree
+        var loadTreeTemplates = function(url){
+            $http.get(url).then(function(resp){
+                rmaTreeTemplates = angular.copy(resp.data);
+            }, function(e){
+                console.log(e);
+            });
+        };
+                 
+        var loadTreeTemplateItems = function(templateId){
+            return $http.get(rmaTreeTemplatesUrl + '/' +templateId + '/items');
+        };
+                 
+        var createTree = function(tree){
+            return $http.post(rmaTreesUrl, tree);
+        };
+        
+        var loadTrees = function(){
+            return $http.get(rmaTreesUrl);
+        };
+        
+        var loadTree = function(treeId){
+            return $http.get(rmaTreesUrl + '/' + treeId);
+        };
+                 
+        var updateTree = function(tree){
+            return $http.put(rmaTreesUrl + '/' + tree.id, tree);
+        };
+                 
+        var deleteTree = function(treeId){
+            return $http.delete(rmaTreesUrl + '/' + treeId);
+        };
+                 
+        var deleteTreeNode = function(treeId, nodeId){
+            return $http.delete(rmaTreesUrl + '/' + treeId + '/node/' + nodeId);
+        };
+                 
+        var loadObjectsByTreeNode = function(treeId, nodeId){            
+            return $http.get(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
+        };
+                 
+        var putObjectsToTreeNode = function(treeId, nodeId, objIds){            
+            return $http.put(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/add', objIds);
+        };
+        
+        var releaseObjectsFromTreeNode = function(treeId, nodeId, objIds){            
+            return $http.put(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/remove', objIds);
+        };
+                 
+        var loadFreeObjectsByTree = function(treeId){            
+            return $http.get(rmaTreesUrl + '/' + treeId + '/contObjects/free');
+        };
+                 
+        var loadSubscrTrees = function(){
+            return $http.get(subscrTreesUrl);
+        };
+        
+        var loadSubscrTree = function(treeId){
+            return $http.get(subscrTreesUrl + '/' + treeId);
+        };
+        
+        var loadSubscrFreeObjectsByTree = function(treeId){            
+            return $http.get(subscrTreesUrl + '/' + treeId + '/contObjects/free');
+        };
+                 
+        var loadSubscrObjectsByTreeNode = function(treeId, nodeId){            
+            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
+        };
+        
+        //service initialization
+        var initSvc = function(){
+            getVzletSystemListFromServer();
+            getRmaDeviceMetadataMeasures();
+            loadTreeTemplates(rmaTreeTemplatesUrl);
+            loadData();
+        };
+
+        initSvc();
                     
         return {
+            createTree,
+            deleteTree,
+            deleteTreeNode,
             getAllDevices,
             getCityConsumingData,
             getCitiesConsumingData,
@@ -394,6 +524,7 @@ angular.module('portalNMC')
             getObjectsUrl,
             getPromise,
             getRmaDeviceMetaDataVzlet,
+            getRmaMetadataMeasureUnit,
             getRmaObject,
             getRmaObjectsData,
             getRmaObjectsUrl,
@@ -403,21 +534,40 @@ angular.module('portalNMC')
             getServiceTypes,
             getSubscrUrl,
             getTimezones,
-            getVzletSystemList,
+            getRmaTreeTemplates,
+            getVzletSystemList,            
+            getZpointMetaDestProp,
+            getZpointMetadataMeasures,
+            getZpointMetaMeasureUnits,
+            getZpointMetaSrcProp,
+            getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
+            loadFreeObjectsByTree,
+            loadObjectsByTreeNode,
             loading,
+            loadTree,            
+            loadTrees,
+            loadTreeTemplateItems,
+            loadTreeTemplates,
+            loadSubscrFreeObjectsByTree,
+            loadSubscrObjectsByTreeNode,
+            loadSubscrTree,
+            loadSubscrTrees,
             promise,
             putDeviceMetaDataVzlet,
             putDeviceSchedulerSettings,
+            putObjectsToTreeNode,
+            releaseObjectsFromTreeNode,
             rmaPromise,
+            saveZpointMetadata,
             sendDeviceToServer,
             setObjectSettings,
             setCurrentObject,
             sortObjectsByFullName,
             sortObjectsByFullNameEx,            
-            sortObjectsByConObjectFullName
-            
+            sortObjectsByConObjectFullName,
+            updateTree
         };
     
 }]);

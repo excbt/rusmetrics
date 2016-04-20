@@ -191,18 +191,50 @@ public class SubscrContObjectService implements SecuredRoles {
 	/**
 	 * 
 	 * @param subscriberId
+	 * @param contObjectIds
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjects(Long subscriberId) {
+	public List<ContObject> selectSubscriberContObjectsExcludingIds(Long subscriberId, List<Long> contObjectIds) {
 		checkNotNull(subscriberId);
-		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
-		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(subscriberId);
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		result.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
+		List<ContObject> result = null;
+		if (contObjectIds.isEmpty()) {
+			result = subscrContObjectRepository.selectContObjects(subscriberId);
+		} else {
+			result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId, contObjectIds);
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
+		checkNotNull(rmaSubscriberId);
+		List<ContObject> result = selectSubscriberContObjects(rmaSubscriberId);
+		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long rmaSubscriberId, List<Long> contObjectIds) {
+		checkNotNull(rmaSubscriberId);
+		checkNotNull(contObjectIds);
+
+		List<ContObject> result = selectSubscriberContObjectsExcludingIds(rmaSubscriberId, contObjectIds);
+
+		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+
 		return result;
 	}
 
@@ -267,6 +299,18 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Long> selectSubscriberContZPointIds(Long subscriberId) {
+		checkNotNull(subscriberId);
+		List<Long> result = subscrContObjectRepository.selectContZPointIds(subscriberId);
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointShortInfo> selectSubscriberContZPointShortInfo(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContZPointShortInfo> result = new ArrayList<>();
@@ -285,8 +329,8 @@ public class SubscrContObjectService implements SecuredRoles {
 			String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
 			String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
 			String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
-			ContZPointShortInfo info = new ContZPointShortInfo(contZPointId, contObjectId, customServiceName, contServiceType,
-					contServiceTypeCaption);
+			ContZPointShortInfo info = new ContZPointShortInfo(contZPointId, contObjectId, customServiceName,
+					contServiceType, contServiceTypeCaption);
 			result.add(info);
 		}
 
@@ -418,6 +462,23 @@ public class SubscrContObjectService implements SecuredRoles {
 		});
 
 		return resultContObjects;
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param contObjects
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public void processRmaContObjectsHaveSubscr(final Long rmaSubscriberId, final List<ContObject> contObjects) {
+		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(rmaSubscriberId);
+
+		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+		contObjects.forEach(i -> {
+			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+			i.set_haveSubscr(haveSubscr);
+		});
+
 	}
 
 }

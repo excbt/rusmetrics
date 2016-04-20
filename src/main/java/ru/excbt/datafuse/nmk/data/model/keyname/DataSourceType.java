@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -46,6 +47,10 @@ public class DataSourceType extends AbstractKeynameEntity {
 	@Column(name = "is_db_table_pair")
 	private Boolean isDbTablePair;
 
+	@JsonIgnore
+	@Column(name = "device_metadata_type")
+	private String deviceMetadataType;
+
 	public String getCaption() {
 		return caption;
 	}
@@ -80,6 +85,10 @@ public class DataSourceType extends AbstractKeynameEntity {
 
 	public Boolean getIsDbTablePair() {
 		return isDbTablePair;
+	}
+
+	public String getDeviceMetadataType() {
+		return deviceMetadataType;
 	}
 
 }

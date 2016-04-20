@@ -50,6 +50,9 @@ angular.module('portalNMC')
 //                notificationFactory.errorInfo(e.statusText, e.data.description || e.data);
 //                console.log(e);
                 var errorCode = "-1";
+                if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+                    errorCode = "ERR_CONNECTION";
+                };
                 if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
                     errorCode = e.resultCode || e.data.resultCode;
                 };
@@ -80,7 +83,10 @@ angular.module('portalNMC')
             
             $scope.refreshData = function(){        
 //console.log(moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat));                
-                var requestDate = moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat)
+                var requestDate = moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat);
+                if (requestDate.localeCompare('Invalid date') == 0 || requestDate < '2000-01-01'){
+                    return "requestDate is Invalid date.";
+                };
                 var url = $scope.dataUrl + "/?beginDate=" + requestDate + "&endDate=" + requestDate;
                 getData(url);
             };
@@ -93,7 +99,17 @@ angular.module('portalNMC')
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                        beforeShow: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        },
+                        onChangeMonthYear: function(){
+                            setTimeout(function(){
+                                $('.ui-datepicker-calendar').css("display", "table");
+                            }, 1);
+                        }
                 }); 
                 
                 $('#'+$scope.type+'Chart-view').bootstrapToggle({

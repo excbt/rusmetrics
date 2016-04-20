@@ -12,8 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
@@ -52,27 +53,26 @@ public class WebApiHelper {
 
 	}
 
-	/**
-	 * 
-	 * @param service
-	 * @param id
-	 * @return
-	 */
-	private static ResponseEntity<?> processResponceApiAction(ApiAction action, HttpStatus successStatus) {
+	private static class ApiProcessResult {
+		//private ResponseEntity<?> errorResponse;
+		private final ApiResult apiErrorResult;
 
-		checkNotNull(action);
-
-		try {
-			action.process();
-		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
+		private boolean isError() {
+			return this.apiErrorResult != null;
 		}
 
-		return ResponseEntity.status(successStatus).build();
+		public ApiProcessResult(ApiResult apiErrorResult) {
+			this.apiErrorResult = apiErrorResult;
+		}
+
+		public ApiProcessResult() {
+			this.apiErrorResult = null;
+		}
+
+		private ResponseEntity<?> buildErrorResponse() {
+			checkNotNull(apiErrorResult.getHttpStatus());
+			return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
+		}
 	}
 
 	/**
@@ -81,25 +81,38 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	private static ResponseEntity<?> processResponceApiActionBody(ApiAction action, HttpStatus successStatus) {
+	private static ResponseEntity<?> _processResponceApiAction(ApiAction action, HttpStatus successStatus) {
+
+		checkNotNull(action);
+
+		ApiProcessResult processResult = _internalProcess(action);
+
+		if (processResult.isError()) {
+			return processResult.buildErrorResponse();
+		}
+
+		if (action.getResult() == null || action.getResult() == ApiActionAdapter.EMPTY_RESULT) {
+			return ResponseEntity.status(successStatus).build();
+		} else {
+			return ResponseEntity.status(successStatus).body(action.getResult());
+		}
+	}
+
+	/**
+	 * 
+	 * @param service
+	 * @param id
+	 * @return
+	 */
+	private static ResponseEntity<?> _processResponceApiActionBody(ApiAction action, HttpStatus successStatus) {
 
 		checkNotNull(action);
 		checkArgument(successStatus != HttpStatus.CREATED, "HttpStatus.CREATED is not supported");
 
-		try {
-			action.process();
-		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
+		ApiProcessResult processResult = _internalProcess(action);
 
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
-
-		} catch (Exception e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResult.error(e));
-
+		if (processResult.isError()) {
+			return processResult.buildErrorResponse();
 		}
 
 		if (action.getResult() == null || action.getResult() == ApiActionAdapter.EMPTY_RESULT) {
@@ -112,6 +125,40 @@ public class WebApiHelper {
 
 	/**
 	 * 
+	 * @param action
+	 * @param successStatus
+	 * @return
+	 */
+	private static ApiProcessResult _internalProcess(ApiAction action) {
+		checkNotNull(action);
+
+		ApiProcessResult result = null;
+
+		try {
+			action.process();
+		} catch (AccessDeniedException e) {
+			logger.warn("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			result = new ApiProcessResult(ApiResult.error(e, HttpStatus.FORBIDDEN));
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.warn("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			result = new ApiProcessResult(ApiResult.error(e, HttpStatus.UNPROCESSABLE_ENTITY));
+		} catch (ModelIsNotValidException e) {
+			logger.warn("Error during process UserAction:{}. ModelIsNotValidException:{}", action.getClass(), e);
+			result = new ApiProcessResult(ApiResult.error(e, HttpStatus.NOT_ACCEPTABLE));
+		} catch (Exception e) {
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			result = new ApiProcessResult(ApiResult.error(e, HttpStatus.INTERNAL_SERVER_ERROR));
+		}
+
+		if (result != null) {
+			return result;
+		}
+
+		return new ApiProcessResult();
+	}
+
+	/**
+	 * 
 	 * @param service
 	 * @param id
 	 * @return
@@ -120,14 +167,10 @@ public class WebApiHelper {
 
 		checkNotNull(action);
 
-		try {
-			action.process();
-		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
+		ApiProcessResult processResult = _internalProcess(action);
+
+		if (processResult.isError()) {
+			return processResult.buildErrorResponse();
 		}
 
 		if (action.getResult() == null) {
@@ -145,7 +188,7 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionOkBody(ApiAction action) {
-		return processResponceApiActionBody(action, HttpStatus.OK);
+		return _processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
 	/**
@@ -155,7 +198,7 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionOk(ApiAction action) {
-		return processResponceApiAction(action, HttpStatus.OK);
+		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**
@@ -165,7 +208,16 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionDelete(ApiAction action) {
-		return processResponceApiAction(action, HttpStatus.NO_CONTENT);
+		return _processResponceApiAction(action, HttpStatus.NO_CONTENT);
+	}
+
+	/**
+	 * 
+	 * @param action
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionDeleteBody(ApiAction action) {
+		return _processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
 	/**
@@ -175,7 +227,7 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionUpdate(ApiAction action) {
-		return processResponceApiActionBody(action, HttpStatus.OK);
+		return _processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
 }

@@ -44,7 +44,7 @@ angular.module('portalNMC')
             {
                 "name": "rsoOrganizationName",
                 "caption": "РСО",
-                "class": "col-xs-2 col-md-2",
+                "class": "col-xs-4 col-md-4",
                 "type": "name",
                 "sortable": true
             },
@@ -58,14 +58,14 @@ angular.module('portalNMC')
             {
                 "name": "flagAdjPump",
                 "caption": "Кор. нас",
-                "class": "col-xs-1 col-md-1",
+                "class": "nmc-td-for-buttons",
                 "type": "checkbox",
                 "sortable": false
             },
             {
                 "name": "flagElevator",
                 "caption": "Элеватор",
-                "class": "col-xs-1 col-md-1",
+                "class": "nmc-td-for-buttons",
                 "type": "checkbox",
                 "sortable": false
             }
@@ -137,6 +137,9 @@ angular.module('portalNMC')
         var errorCallback = function (e) {
             console.log(e);
             var errorCode = "-1";
+            if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+                errorCode = "ERR_CONNECTION";
+            };
             if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
                 errorCode = e.resultCode || e.data.resultCode;
             };
@@ -243,6 +246,7 @@ angular.module('portalNMC')
         
         $scope.addTempSch = function(){
             $scope.data.currentTempSch = {};
+            $scope.data.currentTempSch.chartDeviationValue = 3;//по умолчанию отклонение = 3 - требование заказчика
             $scope.data.currentTempSch.schedules = [angular.copy($scope.ctrlSettings.emptySchedule)];
         };
         
@@ -370,6 +374,10 @@ angular.module('portalNMC')
             };
             if (mainSvc.checkUndefinedNull(tempSch.rsoOrganizationId)){
                 notificationFactory.errorInfo("Ошибка", "Поле \"РСО\" должно быть заполнено!");
+                result = false;
+            };
+            if (mainSvc.checkUndefinedEmptyNullValue(tempSch.chartDeviationValue)){
+                notificationFactory.errorInfo("Ошибка", "Поле \"Допустимое отклонение\" должно быть заполнено!");
                 result = false;
             };
 //            if (!mainSvc.checkPositiveNumberValue(tempSch.chartDeviationValue)){
@@ -600,7 +608,11 @@ angular.module('portalNMC')
                 //Upload file 
         $scope.uploadFile = function(){
 //console.log($scope.data.dataFile);             
-//console.log(typeof $scope.data.dataFile); 
+//console.log(typeof $scope.data.dataFile);
+            if (mainSvc.checkUndefinedNull($scope.data.dataFile)){
+                notificationFactory.errorInfo("Загрузка файла", "Файл не выбран.");
+                return "Management temperature schedules. File loading is failed";
+            };
             var fileLoadedFlag = false;
             var strArray = $scope.data.dataFile.split('\n');
 //console.log(strArray);                                    

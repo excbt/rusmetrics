@@ -415,6 +415,10 @@ body{
 .nmc-dropdown-toggle-filter:hover{
     background-color: #fff;
 }
+
+.nmc-dropdown-hover{
+    margin: 0;
+}
     
 .submenu{
     margin-left: 20px;
@@ -794,6 +798,19 @@ tr.nmc-main-table-header-indicator > th {
     min-height: 360px;
     position:relative
 }
+
+/*  Дерево объектов*/
+.nmc-tree-with-fixed-header{
+    overflow: scroll;
+    height: 73vh;
+    min-height: 360px;
+    position:relative
+}
+
+.nmc-ui-tree-handle:focus{
+    background-color: #eee;
+}
+
 /*  Таблица с непрокручиваемой шапкой для страницы Показания*/
 .nmc-indicator-table-with-fixed-header{
 /*    overflow-y: hidden;*/
@@ -927,6 +944,7 @@ tr.nmc-inactive-price > td{
 .nmc-input-tmax-tmin > .nmc-tmax-tmin-divider{
     display: table-cell;
     padding: 0 5px;
+    vertical-align: middle;
 }
 
     /* Приписка перед интервалом дат - изначально там буква "с"*/
@@ -1044,6 +1062,11 @@ tr.nmc-inactive-price > td{
     font-size: 12px;
     height: 25px;
     padding: 5px;
+}
+/* вывод строки*/
+.nmc-text-ouput{
+    min-height: 25px;
+    padding: 3px 0 0 5px;
 }
 
 .nmc-text-input-notice-filter-form {
@@ -1393,6 +1416,10 @@ tr.nmc-inactive-price > td{
     color:rgba(0, 0, 0, 0.65);
 }
 
+.nmc-button-disabled{
+    opacity: 0.4 !important;
+}
+
 .nmc-button-in-table-question{
 /*    color: red;*/
     width: 24px;
@@ -1608,6 +1635,12 @@ tr.nmc-inactive-price > td{
     max-height: 250px;
 }
 
+    /* Настройка списка мета свойств у точки учета*/
+.nmc-metadata-list-in-zpoint{
+    overflow-y: auto;
+    min-height: 441px;
+    max-height: 463px;    
+}
     /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
     /* Настройка списка мета свойств у прибора*/
 .nmc-object-list-in-notices, .nmc-metadata-list-in-devices{
@@ -1742,6 +1775,11 @@ tr.nmc-inactive-price > td{
 /**********************
  * Вспомогательные
  *********************/
+/* Вертикальное выравнивание содержимого*/
+.nmc-valign-middle{
+    vertical-align: middle;
+}
+
 /*Класс для форматирования дива, в который выводятся данные о потребелении*/
 .nmc-div-data{
     height: 2em;
@@ -2045,6 +2083,10 @@ tr.nmc-inactive-price > td{
 
 .paddingRight10{
     padding-right: 10px;
+}
+
+.paddingRight20{
+    padding-right: 20px;
 }
 
 .paddingLeftRight15{

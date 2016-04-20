@@ -51,6 +51,28 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	/**
 	 * 
 	 * @param contObjectId
+	 * @return
+	 */
+	@Override
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
+		for (DeviceObject deviceObject : deviceObjects) {
+			deviceObject.shareDeviceLoginInfo();
+		}
+
+		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @param subscrDataSourceId
 	 * @param subscrDataSourceAddr
@@ -91,10 +113,13 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setIsActive(true);
 		}
 
+		deviceObject.saveDeviceObjectInfo();
+
 		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
 			@Override
 			public void process() {
 				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
+				result.shareDeviceLoginInfo();
 				setResultEntity(result);
 			}
 		};
@@ -173,6 +198,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
 			deviceObjectDataSource.setIsActive(true);
 		}
+
+		deviceObject.saveDeviceObjectInfo();
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
 

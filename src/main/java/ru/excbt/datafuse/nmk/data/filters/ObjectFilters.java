@@ -102,6 +102,18 @@ public class ObjectFilters {
 
 	/**
 	 * 
+	 * @param inObject
+	 * @return
+	 */
+	public static <T extends DeletableObject> T deletedFilter(T inObject) {
+		if (inObject == null) {
+			return null;
+		}
+		return NO_DELETED_OBJECT_PREDICATE.test(inObject) ? inObject : null;
+	}
+
+	/**
+	 * 
 	 * @param inStream
 	 * @return
 	 */

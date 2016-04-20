@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,12 +35,12 @@ public class JsonMetadataParser {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	private final static String META_SUBSTR_REXPR = "\\(var\\)";
-	private final static Pattern META_VAR = Pattern.compile(META_SUBSTR_REXPR);
-	private final static String COMMA_STR = ",";
-	private final static String DEGIT_REGEXP = "(\\\\d)+";
-	private final static String SUM_FUNCION = "SUM(*)";
-	private final static List<String> SUPPORTED_FUNC = Arrays.asList(SUM_FUNCION);
+	public final static String META_SUBSTR_REXPR = "\\(var\\)";
+	public final static Pattern META_VAR_PATTERN = Pattern.compile(META_SUBSTR_REXPR);
+	public final static String COMMA_STR = ",";
+	public final static String DEGIT_REGEXP = "(\\\\d)+";
+	public final static String SUM_FUNCION = "SUM(*)";
+	public final static List<String> SUPPORTED_FUNC = Collections.unmodifiableList(Arrays.asList(SUM_FUNCION));
 
 	/**
 	 * 
@@ -58,7 +59,7 @@ public class JsonMetadataParser {
 
 			MetadataInfoHolder data = new MetadataInfoHolder(srcMetadata);
 
-			Matcher m = META_VAR.matcher(srcMetadata.getSrcProp());
+			Matcher m = META_VAR_PATTERN.matcher(srcMetadata.getSrcProp());
 
 			if (data.getPropVars() != null && !srcMetadata.getPropVars().contains(propVarStr)) {
 				logger.trace("srcProp: {} SKIPPED (by propVars)", srcMetadata.getSrcProp());

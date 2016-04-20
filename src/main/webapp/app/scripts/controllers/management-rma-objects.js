@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout) {
+.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
+            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
                 $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
@@ -18,6 +18,8 @@ angular.module('portalNMC')
                 $scope.messages.viewDevices = "Приборы";
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
+                $scope.messages.moveToNode = "Переместить";
+                $scope.messages.releaseFromNode = "Отвязать от узла";
                 
                     //object ctrl settings
                 $scope.crudTableName = objectSvc.getObjectsUrl();
@@ -83,41 +85,44 @@ angular.module('portalNMC')
                         }
                     });        
                     return obj;
-                };
+                };                
                 
 //console.log(objectSvc.promise);
-                var getObjectsData = function(objId){
-//console.log("getObjectsData");                    
-                    objectSvc.getRmaPromise().then(function(response){
-                        var tempArr = response.data;
-    //console.log(tempArr);                    
-                        $scope.objects = response.data;
-                        //sort by name
-                        objectSvc.sortObjectsByFullName($scope.objects);
-                        
-                        if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
+                
+                var performObjectsData = function(response){
+                    var tempArr = response.data;
+//console.log(tempArr);                    
+                    $scope.objects = response.data;
+                    //sort by name
+                    objectSvc.sortObjectsByFullName($scope.objects);
 
-                            $scope.objectsWithoutFilter = $scope.objects;
-                            $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
-                            tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
-                            $scope.objectsOnPage = tempArr;                            
-                            //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                            if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
-                                $scope.toggleShowGroupDetails(Number($cookies.contObject));
-                                $cookies.contObject = null;          
-                            };
-                            $rootScope.$broadcast('objectSvc:loaded');
-
-                            if (!mainSvc.checkUndefinedNull(objId)){
-                                moveToObject(objId);
-                            };
-                        } else {
-                            $scope.searchObjects($scope.filter);
+                    if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
+                        $scope.objectsWithoutFilter = $scope.objects;
+                        $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        $scope.objectsOnPage = tempArr;                            
+                        //if we have the contObject id in cookies, then draw the Zpoint table for this object.
+                        if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
+                            $scope.toggleShowGroupDetails(Number($cookies.contObject));
+                            $cookies.contObject = null;          
                         };
-                        $scope.loading = false;  
-                    });
+                        $rootScope.$broadcast('objectSvc:loaded');
+//                        if (!mainSvc.checkUndefinedNull(objId)){
+//                            moveToObject(objId);
+//                        };
+                    } else {
+                        $scope.searchObjects($scope.filter);
+                    };
+                    $scope.loading = false;  
                 };
-                getObjectsData();
+                
+                var getObjectsData = function(objId){
+//console.log("getObjectsData");
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $scope.loading = true;
+                    objectSvc.getRmaPromise().then(performObjectsData);
+                };
+                
                 
                 var getRsoOrganizations = function(){
                     objectSvc.getRsoOrganizations()
@@ -125,7 +130,6 @@ angular.module('portalNMC')
                         $scope.data.rsoOrganizations = response.data;
                     });
                 };
-                getRsoOrganizations();
                 
                 var getCmOrganizations = function(){
                     objectSvc.getCmOrganizations()
@@ -135,7 +139,6 @@ angular.module('portalNMC')
                         mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
                     });
                 };
-                getCmOrganizations();
                 
                 var getServiceTypes = function(){
                     objectSvc.getServiceTypes()
@@ -144,7 +147,6 @@ angular.module('portalNMC')
 //console.log(response.data);                        
                     });
                 };
-                getServiceTypes();
                 
                 var getTimezones = function(){
                     objectSvc.getTimezones()
@@ -153,8 +155,7 @@ angular.module('portalNMC')
 //console.log($scope.data.timezones);                        
                     });
                 };
-                getTimezones();
-                
+
 //                $scope.objects = objectSvc.getObjects();
                 $scope.loading = objectSvc.getLoadingStatus();//loading;
                 $scope.columns = [
@@ -176,9 +177,9 @@ angular.module('portalNMC')
                 $scope.bList = true;//angular.fromJson($attrs.blist) || true; //Признак того, что объекты выводятся только для просмотра        
                 //zpoint column names
                 $scope.oldColumns = [
-                        {"name":"zpointName", "header" : "Наименование", "class":"col-md-5"},
-                        {"name":"zpointModel", "header" : "Модель", "class":"col-md-2"},
-                        {"name":"zpointNumber", "header" : "Номер", "class":"col-md-2"},
+                        {"name":"zpointName", "header" : "Наименование", "class":"col-xs-5 col-md-5"},
+                        {"name":"zpointModel", "header" : "Модель", "class":"col-xs-2 col-md-2"},
+                        {"name":"zpointNumber", "header" : "Номер", "class":"col-xs-2 col-md-2"},
 //                        {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
                     ];//angular.fromJson($attrs.zpointcolumns);
                 // Эталонный интервал
@@ -192,6 +193,46 @@ angular.module('portalNMC')
                 $scope.cont_zpoint_setting_mode_check = [
                     {"keyname":"summer", "caption":"Летний режим"}
                     ,{"keyname":"winter", "caption":"Зимний режим"}
+                ];
+                
+                $scope.data.metadataSchema = [
+                    {
+                        header: 'Поле источник',
+                        headClass : 'col-xs-2 col-md-2',
+                        name: 'srcProp',
+                        type: 'select_src_field'
+                    },{
+                        header: 'Делитель',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'srcPropDivision',
+                        type: 'input/text',
+                        disabled: false
+                    },{
+                        header: 'Единицы измерения источника',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'srcMeasureUnit',
+                        type: 'select_measure_units',
+                        disabled: false
+                    },{
+                        header: 'Единицы измерения приемника',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'destMeasureUnit',
+                        type: 'select_measure_units',
+                        disabled: false
+                    }
+                    ,{
+                        header: 'Поле приемник',
+                        headClass : 'col-xs-2 col-md-2',
+                        name: 'destProp',
+                        type: 'input/text',
+                        disabled: true
+                    },{
+                        header: 'Функция',
+                        headClass : 'col-xs-1 col-md-1',
+                        name: 'propFunc',
+                        type: 'input/text',
+                        disabled: true
+                    }
                 ];
                 
 
@@ -337,7 +378,7 @@ angular.module('portalNMC')
                 
                 var successCallbackUpdateObject = function(e){ 
                     $rootScope.$broadcast('objectSvc:requestReloadData');
-//console.log(e);
+console.log(e);
 //console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
                                         //update zpoints info
@@ -411,19 +452,30 @@ angular.module('portalNMC')
 
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
-                    $scope.loading = true;
-                    getObjectsData(e.id);
+                    if ($scope.objectCtrlSettings.isTreeView == false){
+                        getObjectsData(e.id);
+                    }else{
+                    //if tree is on
+                        $scope.loadTree($scope.data.currentTree, e.id);                    
+                    };
+                    
                 };
-
-                var errorCallback = function (e) { 
+                
+                var errorProtoCallback = function(e){
                     console.log(e);
                     var errorCode = "-1";
+                    if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+                        errorCode = "ERR_CONNECTION";
+                    };
                     if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
                         errorCode = e.resultCode || e.data.resultCode;
                     };
                     var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);                    
+                };
+
+                var errorCallback = function (e) { 
+                    errorProtoCallback(e);
                     //zpoint settings saving flag reset
                     $scope.zpointSettings.isSaving = false;
                     $scope.currentObject.isSaving = false;
@@ -491,15 +543,15 @@ angular.module('portalNMC')
                         notificationFactory.errorInfo("Ошибка", "Не задано наименование объекта!");
                         result = false;
                     };
-                    if ($scope.emptyString(obj.timezoneDefKeyname)){
+                    if ($scope.emptyString(obj.timezoneDefKeyname) && (obj.isLightForm != true)){
                         notificationFactory.errorInfo("Ошибка", "Не задан часовой пояс объекта!");
                         result = false;
                     };
-                    if ($scope.checkUndefinedNull(obj.contManagementId)){
+                    if ($scope.checkUndefinedNull(obj.contManagementId) && (obj.isLightForm != true)){
                         notificationFactory.errorInfo("Ошибка", "Не задана управляющая компания!");
                         result = false;
                     };
-                    if ($scope.emptyString(obj.currentSettingMode)){
+                    if ($scope.emptyString(obj.currentSettingMode) && (obj.isLightForm != true)){
                         notificationFactory.errorInfo("Ошибка", "Не задан режим функционирования!");
                         result = false;
                     };
@@ -526,7 +578,7 @@ angular.module('portalNMC')
 			        $scope.currentObject = curObject;                    
 			    };
                 
-                $scope.selectedObject = function(objId){
+                $scope.selectedObject = function(objId, isLightForm){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
                         $scope.currentObject = resp.data;
@@ -534,6 +586,9 @@ angular.module('portalNMC')
                         if (angular.isDefined($scope.currentObject._activeContManagement) && 
                             ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
+                        };
+                        if (!mainSvc.checkUndefinedNull(isLightForm)){
+                            $scope.currentObject.isLightForm = isLightForm;
                         };
                         checkGeo();
                     }, function(error){
@@ -672,7 +727,9 @@ angular.module('portalNMC')
                             };
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
-                        });
+                        }, 
+                                                                               errorCallback
+                                                                              );
                     }//else if curObject.showGroupDetails = false => hide child zpoint table
                     else{
                         var trObj = document.getElementById("obj" + curObject.id);
@@ -699,7 +756,7 @@ angular.module('portalNMC')
 
                     trHTML += "<td class=\"nmc-td-for-button-object-control\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" +object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
                     trHTML += "<thead><tr class=\"nmc-child-table-header\">";
-                    trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons\"></th>";
+                    trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-button\"></th>";
                     $scope.oldColumns.forEach(function(column){
                         trHTML += "<th class=\"" + column.class + "\">";
                         trHTML += "" + (column.header || column.name) + "";
@@ -710,29 +767,34 @@ angular.module('portalNMC')
                     
                     object.zpoints.forEach(function(zpoint){
                         trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" >";
-//                        ng-dblclick=\"getIndicators("+object.id+","+zpoint.id+")\"
-                        trHTML += "<td class=\"nmc-td-for-buttons\">"+
-                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\""+
-                                    "ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\""+
-                                    "data-target=\"#showZpointOptionModal\""+
-                                    "data-toggle=\"modal\""+
-                                    "data-placement=\"bottom\""+
-                                    "title=\"Свойства точки учёта\">"+
-                                "</i>"+
-                                "<i class=\"btn btn-xs nmc-button-in-table\""+
-                                    "ng-click=\"getZpointSettingsExpl(" + object.id + "," + zpoint.id + ")\""+
-                                    "data-target=\"#showZpointExplParameters\""+
-                                    "data-toggle=\"modal\""+
-                                    "data-placement=\"bottom\""+
-                                    "title=\"Эксплуатационные параметры точки учёта\">"+
-                                        "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
-                                "</i>"+
-//                                "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
-//                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
-//                                    "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
-//                                    "title=\"Показания точки учёта\">"+
-//                                "</i></a>"+
-
+                        trHTML += "<td class=\"nmc-td-for-button\">" +
+                            
+                            "<div class=\"btn-group\">" +
+                            "<i title=\"Действия над точкой учета\" type=\"button\" class=\"btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" style=\"font-size: .9em;\"></i>" +
+                            "<ul class=\"dropdown-menu\">" +                                                                    
+                                    "<li><a ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
+                                            "data-target=\"#showZpointOptionModal\"" +
+                                            "data-toggle=\"modal\"" +
+                                            "data-placement=\"bottom\"" +
+                                            "title=\"Свойства точки учёта\">" +
+                                            "Свойства" +
+                                    "</a></li>" +                                    
+                                    "<li><a ng-click=\"getZpointSettingsExpl(" + object.id + "," + zpoint.id + ")\"" +
+                                        "data-target=\"#showZpointExplParameters\""+
+                                        "data-toggle=\"modal\"" +
+                                        "data-placement=\"bottom\"" +
+                                        "title=\"Эксплуатационные параметры точки учёта\">" +
+                                        "Эксплуатационные параметры" +
+                                    "</a></li>" +                                    
+                                    "<li><a ng-click=\"openZpointMetadata(" + object.id + "," + zpoint.id + ")\"" +
+//                                        "data-target=\"#metaDataEditorModal\""+
+//                                        "data-toggle=\"modal\"" +
+//                                        "data-placement=\"bottom\"" +
+                                        "title=\"Метаданные точки учета\">" +
+                                        "Метаданные" +
+                                    "</a></li>" +
+                            "</ul>" +
+                            "</div>" +
                             "</td>";
                         $scope.oldColumns.forEach(function(column){
                             switch (column.name){
@@ -829,7 +891,7 @@ angular.module('portalNMC')
                 $scope.addZpoint = function(object){
                     $scope.selectedItem(object);                    
                     $scope.zpointSettings = {};
-                    $scope.getDevices(object, false);
+                    $scope.getDevices(object, false);                    
                 };
                 
                 $scope.getZpointSettings = function(objId, zpointId){
@@ -1281,11 +1343,14 @@ angular.module('portalNMC')
                     $scope.deleteObjectInit($scope.currentObject);
                 };
                 
-                $scope.addObjectInit = function(){
+                $scope.addObjectInit = function(isLightForm){
 //console.log("addObjectInit");                    
                     $scope.currentObject = {};
+                    $scope.currentObject.isLightForm = isLightForm;
                     checkGeo();
                     $('#showObjOptionModal').modal();
+                    $('#showObjOptionModal').css("z-index", "1041");
+console.log($scope.currentObject);                    
                 };
                 
 //                work with object devices
@@ -1340,9 +1405,9 @@ angular.module('portalNMC')
 //                    $scope.currentDevice.contObjectId = $scope.currentObject.id;
                 };
                 
-                var setConfirmCode = function(){
+                var setConfirmCode = function(useImprovedMethodFlag){
                     $scope.confirmCode = null;
-                    var tmpCode = mainSvc.getConfirmCode();
+                    var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
                     $scope.confirmLabel = tmpCode.label;
                     $scope.sumNums = tmpCode.result;                    
                 };
@@ -1439,8 +1504,6 @@ angular.module('portalNMC')
                     });
                 };
                 
-                getClients();
-                
                                 
                var deleteDoubleElements = function(targetArray){
                     var resultArray = angular.copy(targetArray);
@@ -1475,15 +1538,15 @@ angular.module('portalNMC')
                 //инициализируем переменные и интерфейсы для назначения объектов абонентам
                 $scope.setClientsInit = function(object){
                     if (!mainSvc.checkUndefinedNull(object)){
-                        object.selected = true;
+//                        object.selected = true;
+                        $scope.selectedItem(object);
+                        $scope.objectCtrlSettings.isSetClientForOneObject = true;//включаем флаг того, что назначаем абонентов только одному текущему объекту
                     };
                     $scope.data.clientsOnPage = angular.copy($scope.data.clients);
                     $('#setClientModal').modal();
                 };
                 
-                //отправляем запрос на назначение на сервер
-                $scope.setClients = function(){
-                    //собираем идишники выбранных объектов в один массив
+                var prepareObjectsIdsArray = function(){
                     var tmp = [];
                     if ($scope.objectCtrlSettings.allSelected == true){
                         $scope.objects.forEach(function(elem){
@@ -1500,20 +1563,26 @@ angular.module('portalNMC')
                             };
                         });
                     };
+                    return tmp;
+                };
+                
+                //отправляем запрос на назначение на сервер
+                $scope.setClients = function(){
+                    var tmp = [];//массив id объектов, которым назначаются абоненты
+                    if ($scope.objectCtrlSettings.isSetClientForOneObject == true){
+                        tmp.push($scope.currentObject.id);//передать в массив id текущего объекта
+                        $scope.objectCtrlSettings.isSetClientForOneObject = false;//сбросить флаг
+                    }else{
+                    //собираем идишники выбранных объектов в один массив
+                        tmp = prepareObjectsIdsArray();
+                        $scope.objectCtrlSettings.anySelected = false;
+                    };
                     //для каждого абонента надо вызвать rest для задания объектов, 
                     //передавая полученный массив идишников
                     $scope.data.clientsOnPage.forEach(function(cl){
                        if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
                             var table = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
                             prepareClient(table, tmp);
-//                            $http.get(table).then(function(response){
-//                                var subscrObjs = response.data;
-//                                var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
-//                                $http.put(table, tmp).then(successCallback, errorCallback);
-//                            },
-//                                                  errorCallBack
-//                            );
-                            
                         }; 
                     });                    
                 };
@@ -1637,7 +1706,7 @@ angular.module('portalNMC')
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
                     $('#inputEXCode').inputmask();
-                    $("#inputAddress").suggestions({
+                    $("#inputObjAddress").suggestions({
                         serviceUrl: "https://dadata.ru/api/v2",
                         token: "f9879c8518e9c9e794ff06a6e81eebff263f97d5",
                         type: "ADDRESS",
@@ -1660,7 +1729,7 @@ angular.module('portalNMC')
                             // $scope.$apply();
                         }
                     });
-                    $("#inputAddress").change(function(){
+                    $("#inputObjAddress").change(function(){
                         $scope.currentSug = null;
                         $scope.currentObject.isAddressAuto = false;
                         $scope.currentObject.isValidGeoPos = false;
@@ -1678,6 +1747,471 @@ angular.module('portalNMC')
                 
                 $('#showObjOptionModal').on('hidden.bs.modal', function(){
                     $scope.currentObject.isSaving = false;
+                    $scope.currentSug = null;
                 });
+                
+// *****************************************************************************************
+//                Zpoint metadata
+// ******************************************************************************************
+                $scope.zpointMetadataIntegratorsFlag = false;
+                    
+                $scope.openZpointMetadata = function(coId, zpId){
+                    $scope.selectedZpoint(coId, zpId);
+                    //get srcProp
+                    objectSvc.getZpointMetaSrcProp(coId, zpId).then(
+                        function(resp){
+                            $scope.currentZpoint.metaData = {};
+                            $scope.currentZpoint.metaData.srcProp = resp.data;
+                            $scope.currentZpoint.metaData.srcProp.push({columnName: ""});
+                            objectSvc.getZpointMetaDestProp(coId, zpId).then(
+                                function(resp){
+                                    $scope.currentZpoint.metaData.destProp = resp.data;
+                                    objectSvc.getZpointMetaMeasureUnits(coId, zpId);
+                                }, errorCallback                                
+                            );
+                        }, errorCallback
+                    );
+                };
+                
+                $scope.$on('objectSvc:zpointMetadataMeasuresLoaded', function(){
+                    $scope.currentZpoint.metaData.measures = objectSvc.getZpointMetadataMeasures();
+                    objectSvc.getZpointMetadata($scope.currentZpoint.contObjectId, $scope.currentZpoint.id).then(
+                        function(resp){
+                            $scope.currentZpoint.metaData.metaData = resp.data;
+                            $('#metaDataEditorModal').modal();
+//console.log($scope.currentZpoint);                                            
+                        }, errorCallback
+                    );
+                });
+                
+                $scope.updateZpointMetaData = function(zpoint){
+//console.log(zpoint);                    
+                    objectSvc.saveZpointMetadata(zpoint.contObjectId, zpoint.id, zpoint.metaData.metaData).then(
+                        function(resp){
+                            $('#metaDataEditorModal').modal('hide');
+                            notificationFactory.success();
+                        },
+                        errorCallback
+                    );
+                };
+                
+                $scope.log = function(logObj){
+                    console.log(logObj);
+                };
+// *****************************************************************************************
+//                end Zpoint metadata
+// ******************************************************************************************                
+                
+// ********************************************************************************************
+                //  TREEVIEW
+//*********************************************************************************************
+                $scope.data.treeTemplates = objectSvc.getRmaTreeTemplates();
+                $scope.objectCtrlSettings.treeSettings = {};
+                $scope.objectCtrlSettings.treeSettings.nodesPropName = 'childObjectList'; //'objectName'
+                $scope.data.currentDeleteMessage = "";
+
+                var ROOT_NODE = {
+                    objectName: "",
+                    type: "root",
+                    childObjectList: []
+                };
+                
+                $scope.objectCtrlSettings.isTreeView = true;
+                $scope.data.currentTree = {};
+                $scope.data.newTree = {};
+                
+                var findNodeInTree = function(node, tree){
+                    return mainSvc.findNodeInTree(node, tree);
+                };
+                
+                $scope.findNodeInTree = function(node, tree){//wrapper for testing
+                    return mainSvc.findNodeInTree(node, tree);
+                };
+                
+                $scope.selectNode = function(item){                    
+                    var treeForSearch = $scope.data.currentTree;
+                    var selectedNode = $scope.data.selectedNode;
+                    if ($scope.objectCtrlSettings.isObjectMoving == true){
+                        treeForSearch = $scope.data.treeForMove;
+                        if (mainSvc.checkUndefinedNull($scope.data.selectedNodeForMove)){
+                            item.isSelected = true;                    
+                            $scope.data.selectedNodeForMove = angular.copy(item);
+                            return ;
+                        };
+                        selectedNode = $scope.data.selectedNodeForMove;
+                    };
+                    if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
+                        return ;
+                    };             
+                    if (!mainSvc.checkUndefinedNull(selectedNode)){                        
+                        var preNode = findNodeInTree(selectedNode, treeForSearch);
+                        if (!mainSvc.checkUndefinedNull(preNode)){
+                            preNode.isSelected = false;
+                        }
+                    };
+                    
+                    item.isSelected = true;                    
+                    if ($scope.objectCtrlSettings.isObjectMoving == true){
+                        $scope.data.selectedNodeForMove = angular.copy(item);
+                    }else{
+                        $scope.data.selectedNode = angular.copy(item); 
+//                        $rootScope.$broadcast('objectSvc:requestReloadData');
+                        $scope.loading = true;
+                        if (item.type == 'root'){
+                            objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                        }else{
+                            objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performObjectsData);
+                        };
+                    };                    
+                };
+                
+                $scope.data.trees = [];
+                
+                $scope.loadTree = function(tree, objId){
+//                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $scope.loading = true;
+                    objectSvc.loadTree(tree.id).then(function(resp){
+                            $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
+                            var respTree = angular.copy(resp.data);
+                            respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
+                            $scope.data.currentTree = respTree;
+                            respTree.childObjectList[0].isSelected = true;
+                            $scope.data.selectedNode = angular.copy(respTree.childObjectList[0]);
+                            objectSvc.loadFreeObjectsByTree(tree.id).then(performObjectsData);
+                            if (mainSvc.checkUndefinedNull($scope.data.currentTree.templateId)){
+                                return "Tree is free";
+                            };
+                            objectSvc.loadTreeTemplateItems($scope.data.currentTree.templateId).then(function(resp){
+                                $scope.data.currentTreeTemplateItems = angular.copy(resp.data);
+                                respTree.childObjectList[0].templateId = $scope.data.currentTree.templateId;
+                                respTree.childObjectList[0].templateItemId = $scope.data.currentTree.templateItemId;
+                            }, errorProtoCallback);
+//                            $scope.data.trees.push(respTree);
+                        }, errorProtoCallback);
+                };
+                
+                var loadTrees = function(){
+                    objectSvc.loadTrees().then(function(resp){
+                        mainSvc.sortItemsBy(resp.data, "objectName");
+                        $scope.data.trees = angular.copy(resp.data);
+                        if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
+                            $scope.messages.treeMenuHeader = "Выберете дерево";
+                            getObjectsData();
+                            return "Object tree array is empty.";
+                        }                        
+                        $scope.loadTree($scope.data.trees[0]);                        
+                    }, errorProtoCallback);
+                };                
+                
+                var performNewNode = function(newNode, parent){
+                    var trueParentRoot = null;
+                    if (parent.type == 'root'){
+                        trueParentRoot = $scope.data.currentTree;
+                    }else{
+                        trueParentRoot = parent;
+                    };
+                    if (mainSvc.checkUndefinedNull(trueParentRoot) || !angular.isArray(trueParentRoot.childObjectList)){
+                        return "Parent is incorrect node!"
+                    };
+                    trueParentRoot.childObjectList.push(newNode);                 
+                };
+                
+                $scope.saveNode = function(newNode, parent, anotherNodeFlag){
+                    var isCheckTree = checkTree(newNode);      
+                    if (isCheckTree == false){
+                        return "Node is no correct!";
+                    };
+                    performNewNode(newNode, parent);
+                    // remove temporary root node before update tree
+                    if (angular.isArray($scope.data.currentTree.childObjectList) && 
+                        ($scope.data.currentTree.childObjectList.length > 0) && 
+                        ($scope.data.currentTree.childObjectList[0].type == "root"))
+                    {
+                        $scope.data.currentTree.childObjectList.shift();
+                    };
+                    objectSvc.updateTree($scope.data.currentTree).then(function(resp){                      
+                        var respTree = resp.data;
+                        respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
+                        if (!mainSvc.checkUndefinedNull(respTree.templateId)){
+                            respTree.childObjectList[0].templateId = respTree.templateId;
+                        };
+                        if (!mainSvc.checkUndefinedNull(respTree.templateItemId)){
+                            respTree.childObjectList[0].templateItemId = respTree.templateItemId;
+                        };
+                        var findIndex = -1;                        
+                        $scope.data.trees.some(function(tree, index){
+                            if (tree.id == respTree.id){
+                                findIndex = index;
+                                return true;
+                            };
+                        });
+                        if (findIndex != -1){
+                            $scope.data.trees[findIndex] = respTree;
+                            $scope.data.currentTree = respTree;
+                        };
+                        if (mainSvc.checkUndefinedNull(anotherNodeFlag) || anotherNodeFlag != true){
+                            $('#treeLevelModal').modal('hide');
+                        }else{
+                            $scope.data.parentLevel = findNodeInTree(parent, $scope.data.currentTree);
+                            $scope.data.currentLevel = {childObjectList: []};
+                            if (!mainSvc.checkUndefinedNull($scope.data.parentLevel.templateItemId)){
+                                var parentLevel = findTemplateItemById($scope.data.parentLevel.templateItemId);
+                                var currentLevel = findTemplateItemByItemLevel(parentLevel.itemLevel + 1);
+                                if (currentLevel == null){
+                                    return "Template item is no find.";
+                                };
+                                $scope.data.currentLevel.objectName = currentLevel.itemName;
+                                $scope.data.currentLevel.templateId = currentLevel.templateId;
+                                $scope.data.currentLevel.templateItemId = currentLevel.id;
+                            };
+                            $('#inputLevelName').focus();
+                        };
+                        //update tree in array
+                    }, errorProtoCallback);
+                    
+                };
+                
+                var checkTree = function(tree){                   
+                    var result = true;
+                    if ($scope.emptyString(tree.objectName)){
+                        notificationFactory.errorInfo("Ошибка", "Не задано наименование!");
+                        result = false;
+                    };
+                    return result;
+                };
+                
+                $scope.saveTree = function(tree){
+                    var isCheckTree = checkTree(tree);      
+                    if (isCheckTree == false){
+                        return "Tree is no correct!";
+                    };
+                        // remove temporary root node
+                    if (angular.isArray(tree.childObjectList) && (tree.childObjectList.length > 0) && (tree.childObjectList[0].type == "root")){
+                        tree.childObjectList.shift();
+                    };
+                    objectSvc.createTree(tree).then(function(resp){
+                        var createdTree = angular.copy(resp.data);
+                        createdTree.childObjectList.unshift(angular.copy(ROOT_NODE));
+                        if (!mainSvc.checkUndefinedNull(createdTree.templateId)){
+                            createdTree.childObjectList[0].templateId = createdTree.templateId;
+                        };
+                        if (!mainSvc.checkUndefinedNull(createdTree.templateItemId)){
+                            createdTree.childObjectList[0].templateItemId = createdTree.templateItemId;
+                        };
+                        $scope.data.trees.push(createdTree);
+                        $('#showTreeOptionModal').modal('hide');
+                    }, errorProtoCallback);                    
+                };
+                
+                $scope.removeNodeInit = function(node){
+                    $scope.data.currentDeleteItem = node;
+                    if (node.type == 'root'){
+                        $scope.data.currentDeleteMessage = $scope.data.currentTree.objectName || $scope.data.currentTree.id;                     
+                    }else{
+                        $scope.data.currentDeleteMessage = node.objectName || node.id;
+                    };
+                    setConfirmCode(true);
+                    $scope.deleteHandler = function(delItem){
+                        if (mainSvc.checkUndefinedNull(delItem)){
+                            return "Deleting item is undefined or null."
+                        };
+                        if (!mainSvc.checkUndefinedNull(delItem.type) && delItem.type == 'root'){
+                            objectSvc.deleteTree($scope.data.currentTree.id).then(function(resp){
+                                loadTrees();
+                            }, errorProtoCallback);                            
+                        }else{
+                            objectSvc.deleteTreeNode($scope.data.currentTree.id, delItem.id).then(function(resp){
+                                $scope.loadTree($scope.data.currentTree);
+                            }, errorCallback);
+                        };
+                        $("#deleteWindowModal").modal('hide');
+                    };
+                    $("#deleteWindowModal").modal();
+                };
+                
+                $scope.moveToNodeInit = function(object){
+                    $scope.data.selectedNodeForMove = null;
+                    var tmpMovingObjectArr = [];
+                    if (!mainSvc.checkUndefinedNull(object)){
+                        $scope.selectedItem(object);
+                        tmpMovingObjectArr.push(object.id);
+                    }else{
+                        tmpMovingObjectArr = prepareObjectsIdsArray();                        
+                        $scope.objectCtrlSettings.anySelected = false;
+                    };
+                    $scope.data.treeForMove = angular.copy($scope.data.currentTree);
+                    $scope.data.treeForMove.childObjectList.shift();
+                    $scope.data.treeForMove.movingObjects = tmpMovingObjectArr;
+                }
+                
+                $scope.moveToNode = function(){
+                    objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
+                        $scope.loading = true;
+                        if ($scope.data.selectedNode.type == 'root'){
+                            objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                        }else{
+                            objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
+                        };
+                        $('#viewTreeModal').modal('hide');
+                    }, errorCallback);
+                };
+                
+                $scope.releaseFromNode = function(object){
+                    var tmpMovingObjectArr = [];
+                    if (!mainSvc.checkUndefinedNull(object)){
+                        $scope.selectedItem(object);
+                        tmpMovingObjectArr.push(object.id);
+                    }else{
+                        tmpMovingObjectArr = prepareObjectsIdsArray();                        
+                        $scope.objectCtrlSettings.anySelected = false;
+                    };                   
+                    objectSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
+                        $scope.loading = true;
+                        if ($scope.data.selectedNode.type == 'root'){
+                            objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                        }else{
+                            objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
+                        };
+                    }, errorProtoCallback);
+                };
+                
+                $scope.toggleTreeView = function(){
+                    $scope.objectCtrlSettings.isTreeView = !$scope.objectCtrlSettings.isTreeView;
+                    //if tree is off
+                    if ($scope.objectCtrlSettings.isTreeView == false){
+                        getObjectsData();
+                    }else{
+                    //if tree is on
+                        loadTrees();                    
+                    };
+                };
+                
+                $scope.createTreeByTemplate = function(template){
+                    objectSvc.loadTreeTemplateItems(template.id).then(function(resp){
+                        $scope.data.currentTreeTemplateItems = angular.copy(resp.data);
+                        var treeItemLevel = null;
+                        $scope.data.currentTreeTemplateItems.some(function(item){
+                            if(item.itemLevel == 0){
+                                treeItemLevel = item;
+                                return true;
+                            };
+                        });
+                        if (treeItemLevel == null){
+                            return "Incorrect template. itemLevel == 0 is absent.";
+                        };
+                        $scope.data.newTree = {};
+                        $scope.data.newTree.templateId = template.id;
+                        $scope.data.newTree.templateItemId = treeItemLevel.id;
+                        $scope.data.newTree.objectName = treeItemLevel.itemName;
+                        $("#showTreeOptionModal").modal();
+                        
+                    }, errorProtoCallback);
+                };
+                
+                var findTemplateItemById = function(templId){
+                    var result = null;
+                    $scope.data.currentTreeTemplateItems.some(function(item){
+                        if (templId == item.id){
+                            result = item;
+                            return true;
+                        }
+                    });
+                    return result;
+                };
+                
+                var findTemplateItemByItemLevel = function(level){
+                    var result = null;
+                    $scope.data.currentTreeTemplateItems.some(function(item){
+                        if (level == item.itemLevel){
+                            result = item;
+                            return true;
+                        }
+                    });
+                    return result;
+                };
+                
+                $scope.addNodeDisabled = function(curItem){                
+                    if (mainSvc.checkUndefinedNull(curItem.templateItemId)){                    
+                        return false;
+                    };
+                    if (!angular.isArray($scope.data.currentTreeTemplateItems)){               
+                        return true;
+                    };
+                    var currentLevel = findTemplateItemById(curItem.templateItemId);
+//                    $scope.data.currentTreeTemplateItems.some(function(item){
+//                        if (curItem.templateItemId == item.id){
+//                            currentLevel = item.itemLevel;
+//                            return true;
+//                        }
+//                    });
+                    if (currentLevel == null){                                         
+                        return false;
+                    };
+                    if (currentLevel.itemLevel < ($scope.data.currentTreeTemplateItems.length - 1)){                                             
+                        return false;
+                    };              
+                    return true;
+                };
+                
+                $scope.createNodeInit = function(item){
+//console.log(item);                    
+                    $scope.data.parentLevel = item;                    
+                    $scope.data.currentLevel = {childObjectList: []};
+                    if (!mainSvc.checkUndefinedNull(item.templateItemId)){
+                        var parentLevel = findTemplateItemById(item.templateItemId);
+                        var currentLevel = findTemplateItemByItemLevel(parentLevel.itemLevel + 1);
+                        if (currentLevel == null){
+                            return "Template item is no find.";
+                        };
+                        $scope.data.currentLevel.objectName = currentLevel.itemName;
+                        $scope.data.currentLevel.templateId = currentLevel.templateId;
+                        $scope.data.currentLevel.templateItemId = currentLevel.id;
+                    };
+                };
+                
+                $('#viewTreeModal').on('shown.bs.modal', function(){
+                    $scope.objectCtrlSettings.isObjectMoving = true;
+                    $scope.$apply();
+                });
+                
+                $('#viewTreeModal').on('hidden.bs.modal', function(){
+                    $scope.objectCtrlSettings.isObjectMoving = false;
+                    $scope.$apply();
+                });
+// ********************************************************************************************
+                //  end TREEVIEW
+//*********************************************************************************************
+                //set focus on first input element when window will be opened                
+                $('#showTreeOptionModal').on('shown.bs.modal', function(){                   
+                    $('#inputTreeName').focus();
+                });
+                
+                $('#treeLevelModal').on('shown.bs.modal', function(){
+                    $('#inputLevelName').focus();
+                });
+                
+                $('#showObjOptionModal').on('shown.bs.modal', function(){
+                    $('#inputContObjectName').focus();
+                });
+                
+                $('#showZpointOptionModal').on('shown.bs.modal', function(){
+                    $('#inputZpointName').focus();
+                });
+                //controller initialization
+                var initCtrl = function(){
+                    getRsoOrganizations();
+                    getCmOrganizations();
+                    getServiceTypes();
+                    getTimezones();
+                    getClients();
+                    //if tree is off
+                    if ($scope.objectCtrlSettings.isTreeView == false){
+                        getObjectsData();
+                    }else{
+                    //if tree is on
+                        loadTrees();                    
+                    };
+                };
+                initCtrl();
 //            }]
 }]);

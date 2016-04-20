@@ -8,6 +8,8 @@ import javax.persistence.PersistenceException;
 
 import org.springframework.transaction.TransactionSystemException;
 
+import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
+
 /**
  * Коды результатов выполнения запроса
  * 
@@ -23,6 +25,7 @@ public enum ApiResultCode {
 	ERR_ACCESS_DENIED(false, "Access Denied"),
 	ERR_UNPROCESSABLE_TRANSACTION(false, "Unprocessable Transaction"),
 	ERR_DATABASE_ERROR(false, "Database Error"),
+	ERR_MODEL_VALIDATION_ERROR(false, "Model Validation Error"),
 	ERR_BRM_VALIDATION(false, "Buisiness Rule Validation Error"),
 	ERR_VALIDATION(false, "Data Validation Error"),
 	ERR_INTERNAL(false, "Internal server error"),
@@ -67,6 +70,10 @@ public enum ApiResultCode {
 
 		if (e.getClass().equals(PersistenceException.class)) {
 			result = ERR_DATABASE_ERROR;
+		}
+
+		if (e.getClass().equals(ModelIsNotValidException.class)) {
+			result = ERR_MODEL_VALIDATION_ERROR;
 		}
 
 		return result;

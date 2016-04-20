@@ -47,6 +47,17 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 
 	/**
 	 * 
+	 * @return
+	 */
+	@Query("SELECT sco.contObject FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
+			+ " AND sco.deleted = 0 AND sco.contObjectId NOT IN (:idList)"
+			+ " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
+	public List<ContObject> selectContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
+			@Param("idList") List<Long> idList);
+
+	/**
+	 * 
 	 * @param subscriberId
 	 * @return
 	 */
@@ -99,6 +110,16 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 			+ " (SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL) AND zp.deleted = 0")
 	public List<Object[]> selectContZPointShortInfo(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT zp.id " + " FROM ContZPoint zp INNER JOIN zp.contServiceType st WHERE zp.contObjectId IN "
+			+ " (SELECT sco.contObjectId FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL) AND zp.deleted = 0")
+	public List<Long> selectContZPointIds(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 * 

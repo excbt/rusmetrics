@@ -411,7 +411,9 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input type="submit" 
+                                   ng-disabled = "(confirmCode!=sumNums && !isSystemuser())"
+                                   class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(data.currentObject);"
 								value="Удалить" />
 						</div>

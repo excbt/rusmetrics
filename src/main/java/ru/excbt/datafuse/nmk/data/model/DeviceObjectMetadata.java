@@ -95,6 +95,12 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "meta_version")
 	private Integer metaVersion = 1;
 
+	@Column(name = "is_transformed")
+	private Boolean isTransformed;
+
+	@Column(name = "cont_zpoint_id")
+	private Long contZPointId;
+
 	public String getDeviceMetadataType() {
 		return deviceMetadataType;
 	}
@@ -255,6 +261,14 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 
 	public void setMetaVersion(Integer metaVersion) {
 		this.metaVersion = metaVersion;
+	}
+
+	public Boolean getIsTransformed() {
+		return isTransformed;
+	}
+
+	public void setIsTransformed(Boolean isTransformed) {
+		this.isTransformed = isTransformed;
 	}
 
 }

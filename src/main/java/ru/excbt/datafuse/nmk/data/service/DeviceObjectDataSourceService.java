@@ -40,7 +40,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<DeviceObjectDataSource> selectActiveDeviceDataSource(Long deviceObjectId) {
+	public List<DeviceObjectDataSource> selectActiveDeviceObjectDataSource(Long deviceObjectId) {
 		List<DeviceObjectDataSource> resultList = deviceObjectDataSourceRepository
 				.selectActiveDataSource(deviceObjectId);
 		return resultList;
@@ -64,7 +64,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 		deviceObjectDataSource.setSubscrDataSourceId(deviceObjectDataSource.getSubscrDataSource().getId());
 
 		// Check current Active data source
-		List<DeviceObjectDataSource> currentActiveList = selectActiveDeviceDataSource(
+		List<DeviceObjectDataSource> currentActiveList = selectActiveDeviceObjectDataSource(
 				deviceObjectDataSource.getDeviceObject().getId());
 
 		Optional<DeviceObjectDataSource> checkActiveDataSource = currentActiveList.stream()
@@ -104,7 +104,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void makeDeviceDataSourceInactive(Long deviceObjectId) {
-		List<DeviceObjectDataSource> deviceObjectDataSources = selectActiveDeviceDataSource(deviceObjectId);
+		List<DeviceObjectDataSource> deviceObjectDataSources = selectActiveDeviceObjectDataSource(deviceObjectId);
 		deviceObjectDataSources.forEach(i -> i.setIsActive(null));
 		deviceObjectDataSourceRepository.save(deviceObjectDataSources);
 	}
