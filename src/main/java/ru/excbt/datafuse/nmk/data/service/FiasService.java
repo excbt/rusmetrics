@@ -41,6 +41,11 @@ public class FiasService {
 		Query query = em.createNativeQuery(qString).setParameter("p_uuid", fiasUUID.toString());
 
 		Object result = query.getSingleResult();
+
+		if (result == null) {
+			return null;
+		}
+
 		String strResult = (String) result;
 		return UUID.fromString(strResult);
 	}
@@ -57,6 +62,11 @@ public class FiasService {
 		Query query = em.createNativeQuery(qString).setParameter("p_uuid", fiasUUID.toString());
 
 		Object result = query.getSingleResult();
+
+		if (result == null) {
+			return null;
+		}
+
 		String strResult = (String) result;
 		return strResult;
 	}
@@ -73,6 +83,11 @@ public class FiasService {
 		Query query = em.createNativeQuery(qString).setParameter("p_uuid", fiasUUID.toString());
 
 		Object result = query.getSingleResult();
+
+		if (result == null) {
+			return null;
+		}
+
 		String strResult = (String) result;
 		return strResult;
 	}
