@@ -75,20 +75,7 @@ angular.module('portalNMC')
                 $scope.data.devices = tmp;
                 $scope.ctrlSettings.loading = false;                
             },
-            function(e){
-                console.log(e);
-                var errorCode = "-1";
-                if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-                    errorCode = "ERR_CONNECTION";
-                };
-                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
-                    errorCode = e.resultCode || e.data.resultCode;
-                };
-                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
-//                console.log(error.data);
-//                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
-            }
+            errorProtoCallback
         );
     };
     $scope.getDevices();
@@ -101,31 +88,18 @@ angular.module('portalNMC')
                 $scope.selectedItem(device);
                 $('#sheduleEditorModal').modal();
             },
-            function(e){
-                console.log(e);
-                var errorCode = "-1";
-                if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-                    errorCode = "ERR_CONNECTION";
-                };
-                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
-                    errorCode = e.resultCode || e.data.resultCode;
-                };
-                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
-//                console.log(error.data);
-//                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
-            }
+            errorProtoCallback
         );
     };
     //save scheduler settings
-    $scope.saveScheduler = function(objId, device, scheduler){
+    $scope.saveScheduler = function(objId, device, scheduler){     
         if (mainSvc.checkUndefinedNull(objId)){
             return "ObjId of scheduler is undefined or null.";
         };
         if (mainSvc.checkUndefinedNull(device) || mainSvc.checkUndefinedNull(device.id)){
             return "Device of scheduler is empty.";
         };
-        if (mainSvc.checkUndefinedNull(scheduler) || mainSvc.checkUndefinedNull(scheduler.id)){
+        if (mainSvc.checkUndefinedNull(scheduler)){
             return "Scheduler is empty.";
         };
         scheduler.isSaving = true;
@@ -155,9 +129,6 @@ angular.module('portalNMC')
             function(e){
                 console.log(e);
                 var errorCode = "-1";
-                if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-                    errorCode = "ERR_CONNECTION";
-                };
                 if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
                     errorCode = e.resultCode || e.data.resultCode;
                 };
@@ -230,9 +201,6 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentObject.curDatasource = curDataSource;
-//        $timeout(function(){
-//            $('#inputNetAddr').inputmask();
-//        }, 10);
     };
     
     var successCallback = function(response){
@@ -245,7 +213,7 @@ angular.module('portalNMC')
         $scope.data.currentScheduler = {};
     };
     
-    var errorCallback = function(e){       
+    var errorProtoCallback = function(e){
         console.log(e);
         var errorCode = "-1";
         if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
@@ -256,6 +224,10 @@ angular.module('portalNMC')
         };
         var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+    };
+    
+    var errorCallback = function(e){
+        errorProtoCallback(e);
         // reset saving device flag
         $scope.data.currentObject.isSaving = false;
         //reset saving csheduler flag
@@ -325,15 +297,6 @@ angular.module('portalNMC')
     $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function(){
         $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();       
     });
-    
-    $scope.getDeviceMetadata = function(objId, device){        
-        objectSvc.getRmaDeviceMetadata(objId, device.id)
-        .then(function(resp){
-            device.metadata = resp.data;
-            $scope.selectedItem(device);           
-            $('#metaDataEditorModal').modal();
-        }, errorCallback);
-    };
     
     $scope.updateDeviceMetaData = function(device){
         device.isSaving = true;
@@ -512,7 +475,6 @@ angular.module('portalNMC')
                 }, 1);
             }
         });
-        $('#inputAttemptsNumberShd').inputmask();        
-//        $('#inputNetAddr').inputmask();
+        $('#inputAttemptsNumberShd').inputmask();                
     });
 }]);

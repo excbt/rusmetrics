@@ -133,11 +133,6 @@
                         </a>
                     </li>
                     <li ng-if = "isDirectDevice(device)">
-                        <a href="" ng-click="getDeviceMetadata(device.contObjectId, device)">
-                            Редактировать метаданные
-                        </a>
-                    </li>
-                    <li ng-if = "isDirectDevice(device)">
                         <a href="" ng-click="getDeviceSchedulerSettings(device.contObjectId, device)">
                             Расписание опроса прибора
                         </a>
@@ -344,18 +339,7 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-3 col-md-3">
-                            <div class="btn-group">
-                                <button 
-                                   type="button" class="btn btn-xs nmc-add-button-in-modal" 
-                                   ng-show="isDirectDevice(data.currentObject) && (data.currentObject.beginDeviceModelId == data.currentObject.deviceModelId)"
-                                   title="Редактировать метаданные" 
-                                   ng-click="getDeviceMetadata(data.currentObject.contObjectId, data.currentObject)">
-                                    Редактор метаданных
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-xs-offset-3 col-md-3">
+                        <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveDevice(data.currentObject)"
                                 ng-disabled="isDeviceDisabled(data.currentObject);"
