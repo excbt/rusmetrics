@@ -2,10 +2,14 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_pref_value")
@@ -19,14 +23,18 @@ public class SubscrPrefValue extends JsonAbstractAuditableModel {
 	@Column(name = "subscriber_id")
 	private Long subscriberId;
 
-	@Column(name = "pref_category")
-	private String prefCategory;
+	@Column(name = "subscr_pref_category")
+	private String subscrPrefCategory;
 
 	@Column(name = "subscr_pref")
-	private String subscrPref;
+	private String subscrPrefKeyname;
 
-	@Column(name = "pref_value")
-	private String prefValue;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "subscr_pref", insertable = false, updatable = false)
+	private SubscrPref subscrPref;
+
+	@Column(name = "value")
+	private String value;
 
 	@Version
 	private int version;
@@ -40,30 +48,6 @@ public class SubscrPrefValue extends JsonAbstractAuditableModel {
 
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
-	}
-
-	public String getPrefCategory() {
-		return prefCategory;
-	}
-
-	public void setPrefCategory(String prefCategory) {
-		this.prefCategory = prefCategory;
-	}
-
-	public String getSubscrPref() {
-		return subscrPref;
-	}
-
-	public void setSubscrPref(String subscrPref) {
-		this.subscrPref = subscrPref;
-	}
-
-	public String getPrefValue() {
-		return prefValue;
-	}
-
-	public void setPrefValue(String prefValue) {
-		this.prefValue = prefValue;
 	}
 
 	public int getVersion() {
@@ -80,6 +64,38 @@ public class SubscrPrefValue extends JsonAbstractAuditableModel {
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getSubscrPrefCategory() {
+		return subscrPrefCategory;
+	}
+
+	public void setSubscrPrefCategory(String subscrPrefCategory) {
+		this.subscrPrefCategory = subscrPrefCategory;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public String getSubscrPrefKeyname() {
+		return subscrPrefKeyname;
+	}
+
+	public void setSubscrPrefKeyname(String subscrPrefKeyname) {
+		this.subscrPrefKeyname = subscrPrefKeyname;
+	}
+
+	public SubscrPref getSubscrPref() {
+		return subscrPref;
+	}
+
+	public void setSubscrPref(SubscrPref subscrPref) {
+		this.subscrPref = subscrPref;
 	}
 
 }

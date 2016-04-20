@@ -21,8 +21,8 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 	@Column(name = "comment")
 	private String comment;
 
-	@Column(name = "pref_category")
-	private String prefCategory;
+	@Column(name = "subscr_pref_category")
+	private String subscrPrefCategory;
 
 	@Column(name = "pref_name")
 	private String prefName;
@@ -57,14 +57,6 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public String getPrefCategory() {
-		return prefCategory;
-	}
-
-	public void setPrefCategory(String prefCategory) {
-		this.prefCategory = prefCategory;
 	}
 
 	public String getPrefName() {
@@ -138,6 +130,14 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 
 	public void setIsDisabled(Boolean isDisabled) {
 		this.isDisabled = isDisabled;
+	}
+
+	public String getSubscrPrefCategory() {
+		return subscrPrefCategory;
+	}
+
+	public void setSubscrPrefCategory(String subscrPrefCategory) {
+		this.subscrPrefCategory = subscrPrefCategory;
 	}
 
 }
