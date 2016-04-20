@@ -18,7 +18,7 @@ angular.module('portalNMC')
                 $scope.messages.viewDevices = "Приборы";
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
-                $scope.messages.moveToNode = "Переместить";
+                $scope.messages.moveToNode = "Привязать к узлу";
                 $scope.messages.releaseFromNode = "Отвязать от узла";
                 
                     //object ctrl settings
