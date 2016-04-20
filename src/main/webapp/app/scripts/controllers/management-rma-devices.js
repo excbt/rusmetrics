@@ -29,7 +29,7 @@ angular.module('portalNMC')
             name: 'destProp',
             type: 'input/text'
         },{
-            header: 'Единици измерения',
+            header: 'Единицы измерения',
             headClass : 'col-xs-1 col-md-1',
             name: 'srcMeasureUnit',
             type: 'select',
@@ -201,9 +201,6 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentObject.curDatasource = curDataSource;
-        $timeout(function(){
-            $('#inputNetAddr').inputmask();
-        }, 10);
     };
     
     var successCallback = function(response){
@@ -219,6 +216,9 @@ angular.module('portalNMC')
     var errorProtoCallback = function(e){
         console.log(e);
         var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
         if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
             errorCode = e.resultCode || e.data.resultCode;
         };
@@ -297,15 +297,6 @@ angular.module('portalNMC')
     $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function(){
         $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();       
     });
-    
-    $scope.getDeviceMetadata = function(objId, device){        
-        objectSvc.getRmaDeviceMetadata(objId, device.id)
-        .then(function(resp){
-            device.metadata = resp.data;
-            $scope.selectedItem(device);           
-            $('#metaDataEditorModal').modal();
-        }, errorCallback);
-    };
     
     $scope.updateDeviceMetaData = function(device){
         device.isSaving = true;
@@ -484,7 +475,6 @@ angular.module('portalNMC')
                 }, 1);
             }
         });
-        $('#inputAttemptsNumberShd').inputmask();        
-        $('#inputNetAddr').inputmask();
+        $('#inputAttemptsNumberShd').inputmask();                
     });
 }]);
