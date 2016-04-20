@@ -7,10 +7,11 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_pref")
-public class SubscrPref extends JsonAbstractKeynameEntity {
+public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObject {
 
 	/**
 	 * 
@@ -46,6 +47,9 @@ public class SubscrPref extends JsonAbstractKeynameEntity {
 
 	@Column(name = "deleted")
 	private int deleted;
+
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
 
 	public String getComment() {
 		return comment;
@@ -125,6 +129,15 @@ public class SubscrPref extends JsonAbstractKeynameEntity {
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	@Override
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 
 }
