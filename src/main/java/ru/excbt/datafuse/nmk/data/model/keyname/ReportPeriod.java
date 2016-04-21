@@ -8,7 +8,7 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
-@Table (name="report_period")
+@Table(name = "report_period")
 public class ReportPeriod extends AbstractKeynameEntity {
 
 	/**
@@ -16,20 +16,23 @@ public class ReportPeriod extends AbstractKeynameEntity {
 	 */
 	private static final long serialVersionUID = 7709872986189209116L;
 
-	@Column(name="caption")
+	@Column(name = "caption")
 	private String caption;
-	
-	@Column(name="report_period_name")
+
+	@Column(name = "report_period_name")
 	private String name;
-	
-	@Column(name="report_period_sign")
+
+	@Column(name = "report_period_sign")
 	private Integer sign;
-	
-	@Column(name="report_period_unit")
+
+	@Column(name = "report_period_unit")
 	private String unit;
-	
+
 	@Version
 	private int version;
+
+	@Column(name = "is_settlement_day")
+	private Boolean isSettlementDay;
 
 	public String getCaption() {
 		return caption;
@@ -70,5 +73,13 @@ public class ReportPeriod extends AbstractKeynameEntity {
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	
+
+	public Boolean getIsSettlementDay() {
+		return isSettlementDay;
+	}
+
+	public void setIsSettlementDay(Boolean isSettlementDay) {
+		this.isSettlementDay = isSettlementDay;
+	}
+
 }

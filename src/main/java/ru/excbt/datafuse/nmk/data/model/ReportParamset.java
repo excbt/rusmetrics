@@ -143,6 +143,9 @@ public class ReportParamset extends AbstractAuditableModel implements DeletableO
 	@OneToMany(mappedBy = "reportParamset", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Collection<ReportParamsetParamSpecial> paramSpecialList = new ArrayList<ReportParamsetParamSpecial>();
 
+	@Column(name = "settlement_day")
+	private Integer settlementDay;
+
 	public ReportTemplate getReportTemplate() {
 		return reportTemplate;
 	}
@@ -355,6 +358,14 @@ public class ReportParamset extends AbstractAuditableModel implements DeletableO
 
 	public void setIsContextLaunch(Boolean isContextLaunch) {
 		this.isContextLaunch = isContextLaunch;
+	}
+
+	public Integer getSettlementDay() {
+		return settlementDay;
+	}
+
+	public void setSettlementDay(Integer settlementDay) {
+		this.settlementDay = settlementDay;
 	}
 
 }
