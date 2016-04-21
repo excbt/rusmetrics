@@ -258,4 +258,12 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 	}
 
+	@Test
+	public void testDeviceObjectLastInfo() throws Exception {
+		String url = apiRmaUrl(String.format("/contObjects/%d/deviceObjects/%d", 512136083, 512136235));
+
+		String deviceObjectContent = _testGetJson(url);
+
+	}
+
 }

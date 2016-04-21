@@ -23,6 +23,7 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
@@ -216,6 +217,9 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 	@Transient
 	private DeviceLoginInfo deviceLoginInfo;
+
+	@OneToOne(mappedBy = "deviceObject")
+	private DeviceObjectLastInfo deviceObjectLastInfo;
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -434,6 +438,16 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 			this.deviceLogin = deviceLoginInfo.deviceLogin;
 			this.devicePassword = deviceLoginInfo.devicePassword;
 		}
+	}
+
+	@JsonProperty
+	public DeviceObjectLastInfo getDeviceObjectLastInfo() {
+		return deviceObjectLastInfo;
+	}
+
+	@JsonIgnore
+	public void setDeviceObjectLastInfo(DeviceObjectLastInfo deviceObjectLastInfo) {
+		this.deviceObjectLastInfo = deviceObjectLastInfo;
 	}
 
 }
