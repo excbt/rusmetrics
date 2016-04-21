@@ -215,7 +215,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	private Boolean isTimeSyncEnabled;
 
 	@Transient
-	private DeviceLoginInfo deviceLoginInfo = new DeviceLoginInfo();
+	private DeviceLoginInfo deviceLoginInfo;
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;

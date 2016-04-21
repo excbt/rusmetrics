@@ -72,6 +72,34 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	/**
 	 * 
+	 */
+	@Override
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deviceObjectByContObjectGet(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+
+		if (deviceObject == null) {
+			return responseNoContent();
+		}
+
+		if (deviceObject.getContObject() == null || !contObjectId.equals(deviceObject.getContObject().getId())) {
+			return responseBadRequest();
+		}
+
+		deviceObject.shareDeviceLoginInfo();
+
+		return ResponseEntity.ok(deviceObject);
+	}
+
+	/**
+	 * 
 	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @param subscrDataSourceId
@@ -257,6 +285,11 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	public ResponseEntity<?> getDeviceObjects() {
 		List<DeviceObject> deviceObjects = deviceObjectService
 				.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
+
+		for (DeviceObject deviceObject : deviceObjects) {
+			deviceObject.shareDeviceLoginInfo();
+		}
+
 		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 
