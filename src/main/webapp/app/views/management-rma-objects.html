@@ -166,12 +166,12 @@
                                                     </button>
                                                   <ul class="dropdown-menu">
                                                     <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
-                                                    <li ng-if="data.selectedNode.type == 'root'"><a href="" 
+                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'"><a href="" 
                                                            data-target="#viewTreeModal" 
                                                            data-toggle="modal" 
                                                            ng-click="moveToNodeInit()">{{messages.moveToNode}}</a>
                                                     </li>
-                                                    <li ng-if="data.selectedNode.type != 'root'">
+                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root'">
                                                         <a href="" 
                                                            ng-click="releaseFromNode()">{{messages.releaseFromNode}}
                                                         </a>
@@ -257,13 +257,15 @@
                                             <li><a href="" ng-click="selectedObject(object.id, false)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
                                             <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>            
                                             <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
-                                            <li ng-if="data.selectedNode.type == 'root'"><a href="" 
+                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'">
+                                                <a href="" 
                                                    data-target="#viewTreeModal" 
                                                    data-toggle="modal" 
                                                    ng-click="moveToNodeInit(object)">{{messages.moveToNode}}
                                                 </a>
                                             </li>
-                                            <li ng-if="data.selectedNode.type != 'root'"><a href=""                                             
+                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root'">
+                                                <a href=""                                             
                                                    ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
                                             </li>
                                             <li role="separator" class="divider"></li>

@@ -260,7 +260,7 @@
                                            id="inputDSTimeout"
                                            data-inputmask="'alias':'numeric', 'greedy': false"
                                            type="text" 
-                                           ng-model="data.currentObject.timeout">
+                                           ng-model="data.currentObject.rawTimeout">
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
@@ -271,7 +271,7 @@
                                            id="inputDSCheckInterval"
                                            data-inputmask="'alias':'numeric', 'greedy': false"
                                            type="text" 
-                                           ng-model="data.currentObject.sleeptime">
+                                           ng-model="data.currentObject.rawSleepTime">
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
@@ -282,7 +282,7 @@
                                            id="inputDSRepeatCount"
                                            data-inputmask="'alias':'numeric', 'greedy': false"
                                            type="text" 
-                                           ng-model="data.currentObject.resendAttempts">
+                                           ng-model="data.currentObject.rawResendAttempts">
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
@@ -294,7 +294,7 @@
                                            id="inputDSReconnectionCount"
                                            data-inputmask="'alias':'numeric', 'greedy': false"
                                            type="text" 
-                                           ng-model="data.currentObject.reconnectAttempts">
+                                           ng-model="data.currentObject.rawReconnectAttempts">
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
@@ -306,7 +306,7 @@
                                            id="inputDSReconnectionInterval"
                                            data-inputmask="'alias':'numeric', 'greedy': false"
                                            type="text" 
-                                           ng-model="data.currentObject.reconnectTimeout">
+                                           ng-model="data.currentObject.rawReconnectTimeout">
                                 </td>
                             </tr>
 
