@@ -6,10 +6,11 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_pref_object_tree_type")
-public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel {
+public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel implements DisabledObject {
 
 	/**
 	 * 
@@ -17,7 +18,7 @@ public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel {
 	private static final long serialVersionUID = -5446111068809742392L;
 
 	@Column(name = "subscr_pref")
-	private String subscrPref;
+	private String subscrPrefKeyname;
 
 	@Column(name = "object_tree_type")
 	private String objectTreeType;
@@ -31,13 +32,8 @@ public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel {
 	@Column(name = "deleted")
 	private int deleted;
 
-	public String getSubscrPref() {
-		return subscrPref;
-	}
-
-	public void setSubscrPref(String subscrPref) {
-		this.subscrPref = subscrPref;
-	}
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
 
 	public String getObjectTreeType() {
 		return objectTreeType;
@@ -69,6 +65,23 @@ public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel {
 
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getSubscrPrefKeyname() {
+		return subscrPrefKeyname;
+	}
+
+	public void setSubscrPrefKeyname(String subscrPrefKeyname) {
+		this.subscrPrefKeyname = subscrPrefKeyname;
+	}
+
+	@Override
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 
 }

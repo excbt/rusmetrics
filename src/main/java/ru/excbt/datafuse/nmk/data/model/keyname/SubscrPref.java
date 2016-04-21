@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
@@ -48,6 +50,7 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 	@Column(name = "deleted")
 	private int deleted;
 
+	@JsonIgnore
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 

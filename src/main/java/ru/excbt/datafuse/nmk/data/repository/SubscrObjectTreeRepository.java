@@ -15,7 +15,8 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	 * @param rmaSubscriberId
 	 * @return
 	 */
-	@Query("SELECT t FROM SubscrObjectTree t WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL")
+	@Query("SELECT t FROM SubscrObjectTree t WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL "
+			+ " ORDER BY t.objectTreeType, t.objectName ")
 	List<SubscrObjectTree> selectSubscrObjectTree(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
@@ -24,7 +25,8 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	 * @return
 	 */
 	@Query("SELECT t.id, t.objectTreeType, t.objectName FROM SubscrObjectTree t "
-			+ " WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL AND t.deleted = 0")
+			+ " WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL AND t.deleted = 0 "
+			+ " ORDER BY t.objectTreeType, t.objectName ")
 	List<Object[]> selectSubscrObjectTreeShort(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
