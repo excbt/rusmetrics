@@ -172,6 +172,7 @@ angular.module('portalNMC')
         $scope.data.currentObject = {};
         $scope.data.currentObject.id = null;
         $scope.data.currentObject.isManual = true;
+        $scope.data.currentObject.deviceLoginInfo = {};
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
     };
