@@ -89,6 +89,7 @@ public class ReportService {
 		reportTypeMap.put(ReportTypeKey.CONS_T1_REPORT, ReportType.RPT_CONSOLIDATED_1);
 		reportTypeMap.put(ReportTypeKey.CONS_T2_REPORT, ReportType.RPT_CONSOLIDATED_2);
 		reportTypeMap.put(ReportTypeKey.EVENT_REPORT, ReportType.RPT_EVENT);
+
 		reportTypeMap.put(ReportTypeKey.METROLOGICAL_REPORT, ReportType.RPT_METROLOGICAL);
 		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT, ReportType.RPT_CONSUMPTION);
 		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT, ReportType.RPT_CONSUMPTION_HISTORY);
@@ -104,7 +105,12 @@ public class ReportService {
 		reportTypeMap.put(ReportTypeKey.ELECTRIC_READINGS_REPORT, ReportType.RPT_ELECTRIC_READINGS);
 		reportTypeMap.put(ReportTypeKey.HW_QUALITY_REPORT, ReportType.RPT_HW_QUALITY);
 		reportTypeMap.put(ReportTypeKey.ELECTRIC_CONSUMPTION_REPORT, ReportType.RPT_ELECTRIC_CONSUMPTION);
+		reportTypeMap.put(ReportTypeKey.HW_QUALITY_SHEET_REPORT, ReportType.RPT_HW_QUALITY_SHEET);
+		reportTypeMap.put(ReportTypeKey.HW_QUALITY_SHEET_HOUR_REPORT, ReportType.RPT_HW_QUALITY_SHEET_HOUR);
+		reportTypeMap.put(ReportTypeKey.HW_QUALITY_ACT_1_REPORT, ReportType.RPT_HW_QUALITY_ACT_1);
+		reportTypeMap.put(ReportTypeKey.HW_QUALITY_ACT_2_REPORT, ReportType.RPT_HW_QUALITY_ACT_2);
 		REPORTS_TYPE_KEYNAME_CONVERTER = Collections.unmodifiableMap(reportTypeMap);
+
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
@@ -347,6 +353,7 @@ public class ReportService {
 
 			dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate, reportParamset.getReportPeriodKey());
 			dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+
 		}
 		////////////////////////
 

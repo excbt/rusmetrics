@@ -183,6 +183,22 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				ReportConstants.Files.ELECTRIC_CONSUMPTION_FILE_COMPILED,
 				isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.HW_QUALITY_SHEET_REPORT,
+				ReportConstants.Files.HW_QUALITY_SHEET_FILE_COMPILED,
+				isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.HW_QUALITY_SHEET_HOUR_REPORT,
+				ReportConstants.Files.HW_QUALITY_SHEET_HOUR_FILE_COMPILED,
+				isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.HW_QUALITY_ACT_1_REPORT,
+				ReportConstants.Files.HW_QUALITY_ACT_1_FILE_COMPILED,
+				isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.HW_QUALITY_ACT_2_REPORT,
+				ReportConstants.Files.HW_QUALITY_ACT_2_FILE_COMPILED,
+				isCompiled);
+
 	}
 
 	/**
@@ -209,6 +225,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT_M_V);
 		updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_CONSUMPTION_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_SHEET_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_SHEET_HOUR_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_ACT_1_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_ACT_2_REPORT);
 
 	}
 
