@@ -89,19 +89,19 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 	private Boolean _isAnotherSubscriber;
 
 	@Column(name = "raw_timeout")
-	private Integer rawTimeout;
+	private Integer rawTimeout = 5000;
 
 	@Column(name = "raw_sleep_time")
-	private Integer rawSleepTime;
+	private Integer rawSleepTime = 100;
 
 	@Column(name = "raw_resend_attempts")
-	private Integer rawResendAttempts;
+	private Integer rawResendAttempts = 1;
 
 	@Column(name = "raw_reconnect_attempts")
-	private Integer rawReconnectAttempts;
+	private Integer rawReconnectAttempts = 2;
 
 	@Column(name = "raw_reconnect_timeout")
-	private Integer rawReconnectTimeout;
+	private Integer rawReconnectTimeout = 90000;
 
 	public Subscriber getSubscriber() {
 		return subscriber;
