@@ -458,6 +458,14 @@ angular.module('portalNMC')
             && $scope.checkPositiveNumberValue(scheduler.loadingAttempts)
     };
     
+    $scope.isAvailableConPropertiesTab = function(){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource)){
+            return false;
+        };
+        return $scope.data.currentObject.curDatasource.dataSourceType.isRaw == true || $scope.data.currentObject.curDatasource.dataSourceType.isDbTablePair == true || 
+            $scope.data.currentObject.exSystemKeyname == 'VZLET';
+    };
+    
     $(document).ready(function(){
         $('#inputVerificationInterval').inputmask();
         $('#inputVerificationDate').datepicker({
@@ -477,5 +485,29 @@ angular.module('portalNMC')
             }
         });
         $('#inputAttemptsNumberShd').inputmask();                
+    });
+    
+    var setMainPropertiesActiveTab = function(){
+        var tab = document.getElementById('con_properties_tab');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('time_properties_tab');     
+        tab.classList.remove("active");
+        var tab = document.getElementById("main_properties_tab");        
+        tab.classList.add("active"); 
+        
+        var tab = document.getElementById('con_properties');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('time_properties');     
+        tab.classList.remove("active");
+        var tab = document.getElementById("main_properties");
+        tab.classList.add("in");
+        tab.classList.add("active");        
+    };
+    
+    $("#showDeviceModal").on("shown.bs.modal", function(){
+        $("#inputDeviceModel").focus();
+    });
+    $("#showDeviceModal").on("hidden.bs.modal", function(){
+        setMainPropertiesActiveTab();
     });
 }]);

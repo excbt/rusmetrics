@@ -726,7 +726,7 @@ console.log($scope.psEndDateFormatted);
     };
     
     $scope.selectAllAvailableEntities = function(){      
-        for (var index = 0; index<$scope.availableEntities.length; index++){         
+        for (var index = 0; index < $scope.availableEntities.length; index++){         
             $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
         };
     };
@@ -811,8 +811,7 @@ console.log($scope.psEndDateFormatted);
                     $scope.paramsetEndDateFormat = ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
                 }
             };
-        };
-              
+        };              
     }, false);
     
     $scope.isDisabled = function(){

@@ -327,6 +327,15 @@ angular.module('portalNMC')
             return "Field for sort is undefined or null.";
         };
         itemArray.sort(function(firstItem, secondItem){
+            if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
+                return 0;
+            };
+            if (checkUndefinedNull(firstItem[sortField])){
+                return -1;
+            };
+            if (checkUndefinedNull(secondItem[sortField])){
+                return 1;
+            };
             if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
                 return 1;
             };
@@ -342,15 +351,16 @@ angular.module('portalNMC')
         if (!angular.isArray(orgArr)){
             return "Param is no array.";
         };
-        orgArr.sort(function(a, b){
-            if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
-                return 1;
-            };
-            if (a.organizationName.toUpperCase() < b.organizationName.toUpperCase()){
-                return -1;
-            };
-            return 0;
-        });
+        sortItemsBy(orgArr, "organizationName")
+//        orgArr.sort(function(a, b){
+//            if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
+//                return 1;
+//            };
+//            if (a.organizationName.toUpperCase() < b.organizationName.toUpperCase()){
+//                return -1;
+//            };
+//            return 0;
+//        });
     };
     
     // *************** generation confirm code *****************

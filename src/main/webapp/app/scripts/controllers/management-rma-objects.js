@@ -790,8 +790,8 @@ console.log(e);
 //                                        "data-target=\"#metaDataEditorModal\""+
 //                                        "data-toggle=\"modal\"" +
 //                                        "data-placement=\"bottom\"" +
-                                        "title=\"Метаданные точки учета\">" +
-                                        "Метаданные" +
+                                        "title=\"Метаданные прибора\">" +
+                                        "Метаданные прибора" +
                                     "</a></li>" +
                             "</ul>" +
                             "</div>" +
@@ -1765,7 +1765,7 @@ console.log($scope.currentObject);
                             $scope.currentZpoint.metaData.srcProp.push({columnName: ""});
                             objectSvc.getZpointMetaDestProp(coId, zpId).then(
                                 function(resp){
-                                    $scope.currentZpoint.metaData.destProp = resp.data;
+                                    $scope.currentZpoint.metaData.destProp = resp.data;                                    
                                     objectSvc.getZpointMetaMeasureUnits(coId, zpId);
                                 }, errorCallback                                
                             );
@@ -1776,7 +1776,8 @@ console.log($scope.currentObject);
                 $scope.$on('objectSvc:zpointMetadataMeasuresLoaded', function(){
                     $scope.currentZpoint.metaData.measures = objectSvc.getZpointMetadataMeasures();
                     objectSvc.getZpointMetadata($scope.currentZpoint.contObjectId, $scope.currentZpoint.id).then(
-                        function(resp){
+                        function(resp){                            
+                            mainSvc.sortItemsBy(resp.data, "destProp");
                             $scope.currentZpoint.metaData.metaData = resp.data;
                             $('#metaDataEditorModal').modal();
 //console.log($scope.currentZpoint);                                            

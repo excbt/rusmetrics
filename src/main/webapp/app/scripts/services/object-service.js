@@ -265,24 +265,53 @@ angular.module('portalNMC')
             }
             return result;
         };
-                 
-            // sort the object array by the fullname
-        function sortObjectsByFullName(array){
-            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
-                return false;
+        
+            // Sort object array by some string field
+        var sortItemsBy = function(itemArray, sortField){
+            if (!angular.isArray(itemArray)){
+                return "Input value is no array.";
             };
-            array.sort(function(a, b){
-                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
+            if (checkUndefinedNull(sortField)){
+                return "Field for sort is undefined or null.";
+            };
+            itemArray.sort(function(firstItem, secondItem){
+                if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
                     return 0;
                 };
-                if (a.fullName.toUpperCase() > b.fullName.toUpperCase()){
+                if (checkUndefinedNull(firstItem[sortField])){
+                    return -1;
+                };
+                if (checkUndefinedNull(secondItem[sortField])){
                     return 1;
                 };
-                if (a.fullName.toUpperCase() < b.fullName.toUpperCase()){
+                if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
+                    return 1;
+                };
+                if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
                     return -1;
                 };
                 return 0;
             });
+        };
+                 
+            // sort the object array by the fullname
+        function sortObjectsByFullName(array){
+            sortItemsBy(array, "fullName");
+//            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
+//                return false;
+//            };
+//            array.sort(function(a, b){
+//                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
+//                    return 0;
+//                };
+//                if (a.fullName.toUpperCase() > b.fullName.toUpperCase()){
+//                    return 1;
+//                };
+//                if (a.fullName.toUpperCase() < b.fullName.toUpperCase()){
+//                    return -1;
+//                };
+//                return 0;
+//            });
         };                 
                     // sort the object array by the fullname, where some objects do not have field "fullName"
         function sortObjectsByFullNameEx(array){
@@ -309,8 +338,15 @@ angular.module('portalNMC')
                 return false;
             };           
             array.sort(function(a, b){
-                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.contObject.fullName) || checkUndefinedNull(b.contObject.fullName)){         
+                if ((checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)) && 
+                    (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName))){         
                     return 0;
+                };
+                if (checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)){         
+                    return -1;
+                };
+                if (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName)){         
+                    return 1;
                 };
                 if (a.contObject.fullName.toUpperCase() > b.contObject.fullName.toUpperCase()){
                     return 1;

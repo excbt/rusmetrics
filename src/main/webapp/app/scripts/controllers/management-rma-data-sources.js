@@ -142,12 +142,30 @@ angular.module('portalNMC')
     };
     
     $("#showDatasourceModal").on("shown.bs.modal", function(){
+        $("#inputDataSourceMode").focus();
 //        inputDSTimeout inputDSCheckInterval inputDSRepeatCount inputDSReconnectionCount inputDSReconnectionInterval
         $("#inputDSTimeout").inputmask();
         $("#inputDSCheckInterval").inputmask();
         $("#inputDSRepeatCount").inputmask();
         $("#inputDSReconnectionCount").inputmask();
         $("#inputDSReconnectionInterval").inputmask();
+    });
+    
+    var setMainPropertiesActiveTab = function(){
+        var tab = document.getElementById('con_properties_tab');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('con_properties');     
+        tab.classList.remove("active");
+        
+        var tab = document.getElementById("main_properties_tab");        
+        tab.classList.add("active");
+        var tab = document.getElementById("main_properties");
+        tab.classList.add("in");
+        tab.classList.add("active"); 
+    };
+
+    $("#showDatasourceModal").on("hidden.bs.modal", function(){
+        setMainPropertiesActiveTab();
     });
     
     //set input mask
