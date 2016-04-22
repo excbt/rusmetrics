@@ -326,14 +326,24 @@ public class ReportService {
 			int currentDayOfMonth = reportDate.withMillisOfDay(0).getDayOfMonth();
 
 			if (currentDayOfMonth >= settlementDay && settlementDay <= lastDayOfCurrMonth) {
-				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(settlementDay));
-				dtStart = JodaTimeUtils.startOfDay(dtEnd).minusMonths(1);
+				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(settlementDay).minusDays(1));
+				dtStart = JodaTimeUtils.startOfDay(reportDate.withDayOfMonth(settlementDay).minusMonths(1));
 			} else {
-				final int lastDayOfPrevMonth = reportDate.withDayOfMonth(1).withMillisOfDay(0).minusDays(1)
-						.getDayOfMonth();
-				if (settlementDay <= lastDayOfPrevMonth) {
-					dtEnd = JodaTimeUtils.endOfDay(reportDate.minusMonths(1).withDayOfMonth(settlementDay));
-					dtStart = JodaTimeUtils.startOfDay(dtEnd).minusMonths(1);
+
+				try {
+					final int lastDayOfPrev1Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
+							.getDayOfMonth();
+					final int lastDayOfPrev2Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
+							.minusDays(1).getDayOfMonth();
+					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
+						dtEnd = JodaTimeUtils
+								.endOfDay(reportDate.minusMonths(1).withDayOfMonth(settlementDay).minusDays(1));
+						dtStart = JodaTimeUtils.startOfDay(reportDate.minusMonths(2).withDayOfMonth(settlementDay));
+					}
+
+				} catch (Exception e) {
+					logger.error("Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}", reportDate,
+							settlementDay);
 				}
 			}
 
