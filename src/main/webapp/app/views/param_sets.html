@@ -568,15 +568,16 @@
                                                 </select>
                                                 
                                             </div>
-                                            <div ng-show="currentObject.reportPeriodKey == 'LAST_MONTH'" 
+                                            <div ng-show="currentReportPeriod.isSettlementDay == true" 
                                                  class="col-sm-6 noPadding">
-                                                <label for="inputRSDay">Расчетный день:</label>
+                                                <label for="inputSettlementDay">Расчетный день:</label>
                                                 <input
-                                                       id="inputRSDay"
+                                                       id="inputSettlementDay"
                                                        class="form-control nmc-text-input-form nmc-input-digital-data"
-                                                       data-inputmask="'alias':'numeric', 'greedy':false"
+                                                       
+                                                       ng-model="currentObject.settlementDay"
                                                        />
-                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr ng-show="currentSign==null">

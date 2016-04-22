@@ -50,6 +50,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
     
     $scope.currentObject = {};
+    $scope.currentReportPeriod = {};
     $scope.reportObjects = [];
 //    $scope.columns = [
 //        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
@@ -630,6 +631,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         for (var i = 0; i<$scope.reportPeriods.length;i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
+                $scope.currentReportPeriod = $scope.reportPeriods[i];
                 if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
                     $scope.paramsetStartDateFormat = ($scope.currentObject.paramsetStartDate == null) ? null : (new Date($scope.currentObject.paramsetStartDate));
                     $scope.paramsetEndDateFormat= ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));

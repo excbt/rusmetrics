@@ -203,7 +203,7 @@
                                             </label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
-                                            <div class="form-group noMarginBottom" 
+                                            <div class="form-group noMarginBottom col-sm-6 noPadding" 
                                                  ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
                                                 <select ng-disabled="isDisabled()" 
                                                         class="form-control nmc-input-data nmc-select-form" 
@@ -212,7 +212,17 @@
                                                         ng-model="currentObject.reportPeriodKey" 
                                                         ng-options="period.keyname as period.caption for period in reportPeriods">
                                                 </select>
-                                            </div>    
+                                            </div>
+                                            <div ng-show="currentReportPeriod.isSettlementDay == true" 
+                                                 class="col-sm-6 noPadding">
+                                                <label for="inputReportSettlementDay">Расчетный день:</label>
+                                                <input
+                                                       id="inputReportSettlementDay"
+                                                       class="form-control nmc-text-input-form nmc-input-digital-data"
+                                                       
+                                                       ng-model="currentObject.settlementDay"
+                                                       />
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr ng-show="currentSign==null">

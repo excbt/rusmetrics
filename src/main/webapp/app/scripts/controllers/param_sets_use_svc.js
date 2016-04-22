@@ -418,9 +418,11 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
          //set the fields for a new paramset
         $scope.currentObject = {};
             //set default report period
-        $scope.currentObject.reportPeriodKey = "CURRENT_MONTH"; 
+        $scope.currentObject.reportPeriodKey = "CURRENT_MONTH";
             //set file type for report
         $scope.currentObject.outputFileType = $scope.fileTypes[0];
+        
+        $scope.currentReportPeriod = {};
         
 //console.log($scope.currentObject.reportTemplate);        
         $scope.currentObject.showParamsBeforeRunReport = true;       
@@ -803,6 +805,7 @@ console.log($scope.psEndDateFormatted);
         for (var i = 0; i < $scope.reportPeriods.length; i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
+                $scope.currentReportPeriod = $scope.reportPeriods[i];
                 if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
                     $scope.paramsetStartDateFormat = ($scope.currentObject.paramsetStartDate == null) ? null : (new Date($scope.currentObject.paramsetStartDate));
                     $scope.paramsetEndDateFormat = ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
@@ -1119,7 +1122,7 @@ console.log($scope.psEndDateFormatted);
     };
         
     $("#createParamsetModal").on("shown.bs.modal", function(){
-        $("#inputRSDay").inputmask();
+        $("#inputSettlementDay").inputmask("d", {placeholder: ""});
     });
 
 }]);
