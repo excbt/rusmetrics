@@ -97,7 +97,8 @@ public class ReportService {
 		reportTypeMap.put(ReportTypeKey.PARTNER_SERVICE_REPORT, ReportType.RPT_PARTNER_SERVICE);
 		reportTypeMap.put(ReportTypeKey.ABONENT_SERVICE_REPORT, ReportType.RPT_ABONENT_SERVICE);
 		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2, ReportType.RPT_CONSUMPTION_HISTORY_V2);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2, ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2);
+		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2,
+				ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2);
 		reportTypeMap.put(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT, ReportType.RPT_RMA_ABONENT_SERVICE);
 		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT_V1_1, ReportType.RPT_CONSUMPTION_V1_1);
 		reportTypeMap.put(ReportTypeKey.ELECTRIC_READINGS_REPORT, ReportType.RPT_ELECTRIC_READINGS);
@@ -295,6 +296,7 @@ public class ReportService {
 
 		final ReportParamset reportParamset = reportMakerParam.getReportParamset();
 
+		// Get Start and End dates
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
@@ -307,10 +309,46 @@ public class ReportService {
 			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset.getParamsetStartDate()));
 			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
 
-		} else {
-			dtStart = ReportParamsetUtils.getStartDateTime(reportDate, reportParamset.getReportPeriodKey());
-			dtEnd = ReportParamsetUtils.getEndDateTime(reportDate, reportParamset.getReportPeriodKey());
+		} else if (reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null
+				&& reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH) {
+
+			int settlementDay = reportParamset.getSettlementDay();
+
+			final int lastDayOfCurrMonth = reportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
+					.getDayOfMonth();
+
+			int currentDayOfMonth = reportDate.withMillisOfDay(0).getDayOfMonth();
+
+			if (currentDayOfMonth >= settlementDay && settlementDay <= lastDayOfCurrMonth) {
+				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(settlementDay));
+				dtStart = JodaTimeUtils.startOfDay(dtEnd).minusMonths(1);
+			} else {
+				final int lastDayOfPrevMonth = reportDate.withDayOfMonth(1).withMillisOfDay(0).minusDays(1)
+						.getDayOfMonth();
+				if (settlementDay <= lastDayOfPrevMonth) {
+					dtEnd = JodaTimeUtils.endOfDay(reportDate.minusMonths(1).withDayOfMonth(settlementDay));
+					dtStart = JodaTimeUtils.startOfDay(dtEnd).minusMonths(1);
+				}
+			}
+
+			// If we havn't process dates 
+			if (dtStart == null || dtEnd == null) {
+				LocalDateTime processedReportDate = reportDate;
+
+				dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate,
+						reportParamset.getReportPeriodKey());
+				dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+			}
+
 		}
+
+		else {
+			LocalDateTime processedReportDate = reportDate;
+
+			dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+			dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+		}
+		////////////////////////
 
 		// List<Long> makeObjectIds = reportMakerParam.getContObjectList();
 		List<Long> makeObjectIds = reportMakerParam.getReportContObjectIds();

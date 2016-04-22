@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.report;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Типы периодов отчетов
  * 
@@ -9,5 +11,32 @@ package ru.excbt.datafuse.nmk.report;
  *
  */
 public enum ReportPeriodKey {
-	CURRENT_MONTH, INTERVAL, LAST_MONTH, TODAY, YESTERDAY, DAY
+	CURRENT_MONTH, INTERVAL, LAST_MONTH(true), TODAY, YESTERDAY, DAY;
+
+	private final boolean isSettlementDay;
+
+	/**
+	 * 
+	 * @param isSettlementDay
+	 */
+	private ReportPeriodKey(boolean isSettlementDay) {
+		this.isSettlementDay = isSettlementDay;
+	}
+
+	/**
+	 * 
+	 */
+	private ReportPeriodKey() {
+		this.isSettlementDay = false;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@JsonIgnore
+	public boolean isSettlementDay() {
+		return isSettlementDay;
+	}
+
 }
