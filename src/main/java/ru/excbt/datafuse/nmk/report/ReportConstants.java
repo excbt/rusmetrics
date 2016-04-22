@@ -47,6 +47,10 @@ public class ReportConstants {
 		public static final String HW_QUALITY_FILE_COMPILED = "jasper_reports/nmk_hw_quality_report.prpt";
 		public static final String COMM_M_V_FILE_COMPILED = "jasper_reports/nmk_com_report_m_v.jasper";
 		public static final String ELECTRIC_CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_electric_consumption_report.prpt";
+		public static final String HW_QUALITY_SHEET_FILE_COMPILED = "jasper_reports/nmk_hw_quality_sheet_report.prpt";
+		public static final String HW_QUALITY_SHEET_HOUR_FILE_COMPILED = "jasper_reports/nmk_hw_quality_sheet_hour_report.prpt";
+		public static final String HW_QUALITY_ACT_1_FILE_COMPILED = "jasper_reports/nmk_hw_quality_act_1_report.prpt";
+		public static final String HW_QUALITY_ACT_2_FILE_COMPILED = "jasper_reports/nmk_hw_quality_act_2_report.prpt";
 
 		private Files() {
 
