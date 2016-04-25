@@ -298,33 +298,39 @@
                                             <td colspan="2" class="col-sm-9"><label for="inputMode">Время ожидания ответа, сек</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
-                                                       id="inputDSTimeout"
-                                                       data-inputmask="'alias':'numeric', 'greedy': false"
-                                                       type="text" 
-                                                       ng-model="data.currentObject.rawTimeout">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.rawTimeout)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSTimeout"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="data.currentObject.rawTimeout">
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
                                             <td colspan="2" class="col-sm-9"><label for="inputMode">Интервал проверки получения ответа, мс</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
-                                                       id="inputDSCheckInterval"
-                                                       data-inputmask="'alias':'numeric', 'greedy': false"
-                                                       type="text" 
-                                                       ng-model="data.currentObject.rawSleepTime">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.rawSleepTime)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSCheckInterval"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="data.currentObject.rawSleepTime">
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
                                             <td colspan="2" class="col-sm-9"><label for="inputMode">Количество попыток переотправки пакета</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
-                                                       id="inputDSRepeatCount"
-                                                       data-inputmask="'alias':'numeric', 'greedy': false"
-                                                       type="text" 
-                                                       ng-model="data.currentObject.rawResendAttempts">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.rawResendAttempts)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSRepeatCount"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="data.currentObject.rawResendAttempts">
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
@@ -332,11 +338,13 @@
                                                 <label for="inputMode">Количество переподключений в случае ошибки</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
-                                                       id="inputDSReconnectionCount"
-                                                       data-inputmask="'alias':'numeric', 'greedy': false"
-                                                       type="text" 
-                                                       ng-model="data.currentObject.rawReconnectAttempts">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.rawReconnectAttempts)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSReconnectionCount"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="data.currentObject.rawReconnectAttempts">
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
@@ -344,11 +352,13 @@
                                                 <label for="inputMode">Пауза между переподключениями, сек</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
-                                                       id="inputDSReconnectionInterval"
-                                                       data-inputmask="'alias':'numeric', 'greedy': false"
-                                                       type="text" 
-                                                       ng-model="data.currentObject.rawReconnectTimeout">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.rawReconnectTimeout)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSReconnectionInterval"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="data.currentObject.rawReconnectTimeout">
+                                                </div>
                                             </td>
                                         </tr>
                                     </table>

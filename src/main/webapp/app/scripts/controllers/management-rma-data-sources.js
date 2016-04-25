@@ -56,6 +56,21 @@ angular.module('portalNMC')
     
     $scope.selectedItem = function(item){
         $scope.data.currentObject = angular.copy(item);
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawTimeout)){
+            $scope.data.currentObject.rawTimeout = TIMEOUT;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawSleepTime)){
+            $scope.data.currentObject.rawSleepTime = SLEEPTIME;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawResendAttempts)){
+            $scope.data.currentObject.rawResendAttempts = RESENDS;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectAttempts)){
+            $scope.data.currentObject.rawReconnectAttempts = RECONNECTS;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectTimeout)){
+            $scope.data.currentObject.rawReconnectTimeout = RECONNECT_TIMEOUT;
+        }
     };
     
     $scope.addDatasource = function(){
@@ -105,14 +120,68 @@ angular.module('portalNMC')
             checkDsourceFlag = false;
         };
 //        if (!$("#inputIP").inputmask("isComplete")){
-        if (angular.isUndefined(dsource.dataSourceIp)|| (dsource.dataSourceIp=== null)||(dsource.dataSourceIp==="")){
+        if (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === "")){
             notificationFactory.errorInfo("Ошибка","Не заполнен ip \\ hostname источника данных.");
             checkDsourceFlag = false;
         };
-        if (angular.isUndefined(dsource.dataSourceName)|| (dsource.dataSourceName=== null)||(dsource.dataSourceName==="")){
+        if (angular.isUndefined(dsource.dataSourceName) || (dsource.dataSourceName === null) || (dsource.dataSourceName === "")){
             notificationFactory.errorInfo("Ошибка","Не задано имя источника данных.");
             checkDsourceFlag = false;
         };
+        
+        if (dsource.dataSourceTypeKey == 'DEVICE'){
+            if (dsource.rawTimeout == ""){
+                notificationFactory.errorInfo("Ошибка","Не корректно задано время ожидания ответа.");
+                checkDsourceFlag = false;
+            }else{
+                dsource.rawTimeout = Number(dsource.rawTimeout);
+                if (!$scope.checkPositiveNumberValue(dsource.rawTimeout)){
+                    notificationFactory.errorInfo("Ошибка","Не корректно задано время ожидания ответа.");
+                    checkDsourceFlag = false;
+                }
+            };
+            if (dsource.rawSleepTime == ""){
+                notificationFactory.errorInfo("Ошибка","Не корректно задан интервал проверки получения ответа.");
+                checkDsourceFlag = false;
+            }else{
+                dsource.rawSleepTime = Number(dsource.rawSleepTime);
+                if (!$scope.checkPositiveNumberValue(dsource.rawSleepTime)){
+                    notificationFactory.errorInfo("Ошибка","Не корректно задан интервал проверки получения ответа.");
+                    checkDsourceFlag = false;
+                }
+            };
+            if (dsource.rawResendAttempts == ""){
+                notificationFactory.errorInfo("Ошибка","Не корректно задано количество попыток переотправки пакета.");
+                checkDsourceFlag = false;
+            }else{
+                dsource.rawResendAttempts = Number(dsource.rawResendAttempts);
+                if (!$scope.checkPositiveNumberValue(dsource.rawResendAttempts)){
+                    notificationFactory.errorInfo("Ошибка","Не корректно задано количество попыток переотправки пакета.");
+                    checkDsourceFlag = false;
+                }
+            };
+            if (dsource.rawReconnectAttempts == ""){
+                notificationFactory.errorInfo("Ошибка","Не корректно задано количество переподключений в случае ошибки.");
+                checkDsourceFlag = false;
+            }else{
+                dsource.rawReconnectAttempts = Number(dsource.rawReconnectAttempts);
+                if (!$scope.checkPositiveNumberValue(dsource.rawReconnectAttempts)){
+                    notificationFactory.errorInfo("Ошибка","Не корректно задано количество переподключений в случае ошибки.");
+                    checkDsourceFlag = false;
+                }
+            };
+            if (dsource.rawReconnectTimeout == ""){
+                notificationFactory.errorInfo("Ошибка","Не корректно задана пауза между переподключениями.");
+                checkDsourceFlag = false;
+            }else{
+                dsource.rawReconnectTimeout = Number(dsource.rawReconnectTimeout);
+                if (!$scope.checkPositiveNumberValue(dsource.rawReconnectTimeout)){
+                    notificationFactory.errorInfo("Ошибка","Не корректно задана пауза между переподключениями.");
+                    checkDsourceFlag = false;
+                }
+            };
+        };
+
         if (checkDsourceFlag === false){
             return;
         };
