@@ -2,6 +2,13 @@
 angular.module('portalNMC')
 .controller('MngmtDatasourcesCtrl', ['$rootScope', '$scope','$http', 'mainSvc', 'notificationFactory', function($rootScope, $scope, $http, mainSvc, notificationFactory){
 //console.log('Run data sources management controller.');
+        //default raw data source params
+    var TIMEOUT = 25;
+    var SLEEPTIME = 250;
+    var RESENDS = 3;
+    var RECONNECTS = 1;
+    var RECONNECT_TIMEOUT = 60;
+
     $rootScope.ctxId = "management_rma_data_sources_page";
     //ctrl variables
     $scope.ctrlSettings = {};
@@ -54,6 +61,12 @@ angular.module('portalNMC')
     $scope.addDatasource = function(){
         $scope.data.currentObject = {};
         $scope.data.currentObject.dataSourceTypeKey = "DEVICE";
+        $scope.data.currentObject.rawTimeout = TIMEOUT;
+        $scope.data.currentObject.rawSleepTime = SLEEPTIME;
+        $scope.data.currentObject.rawResendAttempts = RESENDS;
+        $scope.data.currentObject.rawReconnectAttempts = RECONNECTS;
+        $scope.data.currentObject.rawReconnectTimeout = RECONNECT_TIMEOUT;
+        
         $('#showDatasourceModal').modal();
     };
     $scope.editDatasource = function(dsource){
