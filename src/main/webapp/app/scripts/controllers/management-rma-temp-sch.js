@@ -277,15 +277,7 @@ angular.module('portalNMC')
             if (!angular.isArray(schedules)){
                 return "Schedules is not array;";
             };
-            schedules.sort(function(a, b){
-                if (Number(a.t_Ambience) > Number(b.t_Ambience)){
-                    return -1;
-                };
-                if (Number(a.t_Ambience) < Number(b.t_Ambience)){
-                    return 1;
-                };
-                return 0;
-            });
+            mainSvc.sortItemsBy(schedules, "t_Ambience");
             $scope.ctrlSettings.isTempSchSort = true;    
         };
         
