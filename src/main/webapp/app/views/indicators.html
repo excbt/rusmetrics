@@ -49,7 +49,7 @@
 </div>
 <div class="container-fluid nmc-indicator-table-with-fixed-header">
     <div class="container-fluid">
-        <div class="row">   
+        <div class="row" ng-show="!ctrlSettings.loading">   
             <div class="col-xs-12 col-md-12 noPadding marginBottom10">
                 <div class="col-xs-4 col-md-4 noPadding">
                     <div class="col-xs-4 col-md-4 paddingTop5">
@@ -107,13 +107,16 @@
                 </div>
             </div>    
         </div>
+        <div class="row" ng-show="ctrlSettings.loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
 
         <div class="row" 
              class="nmc-hide" 
-             ng-show="data.length ==0">
+             ng-show="(data.length ==0) && !ctrlSettings.loading">
             <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
         </div>
-        <div class="row" ng-show="data.length >0">
+        <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
     <!--        Непрокручиваемая шапка таблицы показаний-->
 <!--            style="margin-bottom: -20px;"-->
             <table id="indicatorTableHeader" class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" 
@@ -148,7 +151,7 @@
         </div>
     </div>
     <div id="divIndicatorTable" class="container-fluid nmc-indicator-table-without-fixed-header">
-        <div class="row" ng-show="data.length >0">
+        <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
 <!--            style="margin-top: -79px;"-->
             <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus79" 
                    ng-class="tableDef.tableClass">
@@ -181,7 +184,7 @@
             </div>
         </div>    
     <!--    In total-->
-        <div class="row" ng-show="data.length > 0 && timeDetailType != '1h_abs'">
+        <div class="row" ng-show="data.length > 0 && timeDetailType != '1h_abs' && !ctrlSettings.loading">
             <table class="nmc-table-nowrap-data nmc-main-table crud-grid table table-lighter table-bordered table-condensed table-hover">
                 <tr class="nmc-main-table-header">
                     <th id="totals_th_head" 

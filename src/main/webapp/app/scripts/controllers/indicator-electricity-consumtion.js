@@ -274,7 +274,12 @@ angular.module('portalNMC')
          $scope.data = [];
          var paramString = "";
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
-         timeDetailType+=$scope.ctrlSettings.viewMode;
+         if (timeDetailType.indexOf("_abs") >= 0){
+             timeDetailType = "24h";
+             $scope.timeDetailType = "24h";
+         };
+         
+         timeDetailType += $scope.ctrlSettings.viewMode;
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceElCons/" + timeDetailType + "/" + $scope.contZPoint;// + "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
          if ($scope.timeDetailType=="1h"){
              var requestDate = moment($scope.ctrlSettings.dataDate, $scope.ctrlSettings.userFormat).format($scope.ctrlSettings.requestFormat);
@@ -304,7 +309,7 @@ angular.module('portalNMC')
     };
     
     $scope.$watch('indicatorDates', function (newDates, oldDates) {      
-        if ($location.path()!=="/objects/indicator-electricity"){
+        if ($location.path() !== "/objects/indicator-electricity"){
             return;
         };
         if(newDates===oldDates){

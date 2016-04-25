@@ -33,6 +33,8 @@ angular.module('portalNMC')
     
     $scope.ctrlSettings ={};
     $scope.ctrlSettings.ctxId = "zpoint_indicator_page";
+    
+    //$scope.ctrlSettings.loading = true; //default loading data
         
 //    sort settings
     $scope.ctrlSettings.orderBy = {};
@@ -624,6 +626,7 @@ angular.module('portalNMC')
       //Получаем показания
     $scope.columns = [];
     $scope.getData = function (pageNumber) {
+        $scope.ctrlSettings.loading = true;        
 //console.log("getData");        
         $scope.pagination.current = pageNumber;   
 //         $scope.contZPoint = $cookies.contZPoint;
@@ -638,8 +641,9 @@ angular.module('portalNMC')
          $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage+"&dataDateSort="+$scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
 //console.log(table);        
-        crudGridDataFactory(table).get(function (data) {
-//console.log(data);            
+//        crudGridDataFactory(table).get(function(data){
+        $http.get(table).success(function(data){    
+//console.log(data);
                 $scope.totalIndicators = data.totalElements;
  
                 $scope.columns = $scope.tableDef.columns;
@@ -653,32 +657,34 @@ angular.module('portalNMC')
 //                          var datad = DateNMC(el.dataDate);
 //console.log(datad.getTimezoneOffset());
 //console.log(datad.toLocaleString());                            
-                            el.dataDate=el.dataDateString;//printDateNMC(datad);
+                            el.dataDate = el.dataDateString;//printDateNMC(datad);
                             continue;
                         }
-                        if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].fieldName !== "dataDateString")){
+                        if ((el[$scope.columns[i].fieldName] != null) && ($scope.columns[i].fieldName !== "dataDateString")){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
-                        if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "m_delta")){
+                        if ((el[$scope.columns[i].fieldName] == null) && ($scope.columns[i].fieldName === "m_delta")){
                             if((el.m_out!=null)&&(el.m_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.m_in-el.m_out).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.m_in - el.m_out).toFixed(3);
                             };
                         };
-                        if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "v_delta")){
-                            if((el.v_out!=null)&&(el.v_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.v_in-el.v_out).toFixed(3);
+                        if ((el[$scope.columns[i].fieldName] == null) && ($scope.columns[i].fieldName === "v_delta")){
+                            if((el.v_out != null) && (el.v_in != null)){
+                                el[$scope.columns[i].fieldName] = (el.v_in - el.v_out).toFixed(3);
                             };
                         };
-                        if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "p_delta")){
-                            if((el.p_out!=null)&&(el.p_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.p_in-el.p_out).toFixed(3);
+                        if ((el[$scope.columns[i].fieldName] == null) && ($scope.columns[i].fieldName === "p_delta")){
+                            if((el.p_out != null) && (el.p_in != null)){
+                                el[$scope.columns[i].fieldName] = (el.p_in - el.p_out).toFixed(3);
                             };
                         };
                         
                     };                    
                 });
-                $scope.data = data.objects;            
-        });
+                $scope.data = data.objects;
+                $scope.ctrlSettings.loading = false;            
+        })
+        .error(errorCallback);
          
         $scope.setScoreStyles = function(){
             //ровняем таблицу, если появляются полосы прокрутки
@@ -989,6 +995,7 @@ angular.module('portalNMC')
     };
         
     var errorCallback = function (e) {
+        $scope.ctrlSettings.loading = false;
         console.log(e);
         var errorCode = "-1";
         if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
