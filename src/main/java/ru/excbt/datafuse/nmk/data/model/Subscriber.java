@@ -103,6 +103,12 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "subscr_type", updatable = false)
 	private String subscrType;
 
+	@Column(name = "can_create_child")
+	private Boolean canCreateChild;
+
+	@Column(name = "is_child")
+	private Boolean isChild;
+
 	public String getInfo() {
 		return info;
 	}
@@ -255,6 +261,22 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setSubscrType(String subscrType) {
 		this.subscrType = subscrType;
+	}
+
+	public Boolean getCanCreateChild() {
+		return canCreateChild;
+	}
+
+	public void setCanCreateChild(Boolean canCreateChild) {
+		this.canCreateChild = canCreateChild;
+	}
+
+	public Boolean getIsChild() {
+		return isChild;
+	}
+
+	public void setIsChild(Boolean isChild) {
+		this.isChild = isChild;
 	}
 
 }
