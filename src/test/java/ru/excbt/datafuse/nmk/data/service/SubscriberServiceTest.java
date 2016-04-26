@@ -109,7 +109,7 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 			}
 		}
 
-		subscrUserService.createOne(subscrUser, "exbt_123456", true);
+		subscrUserService.createSubscrUser(subscrUser, "exbt_123456", true);
 
 	}
 

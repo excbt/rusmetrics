@@ -39,7 +39,7 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "subscriber_name")
+	@Column(name = "subscriber_name", insertable = true, updatable = false)
 	private String subscriberName;
 
 	@Column(name = "subscriber_info")
@@ -114,6 +114,13 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	@Column(name = "subscr_cabinet_nr")
 	private String subscrCabinetNr;
+
+	@Column(name = "contact_email")
+	private String contactEmail;
+
+	@JsonIgnore
+	@Column(name = "parent_subscriber_id", updatable = false)
+	private Long parentSubscriberId;
 
 	public String getInfo() {
 		return info;
@@ -299,6 +306,22 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setSubscrCabinetNr(String subscrCabinetNr) {
 		this.subscrCabinetNr = subscrCabinetNr;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public Long getParentSubscriberId() {
+		return parentSubscriberId;
+	}
+
+	public void setParentSubscriberId(Long parentSubscriberId) {
+		this.parentSubscriberId = parentSubscriberId;
 	}
 
 }

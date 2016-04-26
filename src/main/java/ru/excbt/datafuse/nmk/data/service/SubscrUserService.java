@@ -92,8 +92,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser createOne(SubscrUser subscrUser, String password) {
-		return createOne(subscrUser, password, false);
+	public SubscrUser createSubscrUser(SubscrUser subscrUser, String password) {
+		return createSubscrUser(subscrUser, password, false);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser createOne(SubscrUser subscrUser, String password, boolean skipLdapAction) {
+	public SubscrUser createSubscrUser(SubscrUser subscrUser, String password, boolean skipLdapAction) {
 		checkNotNull(subscrUser);
 		checkArgument(subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
@@ -141,7 +141,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser updateOne(SubscrUser subscrUser, String[] passwords) {
+	public SubscrUser updateSubscrUser(SubscrUser subscrUser, String[] passwords) {
 		checkNotNull(subscrUser);
 		checkArgument(!subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
@@ -207,7 +207,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteOne(Long subscrUserId) {
+	public void deleteSubscrUser(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
 		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
@@ -223,7 +223,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteOnePermanent(Long subscrUserId) {
+	public void deleteSubscrUserPermanent(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
 		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);

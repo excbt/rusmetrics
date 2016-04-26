@@ -79,7 +79,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOne(List<SubscrContObject> objects, LocalDate subscrEndDate) {
+	public void deleteSubscrContObject(List<SubscrContObject> objects, LocalDate subscrEndDate) {
 		checkNotNull(objects);
 		checkNotNull(subscrEndDate);
 		Date endDate = subscrEndDate.toDate();
@@ -100,7 +100,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOne(SubscrContObject subscrContObject, LocalDate subscrEndDate) {
+	public void deleteSubscrContObject(SubscrContObject subscrContObject, LocalDate subscrEndDate) {
 		checkNotNull(subscrContObject);
 		if (subscrContObject.getSubscrBeginDate().equals(subscrContObject.getSubscrEndDate())) {
 			subscrContObjectRepository.delete(subscrContObject);
@@ -116,7 +116,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOnePermanent(List<SubscrContObject> objects) {
+	public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
 		subscrContObjectRepository.delete(objects);
 	}
 
@@ -126,7 +126,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOnePermanent(SubscrContObject subscrContObject) {
+	public void deleteSubscrContObjectPermanent(SubscrContObject subscrContObject) {
 		subscrContObjectRepository.delete(subscrContObject);
 	}
 
@@ -370,7 +370,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public SubscrContObject createOne(ContObject contObject, Subscriber subscriber, LocalDate subscrBeginDate) {
+	public SubscrContObject createSubscrContObject(ContObject contObject, Subscriber subscriber,
+			LocalDate subscrBeginDate) {
 		checkNotNull(contObject);
 		checkNotNull(subscriber);
 		checkNotNull(subscrBeginDate);
@@ -391,7 +392,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public SubscrContObject createOne(Long contObjectId, Subscriber subscriber, LocalDate subscrBeginDate) {
+	public SubscrContObject createSubscrContObject(Long contObjectId, Subscriber subscriber,
+			LocalDate subscrBeginDate) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriber);
 		checkNotNull(subscrBeginDate);
@@ -451,10 +453,10 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			}
 		});
 
-		deleteOne(delSubscrContObjects, subscrCurrentDate);
+		deleteSubscrContObject(delSubscrContObjects, subscrCurrentDate);
 
 		addContObjectIds.forEach(i -> {
-			createOne(i, subscriber, subscrBeginDate);
+			createSubscrContObject(i, subscriber, subscrBeginDate);
 		});
 
 		List<ContObject> resultContObjects = selectSubscriberContObjects(subscriberId);

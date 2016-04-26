@@ -202,7 +202,7 @@ public class SubscrUserController extends SubscrApiController {
 
 			@Override
 			public SubscrUser processAndReturnResult() {
-				return subscrUserService.createOne(entity, password);
+				return subscrUserService.createSubscrUser(entity, password);
 			}
 		};
 
@@ -262,7 +262,7 @@ public class SubscrUserController extends SubscrApiController {
 
 			@Override
 			public SubscrUser processAndReturnResult() {
-				return subscrUserService.updateOne(entity, passwords);
+				return subscrUserService.updateSubscrUser(entity, passwords);
 			}
 		};
 
@@ -290,9 +290,9 @@ public class SubscrUserController extends SubscrApiController {
 			@Override
 			public void process() {
 				if (Boolean.TRUE.equals(isPermanent)) {
-					subscrUserService.deleteOnePermanent(subscrUserId);
+					subscrUserService.deleteSubscrUserPermanent(subscrUserId);
 				} else {
-					subscrUserService.deleteOne(subscrUserId);
+					subscrUserService.deleteSubscrUser(subscrUserId);
 				}
 
 			}

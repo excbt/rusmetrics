@@ -302,7 +302,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObjectDaDataService.saveContObjectDaData(contObjectDaData);
 		contObjectFiasRepository.save(contObjectFias);
 
-		subscrContObjectService.createOne(resultContObject, subscriber, subscrBeginDate);
+		subscrContObjectService.createSubscrContObject(resultContObject, subscriber, subscrBeginDate);
 
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
@@ -333,7 +333,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		softDelete(contObject);
 
 		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
-		subscrContObjectService.deleteOne(subscrContObjects, subscrEndDate);
+		subscrContObjectService.deleteSubscrContObject(subscrContObjects, subscrEndDate);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {
@@ -374,7 +374,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		}
 
 		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
-		subscrContObjectService.deleteOnePermanent(subscrContObjects);
+		subscrContObjectService.deleteSubscrContObjectPermanent(subscrContObjects);
 
 		List<ContManagement> contManagements = contManagementService.selectByContObject(contObjectId);
 		contManagementService.deletePermanent(contManagements);

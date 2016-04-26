@@ -63,8 +63,8 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	private int version;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id") ,
-			inverseJoinColumns = @JoinColumn(name = "subscr_role_id") )
+	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id"),
+			inverseJoinColumns = @JoinColumn(name = "subscr_role_id"))
 	private List<SubscrRole> subscrRoles = new ArrayList<>();
 
 	@JsonIgnore
@@ -100,6 +100,9 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@JsonIgnore
 	@Column(name = "is_readonly")
 	private Boolean isReadonly;
+
+	@Column(name = "contact_email")
+	private String contactEmail;
 
 	public String getUserName() {
 		return userName;
