@@ -36,6 +36,8 @@ public class AdminUtils {
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_ZPOINT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_CREATE_CHILD));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_CREATE_CABINET));
 		return grantedAuths;
 	}
 }

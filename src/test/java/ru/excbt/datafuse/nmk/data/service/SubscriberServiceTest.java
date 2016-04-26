@@ -100,7 +100,7 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 			subscrUser.setIsAdmin(false);
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles(true));
 				if (Boolean.TRUE.equals(isRma)) {
 					subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrRmaAdminRoles());
 				}
@@ -109,7 +109,7 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 			}
 		}
 
-		subscrUserService.createOne(subscrUser, "excbt_12345");
+		subscrUserService.createOne(subscrUser, "exbt_123456", true);
 
 	}
 

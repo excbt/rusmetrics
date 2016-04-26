@@ -97,8 +97,7 @@ public class SubscrUserController extends SubscrApiController {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(getCurrentSubscriberId(), isAdmin, isReadonly, subscrUser, newPassword,
-				request);
+		return createSubscrUserInternal(getCurrentSubscriber(), isAdmin, isReadonly, subscrUser, newPassword, request);
 	}
 
 	/**
@@ -118,7 +117,7 @@ public class SubscrUserController extends SubscrApiController {
 		String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
 				: null;
 
-		return updateSubscrUserInternal(getCurrentSubscriberId(), subscrUserId, isAdmin, isReadonly, subscrUser,
+		return updateSubscrUserInternal(getCurrentSubscriber(), subscrUserId, isAdmin, isReadonly, subscrUser,
 				passwords);
 	}
 
@@ -144,9 +143,10 @@ public class SubscrUserController extends SubscrApiController {
 	 * @param request
 	 * @return
 	 */
-	protected ResponseEntity<?> createSubscrUserInternal(Long rSubscriberId, Boolean isAdmin, Boolean isReadonly,
+	protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
 			SubscrUser subscrUser, String password, HttpServletRequest request) {
-		checkNotNull(rSubscriberId);
+		checkNotNull(rmaSubscriber);
+		checkNotNull(rmaSubscriber.getId());
 		checkNotNull(subscrUser);
 
 		if (subscrUser.getUserName() != null) {
@@ -172,9 +172,7 @@ public class SubscrUserController extends SubscrApiController {
 			return responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
-		Subscriber subcriber = subscriberService.findOne(rSubscriberId);
-
-		subscrUser.setSubscriberId(rSubscriberId);
+		subscrUser.setSubscriberId(rmaSubscriber.getId());
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
 		subscrUser.setIsReadonly(isReadonly);
@@ -184,9 +182,11 @@ public class SubscrUserController extends SubscrApiController {
 			subscrUser.setIsAdmin(false);
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
-				if (Boolean.TRUE.equals(subcriber.getIsRma())) {
-					subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrRmaAdminRoles());
+				subscrUser.getSubscrRoles()
+						.addAll(subscrRoleService.subscrAdminRoles(rmaSubscriber.getCanCreateChild()));
+				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
+					subscrUser.getSubscrRoles()
+							.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
 				}
 			} else {
 				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
@@ -217,19 +217,20 @@ public class SubscrUserController extends SubscrApiController {
 	 * @param subscrUser
 	 * @return
 	 */
-	protected ResponseEntity<?> updateSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isAdmin,
+	protected ResponseEntity<?> updateSubscrUserInternal(Subscriber rmaSubscriber, Long subscrUserId, Boolean isAdmin,
 			Boolean isReadonly, SubscrUser subscrUser, String[] passwords) {
 
-		checkNotNull(rSubscriberId);
+		checkNotNull(rmaSubscriber);
+		checkNotNull(rmaSubscriber.getId());
 		checkNotNull(subscrUserId);
 		checkNotNull(subscrUser);
 		checkNotNull(subscrUser.getSubscriberId());
 
-		if (!subscrUser.getSubscriberId().equals(rSubscriberId)) {
+		if (!subscrUser.getSubscriberId().equals(rmaSubscriber.getId())) {
 			return responseBadRequest();
 		}
 
-		if (checkSubscrUserOwnerFail(rSubscriberId, subscrUser)) {
+		if (checkSubscrUserOwnerFail(rmaSubscriber.getId(), subscrUser)) {
 			return responseBadRequest();
 		}
 
@@ -250,7 +251,8 @@ public class SubscrUserController extends SubscrApiController {
 			subscrUser.setIsAdmin(false);
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+				subscrUser.getSubscrRoles()
+						.addAll(subscrRoleService.subscrAdminRoles(rmaSubscriber.getCanCreateChild()));
 			} else {
 				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
 			}

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
  * Контроллер для работы с пользователями абонентов
@@ -88,7 +89,12 @@ public class RmaSubscrUserController extends SubscrUserController {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(rSubscriberId, isAdmin, isReadonly, subscrUser, newPassword, request);
+		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
+		if (subscriber == null) {
+			return responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
+		}
+
+		return createSubscrUserInternal(subscriber, isAdmin, isReadonly, subscrUser, newPassword, request);
 	}
 
 	/**
@@ -110,7 +116,12 @@ public class RmaSubscrUserController extends SubscrUserController {
 		//				: null;
 		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
-		return updateSubscrUserInternal(rSubscriberId, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
+		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
+		if (subscriber == null) {
+			return responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
+		}
+
+		return updateSubscrUserInternal(subscriber, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
 	}
 
 	/**

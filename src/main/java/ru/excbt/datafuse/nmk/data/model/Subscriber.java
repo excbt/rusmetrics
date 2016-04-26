@@ -103,10 +103,10 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "subscr_type", updatable = false)
 	private String subscrType;
 
-	@Column(name = "can_create_child")
+	@Column(name = "can_create_child", insertable = false, updatable = false)
 	private Boolean canCreateChild;
 
-	@Column(name = "is_child")
+	@Column(name = "is_child", updatable = false)
 	private Boolean isChild;
 
 	public String getInfo() {

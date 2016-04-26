@@ -51,14 +51,21 @@ public class SubscrRoleService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrRole> subscrAdminRoles() {
+	public List<SubscrRole> subscrAdminRoles(boolean haveCabinet) {
 		List<SubscrRole> allRoles = findAll();
 		return allRoles.stream()
 				.filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_CONT_OBJECT_ADMIN.equals(i.getRoleName())
-						|| SecuredRoles.ROLE_ZPOINT_ADMIN.equals(i.getRoleName()))
+						|| SecuredRoles.ROLE_ZPOINT_ADMIN.equals(i.getRoleName())
+						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
+						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrRole> subscrAdminRoles() {
+		return subscrAdminRoles(false);
 	}
 
 	/**
@@ -67,12 +74,24 @@ public class SubscrRoleService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrRmaAdminRoles() {
+		return subscrRmaAdminRoles(false);
+	}
+
+	/**
+	 * 
+	 * @param haveCabinet
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrRole> subscrRmaAdminRoles(boolean haveCabinet) {
 		List<SubscrRole> allRoles = findAll();
 		return allRoles.stream()
 				.filter(i -> SecuredRoles.ROLE_RMA_CONT_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN.equals(i.getRoleName())
-						|| SecuredRoles.ROLE_RMA_ZPOINT_ADMIN.equals(i.getRoleName()))
+						|| SecuredRoles.ROLE_RMA_ZPOINT_ADMIN.equals(i.getRoleName())
+						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
+						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
 	}
 
