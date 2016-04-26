@@ -456,7 +456,15 @@ console.log(e);
                         getObjectsData(e.id);
                     }else{
                     //if tree is on
-                        $scope.loadTree($scope.data.currentTree, e.id);                    
+                        if (mainSvc.checkUndefinedNull($scope.data.selectedNode.type) || $scope.data.selectedNode.type != 'root'){
+                            $scope.data.selectedNodeForMove = angular.copy($scope.data.selectedNode);
+                            $scope.data.treeForMove = angular.copy($scope.data.currentTree);
+                            $scope.data.treeForMove.childObjectList.shift();
+                            $scope.data.treeForMove.movingObjects = [e.id];
+                            $scope.moveToNode();
+                        }else{
+                            $scope.loadTree($scope.data.currentTree, e.id);                    
+                        }
                     };
                     
                 };
@@ -1350,7 +1358,7 @@ console.log(e);
                     checkGeo();
                     $('#showObjOptionModal').modal();
                     $('#showObjOptionModal').css("z-index", "1041");
-console.log($scope.currentObject);                    
+//console.log($scope.currentObject);                    
                 };
                 
 //                work with object devices
