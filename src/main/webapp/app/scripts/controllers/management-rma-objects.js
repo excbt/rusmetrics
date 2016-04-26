@@ -2008,6 +2008,7 @@ console.log(e);
                             createdTree.childObjectList[0].templateItemId = createdTree.templateItemId;
                         };
                         $scope.data.trees.push(createdTree);
+                        $scope.loadTree(createdTree);
                         $('#showTreeOptionModal').modal('hide');
                     }, errorProtoCallback);                    
                 };
