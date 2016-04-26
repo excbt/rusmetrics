@@ -69,4 +69,23 @@ public abstract class AbstractService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param checkIds
+	 * @param availableIds
+	 * @return
+	 */
+	protected boolean checkIds(Long[] checkIds, List<Long> availableIds) {
+
+		if (availableIds == null || availableIds.isEmpty()) {
+			return false;
+		}
+
+		boolean result = true;
+		for (Long id : checkIds) {
+			result = result && availableIds.contains(id);
+		}
+		return result;
+	}
+
 }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
 /**
  * Сервис для работы с Абонентами РМА
@@ -68,6 +69,8 @@ public class RmaSubscriberService extends SubscriberService {
 
 		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
+
+		subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
 
 		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
 

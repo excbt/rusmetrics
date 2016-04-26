@@ -109,6 +109,12 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "is_child", updatable = false)
 	private Boolean isChild;
 
+	@Column(name = "child_ldap_ou", updatable = false, insertable = false)
+	private String childLdapOu;
+
+	@Column(name = "subscr_cabinet_nr")
+	private String subscrCabinetNr;
+
 	public String getInfo() {
 		return info;
 	}
@@ -277,6 +283,22 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setIsChild(Boolean isChild) {
 		this.isChild = isChild;
+	}
+
+	public String getChildLdapOu() {
+		return childLdapOu;
+	}
+
+	public void setChildLdapOu(String childLdapOu) {
+		this.childLdapOu = childLdapOu;
+	}
+
+	public String getSubscrCabinetNr() {
+		return subscrCabinetNr;
+	}
+
+	public void setSubscrCabinetNr(String subscrCabinetNr) {
+		this.subscrCabinetNr = subscrCabinetNr;
 	}
 
 }

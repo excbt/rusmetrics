@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -39,7 +40,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
  *
  */
 @Service
-public class SubscrContObjectService implements SecuredRoles {
+public class SubscrContObjectService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectService.class);
 
@@ -479,6 +480,41 @@ public class SubscrContObjectService implements SecuredRoles {
 			i.set_haveSubscr(haveSubscr);
 		});
 
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public boolean canAccessContObjects(Long subscriberId, Long[] contObjectIds) {
+
+		if (contObjectIds == null || contObjectIds.length == 0) {
+			return false;
+		}
+
+		List<Long> subscrContObjectIds = selectSubscriberContObjectIds(subscriberId);
+
+		return checkIds(contObjectIds, subscrContObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contZPointIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public boolean canAccessContZPoint(Long subscriberId, Long[] contZPointIds) {
+		if (contZPointIds == null || contZPointIds.length == 0) {
+			return false;
+		}
+
+		List<Long> availableIds = selectSubscriberContZPointIds(subscriberId);
+
+		return checkIds(contZPointIds, availableIds);
 	}
 
 }

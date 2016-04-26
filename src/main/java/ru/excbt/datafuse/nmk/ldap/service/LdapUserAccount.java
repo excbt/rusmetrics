@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.ldap.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
+
 /**
  * Класс для работы с пользователем LDAP
  * 
@@ -20,7 +22,7 @@ public final class LdapUserAccount {
 	private final static String HOME_DIR = "/home/";
 
 	private final Long id;
-	private final String ou;
+	private final String[] orgUnits;
 	private final String firstName;
 	private final String secondName;
 	private final String userName;
@@ -36,15 +38,15 @@ public final class LdapUserAccount {
 	 * @param names
 	 * @param mail
 	 */
-	public LdapUserAccount(Long id, String userName, String[] names, String ou, String mail) {
-		checkNotNull(ou);
+	public LdapUserAccount(Long id, String userName, String[] names, String[] orgUnits, String mail) {
+		checkNotNull(orgUnits);
 		checkNotNull(id);
 		checkNotNull(userName);
 		checkNotNull(names);
 		checkArgument(names.length == 2);
 
 		this.id = id;
-		this.ou = ou;
+		this.orgUnits = Arrays.copyOf(orgUnits, orgUnits.length);
 		this.userName = userName;
 		this.firstName = names[0];
 		this.secondName = names[1];
@@ -60,7 +62,7 @@ public final class LdapUserAccount {
 	 * @param username
 	 * @param names
 	 */
-	public LdapUserAccount(Long id, String username, String[] names, String ou) {
+	public LdapUserAccount(Long id, String username, String[] names, String[] ou) {
 		this(id, username, names, ou, username + DEFAULT_EMAIL_DOMAIN);
 	}
 
@@ -124,8 +126,8 @@ public final class LdapUserAccount {
 	 * 
 	 * @return
 	 */
-	public String getOu() {
-		return ou;
+	public String[] getOrgUnits() {
+		return Arrays.copyOf(orgUnits, orgUnits.length);
 	}
 
 	public Long getId() {

@@ -82,11 +82,12 @@ public class LdapServiceTest extends JpaSupportTest {
 		// ldapService.changePassword("chekh",psw);
 	}
 
+	@Ignore
 	@Test
 	public void testCreateUser() throws Exception {
 		String username = "usr_" + System.currentTimeMillis();
 		LdapUserAccount user = new LdapUserAccount(1L, username, new String[] { "user_firstName", "user_secondName" },
-				"EXCBT-NMK", username + "@rusmetrics.ru");
+				new String[] { "EXCBT-NMK" }, username + "@rusmetrics.ru");
 		ldapService.createUser(user);
 		ldapService.blockLdapUser(user);
 	}

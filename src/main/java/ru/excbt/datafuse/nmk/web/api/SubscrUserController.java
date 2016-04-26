@@ -182,8 +182,8 @@ public class SubscrUserController extends SubscrApiController {
 			subscrUser.setIsAdmin(false);
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles()
-						.addAll(subscrRoleService.subscrAdminRoles(rmaSubscriber.getCanCreateChild()));
+				subscrUser.getSubscrRoles().addAll(
+						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
 				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
 					subscrUser.getSubscrRoles()
 							.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
@@ -251,8 +251,8 @@ public class SubscrUserController extends SubscrApiController {
 			subscrUser.setIsAdmin(false);
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles()
-						.addAll(subscrRoleService.subscrAdminRoles(rmaSubscriber.getCanCreateChild()));
+				subscrUser.getSubscrRoles().addAll(
+						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
 			} else {
 				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
 			}

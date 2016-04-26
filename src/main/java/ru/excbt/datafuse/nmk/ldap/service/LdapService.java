@@ -204,9 +204,15 @@ public class LdapService {
 
 	protected Name buildDn(LdapUserAccount user) {
 		checkNotNull(user.getUserName());
-		checkNotNull(user.getOu());
-		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", user.getOu()).add("uid", user.getUserName())
-				.build();
+		checkNotNull(user.getOrgUnits());
+
+		LdapNameBuilder builder = LdapNameBuilder.newInstance().add("ou", "people");
+
+		for (String ou : user.getOrgUnits()) {
+			builder.add("ou", ou);
+		}
+
+		return builder.add("uid", user.getUserName()).build();
 
 	}
 

@@ -240,7 +240,9 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	private LdapUserAccount ldapAccount(SubscrUser subscrUser, Long subscriberId) {
 
-		String ou = subscriberService.getRmaLdapOu(subscriberId);
+		String rmaOu = subscriberService.getRmaLdapOu(subscriberId);
+		String[] ou = new String[] { rmaOu };
+		//String childOu = subscriberService.get
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(),
 				new String[] { subscrUser.getFirstName(), subscrUser.getLastName() }, ou, subscrUser.getUserEMail());

@@ -8,6 +8,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
@@ -37,6 +39,7 @@ public class SystemUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "last_name")
 	private String lastName;
 
+	@JsonIgnore
 	@Column(name = "password")
 	private String password;
 

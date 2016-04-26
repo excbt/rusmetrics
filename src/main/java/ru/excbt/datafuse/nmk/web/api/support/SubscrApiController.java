@@ -45,25 +45,6 @@ public class SubscrApiController extends WebApiController {
 
 	/**
 	 * 
-	 * @param checkIds
-	 * @param availableIds
-	 * @return
-	 */
-	protected boolean checkIds(Long[] checkIds, List<Long> availableIds) {
-
-		if (availableIds == null || availableIds.isEmpty()) {
-			return false;
-		}
-
-		boolean result = true;
-		for (Long id : checkIds) {
-			result = result && availableIds.contains(id);
-		}
-		return result;
-	}
-
-	/**
-	 * 
 	 * @param contObjectId
 	 * @return
 	 */
@@ -79,18 +60,10 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected boolean canAccessContObject(Long[] contObjectIds) {
-		if (contObjectIds == null || contObjectIds.length == 0) {
-			return false;
-		}
-
 		if (currentUserService.isSystem()) {
 			return true;
 		}
-
-		List<Long> subscrContObjectIds = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
-
-		return checkIds(contObjectIds, subscrContObjectIds);
+		return subscrContObjectService.canAccessContObjects(currentSubscriberService.getSubscriberId(), contObjectIds);
 	}
 
 	/**
@@ -99,17 +72,10 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected boolean canAccessContZPoint(Long[] contZPointIds) {
-		if (contZPointIds == null || contZPointIds.length == 0) {
-			return false;
-		}
-
 		if (currentUserService.isSystem()) {
 			return true;
 		}
-
-		List<Long> availableIds = subscrContObjectService.selectSubscriberContZPointIds(getCurrentSubscriberId());
-
-		return checkIds(contZPointIds, availableIds);
+		return subscrContObjectService.canAccessContZPoint(getCurrentSubscriberId(), contZPointIds);
 	}
 
 	/**
