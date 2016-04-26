@@ -34,16 +34,44 @@ public class AnyControllerTest extends AbstractControllerTest {
 	public final static String API_RMA = "/api/rma";
 	public final static String API_SUBSCR = "/api/subscr";
 
+	/**
+	 * 
+	 */
+	public void setupAuditor() {
+		setupAuditor(getSubscrUserId(), getSubscriberId());
+	}
+
+	/**
+	 * 
+	 */
 	@Before
 	public void setup() {
-		setupAuditor(TEST_AUDIT_USER, DEV_SUBSCR_ORG_ID);
-
+		setupAuditor();
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilters(springSecurityFilterChain).build();
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void testInit() {
 		checkNotNull(mockMvc);
+	}
+
+	/**
+	 * 
+	 */
+
+	protected long getSubscriberId() {
+		return DEV_SUBSCR_ORG_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected long getSubscrUserId() {
+		return TEST_AUDIT_USER;
 	}
 
 }
