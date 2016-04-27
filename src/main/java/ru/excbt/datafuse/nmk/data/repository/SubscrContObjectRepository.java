@@ -93,6 +93,15 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	/**
 	 * 
 	 * @param subscriberId
+	 * @param contObjectId
+	 * @return
+	 */
+	@Query("SELECT sco FROM SubscrContObject sco " + " WHERE sco.subscriberId = :subscriberId ")
+	public List<SubscrContObject> selectSubscrContObjects(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
 	 * @return
 	 */
 	@Query("SELECT zp FROM ContZPoint zp WHERE zp.contObjectId IN "

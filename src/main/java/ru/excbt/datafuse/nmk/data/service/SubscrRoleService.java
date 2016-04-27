@@ -48,18 +48,19 @@ public class SubscrRoleService {
 
 	/**
 	 * 
+	 * @param canCreateCabinet
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrRole> subscrAdminRoles(boolean haveCabinet) {
+	public List<SubscrRole> subscrAdminRoles(boolean canCreateCabinet) {
 		List<SubscrRole> allRoles = findAll();
 		return allRoles.stream()
 				.filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_CONT_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_ZPOINT_ADMIN.equals(i.getRoleName())
-						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
-						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
+						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
+						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
 	}
 
@@ -79,19 +80,19 @@ public class SubscrRoleService {
 
 	/**
 	 * 
-	 * @param haveCabinet
+	 * @param canCreateCabinet
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrRole> subscrRmaAdminRoles(boolean haveCabinet) {
+	public List<SubscrRole> subscrRmaAdminRoles(boolean canCreateCabinet) {
 		List<SubscrRole> allRoles = findAll();
 		return allRoles.stream()
 				.filter(i -> SecuredRoles.ROLE_RMA_CONT_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_ZPOINT_ADMIN.equals(i.getRoleName())
-						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
-						|| (haveCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
+						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
+						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
 	}
 
@@ -104,6 +105,17 @@ public class SubscrRoleService {
 		List<SubscrRole> allRoles = findAll();
 		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_READONLY.equals(i.getRoleName()))
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrRole> subscrCabinetRoles() {
+		List<SubscrRole> allRoles = findAll();
+		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName())
+				|| SecuredRoles.ROLE_CABINET_USER.equals(i.getRoleName())).collect(Collectors.toList());
 	}
 
 }

@@ -1,6 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -9,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.SubscrCabinetInfo;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 public class SubscrCabinetServiceTest extends JpaSupportTest {
 
@@ -18,19 +23,40 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 	private SubscrCabinetService subscrCabinetService;
 
 	@Autowired
+	private SubscrUserService subscrUserService;
+
+	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private LdapService ldapService;
 
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testName() throws Exception {
+	public void testCreate() throws Exception {
 
 		Subscriber subsciber = subscriberService.findOne(getSubscriberId());
 		assertNotNull(subsciber);
 
-		subscrCabinetService.createSubscrUserCabinet(subsciber, new Long[] { 29863789L });
+		SubscrCabinetInfo cabinetInfo = subscrCabinetService.createSubscrUserCabinet(subsciber,
+				new Long[] { 29863789L });
+		logger.info("Created Subscriber id={}", cabinetInfo.getSubscriber().getId());
+
+	}
+
+	@Test
+	public void testDelete() throws Exception {
+		List<Subscriber> subscribers = subscriberService.selectChildSubscribers(getSubscriberId());
+		assertNotNull(subscribers);
+		assertFalse(subscribers.isEmpty());
+
+		for (Subscriber s : subscribers) {
+			subscrCabinetService.deleteSubscrUserCabinet(s);
+		}
+
 	}
 
 	/**

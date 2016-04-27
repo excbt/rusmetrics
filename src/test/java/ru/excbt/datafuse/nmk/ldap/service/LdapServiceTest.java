@@ -87,7 +87,7 @@ public class LdapServiceTest extends JpaSupportTest {
 	public void testCreateUser() throws Exception {
 		String username = "usr_" + System.currentTimeMillis();
 		LdapUserAccount user = new LdapUserAccount(1L, username, new String[] { "user_firstName", "user_secondName" },
-				new String[] { "EXCBT-NMK" }, username + "@rusmetrics.ru");
+				new String[] { "EXCBT-NMK" });
 		ldapService.createUser(user);
 		ldapService.blockLdapUser(user);
 	}

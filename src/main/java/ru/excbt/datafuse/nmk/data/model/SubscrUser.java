@@ -87,6 +87,7 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "user_comment")
 	private String userComment;
 
+	// Uses for Ldap e-mail
 	@Column(name = "user_email")
 	private String userEMail;
 
@@ -101,8 +102,13 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "is_readonly")
 	private Boolean isReadonly;
 
+	// Uses for User contact e-mail
 	@Column(name = "contact_email")
 	private String contactEmail;
+
+	// Uses for Ldap Description
+	@Column(name = "user_description", insertable = true, updatable = false)
+	private String userDescription;
 
 	public String getUserName() {
 		return userName;
@@ -226,6 +232,22 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setIsReadonly(Boolean isReadonly) {
 		this.isReadonly = isReadonly;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public String getUserDescription() {
+		return userDescription;
+	}
+
+	public void setUserDescription(String userDescription) {
+		this.userDescription = userDescription;
 	}
 
 }

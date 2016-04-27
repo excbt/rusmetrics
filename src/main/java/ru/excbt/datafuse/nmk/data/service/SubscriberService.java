@@ -12,6 +12,7 @@ import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,6 +85,27 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public Subscriber saveSubscriber(Subscriber entity) {
+		return subscriberRepository.save(entity);
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteSubscriber(Subscriber entity) {
+		subscriberRepository.delete(entity);
 	}
 
 	/**
@@ -256,11 +278,47 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	public Subscriber getLdapSubscriber(Long subscriberId) {
+		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+		if (subscriber == null) {
+			return null;
+		}
+		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+			return subscriber;
+		}
+
+		if (subscriber.getRmaLdapOu() != null) {
+			return subscriber;
+		}
+
+		if (subscriber.getRmaSubscriberId() == null) {
+			return null;
+		}
+
+		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
+		return rmaSubscriber == null ? null : subscriber;
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Subscriber> findAllSubscribers() {
 		return Lists.newArrayList(subscriberRepository.findAll());
+	}
+
+	/**
+	 * 
+	 * @param parentSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Subscriber> selectChildSubscribers(Long parentSubscriberId) {
+		return subscriberRepository.selectChildSubscribers(parentSubscriberId);
 	}
 
 }

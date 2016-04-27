@@ -38,7 +38,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserService.class);
 
-	private interface LdapAction {
+	public interface LdapAction {
 		void doAction(LdapUserAccount user);
 	}
 
@@ -238,14 +238,33 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @param subscrUser
 	 * @return
 	 */
-	private LdapUserAccount ldapAccount(SubscrUser subscrUser, Long subscriberId) {
+	public LdapUserAccount ldapAccountFactory(SubscrUser subscrUser, Long subscriberId) {
 
-		String rmaOu = subscriberService.getRmaLdapOu(subscriberId);
-		String[] ou = new String[] { rmaOu };
-		//String childOu = subscriberService.get
+		checkNotNull(subscrUser.getSubscriber());
+
+		String rmaOu = null;
+		String childLdapOu = null;
+		String[] orgUnits = null;
+
+		if (Boolean.TRUE.equals(subscrUser.getSubscriber().getIsChild())) {
+			rmaOu = subscriberService.getRmaLdapOu(subscrUser.getSubscriber().getParentSubscriberId());
+			Subscriber parentSubscriber = subscriberService.findOne(subscrUser.getSubscriber().getParentSubscriberId());
+			checkNotNull(parentSubscriber);
+
+			childLdapOu = parentSubscriber.getChildLdapOu();
+
+			orgUnits = new String[] { rmaOu, childLdapOu };
+
+		} else {
+			rmaOu = subscriberService.getRmaLdapOu(subscriberId);
+			orgUnits = new String[] { rmaOu };
+		}
+
+		checkNotNull(orgUnits);
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(),
-				new String[] { subscrUser.getFirstName(), subscrUser.getLastName() }, ou, subscrUser.getUserEMail());
+				new String[] { subscrUser.getFirstName(), subscrUser.getLastName() }, orgUnits,
+				subscrUser.getUserEMail(), subscrUser.getUserDescription());
 		return user;
 
 	}
@@ -254,8 +273,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * 
 	 * @param action
 	 */
-	private void processLdapAction(SubscrUser subscrUser, LdapAction action) {
-		LdapUserAccount user = ldapAccount(subscrUser, subscrUser.getSubscriberId());
+	public final void processLdapAction(SubscrUser subscrUser, LdapAction action) {
+		LdapUserAccount user = ldapAccountFactory(subscrUser, subscrUser.getSubscriberId());
 		try {
 			action.doAction(user);
 		} catch (Exception e) {
@@ -274,6 +293,30 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findByUsername(String userName) {
 		return subscrUserRepository.findByUserNameIgnoreCase(userName);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 */
+	@Secured({ ROLE_SUBSCR_CREATE_CABINET })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteSubscrUsers(Long subscriberId) {
+
+		List<SubscrUser> subscrUsers = subscrUserRepository.findBySubscriberId(subscriberId);
+
+		// Delete from Ldap
+		LdapAction action = (u) -> {
+			ldapService.deleteUser(u);
+		};
+
+		for (SubscrUser subscrUser : subscrUsers) {
+			processLdapAction(subscrUser, action);
+		}
+
+		// Delete from table
+		subscrUserRepository.delete(subscrUsers);
+
 	}
 
 }

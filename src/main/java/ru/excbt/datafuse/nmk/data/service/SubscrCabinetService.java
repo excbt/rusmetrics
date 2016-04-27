@@ -3,11 +3,16 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +22,49 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
-import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 public class SubscrCabinetService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetService.class);
+
+	public static class SubscrCabinetInfo implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2991125903866112134L;
+
+		private final Subscriber subscriber;
+		private final SubscrUser subscrUser;
+
+		private final List<ContObject> contObjects;
+
+		private SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser, List<ContObject> contObjects) {
+			this.subscriber = subscriber;
+			this.subscrUser = subscrUser;
+			this.contObjects = Collections.unmodifiableList(contObjects);
+		}
+
+		public Subscriber getSubscriber() {
+			return subscriber;
+		}
+
+		public SubscrUser getSubscrUser() {
+			return subscrUser;
+		}
+
+		public List<ContObject> getContObjects() {
+			return contObjects;
+		}
+
+	}
 
 	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
@@ -35,10 +73,10 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	protected SubscrUserService subscrUserService;
 
 	@Autowired
-	protected SubscriberService subscriberService;
+	protected SubscrRoleService subscrRoleService;
 
 	@Autowired
-	protected SubscriberRepository subscriberRepository;
+	protected SubscriberService subscriberService;
 
 	@Autowired
 	private ContObjectService contObjectService;
@@ -76,7 +114,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
-	public Subscriber createSubscrUserCabinet(Subscriber parentSubscriber, Long[] contObjectIds) {
+	public SubscrCabinetInfo createSubscrUserCabinet(Subscriber parentSubscriber, Long[] contObjectIds) {
 		checkNotNull(parentSubscriber);
 		checkNotNull(parentSubscriber.getId());
 		checkNotNull(contObjectIds);
@@ -110,7 +148,53 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		newSubscriber.setTimezoneDef(parentSubscriber.getTimezoneDef());
 		newSubscriber.setIsChild(true);
 
-		return subscriberRepository.save(newSubscriber);
+		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
+
+		List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
+				Arrays.asList(contObjectIds), LocalDate.now());
+
+		SubscrUser subscrUser = new SubscrUser();
+		subscrUser.setSubscriber(newSubscriber);
+		subscrUser.setSubscriberId(newSubscriber.getId());
+		subscrUser.setSubscrRoles(subscrRoleService.subscrCabinetRoles());
+		subscrUser.setUserName(subscrCabinetNr.toString());
+		subscrUser.setFirstName("Не задано");
+		subscrUser.setLastName("Не задано");
+		subscrUser.setUserComment(contObject.getFullName());
+		subscrUser.setPassword(PasswordUtils.generateRandomPassword());
+		subscrUser.setUserDescription(contObject.getFullName());
+
+		subscrUserService.createSubscrUser(subscrUser, subscrUser.getPassword());
+
+		SubscrCabinetInfo result = new SubscrCabinetInfo(newSubscriber, subscrUser, contObjects);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param cabinetSubscriber
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
+	public void deleteSubscrUserCabinet(Subscriber cabinetSubscriber) {
+		checkNotNull(cabinetSubscriber);
+		checkArgument(!cabinetSubscriber.isNew());
+
+		if (!SubscrTypeKey.CABINET.getKeyname().equals(cabinetSubscriber.getSubscrType())) {
+			throw new PersistenceException(String.format("Subscriber (id=%d) is not type of CABINET. Actual type: %s",
+					cabinetSubscriber.getId(), cabinetSubscriber.getSubscrType()));
+		}
+
+		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
+
+		List<SubscrContObject> subscrContObjects = subscrContObjectService
+				.selectSubscrContObjects(cabinetSubscriber.getId());
+
+		subscrContObjectService.deleteSubscrContObjectPermanent(subscrContObjects);
+
+		subscriberService.deleteSubscriber(cabinetSubscriber);
+
 	}
 
 }

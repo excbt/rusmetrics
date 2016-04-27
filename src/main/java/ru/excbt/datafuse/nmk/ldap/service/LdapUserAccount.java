@@ -30,15 +30,19 @@ public final class LdapUserAccount {
 	private final String homeDirectory;
 	private final String uidNumber;
 	private final String gidNumber;
+	private final String description;
 
 	/**
 	 * 
-	 * @param ou
-	 * @param username
+	 * @param id
+	 * @param userName
 	 * @param names
+	 * @param orgUnits
 	 * @param mail
+	 * @param description
 	 */
-	public LdapUserAccount(Long id, String userName, String[] names, String[] orgUnits, String mail) {
+	public LdapUserAccount(Long id, String userName, String[] names, String[] orgUnits, String mail,
+			String description) {
 		checkNotNull(orgUnits);
 		checkNotNull(id);
 		checkNotNull(userName);
@@ -54,6 +58,7 @@ public final class LdapUserAccount {
 		this.homeDirectory = HOME_DIR + userName;
 		this.uidNumber = id.toString();
 		this.gidNumber = Integer.valueOf(0).toString();
+		this.description = description;
 	}
 
 	/**
@@ -62,8 +67,8 @@ public final class LdapUserAccount {
 	 * @param username
 	 * @param names
 	 */
-	public LdapUserAccount(Long id, String username, String[] names, String[] ou) {
-		this(id, username, names, ou, username + DEFAULT_EMAIL_DOMAIN);
+	public LdapUserAccount(Long id, String username, String[] names, String[] orgUnits) {
+		this(id, username, names, orgUnits, username + DEFAULT_EMAIL_DOMAIN, null);
 	}
 
 	/**
@@ -132,6 +137,10 @@ public final class LdapUserAccount {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 }

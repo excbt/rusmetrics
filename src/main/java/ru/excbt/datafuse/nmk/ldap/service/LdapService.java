@@ -235,7 +235,21 @@ public class LdapService {
 		context.setAttributeValue("mail", user.getMail());
 		context.setAttributeValue("uidNumber", user.getUidNumber());
 		context.setAttributeValue("gidNumber", user.getGidNumber());
+		if (user.getDescription() != null) {
+			context.setAttributeValue("description", user.getDescription());
+		}
 		ldapTemplate.bind(context);
+		return user;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public LdapUserAccount deleteUser(LdapUserAccount user) {
+		checkNotNull(user);
+		ldapTemplate.unbind(buildDn(user));
 		return user;
 	}
 
