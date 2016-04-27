@@ -899,7 +899,8 @@ console.log(e);
                 $scope.addZpoint = function(object){
                     $scope.selectedItem(object);                    
                     $scope.zpointSettings = {};
-                    $scope.getDevices(object, false);                    
+                    $scope.getDevices(object, false);
+                    getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
                 };
                 
                 $scope.getZpointSettings = function(objId, zpointId){
