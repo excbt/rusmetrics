@@ -181,6 +181,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/settings-notices.html',
         controller: 'SettingsNoticesCtrl'
       })
+      .when('/settings/tenants', {
+        templateUrl: 'views/settings-tenants.html',
+        controller: 'SettingsTenantsCtrl'
+      })
       .when('/management/objects', {
         templateUrl: 'views/management-rma-objects.html',
         controller: 'MngmtObjectsCtrl',

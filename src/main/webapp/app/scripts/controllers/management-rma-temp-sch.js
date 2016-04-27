@@ -641,6 +641,30 @@ angular.module('portalNMC')
             $('#upLoadFileModal').modal('hide');
         };
         
+        $scope.uploadFileAlter = function(){
+//console.log($scope.data.dataFile);             
+//console.log(typeof $scope.data.dataFile);
+            if (mainSvc.checkUndefinedNull($scope.data.dataFile)){
+                notificationFactory.errorInfo("Загрузка файла", "Файл не выбран.");
+                return "Management temperature schedules. File loading is failed";
+            };
+            var fileLoadedFlag = false;
+            var strArray = $scope.data.dataFile.split('\n');
+//console.log(strArray);                                    
+            $scope.dataArray = [];
+            strArray.forEach(function(dataStr){
+                var strWords = dataStr.split(';');
+                if (!angular.isArray(strWords)){
+                    console.log(dataStr + " is not a correct data string!");
+                    return dataStr + " is not a correct data string!";
+                };
+                $scope.dataArray.push(strWords);
+            });
+console.log($scope.dataArray);            
+console.log(JSON.stringify($scope.dataArray));            
+            $('#upLoadFileModal').modal('hide');
+        };
+        
         var initCtrl = function(){
 //console.log(new Date());            
             getAllLocalPlaces();
