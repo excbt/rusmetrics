@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.SubscrCabinetInfo;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
+import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 public class SubscrCabinetServiceTest extends JpaSupportTest {
@@ -30,6 +31,24 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private LdapService ldapService;
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	protected long getSubscriberId() {
+		return 512156297L;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	protected long getSubscrUserId() {
+		return 512156325L;
+	}
 
 	/**
 	 * 
@@ -61,20 +80,15 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 
 	/**
 	 * 
-	 * @return
+	 * @throws Exception
 	 */
-	@Override
-	protected long getSubscriberId() {
-		return 512156297L;
-	}
+	@Test
+	public void testContObjectCabinetInfoList() throws Exception {
+		List<ContObjectCabinetInfo> result = subscrCabinetService
+				.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 
-	/**
-	 * 
-	 * @return
-	 */
-	@Override
-	protected long getSubscrUserId() {
-		return 512156325L;
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
 	}
 
 }

@@ -72,7 +72,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 			return responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(rSubscriberId);
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(rSubscriberId);
 		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 

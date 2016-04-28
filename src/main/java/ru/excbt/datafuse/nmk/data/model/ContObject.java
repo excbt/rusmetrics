@@ -34,6 +34,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 
 /**
  * Контейнер учета
@@ -413,6 +414,32 @@ public class ContObject extends AbstractAuditableModel
 
 	public void setIsValidGeoPos(Boolean isValidGeoPos) {
 		this.isValidGeoPos = isValidGeoPos;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@JsonIgnore
+	public ContObjectShortInfo getContObjectShortInfo() {
+		return new ContObjectShortInfo() {
+
+			@Override
+			public String getFullName() {
+				return fullName;
+			}
+
+			@Override
+			public String getName() {
+				return name;
+			}
+
+			@Override
+			public Long getContObjectId() {
+				return getId();
+			}
+
+		};
 	}
 
 }

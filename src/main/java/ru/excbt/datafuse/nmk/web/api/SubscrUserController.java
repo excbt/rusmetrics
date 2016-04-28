@@ -61,7 +61,7 @@ public class SubscrUserController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
-		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(getCurrentSubscriberId());
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
@@ -80,7 +80,7 @@ public class SubscrUserController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(getCurrentSubscriberId());
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 

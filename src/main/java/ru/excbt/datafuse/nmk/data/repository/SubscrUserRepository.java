@@ -24,5 +24,6 @@ public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long> {
 	@Query("SELECT u.subscrRoles FROM SubscrUser u WHERE u.id = :subscrUserId ")
 	public List<SubscrRole> selectSubscrRoles(@Param("subscrUserId") long subscrUserId);
 
-	public List<SubscrUser> findBySubscriberId(Long subscriberId);
+	@Query("SELECT u FROM SubscrUser u WHERE u.subscriberId = :subscriberId ORDER BY u.id ")
+	public List<SubscrUser> selectBySubscriberId(@Param("subscriberId") Long subscriberId);
 }

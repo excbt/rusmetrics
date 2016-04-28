@@ -86,7 +86,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param rmaSubscriberId
 	 * @return
 	 */
-	@Query("SELECT s FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId and s.isChild = true ")
+	@Query("SELECT s FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId and s.isChild = true ORDER BY s.id ")
 	public List<Subscriber> selectChildSubscribers(@Param("parentSubscriberId") Long parentSubscriberId);
 
 }

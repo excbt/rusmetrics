@@ -67,8 +67,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrUser> findBySubscriberId(Long subscriberId) {
-		List<SubscrUser> resultList = subscrUserRepository.findBySubscriberId(subscriberId);
+	public List<SubscrUser> selectBySubscriberId(Long subscriberId) {
+		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
 		resultList.forEach(i -> {
 			i.getSubscriber().getId();
 		});
@@ -303,7 +303,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteSubscrUsers(Long subscriberId) {
 
-		List<SubscrUser> subscrUsers = subscrUserRepository.findBySubscriberId(subscriberId);
+		List<SubscrUser> subscrUsers = subscrUserRepository.selectBySubscriberId(subscriberId);
 
 		// Delete from Ldap
 		LdapAction action = (u) -> {

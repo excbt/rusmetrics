@@ -49,19 +49,25 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "user_name", updatable = false)
 	private String userName;
 
-	@Column(name = "first_name")
+	@JsonIgnore
+	@Column(name = "first_name", updatable = false)
 	private String firstName;
 
-	@Column(name = "last_name")
+	@JsonIgnore
+	@Column(name = "last_name", updatable = false)
 	private String lastName;
 
-	@Column(name = "password")
+	@Column(name = "user_nickname")
+	private String userNickname;
+
+	@Column(name = "password", updatable = false)
 	@JsonIgnore
 	private String password;
 
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id"),
 			inverseJoinColumns = @JoinColumn(name = "subscr_role_id"))
@@ -248,6 +254,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setUserDescription(String userDescription) {
 		this.userDescription = userDescription;
+	}
+
+	public String getUserNickname() {
+		return userNickname;
+	}
+
+	public void setUserNickname(String userNickname) {
+		this.userNickname = userNickname;
 	}
 
 }

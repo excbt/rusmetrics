@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
@@ -50,7 +51,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	private static final long serialVersionUID = -199459403017867220L;
 
 	@JsonIgnoreProperties(ignoreUnknown = true, allowSetters = false)
-	public class ContObjectInfo implements Serializable {
+	public class ContObjectInfo implements Serializable, ContObjectShortInfo {
 		/**
 		 * 
 		 */
@@ -60,14 +61,17 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 		}
 
+		@Override
 		public String getFullName() {
 			return contObject == null ? null : contObject.getFullName();
 		}
 
+		@Override
 		public String getName() {
 			return contObject == null ? null : contObject.getName();
 		}
 
+		@Override
 		public Long getContObjectId() {
 			return contObject == null ? null : contObject.getId();
 		}
@@ -143,7 +147,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	}
 
 	@Transient
-	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
+	private final ContObjectShortInfo contObjectInfo = new ContObjectInfo();
 
 	@Transient
 	private DataSourceInfo editDataSourceInfo;
@@ -308,7 +312,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		this.deviceObjectDataSources = deviceObjectDataSources;
 	}
 
-	public ContObjectInfo getContObjectInfo() {
+	public ContObjectShortInfo getContObjectInfo() {
 		return contObjectInfo;
 	}
 

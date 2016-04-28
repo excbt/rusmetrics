@@ -5,9 +5,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -21,10 +24,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
@@ -34,37 +40,6 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 public class SubscrCabinetService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetService.class);
-
-	public static class SubscrCabinetInfo implements Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 2991125903866112134L;
-
-		private final Subscriber subscriber;
-		private final SubscrUser subscrUser;
-
-		private final List<ContObject> contObjects;
-
-		private SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser, List<ContObject> contObjects) {
-			this.subscriber = subscriber;
-			this.subscrUser = subscrUser;
-			this.contObjects = Collections.unmodifiableList(contObjects);
-		}
-
-		public Subscriber getSubscriber() {
-			return subscriber;
-		}
-
-		public SubscrUser getSubscrUser() {
-			return subscrUser;
-		}
-
-		public List<ContObject> getContObjects() {
-			return contObjects;
-		}
-
-	}
 
 	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
@@ -80,6 +55,45 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	@Autowired
 	private ContObjectService contObjectService;
+
+	public class ContObjectCabinetInfo implements Serializable {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6659437346714897566L;
+
+		private final ContObjectShortInfo contObjectInfo;
+
+		private final SubscrCabinetInfo subscrCabinetInfo;
+
+		/**
+		 * 
+		 * @param contObject
+		 * @param subscrCabinetInfo
+		 */
+		public ContObjectCabinetInfo(ContObject contObject, SubscrCabinetInfo subscrCabinetInfo) {
+			this.contObjectInfo = contObject.getContObjectShortInfo();
+			this.subscrCabinetInfo = subscrCabinetInfo;
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public ContObjectShortInfo getContObjectInfo() {
+			return contObjectInfo;
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public SubscrCabinetInfo getSubscrCabinetInfo() {
+			return subscrCabinetInfo;
+		}
+
+	}
 
 	/**
 	 * 
@@ -195,6 +209,72 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<ContObjectCabinetInfo> selectSubscrContObjectCabinetInfoList(Long parentSubscriberId) {
+
+		List<ContObject> contObjectList = ObjectFilters
+				.deletedFilter(subscrContObjectService.selectSubscriberContObjects(parentSubscriberId));
+
+		List<Subscriber> childSubscribers = subscriberService.selectChildSubscribers(parentSubscriberId);
+
+		Map<Long, List<Long>> childContObjectIdMap = new HashMap<>();
+		Map<Long, List<Long>> childContObjectSubscriberMap = new HashMap<>();
+		Map<Long, List<ContObject>> childContObjecMap = new HashMap<>();
+
+		for (Subscriber s : childSubscribers) {
+			List<Long> childContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(s.getId());
+			List<ContObject> childContObjects = subscrContObjectService.selectSubscriberContObjects(s.getId());
+			if (!childContObjectIds.isEmpty()) {
+				childContObjectIdMap.put(s.getId(), childContObjectIds);
+			}
+			if (!childContObjects.isEmpty()) {
+				childContObjecMap.put(s.getId(), childContObjects);
+			}
+
+			for (Long contObjectId : childContObjectIds) {
+				if (childContObjectSubscriberMap.get(contObjectId) == null) {
+					childContObjectSubscriberMap.put(contObjectId, new ArrayList<>());
+				}
+				childContObjectSubscriberMap.get(contObjectId).add(s.getId());
+			}
+
+		}
+
+		List<ContObjectCabinetInfo> result = new ArrayList<>();
+
+		for (ContObject contObject : contObjectList) {
+
+			SubscrCabinetInfo subscrCabinetInfo = null;
+
+			if (childContObjectSubscriberMap.get(contObject.getId()) != null
+					&& !childContObjectSubscriberMap.get(contObject.getId()).isEmpty()) {
+
+				Long childSubscriberId = childContObjectSubscriberMap.get(contObject.getId()).get(0);
+
+				Optional<Subscriber> optChildSubscriber = childSubscribers.stream()
+						.filter(i -> i.getId().equals(childSubscriberId)).findFirst();
+
+				if (optChildSubscriber.isPresent()) {
+					List<SubscrUser> childSubscrUsers = subscrUserService.selectBySubscriberId(childSubscriberId);
+					if (!childSubscrUsers.isEmpty()) {
+						subscrCabinetInfo = new SubscrCabinetInfo(optChildSubscriber.get(), childSubscrUsers.get(0),
+								childContObjecMap.get(optChildSubscriber.get().getId()));
+					}
+				}
+
+			}
+
+			ContObjectCabinetInfo cabinetInfo = new ContObjectCabinetInfo(contObject, subscrCabinetInfo);
+			result.add(cabinetInfo);
+
+		}
+
+		return result;
 	}
 
 }

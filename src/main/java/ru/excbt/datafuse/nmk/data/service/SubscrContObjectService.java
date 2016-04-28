@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -186,9 +187,14 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
-		return result;
+		return ObjectFilters.deletedFilter(result);
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrContObject> selectSubscrContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);
