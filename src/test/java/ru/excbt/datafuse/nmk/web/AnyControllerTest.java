@@ -23,7 +23,8 @@ import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 		LocalSecurityConfig.class, LdapConfig.class })
 @WithMockUser(username = "admin", password = "admin",
 		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
-				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
+				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
+				"CABINET_USER" })
 public class AnyControllerTest extends AbstractControllerTest {
 
 	private final static long TEST_AUDIT_USER = 1;

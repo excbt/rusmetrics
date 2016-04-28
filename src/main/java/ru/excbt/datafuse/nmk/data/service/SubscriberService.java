@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
@@ -318,7 +319,8 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Subscriber> selectChildSubscribers(Long parentSubscriberId) {
-		return subscriberRepository.selectChildSubscribers(parentSubscriberId);
+		List<Subscriber> result = subscriberRepository.selectChildSubscribers(parentSubscriberId);
+		return ObjectFilters.deletedFilter(result);
 	}
 
 }

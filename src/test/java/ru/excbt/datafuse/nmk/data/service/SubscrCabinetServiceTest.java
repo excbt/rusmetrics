@@ -69,6 +69,10 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Ignore
 	@Test
 	public void testDeleteAllCabinets() throws Exception {
