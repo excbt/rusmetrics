@@ -32,6 +32,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
+import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -56,6 +57,12 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	private SubscrContObjectRepository subscrContObjectRepository;
+
+	/*
+	 * 
+	 */
 	public class ContObjectCabinetInfo implements Serializable {
 
 		/**
@@ -93,6 +100,27 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 			return subscrCabinetInfo;
 		}
 
+	}
+
+	/*
+	 * 
+	 */
+	public class SubscCabinetContObjectStats {
+		private final Long contObjectId;
+		private final Long count;
+
+		public SubscCabinetContObjectStats(Long contObjectId, Long count) {
+			this.contObjectId = contObjectId;
+			this.count = count;
+		}
+
+		public Long getContObjectId() {
+			return contObjectId;
+		}
+
+		public Long getCount() {
+			return count;
+		}
 	}
 
 	/**
@@ -179,6 +207,13 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		subscrUser.setUserDescription(contObject.getFullName());
 
 		subscrUserService.createSubscrUser(subscrUser, subscrUser.getPassword());
+
+		if (!checkIfSubscriberCabinetsOK(parentSubscriber.getId())) {
+
+			throw new PersistenceException(
+					String.format("Can't create Child Subscriber for contObjects=%s", contObjectIds.toString()));
+
+		}
 
 		SubscrCabinetInfo result = new SubscrCabinetInfo(newSubscriber, subscrUser, contObjects);
 
@@ -275,6 +310,44 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		}
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param parentSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscCabinetContObjectStats> selectChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
+		List<Object[]> qryResult = subscrContObjectRepository
+				.selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
+		List<SubscCabinetContObjectStats> result = new ArrayList<>();
+
+		for (Object[] row : qryResult) {
+
+			if (!(row[0] instanceof Long) || !(row[1] instanceof Long)) {
+
+				throw new PersistenceException(String.format(
+						"Can't calculate SubscCabinetContObjectStats for Subscriber (id=%d)", parentSubscriberId));
+
+			}
+			SubscCabinetContObjectStats stats = new SubscCabinetContObjectStats((Long) row[0], (Long) row[1]);
+			result.add(stats);
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param parentSubscriberId
+	 * @param contObjectIds
+	 * @return
+	 */
+	public boolean checkIfSubscriberCabinetsOK(Long parentSubscriberId) {
+		List<SubscCabinetContObjectStats> stats = selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
+		return !stats.stream().filter(i -> (i.getCount() != null) && (i.getCount() > 1)).findAny().isPresent();
 	}
 
 }

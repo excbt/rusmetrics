@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.ContObjectCabinetInfo;
+import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.SubscCabinetContObjectStats;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 public class SubscrCabinetServiceTest extends JpaSupportTest {
@@ -54,8 +56,9 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
-	public void testCreate() throws Exception {
+	public void testCreateCabinet() throws Exception {
 
 		Subscriber subsciber = subscriberService.findOne(getSubscriberId());
 		assertNotNull(subsciber);
@@ -66,8 +69,9 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 
 	}
 
+	@Ignore
 	@Test
-	public void testDelete() throws Exception {
+	public void testDeleteAllCabinets() throws Exception {
 		List<Subscriber> subscribers = subscriberService.selectChildSubscribers(getSubscriberId());
 		assertNotNull(subscribers);
 		assertFalse(subscribers.isEmpty());
@@ -89,6 +93,16 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSubscrCabinetContObjectStats() throws Exception {
+		List<SubscCabinetContObjectStats> rows = subscrCabinetService
+				.selectChildSubscrCabinetContObjectsStats(getSubscriberId());
 	}
 
 }
