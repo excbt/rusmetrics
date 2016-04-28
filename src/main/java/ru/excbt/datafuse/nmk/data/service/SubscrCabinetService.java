@@ -33,6 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -59,6 +60,9 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	@Autowired
 	private SubscrContObjectRepository subscrContObjectRepository;
+
+	@Autowired
+	private SubscrUserRepository subscrUserRepository;
 
 	/*
 	 * 
@@ -200,8 +204,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		subscrUser.setSubscriberId(newSubscriber.getId());
 		subscrUser.setSubscrRoles(subscrRoleService.subscrCabinetRoles());
 		subscrUser.setUserName(subscrCabinetNr.toString());
-		subscrUser.setFirstName("Не задано");
-		subscrUser.setLastName("Не задано");
+		subscrUser.setUserNickname("Не задано");
 		subscrUser.setUserComment(contObject.getFullName());
 		subscrUser.setPassword(PasswordUtils.generateRandomPassword());
 		subscrUser.setUserDescription(contObject.getFullName());
@@ -364,6 +367,55 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	public boolean checkIfSubscriberCabinetsOK(Long parentSubscriberId) {
 		List<SubscCabinetContObjectStats> stats = selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
 		return !stats.stream().filter(i -> (i.getCount() != null) && (i.getCount() > 1)).findAny().isPresent();
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public SubscrUser saveCabinelSubscrUser(SubscrUser entity) {
+		checkNotNull(entity);
+		checkArgument(!entity.isNew());
+
+		SubscrUser currentSubscrUser = subscrUserRepository.findOne(entity.getId());
+		if (currentSubscrUser == null) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", entity.getId()));
+		}
+
+		if (!SubscrTypeKey.CABINET.getKeyname().equals(currentSubscrUser.getSubscriber().getSubscrType())) {
+			throw new IllegalArgumentException("SubscrUser (id=%d) is not of type CABINET");
+		}
+
+		currentSubscrUser.setUserComment(entity.getUserComment());
+		currentSubscrUser.setUserNickname(entity.getUserNickname());
+		currentSubscrUser.setUserDescription(entity.getUserDescription());
+		currentSubscrUser.setDevComment(entity.getDevComment());
+
+		return subscrUserRepository.save(currentSubscrUser);
+	}
+
+	/**
+	 * 
+	 * @param subscrUserId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public SubscrUser selectCabinelSubscrUser(Long subscrUserId) {
+		checkNotNull(subscrUserId);
+
+		SubscrUser currentSubscrUser = subscrUserRepository.findOne(subscrUserId);
+		if (currentSubscrUser == null) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
+		}
+
+		if (!SubscrTypeKey.CABINET.getKeyname().equals(currentSubscrUser.getSubscriber().getSubscrType())) {
+			throw new IllegalArgumentException("SubscrUser (id=%d) is not of type CABINET");
+		}
+
+		return currentSubscrUser;
 	}
 
 }

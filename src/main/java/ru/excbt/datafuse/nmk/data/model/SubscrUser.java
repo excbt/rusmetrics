@@ -15,11 +15,10 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
@@ -33,9 +32,8 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
  */
 @Entity
 @Table(name = "subscr_user")
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class SubscrUser extends AbstractAuditableModel implements SubscriberUser, DeletableObject {
+public class SubscrUser extends JsonAbstractAuditableModel implements SubscriberUser, DeletableObject {
 
 	/**
 	 * 
@@ -60,7 +58,7 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "user_nickname")
 	private String userNickname;
 
-	@Column(name = "password", updatable = false)
+	@Column(name = "password")
 	@JsonIgnore
 	private String password;
 
@@ -115,6 +113,9 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	// Uses for Ldap Description
 	@Column(name = "user_description", insertable = true, updatable = false)
 	private String userDescription;
+
+	@Column(name = "dev_comment")
+	private String devComment;
 
 	public String getUserName() {
 		return userName;
@@ -262,6 +263,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setUserNickname(String userNickname) {
 		this.userNickname = userNickname;
+	}
+
+	public String getDevComment() {
+		return devComment;
+	}
+
+	public void setDevComment(String devComment) {
+		this.devComment = devComment;
 	}
 
 }

@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -78,6 +83,10 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeleteCabinetSubscriber() throws Exception {
 
@@ -85,5 +94,24 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 
 		List<Long> childSubscriberIds = subscribers.stream().map(i -> i.getId()).collect(Collectors.toList());
 		_testUpdateJson("/api/subscr/subscrCabinet/delete", childSubscriberIds);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testUpdateSubscrUser() throws Exception {
+		String content = _testGetJson("/api/subscr/subscrCabinet/subscrUser/512157249");
+
+		SubscrUser subscrUser = fromJSON(new TypeReference<SubscrUser>() {
+		}, content);
+
+		assertNotNull(subscrUser);
+
+		subscrUser.setDevComment(EDITED_BY_REST);
+
+		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/512157249", subscrUser);
+
 	}
 }

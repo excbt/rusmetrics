@@ -109,8 +109,6 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser);
 		checkArgument(subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
-		checkNotNull(subscrUser.getFirstName());
-		checkNotNull(subscrUser.getLastName());
 		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
 		checkArgument(subscrUser.getDeleted() == 0);
@@ -145,8 +143,6 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser);
 		checkArgument(!subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
-		checkNotNull(subscrUser.getFirstName());
-		checkNotNull(subscrUser.getLastName());
 		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
 

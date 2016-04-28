@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -103,6 +105,48 @@ public class SubscrCabinetController extends SubscrApiController {
 			}
 		};
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscrUserId
+	 * @param requestEntity
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putSubscrUser(@PathVariable("subscrUserId") Long subscrUserId,
+			@RequestBody SubscrUser requestEntity) {
+
+		checkNotNull(subscrUserId);
+		checkNotNull(requestEntity);
+
+		if (!subscrUserId.equals(requestEntity.getId())) {
+			return responseBadRequest();
+		}
+
+		ApiAction action = new ApiActionEntityAdapter<SubscrUser>(requestEntity) {
+
+			@Override
+			public SubscrUser processAndReturnResult() {
+				return subscrCabinetService.saveCabinelSubscrUser(entity);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscrUserId
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
+		SubscrUser result = subscrCabinetService.selectCabinelSubscrUser(subscrUserId);
+		if (result == null) {
+			return responseBadRequest();
+		}
+		return responseOK(result);
 	}
 
 }
