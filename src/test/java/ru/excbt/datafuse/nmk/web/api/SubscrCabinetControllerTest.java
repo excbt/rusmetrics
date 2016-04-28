@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class SubscrCabinetServiceControllerTest extends AnyControllerTest {
+public class SubscrCabinetControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetServiceControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetControllerTest.class);
 
 	/**
 	 * 
@@ -34,6 +34,6 @@ public class SubscrCabinetServiceControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testContObjectInfoList() throws Exception {
-		_testGetJson("/api/subscr/subscrCabinetService/contObjectCabinetInfo");
+		_testGetJson("/api/subscr/subscrCabinet/contObjectCabinetInfo");
 	}
 }

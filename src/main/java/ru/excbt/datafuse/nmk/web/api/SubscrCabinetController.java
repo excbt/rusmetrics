@@ -25,10 +25,10 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  *
  */
 @Controller
-@RequestMapping(value = "/api/subscr/subscrCabinetService")
-public class SubscrCabinetServiceController extends SubscrApiController {
+@RequestMapping(value = "/api/subscr/subscrCabinet")
+public class SubscrCabinetController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetServiceController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetController.class);
 
 	@Autowired
 	private SubscrCabinetService subscrCabinetService;
