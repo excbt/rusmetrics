@@ -13,7 +13,7 @@
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tenants/" aria-controls="settings-tenants" data-target="#settings-tenants" role="tab" data-toggle="tab">Квартиросъемщики</a></li>
+<!--        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tenants/" aria-controls="settings-tenants" data-target="#settings-tenants" role="tab" data-toggle="tab">Квартиросъемщики</a></li>-->
 
     </ul>
 
@@ -22,7 +22,22 @@
       </div>
     </div>
 </div>
-<div class="btn-toolbar marginBottom10">
+<div role="tabpanel" class="nmc-tab-panel">
+
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li id="users_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="users_sets" data-target="#users_sets" role="tab" data-toggle="tab">{{userInfo.subscriber.subscriberName || "Организация"}}</a></li>
+    <li id="tenants_3rd_menu_item" role="presentation" ><a class="nmc-tab-button" href="#/settings/tenants/" aria-controls="tenants_sets" data-target="#tenants_sets"  role="tab" data-toggle="tab">Пользователи объектов учета</a></li>  
+  </ul>
+
+  <!-- реализация вкладок -->
+  <div class="tab-content">
+<!--      Варианты отчетов-->
+    <div role="tabpanel" class="tab-pane fade in active" id="users_sets">
+      </div>
+    </div>
+</div>
+<div class="btn-toolbar marginBottom5 marginTop5">
     <button ng-disabled="isROfield()" class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
 </div>
 <!--

@@ -9,18 +9,15 @@ angular.module('portalNMC')
                     //messages for user
                 $scope.messages = {};
                 
-                $scope.messages.createTenants = "Создать логины для квартиросъемщиков";
+                $scope.messages.createTenants = "Создать пользователей";
                 $scope.messages.recreateTenantPasswords = "Пересоздать пароли";
                 $scope.messages.sendLoginInfoByEmail = "Отправить данные на эл. почту";
-                $scope.messages.deleteLogins = "Удалить логины квартиросъемщиков";
-                $scope.messages.deleteLogin = "Удалить логин квартиросъемщика";
-                
-                $scope.messages.viewProps = "Данные квартиросъемщика";
-                
-                $scope.messages.createTenant = "Создать логин для квартиросъемщика";
+                $scope.messages.deleteLogins = "Удалить пользователей";
+                $scope.messages.deleteLogin = "Удалить пользователя";                
+                $scope.messages.viewProps = "Данные пользователя";                
+                $scope.messages.createTenant = "Создать пользователя";
                 $scope.messages.changeTenantPassword = "Сменить пароль";
-                
-                $scope.messages.viewDevices = "Приборы";
+
                 
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
@@ -106,12 +103,7 @@ angular.module('portalNMC')
                         $scope.objectsWithoutFilter = $scope.objects;
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                         tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
-                        $scope.objectsOnPage = tempArr;                            
-                        //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                        if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
-                            $scope.toggleShowGroupDetails(Number($cookies.contObject));
-                            $cookies.contObject = null;          
-                        };
+                        $scope.objectsOnPage = tempArr;                                                    
                         $rootScope.$broadcast('objectSvc:loaded');
 //                        if (!mainSvc.checkUndefinedNull(objId)){
 //                            moveToObject(objId);
@@ -181,66 +173,10 @@ angular.module('portalNMC')
                 $scope.bGroupByObject = false;//angular.fromJson($attrs.bgroup) || false;
                 $scope.bObject = false;//angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 $scope.bList = true;//angular.fromJson($attrs.blist) || true; //Признак того, что объекты выводятся только для просмотра        
-                //zpoint column names
-                $scope.oldColumns = [
-                        {"name":"zpointName", "header" : "Наименование", "class":"col-xs-5 col-md-5"},
-                        {"name":"zpointModel", "header" : "Модель", "class":"col-xs-2 col-md-2"},
-                        {"name":"zpointNumber", "header" : "Номер", "class":"col-xs-2 col-md-2"},
-//                        {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
-                    ];//angular.fromJson($attrs.zpointcolumns);
-                // Эталонный интервал
-                $scope.refRange = {};
-                $scope.urlRefRange = '../api/subscr/contObjects/';
+                
                 // Промежуточные переменные для начала и конца интервала
                 $scope.beginDate;
                 $scope.endDate;
-                
-                //Режимы функционирования (лето/зима)
-                $scope.cont_zpoint_setting_mode_check = [
-                    {"keyname":"summer", "caption":"Летний режим"}
-                    ,{"keyname":"winter", "caption":"Зимний режим"}
-                ];
-                
-                $scope.data.metadataSchema = [
-                    {
-                        header: 'Поле источник',
-                        headClass : 'col-xs-2 col-md-2',
-                        name: 'srcProp',
-                        type: 'select_src_field'
-                    },{
-                        header: 'Делитель',
-                        headClass : 'col-xs-1 col-md-1',
-                        name: 'srcPropDivision',
-                        type: 'input/text',
-                        disabled: false
-                    },{
-                        header: 'Единицы измерения источника',
-                        headClass : 'col-xs-1 col-md-1',
-                        name: 'srcMeasureUnit',
-                        type: 'select_measure_units',
-                        disabled: false
-                    },{
-                        header: 'Единицы измерения приемника',
-                        headClass : 'col-xs-1 col-md-1',
-                        name: 'destMeasureUnit',
-                        type: 'select_measure_units',
-                        disabled: false
-                    }
-                    ,{
-                        header: 'Поле приемник',
-                        headClass : 'col-xs-2 col-md-2',
-                        name: 'destProp',
-                        type: 'input/text',
-                        disabled: true
-                    },{
-                        header: 'Функция',
-                        headClass : 'col-xs-1 col-md-1',
-                        name: 'propFunc',
-                        type: 'input/text',
-                        disabled: true
-                    }
-                ];
-                
 
                 $scope.toggleAddMode = function () {
                     $scope.addMode = !$scope.addMode;
@@ -253,64 +189,6 @@ angular.module('portalNMC')
 
                 $scope.toggleEditMode = function (object) {
                     object.editMode = !object.editMode;
-                };
-                
-                var successCallbackOnZpointUpdate = function(e){
-//console.log(e);              
-                    //e.data содержит данные измененной/созданной точки учета
-//                    их теперь нужно 
-//                    размапить
-                    var mappedZpoint  = mapZpointProp(e.data);
-//                    добавить/перезаписать список точек у объекта
-                    
-//                    отрисовать таблицу точек учета
-                    
-                    notificationFactory.success();
-                    $('#showZpointOptionModal').modal('hide');
-                    if (mainSvc.checkUndefinedNull($scope.currentObject.zpoints) || !angular.isArray($scope.currentObject.zpoints)){
-                        //$scope.zpointSettings = {};
-                        return;
-                    };
-                    var curIndex = -1;
-//console.log($scope.currentObject); 
-                    $scope.currentObject.zpoints.some(function(elem, index){
-                        if (elem.id === $scope.zpointSettings.id){
-                            curIndex = index;
-                            return true;
-                        };
-                    });
-                    
-                    //update view name for zpoint
-                    if ((curIndex >-1)){
-                            var repaintZpointTableFlag = false;
-                            if(($scope.currentObject.zpoints[curIndex].zpointName!==$scope.zpointSettings.customServiceName)){
-                                repaintZpointTableFlag = true;
-                            };
-                            var objectIndex = -1;
-                            objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
-                            var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
-                            if (objectIndex>-1){
-                                //update zpoint data in arrays                             
-                                $scope.objects[objectIndex].zpoints[curIndex] = mappedZpoint;
-                                $scope.objectsOnPage[objectOnPageIndex].zpoints[curIndex] = mappedZpoint;
-                            };
-                            //remake zpoint table
-                            if(($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true)){
-                                makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
-                            };
-                    }else{
-                        var objectIndex = -1;
-                        objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
-                        var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
-                        if (objectIndex>-1){
-                            //update zpoint data in arrays
-                            $scope.objects[objectIndex].zpoints.push(mappedZpoint);                           
-                            if ($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true){
-                                makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
-                            };                             
-                        };
-                    };
-                    //$scope.zpointSettings = {};
                 };
                 
                 var successCallbackOnSetMode = function(e){
@@ -387,32 +265,7 @@ angular.module('portalNMC')
 console.log(e);
 //console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
-                                        //update zpoints info
-                    var mode = "Ex";
-                    objectSvc.getZpointsDataByObject(e, mode).then(function(response){
-                        var tmp = [];
-                        var copyTmp = angular.copy(response.data);
-//console.log(copyTmp);                              
-                        if (mode == "Ex"){
-                            tmp = response.data.map(function(el){
-                                var result = {};
-                                result = el.object;
-                                result.lastDataDate = el.lastDataDate;
-//console.log(el.lastDataDate);                                    
-                                return result;
-                            });
-                        }else{
-                            tmp = data;
-                        };
-                        var zPointsByObject = tmp;                          
-                        var zpoints = [];
-                        for(var i = 0; i < zPointsByObject.length; i++){
-                            var zpoint = mapZpointProp(zPointsByObject[i]);
-                            zpoints[i] = zpoint;                  
-                        }
-                        e.zpoints = zpoints;
 
-                    });
                     var objIndex = null;
                     objIndex = findObjectIndexInArray(e.id, $scope.objects);
                     if (objIndex != null) {$scope.objects[objIndex] = e};
@@ -420,17 +273,6 @@ console.log(e);
                     objIndex = findObjectIndexInArray(e.id, $scope.objectsOnPage);
                     if (objIndex != null) {$scope.objectsOnPage[objIndex] = e};
 //                    $scope.currentObject = {};
-                    successCallback(e, null);
-                };
-                
-                var successDeviceCallback = function(e){
-                    $scope.getDevices($scope.currentObject, true);
-                    $('#deleteDeviceModal').modal('hide');
-                    $('#showDeviceModal').modal('hide');
-                };
-                
-                var successDeleteDeviceCallback = function (e, cb) {          
-                    deleteObjectFromArray($scope.currentDevice.id, $scope.currentObject.devices);
                     successCallback(e, null);
                 };
                 
@@ -448,14 +290,6 @@ console.log(e);
                     successCallback(e, null);
                 };
                 
-                var successDeleteZpointCallback = function(e){
-                    $('#deleteZpointModal').modal('hide');
-                    deleteObjectFromArray($scope.currentZpoint.id, $scope.currentObject.zpoints);
-                    makeZpointTable($scope.currentObject);
-                    successCallback(e, null);
-                };
-
-
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
                     if ($scope.objectCtrlSettings.isTreeView == false || mainSvc.checkUndefinedNull($scope.data.currentTree)){
@@ -490,8 +324,6 @@ console.log(e);
 
                 var errorCallback = function (e) { 
                     errorProtoCallback(e);
-                    //zpoint settings saving flag reset
-                    $scope.zpointSettings.isSaving = false;
                     $scope.currentObject.isSaving = false;
                 };
 
@@ -520,12 +352,6 @@ console.log(e);
                     }else if (angular.isDefined(obj.deleteObjects) && (obj.deleteObjects != null) && angular.isArray(obj.deleteObjects)){
                         crudGridDataFactory(url).delete({ contObjectIds: obj.deleteObjectIds }, successDeleteObjectsCallback, errorCallback);
                     };
-                };
-                
-                $scope.deleteZpoint = function (zpoint) {
-                    var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
-//console.log(url);                                       
-                    crudGridDataFactory(url).delete({ id: zpoint[$scope.extraProps.idColumnName] }, successDeleteZpointCallback, errorCallback);
                 };
                                 
                 $scope.updateObject = function (url, object) {
@@ -610,267 +436,25 @@ console.log(e);
                     });
                 };
                 
-                var getTemperatureSchedulesByObjectForZpoint = function(objId, zp){
-                    $http.get($scope.objectCtrlSettings.tempSchBaseUrl + "/" + objId).then(function(resp){
-                        zp.tempSchedules = resp.data;
-                        if (mainSvc.checkUndefinedNull(zp.temperatureChartId)){
-                            return "temperatureChartId is null";
-                        };
-                        zp.tempSchedules.some(function(sch){
-                            if (sch.id == zp.temperatureChartId){
-                                zp.tChart = sch;
-                                return true;
-                            };
-                        });
-                    }, errorCallback);
-                };
-                
-                $scope.selectedZpoint = function(objId, zpointId){
-                    $scope.selectedItem(objectSvc.findObjectById(objId, $scope.objects));
-//console.log($scope.currentObject);                     
-                    var curZpoint = null;
-                    if (angular.isDefined($scope.currentObject.zpoints) && angular.isArray($scope.currentObject.zpoints)){
-                        $scope.currentObject.zpoints.some(function(element){
-                            if (element.id === zpointId){
-                                curZpoint = angular.copy(element);
-                            };
-                        });
-                    };
-                    $scope.currentZpoint = curZpoint;
-//console.log($scope.currentZpoint);                                        
-                };
-                
-                var mapZpointProp = function(zpoint){
-                    var result = {};
-                              
-                    result.id = zpoint.id;
-                    result.exSystemKeyname = zpoint.exSystemKeyname;
-                    result.tsNumber = zpoint.tsNumber;
-                    result.exCode = zpoint.exCode;
-                    result.version = zpoint.version;
-                    result.contObjectId = zpoint.contObjectId;
-                    result.startDate = zpoint.startDate;
-                    result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
-                    result.rsoId = zpoint.rsoId;
-                    result.zpointType = zpoint.contServiceType.keyname;
-                    result.isManualLoading = zpoint.isManualLoading;
-                    result.customServiceName = zpoint.customServiceName;
-                    result.contServiceTypeKeyname = zpoint.contServiceTypeKeyname;
-                    result.zpointName = zpoint.customServiceName;
-                    result.contZPointComment = zpoint.contZPointComment;
-                    if ((typeof zpoint.rso != 'undefined') && (zpoint.rso != null)){
-                        result.zpointRSO = zpoint.rso.organizationFullName || zpoint.rso.organizationName;
-                        result.rsoId = zpoint.rsoId;
-                    }else{
-                        result.zpointRSO = "Не задано"
-                    };
-                    result.checkoutTime = zpoint.checkoutTime;
-                    result.checkoutDay = zpoint.checkoutDay;
-                    if((typeof zpoint.doublePipe == 'undefined')){
-                        result.piped = false;
-
-
-                    }else {
-                        result.piped = true;
-                        result.doublePipe = (zpoint.doublePipe === null) ? false : zpoint.doublePipe;
-                        result.singlePipe = !result.doublePipe;
-                    };
-//console.log(zpoint);
-                    if ((typeof zpoint.deviceObjects != 'undefined') && (zpoint.deviceObjects.length > 0)){                                
-                        if (zpoint.deviceObjects[0].hasOwnProperty('deviceModel')){
-                            result.zpointModel = zpoint.deviceObjects[0].deviceModel.modelName;
-                        }else{
-                            result.zpointModel = "Не задано";
-                        };
-                        result.zpointNumber = zpoint.deviceObjects[0].number;
-                    };
-                    result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
-                    result.zpointLastDataDate  = zpoint.lastDataDate;  
-                    result.isDroolsDisable = zpoint.isDroolsDisable;
-                    result.temperatureChartId = zpoint.temperatureChartId;
-//                    result.tempSchedules = zpoint.tempSchedules;
-                    return result;
-                };
-                
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
                     var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                
                     //if cur object = null => exit function
                     if (curObject == null){
                         return;
                     };
-                    //else
-                    
-                    var zpTable = document.getElementById("zpointTable" + curObject.id);
-//console.log(zpTable);                    
-                    if ((curObject.showGroupDetails == true) && (zpTable == null)){                        
+                    //else            
+                    if ((curObject.showGroupDetails == true)){                        
                         curObject.showGroupDetails = true;
                     }else{                       
                         curObject.showGroupDetails = !curObject.showGroupDetails;
                     };                                           
-                    //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
-                    if (curObject.showGroupDetails === true){
-                      
-                        var mode = "Ex";
-                        objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
-                            var tmp = [];
-                            var copyTmp = angular.copy(response.data);
-//console.log(copyTmp);                              
-                            if (mode == "Ex"){
-                                tmp = response.data.map(function(el){
-                                    var result = {};
-                                    result = el.object;
-                                    result.lastDataDate = el.lastDataDate;
-//console.log(el.lastDataDate);                                    
-                                    return result;
-                                });
-                            }else{
-                                tmp = data;
-                            };
-                            var zPointsByObject = tmp;                          
-                            var zpoints = [];
-                            for(var i = 0; i < zPointsByObject.length; i++){
-                                var zpoint = mapZpointProp(zPointsByObject[i]);
-                                zpoints[i] = zpoint;                  
-                            }
-                            curObject.zpoints = zpoints;
-                            makeZpointTable(curObject);
-                            var btnDetail = document.getElementById("btnDetail" + curObject.id);
-                            if (!mainSvc.checkUndefinedNull(btnDetail)){
-                                btnDetail.classList.remove("glyphicon-chevron-right");
-                                btnDetail.classList.add("glyphicon-chevron-down");
-                            };
-                            
-                            curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
-                        }, 
-                                                                               errorCallback
-                                                                              );
-                    }//else if curObject.showGroupDetails = false => hide child zpoint table
-                    else{
-                        var trObj = document.getElementById("obj" + curObject.id);
-                        var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");                      
-                        trObjZp.innerHTML = "";
-                        var btnDetail = document.getElementById("btnDetail" + curObject.id);
-                        btnDetail.classList.remove("glyphicon-chevron-down");
-                        btnDetail.classList.add("glyphicon-chevron-right");
-                    };
                     
                 };
-                //Формируем таблицу с точками учета
-                function makeZpointTable(object){ 
-//console.log(object);                                        
-                    var trObj = document.getElementById("obj" + object.id);
-//console.log(trObj);                    
-                    if ((angular.isUndefined(trObj)) || (trObj === null)){
-                        return;
-                    };
-                    var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");                    
-//console.log(trObjZp);                                        
-//                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
-                    var trHTML = "";
-
-                    trHTML += "<td class=\"nmc-td-for-button-object-control\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" +object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
-                    trHTML += "<thead><tr class=\"nmc-child-table-header\">";
-                    trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-button\"></th>";
-                    $scope.oldColumns.forEach(function(column){
-                        trHTML += "<th class=\"" + column.class + "\">";
-                        trHTML += "" + (column.header || column.name) + "";
-                        trHTML += "</th>";
-                    });
-                    trHTML += "<th></th>";
-                    trHTML += "</tr></thead>";
-                    
-                    object.zpoints.forEach(function(zpoint){
-                        trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" >";
-                        trHTML += "<td class=\"nmc-td-for-button\">" +
-                            
-                            "<div class=\"btn-group\">" +
-                            "<i title=\"Действия над точкой учета\" type=\"button\" class=\"btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" style=\"font-size: .9em;\"></i>" +
-                            "<ul class=\"dropdown-menu\">" +                                                                    
-                                    "<li><a ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
-                                            "data-target=\"#showZpointOptionModal\"" +
-                                            "data-toggle=\"modal\"" +
-                                            "data-placement=\"bottom\"" +
-                                            "title=\"Свойства точки учёта\">" +
-                                            "Свойства" +
-                                    "</a></li>" +                                    
-                                    "<li><a ng-click=\"getZpointSettingsExpl(" + object.id + "," + zpoint.id + ")\"" +
-                                        "data-target=\"#showZpointExplParameters\""+
-                                        "data-toggle=\"modal\"" +
-                                        "data-placement=\"bottom\"" +
-                                        "title=\"Эксплуатационные параметры точки учёта\">" +
-                                        "Эксплуатационные параметры" +
-                                    "</a></li>" +                                    
-                                    "<li><a ng-click=\"openZpointMetadata(" + object.id + "," + zpoint.id + ")\"" +
-//                                        "data-target=\"#metaDataEditorModal\""+
-//                                        "data-toggle=\"modal\"" +
-//                                        "data-placement=\"bottom\"" +
-                                        "title=\"Метаданные прибора\">" +
-                                        "Метаданные прибора" +
-                                    "</a></li>" +
-                            "</ul>" +
-                            "</div>" +
-                            "</td>";
-                        $scope.oldColumns.forEach(function(column){
-                            switch (column.name){
-                                case "zpointName": 
-                                    var imgPath = "";                                  
-                                    switch(zpoint['zpointType']){
-                                        case "cw":
-                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
-                                            break;
-                                        case "hw":
-                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
-                                            break;
-                                        case "heat":
-                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
-                                            break;
-                                        case "gas":
-                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
-                                            break;
-                                        case "env":
-                                            imgPath = "images/es.png";
-                                            break;
-                                        case "el":
-                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";               
-                                            break;
-                                        default:
-                                            imgPath = column['zpointType'];
-                                            break;   
-                                    };                                   
-                                    trHTML += "<td>";
-                                    trHTML += "<img height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
-                                    trHTML += (zpoint[column.name] || "Не задано")+"<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>"; 
-                                    break;
-                                case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
-                                case "zpointRefRange": trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
-                                default : trHTML += "<td>" + zpoint[column.name] + "</td>"; break;
-                            };
-                        });
-                        trHTML += "<td>";
-                        trHTML += "<div class=\"btn-toolbar\">"+
-                                "<div class=\"btn-group pull-right\">"+                   
-                                    "<i title=\"Удалить точку учета\" class=\"btn btn-xs glyphicon glyphicon-trash nmc-button-in-table\" ng-click=\"deleteZpointInit(" + object.id + "," + zpoint.id + ")\" data-target=\"#deleteZpointModal\" data-toggle=\"modal\"></i>"+
-                                "</div>"+
-                            "</div>";
-                        trHTML += "</td>";
-                        trHTML += "</tr>";
-                    });    
-                    trHTML += "</table></td>";
-                    trObjZp.innerHTML = trHTML;
-                    
-                    $compile(trObjZp)($scope);                
-                }; 
                 
                 $scope.dateFormat = function(millisec){
                     var result = "";
                     var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone*3600.0*1000.0);
-                    var tmpDate = (new Date(millisec+serverTimeZoneDifferent));
-//console.log(tmpDate);        
-//console.log(tmpDate.getUTCFullYear());   
-//console.log(tmpDate.getUTCMonth());
-//console.log(tmpDate.getUTCDate());
-//console.log(tmpDate.getUTCHours());
-//console.log(tmpDate.getUTCMinutes());        
+                    var tmpDate = (new Date(millisec+serverTimeZoneDifferent));       
                     result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(), tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
                     return result;//
                 };
@@ -900,93 +484,6 @@ console.log(e);
                     }
                 };
         
-                //Свойства точки учета
-                $scope.zpointSettings = {};
-                $scope.addZpoint = function(object){
-                    $scope.selectedItem(object);                    
-                    $scope.zpointSettings = {};
-                    $scope.getDevices(object, false);                    
-                };
-                
-                $scope.getZpointSettings = function(objId, zpointId){
-                    $scope.selectedZpoint(objId, zpointId);
-                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
-                        return "currentZpoint is undefined or null.";
-                    };
-//console.log($scope.currentZpoint); 
-                    var object = angular.copy($scope.currentZpoint);
-                    var zps = {};
-                    zps.id = object.id;
-                    zps.exSystemKeyname = object.exSystemKeyname;
-                    zps.tsNumber = object.tsNumber;
-                    zps.exCode = object.exCode;
-                    zps.version = object.version;
-                    zps.contObjectId = object.contObjectId;
-                    zps.startDate = object.startDate;
-                    zps._activeDeviceObjectId = object._activeDeviceObjectId;
-                    zps.rsoId = object.rsoId;
-                    zps.isManualLoading = object.isManualLoading;
-                    zps.customServiceName = object.customServiceName;
-                    zps.contServiceTypeKeyname = object.contServiceTypeKeyname;
-                    zps.contZPointComment = object.contZPointComment;
-                    zps.zpointName = object.zpointName;
-                    switch (object.zpointType){
-                       case "heat" :  zps.zpointType = "Теплоснабжение"; break;
-                       case "hw" : zps.zpointType = "ГВС"; break;
-                       case "cw" : zps.zpointType = "ХВС"; break;    
-                        default : zps.zpointType = object.zpointType;        
-                    };
-                    zps.piped = object.piped;
-                    zps.singlePipe = object.singlePipe;
-                    zps.doublePipe = object.doublePipe;
-//console.log(zps);
-                    zps.zpointModel = object.zpointModel;
-                    zps.zpointRSO = object.zpointRSO;
-                    zps.checkoutTime = object.checkoutTime;
-                    zps.checkoutDay = object.checkoutDay;
-                    zps.isDroolsDisable = object.isDroolsDisable;
-                    zps.temperatureChartId = object.temperatureChartId;
-                    zps.winter = {};
-                    zps.summer = {};
-                    $scope.zpointSettings = zps;
-//console.log($scope.zpointSettings);                    
-                    $scope.getDevices($scope.currentObject, false);
-                    getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
-                };
-                
-                $scope.getZpointSettingsExpl = function(objId, zpointId){
-                    $scope.getZpointSettings(objId, zpointId);
-                    var winterSet = {};
-                    var summerSet = {};
-                                        //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
-                    var table = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
-                    crudGridDataFactory(table).query(function (data) {
-                        for(var i = 0; i < data.length; i++){                                                    
-                            if(data[i].settingMode == "winter"){
-                                winterSet = data[i];
-                            }else if(data[i].settingMode == "summer"){
-                                summerSet = data[i];
-                            }
-                        };                 
-                        $scope.zpointSettings.winter = winterSet;
-                        $scope.zpointSettings.summer = summerSet;
-                    });
-                };
-            
-                var successZpointSummerCallback = function (e) {
-                    notificationFactory.success();
-                    var tableWinter = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
-                    crudGridDataFactory(tableWinter).update({ id: $scope.zpointSettings.winter.id }, $scope.zpointSettings.winter, successZpointWinterCallback, errorCallback);           
-                };
-                
-                 var successZpointWinterCallback = function (e) {
-                    notificationFactory.success();    
-                    $('#showZpointOptionModal').modal('hide');
-                    $('#showZpointExplParameters').modal('hide');
-                   //  $scope.zpointSettings = {};
-                };
-                
-                //Save new Zpoint | Update the common zpoint setiing - for example, Name
                 //$scope.checkString  
                 $scope.emptyString = function(str){
                     return mainSvc.checkUndefinedEmptyNullValue(str);
@@ -995,95 +492,11 @@ console.log(e);
                     return mainSvc.checkUndefinedNull(val);
                 };
                 
-                var checkZpointCommonSettings = function(){
-                    //check name, type, rso, device
-                    var result = true;
-                    if ($scope.emptyString($scope.zpointSettings.customServiceName)){
-                        notificationFactory.errorInfo("Ошибка", "Не задано наименование точки учета!");
-                        result = false;
-                    };
-                    if ($scope.emptyString($scope.zpointSettings.contServiceTypeKeyname)){
-                        notificationFactory.errorInfo("Ошибка", "Не задан тип точки учета!");
-                        result = false;
-                    };
-                    if ($scope.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)){
-                        notificationFactory.errorInfo("Ошибка", "Не задан прибор для точки учета!");
-                        result = false;
-                    };
-                    if ($scope.checkUndefinedNull($scope.zpointSettings.rsoId)){
-                        notificationFactory.errorInfo("Ошибка", "Не задано РСО для точки учета!");
-                        result = false;
-                    };
-                    return result;
-                };
-                
-                $scope.updateZpointCommonSettings = function(){
-                    $scope.zpointSettings.isSaving = true;
-//console.log($scope.zpointSettings);
-                    if (!checkZpointCommonSettings()){
-                        //zpoint settings saving flag reset
-                        $scope.zpointSettings.isSaving = false;
-                        return false;
-                    };
-                    //prepare piped info
-//                    if ($scope.zpointSettings.singlePipe){
-//                        $scope.zpointSettings.doublePipe = false;
-//                    };
-                        //perform temperature schedule
-                    if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)){
-                        $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
-                        $scope.zpointSettings.tChart = null;
-                    };
-                    var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
-                    if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)){
-                        url = url + "/" + $scope.zpointSettings.id;
-                    
-                        $http({
-                            url: url,
-                            method: 'PUT',
-                            data: $scope.zpointSettings
-                        })
-                            .then(successCallbackOnZpointUpdate, errorCallback);
-                    }else{
-                        $scope.zpointSettings.startDate = Date.now();
-                        $http({
-                            url: url,
-                            method: 'POST',
-                            data: $scope.zpointSettings
-                        })
-                            .then(successCallbackOnZpointUpdate, errorCallback);
-                    };
-                    
-//                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
-                };
-                
-                //Update the zpoint settings, which set the mode for Summer or Winter season
-                $scope.updateZpointModeSettings = function(){ 
-                    $scope.zpointSettings.isSaving = true;
-                    var tableSummer = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
-                    crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
-                };
-                
                 // search objects
                 $scope.searchObjects = function(searchString){
                     if (($scope.objects.length <= 0)){
                         return;
-                    };
-                    
-                                          //close all opened objects zpoints
-                    $scope.objectsOnPage.forEach(function(obj){
-                        if (obj.showGroupDetailsFlag == true){
-                            var trObj = document.getElementById("obj" + obj.id);
-                            if (!mainSvc.checkUndefinedNull(trObj)){                                    
-                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
-                                trObjZp.innerHTML = "";
-                                var btnDetail = document.getElementById("btnDetail" + obj.id);
-                                btnDetail.classList.remove("glyphicon-chevron-down");
-                                btnDetail.classList.add("glyphicon-chevron-right");
-                            };
-                        };
-                        obj.showGroupDetailsFlag = false;
-                    });
+                    };              
                     
                     if (angular.isUndefined(searchString) || (searchString === '')){                      
                         var tempArr = [];
@@ -1103,24 +516,6 @@ console.log(e);
 //console.log($scope.objectsOnPage);                    
                 };
                 
-                $scope.changeServiceType = function(zpSettings){
-                    if ($scope.emptyString(zpSettings.customServiceName)){
-                        switch (zpSettings.contServiceTypeKeyname){
-                            case "heat": 
-                                zpSettings.customServiceName = "Система отопления";
-                                break;
-                            default:
-                                $scope.data.serviceTypes.some(function(svType){
-                                    if (svType.keyname == zpSettings.contServiceTypeKeyname){
-                                        zpSettings.customServiceName = svType.caption;
-                                        return true;
-                                    };
-                                });
-                                 
-                        };
-                    };
-                };
-                
                 $scope.$on('$destroy', function() {
                     window.onkeydown = undefined;
                 }); 
@@ -1128,16 +523,6 @@ console.log(e);
                 
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){
-//console.log(e);                    
-//                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
-//                        $scope.loading =  true;    
-//                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
-//                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-//                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
-//                        
-//                        $scope.objectCtrlSettings.isCtrlEnd = true;
-//                        
-//                    };
                     
                     if (e.keyCode == 38){                        
                         var elem = document.getElementById("divWithObjectTable");
@@ -1150,8 +535,6 @@ console.log(e);
                         return;
                     };
                     if (e.keyCode == 34){
-//                        $scope.addMoreObjects();
-//                        $scope.$apply();
                         var elem = document.getElementById("divWithObjectTable");
                         elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;                        
                         return;
@@ -1263,84 +646,6 @@ console.log(e);
                     };
                 };
                 
-                $scope.setModeForObjects = function(mode){
-                    $scope.settedMode = mode;
-                    //get the object ids array
-                    var contObjectIds = [];
-                    if ($scope.objectCtrlSettings.allSelected === true){
-                        contObjectIds = $scope.objects.map(function(el){return el.id});
-                    }else{
-                        $scope.objectsOnPage.forEach(function(el){
-                            if(el.selected === true){
-                                contObjectIds.push(el.id);
-                            };
-                        });
-                    };
-                    
-                    //send data to server
-                    var url = objectSvc.getObjectsUrl() + "/settingModeType";
-                    $http({
-                        url: url, 
-                        method: "PUT",
-                        params: { contObjectIds:contObjectIds, currentSettingMode: mode },
-                        data: null
-                    })
-                    .then(successCallbackOnSetMode, errorCallback);
-                };
-                
-                //Work with devices
-                    //get the list of the systems for meta data editor
-//                $scope.getVzletSystemList = function(){
-//                    var tmpSystemList = objectSvc.getVzletSystemList();
-//                    if (tmpSystemList.length===0){
-//                        objectSvc.getDeviceMetaDataSystemList()
-//                            .then(
-//                            function(response){
-//                                $scope.objectCtrlSettings.vzletSystemList = response.data;                           
-//                            },
-//                            function(e){
-//                                notificationFactory.errorInfo(e.statusText,e.description);
-//                            }
-//                        );
-//                    }else{
-//                        $scope.objectCtrlSettings.vzletSystemList =tmpSystemList;
-//                    };
-//                };
-//                $scope.getVzletSystemList();
-                    //get devices
-                $scope.getDevices = function(obj, showFlag){
-                    objectSvc.getDevicesByObject(obj).then(
-                        function(response){
-                            //select only vzlet devices
-                            var tmpArr = response.data;
-                            tmpArr.forEach(function(elem){
-                                if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)){
-                                    elem.contObjectId = elem.contObjectInfo.contObjectId;
-                                };
-                                if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)){
-                                    elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
-                                    elem.curDatasource = elem.activeDataSource.subscrDataSource;
-                                    elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
-                                    elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
-                                    elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
-                                };
-                            });
-                            obj.devices = tmpArr;//response.data;
-                            $scope.selectedItem(obj);
-//console.log(obj);                            
-                            if (showFlag == true){
-                                $('#contObjectDevicesModal').modal();
-                            };
-//                            if (showFlag == false){
-//                                $('#contObjectDevicesModal').modal();
-//                            };
-                        },
-                        errorCallback/*function(error){
-                            notificationFactory.errorInfo(error.statusText,error.description);
-                        }*/
-                    );
-                };
-                
                 $scope.invokeHelp = function(){
                     alert('This is SPRAVKA!!!111');
                 };
@@ -1349,12 +654,6 @@ console.log(e);
                     $scope.selectedItem(object);
                     //generation confirm code
                     setConfirmCode();
-                };
-                
-                $scope.deleteZpointInit = function(objId, zpointId){
-                    //setConfirmCode();
-                    $scope.selectedZpoint(objId, zpointId);
-                    $scope.deleteObjectInit($scope.currentObject);
                 };
                 
                 $scope.addObjectInit = function(isLightForm){
@@ -1367,75 +666,11 @@ console.log(e);
 //console.log($scope.currentObject);                    
                 };
                 
-//                work with object devices
-//                *******************************
-                //get device models
-                $scope.getDeviceModels = function(){
-                    objectSvc.getDeviceModels().then(
-                        function(response){
-                            $scope.data.deviceModels = response.data;
-            //console.log($scope.data.deviceModels);                
-                        },
-                        errorCallback/*function(error){
-                            console.log(error);
-                            notificationFactory.errorInfo(error.statusText,error.description);
-                        }*/
-                    );
-                };
-                $scope.getDeviceModels();
-
-                       //get data sources
-                var getDatasources = function(url){
-                    var targetUrl = url;
-                    $http.get(targetUrl)
-                    .then(function(response){
-                        var tmp = response.data;      
-                        $scope.data.dataSources = tmp;
-            //console.log(tmp);            
-                    },
-                          errorCallback/*function(e){
-                        console.log(e);
-                        notificationFactory.errorInfo(e.statusText,e.description);
-                    }*/);
-                };
-                getDatasources(objectSvc.getDatasourcesUrl());
-                
-                $scope.deviceDatasourceChange = function(){
-                    $scope.currentDevice.dataSourceTable1h = null;
-                    $scope.currentDevice.dataSourceTable24h = null;
-                    $scope.currentDevice.subscrDataSourceAddr = null;
-                    var curDataSource = null;
-                    $scope.data.dataSources.some(function(source){
-                        if (source.id === $scope.currentDevice.subscrDataSourceId){
-                            curDataSource = source;
-                            return true;
-                        };
-                    });
-                    $scope.currentDevice.curDatasource = curDataSource;       
-                };
-                
-                $scope.selectDevice = function(device){
-                    $scope.currentDevice = angular.copy(device);
-//                    $scope.currentDevice.contObjectId = $scope.currentObject.id;
-                };
-                
                 var setConfirmCode = function(useImprovedMethodFlag){
                     $scope.confirmCode = null;
                     var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
                     $scope.confirmLabel = tmpCode.label;
                     $scope.sumNums = tmpCode.result;                    
-                };
-                
-                $scope.addDevice = function(){
-                    $scope.currentDevice = {};
-                    $scope.currentDevice.contObjectId = $scope.currentObject.id;
-                    $('#showDeviceModal').modal();
-                };
-                
-                $scope.deleteDeviceInit = function(device){
-                    setConfirmCode();
-                    $scope.selectDevice(device);
-                    //$('#deleteDeviceModal').modal();
                 };
                 
                 $scope.deleteObjectsInit = function(){
@@ -1471,142 +706,7 @@ console.log(e);
                             $('#deleteObjectModal').modal();
                         };
                     };
-                };
-                
-                $scope.saveDevice = function(device){ 
-                    //check device data
-                    var checkDsourceFlag = true;
-                    if (device.contObjectId == null){
-                        notificationFactory.errorInfo("Ошибка","Не задан объект учета");
-                        checkDsourceFlag = false;
-                    };
-                    if (device.subscrDataSourceId == null){
-                        notificationFactory.errorInfo("Ошибка","Не задан источник данных");
-                        checkDsourceFlag = false;
-                    };
-                    if (checkDsourceFlag === false){
-                        return;
-                    };
-            //console.log(device);        
-                    //send to server
-                    objectSvc.sendDeviceToServer(device).then(successDeviceCallback, errorCallback);
-                };
-
-                $scope.deleteDevice = function(device){
-            //console.log(device);        
-                    var targetUrl = objectSvc.getRmaObjectsUrl();
-                    targetUrl = targetUrl + "/" + device.contObjectInfo.contObjectId + "/deviceObjects/" + device.id;
-                    $http.delete(targetUrl).then(successDeviceCallback, errorCallback);
-                };
-// **************************************************************************************************
-                
-//******************************* Work with subscribers ****************************************
-// *********************************************************************************************                
-                //    get subscribers
-                var getClients = function(){
-                    var targetUrl = $scope.objectCtrlSettings.clientsUrl;
-                    $http.get(targetUrl)
-                    .then(function(response){
-                        response.data.forEach(function(el){
-                            el.organizationName = el.organization.organizationFullName;
-                        });
-                        $scope.data.clients = response.data;
-//console.log($scope.data.clients);            
-                    },
-                         function(e){
-                        console.log(e);
-                    });
-                };
-                
-                                
-               var deleteDoubleElements = function(targetArray){
-                    var resultArray = angular.copy(targetArray);
-                    resultArray = resultArray.sort();
-                    var arrLength = resultArray.length;
-                    while (arrLength >= 2){
-                        arrLength--;                                               
-                        if (resultArray[arrLength] == resultArray[arrLength-1]){                                          
-                            resultArray.splice(arrLength, 1);
-                        };
-                    };                 
-                    return resultArray;
-                };
-                
-                var prepareClient = function(table, objIdsArr){
-                    var ids = angular.copy(objIdsArr);
-                    $http.get(table).then(function(response){
-                        var subscrObjs = response.data;
-                        var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
-                        Array.prototype.push.apply(ids, subscrObjIds);
-                        ids = deleteDoubleElements(ids);
-//console.log(table);                        
-//console.log(ids);                        
-                        $http.put(table, ids).then(successPostCallback, errorCallback);
-                        },
-                        function(e){
-                            console.log(e);
-                    }
-                    );
-                };
-                
-                //инициализируем переменные и интерфейсы для назначения объектов абонентам
-                $scope.setClientsInit = function(object){
-                    if (!mainSvc.checkUndefinedNull(object)){
-//                        object.selected = true;
-                        $scope.selectedItem(object);
-                        $scope.objectCtrlSettings.isSetClientForOneObject = true;//включаем флаг того, что назначаем абонентов только одному текущему объекту
-                    };
-                    $scope.data.clientsOnPage = angular.copy($scope.data.clients);
-                    $('#setClientModal').modal();
-                };
-                
-                var prepareObjectsIdsArray = function(){
-                    var tmp = [];
-                    if ($scope.objectCtrlSettings.allSelected == true){
-                        $scope.objects.forEach(function(elem){
-                            if (elem.selected == true){
-                                tmp.push(elem.id);
-                                elem.selected = false;
-                            };
-                        });
-                    }else{
-                        $scope.objectsOnPage.forEach(function(elem){
-                            if (elem.selected == true){
-                                tmp.push(elem.id);
-                                elem.selected = false;
-                            };
-                        });
-                    };
-                    return tmp;
-                };
-                
-                //отправляем запрос на назначение на сервер
-                $scope.setClients = function(){
-                    var tmp = [];//массив id объектов, которым назначаются абоненты
-                    if ($scope.objectCtrlSettings.isSetClientForOneObject == true){
-                        tmp.push($scope.currentObject.id);//передать в массив id текущего объекта
-                        $scope.objectCtrlSettings.isSetClientForOneObject = false;//сбросить флаг
-                    }else{
-                    //собираем идишники выбранных объектов в один массив
-                        tmp = prepareObjectsIdsArray();
-                        $scope.objectCtrlSettings.anySelected = false;
-                    };
-                    //для каждого абонента надо вызвать rest для задания объектов, 
-                    //передавая полученный массив идишников
-                    $scope.data.clientsOnPage.forEach(function(cl){
-                       if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
-                            var table = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
-                            prepareClient(table, tmp);
-                        }; 
-                    });                    
-                };
-                
-                $scope.selectAllClients = function(){
-                    $scope.data.clientsOnPage.forEach(function(el){
-                        el.selected = $scope.objectCtrlSettings.selectedAllClients;
-                    });
-                };
-// ******************************* end subscriber region ***********************                
+                };           
                 
                 //checkers            
                 $scope.checkEmptyNullValue = function(numvalue){                    
@@ -1664,37 +764,7 @@ console.log(e);
                         return true;
                     };
                     return false;
-                };
-                
-                $scope.checkZpointSettingsFrom = function(zpointSettings){              
-                    if((zpointSettings == null) || (!zpointSettings.hasOwnProperty('summer')) || (!zpointSettings.hasOwnProperty('winter'))){
-                        return true;
-                    };
-                    return $scope.checkPositiveNumberValue(zpointSettings.summer.ov_BalanceM_ctrl) && 
-                        $scope.checkPositiveNumberValue(zpointSettings.winter.ov_BalanceM_ctrl) &&
-                        $scope.checkHHmm(zpointSettings.summer.ov_Worktime) &&
-                        $scope.checkHHmm(zpointSettings.winter.ov_Worktime) &&
-                        $scope.checkPositiveNumberValue(zpointSettings.summer.leak_Gush) &&
-                        $scope.checkPositiveNumberValue(zpointSettings.winter.leak_Gush) &&
-                        $scope.checkPositiveNumberValue(zpointSettings.summer.leak_Night) &&
-                        $scope.checkPositiveNumberValue(zpointSettings.winter.leak_Night) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_deltaT_min, zpointSettings.summer.wm_deltaT_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_deltaT_min, zpointSettings.winter.wm_deltaT_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_deltaQ_min, zpointSettings.winter.wm_deltaQ_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_P2_min, zpointSettings.summer.wm_P2_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_P2_min, zpointSettings.winter.wm_P2_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_P1_min, zpointSettings.winter.wm_P1_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_T2_min, zpointSettings.summer.wm_T2_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_T1_min, zpointSettings.summer.wm_T1_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_T2_min, zpointSettings.winter.wm_T2_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_T1_min, zpointSettings.winter.wm_T1_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_M2_min, zpointSettings.summer.wm_M2_max) &&
-                        $scope.checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max) &&
-                        $scope.checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max);
-                };
+                };                
                 
                 $scope.checkObjectPropertiesForm = function(object){
 //                    if ((object==null)||(object.cwTemp === undefined)){
@@ -1706,11 +776,7 @@ console.log(e);
 
                 var checkGeo = function(){
                    $scope.currentObject.geoState = "red";
-                   $scope.currentObject.geoStateText = "Не отображается на карте";
-// console.log($scope.currentObject.isValidGeoPos);
-// console.log($scope.currentSug);
-// console.log($scope.currentSug.data.geo_lat);
-// console.log($scope.currentSug.data.geo_lon);                
+                   $scope.currentObject.geoStateText = "Не отображается на карте";                
                    if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null){
                         $scope.currentObject.geoState = "green";
                         $scope.currentObject.geoStateText = "Отображается на карте";
@@ -1752,70 +818,10 @@ console.log(e);
                     });
                 });
                 
-                $('#showZpointOptionModal').on('hidden.bs.modal', function(){
-                    $scope.zpointSettings = {};
-                });
-                $('#showZpointExplParameters').on('hidden.bs.modal', function(){
-                    $scope.zpointSettings = {};
-                });
-                
                 $('#showObjOptionModal').on('hidden.bs.modal', function(){
                     $scope.currentObject.isSaving = false;
                     $scope.currentSug = null;
-                });
-                
-// *****************************************************************************************
-//                Zpoint metadata
-// ******************************************************************************************
-                $scope.zpointMetadataIntegratorsFlag = false;
-                    
-                $scope.openZpointMetadata = function(coId, zpId){
-                    $scope.selectedZpoint(coId, zpId);
-                    //get srcProp
-                    objectSvc.getZpointMetaSrcProp(coId, zpId).then(
-                        function(resp){
-                            $scope.currentZpoint.metaData = {};
-                            $scope.currentZpoint.metaData.srcProp = resp.data;
-                            $scope.currentZpoint.metaData.srcProp.push({columnName: ""});
-                            objectSvc.getZpointMetaDestProp(coId, zpId).then(
-                                function(resp){
-                                    $scope.currentZpoint.metaData.destProp = resp.data;                                    
-                                    objectSvc.getZpointMetaMeasureUnits(coId, zpId);
-                                }, errorCallback                                
-                            );
-                        }, errorCallback
-                    );
-                };
-                
-                $scope.$on('objectSvc:zpointMetadataMeasuresLoaded', function(){
-                    $scope.currentZpoint.metaData.measures = objectSvc.getZpointMetadataMeasures();
-                    objectSvc.getZpointMetadata($scope.currentZpoint.contObjectId, $scope.currentZpoint.id).then(
-                        function(resp){                            
-                            mainSvc.sortItemsBy(resp.data, "destProp");
-                            $scope.currentZpoint.metaData.metaData = resp.data;
-                            $('#metaDataEditorModal').modal();
-//console.log($scope.currentZpoint);                                            
-                        }, errorCallback
-                    );
-                });
-                
-                $scope.updateZpointMetaData = function(zpoint){
-//console.log(zpoint);                    
-                    objectSvc.saveZpointMetadata(zpoint.contObjectId, zpoint.id, zpoint.metaData.metaData).then(
-                        function(resp){
-                            $('#metaDataEditorModal').modal('hide');
-                            notificationFactory.success();
-                        },
-                        errorCallback
-                    );
-                };
-                
-                $scope.log = function(logObj){
-                    console.log(logObj);
-                };
-// *****************************************************************************************
-//                end Zpoint metadata
-// ******************************************************************************************                
+                });         
                 
 // ********************************************************************************************
                 //  TREEVIEW
@@ -2206,20 +1212,16 @@ console.log(e);
                     $('#inputLevelName').focus();
                 });
                 
-                $('#showObjOptionModal').on('shown.bs.modal', function(){
-                    $('#inputContObjectName').focus();
+                $('#showTenantOptionModal').on('shown.bs.modal', function(){
+                    $('#inputTenantName').focus();
                 });
                 
-                $('#showZpointOptionModal').on('shown.bs.modal', function(){
-                    $('#inputZpointName').focus();
-                });
                 //controller initialization
                 var initCtrl = function(){
                     getRsoOrganizations();
                     getCmOrganizations();
                     getServiceTypes();
                     getTimezones();
-                    getClients();
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData();

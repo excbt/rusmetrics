@@ -804,7 +804,8 @@ tr.nmc-main-table-header-indicator > th {
     overflow: scroll;
     height: 73vh;
     min-height: 360px;
-    position:relative
+    position:relative;
+    padding-left: 15px;
 }
 
 .nmc-ui-tree-handle:focus{
@@ -2055,16 +2056,20 @@ tr.nmc-inactive-price > td{
     padding-left: 0;
 }
 
-.paddingLeft20 {
-    padding-left: 20px;
-}
-
 .paddingLeft5 {
     padding-left: 5px;
 }
 
 .paddingLeft10 {
     padding-left: 10px;
+}
+
+.paddingLeft15 {
+    padding-left: 15px;
+}
+
+.paddingLeft20 {
+    padding-left: 20px;
 }
 
 .onlyPaddingLeft15 {

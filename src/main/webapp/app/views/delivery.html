@@ -23,7 +23,6 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tenants/" aria-controls="settings-tenants" data-target="#settings-tenants" role="tab" data-toggle="tab">Квартиросъемщики</a></li>
 
     </ul>
 
@@ -60,8 +59,9 @@
 <!--		<h2>Рассылки</h2>-->
 		<!-- Кнопка добавления рассылок -->
 		<div class="btn-group">
-			<button ng-disabled="isROfield()" class="btn marginTop15 nmc-main-add-button" ng-click="addNewReportShedule('new')">Добавить рассылку</button>
-		</div><br><br>		
+			<button ng-disabled="isROfield()" class="btn  marginBottom5 marginTop5 nmc-main-add-button" ng-click="addNewReportShedule('new')">Добавить рассылку</button>
+		</div>
+<!--        <br><br>		-->
 		<!-- Таблица со списком рассылок -->
    		<table id="table_deliveries_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
     		<tr id="tr_dlv_header" class="nmc-main-table-header">
