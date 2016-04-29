@@ -2,10 +2,9 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.nio.file.AccessDeniedException;
-
 import javax.persistence.PersistenceException;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
