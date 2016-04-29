@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
@@ -104,14 +104,15 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	public void testUpdateSubscrUser() throws Exception {
 		String content = _testGetJson("/api/subscr/subscrCabinet/subscrUser/512157249");
 
-		SubscrUser subscrUser = fromJSON(new TypeReference<SubscrUser>() {
+		SubscrUserWrapper subscrUserWrapper = fromJSON(new TypeReference<SubscrUserWrapper>() {
 		}, content);
 
-		assertNotNull(subscrUser);
+		assertNotNull(subscrUserWrapper);
 
-		subscrUser.setDevComment(EDITED_BY_REST);
+		subscrUserWrapper.getSubscrUser().setDevComment(EDITED_BY_REST + " at " + System.currentTimeMillis());
+		subscrUserWrapper.setPasswordPocket("12345");
 
-		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/512157249", subscrUser);
+		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/512157249", subscrUserWrapper);
 
 	}
 }

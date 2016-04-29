@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -115,19 +116,20 @@ public class SubscrCabinetController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrUser(@PathVariable("subscrUserId") Long subscrUserId,
-			@RequestBody SubscrUser requestEntity) {
+			@RequestBody SubscrUserWrapper requestEntity) {
 
 		checkNotNull(subscrUserId);
 		checkNotNull(requestEntity);
+		checkNotNull(requestEntity.getSubscrUser());
 
-		if (!subscrUserId.equals(requestEntity.getId())) {
+		if (!subscrUserId.equals(requestEntity.getSubscrUser().getId())) {
 			return responseBadRequest();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<SubscrUser>(requestEntity) {
+		ApiAction action = new ApiActionEntityAdapter<SubscrUserWrapper>(requestEntity) {
 
 			@Override
-			public SubscrUser processAndReturnResult() {
+			public SubscrUserWrapper processAndReturnResult() {
 				return subscrCabinetService.saveCabinelSubscrUser(entity);
 			}
 		};

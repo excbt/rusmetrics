@@ -23,6 +23,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -31,11 +33,14 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService.LdapAction;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -64,6 +69,9 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
 
+	@Autowired
+	private LdapService ldapService;
+
 	/*
 	 * 
 	 */
@@ -76,6 +84,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		private final ContObjectShortInfo contObjectInfo;
 
+		@JsonProperty(value = "cabinet")
 		private final SubscrCabinetInfo subscrCabinetInfo;
 
 		/**
@@ -376,25 +385,47 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser saveCabinelSubscrUser(SubscrUser entity) {
+	public SubscrUserWrapper saveCabinelSubscrUser(SubscrUserWrapper entity) {
 		checkNotNull(entity);
-		checkArgument(!entity.isNew());
+		checkNotNull(entity.getSubscrUser());
+		checkArgument(!entity.getSubscrUser().isNew());
 
-		SubscrUser currentSubscrUser = subscrUserRepository.findOne(entity.getId());
+		SubscrUser entitySubsrUser = entity.getSubscrUser();
+
+		SubscrUser currentSubscrUser = subscrUserRepository.findOne(entitySubsrUser.getId());
 		if (currentSubscrUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", entity.getId()));
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", entitySubsrUser.getId()));
 		}
 
 		if (!SubscrTypeKey.CABINET.getKeyname().equals(currentSubscrUser.getSubscriber().getSubscrType())) {
 			throw new IllegalArgumentException("SubscrUser (id=%d) is not of type CABINET");
 		}
 
-		currentSubscrUser.setUserComment(entity.getUserComment());
-		currentSubscrUser.setUserNickname(entity.getUserNickname());
-		currentSubscrUser.setUserDescription(entity.getUserDescription());
-		currentSubscrUser.setDevComment(entity.getDevComment());
+		currentSubscrUser.setUserComment(entitySubsrUser.getUserComment());
+		currentSubscrUser.setUserNickname(entitySubsrUser.getUserNickname());
+		currentSubscrUser.setUserDescription(entitySubsrUser.getUserDescription());
+		currentSubscrUser.setDevComment(entitySubsrUser.getDevComment());
 
-		return subscrUserRepository.save(currentSubscrUser);
+		final String pass = entity.getPasswordPocket();
+
+		if (pass != null) {
+			currentSubscrUser.setPassword(null);
+		}
+
+		SubscrUser result = subscrUserRepository.save(currentSubscrUser);
+
+		if (pass != null) {
+
+			LdapAction action = (u) -> {
+				//ldapService.changePassword(u, passwords[0], passwords[1]);
+				ldapService.changePassword(u, pass);
+			};
+
+			subscrUserService.processLdapAction(result, action);
+
+		}
+
+		return new SubscrUserWrapper(result);
 	}
 
 	/**

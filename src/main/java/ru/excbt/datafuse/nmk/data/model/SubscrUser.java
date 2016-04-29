@@ -59,6 +59,7 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 	private String userNickname;
 
 	@Column(name = "password")
+	//@JsonProperty(access = Access.WRITE_ONLY)
 	@JsonIgnore
 	private String password;
 
@@ -116,6 +117,9 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 
 	@Column(name = "dev_comment")
 	private String devComment;
+
+	//	@Transient
+	//	private String passwordPocket;
 
 	public String getUserName() {
 		return userName;
