@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.EmailNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -69,6 +70,9 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	@Autowired
 	private LdapService ldapService;
+
+	@Autowired
+	private EmailNotificationService emailNotificationService;
 
 	/*
 	 * 
@@ -455,6 +459,52 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		return new SubscrUserWrapper(result);
 
+	}
+
+	/**
+	 * 
+	 * @param subscrUserId
+	 */
+	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public boolean sendSubscrUserPasswordEmailNotification(Long fromSubscrUserId, Long toSubscrUserId) {
+		SubscrUser fromSubscrUser = subscrUserService.findOne(fromSubscrUserId);
+		SubscrUser toSubscrUser = subscrUserService.findOne(toSubscrUserId);
+
+		if (fromSubscrUser == null || toSubscrUser == null) {
+			throw new PersistenceException(
+					String.format("Invalid user for send email (fromSubscrUserId=%d, toSubscrUserId=%d) ",
+							fromSubscrUserId, toSubscrUserId));
+		}
+
+		if (toSubscrUser.getPassword() == null) {
+			return false;
+		}
+
+		EmailNotification emailNotification = new EmailNotification();
+
+		emailNotification.setFromSubscrUserId(fromSubscrUserId);
+		emailNotification.setToSubscrUserId(toSubscrUserId);
+		emailNotification.setMessageFrom(getEmail(fromSubscrUser));
+		emailNotification.setMessageTo(getEmail(toSubscrUser));
+
+		emailNotification.setMessageSubject("Напоминание пароля для пользователя: " + toSubscrUser.getUserName());
+		emailNotification.setMessageText("Пароль сгенерированный системой: " + toSubscrUser.getPassword());
+
+		emailNotificationService.saveEmailNotification(emailNotification);
+
+		return true;
+
+	}
+
+	/**
+	 * 
+	 * @param subscrUser
+	 * @return
+	 */
+	private String getEmail(SubscrUser subscrUser) {
+		String result = subscrUser.getContactEmail() != null ? subscrUser.getContactEmail() : subscrUser.getUserEMail();
+		return result != null ? result : subscrUser.getUserName() + "@rusmetrics.ru";
 	}
 
 }

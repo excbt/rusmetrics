@@ -109,6 +109,14 @@ public class SubscrApiController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	protected Long getCurrentSubscUserId() {
+		return currentUserService.getCurrentUserId();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	protected Subscriber getCurrentSubscriber() {
 		return currentSubscriberService.getSubscriber();
 	}

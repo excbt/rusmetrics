@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -177,6 +178,36 @@ public class SubscrCabinetController extends SubscrApiController {
 				}
 
 				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscrUserIds
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrUser/sendPassword", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putSubscrUserPasswordNotification(@RequestBody final List<Long> subscrUserIds) {
+
+		ApiAction action = new ApiActionEntityAdapter<List<Long>>() {
+
+			@Override
+			public List<Long> processAndReturnResult() {
+
+				List<Long> result = new ArrayList<>();
+
+				for (Long subscrUserId : subscrUserIds) {
+					if (subscrCabinetService.sendSubscrUserPasswordEmailNotification(getCurrentSubscUserId(),
+							subscrUserId)) {
+						result.add(subscrUserId);
+					}
+					;
+				}
+
+				return result;// subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 			}
 		};
 

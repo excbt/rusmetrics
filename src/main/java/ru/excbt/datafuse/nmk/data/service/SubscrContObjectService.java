@@ -116,7 +116,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param objects
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
 		subscrContObjectRepository.delete(objects);
 	}
@@ -428,7 +428,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	public List<ContObject> updateSubscrContObjects(Long subscriberId, List<Long> contObjectIds,
 			LocalDate subscrBeginDate) {
 

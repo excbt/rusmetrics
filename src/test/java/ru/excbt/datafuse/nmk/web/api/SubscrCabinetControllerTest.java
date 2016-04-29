@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -18,6 +19,8 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+@WithMockUser(username = "ex1-cab-admin", password = "12345", roles = { "SUBSCR_USER", "SUBSCR_ADMIN",
+		"CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "SUBSCR_CREATE_CHILD", "SUBSCR_CREATE_CABINET" })
 public class SubscrCabinetControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetControllerTest.class);
@@ -124,6 +127,16 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	public void testSubscrUserResetPassword() throws Exception {
 		List<Long> subscrUserIds = Arrays.asList(512157249L);
 		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/resetPassword", subscrUserIds);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSubscrUserSendPassword() throws Exception {
+		List<Long> subscrUserIds = Arrays.asList(512157249L);
+		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/sendPassword", subscrUserIds);
 	}
 
 }
