@@ -194,7 +194,9 @@
                                             </th>
                                             <th class="col-xs-3 col-md-3">Пользователь
                                             </th>
-                                            <th class="col-xs-3 col-md-3">Пароль
+                                            <th class="col-xs-2 col-md-2">Логин
+                                            </th>
+                                            <th class="col-xs-1 col-md-1">Пароль
                                             </th>
                                             <th>
 <!--
@@ -249,7 +251,9 @@
                                             </th>
                                             <th class="col-xs-3 col-md-3">Пользователь
                                             </th>
-                                            <th class="col-xs-3 col-md-3">Пароль
+                                            <th class="col-xs-2 col-md-2">Логин
+                                            </th>
+                                            <th class="col-xs-1 col-md-1">Пароль
                                             </th>
                                             <th>
                                             </th>
@@ -271,7 +275,7 @@
                                           <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                                             </i>
                                           <ul class="dropdown-menu">
-                                            <li><a href="" ng-click="" data-target="#showTenantOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
+                                            <li><a href="" ng-click="selectCabinet(object)" data-target="#showTenantOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
                                             <li><a href="" ng-click="">{{messages.createTenant}}</a></li>                                                        
                                             <li class="menu-item dropdown dropdown-submenu" role="presentation">
                                                 <a href="" ng-click="">{{messages.changeTenantPassword}}
@@ -321,14 +325,17 @@
 <!--                                    </td>-->
 
                                     <td class="col-xs-3 col-md-3">                                        
-                                        {{object.fullName}}
+                                        {{object.contObjectInfo.fullName}}
 <!--                                        <span ng-show="isSystemuser()">(id = {{object.id}})</span>-->
                                     </td>
                                     <td class="col-xs-3 col-md-3">
-                                        <span ng-hide="$index%7==0">{{object.id}}</span>
+                                        {{object.cabinet.subscrUser.userNickname}}
                                     </td>
-                                    <td class="col-xs-3 col-md-3">
-                                        <span ng-show="$index%10==0">{{object.id}}</span>
+                                    <td class="col-xs-2 col-md-2">
+                                        {{object.cabinet.subscrCabinetNr}}
+                                    </td>
+                                    <td class="col-xs-1 col-md-1">
+                                        {{object.cabinet.subscrUser.passwordPocket}}
                                     </td>
                                     <td>
                                         <div class="btn-toolbar">
@@ -374,7 +381,7 @@
                                            type="text" 
                                            id="inputTenantLogin" 
                                            placeholder="Логин" 
-                                           ng-model="currentObject.login"
+                                           ng-model="data.selectedCabinet.cabinet.subscrCabinetNr"
                                            disabled
                                            />
                                 </td>
@@ -383,12 +390,12 @@
                                 <td class="col-sm-3"><label for="inputTenantName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.fullName)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.userNickname)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantName" 
                                                placeholder="Наименование" 
-                                               ng-model="currentObject.fullName"
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.userNickname"
                                                />
                                     </div>
                                 </td>
@@ -396,36 +403,38 @@
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="data.selectedCabinet.cabinet.subscrUser.userDescription"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputTenantEmail">Эл. почта</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.tenantEmail)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.contactEmail)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantEmail" 
                                                placeholder="Электронная почта" 
-                                               ng-model="currentObject.tenantEmail"
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.contactEmail"
                                                />
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3">
-                                    <label for="inputObjAddress">Адрес</label>
+                                    <label for="viewTenantAddress">Адрес</label>
 
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputObjAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewTenantAddress" placeholder="Адрес" ng-model="data.selectedCabinet.contObjectInfo.fullName" disabled>
+<!--
                                     <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
                                         <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
                                         </small>
                                         <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
                                         </small>
                                     </div>
+-->
                                 </td>
                             </tr>
                             <tr>
@@ -433,12 +442,12 @@
                                     <label for="inputTenantPassword">Пароль</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.tenantPassword)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.passwordPocket)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantPassword" 
                                                placeholder="Пароль" 
-                                               ng-model="currentObject.tenantPassword"
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocket"
                                                />
                                     </div>
                                 </td>
@@ -455,7 +464,7 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="!checkObjectPropertiesForm(currentObject) || currentObject.isSaving == true" 
+							<input 
                                    type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click=""

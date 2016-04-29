@@ -187,6 +187,14 @@ angular.module('portalNMC')
             .error(function(e){
                 console.log(e);
     });
+    
+    var getProp = function(obj, propName){
+        var result = false;
+        if (angular.isDefined(obj)){
+            result = obj[propName];
+        };
+        return result;
+    };
         //check user: system? - true/false
     var isSystemuser = function(){
         var result = false;
@@ -217,6 +225,10 @@ angular.module('portalNMC')
         return result;
     };
     
+    var isCabinet = function(){
+        return getProp($rootScope.userInfo, "isCabinet");
+    };
+    
                     //check user rights: read only?:  - true/false
     var isReadonly = function(){
         var result = false;
@@ -227,6 +239,19 @@ angular.module('portalNMC')
         return result;
     };
     
+    //permissions for user cabinet
+    var cabinetPermissions = [
+        {
+            keyname : "WEB_ALLOW_OBJECT_LIST_VIEW_PAGE",
+            permissionTagId : "object_list_view_page",
+            priority : 100
+        },
+        {
+            keyname : "WEB_ALLOW_OBJECT_MAIN_MENU_ITEM",
+            permissionTagId : "object_main_menu_item",
+            priority : 100
+        }
+    ];
     //get user permission
     var getUserServicesPermissions = function(){
         mainSvcSettings.loadingServicePermissionFlag = true;
@@ -538,6 +563,7 @@ angular.module('portalNMC')
         getServerErrorByResultCode,
         getUserServicesPermissions,
         isAdmin,
+        isCabinet,
         isNumeric,
         isRma,
         isReadonly,

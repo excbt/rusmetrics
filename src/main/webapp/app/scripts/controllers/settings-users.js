@@ -259,4 +259,8 @@ angular.module('portalNMC')
     $scope.isROfield = function(){
         return ($scope.isReadonly() || !$scope.isAdmin());
     };
+    
+    $scope.isCabinetsEnabled = function(){
+        return true;
+    };
 }]);

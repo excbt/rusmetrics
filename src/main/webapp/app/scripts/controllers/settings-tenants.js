@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+.controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window',
+            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window) {
                 $rootScope.ctxId = "settings_tenants_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
@@ -25,7 +25,6 @@ angular.module('portalNMC')
                 $scope.messages.releaseFromNode = "Отвязать от узла";
                 
                     //object ctrl settings
-                $scope.crudTableName = objectSvc.getObjectsUrl();
                 $scope.objectCtrlSettings = {};
 
                 $scope.objectCtrlSettings.isCtrlEnd =false;
@@ -49,12 +48,9 @@ angular.module('portalNMC')
                 
                 //service permission settings
 //                $scope.objectCtrlSettings.mapAccess = false;
-                $scope.objectCtrlSettings.ctxId = "management_objects_2nd_menu_item";
+                $scope.objectCtrlSettings.ctxId = "settings_tenants_2nd_menu_item";
                 
                 $scope.objectCtrlSettings.rmaUrl = "../api/rma";
-                $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
-                $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
-                $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();
@@ -90,21 +86,21 @@ angular.module('portalNMC')
                     return obj;
                 };                
                 
-//console.log(objectSvc.promise);
+//console.log(subscrCabinetsSvc.promise);
                 
                 var performObjectsData = function(response){
                     var tempArr = response.data;
 //console.log(tempArr);                    
                     $scope.objects = response.data;
                     //sort by name
-                    objectSvc.sortObjectsByFullName($scope.objects);
+                    subscrCabinetsSvc.sortCabinetsByContObjectFullName($scope.objects);
 
                     if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
                         $scope.objectsWithoutFilter = $scope.objects;
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                         tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                         $scope.objectsOnPage = tempArr;                                                    
-                        $rootScope.$broadcast('objectSvc:loaded');
+                        $rootScope.$broadcast('subscrCabinets:loaded');
 //                        if (!mainSvc.checkUndefinedNull(objId)){
 //                            moveToObject(objId);
 //                        };
@@ -116,13 +112,17 @@ angular.module('portalNMC')
                 
                 var getObjectsData = function(objId){
 //console.log("getObjectsData");
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $rootScope.$broadcast('subscrCabinets:requestReloadCabinetsData');
                     $scope.loading = true;
-                    objectSvc.getPromise().then(performObjectsData);
+                    subscrCabinetsSvc.getPromise().then(performObjectsData);
+                };
+                
+                $scope.selectCabinet = function(cabinet){
+                    $scope.data.selectedCabinet = angular.copy(cabinet);
                 };
 
-//                $scope.objects = objectSvc.getObjects();
-                $scope.loading = objectSvc.getLoadingStatus();//loading;
+//                $scope.objects = subscrCabinetsSvc.getObjects();
+                $scope.loading = subscrCabinetsSvc.getLoadingStatus();//loading;
                 $scope.columns = [
 
                         {"name":"fullName", "header" : "Название", "class":"col-md-5"},
@@ -192,7 +192,7 @@ angular.module('portalNMC')
                     if (mainSvc.checkUndefinedNull(objId)){
                         return "moveToObject: object id is undefined or null.";
                     };
-                    var curObj = objectSvc.findObjectById(Number(objId), $scope.objects);
+                    var curObj = subscrCabinetsSvc.findObjectById(Number(objId), $scope.objects);
                     if (curObj != null){
                         var curObjIndex = $scope.objects.indexOf(curObj);                        
                         if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage){
@@ -228,7 +228,7 @@ angular.module('portalNMC')
                 };
                 
                 var successCallbackUpdateObject = function(e){ 
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $rootScope.$broadcast('subscrCabinets:requestReloadCabinetsData');
 console.log(e);
 //console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
@@ -306,14 +306,14 @@ console.log(e);
                 };
 
                 $scope.deleteObject = function (obj) {
-                    var url = objectSvc.getRmaObjectsUrl();                 
+                    var url = subscrCabinetsSvc.getRmaObjectsUrl();                 
                     if (angular.isDefined(obj) && (angular.isDefined(obj.id)) && (obj.id != null)){
                         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
                     };
                 };
                 
                 $scope.deleteObjects = function(obj){
-                    var url = objectSvc.getRmaObjectsUrl();                   
+                    var url = subscrCabinetsSvc.getRmaObjectsUrl();                   
                     if (angular.isDefined(obj) && (angular.isDefined(obj.id)) && (obj.id != null)){
                         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
                     }else if (angular.isDefined(obj.deleteObjects) && (obj.deleteObjects != null) && angular.isArray(obj.deleteObjects)){
@@ -371,7 +371,7 @@ console.log(e);
                         obj.isSaving = false;
                         return false;
                     };
-                    var url = objectSvc.getRmaObjectsUrl();                    
+                    var url = subscrCabinetsSvc.getRmaObjectsUrl();                    
                     if (angular.isDefined(obj.id) && (obj.id != null)){
                         $scope.updateObject(url, obj);
                     }else{
@@ -386,7 +386,7 @@ console.log(e);
 			    };
                 
                 $scope.selectedObject = function(objId, isLightForm){
-                    objectSvc.getRmaObject(objId)
+                    subscrCabinetsSvc.getRmaObject(objId)
                     .then(function(resp){
                         $scope.currentObject = resp.data;
 //console.log($scope.currentObject);                        
@@ -404,7 +404,7 @@ console.log(e);
                 };
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
-                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                
+                    var curObject = subscrCabinetsSvc.findObjectById(objId, $scope.objects);//null;                
                     //if cur object = null => exit function
                     if (curObject == null){
                         return;
@@ -793,7 +793,7 @@ console.log(e);
 // ********************************************************************************************
                 //  TREEVIEW
 //*********************************************************************************************
-                $scope.data.treeTemplates = objectSvc.getRmaTreeTemplates();
+                $scope.data.treeTemplates = subscrCabinetsSvc.getRmaTreeTemplates();
                 $scope.objectCtrlSettings.treeSettings = {};
                 $scope.objectCtrlSettings.treeSettings.nodesPropName = 'childObjectList'; //'objectName'
                 $scope.data.currentDeleteMessage = "";
@@ -843,12 +843,12 @@ console.log(e);
                         $scope.data.selectedNodeForMove = angular.copy(item);
                     }else{
                         $scope.data.selectedNode = angular.copy(item); 
-//                        $rootScope.$broadcast('objectSvc:requestReloadData');
+//                        $rootScope.$broadcast('subscrCabinetsSvc:requestReloadData');
                         $scope.loading = true;
                         if (item.type == 'root'){
-                            objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
-                            objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performObjectsData);
                         };
                     };                    
                 };
@@ -856,20 +856,20 @@ console.log(e);
                 $scope.data.trees = [];
                 
                 $scope.loadTree = function(tree, objId){
-//                    $rootScope.$broadcast('objectSvc:requestReloadData');
+//                    $rootScope.$broadcast('subscrCabinetsSvc:requestReloadData');
                     $scope.loading = true;
-                    objectSvc.loadTree(tree.id).then(function(resp){
+                    subscrCabinetsSvc.loadTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
                             respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                             $scope.data.currentTree = respTree;
                             respTree.childObjectList[0].isSelected = true;
                             $scope.data.selectedNode = angular.copy(respTree.childObjectList[0]);
-                            objectSvc.loadFreeObjectsByTree(tree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree(tree.id).then(performObjectsData);
                             if (mainSvc.checkUndefinedNull($scope.data.currentTree.templateId)){
                                 return "Tree is free";
                             };
-                            objectSvc.loadTreeTemplateItems($scope.data.currentTree.templateId).then(function(resp){
+                            subscrCabinetsSvc.loadTreeTemplateItems($scope.data.currentTree.templateId).then(function(resp){
                                 $scope.data.currentTreeTemplateItems = angular.copy(resp.data);
                                 respTree.childObjectList[0].templateId = $scope.data.currentTree.templateId;
                                 respTree.childObjectList[0].templateItemId = $scope.data.currentTree.templateItemId;
@@ -879,7 +879,7 @@ console.log(e);
                 };
                 
                 var loadTrees = function(){
-                    objectSvc.loadTrees().then(function(resp){
+                    subscrCabinetsSvc.loadTrees().then(function(resp){
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
@@ -917,7 +917,7 @@ console.log(e);
                     {
                         $scope.data.currentTree.childObjectList.shift();
                     };
-                    objectSvc.updateTree($scope.data.currentTree).then(function(resp){                      
+                    subscrCabinetsSvc.updateTree($scope.data.currentTree).then(function(resp){                      
                         var respTree = resp.data;
                         respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                         if (!mainSvc.checkUndefinedNull(respTree.templateId)){
@@ -977,7 +977,7 @@ console.log(e);
                     if (angular.isArray(tree.childObjectList) && (tree.childObjectList.length > 0) && (tree.childObjectList[0].type == "root")){
                         tree.childObjectList.shift();
                     };
-                    objectSvc.createTree(tree).then(function(resp){
+                    subscrCabinetsSvc.createTree(tree).then(function(resp){
                         var createdTree = angular.copy(resp.data);
                         createdTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                         if (!mainSvc.checkUndefinedNull(createdTree.templateId)){
@@ -1005,11 +1005,11 @@ console.log(e);
                             return "Deleting item is undefined or null."
                         };
                         if (!mainSvc.checkUndefinedNull(delItem.type) && delItem.type == 'root'){
-                            objectSvc.deleteTree($scope.data.currentTree.id).then(function(resp){
+                            subscrCabinetsSvc.deleteTree($scope.data.currentTree.id).then(function(resp){
                                 loadTrees();
                             }, errorProtoCallback);                            
                         }else{
-                            objectSvc.deleteTreeNode($scope.data.currentTree.id, delItem.id).then(function(resp){
+                            subscrCabinetsSvc.deleteTreeNode($scope.data.currentTree.id, delItem.id).then(function(resp){
                                 $scope.loadTree($scope.data.currentTree);
                             }, errorCallback);
                         };
@@ -1034,12 +1034,12 @@ console.log(e);
                 }
                 
                 $scope.moveToNode = function(){
-                    objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
+                    subscrCabinetsSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
                         $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
-                            objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
-                            objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
                         };
                         $('#viewTreeModal').modal('hide');
                     }, errorCallback);
@@ -1054,12 +1054,12 @@ console.log(e);
                         tmpMovingObjectArr = prepareObjectsIdsArray();                        
                         $scope.objectCtrlSettings.anySelected = false;
                     };                   
-                    objectSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
+                    subscrCabinetsSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
                         $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
-                            objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{
-                            objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
                         };
                     }, errorProtoCallback);
                 };
@@ -1076,7 +1076,7 @@ console.log(e);
                 };
                 
                 $scope.createTreeByTemplate = function(template){
-                    objectSvc.loadTreeTemplateItems(template.id).then(function(resp){
+                    subscrCabinetsSvc.loadTreeTemplateItems(template.id).then(function(resp){
                         $scope.data.currentTreeTemplateItems = angular.copy(resp.data);
                         var treeItemLevel = null;
                         $scope.data.currentTreeTemplateItems.some(function(item){
@@ -1127,12 +1127,6 @@ console.log(e);
                         return true;
                     };
                     var currentLevel = findTemplateItemById(curItem.templateItemId);
-//                    $scope.data.currentTreeTemplateItems.some(function(item){
-//                        if (curItem.templateItemId == item.id){
-//                            currentLevel = item.itemLevel;
-//                            return true;
-//                        }
-//                    });
                     if (currentLevel == null){                                         
                         return false;
                     };
@@ -1185,10 +1179,6 @@ console.log(e);
                 
                 //controller initialization
                 var initCtrl = function(){
-//                    getRsoOrganizations();
-//                    getCmOrganizations();
-//                    getServiceTypes();
-//                    getTimezones();
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData();

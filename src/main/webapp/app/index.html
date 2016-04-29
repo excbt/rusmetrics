@@ -130,19 +130,29 @@
     <div class="row row-offcanvas row-offcanvas-left">    
        
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu" ng-class="{'nmc-main-menu-minimize':!mainCtrlSettings.showFullMenuFlag}">
+        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu" 
+             ng-class="{'nmc-main-menu-minimize':!mainCtrlSettings.showFullMenuFlag}">
                         <nav class="sidebar-nav"
-                            role="navigation" ng-show="!showPrivateOfficeMenu">
+                             role="navigation" 
+                             ng-show="!showPrivateOfficeMenu">
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
    
                                 <!-- Объекты, редактирование -->
-                                <a id="object_main_menu_item" class="list-group-item nmc-main-menu-item nmc-hide" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
-
-                                    href="#/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showAdminSettings=false;"><i class="glyphicon glyphicon-list nmc-main-menu-item-icon" title="Объекты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span></a>
+                                <a id="object_main_menu_item" 
+                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-show':isCabinet()}"                                   
+                                   href="#/" 
+                                   data-toggle="offcanvas" 
+                                   ng-click="clickMenu('object_menu_item');showAdminSettings=false;">
+                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon" 
+                                       title="Объекты">
+                                    </i>
+                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
+                                </a>
                                 
                                 <!-- Отчеты -->
-                                <a id="report_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
+                                <a id="report_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item, 'nmc-hide':isCabinet()}"
 
                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span></a>
                                 
@@ -152,7 +162,7 @@
                                    href="#/notices/monitor/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item')"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span></a>                            
                                 
 <!--                                Настройки-->
-                                <a id="setting_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
+                                <a id="setting_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item, 'nmc-hide':isCabinet()}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 
@@ -346,6 +356,7 @@
       <script src="scripts/services/indicator-service.js"></script>
       <script src="scripts/services/main-service.js"></script>
       <script src="scripts/services/report-service.js"></script>
+      <script src="scripts/services/subscr-cabinets-service.js"></script>
         <!-- endbuild -->
     
       <script src="scripts/controllers/data-range-settings.js"></script>

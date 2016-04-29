@@ -44,11 +44,11 @@ console.log("MainCtrl");
         var loca = $location.path();
 console.log(loca);          
         //set menu flag with current location
-        $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list")!=-1 ? true:false);
-        $scope.menuMassive.report_menu_item= (loca==="/reports" ? true:false);
-        $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/")!=-1 ? true:false);
-        $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/")!=-1 ? true:false);
-        $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/")!=-1 ? true:false);
+        $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list") != -1 ? true : false);
+        $scope.menuMassive.report_menu_item= (loca === "/reports" ? true : false);
+        $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/") != -1 ? true : false);
+        $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") != -1 ? true : false);
+        $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/") != -1 ? true : false);
         var menuFlag = false;
         //check menu flags
         for (var k in $scope.menuMassive){
@@ -88,7 +88,7 @@ console.log(loca);
           for (var k in $scope.menuMassive){ 
               $scope.menuMassive[k] = false;
           };        
-         $scope.menuMassive[menu]=true;  
+         $scope.menuMassive[menu] = true;  
     };
 
       //set default menu state
@@ -97,7 +97,7 @@ console.log("setDefaultMenuState");
       for (var k in $scope.menuMassive){
               $scope.menuMassive[k] = false;
           };        
-         $scope.menuMassive.object_menu_item=true;
+         $scope.menuMassive.object_menu_item = true;
 //console.log(window.location.href);        
 //console.log(window.location);        
     };
@@ -124,11 +124,11 @@ console.log("setDefaultMenuState");
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
         tmp.forEach(function(element){
-            if(element.permissionTagId.localeCompare(ctxId)==0){
+            if(element.permissionTagId.localeCompare(ctxId) == 0){
                 ctxFlag = true;
             };
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-            if (angular.isUndefined(elDOM)||(elDOM==null)){
+            if (angular.isUndefined(elDOM) || (elDOM == null)){
                 return;
             };              
             $('#'+element.permissionTagId).removeClass('nmc-hide');
@@ -146,6 +146,9 @@ console.log("setDefaultMenuState");
       //check user
     $scope.isRma = function(){
         return mainSvc.isRma();
+    };
+    $scope.isCabinet = function(){
+        return mainSvc.isCabinet();
     };
       
     $scope.getCtx = function(){
