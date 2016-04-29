@@ -69,6 +69,9 @@ public class FullUserInfo implements Serializable {
 	@Column(name = "is_readonly")
 	private Boolean isReadonly;
 
+	@Column(name = "can_create_child")
+	private Boolean canCreateChild;
+
 	@Column(name = "is_child")
 	private Boolean isChild;
 
@@ -164,6 +167,10 @@ public class FullUserInfo implements Serializable {
 
 	public Boolean getIsCabinet() {
 		return SubscrTypeKey.CABINET.getKeyname().equals(subscrType) && Boolean.TRUE.equals(isChild);
+	}
+
+	public Boolean getCanCreateChild() {
+		return canCreateChild;
 	}
 
 }
