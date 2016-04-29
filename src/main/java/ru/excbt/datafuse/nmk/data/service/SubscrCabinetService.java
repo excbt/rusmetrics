@@ -18,6 +18,7 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -334,12 +335,39 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	/**
 	 * 
+	 * @param subscrUser
+	 */
+	private void checkCabinerSubscrUserValid(Long parentSubscriberId, Long subscrUserId, SubscrUser subscrUser) {
+
+		checkNotNull(parentSubscriberId);
+
+		if (subscrUser == null) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
+		}
+
+		if (subscrUser.getSubscriber() == null) {
+			throw new PersistenceException(
+					String.format("Subscriber of SubscrUser (id=%d) is not found", subscrUserId));
+		}
+
+		if (!SubscrTypeKey.CABINET.getKeyname().equals(subscrUser.getSubscriber().getSubscrType())) {
+			throw new IllegalArgumentException("SubscrUser (id=%d) is not of type CABINET");
+		}
+
+		if (!parentSubscriberId.equals(subscrUser.getSubscriber().getParentSubscriberId())) {
+			throw new AccessDeniedException(String.format("Access denied to SubscrUser (id=%d) ", subscrUserId));
+		}
+
+	}
+
+	/**
+	 * 
 	 * @param entity
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUserWrapper saveCabinelSubscrUser(SubscrUserWrapper entity) {
+	public SubscrUserWrapper saveCabinelSubscrUser(Long parentSubscriberId, SubscrUserWrapper entity) {
 		checkNotNull(entity);
 		checkNotNull(entity.getSubscrUser());
 		checkArgument(!entity.getSubscrUser().isNew());
@@ -347,13 +375,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		SubscrUser entitySubsrUser = entity.getSubscrUser();
 
 		SubscrUser currentSubscrUser = subscrUserRepository.findOne(entitySubsrUser.getId());
-		if (currentSubscrUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", entitySubsrUser.getId()));
-		}
-
-		if (!SubscrTypeKey.CABINET.getKeyname().equals(currentSubscrUser.getSubscriber().getSubscrType())) {
-			throw new IllegalArgumentException("SubscrUser (id=%d) is not of type CABINET");
-		}
+		checkCabinerSubscrUserValid(parentSubscriberId, entitySubsrUser.getId(), currentSubscrUser);
 
 		currentSubscrUser.setUserComment(entitySubsrUser.getUserComment());
 		currentSubscrUser.setUserNickname(entitySubsrUser.getUserNickname());
@@ -401,6 +423,37 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		}
 
 		return currentSubscrUser;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public SubscrUserWrapper saveCabinelSubscrUserPassword(Long parentSubscriberId, Long subscrUserId,
+			String password) {
+		checkNotNull(subscrUserId);
+		checkNotNull(password);
+
+		SubscrUser currentSubscrUser = subscrUserRepository.findOne(subscrUserId);
+
+		checkCabinerSubscrUserValid(parentSubscriberId, subscrUserId, currentSubscrUser);
+
+		currentSubscrUser.setPassword(password);
+
+		SubscrUser result = subscrUserRepository.save(currentSubscrUser);
+
+		LdapAction action = (u) -> {
+			//ldapService.changePassword(u, passwords[0], passwords[1]);
+			ldapService.changePassword(u, password);
+		};
+
+		subscrUserService.processLdapAction(result, action);
+
+		return new SubscrUserWrapper(result);
+
 	}
 
 }

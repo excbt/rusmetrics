@@ -115,4 +115,15 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/512157249", subscrUserWrapper);
 
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSubscrUserResetPassword() throws Exception {
+		List<Long> subscrUserIds = Arrays.asList(512157249L);
+		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/resetPassword", subscrUserIds);
+	}
+
 }

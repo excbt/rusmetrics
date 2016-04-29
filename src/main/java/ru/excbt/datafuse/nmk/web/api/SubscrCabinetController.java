@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
+import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -130,7 +131,7 @@ public class SubscrCabinetController extends SubscrApiController {
 
 			@Override
 			public SubscrUserWrapper processAndReturnResult() {
-				return subscrCabinetService.saveCabinelSubscrUser(entity);
+				return subscrCabinetService.saveCabinelSubscrUser(getSubscriberId(), entity);
 			}
 		};
 
@@ -144,11 +145,42 @@ public class SubscrCabinetController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
-		SubscrUser result = subscrCabinetService.selectCabinelSubscrUser(subscrUserId);
-		if (result == null) {
+		SubscrUser subscrUser = subscrCabinetService.selectCabinelSubscrUser(subscrUserId);
+		if (subscrUser == null) {
 			return responseBadRequest();
 		}
+
+		SubscrUserWrapper result = new SubscrUserWrapper(subscrUser);
+
 		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param subscrUserIds
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrUser/resetPassword", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putSubscrUserResetPassword(@RequestBody final List<Long> subscrUserIds) {
+
+		ApiAction action = new ApiActionEntityAdapter<List<ContObjectCabinetInfo>>() {
+
+			@Override
+			public List<ContObjectCabinetInfo> processAndReturnResult() {
+
+				for (Long subscrUserId : subscrUserIds) {
+					try {
+						subscrCabinetService.saveCabinelSubscrUserPassword(getSubscriberId(), subscrUserId,
+								PasswordUtils.generateRandomPassword());
+					} catch (PersistenceException e) {
+					}
+				}
+
+				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }
