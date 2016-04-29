@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,15 +22,13 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
@@ -75,50 +72,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	/*
 	 * 
 	 */
-	public class ContObjectCabinetInfo implements Serializable {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6659437346714897566L;
-
-		private final ContObjectShortInfo contObjectInfo;
-
-		@JsonProperty(value = "cabinet")
-		private final SubscrCabinetInfo subscrCabinetInfo;
-
-		/**
-		 * 
-		 * @param contObject
-		 * @param subscrCabinetInfo
-		 */
-		public ContObjectCabinetInfo(ContObject contObject, SubscrCabinetInfo subscrCabinetInfo) {
-			this.contObjectInfo = contObject.getContObjectShortInfo();
-			this.subscrCabinetInfo = subscrCabinetInfo;
-		}
-
-		/**
-		 * 
-		 * @return
-		 */
-		public ContObjectShortInfo getContObjectInfo() {
-			return contObjectInfo;
-		}
-
-		/**
-		 * 
-		 * @return
-		 */
-		public SubscrCabinetInfo getSubscrCabinetInfo() {
-			return subscrCabinetInfo;
-		}
-
-	}
-
-	/*
-	 * 
-	 */
-	public class SubscCabinetContObjectStats {
+	private class SubscCabinetContObjectStats {
 		private final Long contObjectId;
 		private final Long count;
 
@@ -346,7 +300,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscCabinetContObjectStats> selectChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
+	private List<SubscCabinetContObjectStats> selectChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
 		List<Object[]> qryResult = subscrContObjectRepository
 				.selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
 		List<SubscCabinetContObjectStats> result = new ArrayList<>();

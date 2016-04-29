@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -13,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
-import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.ContObjectCabinetInfo;
-import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService.SubscCabinetContObjectStats;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 public class SubscrCabinetServiceTest extends JpaSupportTest {
@@ -105,8 +105,10 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSubscrCabinetContObjectStats() throws Exception {
-		List<SubscCabinetContObjectStats> rows = subscrCabinetService
-				.selectChildSubscrCabinetContObjectsStats(getSubscriberId());
+		boolean result = subscrCabinetService.checkIfSubscriberCabinetsOK(getSubscriberId());
+
+		assertTrue(result);
+
 	}
 
 }
