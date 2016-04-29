@@ -170,7 +170,7 @@
                                                     <span class="caret"></span>
                                                     </button>
                                                   <ul class="dropdown-menu">
-                                                    <li><a href="" ng-click="">{{messages.createTenants}}</a></li>
+                                                    <li><a href="" ng-click="createCabinets()">{{messages.createTenants}}</a></li>
                                                     <li><a href="" ng-click="">{{messages.recreateTenantPasswords}}</a></li>
                                                     <li><a href="" ng-click="">{{messages.sendLoginInfoByEmail}}</a></li>  
                                                     <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'"><a href="" 
@@ -275,9 +275,14 @@
                                           <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                                             </i>
                                           <ul class="dropdown-menu">
-                                            <li><a href="" ng-click="selectCabinet(object)" data-target="#showTenantOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
-                                            <li><a href="" ng-click="">{{messages.createTenant}}</a></li>                                                        
-                                            <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)"><a href="" ng-click="selectCabinet(object)" data-target="#showTenantOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
+                                            <li ng-if="checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="createCabinets(object)">
+                                                    {{messages.createTenant}}
+                                                </a>
+                                            </li>                                                        
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)" class="menu-item dropdown dropdown-submenu" role="presentation">
                                                 <a href="" ng-click="">{{messages.changeTenantPassword}}
                                                 </a>
                                                 <ul class="dropdown-menu nmc-dropdown-menu">
@@ -302,7 +307,12 @@
                                                   </li>    
                                                 </ul>
                                             </li>
-                                            <li><a href="" ng-click="">{{messages.sendLoginInfoByEmail}}</a></li>
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="">
+                                                    {{messages.sendLoginInfoByEmail}}
+                                                </a>
+                                            </li>
                                             <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'">
                                                 <a href="" 
                                                    data-target="#viewTreeModal" 
@@ -314,8 +324,8 @@
                                                 <a href=""                                             
                                                    ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
                                             </li>
-                                            <li role="separator" class="divider"></li>
-                                            <li><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteLogin}}</a></li>  
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)" role="separator" class="divider"></li>
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)"><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteLogin}}</a></li>  
                                           </ul>
                                         </div>            
                                         <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
@@ -390,14 +400,14 @@
                                 <td class="col-sm-3"><label for="inputTenantName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.userNickname)}">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.userNickname)}">-->
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantName" 
                                                placeholder="Наименование" 
                                                ng-model="data.selectedCabinet.cabinet.subscrUser.userNickname"
                                                />
-                                    </div>
+<!--                                    </div>-->
                                 </td>
                             </tr>
                             <tr>
@@ -410,14 +420,14 @@
                                 <td class="col-sm-3"><label for="inputTenantEmail">Эл. почта</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.contactEmail)}">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.contactEmail)}">-->
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantEmail" 
                                                placeholder="Электронная почта" 
                                                ng-model="data.selectedCabinet.cabinet.subscrUser.contactEmail"
                                                />
-                                    </div>
+<!--                                    </div>-->
                                 </td>
                             </tr>
                             <tr>
@@ -442,14 +452,14 @@
                                     <label for="inputTenantPassword">Пароль</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.passwordPocket)}">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.passwordPocket)}">-->
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantPassword" 
                                                placeholder="Пароль" 
                                                ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocket"
                                                />
-                                    </div>
+<!--                                    </div>-->
                                 </td>
                             </tr>
 

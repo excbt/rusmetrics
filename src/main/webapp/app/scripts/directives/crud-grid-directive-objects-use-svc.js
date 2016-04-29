@@ -1496,10 +1496,14 @@ angular.module('portalNMC')
                     return ($scope.isReadonly() || !$scope.isAdmin());
                 };
                 
+                $scope.isCabinet = function(){
+                    return mainSvc.isCabinet();
+                };
+                
 // ********************************************************************************************
 //  TREEVIEW
 //*********************************************************************************************
-                $scope.objectCtrlSettings.isTreeView = true;
+                $scope.objectCtrlSettings.isTreeView = (true && !mainSvc.isCabinet());
                 $scope.data.currentTree = {};
                 $scope.data.newTree = {}
                 

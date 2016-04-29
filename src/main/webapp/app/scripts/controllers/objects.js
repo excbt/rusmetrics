@@ -10,8 +10,7 @@ console.log("Objects ctrl.");
     $rootScope.ctxId = "object_list_view_page";
     
     $scope.ctrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
-    $scope.ctrlSettings.pageAccess = mainSvc.checkContext($scope.ctrlSettings.pageCtxId);
-    
+    $scope.ctrlSettings.pageAccess = mainSvc.checkContext($scope.ctrlSettings.pageCtxId) || mainSvc.isCabinet();
     
     
 });

@@ -141,7 +141,7 @@
                                 <!-- Объекты, редактирование -->
                                 <a id="object_main_menu_item" 
                                    class="list-group-item nmc-main-menu-item nmc-hide" 
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-show':isCabinet()}"                                   
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide':!isCabinet(),'nmc-show':isCabinet()}"                                   
                                    href="#/" 
                                    data-toggle="offcanvas" 
                                    ng-click="clickMenu('object_menu_item');showAdminSettings=false;">
@@ -152,7 +152,10 @@
                                 </a>
                                 
                                 <!-- Отчеты -->
-                                <a id="report_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item, 'nmc-hide':isCabinet()}"
+                                <a 
+                                   id="report_main_menu_item" 
+                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
 
                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span></a>
                                 
@@ -162,7 +165,10 @@
                                    href="#/notices/monitor/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item')"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span></a>                            
                                 
 <!--                                Настройки-->
-                                <a id="setting_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item, 'nmc-hide':isCabinet()}"
+                                <a 
+                                   id="setting_main_menu_item" 
+                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 

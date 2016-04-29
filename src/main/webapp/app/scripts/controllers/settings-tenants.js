@@ -88,7 +88,7 @@ angular.module('portalNMC')
                 
 //console.log(subscrCabinetsSvc.promise);
                 
-                var performObjectsData = function(response){
+                var performCabinetsData = function(response){
                     var tempArr = response.data;
 //console.log(tempArr);                    
                     $scope.objects = response.data;
@@ -110,11 +110,11 @@ angular.module('portalNMC')
                     $scope.loading = false;  
                 };
                 
-                var getObjectsData = function(objId){
-//console.log("getObjectsData");
+                var getCabinetsData = function(objId){
+//console.log("getCabinetsData");
                     $rootScope.$broadcast('subscrCabinets:requestReloadCabinetsData');
                     $scope.loading = true;
-                    subscrCabinetsSvc.getPromise().then(performObjectsData);
+                    subscrCabinetsSvc.getPromise().then(performCabinetsData);
                 };
                 
                 $scope.selectCabinet = function(cabinet){
@@ -140,22 +140,37 @@ angular.module('portalNMC')
                 $scope.bGroupByObject = false;//angular.fromJson($attrs.bgroup) || false;
                 $scope.bObject = false;//angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 $scope.bList = true;//angular.fromJson($attrs.blist) || true; //Признак того, что объекты выводятся только для просмотра        
+
                 
-                // Промежуточные переменные для начала и конца интервала
-                $scope.beginDate;
-                $scope.endDate;
-
-                $scope.toggleAddMode = function () {
-                    $scope.addMode = !$scope.addMode;
-                    $scope.object = {};
-                    if ($scope.addMode) {
-                    	if ($scope.newIdProperty && $scope.newIdValue)
-                    		$scope.object[$scope.newIdProperty] =  $scope.newIdValue;
-                    }
+                var prepareObjectsIdsArray = function(){
+                    var tmp = [];
+                    if ($scope.objectCtrlSettings.allSelected == true){
+                        $scope.objects.forEach(function(elem){
+                            if (elem.selected == true){
+                                tmp.push(elem.contObjectInfo.contObjectId);                                
+                            };
+                        });
+                    }else{
+                        $scope.objectsOnPage.forEach(function(elem){
+                            if (elem.selected == true){
+                                tmp.push(elem.contObjectInfo.contObjectId);                                
+                            };
+                        });
+                    };
+                    return tmp;
                 };
-
-                $scope.toggleEditMode = function (object) {
-                    object.editMode = !object.editMode;
+                
+                $scope.createCabinets = function(obj) {
+                    var objectIds = [];
+                    if (mainSvc.checkUndefinedNull(obj)){
+                        objectIds = prepareObjectsIdsArray();
+                    }else{
+                        objectIds.push(obj.contObjectInfo.contObjectId);
+                    }
+                    if (objectIds.length == 0){
+                        return "Cabinet array is empty."
+                    };
+                    subscrCabinetsSvc.createCabinets(objectIds).then(performCabinetsData, errorCallback);
                 };
                 
                 var successCallbackOnSetMode = function(e){
@@ -260,7 +275,7 @@ console.log(e);
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
                     if ($scope.objectCtrlSettings.isTreeView == false || mainSvc.checkUndefinedNull($scope.data.currentTree)){
-                        getObjectsData(e.id);
+                        getCabinetsData(e.id);
                     }else{
                     //if tree is on
                         if (mainSvc.checkUndefinedNull($scope.data.selectedNode.type) || $scope.data.selectedNode.type != 'root'){
@@ -290,8 +305,7 @@ console.log(e);
                 };
 
                 var errorCallback = function (e) { 
-                    errorProtoCallback(e);
-                    $scope.currentObject.isSaving = false;
+                    errorProtoCallback(e);                    
                 };
 
                 $scope.addObject = function (url, obj) {                    
@@ -846,9 +860,9 @@ console.log(e);
 //                        $rootScope.$broadcast('subscrCabinetsSvc:requestReloadData');
                         $scope.loading = true;
                         if (item.type == 'root'){
-                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performCabinetsData);
                         }else{
-                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performCabinetsData);
                         };
                     };                    
                 };
@@ -865,7 +879,7 @@ console.log(e);
                             $scope.data.currentTree = respTree;
                             respTree.childObjectList[0].isSelected = true;
                             $scope.data.selectedNode = angular.copy(respTree.childObjectList[0]);
-                            subscrCabinetsSvc.loadFreeObjectsByTree(tree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree(tree.id).then(performCabinetsData);
                             if (mainSvc.checkUndefinedNull($scope.data.currentTree.templateId)){
                                 return "Tree is free";
                             };
@@ -884,7 +898,7 @@ console.log(e);
                         $scope.data.trees = angular.copy(resp.data);
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
                             $scope.messages.treeMenuHeader = "Выберете дерево";
-                            getObjectsData();
+                            getCabinetsData();
                             return "Object tree array is empty.";
                         }                        
                         $scope.loadTree($scope.data.trees[0]);                        
@@ -1026,7 +1040,7 @@ console.log(e);
                         tmpMovingObjectArr.push(object.id);
                     }else{
                         tmpMovingObjectArr = prepareObjectsIdsArray();                        
-                        $scope.objectCtrlSettings.anySelected = false;
+//                        $scope.objectCtrlSettings.anySelected = false;
                     };
                     $scope.data.treeForMove = angular.copy($scope.data.currentTree);
                     $scope.data.treeForMove.childObjectList.shift();
@@ -1037,9 +1051,9 @@ console.log(e);
                     subscrCabinetsSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
                         $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
-                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performCabinetsData);
                         }else{
-                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performCabinetsData);
                         };
                         $('#viewTreeModal').modal('hide');
                     }, errorCallback);
@@ -1052,14 +1066,14 @@ console.log(e);
                         tmpMovingObjectArr.push(object.id);
                     }else{
                         tmpMovingObjectArr = prepareObjectsIdsArray();                        
-                        $scope.objectCtrlSettings.anySelected = false;
+//                        $scope.objectCtrlSettings.anySelected = false;
                     };                   
                     subscrCabinetsSvc.releaseObjectsFromTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id, tmpMovingObjectArr).then(function(resp){
                         $scope.loading = true;
                         if ($scope.data.selectedNode.type == 'root'){
-                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performCabinetsData);
                         }else{
-                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
+                            subscrCabinetsSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performCabinetsData);
                         };
                     }, errorProtoCallback);
                 };
@@ -1068,7 +1082,7 @@ console.log(e);
                     $scope.objectCtrlSettings.isTreeView = !$scope.objectCtrlSettings.isTreeView;
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
-                        getObjectsData();
+                        getCabinetsData();
                     }else{
                     //if tree is on
                         loadTrees();                    
@@ -1181,7 +1195,7 @@ console.log(e);
                 var initCtrl = function(){
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
-                        getObjectsData();
+                        getCabinetsData();
                     }else{
                     //if tree is on
                         loadTrees();                    

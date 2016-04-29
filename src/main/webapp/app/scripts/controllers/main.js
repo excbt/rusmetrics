@@ -123,7 +123,7 @@ console.log("setDefaultMenuState");
     var setVisibles = function(ctxId){
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
-        tmp.forEach(function(element){
+        tmp.forEach(function(element){         
             if(element.permissionTagId.localeCompare(ctxId) == 0){
                 ctxFlag = true;
             };

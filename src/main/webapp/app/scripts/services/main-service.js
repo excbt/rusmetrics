@@ -239,19 +239,19 @@ angular.module('portalNMC')
         return result;
     };
     
-    //permissions for user cabinet
-    var cabinetPermissions = [
+    var externalAllow = [
         {
-            keyname : "WEB_ALLOW_OBJECT_LIST_VIEW_PAGE",
-            permissionTagId : "object_list_view_page",
-            priority : 100
+            keyname:"WEB_ALLOW_SETTING_MAIN_MENU_ITEM",
+            permissionTagId:"setting_main_menu_item",
+            priority:100
         },
         {
-            keyname : "WEB_ALLOW_OBJECT_MAIN_MENU_ITEM",
-            permissionTagId : "object_main_menu_item",
-            priority : 100
+            keyname:"WEB_ALLOW_REPORT_MAIN_MENU_ITEM",
+            permissionTagId:"report_main_menu_item",
+            priority:100
         }
     ];
+    
     //get user permission
     var getUserServicesPermissions = function(){
         mainSvcSettings.loadingServicePermissionFlag = true;
@@ -260,6 +260,9 @@ angular.module('portalNMC')
         .then(function(response){
             var tmp = response.data;
             contextIds = tmp;
+            if (!isCabinet()){
+                contextIds.push(externalAllow[0], externalAllow[1]);
+            }
 //console.log(tmp);            
             mainSvcSettings.loadingServicePermissionFlag = false;
             $rootScope.$broadcast('servicePermissions:loaded');
@@ -489,6 +492,22 @@ angular.module('portalNMC')
         if (checkUndefinedEmptyNullValue(resultCode)){return result};
         serverErrors.some(function(serror){
             if (serror.resultCode == resultCode) {
+                result = serror; 
+                return true;
+            };
+        });
+        return result;
+    };
+    
+    var getServerErrorByResult = function(result){
+//console.log(resultCode);
+        var result = DEFAULT_ERROR_MESSAGE;
+        if (checkUndefinedEmptyNullValue(resultCode)){return result};
+        serverErrors.some(function(serror){
+            if (serror.resultCode == result.resultCode) {
+//                if (result.description.indexOf("Access is denied") >= 0){
+//                    
+//                };
                 result = serror; 
                 return true;
             };
