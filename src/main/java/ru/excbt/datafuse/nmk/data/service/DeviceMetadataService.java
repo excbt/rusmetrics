@@ -122,6 +122,7 @@ public class DeviceMetadataService {
 		dst.setPropFunc(src.getPropFunc());
 		dst.setDestDbType(src.getDestDbType());
 		dst.setMetaVersion(src.getMetaVersion());
+		dst.setMetaName(src.getMetaName());
 
 		return dst;
 	}

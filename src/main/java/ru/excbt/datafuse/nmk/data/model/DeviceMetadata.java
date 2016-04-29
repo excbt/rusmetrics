@@ -87,6 +87,9 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	@Column(name = "meta_version")
 	private Integer metaVersion = 1;
 
+	@Column(name = "meta_name")
+	private String metaName;
+
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
@@ -243,6 +246,14 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 
 	public void setMetaVersion(Integer metaVersion) {
 		this.metaVersion = metaVersion;
+	}
+
+	public String getMetaName() {
+		return metaName;
+	}
+
+	public void setMetaName(String metaName) {
+		this.metaName = metaName;
 	}
 
 }

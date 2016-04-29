@@ -134,6 +134,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 		dst.setPropFunc(src.getPropFunc());
 		dst.setDestDbType(src.getDestDbType());
 		dst.setMetaVersion(src.getMetaVersion());
+		dst.setMetaName(src.getMetaName());
 
 		if (contZPoint != null) {
 			dst.setContZPoint(contZPoint);

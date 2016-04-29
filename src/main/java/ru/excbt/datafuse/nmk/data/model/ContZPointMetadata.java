@@ -98,6 +98,9 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 	@Column(name = "dev_comment")
 	private String devComment;
 
+	@Column(name = "meta_name")
+	private String metaName;
+
 	@Version
 	private int version;
 
@@ -294,6 +297,14 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 
 	public void setDevComment(String devComment) {
 		this.devComment = devComment;
+	}
+
+	public String getMetaName() {
+		return metaName;
+	}
+
+	public void setMetaName(String metaName) {
+		this.metaName = metaName;
 	}
 
 }

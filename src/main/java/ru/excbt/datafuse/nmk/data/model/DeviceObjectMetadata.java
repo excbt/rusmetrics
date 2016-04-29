@@ -98,8 +98,8 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "is_transformed")
 	private Boolean isTransformed;
 
-	@Column(name = "cont_zpoint_id")
-	private Long contZPointId;
+	@Column(name = "meta_name")
+	private String metaName;
 
 	public String getDeviceMetadataType() {
 		return deviceMetadataType;
@@ -269,6 +269,10 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 
 	public void setIsTransformed(Boolean isTransformed) {
 		this.isTransformed = isTransformed;
+	}
+
+	public String getMetaName() {
+		return metaName;
 	}
 
 }
