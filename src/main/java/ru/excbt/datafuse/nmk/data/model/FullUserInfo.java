@@ -90,12 +90,15 @@ public class FullUserInfo implements Serializable {
 			this.lastName = src.lastName;
 			this.version = src.version;
 			this._system = src._system;
-			this.isSystem = src.isSystem;
-			this.isReadonly = src.isReadonly;
-			this.isAdmin = src.isAdmin;
 			this.subscriberId = src.subscriberId;
 			this.subscriber = src.subscriber;
 			this.userUUID = src.userUUID;
+			this.isSystem = src.isSystem;
+			this.isAdmin = src.isAdmin;
+			this.isReadonly = src.isReadonly;
+			this.canCreateChild = src.canCreateChild;
+			this.isChild = src.isChild;
+			this.subscrType = src.subscrType;
 		}
 	}
 
