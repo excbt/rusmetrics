@@ -481,6 +481,10 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 			return false;
 		}
 
+		if (getEmail(fromSubscrUser) == null || getEmail(toSubscrUser) == null) {
+			return false;
+		}
+
 		EmailNotification emailNotification = new EmailNotification();
 
 		emailNotification.setFromSubscrUserId(fromSubscrUserId);
@@ -504,7 +508,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	private String getEmail(SubscrUser subscrUser) {
 		String result = subscrUser.getContactEmail() != null ? subscrUser.getContactEmail() : subscrUser.getUserEMail();
-		return result != null ? result : subscrUser.getUserName() + "@rusmetrics.ru";
+		return result;
 	}
 
 }
