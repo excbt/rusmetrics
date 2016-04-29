@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
+
 /**
  * Полная информация о пользователе
  * 
@@ -20,7 +22,7 @@ import javax.persistence.Version;
  *
  */
 @Entity
-@Table(name = "full_user_info")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "full_user_info")
 public class FullUserInfo implements Serializable {
 
 	/**
@@ -66,6 +68,12 @@ public class FullUserInfo implements Serializable {
 
 	@Column(name = "is_readonly")
 	private Boolean isReadonly;
+
+	@Column(name = "is_child")
+	private Boolean isChild;
+
+	@Column(name = "subscr_type")
+	private String subscrType;
 
 	public FullUserInfo() {
 
@@ -144,6 +152,18 @@ public class FullUserInfo implements Serializable {
 
 	public Boolean getIsReadonly() {
 		return isReadonly;
+	}
+
+	public Boolean getIsChild() {
+		return isChild;
+	}
+
+	public String getSubscrType() {
+		return subscrType;
+	}
+
+	public Boolean getIsCabinet() {
+		return SubscrTypeKey.CABINET.getKeyname().equals(subscrType) && Boolean.TRUE.equals(isChild);
 	}
 
 }
