@@ -159,14 +159,6 @@ public class SubscrUserController extends SubscrApiController {
 					subscrUser.getUserName()));
 		}
 
-		if (subscrUser.getFirstName() == null || subscrUser.getFirstName().length() == 0) {
-			return responseBadRequest(ApiResult.validationError("firstName is not valid"));
-		}
-
-		if (subscrUser.getLastName() == null || subscrUser.getLastName().length() == 0) {
-			return responseBadRequest(ApiResult.validationError("lastName is not valid"));
-		}
-
 		List<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
 		if (!checkUser.isEmpty()) {
 			return responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
@@ -232,14 +224,6 @@ public class SubscrUserController extends SubscrApiController {
 
 		if (checkSubscrUserOwnerFail(rmaSubscriber.getId(), subscrUser)) {
 			return responseBadRequest();
-		}
-
-		if (subscrUser.getFirstName() == null || subscrUser.getFirstName().length() == 0) {
-			return responseBadRequest(ApiResult.validationError("firstName is not valid"));
-		}
-
-		if (subscrUser.getLastName() == null || subscrUser.getLastName().length() == 0) {
-			return responseBadRequest(ApiResult.validationError("lastName is not valid"));
 		}
 
 		subscrUser.getSubscrRoles().clear();

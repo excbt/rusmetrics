@@ -88,8 +88,7 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 		boolean isReadonly = false;
 
 		subscrUser.setUserName("rma-77-admin");
-		subscrUser.setFirstName("rma-77-admin");
-		subscrUser.setLastName("rma-77-admin");
+		subscrUser.setUserNickname("rma-77-admin");
 		subscrUser.setSubscriberId(RMA_SUBSCRIBER);
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);

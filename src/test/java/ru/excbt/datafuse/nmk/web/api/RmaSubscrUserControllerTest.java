@@ -29,8 +29,7 @@ public class RmaSubscrUserControllerTest extends RmaControllerTest {
 
 		String username = "usr_" + System.currentTimeMillis();
 		subscrUser.setUserName(username);
-		subscrUser.setFirstName("user_" + username + "_FN");
-		subscrUser.setLastName("user_" + username + "_LN");
+		subscrUser.setUserNickname("user_" + username + "_FN");
 
 		RequestExtraInitializer paramAdmin = (builder) -> {
 			builder.param("isAdmin", "true");

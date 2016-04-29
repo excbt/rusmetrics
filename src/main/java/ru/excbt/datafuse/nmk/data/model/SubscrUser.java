@@ -143,7 +143,7 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	protected void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 

@@ -90,7 +90,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @param subscrUser
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrUser createSubscrUser(SubscrUser subscrUser, String password) {
 		return createSubscrUser(subscrUser, password, false);
@@ -258,8 +258,11 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 		checkNotNull(orgUnits);
 
-		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(),
-				new String[] { subscrUser.getFirstName(), subscrUser.getLastName() }, orgUnits,
+		String[] stringNames = new String[] {
+				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getFirstName(),
+				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getLastName() };
+
+		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
 				subscrUser.getUserEMail(), subscrUser.getUserDescription());
 		return user;
 
