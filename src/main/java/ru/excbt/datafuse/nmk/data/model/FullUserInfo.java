@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
  *
  */
 @Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "full_user_info")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_full_user_info")
 public class FullUserInfo implements Serializable {
 
 	/**
