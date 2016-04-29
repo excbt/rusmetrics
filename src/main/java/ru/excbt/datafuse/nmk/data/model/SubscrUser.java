@@ -17,6 +17,8 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
@@ -66,7 +68,7 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 	@Version
 	private int version;
 
-	@JsonIgnore
+	@JsonProperty(access = Access.READ_ONLY)
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id"),
 			inverseJoinColumns = @JoinColumn(name = "subscr_role_id"))

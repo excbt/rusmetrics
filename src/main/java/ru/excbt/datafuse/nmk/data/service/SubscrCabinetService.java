@@ -380,6 +380,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		currentSubscrUser.setUserComment(entitySubsrUser.getUserComment());
 		currentSubscrUser.setUserNickname(entitySubsrUser.getUserNickname());
 		currentSubscrUser.setUserDescription(entitySubsrUser.getUserDescription());
+		currentSubscrUser.setContactEmail(entitySubsrUser.getContactEmail());
 		currentSubscrUser.setDevComment(entitySubsrUser.getDevComment());
 
 		final String pass = entity.getPasswordPocket();
