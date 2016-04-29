@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval', '$rootScope',
-             function(crudGridDataFactory, $http, $cookies, $interval, $rootScope){
+.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope',
+             function($http, $cookies, $interval, $rootScope){
 //console.log("Object Service. Run."); 
                  
         var svcObjects = [
@@ -420,8 +420,9 @@ angular.module('portalNMC')
             };
             return null;
         };
-                 
-        //zpoint metadata
+//*******************************************************************************************************         
+//zpoint metadata
+//********************************************************************************************************
         var getZpointMetaSrcProp = function(objId, zpId){
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
             return $http.get(url);
@@ -455,8 +456,9 @@ angular.module('portalNMC')
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
             return $http.put(url, metadata);
         };
-                 
-        //Objects tree
+//****************************************************************************************         
+//Objects tree
+//****************************************************************************************
         var loadTreeTemplates = function(url){
             $http.get(url).then(function(resp){
                 rmaTreeTemplates = angular.copy(resp.data);

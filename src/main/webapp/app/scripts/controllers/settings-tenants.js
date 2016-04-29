@@ -2,7 +2,7 @@
 angular.module('portalNMC')
 .controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
             function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
-                $rootScope.ctxId = "management_rma_objects_page";
+                $rootScope.ctxId = "settings_tenants_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
                 
@@ -119,39 +119,6 @@ angular.module('portalNMC')
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     objectSvc.getPromise().then(performObjectsData);
-                };
-                
-                
-                var getRsoOrganizations = function(){
-                    objectSvc.getRsoOrganizations()
-                    .then(function(response){
-                        $scope.data.rsoOrganizations = response.data;
-                    });
-                };
-                
-                var getCmOrganizations = function(){
-                    objectSvc.getCmOrganizations()
-                    .then(function(response){
-                        $scope.data.cmOrganizations = response.data;
-                        //sort cm by organizationName
-                        mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
-                    });
-                };
-                
-                var getServiceTypes = function(){
-                    objectSvc.getServiceTypes()
-                    .then(function(response){
-                        $scope.data.serviceTypes = response.data;
-//console.log(response.data);                        
-                    });
-                };
-                
-                var getTimezones = function(){
-                    objectSvc.getTimezones()
-                    .then(function(response){
-                        $scope.data.timezones = response.data;
-//console.log($scope.data.timezones);                        
-                    });
                 };
 
 //                $scope.objects = objectSvc.getObjects();
@@ -1218,10 +1185,10 @@ console.log(e);
                 
                 //controller initialization
                 var initCtrl = function(){
-                    getRsoOrganizations();
-                    getCmOrganizations();
-                    getServiceTypes();
-                    getTimezones();
+//                    getRsoOrganizations();
+//                    getCmOrganizations();
+//                    getServiceTypes();
+//                    getTimezones();
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData();

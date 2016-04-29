@@ -47,6 +47,9 @@ angular.module('portalNMC')
         $http.get(targetUrl)
         .then(function(response){
             response.data.forEach(function(elem){
+                if (!angular.isArray(elem.subscrRoles)){
+                    return elem.userName + " is have not the subscrRoles.";
+                }
                 elem.subscrRoles.some(function(role){
                     if (role.roleName == "ROLE_SUBSCR_ADMIN"){
                         elem.isAdmin = true;
