@@ -1,13 +1,10 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 
-@JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubscrUserWrapper {
 
@@ -28,6 +25,7 @@ public class SubscrUserWrapper {
 	 */
 	public SubscrUserWrapper(SubscrUser subscrUser) {
 		this.subscrUser = subscrUser;
+		this.passwordPocket = subscrUser.getPassword();
 	}
 
 	public SubscrUser getSubscrUser() {
