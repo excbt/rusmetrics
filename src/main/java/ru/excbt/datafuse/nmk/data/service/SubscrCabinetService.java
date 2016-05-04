@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -205,6 +206,12 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 			throw new PersistenceException(String.format("Subscriber (id=%d) is not type of CABINET. Actual type: %s",
 					cabinetSubscriber.getId(), cabinetSubscriber.getSubscrType()));
 		}
+
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(cabinetSubscriber.getId());
+
+		List<Long> subscrUserIds = subscrUsers.stream().map(i -> i.getId()).collect(Collectors.toList());
+
+		emailNotificationService.deleteEmailNotifications(subscrUserIds);
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
@@ -481,7 +488,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 			return false;
 		}
 
-		if (getEmail(fromSubscrUser) == null || getEmail(toSubscrUser) == null) {
+		if (getEmail(toSubscrUser) == null) {
 			return false;
 		}
 

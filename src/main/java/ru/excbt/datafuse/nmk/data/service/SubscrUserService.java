@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -310,7 +311,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteSubscrUsers(Long subscriberId) {
+	public List<Long> deleteSubscrUsers(Long subscriberId) {
 
 		List<SubscrUser> subscrUsers = subscrUserRepository.selectBySubscriberId(subscriberId);
 
@@ -320,11 +321,20 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		};
 
 		for (SubscrUser subscrUser : subscrUsers) {
-			processLdapAction(subscrUser, action);
+			try {
+				processLdapAction(subscrUser, action);
+			} catch (Exception e) {
+				logger.error("Error during processLdapAction for user {}: {}", subscrUser.getUserName(), e);
+			}
+
 		}
+
+		List<Long> result = subscrUsers.stream().map(i -> i.getId()).collect(Collectors.toList());
 
 		// Delete from table
 		subscrUserRepository.delete(subscrUsers);
+
+		return result;
 
 	}
 

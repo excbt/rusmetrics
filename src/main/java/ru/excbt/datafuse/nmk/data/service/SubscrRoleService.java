@@ -114,8 +114,8 @@ public class SubscrRoleService {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrCabinetRoles() {
 		List<SubscrRole> allRoles = findAll();
-		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName())
-				|| SecuredRoles.ROLE_CABINET_USER.equals(i.getRoleName())).collect(Collectors.toList());
+		return allRoles.stream().filter(i -> SecuredRoles.ROLE_CABINET_USER.equals(i.getRoleName()))
+				.collect(Collectors.toList());
 	}
 
 }

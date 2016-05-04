@@ -106,7 +106,8 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteSubscriber(Subscriber entity) {
-		subscriberRepository.delete(entity);
+		checkNotNull(entity);
+		subscriberRepository.save(softDelete(entity));
 	}
 
 	/**
