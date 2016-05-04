@@ -146,6 +146,16 @@
                                 <td class="col-sm-3"><label for="inputFirstName">Имя</label><span style="color:red;">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userNickname)}">
+                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.userNickname">
+                                    </div>
+                                </td>
+                            </tr>
+<!--
+                            <tr>
+                                <td class="col-sm-3"><label for="inputFirstName">Имя</label><span style="color:red;">*</span>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.firstName)}">
                                         <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.firstName">
                                     </div>
@@ -160,6 +170,7 @@
                                     </div>
                                 </td>
                             </tr>
+-->
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
@@ -168,11 +179,18 @@
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputEMail">E-mail</label>
-<!--                                    <span style="color:red;">*</span>-->
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputEMail" placeholder="E-mail"  ng-model="data.currentUser.contactEmail">
+                                </td>
+                            </tr>
+<!--
+                            <tr>
+                                <td class="col-sm-3"><label for="inputEMail">E-mail</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputEMail" placeholder="E-mail"  ng-model="data.currentUser.userEMail">
                                 </td>
                             </tr>
+-->
 <!--
                             <tr>
                                 <td class="col-sm-3"><label for="inputPhone">Телефон</label>

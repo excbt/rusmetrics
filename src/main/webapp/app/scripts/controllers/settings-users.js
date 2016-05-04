@@ -18,19 +18,19 @@ angular.module('portalNMC')
             "class": "col-xs-2 col-md-2"
         },
         {
-            "name": "firstName",
+            "name": "userNickname",
             "caption": "Имя",
             "class": "col-xs-3 col-md-3"
         },
-        {
-            "name": "lastName",
-            "caption": "Фамилия",
-            "class": "col-xs-3 col-md-3"
-        },
+//        {
+//            "name": "lastName",
+//            "caption": "Фамилия",
+//            "class": "col-xs-3 col-md-3"
+//        },
         {
             "name": "userComment",
             "caption": "Комментарий",
-            "class": "col-xs-4 col-md-4"
+            "class": "col-xs-7 col-md-7"
         }
     ];
     //data
@@ -216,7 +216,11 @@ angular.module('portalNMC')
 //            notificationFactory.errorInfo("Ошибка", "Не задана фамилия пользователя!");
 //            result = false;
 //        };
-        if ($scope.emptyString(obj.firstName)){
+//        if ($scope.emptyString(obj.firstName)){
+//            notificationFactory.errorInfo("Ошибка", "Не задано имя пользователя!");
+//            result = false;
+//        };
+        if ($scope.emptyString(obj.userNickname)){
             notificationFactory.errorInfo("Ошибка", "Не задано имя пользователя!");
             result = false;
         };
@@ -263,4 +267,8 @@ angular.module('portalNMC')
     $scope.isCabinetsEnabled = function(){
         return true;
     };
+    
+    $('#showUserOptionModal').on("shown.bs.modal", function(){
+        $('#inputFirstName').focus();
+    });
 }]);

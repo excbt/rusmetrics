@@ -301,7 +301,24 @@ angular.module('portalNMC')
                     subscrCabinetsSvc.resetPassword(userIds).then(performCabinetsData, errorCallback);
                 };
                 
-                $scope.checkPassword = function(cabinet){                 
+                $scope.checkPasswordFields = function(cabinet){
+                    if (mainSvc.checkUndefinedNull(cabinet) || mainSvc.checkUndefinedNull(cabinet.cabinet) || mainSvc.checkUndefinedNull(cabinet.cabinet.subscrUser)){
+                        return false;
+                    };
+                    var result = true;
+                    if ($scope.emptyString(cabinet.cabinet.subscrUser.passwordPocket)){                       
+                        result = false;
+                    };
+                    if (cabinet.cabinet.subscrUser.passwordPocket != cabinet.cabinet.subscrUser.passwordPocketConfirm){                        
+                        result = false;
+                    };
+                    return result;
+                };
+                
+                $scope.checkPassword = function(cabinet){
+                    if (mainSvc.checkUndefinedNull(cabinet) || mainSvc.checkUndefinedNull(cabinet.cabinet) || mainSvc.checkUndefinedNull(cabinet.cabinet.subscrUser)){
+                        return false;
+                    };
                     var result = true;
                     if ($scope.emptyString(cabinet.cabinet.subscrUser.passwordPocket)){
                         notificationFactory.errorInfo("Ошибка", "Пароль не должен быть пустым!");
@@ -347,6 +364,23 @@ angular.module('portalNMC')
                         };
                         el.selected = false
                     });
+                };
+                
+                $scope.sendLDByEmail = function(obj){
+                    $scope.data.selectedCabinet = {};
+                    var userIds = [];
+                    if (mainSvc.checkUndefinedNull(obj)){
+                        userIds = prepareUserIdsArray();                        
+                    }else{
+                        $scope.selectCabinet(obj);
+                        if (!mainSvc.checkUndefinedNull(obj.cabinet)){
+                            userIds.push(obj.cabinet.subscrUser.id);                                
+                        };                        
+                    }
+//                    $scope.data.selectedCabinet.cabinetsIdsForDelete = cabinetIds;
+                    subscrCabinetsSvc.sendLDByEmail(userIds).then(function(){
+                        notificationFactory.success();
+                    }, errorCallback);
                 };
                 
                 var findObjectIndexInArray = function(objId, targetArr){                  
@@ -1346,6 +1380,10 @@ console.log(e);
                 
                 $('#showTenantOptionModal').on('shown.bs.modal', function(){
                     $('#inputTenantName').focus();
+                });
+                
+                $('#createPasswordModal').on('shown.bs.modal', function(){
+                    $('#inputTenantPassword').focus();
                 });
                 
                 //controller initialization

@@ -4,7 +4,7 @@ angular.module('portalNMC')
 //console.log('Run user management controller.');
     $rootScope.ctxId = "management_rma_users_page";
     
-    $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
+    $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "fullName", "nameColumnName" : "fullName"}; //angular.fromJson($attrs.exprops);
         //controller settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.orgUrl = "../api/rma/contObjects/cmOrganizations";
@@ -17,22 +17,22 @@ angular.module('portalNMC')
         {
             "name": "userName",
             "caption": "Логин",
-            "class": "col-md-2"
+            "class": "col-xs-2 col-md-2"
         },
         {
-            "name": "firstName",
+            "name": "userNickname",
             "caption": "Имя",
-            "class": "col-md-3"
+            "class": "col-xs-3 col-md-3"
         },
-        {
-            "name": "lastName",
-            "caption": "Фамилия",
-            "class": "col-md-3"
-        },
+//        {
+//            "name": "lastName",
+//            "caption": "Фамилия",
+//            "class": "col-md-3"
+//        },
         {
             "name": "userComment",
             "caption": "Комментарий",
-            "class": "col-md-4"
+            "class": "col-xs-7 col-md-7"
         }
     ];
     //data
@@ -217,11 +217,15 @@ angular.module('portalNMC')
     
     $scope.checkForm = function(obj){
         var result = true;
-        if ($scope.emptyString(obj.lastName)){
-            notificationFactory.errorInfo("Ошибка", "Не задана фамилия пользователя!");
-            result = false;
-        };
-        if ($scope.emptyString(obj.firstName)){
+//        if ($scope.emptyString(obj.lastName)){
+//            notificationFactory.errorInfo("Ошибка", "Не задана фамилия пользователя!");
+//            result = false;
+//        };
+//        if ($scope.emptyString(obj.firstName)){
+//            notificationFactory.errorInfo("Ошибка", "Не задано имя пользователя!");
+//            result = false;
+//        };
+        if ($scope.emptyString(obj.userNickname)){
             notificationFactory.errorInfo("Ошибка", "Не задано имя пользователя!");
             result = false;
         };
@@ -250,6 +254,10 @@ angular.module('portalNMC')
              }
             }
         );
+    });
+    
+    $('#showUserOptionModal').on("shown.bs.modal", function(){
+        $('#inputFirstName').focus();
     });
     
 }]);

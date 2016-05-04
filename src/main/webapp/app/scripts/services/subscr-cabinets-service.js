@@ -133,7 +133,16 @@ angular.module('portalNMC')
             var url = urlCabinets + '/subscrUser/resetPassword';
             return $http.put(url, userIds);
         };
-        
+                                  
+                 //send passwords by email
+        var sendLDByEmail = function(userIds){
+            if (checkUndefinedNull(userIds) || !angular.isArray(userIds)){
+                return null;
+            };
+            var url = urlCabinets + '/subscrUser/sendPassword';
+            return $http.put(url, userIds);
+        };
+                 
             // Sort Cabinet array by some string field
         var sortItemsBy = function(itemArray, sortField){
             if (!angular.isArray(itemArray)){
@@ -360,6 +369,9 @@ angular.module('portalNMC')
             resetPassword,
             
             rmaPromise,
+            
+            sendLDByEmail,
+            
             setCabinetSettings,
             setCurrentCabinet,
             sortCabinetsByFullName,
