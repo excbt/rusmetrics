@@ -28,6 +28,15 @@ public class SubscrUserWrapper {
 		this.passwordPocket = subscrUser.getPassword();
 	}
 
+	/**
+	 * 
+	 * @param subscrUser
+	 */
+	public SubscrUserWrapper(SubscrUser subscrUser, boolean noPassword) {
+		this.subscrUser = subscrUser;
+		this.passwordPocket = noPassword ? null : subscrUser.getPassword();
+	}
+
 	public SubscrUser getSubscrUser() {
 		return subscrUser;
 	}

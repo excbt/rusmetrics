@@ -163,20 +163,26 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
-		SubscrUser result = subscrUserRepository.save(subscrUser);
+		String newPassword = null;
 
 		if (passwords != null && passwords.length != 0) {
-
 			if (passwords.length != 2) {
 				throw new PersistenceException(
 						String.format("Password for user(%s) is not set", subscrUser.getUserName()));
 			}
+			newPassword = passwords[1];
+			subscrUser.setPassword(null);
+		}
+
+		SubscrUser result = subscrUserRepository.save(subscrUser);
+
+		final String ldapPassword = newPassword;
+		if (ldapPassword != null) {
 
 			LdapAction action = (u) -> {
 				//ldapService.changePassword(u, passwords[0], passwords[1]);
-				ldapService.changePassword(u, passwords[1]);
+				ldapService.changePassword(u, ldapPassword);
 			};
-
 			processLdapAction(result, action);
 		}
 
@@ -258,9 +264,13 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 		checkNotNull(orgUnits);
 
-		String[] stringNames = new String[] {
-				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getFirstName(),
-				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getLastName() };
+		String firstName = subscrUser.getUserName();
+		String lastNameName = subscrUser.getUserName();
+
+		//		String[] stringNames = new String[] {
+		//				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getFirstName(),
+		//				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getLastName() };
+		String[] stringNames = new String[] { firstName, lastNameName };
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
 				subscrUser.getUserEMail(), subscrUser.getUserDescription());

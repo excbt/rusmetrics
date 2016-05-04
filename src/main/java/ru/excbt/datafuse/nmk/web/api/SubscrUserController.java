@@ -2,7 +2,10 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
@@ -137,6 +142,40 @@ public class SubscrUserController extends SubscrApiController {
 
 	/**
 	 * 
+	 * @param rmaSubscriber
+	 * @param subscrUser
+	 * @param isAdmin
+	 * @param isReadonly
+	 * @return
+	 */
+	private List<SubscrRole> processSubscrRoles(final Subscriber rmaSubscriber, final boolean isAdmin,
+			final boolean isReadonly) {
+		List<SubscrRole> subscrRoles = new ArrayList<>();
+
+		if (Boolean.TRUE.equals(isReadonly)) {
+			subscrRoles.addAll(subscrRoleService.subscrReadonlyRoles());
+		} else {
+			if (Boolean.TRUE.equals(isAdmin)) {
+				subscrRoles.addAll(
+						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
+				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
+					subscrRoles.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
+				}
+			} else {
+				subscrRoles.addAll(subscrRoleService.subscrUserRoles());
+			}
+		}
+
+		Map<Long, SubscrRole> subscrRolesMap = new HashMap<>();
+		for (SubscrRole r : subscrRoles) {
+			subscrRolesMap.put(r.getId(), r);
+		}
+
+		return new ArrayList<>(subscrRolesMap.values());
+	}
+
+	/**
+	 * 
 	 * @param rSubscriberId
 	 * @param isAdmin
 	 * @param subscrUser
@@ -144,7 +183,7 @@ public class SubscrUserController extends SubscrApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
-			SubscrUser subscrUser, String password, HttpServletRequest request) {
+			final SubscrUser subscrUser, String password, HttpServletRequest request) {
 		checkNotNull(rmaSubscriber);
 		checkNotNull(rmaSubscriber.getId());
 		checkNotNull(subscrUser);
@@ -165,36 +204,28 @@ public class SubscrUserController extends SubscrApiController {
 		}
 
 		subscrUser.setSubscriberId(rmaSubscriber.getId());
-		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
 		subscrUser.setIsReadonly(isReadonly);
-
-		if (Boolean.TRUE.equals(isReadonly)) {
-			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrReadonlyRoles());
+		if (isReadonly) {
 			subscrUser.setIsAdmin(false);
-		} else {
-			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles().addAll(
-						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
-				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
-					subscrUser.getSubscrRoles()
-							.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
-				}
-			} else {
-				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
-			}
 		}
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrUser, Long>(subscrUser, request) {
+		List<SubscrRole> subscrRoles = processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
+
+		subscrUser.getSubscrRoles().clear();
+		subscrUser.getSubscrRoles().addAll(subscrRoles);
+
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrUserWrapper, Long>(request) {
 
 			@Override
 			protected Long getLocationId() {
-				return getResultEntity().getId();
+				return getResultEntity().getSubscrUser().getId();
 			}
 
 			@Override
-			public SubscrUser processAndReturnResult() {
-				return subscrUserService.createSubscrUser(entity, password);
+			public SubscrUserWrapper processAndReturnResult() {
+				SubscrUser result = subscrUserService.createSubscrUser(subscrUser, password);
+				return new SubscrUserWrapper(result, true);
 			}
 		};
 
@@ -210,7 +241,7 @@ public class SubscrUserController extends SubscrApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> updateSubscrUserInternal(Subscriber rmaSubscriber, Long subscrUserId, Boolean isAdmin,
-			Boolean isReadonly, SubscrUser subscrUser, String[] passwords) {
+			Boolean isReadonly, final SubscrUser subscrUser, String[] passwords) {
 
 		checkNotNull(rmaSubscriber);
 		checkNotNull(rmaSubscriber.getId());
@@ -226,27 +257,23 @@ public class SubscrUserController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
 		subscrUser.setIsReadonly(isReadonly);
-
-		if (Boolean.TRUE.equals(isReadonly)) {
-			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrReadonlyRoles());
+		if (isReadonly) {
 			subscrUser.setIsAdmin(false);
-		} else {
-			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrUser.getSubscrRoles().addAll(
-						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
-			} else {
-				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
-			}
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<SubscrUser>(subscrUser) {
+		List<SubscrRole> subscrRoles = processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
+
+		subscrUser.getSubscrRoles().clear();
+		subscrUser.getSubscrRoles().addAll(subscrRoles);
+
+		ApiAction action = new ApiActionEntityAdapter<SubscrUserWrapper>() {
 
 			@Override
-			public SubscrUser processAndReturnResult() {
-				return subscrUserService.updateSubscrUser(entity, passwords);
+			public SubscrUserWrapper processAndReturnResult() {
+				SubscrUser result = subscrUserService.updateSubscrUser(subscrUser, passwords);
+				return new SubscrUserWrapper(result, true);
 			}
 		};
 
