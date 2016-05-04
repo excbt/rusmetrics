@@ -396,7 +396,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		final String pass = entity.getPasswordPocket();
 
-		if (pass != null) {
+		if (pass != null && !pass.equals(currentSubscrUser.getPassword())) {
 			currentSubscrUser.setPassword(null);
 		}
 
