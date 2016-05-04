@@ -122,7 +122,7 @@ angular.module('portalNMC')
                     };
                     $scope.loading = false;
                     $('#deleteCabinetModal').modal('hide');                    
-                    
+                    notificationFactory.success();
                 };
                 
                 var successUpdateCabinetCallback = function(response){
@@ -159,6 +159,7 @@ angular.module('portalNMC')
                     };                   
                     $('#createPasswordModal').modal('hide');
                     $('#showTenantOptionModal').modal('hide');
+                    notificationFactory.success();
                 };
                 
                 var getCabinetsData = function(objId){
@@ -331,8 +332,8 @@ angular.module('portalNMC')
                     return result;
                 };
                 
-                $scope.updateCabinet = function(cabinet){
-                    if ($scope.emptyString(cabinet.cabinet.subscrUser.passwordPocket)){
+                $scope.updateCabinet = function(cabinet, passwordFlag){
+                    if (mainSvc.checkUndefinedNull(passwordFlag) || passwordFlag != true){
                         cabinet.cabinet.subscrUser.passwordPocket = null;
                     };
                     subscrCabinetsSvc.updateCabinet(cabinet).then(successUpdateCabinetCallback, errorCallback);
@@ -343,7 +344,7 @@ angular.module('portalNMC')
                         return "Cabinet is null or undefined.";
                     };
                     if ($scope.checkPassword(cabinet) == false){return "User password is incorrect!"};
-                    $scope.updateCabinet(cabinet);
+                    $scope.updateCabinet(cabinet, true);
 //                    subscrCabinetsSvc.updateCabinet(cabinet).then(performCabinetsData, errorCallback);
                 };
                 
