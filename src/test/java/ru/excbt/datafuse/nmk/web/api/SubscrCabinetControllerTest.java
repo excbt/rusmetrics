@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testCreateCabinetSubscribers() throws Exception {
 		List<Long> contObjectIds = Arrays.asList(29863789L, 29863938L, 29863933L);
@@ -90,6 +92,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testDeleteCabinetSubscriber() throws Exception {
 
@@ -103,6 +106,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testUpdateSubscrUser() throws Exception {
 		String content = _testGetJson("/api/subscr/subscrCabinet/subscrUser/512157249");
@@ -123,6 +127,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testSubscrUserResetPassword() throws Exception {
 		List<Long> subscrUserIds = Arrays.asList(512157249L);
@@ -133,9 +138,10 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testSubscrUserSendPassword() throws Exception {
-		List<Long> subscrUserIds = Arrays.asList(512157249L);
+		List<Long> subscrUserIds = Arrays.asList(512157254L);
 		_testUpdateJson("/api/subscr/subscrCabinet/subscrUser/sendPassword", subscrUserIds);
 	}
 
