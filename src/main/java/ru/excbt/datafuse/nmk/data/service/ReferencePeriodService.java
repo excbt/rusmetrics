@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Secured({ ROLE_SUBSCR_USER })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReferencePeriod createOne(ReferencePeriod referencePeriod) {
 
@@ -100,6 +102,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Secured({ ROLE_SUBSCR_USER })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReferencePeriod updateOne(ReferencePeriod referencePeriod) {
 
@@ -126,6 +129,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Secured({ ROLE_SUBSCR_USER })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteOne(ReferencePeriod referencePeriod) {
 
@@ -141,6 +145,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Secured({ ROLE_SUBSCR_USER })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteOne(long referencePeriodId) {
 		if (referencePeriodRepository.exists(referencePeriodId)) {
