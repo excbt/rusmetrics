@@ -204,7 +204,6 @@ public class SubscrCabinetController extends SubscrApiController {
 							subscrUserId)) {
 						result.add(subscrUserId);
 					}
-					;
 				}
 
 				return result;// subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());

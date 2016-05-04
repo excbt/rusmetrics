@@ -492,6 +492,10 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		emailNotification.setMessageFrom(getEmail(fromSubscrUser));
 		emailNotification.setMessageTo(getEmail(toSubscrUser));
 
+		if (emailNotification.getMessageFrom() == null || emailNotification.getMessageTo() == null) {
+			return false;
+		}
+
 		emailNotification.setMessageSubject("Напоминание пароля для пользователя: " + toSubscrUser.getUserName());
 		emailNotification.setMessageText("Пароль сгенерированный системой: " + toSubscrUser.getPassword());
 
