@@ -200,9 +200,11 @@
 <!--                                            <th class="nmc-td-for-button"></th>-->
                                             <th class="col-xs-3 col-md-3">Название объекта
                                             </th>
-                                            <th class="col-xs-3 col-md-3">Пользователь
+                                            <th class="col-xs-2 col-md-2">Имя пользователя
                                             </th>
-                                            <th class="col-xs-2 col-md-2">Логин
+                                            <th class="col-xs-2 col-md-2">Эл. почта
+                                            </th>
+                                            <th class="col-xs-1 col-md-1">Логин
                                             </th>
                                             <th class="col-xs-1 col-md-1">Пароль
                                             </th>
@@ -257,9 +259,11 @@
 <!--                                            <th class="nmc-td-for-button"></th>-->
                                             <th class="col-xs-3 col-md-3">Название объекта
                                             </th>
-                                            <th class="col-xs-3 col-md-3">Пользователь
+                                            <th class="col-xs-2 col-md-2">Имя пользователя
                                             </th>
-                                            <th class="col-xs-2 col-md-2">Логин
+                                            <th class="col-xs-2 col-md-2">Эл. почта
+                                            </th>
+                                            <th class="col-xs-1 col-md-1">Логин
                                             </th>
                                             <th class="col-xs-1 col-md-1">Пароль
                                             </th>
@@ -355,10 +359,13 @@
                                         {{object.contObjectInfo.fullName}}
 <!--                                        <span ng-show="isSystemuser()">(id = {{object.id}})</span>-->
                                     </td>
-                                    <td class="col-xs-3 col-md-3">
+                                    <td class="col-xs-2 col-md-2">
                                         {{object.cabinet.subscrUser.userNickname}}
                                     </td>
                                     <td class="col-xs-2 col-md-2">
+                                        {{object.cabinet.subscrUser.contactEmail}}
+                                    </td>
+                                    <td class="col-xs-1 col-md-1">
                                         {{object.cabinet.subscrCabinetNr}}
                                     </td>
                                     <td class="col-xs-1 col-md-1">

@@ -192,34 +192,37 @@ angular.module('portalNMC')
                 $scope.bGroupByObject = false;//angular.fromJson($attrs.bgroup) || false;
                 $scope.bObject = false;//angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 $scope.bList = true;//angular.fromJson($attrs.blist) || true; //Признак того, что объекты выводятся только для просмотра        
-
                 
                 var prepareObjectsIdsArray = function(){
+//console.log($scope.objectsOnPage);                    
+//console.log($scope.objects);                    
                     var tmp = [];
-                    if ($scope.objectCtrlSettings.allSelected == true){
-                        $scope.objects.forEach(function(elem){
-                            if (elem.selected == true){
-                                tmp.push(elem.contObjectInfo.contObjectId);                                
-                            };
-                        });
-                    }else{
-                        $scope.objectsOnPage.forEach(function(elem){
-                            if (elem.selected == true){
-                                tmp.push(elem.contObjectInfo.contObjectId);                                
-                            };
-                        });
-                    };
+                    $scope.objects.forEach(function(elem){
+                        if (elem.selected == true){
+                            tmp.push(elem.contObjectInfo.contObjectId);                                
+                        };
+                    });
+//                    if ($scope.objectCtrlSettings.allSelected == true){
+//                        
+//                    }else{
+//                        $scope.objectsOnPage.forEach(function(elem){
+//                            if (elem.selected == true){
+//                                tmp.push(elem.contObjectInfo.contObjectId);                                
+//                            };
+//                        });
+//                    };
                     return tmp;
                 };
                 
                 var prepareCabinetsIdsArray = function(){
                     var tmp = [];
                     var srcArray = [];
-                    if ($scope.objectCtrlSettings.allSelected == true){
-                        srcArray = $scope.objects;
-                    }else{
-                        srcArray = $scope.objectsOnPage;
-                    };                    
+                    srcArray = $scope.objects;
+//                    if ($scope.objectCtrlSettings.allSelected == true){
+//                        srcArray = $scope.objects;
+//                    }else{
+//                        srcArray = $scope.objectsOnPage;
+//                    };                    
                     srcArray.forEach(function(elem){
                         if (elem.selected == true){
                             if (!mainSvc.checkUndefinedNull(elem.cabinet)){
@@ -233,11 +236,12 @@ angular.module('portalNMC')
                 var prepareUserIdsArray = function(){
                     var tmp = [];
                     var srcArray = [];
-                    if ($scope.objectCtrlSettings.allSelected == true){
-                        srcArray = $scope.objects;
-                    }else{
-                        srcArray = $scope.objectsOnPage;
-                    };                    
+                    srcArray = $scope.objects;
+//                    if ($scope.objectCtrlSettings.allSelected == true){
+//                        srcArray = $scope.objects;
+//                    }else{
+//                        srcArray = $scope.objectsOnPage;
+//                    };                    
                     srcArray.forEach(function(elem){
                         if (elem.selected == true){
                             if (!mainSvc.checkUndefinedNull(elem.cabinet) && !mainSvc.checkUndefinedNull(elem.cabinet.subscrUser)){
@@ -667,6 +671,7 @@ console.log(e);
                 
                 // search objects
                 $scope.searchObjects = function(searchString){
+//console.log(searchString);                    
                     if (($scope.objects.length <= 0)){
                         return;
                     };              
@@ -674,13 +679,13 @@ console.log(e);
                     if (angular.isUndefined(searchString) || (searchString === '')){                      
                         var tempArr = [];
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
-                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        tempArr = $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                         $scope.objectsOnPage = tempArr;
                     }else{
 //                        $scope.objectsOnPage = $scope.objects;
                         var tempArr = [];                        
                         $scope.objects.forEach(function(elem){                
-                            if (angular.isDefined(elem.fullName) && elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1){
+                            if (angular.isDefined(elem.contObjectInfo.fullName) && elem.contObjectInfo.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1){
                                 tempArr.push(elem);
                             };
                         });
