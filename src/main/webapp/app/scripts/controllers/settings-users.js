@@ -212,10 +212,10 @@ angular.module('portalNMC')
     
     $scope.checkForm = function(obj){
         var result = true;
-        if ($scope.emptyString(obj.lastName)){
-            notificationFactory.errorInfo("Ошибка", "Не задана фамилия пользователя!");
-            result = false;
-        };
+//        if ($scope.emptyString(obj.lastName)){
+//            notificationFactory.errorInfo("Ошибка", "Не задана фамилия пользователя!");
+//            result = false;
+//        };
         if ($scope.emptyString(obj.firstName)){
             notificationFactory.errorInfo("Ошибка", "Не задано имя пользователя!");
             result = false;

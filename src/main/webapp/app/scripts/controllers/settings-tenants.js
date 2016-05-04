@@ -90,6 +90,19 @@ angular.module('portalNMC')
                 
                 var performCabinetsData = function(response){
                     var tempArr = response.data;
+                    var controlObjectsCopy = angular.copy($scope.objects);
+                    if (angular.isArray(controlObjectsCopy) && controlObjectsCopy.length > 0){
+                        tempArr.forEach(function(elem, index){
+                            controlObjectsCopy.some(function(oldElem){
+                                if (oldElem.contObjectInfo.contObjectId == elem.contObjectInfo.contObjectId){
+                                    if (!mainSvc.checkUndefinedNull(oldElem.selected)){
+                                        elem.selected = oldElem.selected;
+                                    }
+                                    return true;
+                                };
+                            });                            
+                        });
+                    };
 //console.log(tempArr);                    
                     $scope.objects = response.data;
                     //sort by name
@@ -107,7 +120,10 @@ angular.module('portalNMC')
                     } else {
                         $scope.searchObjects($scope.filter);
                     };
-                    $scope.loading = false;  
+                    $scope.loading = false;
+                    $('#deleteCabinetModal').modal('hide');                    
+                    $('#createPasswordModal').modal('hide');
+                    $('#showTenantOptionModal').modal('hide');
                 };
                 
                 var getCabinetsData = function(objId){
@@ -160,6 +176,42 @@ angular.module('portalNMC')
                     return tmp;
                 };
                 
+                var prepareCabinetsIdsArray = function(){
+                    var tmp = [];
+                    var srcArray = [];
+                    if ($scope.objectCtrlSettings.allSelected == true){
+                        srcArray = $scope.objects;
+                    }else{
+                        srcArray = $scope.objectsOnPage;
+                    };                    
+                    srcArray.forEach(function(elem){
+                        if (elem.selected == true){
+                            if (!mainSvc.checkUndefinedNull(elem.cabinet)){
+                                tmp.push(elem.cabinet.id);                                
+                            };
+                        };
+                    });                    
+                    return tmp;
+                };
+                
+                var prepareUserIdsArray = function(){
+                    var tmp = [];
+                    var srcArray = [];
+                    if ($scope.objectCtrlSettings.allSelected == true){
+                        srcArray = $scope.objects;
+                    }else{
+                        srcArray = $scope.objectsOnPage;
+                    };                    
+                    srcArray.forEach(function(elem){
+                        if (elem.selected == true){
+                            if (!mainSvc.checkUndefinedNull(elem.cabinet) && !mainSvc.checkUndefinedNull(elem.cabinet.subscrUser)){
+                                tmp.push(elem.cabinet.subscrUser.id);                                
+                            };
+                        };
+                    });                    
+                    return tmp;
+                };
+                
                 $scope.createCabinets = function(obj) {
                     var objectIds = [];
                     if (mainSvc.checkUndefinedNull(obj)){
@@ -171,6 +223,73 @@ angular.module('portalNMC')
                         return "Cabinet array is empty."
                     };
                     subscrCabinetsSvc.createCabinets(objectIds).then(performCabinetsData, errorCallback);
+                };
+                
+                $scope.deleteCabinetsInit = function(obj){
+                    //generation confirm code
+                    setConfirmCode();
+                    $scope.data.selectedCabinet = {};
+                    var cabinetIds = [];
+                    if (mainSvc.checkUndefinedNull(obj)){
+                        cabinetIds = prepareCabinetsIdsArray();                        
+                    }else{
+                        $scope.selectCabinet(obj);
+                        if (!mainSvc.checkUndefinedNull(obj.cabinet)){
+                            cabinetIds.push(obj.cabinet.id);                                
+                        };                        
+                    }
+                    $scope.data.selectedCabinet.cabinetsIdsForDelete = cabinetIds;
+                    
+                };
+                
+                $scope.deleteCabinets = function(obj) {
+                    if (obj.cabinetsIdsForDelete.length == 0){
+                        return "Cabinet array is empty."
+                    };
+                    subscrCabinetsSvc.deleteCabinets(obj.cabinetsIdsForDelete).then(performCabinetsData, errorCallback);
+                };
+                
+                $scope.resetPasswords = function(obj){
+                    //generation confirm code
+//                    setConfirmCode();
+                    $scope.data.selectedCabinet = {};
+                    var userIds = [];
+                    if (mainSvc.checkUndefinedNull(obj)){
+                        userIds = prepareUserIdsArray();                        
+                    }else{
+                        $scope.selectCabinet(obj);
+                        if (!mainSvc.checkUndefinedNull(obj.cabinet)){
+                            userIds.push(obj.cabinet.subscrUser.id);                                
+                        };                        
+                    }
+//                    $scope.data.selectedCabinet.cabinetsIdsForDelete = cabinetIds;
+                    subscrCabinetsSvc.resetPassword(userIds).then(performCabinetsData, errorCallback);
+                };
+                
+                $scope.checkPassword = function(cabinet){
+                    var result = true;
+                    if ($scope.emptyString(cabinet.subscrUser.passwordPocket)){
+                        notificationFactory.error("Ошибка", "Пароль не должен быть пустым!");
+                        result = false;
+                    };
+                    if (cabinet.subscrUser.passwordPocket != cabinet.subscrUser.passwordPocket){
+                        notificationFactory.error("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
+                        result = false;
+                    };
+                    return result;
+                };
+                
+                $scope.updateCabinet = function(cabinet){
+                    subscrCabinetsSvc.updateCabinet(cabinet).then(performCabinetsData, errorCallback);
+                };
+                
+                $scope.createPassword = function(cabinet){
+                    if (mainSvc.checkUndefinedNull(cabinet)){
+                        return "Cabinet is null or undefined.";
+                    };
+                    $scope.checkPassword(cabinet);
+                    $scope.updateCabinet(cabinet);
+//                    subscrCabinetsSvc.updateCabinet(cabinet).then(performCabinetsData, errorCallback);
                 };
                 
                 var successCallbackOnSetMode = function(e){
@@ -230,7 +349,7 @@ angular.module('portalNMC')
                 
                 var deleteObjectFromArray = function(objId, targetArr){
                     var curInd = findObjectIndexInArray(objId, targetArr);
-                    if (curInd!=-1){
+                    if (curInd != -1){
                         targetArr.splice(curInd, 1);
                     };
                 };

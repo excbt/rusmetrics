@@ -171,7 +171,7 @@
                                                     </button>
                                                   <ul class="dropdown-menu">
                                                     <li><a href="" ng-click="createCabinets()">{{messages.createTenants}}</a></li>
-                                                    <li><a href="" ng-click="">{{messages.recreateTenantPasswords}}</a></li>
+                                                    <li><a href="" ng-click="resetPasswords()">{{messages.recreateTenantPasswords}}</a></li>
                                                     <li><a href="" ng-click="">{{messages.sendLoginInfoByEmail}}</a></li>  
                                                     <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'"><a href="" 
                                                            data-target="#viewTreeModal" 
@@ -184,7 +184,15 @@
                                                         </a>
                                                     </li>
                                                     <li role="separator" class="divider"></li>  
-                                                    <li><a href="" ng-click="">{{messages.deleteLogins}}</a></li>
+                                                    <li>
+                                                        <a href="" 
+                                                           ng-click="deleteCabinetsInit()"
+                                                           data-target="#deleteCabinetModal" 
+                                                           data-toggle="modal"
+                                                           >
+                                                            {{messages.deleteLogins}}
+                                                        </a>
+                                                    </li>
                                                   </ul>
                                                 </div>
                                                 <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
@@ -291,7 +299,8 @@
                                                        class="paddingRight30" 
                                                        data-toggle="dropdown" 
                                                        aria-haspopup="true" 
-                                                       aria-expanded="false"                                               
+                                                       aria-expanded="false"
+                                                       ng-click="resetPasswords(object)"
                                                        >
                                                         Сгенерировать новый
                                                     </a>
@@ -325,7 +334,14 @@
                                                    ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
                                             </li>
                                             <li ng-if="!checkUndefinedNull(object.cabinet)" role="separator" class="divider"></li>
-                                            <li ng-if="!checkUndefinedNull(object.cabinet)"><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteLogin}}</a></li>  
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="deleteCabinetsInit(object)" 
+                                                   data-target="#deleteCabinetModal" 
+                                                   data-toggle="modal">
+                                                    {{messages.deleteLogin}}
+                                                </a>
+                                            </li>  
                                           </ul>
                                         </div>            
                                         <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
@@ -350,7 +366,7 @@
                                     <td>
                                         <div class="btn-toolbar">
                                             <div class="btn-group pull-right">                   
-                                                <i title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                                <i title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteCabinetsInit(object)" data-target="#deleteCabinetModal" data-toggle="modal"></i>
                                             </div>
                                         </div>
                                     </td>
@@ -458,6 +474,7 @@
                                                id="inputTenantPassword" 
                                                placeholder="Пароль" 
                                                ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocket"
+                                               disabled
                                                />
 <!--                                    </div>-->
                                 </td>
@@ -477,7 +494,7 @@
 							<input 
                                    type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click=""
+								ng-click="updateCabinet(data.selectedCabinet)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
@@ -539,7 +556,7 @@
     
     
 <!-- window: delete object-->
-<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
+<div id="deleteCabinetModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 		<div class="modal-header nmc-modal-header">
@@ -551,9 +568,9 @@
 		<div class="modal-body nmc-modal-body">
 			<form name="deleteContactForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить кабинет для  
 					</label> 
-					<label class="text-primary nmc-form-label">{{currentObject.fullName || currentObject.id || (currentObject.countDeleteObjects + " объектов")}}</label>
+					<label class="text-primary nmc-form-label">{{data.selectedCabinet.cabinet.subscrCabinetNr || data.selectedCabinet.cabinet.id || (data.selectedCabinet.cabinetsIdsForDelete.length + " объектов")}}</label>
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
@@ -570,13 +587,13 @@
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
-								ng-click=""
+								ng-click="deleteCabinets(data.selectedCabinet)"
 								value="Удалить" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
+								ng-click="exit('#deleteCabinetModal');">
 								Отменить
 							</button>
 						</div>
@@ -604,7 +621,8 @@
                             <tr>
                                 <td class="col-sm-3"><label for="viewLogin">Логин</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="currentObject.id" disabled>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="data.selectedCabinet.cabinet.subscrCabinetNr" disabled>
                                 </td>
                             </tr>
                             <tr>
@@ -612,12 +630,12 @@
                                     <label for="inputTenantPassword">Пароль</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.tenantPassword)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' :  emptyString(data.selectedCabinet.cabinet.passwordPocket)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantPassword" 
                                                placeholder="Пароль" 
-                                               ng-model="currentObject.tenantPassword"
+                                               ng-model="data.selectedCabinet.cabinet.passwordPocket"
                                                />
                                     </div>
                                 </td>
@@ -627,12 +645,12 @@
                                     <label for="confirmTenantPassword">Подтверждение пароля</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.tenantPasswordConfirm)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' :  emptyString(data.selectedCabinet.cabinet.passwordPocketConfirm)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="confirmTenantPassword" 
                                                placeholder="Повторите пароль" 
-                                               ng-model="currentObject.tenantPasswordConfirm"
+                                               ng-model="data.selectedCabinet.cabinet.passwordPocketConfirm"
                                                />
                                     </div>
                                 </td>
@@ -649,12 +667,12 @@
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click=""
+								ng-click="createPassword(data.selectedCabinet)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#currentDevice')">
+								ng-click="exit('#createPasswordModal')">
 								Отменить
 							</button>
 						</div>

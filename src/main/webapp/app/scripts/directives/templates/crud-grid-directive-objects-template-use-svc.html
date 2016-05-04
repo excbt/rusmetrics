@@ -473,12 +473,16 @@
 		            							title="Изменить эталонный интервал"
     		        							class="btn btn-xs nmc-button-in-modal"
                                                 ng-class="{'nmc-hide':toggleFlag, 'nmc-show':!toggleFlag}"
-        		    							ng-click="editRefRangeOn()">Изменить</p>
+        		    							ng-click="editRefRangeOn()"
+                                               ng-disabled="isCabinet()"
+                                               >Изменить</p>
             								<p id="i_ref_range_save"
             									title="Сохранить эталонный интервал"
             									class="btn btn-xs nmc-button-in-modal nmc-hide" 
                                                 ng-class="{'nmc-hide':!toggleFlag, 'nmc-show':toggleFlag}"
-            									ng-click="addRefRange()">Сохранить</p>
+            									ng-click="addRefRange()"
+                                               ng-disabled="isCabinet()"
+                                               >Сохранить</p>
                             			</div>
                             	</div>
                        </div>    
