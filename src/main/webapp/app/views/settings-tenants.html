@@ -310,6 +310,7 @@
                                                        class="paddingRight30" 
                                                        data-target="#createPasswordModal"                                               
                                                        data-toggle="modal"
+                                                       ng-click="selectCabinet(object)"
                                                        >
                                                         Задать
                                                     </a>
@@ -630,12 +631,12 @@
                                     <label for="inputTenantPassword">Пароль</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error' :  emptyString(data.selectedCabinet.cabinet.passwordPocket)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' :  emptyString(data.selectedCabinet.cabinet.subscrUser.passwordPocket)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="inputTenantPassword" 
                                                placeholder="Пароль" 
-                                               ng-model="data.selectedCabinet.cabinet.passwordPocket"
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocket"
                                                />
                                     </div>
                                 </td>
@@ -645,12 +646,12 @@
                                     <label for="confirmTenantPassword">Подтверждение пароля</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error' :  emptyString(data.selectedCabinet.cabinet.passwordPocketConfirm)}">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' :  emptyString(data.selectedCabinet.cabinet.subscrUser.passwordPocketConfirm)}">
                                         <input class="form-control nmc-text-input-form" 
                                                type="text" 
                                                id="confirmTenantPassword" 
                                                placeholder="Повторите пароль" 
-                                               ng-model="data.selectedCabinet.cabinet.passwordPocketConfirm"
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocketConfirm"
                                                />
                                     </div>
                                 </td>

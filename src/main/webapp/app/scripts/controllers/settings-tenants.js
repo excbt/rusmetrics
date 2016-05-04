@@ -122,6 +122,41 @@ angular.module('portalNMC')
                     };
                     $scope.loading = false;
                     $('#deleteCabinetModal').modal('hide');                    
+                    
+                };
+                
+                var successUpdateCabinetCallback = function(response){
+                    var result = angular.copy(response.data);
+                    var searchIndex = -1;
+                    $scope.objects.some(function(elem, index){                       
+                        if (mainSvc.checkUndefinedNull(elem.cabinet) || mainSvc.checkUndefinedNull(elem.cabinet.subscrUser)){
+                            return false;
+                        };                        
+                        if (elem.cabinet.subscrUser.id == result.id){
+                            searchIndex = index;
+//                            elem.cabinet.subscrUser = result;
+                            return true;
+                        };
+                    });                   
+                    if (searchIndex > -1){
+                        $scope.objects[searchIndex].cabinet.subscrUser = result;
+                        
+                    };
+                    
+                    searchIndex = -1;
+                    $scope.objectsOnPage.some(function(elem, index){
+                        if (mainSvc.checkUndefinedNull(elem.cabinet) || mainSvc.checkUndefinedNull(elem.cabinet.subscrUser)){
+                            return false;
+                        };
+                        if (elem.cabinet.subscrUser.id == result.id){
+                            searchIndex = index;
+//                            elem.cabinet.subscrUser = result;
+                            return true;
+                        };
+                    });                    
+                    if (searchIndex > -1){
+                        $scope.objectsOnPage[searchIndex].cabinet.subscrUser = result;
+                    };                   
                     $('#createPasswordModal').modal('hide');
                     $('#showTenantOptionModal').modal('hide');
                 };
@@ -266,28 +301,31 @@ angular.module('portalNMC')
                     subscrCabinetsSvc.resetPassword(userIds).then(performCabinetsData, errorCallback);
                 };
                 
-                $scope.checkPassword = function(cabinet){
+                $scope.checkPassword = function(cabinet){                 
                     var result = true;
-                    if ($scope.emptyString(cabinet.subscrUser.passwordPocket)){
-                        notificationFactory.error("Ошибка", "Пароль не должен быть пустым!");
+                    if ($scope.emptyString(cabinet.cabinet.subscrUser.passwordPocket)){
+                        notificationFactory.errorInfo("Ошибка", "Пароль не должен быть пустым!");
                         result = false;
                     };
-                    if (cabinet.subscrUser.passwordPocket != cabinet.subscrUser.passwordPocket){
-                        notificationFactory.error("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
+                    if (cabinet.cabinet.subscrUser.passwordPocket != cabinet.cabinet.subscrUser.passwordPocketConfirm){
+                        notificationFactory.errorInfo("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
                         result = false;
                     };
                     return result;
                 };
                 
                 $scope.updateCabinet = function(cabinet){
-                    subscrCabinetsSvc.updateCabinet(cabinet).then(performCabinetsData, errorCallback);
+                    if ($scope.emptyString(cabinet.cabinet.subscrUser.passwordPocket)){
+                        cabinet.cabinet.subscrUser.passwordPocket = null;
+                    };
+                    subscrCabinetsSvc.updateCabinet(cabinet).then(successUpdateCabinetCallback, errorCallback);
                 };
                 
                 $scope.createPassword = function(cabinet){
                     if (mainSvc.checkUndefinedNull(cabinet)){
                         return "Cabinet is null or undefined.";
                     };
-                    $scope.checkPassword(cabinet);
+                    if ($scope.checkPassword(cabinet) == false){return "User password is incorrect!"};
                     $scope.updateCabinet(cabinet);
 //                    subscrCabinetsSvc.updateCabinet(cabinet).then(performCabinetsData, errorCallback);
                 };
