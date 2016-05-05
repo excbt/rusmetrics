@@ -85,6 +85,9 @@ public class ReportTemplate extends AbstractAuditableModel {
 	@Version
 	private int version;
 
+	@Column(name = "report_paramset_default_name")
+	private String reportParamsetDefaultName;
+
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}
@@ -191,6 +194,14 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	public void setReportTypeKeyname(String reportTypeKeyname) {
 		this.reportTypeKeyname = reportTypeKeyname;
+	}
+
+	public String getReportParamsetDefaultName() {
+		return reportParamsetDefaultName;
+	}
+
+	public void setReportParamsetDefaultName(String reportParamsetDefaultName) {
+		this.reportParamsetDefaultName = reportParamsetDefaultName;
 	}
 
 }

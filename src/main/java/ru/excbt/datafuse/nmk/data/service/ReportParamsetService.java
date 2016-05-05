@@ -696,7 +696,10 @@ public class ReportParamsetService implements SecuredRoles {
 
 			String suffix = systemParamService.getParamValueAsString(REPORT_AUTO_SUFFIX);
 
-			String reportParamsetName = commonTemplates.get(0).getName() + " " + suffix;
+			String reportParamsetDefaultName = commonTemplates.get(0).getReportParamsetDefaultName() != null
+					? commonTemplates.get(0).getReportParamsetDefaultName() : commonTemplates.get(0).getName();
+
+			String reportParamsetName = reportParamsetDefaultName + " " + suffix;
 
 			ReportParamset reportParamset = createReportParamsetEx(commonTemplates.get(0), reportParamsetName,
 					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF, subscriber, true);
