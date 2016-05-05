@@ -6,13 +6,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
@@ -38,12 +36,20 @@ public class SubscrCabinetInfo implements Serializable {
 	 * @param subscrUser
 	 * @param contObjects
 	 */
-	public SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser, List<ContObject> contObjects) {
-		checkNotNull(contObjects);
+	//	public SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser, List<ContObject> contObjects) {
+	//		checkNotNull(contObjects);
+	//		this.subscriber = subscriber;
+	//		this.subscrUserWrapper = new SubscrUserWrapper(subscrUser);
+	//		this.contObjectInfoList = Collections.unmodifiableList(
+	//				contObjects.stream().map(i -> i.getContObjectShortInfo()).collect(Collectors.toList()));
+	//	}
+
+	public SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser,
+			List<ContObjectShortInfo> contObjectShortInfos) {
+		checkNotNull(contObjectShortInfos);
 		this.subscriber = subscriber;
 		this.subscrUserWrapper = new SubscrUserWrapper(subscrUser);
-		this.contObjectInfoList = Collections.unmodifiableList(
-				contObjects.stream().map(i -> i.getContObjectShortInfo()).collect(Collectors.toList()));
+		this.contObjectInfoList = Collections.unmodifiableList(contObjectShortInfos);
 	}
 
 	/**

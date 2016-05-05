@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
@@ -57,6 +58,12 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 
 		ids.forEach(i -> logger.info("id:{}", i));
 
+	}
+
+	@Test
+	public void testSelectContObjectShortInfo() throws Exception {
+		List<ContObjectShortInfo> result = subscrContObjectService.selectSubscriberContObjectsShortInfo(64166466L);
+		result.forEach(i -> logger.info("id:{}", i.getContObjectId()));
 	}
 
 }

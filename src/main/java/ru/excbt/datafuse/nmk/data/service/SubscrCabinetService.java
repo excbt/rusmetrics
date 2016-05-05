@@ -25,13 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.EmailNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
@@ -187,7 +187,10 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		}
 
-		SubscrCabinetInfo result = new SubscrCabinetInfo(newSubscriber, subscrUser, contObjects);
+		List<ContObjectShortInfo> subscrObjectSHortInfoList = contObjects.stream().map(i -> i.getContObjectShortInfo())
+				.collect(Collectors.toList());
+
+		SubscrCabinetInfo result = new SubscrCabinetInfo(newSubscriber, subscrUser, subscrObjectSHortInfoList);
 
 		return result;
 	}
@@ -246,23 +249,27 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	public List<ContObjectCabinetInfo> selectSubscrContObjectCabinetInfoList(Long parentSubscriberId) {
 
-		List<ContObject> contObjectList = ObjectFilters
-				.deletedFilter(subscrContObjectService.selectSubscriberContObjects(parentSubscriberId));
+		List<ContObjectShortInfo> contObjectShortInfoList = subscrContObjectService
+				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
 
 		List<Subscriber> childSubscribers = subscriberService.selectChildSubscribers(parentSubscriberId);
 
 		Map<Long, List<Long>> childContObjectIdMap = new HashMap<>();
 		Map<Long, List<Long>> childContObjectSubscriberMap = new HashMap<>();
-		Map<Long, List<ContObject>> childContObjecMap = new HashMap<>();
+		Map<Long, List<ContObjectShortInfo>> childContObjectMap = new HashMap<>();
+
+		List<Long> allChildContObjectIds = new ArrayList<>();
 
 		for (Subscriber s : childSubscribers) {
 			List<Long> childContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(s.getId());
-			List<ContObject> childContObjects = subscrContObjectService.selectSubscriberContObjects(s.getId());
+			allChildContObjectIds.addAll(childContObjectIds);
+			List<ContObjectShortInfo> childContObjects = subscrContObjectService
+					.selectSubscriberContObjectsShortInfo(s.getId());
 			if (!childContObjectIds.isEmpty()) {
 				childContObjectIdMap.put(s.getId(), childContObjectIds);
 			}
 			if (!childContObjects.isEmpty()) {
-				childContObjecMap.put(s.getId(), childContObjects);
+				childContObjectMap.put(s.getId(), childContObjects);
 			}
 
 			for (Long contObjectId : childContObjectIds) {
@@ -276,14 +283,15 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		List<ContObjectCabinetInfo> result = new ArrayList<>();
 
-		for (ContObject contObject : contObjectList) {
+		for (ContObjectShortInfo contObject : contObjectShortInfoList) {
 
 			SubscrCabinetInfo subscrCabinetInfo = null;
 
-			if (childContObjectSubscriberMap.get(contObject.getId()) != null
-					&& !childContObjectSubscriberMap.get(contObject.getId()).isEmpty()) {
+			if (allChildContObjectIds.contains(contObject.getContObjectId())
+					&& childContObjectSubscriberMap.get(contObject.getContObjectId()) != null
+					&& !childContObjectSubscriberMap.get(contObject.getContObjectId()).isEmpty()) {
 
-				Long childSubscriberId = childContObjectSubscriberMap.get(contObject.getId()).get(0);
+				Long childSubscriberId = childContObjectSubscriberMap.get(contObject.getContObjectId()).get(0);
 
 				Optional<Subscriber> optChildSubscriber = childSubscribers.stream()
 						.filter(i -> i.getId().equals(childSubscriberId)).findFirst();
@@ -292,7 +300,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 					List<SubscrUser> childSubscrUsers = subscrUserService.selectBySubscriberId(childSubscriberId);
 					if (!childSubscrUsers.isEmpty()) {
 						subscrCabinetInfo = new SubscrCabinetInfo(optChildSubscriber.get(), childSubscrUsers.get(0),
-								childContObjecMap.get(optChildSubscriber.get().getId()));
+								childContObjectMap.get(optChildSubscriber.get().getId()));
 					}
 				}
 

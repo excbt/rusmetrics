@@ -47,6 +47,7 @@ import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -57,7 +58,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorReposito
  *
  */
 @Service
-public class SubscrContEventNotificationService {
+public class SubscrContEventNotificationService extends AbstractService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationService.class);
 
@@ -243,20 +244,20 @@ public class SubscrContEventNotificationService {
 	 * @param specs
 	 * @return
 	 */
-	private <T> Specifications<T> andFilterBuild(List<Specification<T>> specList) {
-		if (specList == null) {
-			return null;
-		}
-		Specifications<T> result = null;
-		for (Specification<T> i : specList) {
-			if (i == null) {
-				continue;
-			}
-			result = result == null ? Specifications.where(i) : result.and(i);
-		}
-
-		return result;
-	}
+	//	private <T> Specifications<T> andFilterBuild(List<Specification<T>> specList) {
+	//		if (specList == null) {
+	//			return null;
+	//		}
+	//		Specifications<T> result = null;
+	//		for (Specification<T> i : specList) {
+	//			if (i == null) {
+	//				continue;
+	//			}
+	//			result = result == null ? Specifications.where(i) : result.and(i);
+	//		}
+	//
+	//		return result;
+	//	}
 
 	/**
 	 * 
@@ -281,7 +282,7 @@ public class SubscrContEventNotificationService {
 				specContEventCategory(searchConditions.contEventCategoryList), //
 				specContEventDevation(searchConditions.contEventDeviationList));
 
-		Specifications<SubscrContEventNotification> specs = andFilterBuild(andFilter);
+		Specifications<SubscrContEventNotification> specs = specsAndFilterBuild(andFilter);
 
 		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
 

@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +21,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
  * @since 12.10.2015
  *
  */
-public interface SubscrContObjectRepository extends CrudRepository<SubscrContObject, Long> {
+public interface SubscrContObjectRepository
+		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject> {
 
 	/**
 	 * 
@@ -42,8 +44,17 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
-			+ " AND sco.deleted = 0" + " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
+			+ " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
 	public List<ContObject> selectContObjects(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT sco.contObject FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
+	public List<ContObject> selectContObjectsNoSort(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 * 

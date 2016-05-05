@@ -10,11 +10,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,9 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.model.SubscrContObject_;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
@@ -188,6 +192,88 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		checkNotNull(subscriberId);
 		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
 		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectSubscriberContObjectsNoSort(Long subscriberId) {
+		checkNotNull(subscriberId);
+		List<ContObject> result = subscrContObjectRepository.selectContObjectsNoSort(subscriberId);
+		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo(Long subscriberId) {
+		checkNotNull(subscriberId);
+
+		List<ContObjectShortInfo> result = new ArrayList<>();
+
+		ColumnHelper columnHelper = new ColumnHelper(new String[] { "id", "name", "fullName" });
+
+		StringBuilder sqlString = new StringBuilder();
+		sqlString.append(" SELECT ");
+		sqlString.append(columnHelper.build());
+		sqlString.append(" FROM ");
+		sqlString.append(ContObject.class.getSimpleName());
+		sqlString.append(" c ");
+		sqlString.append(" WHERE c.id IN ( ");
+		sqlString.append(" SELECT sco.contObjectId FROM ");
+		sqlString.append(SubscrContObject.class.getSimpleName());
+		sqlString.append(" sco ");
+		sqlString.append(" WHERE sco.subscriberId = :subscriberId ");
+		sqlString.append(" AND sco.deleted = 0 ");
+		sqlString.append(" AND sco.subscrEndDate IS NULL ");
+		sqlString.append(" ) ");
+
+		logger.debug("SQL: {}", sqlString.toString());
+
+		Query q1 = em.createQuery(sqlString.toString());
+
+		q1.setParameter("subscriberId", subscriberId);
+
+		List<?> resultRows = q1.getResultList();
+
+		for (Object r : resultRows) {
+			if (!(r instanceof Object[])) {
+				throw new IllegalStateException();
+			}
+			Object[] row = (Object[]) r;
+			final Long id = columnHelper.getResultAsClass(row, "id", Long.class);
+			final String contObjectName = columnHelper.getResultAsClass(row, "name", String.class);
+			final String contObjectFullName = columnHelper.getResultAsClass(row, "fullName", String.class);
+
+			ContObjectShortInfo contObjectShortInfo = new ContObjectShortInfo() {
+
+				@Override
+				public String getName() {
+					return contObjectName;
+				}
+
+				@Override
+				public String getFullName() {
+					return contObjectFullName;
+				}
+
+				@Override
+				public Long getContObjectId() {
+					return id;
+				}
+			};
+
+			result.add(contObjectShortInfo);
+
+		}
+
+		return result;
 	}
 
 	/**
@@ -541,6 +627,40 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectContObjectSubscriberIdsByRma(Long rmaSubscriberId, Long contObjectId) {
 		return subscrContObjectRepository.selectContObjectSubscriberIdsByRma(rmaSubscriberId, contObjectId);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	private static Specification<SubscrContObject> specSubscriberId(final Long subscriberId) {
+		return (root, query, cb) -> {
+			if (subscriberId == null) {
+				return null;
+			}
+			return cb.equal(root.get(SubscrContObject_.subscriberId), subscriberId);
+		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private static Specification<SubscrContObject> specDeleted() {
+		return (root, query, cb) -> {
+			return cb.equal(root.get(SubscrContObject_.deleted), 0);
+		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private static Specification<SubscrContObject> specSubscrEndDate() {
+		return (root, query, cb) -> {
+			return root.get(SubscrContObject_.subscrEndDate).isNotNull();
+		};
 	}
 
 }

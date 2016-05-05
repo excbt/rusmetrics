@@ -30,6 +30,16 @@ public class ContObjectCabinetInfo implements Serializable {
 
 	/**
 	 * 
+	 * @param contObjectShortInfo
+	 * @param subscrCabinetInfo
+	 */
+	public ContObjectCabinetInfo(ContObjectShortInfo contObjectShortInfo, SubscrCabinetInfo subscrCabinetInfo) {
+		this.contObjectInfo = contObjectShortInfo;
+		this.subscrCabinetInfo = subscrCabinetInfo;
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	public ContObjectShortInfo getContObjectInfo() {
