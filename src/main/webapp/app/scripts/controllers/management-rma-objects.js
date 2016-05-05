@@ -1970,7 +1970,8 @@ console.log(e);
                                 if (currentLevel == null){
                                     return "Template item is no find.";
                                 };
-                                $scope.data.currentLevel.objectName = currentLevel.itemName;
+                                $scope.data.currentLevel.levelType = currentLevel.itemName;
+                                $scope.data.currentLevel.objectName = currentLevel.itemNameTemplate;
                                 $scope.data.currentLevel.templateId = currentLevel.templateId;
                                 $scope.data.currentLevel.templateItemId = currentLevel.id;
                             };
@@ -2174,7 +2175,8 @@ console.log(e);
                         if (currentLevel == null){
                             return "Template item is no find.";
                         };
-                        $scope.data.currentLevel.objectName = currentLevel.itemName;
+                        $scope.data.currentLevel.levelType = currentLevel.itemName;
+                        $scope.data.currentLevel.objectName = currentLevel.itemNameTemplate;
                         $scope.data.currentLevel.templateId = currentLevel.templateId;
                         $scope.data.currentLevel.templateItemId = currentLevel.id;
                     };

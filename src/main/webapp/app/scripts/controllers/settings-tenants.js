@@ -86,7 +86,7 @@ angular.module('portalNMC')
                     return obj;
                 };                
                 
-//console.log(subscrCabinetsSvc.promise);
+//console.log(subscrCabinetsSvc.promise);                
                 
                 var performCabinetsData = function(response){
                     var tempArr = response.data;
@@ -121,7 +121,11 @@ angular.module('portalNMC')
                         $scope.searchObjects($scope.filter);
                     };
                     $scope.loading = false;
-                    $('#deleteCabinetModal').modal('hide');                    
+                    $('#deleteCabinetModal').modal('hide');                                        
+                };
+                
+                var successCabinetsCallback = function(response){
+                    performCabinetsData(response);
                     notificationFactory.success();
                 };
                 
@@ -262,7 +266,7 @@ angular.module('portalNMC')
                     if (objectIds.length == 0){
                         return "Cabinet array is empty."
                     };
-                    subscrCabinetsSvc.createCabinets(objectIds).then(performCabinetsData, errorCallback);
+                    subscrCabinetsSvc.createCabinets(objectIds).then(successCabinetsCallback, errorCallback);
                 };
                 
                 $scope.deleteCabinetsInit = function(obj){
@@ -286,7 +290,7 @@ angular.module('portalNMC')
                     if (obj.cabinetsIdsForDelete.length == 0){
                         return "Cabinet array is empty."
                     };
-                    subscrCabinetsSvc.deleteCabinets(obj.cabinetsIdsForDelete).then(performCabinetsData, errorCallback);
+                    subscrCabinetsSvc.deleteCabinets(obj.cabinetsIdsForDelete).then(successCabinetsCallback, errorCallback);
                 };
                 
                 $scope.resetPasswords = function(obj){
@@ -303,7 +307,7 @@ angular.module('portalNMC')
                         };                        
                     }
 //                    $scope.data.selectedCabinet.cabinetsIdsForDelete = cabinetIds;
-                    subscrCabinetsSvc.resetPassword(userIds).then(performCabinetsData, errorCallback);
+                    subscrCabinetsSvc.resetPassword(userIds).then(successCabinetsCallback, errorCallback);
                 };
                 
                 $scope.checkPasswordFields = function(cabinet){

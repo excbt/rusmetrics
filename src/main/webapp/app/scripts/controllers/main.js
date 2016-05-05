@@ -164,15 +164,7 @@ console.log("setDefaultMenuState");
       
     var errorCallback = function (e) {
         console.log(e);
-        var errorCode = "-1";
-        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-            errorCode = "ERR_CONNECTION";
-        };
-        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
-            errorCode = e.resultCode || e.data.resultCode;
-        };
-        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+        notificationFactory.errorInfo("Не удалось сменить пароль!", "Проверьте правильность текущего пароля.");
     };
       
 // *****************************************************************************
@@ -233,6 +225,7 @@ console.log("setDefaultMenuState");
             params: params
         }).then(function(){
             notificationFactory.success();
+            $('#changePasswordModal').modal('hide');
         }, errorCallback);
     };
       
