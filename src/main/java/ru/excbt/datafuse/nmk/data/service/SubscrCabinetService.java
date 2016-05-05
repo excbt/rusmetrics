@@ -176,7 +176,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		subscrUser.setUserNickname("Не задано");
 		subscrUser.setUserComment(contObject.getFullName());
 		subscrUser.setPassword(PasswordUtils.generateRandomPassword());
-		subscrUser.setUserDescription(contObject.getFullName());
+		subscrUser
+				.setUserDescription(contObject.getFullName() != null ? contObject.getFullName() : contObject.getName());
 
 		subscrUserService.createSubscrUser(subscrUser, subscrUser.getPassword());
 
