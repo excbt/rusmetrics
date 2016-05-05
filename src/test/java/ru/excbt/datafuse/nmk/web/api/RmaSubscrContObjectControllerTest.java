@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class RmaContObjectControllerTest extends RmaControllerTest {
+public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 
 	@Autowired
 	private ContObjectService contObjectService;

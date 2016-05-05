@@ -35,9 +35,9 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
  */
 @Controller
 @RequestMapping(value = "/api/rma")
-public class RmaContObjectController extends SubscrContObjectController {
+public class RmaSubscrContObjectController extends SubscrContObjectController {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaContObjectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrContObjectController.class);
 
 	/**
 	 * 
