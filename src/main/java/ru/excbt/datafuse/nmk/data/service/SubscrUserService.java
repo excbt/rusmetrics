@@ -338,4 +338,19 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 	}
 
+	/**
+	 * 
+	 * @param subscrUserId
+	 */
+	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_USER })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void clearSubscrUserPassword(Long subscrUserId) {
+		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
+		if (subscrUser == null) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
+		}
+
+		subscrUser.setPassword(null);
+		subscrUserRepository.save(subscrUser);
+	}
 }

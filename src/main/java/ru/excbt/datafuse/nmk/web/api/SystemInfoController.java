@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -33,6 +34,9 @@ public class SystemInfoController extends SubscrApiController {
 
 	@Autowired
 	private SystemParamService systemParamService;
+
+	@Autowired
+	private SubscrUserService subscrUserService;
 
 	/**
 	 * 
@@ -145,6 +149,7 @@ public class SystemInfoController extends SubscrApiController {
 
 		boolean changeResult = ldapService.changePassword(username, oldPassword, newPassword);
 		if (changeResult) {
+			subscrUserService.clearSubscrUserPassword(fullUserInfo.getId());
 			return responseOK(ApiResult.ok("Password successfully changed"));
 		}
 
