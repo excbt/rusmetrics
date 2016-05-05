@@ -37,7 +37,8 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_QUALITY_SHEET_REPORT("hw_quality_sheet", ReportSystem.PENTAHO), //
 	HW_QUALITY_SHEET_HOUR_REPORT("hw_quality_sheet_hour", ReportSystem.PENTAHO), //
 	HW_QUALITY_ACT_1_REPORT("hw_quality_act_1", ReportSystem.PENTAHO), //
-	HW_QUALITY_ACT_2_REPORT("hw_quality_act_2", ReportSystem.PENTAHO); //
+	HW_QUALITY_ACT_2_REPORT("hw_quality_act_2", ReportSystem.PENTAHO), //
+	HW_DATA_REPORT("hw_data", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;
