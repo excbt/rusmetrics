@@ -1881,8 +1881,11 @@ console.log(e);
 //                    $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     objectSvc.loadTree(tree.id).then(function(resp){
-                            $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
+                            $scope.messages.treeMenuHeader = tree.objectName || tree.id;
+//console.log(resp.data);                        
                             var respTree = angular.copy(resp.data);
+                            sortTreeNodesByObjectName(respTree);
+//console.log(respTree);                        
                             respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                             $scope.data.currentTree = respTree;
                             respTree.childObjectList[0].isSelected = true;
@@ -1941,6 +1944,7 @@ console.log(e);
                     };
                     objectSvc.updateTree($scope.data.currentTree).then(function(resp){                      
                         var respTree = resp.data;
+                        sortTreeNodesByObjectName(respTree);
                         respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                         if (!mainSvc.checkUndefinedNull(respTree.templateId)){
                             respTree.childObjectList[0].templateId = respTree.templateId;
@@ -2180,6 +2184,17 @@ console.log(e);
                         $scope.data.currentLevel.templateId = currentLevel.templateId;
                         $scope.data.currentLevel.templateItemId = currentLevel.id;
                     };
+                };
+                
+                var sortTreeNodesByObjectName = function(tree){
+                    mainSvc.sortTreeNodesBy(tree, "objectName");
+//                    if (mainSvc.checkUndefinedNull(tree.childObjectList) || !angular.isArray(tree.childObjectList)){
+//                        return;
+//                    };
+//                    mainSvc.sortItemsBy(tree.childObjectList, "objectName");
+//                    tree.childObjectList.forEach(function(node){
+//                        sortTreeNodesByObjectName(node);
+//                    });                    
                 };
                 
                 $('#viewTreeModal').on('shown.bs.modal', function(){

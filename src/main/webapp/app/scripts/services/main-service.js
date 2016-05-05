@@ -557,6 +557,16 @@ angular.module('portalNMC')
         return result;
     };
     
+    var sortTreeNodesBy = function(tree, fieldName){
+        if (checkUndefinedNull(tree.childObjectList) || !angular.isArray(tree.childObjectList)){
+            return;
+        };
+        sortItemsBy(tree.childObjectList, fieldName);
+        tree.childObjectList.forEach(function(node){
+            sortTreeNodesBy(node, fieldName);
+        });                    
+    };
+    
     // *********************************************************************************************
     //                     end Work with trees
     // *********************************************************************************************
@@ -590,7 +600,8 @@ angular.module('portalNMC')
         setMonitorMapSettings,
         setObjectMapSettings,
         sortItemsBy,
-        sortOrganizationsByName,        
+        sortOrganizationsByName,
+        sortTreeNodesBy,
         strDateToUTC
     };
 });

@@ -16,55 +16,97 @@
 <!--<hr>-->
 
 <div class="row">
-        <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
-            <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
-                <div class="col-xs-6 col-md-6">
-                    <div class="btn-group">
-                          <button 
-                                  title="Действия над объектом" 
-                             type="button" 
-                             class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
-                             data-toggle="dropdown" 
-                             aria-haspopup="true" 
-                             aria-expanded="false" 
+    <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
+        <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+            <div class="col-xs-6 col-md-6">
+                <div class="btn-group">
+                      <button 
+                              title="Действия над объектом" 
+                         type="button" 
+                         class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
+                         data-toggle="dropdown" 
+                         aria-haspopup="true" 
+                         aria-expanded="false" 
 
-                             style="font-size: .9em;">
-                              {{messages.treeMenuHeader}} <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu nmc-dropdown-menu">
-                              <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
-                                  <a href="" class=""
-                                     ng-click="loadTree(tree)">
-                                      {{tree.objectName}}
-                                  </a>
-                              </li>
-                          </ul>
-                        </div>
+                         style="font-size: .9em;">
+                          {{messages.treeMenuHeader}} <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu nmc-dropdown-menu">
+                          <li class="menu-item" role="presentation">
+                              <a href="" class=""
+                                 ng-click="viewFullObjectList()">
+                                  Полный список объектов
+                              </a>
+                          </li>
+                          <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
+                              <a href="" class=""
+                                 ng-click="loadTree(tree); objectCtrlSettings.isFullObjectView = false">
+                                  {{tree.objectName}}
+                              </a>
+                          </li>
+                      </ul>
+                    </div>
 
+            </div>
+            <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
+<!--
+                <span class="input-group-addon nmc-search-form-addon">
+                    <i class="glyphicon glyphicon-search nmc-search-form-button">
+                    </i>
+                </span>
+                <input title="Введите текст для поиска узла" 
+                       type="text" 
+                       class="form-control nmc-text-input-form" 
+                       ng-model="treefilter" 
+                       >
+-->
+            </div>
+        </div>
+<!--
+         <div class="row nmc-tree-with-fixed-header">
+              <div ui-tree="options" data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="data.currentTree" >
+                  <li ng-repeat="item in data.currentTree.childObjectList" 
+                      ui-tree-node 
+                      ng-include="'subscr_object_tree_items_renderer.html'"></li>
+                </ol>
+              </div>
+         </div>
+-->
+    </div>
+    <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
+        <div  ng-show="loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
+        <div class="container-fluid" ng-hide="loading">
+            <div class="row nmc-main-workspace-header">
+                <div class="input-group col-xs-4 col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                 </div>
-                <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
-                    <span class="input-group-addon nmc-search-form-addon">
-                        <i class="glyphicon glyphicon-search nmc-search-form-button">
-                        </i>
-                    </span>
-                    <input title="Введите текст для поиска узла" 
-                           type="text" 
-                           class="form-control nmc-text-input-form" 
-                           ng-model="treefilter" 
-                           >
+                <div class="col-md-offset-2 col-xs-2 col-md-2">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                        <span id="timeOutput"></span>
                 </div>
             </div>
-             <div class="row nmc-tree-with-fixed-header">
-                  <div ui-tree="options" data-drag-enabled="false">
-                    <ol ui-tree-nodes ng-model="data.currentTree" >
-                      <li ng-repeat="item in data.currentTree.childObjectList" 
-                          ui-tree-node 
-                          ng-include="'subscr_object_tree_items_renderer.html'"></li>
-                    </ol>
-                  </div>
-             </div>
         </div>
-    <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">                    
+         <div class="row nmc-tree-with-fixed-header">
+              <div ui-tree="options" data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="data.currentTree" >
+                  <li ng-repeat="item in data.currentTree.childObjectList" 
+                      ui-tree-node 
+                      ng-include="'subscr_object_tree_items_renderer.html'"></li>
+                </ol>
+              </div>
+         </div>
+    </div>
+    <div class="paddingLeftRight15" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true && objectCtrlSettings.isFullObjectView == true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false}">
+<!--
         <div  ng-show="loading" class="nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
         </div>
@@ -81,6 +123,7 @@
                 </div>
             </div>
         </div>
+-->
         <!-- Шапка для таблицы-->
         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
                 <thead>
