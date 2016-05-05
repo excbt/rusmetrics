@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 /**
  * Контроллер для работы с объектами учета для РМА
@@ -61,7 +61,8 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.createContObject(entity, getCurrentSubscriberId(), rmaBeginDate, cmOrganizationId);
+				return contObjectService.createContObject(entity, getCurrentSubscriberId(), rmaBeginDate,
+						cmOrganizationId);
 			}
 
 			@Override
@@ -198,6 +199,19 @@ public class RmaContObjectController extends SubscrContObjectController {
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/subscribers", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
+		List<Long> resultList = subscrContObjectService.selectContObjectSubscriberIdsByRma(getRmaSubscriberId(),
+				contObjectId);
+		return responseOK(resultList);
 	}
 
 }

@@ -168,6 +168,19 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	@Query("SELECT sco.contObjectId, COUNT(sco.contObjectId) as cnt FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId AND s.isChild = true)"
 			+ " GROUP BY sco.contObjectId")
-	public List<Object[]> selectChildSubscrCabinetContObjectsStats(@Param("parentSubscriberId") Long parentSubscriberId);
+	public List<Object[]> selectChildSubscrCabinetContObjectsStats(
+			@Param("parentSubscriberId") Long parentSubscriberId);
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param contObjectId
+	 * @return
+	 */
+	@Query("SELECT sco.subscriberId FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId) AND sco.contObjectId = :contObjectId "
+			+ " AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
+	public List<Long> selectContObjectSubscriberIdsByRma(@Param("rmaSubscriberId") Long rmaSubscriberId,
+			@Param("contObjectId") Long contObjectId);
 
 }

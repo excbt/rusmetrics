@@ -98,4 +98,14 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 		_testUpdateJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), currContObjects);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testContObjectSubscribers() throws Exception {
+		_testGetJson("/api/rma/contObjects/29863789/subscribers");
+		//64166466L, 29863789L
+	}
+
 }

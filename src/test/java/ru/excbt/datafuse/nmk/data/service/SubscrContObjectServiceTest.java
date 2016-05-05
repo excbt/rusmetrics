@@ -42,8 +42,21 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	 */
 	@Test
 	public void testContZPointInfo() throws Exception {
-		List<ContZPointShortInfo> result = subscrContObjectService.selectSubscriberContZPointShortInfo(EXCBT_RMA_SUBSCRIBER_ID);
+		List<ContZPointShortInfo> result = subscrContObjectService
+				.selectSubscriberContZPointShortInfo(EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(result.size() > 0);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSelectContObjectSubscriberIdsByRma() throws Exception {
+		List<Long> ids = subscrContObjectService.selectContObjectSubscriberIdsByRma(64166466L, 29863789L);
+
+		ids.forEach(i -> logger.info("id:{}", i));
+
 	}
 
 }

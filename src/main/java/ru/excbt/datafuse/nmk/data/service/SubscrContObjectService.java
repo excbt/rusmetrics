@@ -532,4 +532,15 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return checkIds(contZPointIds, availableIds);
 	}
 
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Long> selectContObjectSubscriberIdsByRma(Long rmaSubscriberId, Long contObjectId) {
+		return subscrContObjectRepository.selectContObjectSubscriberIdsByRma(rmaSubscriberId, contObjectId);
+	}
+
 }
