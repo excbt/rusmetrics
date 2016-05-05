@@ -10,7 +10,7 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', 'mainSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc, mainSvc) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', 'mainSvc', 'notificationFactory', '$http', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc, mainSvc, notificationFactory, $http) {
 console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};  
@@ -18,6 +18,8 @@ console.log("MainCtrl");
     $scope.mainCtrlSettings.showFullMenuFlag = true;  
     $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag(); 
     $scope.mainCtrlSettings.ctxId = "nmc_main";
+      
+    $scope.data = {};
 
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
@@ -27,7 +29,7 @@ console.log("MainCtrl");
         $rootScope.showIndicatorsParam = indicatorsParamVisible;
     };  
       
-    $rootScope.timeDetailType =  "1h";//$scope.timeDetailType;
+    $rootScope.timeDetailType = "1h";//$scope.timeDetailType;
 
        // $rootScope.endDate = ""; //"2014-03-20";//new Date();                 
        //   $rootScope.beginDate ="";// "2014-03-19";//endDate;  
@@ -153,6 +155,85 @@ console.log("setDefaultMenuState");
       
     $scope.getCtx = function(){
       return $rootScope.ctxId;
+    };
+      
+    $scope.emptyString = function(str){
+        return mainSvc.checkUndefinedEmptyNullValue(str);
+    };
+      
+      
+    var errorCallback = function (e) {
+        console.log(e);
+        var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+    };
+      
+// *****************************************************************************
+//          work with user password
+// *****************************************************************************
+    $scope.changePasswordInit = function(){
+        $scope.data.userInfo = angular.copy($rootScope.userInfo);
+    };
+      
+    $scope.checkPasswordFields = function(userInfo){
+        if (mainSvc.checkUndefinedNull(userInfo)){
+            return false;
+        };
+        var result = true;
+        if ($scope.emptyString(userInfo.oldPassword)){            
+            result = false;
+        };
+        if ($scope.emptyString(userInfo.newPassword)){                       
+            result = false;
+        };
+        if (userInfo.newPassword != userInfo.newPasswordConfirm){                        
+            result = false;
+        };
+        return result;
+    };
+
+    var checkPassword = function(userInfo){
+        if (mainSvc.checkUndefinedNull(userInfo)){
+            return false;
+        };
+        var result = true;
+        if ($scope.emptyString(userInfo.oldPassword)){
+            notificationFactory.errorInfo("Ошибка", "Поле \"Текущий пароль\" должно быть заполнено!");
+            result = false;
+        };
+        if ($scope.emptyString(userInfo.newPassword)){
+            notificationFactory.errorInfo("Ошибка", "Пароль не должен быть пустым!");
+            result = false;
+        };
+        if (userInfo.newPassword != userInfo.newPasswordConfirm){
+            notificationFactory.errorInfo("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
+            result = false;
+        };
+        return result;
+    };
+      
+      //change user password
+    $scope.changeUserPassword = function(userInfo){
+        if (checkPassword(userInfo) == false){return "Password is incorrect!"};
+        var url = "../api/systemInfo/passwordChange";
+        var params = {
+            oldPassword : userInfo.oldPassword,
+            newPassword : userInfo.newPassword
+        };
+        $http({
+            method: "PUT",
+            url: url,
+            params: params
+        }).then(function(){
+            notificationFactory.success();
+        }, errorCallback);
     };
       
   }]);

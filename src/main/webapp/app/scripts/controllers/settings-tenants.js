@@ -349,7 +349,6 @@ angular.module('portalNMC')
                     };
                     if ($scope.checkPassword(cabinet) == false){return "User password is incorrect!"};
                     $scope.updateCabinet(cabinet, true);
-//                    subscrCabinetsSvc.updateCabinet(cabinet).then(performCabinetsData, errorCallback);
                 };
                 
                 var successCallbackOnSetMode = function(e){

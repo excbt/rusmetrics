@@ -97,6 +97,16 @@
                                 title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
                             </p></a></li>			
 
+                            <li><a href="" 
+                                   ng-click="changePasswordInit()"
+                                   title='Сменить пароль'
+                                   data-target="#changePasswordModal"
+                                   data-toggle="modal">
+                                    <p> 
+                                        <b>Сменить пароль</b>
+                                    </p>
+                                </a>
+                            </li>
                             <li><a href="../logout" ng-click="logOut();"
                                 title='logout'><p> <b>Выход </b>
                             </p></a></li>
@@ -224,6 +234,100 @@
 
      </div>    
     </div>
+    
+        <!--change password window-->
+    <div id="changePasswordModal" class="modal fade nmc-modal-window" role="dialog"
+        aria-labelledby="changePasswordLabel" tabindex="-1">
+        <div class="modal-dialog  modal-content nmc-modal-dialog">
+            <div class="modal-header nmc-modal-header">
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="changePasswordLabel" class="nmc-h3">
+                    Изменение пароля
+                </h3>
+            </div>
+            <div class="modal-body nmc-modal-body paddingLeftRight15">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                            <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                <tr>
+                                    <td class="col-sm-3"><label for="viewLogin">Логин</label>
+                                    </td>
+                                    <td class="col-sm-9 nmc-text-align-left">
+                                        <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="data.userInfo.userName" disabled>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3">
+                                        <label for="inputTenantPassword">Текущий пароль</label>
+                                    </td>
+                                    <td class="col-sm-9 nmc-text-align-left">
+                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
+                                            <input class="form-control nmc-text-input-form" 
+                                                   type="text" 
+                                                   id="inputUserInfoPassword" 
+                                                   placeholder="" 
+                                                   ng-model="data.userInfo.oldPassword"
+                                                   />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3">
+                                        <label for="inputTenantPassword">Новый пароль</label>
+                                    </td>
+                                    <td class="col-sm-9 nmc-text-align-left">
+                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
+                                            <input class="form-control nmc-text-input-form" 
+                                                   type="text" 
+                                                   id="inputUserInfoPassword" 
+                                                   placeholder="" 
+                                                   ng-model="data.userInfo.newPassword"
+                                                   />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3">
+                                        <label for="confirmTenantPassword">Подтверждение пароля</label>
+                                    </td>
+                                    <td class="col-sm-9 nmc-text-align-left">
+                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
+                                            <input class="form-control nmc-text-input-form" 
+                                                   type="text" 
+                                                   id="confirmUserInfoPassword" 
+                                                   placeholder="Повторите пароль" 
+                                                   ng-model="data.userInfo.newPasswordConfirm"
+                                                   />
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>    
+                    </div>  
+                </div>        
+            </div>
+            <div class="modal-footer nmc-modal-footer">
+                    <div class="container-fluid  ">
+
+                        <div class="row">
+                            <div class="col-xs-offset-6 col-md-3">
+                                <input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                    ng-click="changeUserPassword(data.userInfo)"
+                                    value="Сохранить" />
+                            </div>
+                            <div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+                                <button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+                                    ng-click="exit('#createPasswordModal')">
+                                    Отменить
+                                </button>
+                            </div>
+                        </div>
+                    </div>		
+            </div>
+        </div>
+    </div>
 
 </div> <!-- end id=wrap -->
       
@@ -236,6 +340,7 @@
                </p> 
           </div>
       </div>
+      
    <!-- end ng-controller=MainCtrl -->
 <!--</div>-->
 
