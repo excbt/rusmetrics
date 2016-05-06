@@ -176,7 +176,7 @@
 
         <div id="parentDivWithObjectListTable" ng-controller="ReportsCtrl">
             <div class="" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
-                <h3 class="nmc-h3">Объектов нет.</h3>
+                <h3 class="nmc-h3">{{messages.noObjects}}</h3>
             </div>
             <div id="divWithObjectListTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                 <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">

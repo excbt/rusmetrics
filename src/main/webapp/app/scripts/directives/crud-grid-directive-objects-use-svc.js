@@ -31,6 +31,8 @@ angular.module('portalNMC')
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
                 
+                $scope.messages.noObjects = "Объектов нет.";
+                
                     //object settings
                 $scope.objectCtrlSettings = {};
 //                $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
@@ -109,7 +111,8 @@ angular.module('portalNMC')
                 
 //console.log(objectSvc.promise);
                 
-                var successGetObjectsCallback = function(response){                   
+                var successGetObjectsCallback = function(response){
+                    $scope.messages.noObjects = "Объектов нет.";
                     var tempArr = response.data;
 //console.log(tempArr);                    
                     tempArr.forEach(function(element){
@@ -1590,6 +1593,7 @@ angular.module('portalNMC')
                             $scope.objectsOnPage = [];
                             $scope.loading = false; 
                             $rootScope.$broadcast('objectSvc:loaded');
+                            $scope.messages.noObjects = "";
                         }, errorCallback);
                 };
                 
