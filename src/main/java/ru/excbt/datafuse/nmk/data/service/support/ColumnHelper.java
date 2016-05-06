@@ -32,7 +32,7 @@ public class ColumnHelper {
 	private final String[] columns;
 	private final String operator;
 	private final List<String> columnList;
-	private final List<SingularAttribute<?, ?>> sAttributes;
+	private final List<SingularAttribute<?, ?>> singularAttributes;
 
 	/**
 	 * 
@@ -44,39 +44,25 @@ public class ColumnHelper {
 		this.columns = columns;
 		this.operator = operator;
 		this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
-		this.sAttributes = null;
+		this.singularAttributes = null;
 	}
 
 	/**
 	 * 
 	 * @param columns
 	 */
-	public ColumnHelper(String[] columns) {
+	public ColumnHelper(String... columns) {
 		checkNotNull(columns);
 		this.columns = columns;
 		this.operator = null;
 		this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
-		this.sAttributes = null;
+		this.singularAttributes = null;
 	}
 
 	/**
 	 * 
 	 * @param attributes
 	 */
-	//	public ColumnHelper(SingularAttribute<?, ?>[] attributes) {
-	//		checkNotNull(attributes);
-	//
-	//		String[] colArray = new String[attributes.length];
-	//		int i = 0;
-	//		for (SingularAttribute<?, ?> col : attributes) {
-	//			colArray[i++] = col.getName();
-	//		}
-	//
-	//		this.columns = colArray;
-	//		this.operator = null;
-	//		this.columnList = Collections.unmodifiableList(Arrays.asList(colArray));
-	//	}
-
 	public ColumnHelper(SingularAttribute<?, ?>... attributes) {
 		checkNotNull(attributes);
 
@@ -92,7 +78,7 @@ public class ColumnHelper {
 		this.columns = colArray;
 		this.operator = null;
 		this.columnList = Collections.unmodifiableList(Arrays.asList(colArray));
-		this.sAttributes = Collections.unmodifiableList(sattrs);
+		this.singularAttributes = Collections.unmodifiableList(sattrs);
 	}
 
 	/**
@@ -211,10 +197,10 @@ public class ColumnHelper {
 	 * @return
 	 */
 	public <T> Selection<?>[] getSelection(Root<T> root) {
-		checkState(sAttributes != null);
+		checkState(singularAttributes != null);
 
 		List<Selection<T>> result = new ArrayList<>();
-		for (SingularAttribute<?, ?> sa : sAttributes) {
+		for (SingularAttribute<?, ?> sa : singularAttributes) {
 			result.add(root.get(sa.getName()));
 		}
 		return result.toArray(new Selection<?>[0]);
