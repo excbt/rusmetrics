@@ -204,6 +204,19 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	/**
 	 * 
 	 * @param subscriberId
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectSubscriberContObjects(Long subscriberId, List<Long> contObjectIds) {
+		checkNotNull(subscriberId);
+		List<ContObject> result = subscrContObjectRepository.selectContObjectsByIds(subscriberId, contObjectIds);
+		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)

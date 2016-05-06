@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
@@ -98,23 +100,33 @@ public class SubscrObjectTreeController extends SubscrApiController {
 		}
 
 		////
-		List<ContObject> viewContObjects = null;
+		List<ContObjectShortInfo> viewContObjectShortInfo = null;
 		if (currentSubscriberService.isRma()) {
-			List<ContObject> rmaContObjects = subscrContObjectService
-					.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
-			viewContObjects = rmaContObjects.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
-					.collect(Collectors.toList());
+			//-- New version
+			List<ContObjectShortInfo> rmaContObjectsShortInfo = subscrContObjectService
+					.selectSubscriberContObjectsShortInfo(getSubscriberId());
+
+			List<Long> rmaSubscrContObjectIds = subscrContObjectService.selectRmaSubscrContObjectIds(getSubscriberId());
+
+			viewContObjectShortInfo = rmaContObjectsShortInfo.stream()
+					.filter(i -> rmaSubscrContObjectIds.contains(i.getContObjectId())).collect(Collectors.toList());
+
 		} else {
-			viewContObjects = subscrContObjectService
-					.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+			viewContObjectShortInfo = subscrContObjectService.selectSubscriberContObjectsShortInfo(getSubscriberId());
 		}
 		////
 
 		List<Long> treeContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIds(getRmaSubscriberId(),
 				childSubscrObjectTreeId);
 
-		List<ContObject> resultList = viewContObjects.stream().filter(i -> treeContObjectIds.contains(i.getId()))
+		List<Long> resultContObjectIds = viewContObjectShortInfo.stream()
+				.filter(i -> treeContObjectIds.contains(i.getContObjectId())).map(i -> i.getContObjectId())
 				.collect(Collectors.toList());
+
+		List<ContObject> resultList = new ArrayList<>();
+		if (!resultContObjectIds.isEmpty()) {
+			resultList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId(), resultContObjectIds);
+		}
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
