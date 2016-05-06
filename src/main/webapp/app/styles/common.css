@@ -1475,6 +1475,13 @@ tr.nmc-inactive-price > td{
     padding: 5px 10px 5px 10px !important;
 }
 
+.nmc-toggle-button-trees{
+    font-size: 12px;
+    height: 26px;
+    padding: 3px;
+    min-width: 160px;
+}
+
     /* Активный переключатель*/
 .nmc-toggle > li.active > a{
 /*
@@ -1517,7 +1524,6 @@ tr.nmc-inactive-price > td{
 
 .nmc-toggle-button-active {
 }
-
  
 /* Неактивная кнопка */
 .nmc-button-inactive {

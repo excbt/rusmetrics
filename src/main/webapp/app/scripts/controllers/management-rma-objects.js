@@ -7,8 +7,7 @@ angular.module('portalNMC')
 //var timeDirStart = (new Date()).getTime();
                 
                     //messages for user
-                $scope.messages = {};
-                
+                $scope.messages = {};                
                 $scope.messages.signClientsObjects = "Назначить абонентов";
                 $scope.messages.deleteObjects = "Удалить выделенные объекты";
                 $scope.messages.deleteObject = "Удалить объект";
@@ -24,25 +23,20 @@ angular.module('portalNMC')
                     //object ctrl settings
                 $scope.crudTableName = objectSvc.getObjectsUrl();
                 $scope.objectCtrlSettings = {};
-
-                $scope.objectCtrlSettings.isCtrlEnd =false;
-                //флаг для объектов: true - все объекты выбраны
-                $scope.objectCtrlSettings.allSelected = false;
-                //выбран хотя бы один объект
-                $scope.objectCtrlSettings.anySelected = false;
-                $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.isCtrlEnd =false;                
+                $scope.objectCtrlSettings.allSelected = false;      //флаг для объектов: true - все объекты выбраны
+                $scope.objectCtrlSettings.anySelected = false;      //выбран хотя бы один объект                
+                $scope.objectCtrlSettings.anyClientSelected = false; //выбран хотя бы один абонент
+                $scope.objectCtrlSettings.objectsPerScroll = 34;    //the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
                 
-                //list of system for meta data editor
-                $scope.objectCtrlSettings.vzletSystemList = [];
+                $scope.objectCtrlSettings.vzletSystemList = []; //list of system for meta data editor
                 
-                //flag on/off extended user interface
-                $scope.objectCtrlSettings.extendedInterfaceFlag = true;
+                $scope.objectCtrlSettings.extendedInterfaceFlag = true; //flag on/off extended user interface
+                                
+                $scope.objectCtrlSettings.serverTimeZone = 3; //server time zone at Hours
                 
-                //server time zone at Hours
-                $scope.objectCtrlSettings.serverTimeZone = 3;
-                //date format for user
-                $scope.objectCtrlSettings.dateFormat = "DD.MM.YYYY";
+                $scope.objectCtrlSettings.dateFormat = "DD.MM.YYYY";    //date format for user
                 
                 //service permission settings
 //                $scope.objectCtrlSettings.mapAccess = false;
@@ -95,7 +89,6 @@ angular.module('portalNMC')
                     $scope.objects = response.data;
                     //sort by name
                     objectSvc.sortObjectsByFullName($scope.objects);
-
                     if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
                         $scope.objectsWithoutFilter = $scope.objects;
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
@@ -1251,11 +1244,7 @@ console.log(e);
                             return true;
                         };
                     });
-                    if (anySelectedFlag == true){
-                        $scope.objectCtrlSettings.anySelected = true;
-                    }else{
-                        $scope.objectCtrlSettings.anySelected = false;
-                    };
+                    $scope.objectCtrlSettings.anySelected = anySelectedFlag;
                 };
                 
                 $scope.setModeForObjects = function(mode){
@@ -1548,6 +1537,7 @@ console.log(e);
                 
                 //инициализируем переменные и интерфейсы для назначения объектов абонентам
                 $scope.setClientsInit = function(object){
+                    $scope.currentObject = {};
                     $scope.data.clientsOnPage = angular.copy($scope.data.clients);
                     if (!mainSvc.checkUndefinedNull(object)){
 //                        object.selected = true;
@@ -1563,9 +1553,9 @@ console.log(e);
                             //if object subscribers is no empty,
                             //set seleted flag for clients at clients form.
                             var selectedClientIds = resp.data;
-                            selectedClientIds.forEach(function(selectClientId){
+                            selectedClientIds.forEach(function(selectedClientId){
                                 $scope.data.clientsOnPage.some(function(clientOnPage){
-                                    if (selectClientId == clientOnPage.id){
+                                    if (selectedClientId == clientOnPage.id){
                                         clientOnPage.selected = true;
                                         clientOnPage.selectionDisabled = true;
                                         return true;
@@ -1616,7 +1606,7 @@ console.log(e);
                     //для каждого абонента надо вызвать rest для задания объектов, 
                     //передавая полученный массив идишников
                     $scope.data.clientsOnPage.forEach(function(cl){
-                       if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
+                       if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true) && (cl.selectionDisabled != true)){
                             var url = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
                             prepareClient(url, tmp);
                         }; 
@@ -1625,8 +1615,21 @@ console.log(e);
                 
                 $scope.selectAllClients = function(){
                     $scope.data.clientsOnPage.forEach(function(el){
+                        if (el.selectionDisabled == true) return;
                         el.selected = $scope.objectCtrlSettings.selectedAllClients;
                     });
+                    $scope.objectCtrlSettings.anyClientSelected = $scope.objectCtrlSettings.selectedAllClients;
+                };
+                
+                $scope.selectClient = function(){ 
+                    var anySelectedFlag = false;
+                    $scope.data.clientsOnPage.some(function(elem){
+                        if (elem.selected == true && elem.selectionDisabled != true){
+                            anySelectedFlag = true;
+                            return true;
+                        };
+                    });
+                    $scope.objectCtrlSettings.anyClientSelected = anySelectedFlag;
                 };
 // ******************************* end subscriber region ***********************                
                 

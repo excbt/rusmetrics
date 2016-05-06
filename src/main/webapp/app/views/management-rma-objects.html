@@ -38,12 +38,11 @@
                           <button 
                                   title="Действия над объектом" 
                              type="button" 
-                             class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
+                             class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
                              data-toggle="dropdown" 
                              aria-haspopup="true" 
                              aria-expanded="false" 
-
-                             style="font-size: .9em;">
+                             >
                               {{messages.treeMenuHeader}} <span ng-show="isSystemuser()">(id = {{data.currentTree.id}})</span> <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu nmc-dropdown-menu">
@@ -1570,7 +1569,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="setClientLabel" class="nmc-h3">
-				Назначение абонентов
+				Назначение абонентов <span ng-if="currentObject.id"> для </span>{{currentObject.fullName || currentObject.name || currentObject.id}}
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -1580,7 +1579,10 @@
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
                                 <tr ng-repeat="client in data.clientsOnPage" ng-class="{'nmc-tr-odd':($index%2!==0)}">
-                                    <td><input type="checkbox" ng-model="client.selected" class="nmc-checkbox-form"
+                                    <td><input type="checkbox" 
+                                               ng-model="client.selected" 
+                                               class="nmc-checkbox-form"
+                                               ng-click="selectClient()"
                                                ng-disabled="client.selectionDisabled"/>
                                         {{client.subscriberName}}
                                     </td>
@@ -1598,6 +1600,7 @@
         </span>
             <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
 					ng-click="setClients()"
+                   ng-disabled="!objectCtrlSettings.anyClientSelected"
 					value="Назначить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
