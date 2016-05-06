@@ -11,6 +11,12 @@ import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -24,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObject_;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
@@ -211,8 +218,9 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param subscriberId
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo(Long subscriberId) {
+	public List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo2(Long subscriberId) {
 		checkNotNull(subscriberId);
 
 		List<ContObjectShortInfo> result = new ArrayList<>();
@@ -250,6 +258,71 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			final Long id = columnHelper.getResultAsClass(row, "id", Long.class);
 			final String contObjectName = columnHelper.getResultAsClass(row, "name", String.class);
 			final String contObjectFullName = columnHelper.getResultAsClass(row, "fullName", String.class);
+
+			ContObjectShortInfo contObjectShortInfo = new ContObjectShortInfo() {
+
+				@Override
+				public String getName() {
+					return contObjectName;
+				}
+
+				@Override
+				public String getFullName() {
+					return contObjectFullName;
+				}
+
+				@Override
+				public Long getContObjectId() {
+					return id;
+				}
+			};
+
+			result.add(contObjectShortInfo);
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo(Long subscriberId) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Tuple> q = cb.createTupleQuery();
+		Subquery<Long> subq = q.subquery(Long.class);
+
+		Root<ContObject> co = q.from(ContObject.class);
+		Root<SubscrContObject> sco = subq.from(SubscrContObject.class);
+
+		ParameterExpression<Long> nameParameter = cb.parameter(Long.class, "subscriberId");
+
+		subq.select(sco.get(SubscrContObject_.contObjectId)).where(cb.equal(sco.get(SubscrContObject_.deleted), 0),
+				sco.get(SubscrContObject_.subscrEndDate).isNull(),
+				cb.equal(sco.get(SubscrContObject_.subscriberId), nameParameter));
+
+		ColumnHelper columnHelper = new ColumnHelper(ContObject_.id, ContObject_.name, ContObject_.fullName);
+
+		q.select(cb.tuple(columnHelper.getSelection(co))).where(cb.equal(co.get(ContObject_.deleted), 0),
+				cb.in(co.get(ContObject_.id)).value(subq));
+
+		//		q.select(cb.tuple(co.get(ContObject_.id), co.get(ContObject_.name), co.get(ContObject_.fullName)))
+		//				.where(cb.equal(co.get(ContObject_.deleted), 0), cb.in(co.get(ContObject_.id)).value(subq));
+
+		List<Tuple> resultTuples = em.createQuery(q).setParameter("subscriberId", subscriberId).getResultList();
+
+		List<ContObjectShortInfo> result = new ArrayList<>();
+
+		for (Tuple t : resultTuples) {
+
+			//columnHelper.indexOf(column)
+
+			final Long id = columnHelper.getTupleValue(t, ContObject_.id);
+			final String contObjectName = columnHelper.getTupleValue(t, ContObject_.name);
+			final String contObjectFullName = columnHelper.getTupleValue(t, ContObject_.fullName);
 
 			ContObjectShortInfo contObjectShortInfo = new ContObjectShortInfo() {
 
