@@ -238,7 +238,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 		List<Long> resultList = new ArrayList<>();
 
-		ColumnHelper columnHelper = ColumnHelper.newInstance(new String[] { "cont_object_id" });
+		ColumnHelper columnHelper = new ColumnHelper("cont_object_id");
 
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" SELECT ");

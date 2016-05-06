@@ -225,7 +225,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 		List<ContObjectShortInfo> result = new ArrayList<>();
 
-		ColumnHelper columnHelper = new ColumnHelper(new String[] { "id", "name", "fullName" });
+		ColumnHelper columnHelper = new ColumnHelper("id", "name", "fullName");
 
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" SELECT ");

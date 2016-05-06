@@ -474,7 +474,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	public List<SubscrObjectTree> selectSubscrObjectTreeShort(Long rmaSubscriberId) {
 		List<Object[]> results = subscrObjectTreeRepository.selectSubscrObjectTreeShort(rmaSubscriberId);
 
-		ColumnHelper helper = new ColumnHelper(new String[] { "id", "objectTreeType", "objectName" });
+		ColumnHelper helper = new ColumnHelper("id", "objectTreeType", "objectName");
 
 		List<SubscrObjectTree> resultList = new ArrayList<>();
 
