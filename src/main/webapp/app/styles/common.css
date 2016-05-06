@@ -2270,3 +2270,9 @@ input[type="checkbox"] {
     -moz-border-radius:6px 0 6px 6px;
     border-radius:6px 0 6px 6px;
 }
+/*******************************************************************/
+/* Классы для настройки деревьев*/
+/********************************************************************/
+.angular-ui-tree-handle {
+    cursor:default !important;
+}
