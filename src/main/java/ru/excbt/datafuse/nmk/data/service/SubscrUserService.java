@@ -342,7 +342,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * 
 	 * @param subscrUserId
 	 */
-	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_USER })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_USER, ROLE_CABINET_USER })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void clearSubscrUserPassword(Long subscrUserId) {
 		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
