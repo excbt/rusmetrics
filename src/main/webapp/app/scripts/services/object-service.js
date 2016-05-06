@@ -137,6 +137,11 @@ angular.module('portalNMC')
             return $http.get(url);
         };
                  
+        var getRmaObjectSubscribers = function(objId){
+            var url = urlRmaContObjects + "/" + objId + "/subscribers";
+            return $http.get(url);
+        };
+                 
         var getDeviceSchedulerSettings = function(objId, devId){
 //            /contObjects/%d/deviceObjects/%d/loadingSettings
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
@@ -565,6 +570,7 @@ angular.module('portalNMC')
             getRmaMetadataMeasureUnit,
             getRmaObject,
             getRmaObjectsData,
+            getRmaObjectSubscribers,
             getRmaObjectsUrl,
             getRmaPromise,
             getRefRangeByObjectAndZpoint,

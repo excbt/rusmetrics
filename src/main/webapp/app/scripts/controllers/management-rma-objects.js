@@ -1532,6 +1532,8 @@ console.log(e);
                     $http.get(table).then(function(response){
                         var subscrObjs = response.data;
                         var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
+//console.log(objIdsArr);                        
+//console.log(subscrObjIds);                        
                         Array.prototype.push.apply(ids, subscrObjIds);
                         ids = deleteDoubleElements(ids);
 //console.log(table);                        
@@ -1546,13 +1548,38 @@ console.log(e);
                 
                 //инициализируем переменные и интерфейсы для назначения объектов абонентам
                 $scope.setClientsInit = function(object){
+                    $scope.data.clientsOnPage = angular.copy($scope.data.clients);
                     if (!mainSvc.checkUndefinedNull(object)){
 //                        object.selected = true;
                         $scope.selectedItem(object);
                         $scope.objectCtrlSettings.isSetClientForOneObject = true;//включаем флаг того, что назначаем абонентов только одному текущему объекту
+                        
+                        //get current object client list
+                        objectSvc.getRmaObjectSubscribers(object.id).then(function(resp){      
+                            if (!angular.isArray(resp.data)){
+                                $('#setClientModal').modal();
+                                return "Object subscribers array is empty.";
+                            };
+                            //if object subscribers is no empty,
+                            //set seleted flag for clients at clients form.
+                            var selectedClientIds = resp.data;
+                            selectedClientIds.forEach(function(selectClientId){
+                                $scope.data.clientsOnPage.some(function(clientOnPage){
+                                    if (selectClientId == clientOnPage.id){
+                                        clientOnPage.selected = true;
+                                        clientOnPage.selectionDisabled = true;
+                                        return true;
+                                    };
+                                });
+                            });
+                            //view clients form
+                            $('#setClientModal').modal();
+                        }, function(e){
+                            console.log(e);
+                        });                                                
+                    }else{                    
+                        $('#setClientModal').modal();
                     };
-                    $scope.data.clientsOnPage = angular.copy($scope.data.clients);
-                    $('#setClientModal').modal();
                 };
                 
                 var prepareObjectsIdsArray = function(){
@@ -1590,8 +1617,8 @@ console.log(e);
                     //передавая полученный массив идишников
                     $scope.data.clientsOnPage.forEach(function(cl){
                        if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
-                            var table = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
-                            prepareClient(table, tmp);
+                            var url = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
+                            prepareClient(url, tmp);
                         }; 
                     });                    
                 };
