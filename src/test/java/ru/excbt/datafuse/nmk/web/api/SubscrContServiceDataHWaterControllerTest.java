@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
@@ -60,6 +61,9 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	@Autowired
 	private HWatersCsvService HWatersCsvService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -248,7 +252,8 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	@Test
 	public void testContObjectServiceTypeInfoOne() throws Exception {
 
-		List<Long> ids = currentSubscriberService.getSubscriberContObjectIds();
+		List<Long> ids = subscrContObjectService
+				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		assertTrue(ids.size() > 0);
 
 		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/" + ids.get(0));

@@ -11,18 +11,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
 
 public class CurrentSubscriberServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CurrentSubscriberServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberServiceTest.class);
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private CurrentUserService currentUserService;
 
 	@Test
 	public void testSubscriberId() {
@@ -31,7 +28,7 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testFullUserInfo() {
-		FullUserInfo result = currentUserService.getFullUserInfo();
+		FullUserInfo result = currentSubscriberService.getFullUserInfo();
 		assertNotNull(result);
 
 		logger.info("userId = {}", result.getId());
@@ -47,10 +44,15 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSubscriberCurrentTime() throws Exception {
-		LocalDateTime subscriberTime = currentSubscriberService
-				.getSubscriberCurrentTime_Joda();
+		LocalDateTime subscriberTime = currentSubscriberService.getSubscriberCurrentTime_Joda();
 		assertNotNull(subscriberTime);
 		logger.info("Subscriber Current Time: {}", subscriberTime);
+	}
+
+	@Test
+	public void testCurrentAuditUser() {
+		AuditUser au = currentSubscriberService.getCurrentAuditor();
+		assertNotNull(au);
 	}
 
 }

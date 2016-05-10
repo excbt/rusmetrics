@@ -272,7 +272,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	public ResponseEntity<?> getDeviceModels() {
 		List<DeviceModel> deviceModels = deviceModelService.findAll();
 		deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);
-		if (!currentUserService.isSystem()) {
+		if (!currentSubscriberService.isSystemUser()) {
 			deviceModels = ObjectFilters.devModeFilter(deviceModels);
 		}
 		return ResponseEntity.ok(deviceModels);

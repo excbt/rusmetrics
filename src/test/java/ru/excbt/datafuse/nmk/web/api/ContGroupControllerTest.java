@@ -22,7 +22,6 @@ import com.jayway.jsonpath.JsonPath;
 import ru.excbt.datafuse.nmk.data.model.ContGroup;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class ContGroupControllerTest extends AnyControllerTest {
@@ -82,7 +81,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 	@Test
 	public void testUpdateContGroup() throws Exception {
 		List<ContGroup> contGroups = contGroupService
-				.selectSubscriberGroups(new SubscriberParam(currentSubscriberService.getSubscriberId()));
+				.selectSubscriberGroups(currentSubscriberService.getSubscriberParam());
 
 		assertTrue(contGroups.size() > 0);
 		ContGroup cg;

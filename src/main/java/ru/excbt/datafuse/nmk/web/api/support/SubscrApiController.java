@@ -14,7 +14,6 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
@@ -39,9 +38,6 @@ public class SubscrApiController extends WebApiController {
 	protected SubscrServiceAccessService subscrServiceAccessService;
 
 	@Autowired
-	protected CurrentUserService currentUserService;
-
-	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
 
 	/**
@@ -61,7 +57,7 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected boolean canAccessContObject(Long[] contObjectIds) {
-		if (currentUserService.isSystem()) {
+		if (currentSubscriberService.isSystemUser()) {
 			return true;
 		}
 		return subscrContObjectService.canAccessContObjects(currentSubscriberService.getSubscriberId(), contObjectIds);
@@ -73,7 +69,7 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected boolean canAccessContZPoint(Long[] contZPointIds) {
-		if (currentUserService.isSystem()) {
+		if (currentSubscriberService.isSystemUser()) {
 			return true;
 		}
 		return subscrContObjectService.canAccessContZPoint(getCurrentSubscriberId(), contZPointIds);
@@ -111,7 +107,7 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected SubscriberParam getSubscriberParam() {
-		return new SubscriberParam(currentSubscriberService.getSubscriberId());
+		return currentSubscriberService.getSubscriberParam();
 	}
 
 	/**
@@ -119,7 +115,7 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected Long getCurrentSubscUserId() {
-		return currentUserService.getCurrentUserId();
+		return currentSubscriberService.getCurrentUserId();
 	}
 
 	/**
@@ -170,7 +166,7 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected <T> List<T> filterObjectAccess(List<T> objectList) {
-		SubscriberUserDetails sud = currentUserService.getCurrentUserDetails();
+		SubscriberUserDetails sud = currentSubscriberService.getCurrentUserDetails();
 		if (sud != null && sud.getSkipServiceFilter()) {
 			return new ArrayList<>(objectList);
 		}
@@ -200,7 +196,7 @@ public class SubscrApiController extends WebApiController {
 	 * @return
 	 */
 	protected boolean isSystemUser() {
-		return currentUserService.isSystem();
+		return currentSubscriberService.isSystemUser();
 	}
 
 }

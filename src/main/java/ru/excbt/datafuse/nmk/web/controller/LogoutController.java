@@ -7,18 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
 
 @Controller
 public class LogoutController {
 
 	@Autowired
-	private CurrentUserService currentUserService;
+	private CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService;
 
 	@RequestMapping(value = "/logout", method = { RequestMethod.GET })
 	public String doGet() {
 
-		Authentication auth = currentUserService.getAuthentication();
+		Authentication auth = currentSubscriberUserDetailsService.getAuthentication();
 
 		if (auth != null && (auth.getCredentials() instanceof SAMLCredential)) {
 			return "redirect:/saml/logout";

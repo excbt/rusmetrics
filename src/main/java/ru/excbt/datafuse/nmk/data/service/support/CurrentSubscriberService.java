@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -12,9 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.repository.FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
@@ -35,13 +35,19 @@ public class CurrentSubscriberService {
 	private SubscriberService subscriberService;
 
 	@Autowired
-	private CurrentUserService currentUserService;
-
-	@Autowired
 	private MockSubscriberService mockSubscriberService;
 
 	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+	protected UserSession userSession;
+
+	@Autowired
+	private MockUserService mockUserService;
+
+	@Autowired
+	private FullUserInfoRepository fullUserInfoRepository;
+
+	@Autowired
+	private CurrentSubscriberUserDetailsService subscriberUserDetailsService;
 
 	/**
 	 * 
@@ -49,7 +55,7 @@ public class CurrentSubscriberService {
 	 */
 	public long getSubscriberId() {
 
-		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
+		SubscriberUserDetails userDetails = subscriberUserDetailsService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
@@ -74,9 +80,21 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
+	public SubscriberParam getSubscriberParam() {
+		if (userSession.getSubscriberParam() == null) {
+			userSession.setSubscriberParam(
+					SubscriberParam.builder().subscriberId(getSubscriberId()).subscrUserId(getCurrentUserId()).build());
+		}
+		return userSession.getSubscriberParam();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Subscriber getSubscriber() {
 
-		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
+		SubscriberUserDetails userDetails = subscriberUserDetailsService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
@@ -89,7 +107,8 @@ public class CurrentSubscriberService {
 			return mockSubscriberService.getMockSubscriber();
 		}
 
-		return subscriberService.selectSubscriber(subscriberId);
+		return userDetails.getSubscriber();
+		//return subscriberService.selectSubscriber(subscriberId);
 	}
 
 	/**
@@ -114,24 +133,8 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
-	public List<ContObject> getSubscriberContObjects() {
-		return subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<Long> getSubscriberContObjectIds() {
-		return subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
 	public Long getCurrentUserId() {
-		return currentUserService.getCurrentUserId();
+		return getCurrentAuditor().getId();
 	}
 
 	/**
@@ -169,4 +172,44 @@ public class CurrentSubscriberService {
 		Subscriber subscriber = getSubscriber();
 		return subscriber != null ? subscriber.getGhostSubscriberId() : null;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public AuditUser getCurrentAuditor() {
+		SubscriberUserDetails subscriberUserDetails = subscriberUserDetailsService.getCurrentUserDetails();
+		if (subscriberUserDetails == null) {
+			return mockUserService.getMockAuditUser();
+		}
+		return new AuditUser(subscriberUserDetails);
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public FullUserInfo getFullUserInfo() {
+		AuditUser user = getCurrentAuditor();
+		if (user == null) {
+			return null;
+		}
+
+		FullUserInfo result = fullUserInfoRepository.findOne(user.getId());
+		return result == null ? null : new FullUserInfo(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isSystemUser() {
+		return subscriberUserDetailsService.isSystem();
+	}
+
+	public SubscriberUserDetails getCurrentUserDetails() {
+		return subscriberUserDetailsService.getCurrentUserDetails();
+	}
+
 }

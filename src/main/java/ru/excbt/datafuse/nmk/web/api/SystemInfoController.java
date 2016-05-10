@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -37,6 +38,9 @@ public class SystemInfoController extends SubscrApiController {
 
 	@Autowired
 	private SubscrUserService subscrUserService;
+
+	@Autowired
+	private CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService;
 
 	/**
 	 * 
@@ -83,7 +87,7 @@ public class SystemInfoController extends SubscrApiController {
 	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getFullUserInfo() {
 
-		FullUserInfo result = currentUserService.getFullUserInfo();
+		FullUserInfo result = currentSubscriberService.getFullUserInfo();
 		if (result == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -96,7 +100,7 @@ public class SystemInfoController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/readOnlyMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getUserRights() {
-		UserDetails userDetails = currentUserService.getCurrentUserDetails();
+		UserDetails userDetails = currentSubscriberService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			return responseOK(new ReadOnlyMode(true));
@@ -116,10 +120,10 @@ public class SystemInfoController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/samlAuthMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSamlAuth() {
-		Authentication auth = currentUserService.getAuthentication();
+		Authentication auth = currentSubscriberUserDetailsService.getAuthentication();
 
 		if (auth == null) {
-			responseOK(new SamlAuthMode(false));
+			return responseOK(new SamlAuthMode(false));
 		}
 
 		return responseOK(new SamlAuthMode(auth.getCredentials() instanceof SAMLCredential));
@@ -140,7 +144,7 @@ public class SystemInfoController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("request params is not valid"));
 		}
 
-		FullUserInfo fullUserInfo = currentUserService.getFullUserInfo();
+		FullUserInfo fullUserInfo = currentSubscriberService.getFullUserInfo();
 		if (fullUserInfo == null) {
 			return responseForbidden();
 		}

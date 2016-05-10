@@ -5,7 +5,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 /**
  * Компонент для аудита сущностей
@@ -19,11 +19,11 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 public class AuditorAwareImpl implements AuditorAware<AuditUser> {
 
 	@Autowired
-	private CurrentUserService currentUserService;
+	private CurrentSubscriberService currentSubscriberService;
 
 	@Override
 	public AuditUser getCurrentAuditor() {
-		return currentUserService.getCurrentAuditUser();
+		return currentSubscriberService.getCurrentAuditor();
 	}
 
 }

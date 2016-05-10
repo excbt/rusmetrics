@@ -15,7 +15,6 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -44,9 +43,6 @@ public class ReportSettingsController extends SubscrApiController {
 	@Autowired
 	private ReportActionTypeRepository reportActionTypeRepository;
 
-	@Autowired
-	private CurrentUserService currentUserService;
-
 	/**
 	 * 
 	 * @return
@@ -54,7 +50,7 @@ public class ReportSettingsController extends SubscrApiController {
 	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportType() {
 
-		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentUserService.isSystem());
+		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
 
 		resultReports = filterObjectAccess(resultReports);
 

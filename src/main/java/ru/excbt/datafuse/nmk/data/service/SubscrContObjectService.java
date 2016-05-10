@@ -22,7 +22,6 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -755,40 +754,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectContObjectSubscriberIdsByRma(Long rmaSubscriberId, Long contObjectId) {
 		return subscrContObjectRepository.selectContObjectSubscriberIdsByRma(rmaSubscriberId, contObjectId);
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	private static Specification<SubscrContObject> specSubscriberId(final Long subscriberId) {
-		return (root, query, cb) -> {
-			if (subscriberId == null) {
-				return null;
-			}
-			return cb.equal(root.get(SubscrContObject_.subscriberId), subscriberId);
-		};
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private static Specification<SubscrContObject> specDeleted() {
-		return (root, query, cb) -> {
-			return cb.equal(root.get(SubscrContObject_.deleted), 0);
-		};
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private static Specification<SubscrContObject> specSubscrEndDate() {
-		return (root, query, cb) -> {
-			return root.get(SubscrContObject_.subscrEndDate).isNotNull();
-		};
 	}
 
 }

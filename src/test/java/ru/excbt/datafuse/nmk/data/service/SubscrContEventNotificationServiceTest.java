@@ -25,7 +25,6 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
@@ -45,9 +44,6 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ContEventTypeService contEventTypeService;
-
-	@Autowired
-	private CurrentUserService currentUserService;
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
@@ -110,10 +106,10 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 		List<Long> updateIds = lst.stream().map(v -> v.getId()).collect(Collectors.toList());
 
-		logger.info("Current User Id:{}", currentUserService.getCurrentUserId());
+		logger.info("Current User Id:{}", currentSubscriberService.getCurrentUserId());
 
 		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.FALSE, updateIds,
-				currentUserService.getCurrentUserId());
+				currentSubscriberService.getCurrentUserId());
 
 		SubscrContEventNotification result = subscrContEventNotifiicationService.findOneNotification(updateIds.get(0));
 
@@ -122,7 +118,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		assertTrue(Boolean.FALSE.equals(result.getIsNew()));
 
 		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.TRUE, updateIds,
-				currentUserService.getCurrentUserId());
+				currentSubscriberService.getCurrentUserId());
 
 		logger.info("Update Result. id:{} isNew:{}", result.getId(), result.getIsNew());
 
@@ -170,7 +166,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01", "2015-06-30");
 
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatusCollapse(currentSubscriberService.getSubscriberId(), contObjectId,
+				.selectMonitorContEventTypeStatusCollapse(currentSubscriberService.getSubscriberParam(), contObjectId,
 						dpp.getLocalDatePeriod());
 
 		assertNotNull(checkList);

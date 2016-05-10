@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.HelpContext;
 import ru.excbt.datafuse.nmk.data.service.HelpContextService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/help")
-public class HelpContextController extends WebApiController {
+public class HelpContextController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HelpContextController.class);
 
@@ -26,15 +26,12 @@ public class HelpContextController extends WebApiController {
 	@Autowired
 	private HelpContextService helpContextService;
 
-	@Autowired
-	private CurrentUserService currentUserService;
-
 	/**
 	 * 
 	 * @return
 	 */
 	private boolean isHelpContextSetupEnable() {
-		if (currentUserService.isSystem()) {
+		if (currentSubscriberService.isSystemUser()) {
 			if (helpContextService.isHelpContextSetup()) {
 				return true;
 			}

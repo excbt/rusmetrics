@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -39,6 +40,9 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private ContObjectService contObjectService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	@Test
 	public void testContObjectsGet() throws Exception {
@@ -106,7 +110,8 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testSettingModeUpdate() throws Exception {
 
-		List<ContObject> contObjects = currentSubscriberService.getSubscriberContObjects();
+		List<ContObject> contObjects = subscrContObjectService
+				.selectSubscriberContObjects(currentSubscriberService.getSubscriberParam());
 
 		assertNotNull(contObjects);
 		assertTrue(contObjects.size() > 0);

@@ -48,6 +48,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -716,16 +717,16 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod) {
+	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
+			final SubscriberParam subscriberParam, final Long contObjectId, final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
-		checkNotNull(subscriberId);
+		checkNotNull(subscriberParam);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
 		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCountCollapse(
-				subscriberId, contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
+				subscriberParam.getSubscriberId(), contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
 
 		List<CounterInfo> selectList = selectResult.stream()
 				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
@@ -757,6 +758,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(final Long subscriberId,
 			final LocalDatePeriod datePeriod) {
@@ -839,6 +841,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
 			final Long subscriberId, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
@@ -1017,16 +1020,17 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(final Long subscriberId,
+	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(final SubscriberParam subscriberParam,
 			final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
-				subscriberId, datePeriod, noGreenColor);
+				subscriberParam.getSubscriberId(), datePeriod, noGreenColor);
 
 		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
 				CityMonitorContEventsStatus.FACTORY_INSTANCE);
 
-		Map<UUID, Long> cityEventCount = contEventMonitorService.selectCityContObjectMonitorEventCount(subscriberId);
+		Map<UUID, Long> cityEventCount = contEventMonitorService
+				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
 
 		result.forEach((i) -> {
 			Long cnt = cityEventCount.get(i.getCityFiasUUID());

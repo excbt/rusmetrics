@@ -40,7 +40,6 @@ import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -68,9 +67,6 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
-
-	@Autowired
-	private CurrentUserService currentUserService;
 
 	@Autowired
 	private ContEventLevelColorService contEventLevelColorService;
@@ -193,7 +189,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			@Override
 			public void process() {
 				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
-						currentUserService.getCurrentUserId());
+						currentSubscriberService.getCurrentUserId());
 			}
 		};
 
@@ -218,7 +214,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			@Override
 			public void process() {
 				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
-						currentUserService.getCurrentUserId());
+						currentSubscriberService.getCurrentUserId());
 			}
 		};
 
@@ -270,7 +266,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			public void process() {
 				subscrContEventNotifiicationService.updateRevisionByConditions(getCurrentSubscriberId(), actionDP,
 						contObjectList, contEventTypeIdPairList, isNew, revisionIsNew,
-						currentUserService.getCurrentUserId());
+						currentSubscriberService.getCurrentUserId());
 			}
 		};
 
@@ -283,8 +279,8 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsContObjects(
+	//@RequestMapping(value = "/notifications/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	protected ResponseEntity<?> notificationsContObjects(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
@@ -321,9 +317,9 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/statusCollapse", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsContObjectsStatusCollapse(
+	//@RequestMapping(value = "/notifications/contObject/statusCollapse", method = RequestMethod.GET,
+	//		produces = APPLICATION_JSON_UTF8)
+	protected ResponseEntity<?> notificationsContObjectsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
@@ -367,7 +363,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
-				.selectMonitoryContObjectCityStatus(getCurrentSubscriberId(),
+				.selectMonitoryContObjectCityStatus(getSubscriberParam(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
@@ -379,9 +375,10 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsContObjectEventTypes(@PathVariable(value = "contObjectId") Long contObjectId,
+	//@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET,
+	//		produces = APPLICATION_JSON_UTF8)
+	protected ResponseEntity<?> notificationsContObjectEventTypes(
+			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
@@ -426,7 +423,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatusCollapse(getCurrentSubscriberId(), contObjectId,
+				.selectMonitorContEventTypeStatusCollapse(getSubscriberParam(), contObjectId,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
