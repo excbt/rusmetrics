@@ -4,10 +4,12 @@ public final class SubscriberParam {
 
 	private final long subscriberId;
 	private final long subscrUserId;
+	private final boolean isRma;
 
 	public final static class Builder {
 		private long subscriberId;
 		private long subscrUserId;
+		private boolean isRma;
 
 		public Builder subscriberId(Long arg) {
 			this.subscriberId = arg;
@@ -19,8 +21,13 @@ public final class SubscriberParam {
 			return this;
 		}
 
+		public Builder isRma(Boolean arg) {
+			this.isRma = Boolean.TRUE.equals(arg);
+			return this;
+		}
+
 		public SubscriberParam build() {
-			return new SubscriberParam(subscriberId, subscrUserId);
+			return new SubscriberParam(this);
 		}
 
 	}
@@ -33,9 +40,10 @@ public final class SubscriberParam {
 	 * 
 	 * @param subscriberId
 	 */
-	private SubscriberParam(long subscriberId, long subscrUserId) {
-		this.subscriberId = subscriberId;
-		this.subscrUserId = subscrUserId;
+	private SubscriberParam(Builder builder) {
+		this.subscriberId = builder.subscriberId;
+		this.subscrUserId = builder.subscrUserId;
+		this.isRma = builder.isRma;
 	}
 
 	/**

@@ -82,8 +82,8 @@ public class CurrentSubscriberService {
 	 */
 	public SubscriberParam getSubscriberParam() {
 		if (userSession.getSubscriberParam() == null) {
-			userSession.setSubscriberParam(
-					SubscriberParam.builder().subscriberId(getSubscriberId()).subscrUserId(getCurrentUserId()).build());
+			userSession.setSubscriberParam(SubscriberParam.builder().subscriberId(getSubscriberId())
+					.subscrUserId(getCurrentUserId()).isRma(isRma()).build());
 		}
 		return userSession.getSubscriberParam();
 	}
