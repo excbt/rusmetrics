@@ -33,6 +33,8 @@ angular.module('portalNMC')
                 
                 $scope.messages.noObjects = "Объектов нет.";
                 
+                $scope.messages.groupMenuHeader = "Полный список объектов";
+                
                     //object settings
                 $scope.objectCtrlSettings = {};
 //                $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";

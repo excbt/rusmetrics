@@ -8,6 +8,9 @@ angular.module('portalNMC')
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
     var objectUrl = notificationsUrl+"/contObject";//"resource/objects.json";  
     var monitorUrl = notificationsUrl+"/monitorColor";
+      //user messages
+    $scope.messages = {};
+    $scope.messages.groupMenuHeader = "Полный список объектов";
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];           
     //default date interval settings
@@ -159,22 +162,22 @@ angular.module('portalNMC')
         if ((curObject.showGroupDetails == true) && (eventTable == null)){
             curObject.showGroupDetails = true;
         }else{
-            curObject.showGroupDetails =! curObject.showGroupDetails;
+            curObject.showGroupDetails = !curObject.showGroupDetails;
         };                     
        
         if (curObject.showGroupDetails === true){
             $scope.getEventTypesByObject(curObject.contObject.id, false);
             
-            var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
+            var btnDetail = document.getElementById("btnDetail" + curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-right");
             btnDetail.classList.add("glyphicon-chevron-down");
         }//else if curObject.showGroupDetails = false => hide child zpoint table
         else{
-            var trObj = document.getElementById("obj"+curObject.contObject.id);
+            var trObj = document.getElementById("obj" + curObject.contObject.id);
             var trObjEvents = trObj.getElementsByClassName("nmc-tr-object-events")[0];//.getElementById("trObjZp");
 //            var trObjEvents = document.getElementById("trObjEvents"+curObject.contObject.id);
             trObjEvents.innerHTML = "";
-            var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
+            var btnDetail = document.getElementById("btnDetail" + curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-down");
             btnDetail.classList.add("glyphicon-chevron-right");
         };
@@ -190,49 +193,6 @@ angular.module('portalNMC')
         $scope.setNoticeFilterByObjectAndRevision(objId);
         window.open(noticesUrl);
     };
-
-    //Рисуем таблицу с объектами
-//    function makeObjectTable121212(objectArray, isNewFlag){
-//        var objTable = document.getElementById('objectMonitorTable').getElementsByTagName('tbody')[0];       
-//        var tableHTML = "";
-//        if (!isNewFlag){
-//            tableHTML = objTable.innerHTML;
-//        };               
-//        objectArray.forEach(function(element, index){
-//            var globalElementIndex = $scope.monitorSettings.objectBottomOnPage-objectArray.length+index;
-//            var trClass= globalElementIndex%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
-//            var imgSize = 16; //размер иконки состояния объекта
-//            if(element.statusColor.toLowerCase()=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
-//                imgSize = 1;
-//            };
-//            
-//            tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.contObject.id+"\">";
-//            tableHTML += "<td>";
-//            tableHTML += "<table>";
-//            tableHTML += "<tr>";
-//            tableHTML += "<td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть список типов событий\" id=\"btnDetail" + element.contObject.id + "\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails(" + element.contObject.id + ")\"></i>";
-//            tableHTML += "<img id=\"imgObj" + element.contObject.id + "\" title=\"\" height=\"" + imgSize + "\" width=\"" + imgSize + "\" src=\"" + "images/object-state-" + element.statusColor.toLowerCase() + ".png" + "\" />";
-//            tableHTML += "</td>";
-////        "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;            
-//            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"" + noticesUrl + "?objectMonitorId=" + element.contObject.id + "&monitorFlag=true&fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd + "\" ng-click=\"setNoticeFilterByObject(" + element.contObject.id + ")\" ng-right-click=\"getNoticesByObjectOnRightClick(" + element.contObject.id + ")\">" + element.eventsCount + " / " + element.eventsTypesCount + "</a> (<a title=\"Новые уведомления\" href=\"" + noticesUrl + "\" ng-click=\"setNoticeFilterByObjectAndRevision(" + element.contObject.id + ")\" ng-right-click=\"getNoticesByObjectAndRevisionOnRightClick(" + element.contObject.id + ")\">" + element.newEventsCount + "</a>)";            
-//            tableHTML += "</td>";
-//            tableHTML += "<td class=\"nmc-td-for-buttons\"><i title=\"Показать диаграмму уведомлений\" class=\"btn btn-xs\" ng-click=\"getEventTypesByObject(" + element.contObject.id + ", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
-//            tableHTML += "<td class=\"col-md-3\" ng-click=\"toggleShowGroupDetails(" + element.contObject.id + ")\">" + element.contObject.fullName;
-//            if ($scope.isSystemuser()){
-//                tableHTML += " <span>(id = " + element.contObject.id + ")</span>";
-//            };
-//            tableHTML+= "</td>";
-//            tableHTML += "<td class=\"col-md-8\"></td></tr>";
-////            tableHTML += "</tr>";
-//            tableHTML += "</table>";
-//            tableHTML += "</td>";
-//            tableHTML += "</tr>";
-//            tableHTML += "<tr id=\"trObjEvents" + element.contObject.id + "\">";
-//            tableHTML += "</tr>";
-//        }); 
-//        objTable.innerHTML = tableHTML;
-//        $compile(objTable)($scope);
-//    };
     
     //Формируем таблицу с событиями объекта
     function makeEventTypesByObjectTable(obj){ 
@@ -334,6 +294,19 @@ angular.module('portalNMC')
     $scope.refreshData = function(){
         $scope.monitorSettings.loadingFlag = true;             
         $rootScope.$broadcast('monitor:updateObjectsRequest');
+    };
+      
+    $scope.getMonitor = function(group){
+        if (monitorSvc.checkUndefinedNull(group)){
+            $scope.messages.groupMenuHeader = "Полный список объектов";
+            $scope.monitorSettings.groupId = null;
+            monitorSvc.setMonitorSettings({groupId: null});    
+        }else{
+            $scope.monitorSettings.groupId = group.id;
+            monitorSvc.setMonitorSettings({groupId: group.id});
+            $scope.messages.groupMenuHeader = group.contGroupName;
+        };
+        $scope.refreshData();
     };
     
     $scope.getNoGreenObjects= function(){
@@ -447,7 +420,7 @@ angular.module('portalNMC')
                     monitorSvc.getMonitorEventsByObject(element);
                 }else if((element.statusColor === "YELLOW")){  
                     element.monitorEvents = "На объекте нет нештатных ситуаций";
-                    $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+                    $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
                 };
             });
             Array.prototype.push.apply($scope.objectsOnPage, tempArr);
@@ -464,17 +437,17 @@ angular.module('portalNMC')
         if (newPeriod===oldPeriod){
             return;
         };
-        monitorSvc.setMonitorSettings({refreshPeriod:$scope.monitorSettings.refreshPeriod});
+        monitorSvc.setMonitorSettings({refreshPeriod : $scope.monitorSettings.refreshPeriod});
         $rootScope.$broadcast('monitor:periodChanged');
     }, false);
       
           //check object array
     if ($scope.objects.length!=0)  { 
-        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
+        var tempArr = $scope.objects.slice(0, $scope.monitorSettings.objectsPerScroll);
         $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
-        if (angular.isDefined(monitorSvc.getMonitorSettings().objectMonitorId) && monitorSvc.getMonitorSettings().objectMonitorId!=="null"){     
+        if (angular.isDefined(monitorSvc.getMonitorSettings().objectMonitorId) && monitorSvc.getMonitorSettings().objectMonitorId !== "null"){     
             $scope.getEventTypesByObject(Number(monitorSvc.getMonitorSettings().objectMonitorId), false);
-            monitorSvc.setMonitorSettings({objectMonitorId:null});
+            monitorSvc.setMonitorSettings({objectMonitorId : null});
         };        
     }else if($scope.monitorSettings.loadingFlag === false){//else -> send request      
         $rootScope.$broadcast('monitor:updateObjectsRequest');
@@ -505,7 +478,7 @@ angular.module('portalNMC')
       
     $scope.addMoreObjectsForMonitor = function(){
 //console.log("addMoreObjectsForMonitor. Run");
-        if (($scope.objects.length<=0)){
+        if (($scope.objects.length <= 0)){
             return;
         };
         var endIndex = $scope.monitorSettings.objectsOnPage+$scope.monitorSettings.objectsPerScroll;                   
@@ -520,7 +493,7 @@ angular.module('portalNMC')
         if(endIndex >= ($scope.objects.length)){
             $scope.monitorSettings.objectsOnPage = $scope.objects.length;
         }else{
-            $scope.monitorSettings.objectsOnPage+=$scope.monitorSettings.objectsPerScroll;
+            $scope.monitorSettings.objectsOnPage += $scope.monitorSettings.objectsPerScroll;
         };
     };
       
@@ -534,14 +507,14 @@ angular.module('portalNMC')
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
         tmp.forEach(function(element){
-            if(element.permissionTagId.localeCompare(ctxId)==0){
+            if(element.permissionTagId.localeCompare(ctxId) == 0){
                 ctxFlag = true;
             };
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-            if (angular.isUndefined(elDOM)||(elDOM==null)){
+            if (angular.isUndefined(elDOM) || (elDOM == null)){
                 return;
             };              
-            $('#'+element.permissionTagId).removeClass('nmc-hide');
+            $('#' + element.permissionTagId).removeClass('nmc-hide');
         });
         if (ctxFlag == false){
             window.location.assign('#/notices/list');
@@ -569,7 +542,7 @@ angular.module('portalNMC')
                 return true;
             };
         });
-        if (curObjIndex==-1){
+        if (curObjIndex == -1){
             return;
         };
         var data = [];//, series = Math.floor(Math.random() * 6) + 3;       

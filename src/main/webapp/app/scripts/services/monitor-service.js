@@ -40,6 +40,14 @@ angular.module('portalNMC')
             return citiesMonitorSvc;
         };
         
+        var checkUndefinedNull = function(numvalue){
+            var result = false;
+            if ((angular.isUndefined(numvalue)) || (numvalue == null)){
+                result = true;
+            }
+            return result;
+        };
+        
         function getObjectsFromCities(cities){
             if (angular.isUndefined(cities) || (cities == null) || !angular.isArray(cities)){
                 return false;
@@ -58,6 +66,9 @@ angular.module('portalNMC')
 //console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
             var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
+            if (!checkUndefinedNull(monitorSvcSettings.groupId)){
+                targetUrl += "&groupId=" + monitorSvcSettings.groupId;
+            };
             $http.get(targetUrl)
                 .success(function(data){
 //console.log(data);                
@@ -189,7 +200,7 @@ angular.module('portalNMC')
         });
         
          return {
-            
+            checkUndefinedNull,
             getAllMonitorObjects,
             getAllMonitorCities,
             getLoadingStatus,

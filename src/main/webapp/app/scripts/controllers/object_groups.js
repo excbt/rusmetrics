@@ -77,7 +77,7 @@ angular.module('portalNMC')
         crudGridDataFactory($scope.groupUrl).delete({ id: object.id }, successCallback, errorCallback);
     };
 
-    $scope.getData = function (url, type) {
+    $scope.getData = function (url, type) {      
         crudGridDataFactory(url).query(function (data) {
             switch (type){
                 case "groups": $scope.groups = data; break;

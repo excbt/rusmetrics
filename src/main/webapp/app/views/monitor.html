@@ -37,7 +37,36 @@
                 type="text" ng-model="monitorSettings.monitorDates" options="monitorSettings.dateRangeSettings" aria-describedby="leftAddon"/>
         </div>    
         </div>
-        <div class="pull-right col-md-offset-3 col-md-3 marginTop15">
+        <div class="col-md-2 noPadding marginTop15 nmc-div-filter-date-interval" ng-controller="ObjectGroupsCtrl">
+            <div class="btn-group">
+                  <button 
+                          title="Действия над объектом" 
+                         type="button" 
+                         class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
+                         data-toggle="dropdown" 
+                         aria-haspopup="true" 
+                         aria-expanded="false" 
+                     >
+                      {{messages.groupMenuHeader}} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu nmc-dropdown-menu">
+                      <li class="menu-item" role="presentation">
+                          <a href="" class=""
+                             ng-click="getMonitor()">
+                              Полный список объектов
+                          </a>
+                      </li>
+                      <li class="divider" role="presentation"></li>
+                      <li class="menu-item" role="presentation" ng-repeat="group in groups">
+                          <a href="" class=""
+                             ng-click="getMonitor(group)">
+                              {{group.contGroupName}}
+                          </a>
+                      </li>
+                  </ul>
+                </div>   
+        </div>
+        <div class="pull-right col-md-offset-1 col-md-3 marginTop15">
 <!--            <label class="nmc-form-label">Период обновления:</label>-->
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
             <div class="input-group nmc-input-group-refresh-period">
