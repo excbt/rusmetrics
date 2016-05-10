@@ -67,7 +67,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		List<ContObject> contObjectList = null;
 
 		if (contGroupId == null) {
-			contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
+			contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 		} else {
 			contObjectList = contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
 		}
@@ -89,7 +89,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	 */
 	protected List<ContObject> selectSubscrContObjects(Long contGroupId) {
 		if (contGroupId == null) {
-			return subscrContObjectService.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+			return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 		} else {
 			return contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
 		}

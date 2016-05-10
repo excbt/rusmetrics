@@ -16,18 +16,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.model.ContGroup;
-import ru.excbt.datafuse.nmk.data.service.ContGroupService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.JsonPath;
 
+import ru.excbt.datafuse.nmk.data.model.ContGroup;
+import ru.excbt.datafuse.nmk.data.service.ContGroupService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+
 public class ContGroupControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContGroupControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContGroupControllerTest.class);
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -64,19 +64,15 @@ public class ContGroupControllerTest extends AnyControllerTest {
 		logger.info("jsonBody: {}", jsonBody);
 
 		ResultActions resultAction = mockMvc
-				.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-						.post("/api/contGroup")
-						.contentType(MediaType.APPLICATION_JSON)
-						.param("contObjectIds", arrayToString(objectIds))
-						.content(jsonBody).with(testSecurityContext())
-						.accept(MediaType.APPLICATION_JSON));
+				.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/contGroup")
+						.contentType(MediaType.APPLICATION_JSON).param("contObjectIds", arrayToString(objectIds))
+						.content(jsonBody).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
 		resultAction.andExpect(status().isCreated());
 
-		String jsonContent = resultAction.andReturn().getResponse()
-				.getContentAsString();
+		String jsonContent = resultAction.andReturn().getResponse().getContentAsString();
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		logger.info("createdId: {}", createdId);
 
@@ -86,8 +82,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 	@Test
 	public void testUpdateContGroup() throws Exception {
 		List<ContGroup> contGroups = contGroupService
-				.selectSubscriberGroups(currentSubscriberService
-						.getSubscriberId());
+				.selectSubscriberGroups(new SubscriberParam(currentSubscriberService.getSubscriberId()));
 
 		assertTrue(contGroups.size() > 0);
 		ContGroup cg;
@@ -107,10 +102,8 @@ public class ContGroupControllerTest extends AnyControllerTest {
 
 		ResultActions resultActionsAll;
 		try {
-			resultActionsAll = mockMvc.perform(put(urlStr)
-					.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-					.param("contObjectIds", arrayToString(objectIds))
-					.with(testSecurityContext())
+			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+					.param("contObjectIds", arrayToString(objectIds)).with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());

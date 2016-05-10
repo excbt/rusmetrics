@@ -84,12 +84,18 @@ public class ContGroupController extends SubscrApiController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberGroups() {
 
-		List<ContGroup> resultList = contGroupService
-				.selectSubscriberGroups(currentSubscriberService.getSubscriberId());
+		List<ContGroup> resultList = contGroupService.selectSubscriberGroups(getSubscriberParam());
 
 		return ResponseEntity.ok(resultList);
 	}
 
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @param contGroup
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,

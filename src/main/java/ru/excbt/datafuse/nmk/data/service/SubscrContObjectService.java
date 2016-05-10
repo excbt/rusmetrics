@@ -41,6 +41,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -182,6 +183,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param rmaSubscriberId
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Long> selectRmaSubscrContObjectIds(Long subscriberId) {
 		checkNotNull(subscriberId);
@@ -191,13 +193,39 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 	/**
 	 * 
+	 * @param subscriberParam
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> selectRmaSubscrContObjectIds(SubscriberParam subscriberParam) {
+		checkNotNull(subscriberParam);
+		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberParam.getSubscriberId());
+		return subscrContObjectRepository.selectRmaSubscrContObjectIds(subscriberParam.getSubscriberId(),
+				currentDate.toDate());
+	}
+
+	/**
+	 * 
 	 * @param subscriberId
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
+		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam) {
+		checkNotNull(subscriberParam);
+		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -211,6 +239,20 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId, List<Long> contObjectIds) {
 		checkNotNull(subscriberId);
 		List<ContObject> result = subscrContObjectRepository.selectContObjectsByIds(subscriberId, contObjectIds);
+		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam, List<Long> contObjectIds) {
+		checkNotNull(subscriberParam);
+		List<ContObject> result = subscrContObjectRepository.selectContObjectsByIds(subscriberParam.getSubscriberId(),
+				contObjectIds);
 		return ObjectFilters.deletedFilter(result);
 	}
 
