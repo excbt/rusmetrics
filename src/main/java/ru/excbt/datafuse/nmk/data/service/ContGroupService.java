@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.ContGroupItem;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.repository.ContGroupItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContGroupRepository;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -251,10 +252,10 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectContGroupObjects(Long contGroupId, Long subscriberId) {
+	public List<ContObject> selectContGroupObjects(Long contGroupId, SubscriberParam subscriber) {
 		checkNotNull(contGroupId);
-		checkNotNull(subscriberId);
-		return contGroupItemRepository.selectContGroupObjects(contGroupId, subscriberId);
+		checkNotNull(subscriber);
+		return contGroupItemRepository.selectContGroupObjects(contGroupId, subscriber.getSubscriberId());
 	}
 
 	/**
@@ -264,11 +265,11 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectAvailableContGroupObjects(Long contGroupId, Long subscriberId) {
+	public List<ContObject> selectAvailableContGroupObjects(Long contGroupId, SubscriberParam subscriber) {
 		checkNotNull(contGroupId);
-		checkNotNull(subscriberId);
+		checkNotNull(subscriber);
 
-		return contGroupItemRepository.selectAvailableContGroupObjects(contGroupId, subscriberId);
+		return contGroupItemRepository.selectAvailableContGroupObjects(contGroupId, subscriber.getSubscriberId());
 	}
 
 	/**

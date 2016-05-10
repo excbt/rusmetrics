@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
@@ -103,6 +104,14 @@ public class SubscrApiController extends WebApiController {
 	 */
 	protected long getSubscriberId() {
 		return currentSubscriberService.getSubscriberId();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected SubscriberParam getSubscriberParam() {
+		return new SubscriberParam(currentSubscriberService.getSubscriberId());
 	}
 
 	/**

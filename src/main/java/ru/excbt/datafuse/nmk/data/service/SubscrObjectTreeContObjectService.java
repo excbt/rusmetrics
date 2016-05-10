@@ -81,7 +81,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	public List<ContObject> selectRmaTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
 		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
-		subscrContObjectService.processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+		subscrContObjectService.initRmaHaveSubscr(rmaSubscriberId, result);
 
 		return result;
 

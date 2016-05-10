@@ -22,11 +22,11 @@ import ru.excbt.datafuse.nmk.data.model.ContGroup;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -57,7 +57,7 @@ public class ContGroupController extends SubscrApiController {
 	public ResponseEntity<?> getContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService.selectContGroupObjects(contGroupId, getCurrentSubscriberId());
+		List<ContObject> resultList = contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -72,7 +72,7 @@ public class ContGroupController extends SubscrApiController {
 
 		checkNotNull(contGroupId);
 		List<ContObject> resultList = contGroupService.selectAvailableContGroupObjects(contGroupId,
-				currentSubscriberService.getSubscriberId());
+				getSubscriberParam());
 
 		return ResponseEntity.ok(resultList);
 	}

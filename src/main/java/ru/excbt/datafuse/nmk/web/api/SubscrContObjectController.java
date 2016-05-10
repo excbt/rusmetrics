@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
+import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -52,25 +53,57 @@ public class SubscrContObjectController extends SubscrApiController {
 	protected ContObjectService contObjectService;
 
 	@Autowired
+	protected ContGroupService contGroupService;
+
+	@Autowired
 	private OrganizationService organizationService;
+
+	/**
+	 * 
+	 * @param contGroupId
+	 * @return
+	 */
+	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered) {
+		List<ContObject> contObjectList = null;
+
+		if (contGroupId == null) {
+			contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
+		} else {
+			contObjectList = contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
+		}
+
+		subscrContObjectService.initRmaHaveSubscr(getSubscriberId(), contObjectList);
+
+		if (isHaveSubscrFiltered) {
+			return contObjectList.stream().filter(i -> Boolean.TRUE.equals(i.get_haveSubscr()))
+					.collect(Collectors.toList());
+		}
+
+		return contObjectList;
+	}
+
+	/**
+	 * 
+	 * @param contGroupId
+	 * @return
+	 */
+	protected List<ContObject> selectSubscrContObjects(Long contGroupId) {
+		if (contGroupId == null) {
+			return subscrContObjectService.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+		} else {
+			return contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
+		}
+	}
 
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects() {
+	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
 
-		List<ContObject> resultList = null;
-		if (currentSubscriberService.isRma()) {
-			List<ContObject> contObjectList = subscrContObjectService
-					.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
-			resultList = contObjectList.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
-					.collect(Collectors.toList());
-		} else {
-			resultList = subscrContObjectService
-					.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
-		}
+		List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true)
+				: selectSubscrContObjects(contGroupId);
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}

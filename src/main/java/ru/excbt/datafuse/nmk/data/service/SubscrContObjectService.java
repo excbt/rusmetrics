@@ -401,7 +401,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
 		checkNotNull(rmaSubscriberId);
 		List<ContObject> result = selectSubscriberContObjects(rmaSubscriberId);
-		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+		initRmaHaveSubscr(rmaSubscriberId, result);
 
 		return result;
 	}
@@ -419,7 +419,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 		List<ContObject> result = selectSubscriberContObjectsExcludingIds(rmaSubscriberId, contObjectIds);
 
-		processRmaContObjectsHaveSubscr(rmaSubscriberId, result);
+		initRmaHaveSubscr(rmaSubscriberId, result);
 
 		return result;
 	}
@@ -658,7 +658,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param contObjects
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public void processRmaContObjectsHaveSubscr(final Long rmaSubscriberId, final List<ContObject> contObjects) {
+	public void initRmaHaveSubscr(final Long rmaSubscriberId, final List<ContObject> contObjects) {
 		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(rmaSubscriberId);
 
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
