@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +49,6 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testNotifiicationsGetAll() throws Exception {
-		_testGetJson("/api/subscr/contEvent/notifications/all");
-	}
 
 	/**
 	 * 
@@ -119,9 +111,11 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	/**
+	 * Unused method. // Comment date 11.05.2016
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testNotifiicationsContObject() throws Exception {
 
@@ -136,9 +130,12 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	/**
+	 * Unused method. // Comment date 11.05.2016
+	 * 
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testNotifiicationsContObjectStatusCollapse() throws Exception {
 
@@ -159,16 +156,18 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	@Test
 	public void testCityMonitorContObjectCityStatusCollapse() throws Exception {
 
-		ResultActions resultActionsAll = mockMvc.perform(
-				get("/api/subscr/contEvent/notifications/contObject/cityStatusCollapse").param("fromDate", "2015-06-01")
-						.param("toDate", "2015-06-30").with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
+		RequestExtraInitializer params = (builder) -> {
+			builder.param("fromDate", "2015-06-01");
+			builder.param("toDate", "2015-06-30");
+		};
 
-		resultActionsAll.andDo(MockMvcResultHandlers.print());
-
-		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		_testGetJson("/api/subscr/contEvent/notifications/contObject/cityStatusCollapse", params);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCityMonitorContObjectCityStatusCollapseGrouped() throws Exception {
 
@@ -186,20 +185,19 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testNotificationsContObjectEventTypes() throws Exception {
 
 		long contObjectId = 20118695;
 
-		ResultActions resultActionsAll = mockMvc.perform(
-				get(String.format("/api/subscr/contEvent/notifications/contObject/%d/eventTypes", contObjectId))
-						.param("fromDate", "2015-06-01").param("toDate", "2015-06-30").with(testSecurityContext())
-						.accept(MediaType.APPLICATION_JSON));
+		RequestExtraInitializer params = (builder) -> {
+			builder.param("fromDate", "2015-06-01");
+			builder.param("toDate", "2015-06-30");
+		};
 
-		resultActionsAll.andDo(MockMvcResultHandlers.print());
-
-		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		_testGetJson(String.format("/api/subscr/contEvent/notifications/contObject/%d/eventTypes", contObjectId),
+				params);
 
 	}
 
@@ -212,18 +210,20 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 		long contObjectId = 20118695;
 
-		ResultActions resultActionsAll = mockMvc.perform(
-				get(String.format("/api/subscr/contEvent/notifications/contObject/%d/eventTypes/statusCollapse",
-						contObjectId)).param("fromDate", "2015-06-01").param("toDate", "2015-06-30")
-								.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
+		RequestExtraInitializer params = (builder) -> {
+			builder.param("fromDate", "2015-06-01");
+			builder.param("toDate", "2015-06-30");
+		};
 
-		resultActionsAll.andDo(MockMvcResultHandlers.print());
-
-		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		_testGetJson(String.format("/api/subscr/contEvent/notifications/contObject/%d/eventTypes/statusCollapse",
+				contObjectId), params);
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testNotificationsContObjectMonitor() throws Exception {
 		long contObjectId = 20118695;
@@ -232,6 +232,10 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		_testGetJson(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testNotificationsMonitorColor() throws Exception {
 		String url = "/api/subscr/contEvent/notifications/monitorColor";
