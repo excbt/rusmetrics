@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.model.ContGroup;
+import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -84,7 +84,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberGroups() {
 
-		List<ContGroup> resultList = contGroupService.selectSubscriberGroups(getSubscriberParam());
+		List<SubscrContGroup> resultList = contGroupService.selectSubscriberGroups(getSubscriberParam());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -99,12 +99,12 @@ public class SubscrContGroupController extends SubscrApiController {
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createGroup(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestBody ContGroup contGroup, HttpServletRequest request) {
+			@RequestBody SubscrContGroup contGroup, HttpServletRequest request) {
 
 		checkArgument(contGroup.isNew());
 		contGroup.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContGroup, Long>(contGroup, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrContGroup, Long>(contGroup, request) {
 
 			@Override
 			protected Long getLocationId() {
@@ -112,7 +112,7 @@ public class SubscrContGroupController extends SubscrApiController {
 			}
 
 			@Override
-			public ContGroup processAndReturnResult() {
+			public SubscrContGroup processAndReturnResult() {
 				return contGroupService.createOne(entity, contObjectIds);
 			}
 
@@ -147,7 +147,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateGroup(@PathVariable(value = "contGroupId") Long contGroupId,
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestBody ContGroup contGroup) {
+			@RequestBody SubscrContGroup contGroup) {
 
 		checkNotNull(contGroupId);
 		checkNotNull(contGroup);
@@ -156,7 +156,7 @@ public class SubscrContGroupController extends SubscrApiController {
 
 		contGroup.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiAction action = new AbstractEntityApiAction<ContGroup>(contGroup) {
+		ApiAction action = new AbstractEntityApiAction<SubscrContGroup>(contGroup) {
 			@Override
 			public void process() {
 				setResultEntity(contGroupService.updateOne(entity, contObjectIds));

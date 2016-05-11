@@ -22,8 +22,8 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContGroupType;
  *
  */
 @Entity
-@Table(name = "cont_group")
-public class ContGroup extends AbstractAuditableModel {
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group")
+public class SubscrContGroup extends AbstractAuditableModel {
 
 	/**
 		 * 

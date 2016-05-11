@@ -6,9 +6,10 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
-@Table(name = "cont_group_type")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_group_type")
 public class ContGroupType extends AbstractKeynameEntity {
 
 	/**

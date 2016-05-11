@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.model.ContGroup;
+import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -50,7 +50,7 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	@Test
 	public void testCreateContGroup() throws Exception {
 
-		ContGroup group = new ContGroup();
+		SubscrContGroup group = new SubscrContGroup();
 		group.setContGroupName("Новая группа");
 
 		long[] objectIds = { 18811504L, 18811505L };
@@ -71,11 +71,11 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testUpdateContGroup() throws Exception {
-		List<ContGroup> contGroups = contGroupService
+		List<SubscrContGroup> contGroups = contGroupService
 				.selectSubscriberGroups(currentSubscriberService.getSubscriberParam());
 
 		assertTrue(contGroups.size() > 0);
-		ContGroup cg;
+		SubscrContGroup cg;
 		if (contGroups.size() > 2) {
 			cg = contGroups.get(1);
 		} else {

@@ -19,8 +19,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  *
  */
 @Entity
-@Table(name = "cont_group_item")
-public class ContGroupItem extends AbstractAuditableModel {
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group_item")
+public class SubscrContGroupItem extends AbstractAuditableModel {
 
 	/**
 		 * 
@@ -28,8 +28,8 @@ public class ContGroupItem extends AbstractAuditableModel {
 	private static final long serialVersionUID = 6212870140304523057L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_group_id")
-	private ContGroup contGroup;
+	@JoinColumn(name = "subscr_cont_group_id")
+	private SubscrContGroup contGroup;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
@@ -41,11 +41,11 @@ public class ContGroupItem extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	public ContGroup getContGroup() {
+	public SubscrContGroup getContGroup() {
 		return contGroup;
 	}
 
-	public void setContGroup(ContGroup contGroup) {
+	public void setContGroup(SubscrContGroup contGroup) {
 		this.contGroup = contGroup;
 	}
 

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import ru.excbt.datafuse.nmk.data.model.ContGroupItem;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem;
 
 /**
  * Repository для ContGroupItem
@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
  * @since 25.05.2015
  *
  */
-public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, Long> {
+public interface SubscrContGroupItemRepository extends CrudRepository<SubscrContGroupItem, Long> {
 
 	/**
 	 * 
@@ -26,7 +26,7 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	 * @return
 	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco WHERE sco.contObjectId IN "
-			+ "( SELECT ci.contObject.id FROM ContGroupItem ci INNER JOIN ci.contGroup cg "
+			+ "( SELECT ci.contObject.id FROM SubscrContGroupItem ci INNER JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) AND" + " sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL"
 			+ " ORDER BY sco.contObject.name, sco.contObject.id ")
 	public List<ContObject> selectContGroupObjects(@Param("subscriberId") long subscriberId,
@@ -40,7 +40,7 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ "WHERE sco.subscriberId = :subscriberId AND sco.contObjectId NOT IN "
-			+ "( SELECT ci.contObject.id FROM ContGroupItem ci LEFT JOIN ci.contGroup cg "
+			+ "( SELECT ci.contObject.id FROM SubscrContGroupItem ci LEFT JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) " + " ORDER BY sco.contObject.name, sco.contObject.id ")
 	public List<ContObject> selectAvailableContGroupObjects(@Param("subscriberId") long subscriberId,
 			@Param("contGroupId") long contGroupId);
@@ -50,7 +50,7 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	 * @param contGroupId
 	 * @return
 	 */
-	@Query("SELECT ci.contObjectId FROM ContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
+	@Query("SELECT ci.contObjectId FROM SubscrContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
 	public List<Long> selectObjectIds(@Param("contGroupId") long contGroupId);
 
 	/**
@@ -59,7 +59,7 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	 * @param objectId
 	 * @return
 	 */
-	@Query("SELECT ci.id FROM ContGroupItem ci "
+	@Query("SELECT ci.id FROM SubscrContGroupItem ci "
 			+ "WHERE ci.contGroup.id = :contGroupId AND ci.contObjectId = :objectId ")
 	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId, @Param("objectId") long objectId);
 
@@ -68,7 +68,7 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	 * @param contGroupId
 	 * @return
 	 */
-	@Query("SELECT ci.id FROM ContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
+	@Query("SELECT ci.id FROM SubscrContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
 	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId);
 
 }
