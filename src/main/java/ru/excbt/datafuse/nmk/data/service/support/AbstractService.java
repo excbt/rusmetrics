@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,6 +23,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
  *
  */
 public abstract class AbstractService {
+
+	public final static List<Long> NO_DATA_IDS = Collections.unmodifiableList(Arrays.asList(Long.MIN_VALUE));
 
 	@PersistenceContext(unitName = "nmk-p")
 	protected EntityManager em;

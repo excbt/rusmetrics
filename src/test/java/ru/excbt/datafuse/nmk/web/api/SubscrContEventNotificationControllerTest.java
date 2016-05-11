@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -156,7 +157,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	 * @throws Exception
 	 */
 	@Test
-	public void testNotifiicationsContObjectCityStatusCollapse() throws Exception {
+	public void testCityMonitorContObjectCityStatusCollapse() throws Exception {
 
 		ResultActions resultActionsAll = mockMvc.perform(
 				get("/api/subscr/contEvent/notifications/contObject/cityStatusCollapse").param("fromDate", "2015-06-01")
@@ -166,6 +167,19 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 		resultActionsAll.andExpect(status().isOk())
 				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+	}
+
+	@Test
+	public void testCityMonitorContObjectCityStatusCollapseGrouped() throws Exception {
+
+		RequestExtraInitializer params = (builder) -> {
+			builder.param("fromDate", "2015-06-01");
+			builder.param("toDate", "2015-06-30");
+			builder.param("contGroupId", "488528511");
+		};
+
+		_testGetJson("/api/subscr/contEvent/notifications/contObject/cityStatusCollapse", params);
+
 	}
 
 	/**
@@ -235,6 +249,20 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	public void testContEventDeviation() throws Exception {
 		String url = apiSubscrUrl("/contEvent/deviations");
 		_testGetJson(url);
+	}
+
+	@Override
+	public long getSubscriberId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscrUserId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
 	}
 
 }

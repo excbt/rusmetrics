@@ -852,6 +852,10 @@ public class SubscrContEventNotificationService extends AbstractService {
 
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
+		if (contObjectIds.isEmpty()) {
+			contObjectIds = NO_DATA_IDS;
+		}
+
 		ContObjectCounterMap allMap = new ContObjectCounterMap(
 				selectContEventNotificationInfoList(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
