@@ -24,9 +24,9 @@ import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class ContGroupControllerTest extends AnyControllerTest {
+public class SubscrContGroupControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContGroupControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContGroupControllerTest.class);
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -36,12 +36,12 @@ public class ContGroupControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testContGroupObjects() throws Exception {
-		_testGetJson("/api/contGroup/0/contObject/available");
+		_testGetJson("/api/subscr/contGroup/0/contObject/available");
 	}
 
 	@Test
 	public void testContGroup() throws Exception {
-		_testGetJson("/api/contGroup");
+		_testGetJson("/api/subscr/contGroup");
 	}
 
 	@Test
@@ -62,8 +62,8 @@ public class ContGroupControllerTest extends AnyControllerTest {
 		logger.info("Array of {}", arrayToString(objectIds));
 		logger.info("jsonBody: {}", jsonBody);
 
-		ResultActions resultAction = mockMvc
-				.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/contGroup")
+		ResultActions resultAction = mockMvc.perform(
+				org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/subscr/contGroup")
 						.contentType(MediaType.APPLICATION_JSON).param("contObjectIds", arrayToString(objectIds))
 						.content(jsonBody).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
@@ -97,7 +97,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 
 		cg.setContGroupComment("TEST AutoUpdate " + System.currentTimeMillis());
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(cg);
-		String urlStr = "/api/contGroup/" + cg.getId();
+		String urlStr = "/api/subscr/contGroup/" + cg.getId();
 
 		ResultActions resultActionsAll;
 		try {
@@ -128,7 +128,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 	 */
 
 	public void testDeleteContGroup(Long contGroupId) throws Exception {
-		_testDeleteJson("/api/contGroup/" + contGroupId);
+		_testDeleteJson("/api/subscr/contGroup/" + contGroupId);
 	}
 
 }

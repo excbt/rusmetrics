@@ -38,8 +38,8 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  *
  */
 @Controller
-@RequestMapping(value = "/api/contGroup")
-public class ContGroupController extends SubscrApiController {
+@RequestMapping(value = "/api/subscr/contGroup")
+public class SubscrContGroupController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetController.class);
 
