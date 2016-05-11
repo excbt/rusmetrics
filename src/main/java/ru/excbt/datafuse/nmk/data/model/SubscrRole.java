@@ -9,7 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 /**
  * Роль абонента
@@ -22,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(name = "subscr_role")
 @JsonInclude(Include.NON_NULL)
-public class SubscrRole extends AbstractAuditableModel {
+public class SubscrRole extends JsonAbstractAuditableModel implements DisabledObject {
 
 	/**
 	 * 
@@ -41,6 +42,9 @@ public class SubscrRole extends AbstractAuditableModel {
 	@JsonIgnore
 	@Version
 	private int version;
+
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
 
 	public String getInfo() {
 		return info;
@@ -72,6 +76,15 @@ public class SubscrRole extends AbstractAuditableModel {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	@Override
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 
 }

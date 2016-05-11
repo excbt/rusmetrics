@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -31,8 +32,9 @@ public class SubscrRoleService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrRole> findAll() {
-		return subscrRoleRepository.findAll();
+	public List<SubscrRole> findAllRoles() {
+		List<SubscrRole> result = subscrRoleRepository.findAll();
+		return ObjectFilters.disabledFilter(result);
 	}
 
 	/**
@@ -41,7 +43,7 @@ public class SubscrRoleService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrUserRoles() {
-		List<SubscrRole> allRoles = findAll();
+		List<SubscrRole> allRoles = findAllRoles();
 		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName()))
 				.collect(Collectors.toList());
 	}
@@ -53,7 +55,7 @@ public class SubscrRoleService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrAdminRoles(boolean canCreateCabinet) {
-		List<SubscrRole> allRoles = findAll();
+		List<SubscrRole> allRoles = findAllRoles();
 		return allRoles.stream()
 				.filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getRoleName())
@@ -85,7 +87,7 @@ public class SubscrRoleService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrRmaAdminRoles(boolean canCreateCabinet) {
-		List<SubscrRole> allRoles = findAll();
+		List<SubscrRole> allRoles = findAllRoles();
 		return allRoles.stream()
 				.filter(i -> SecuredRoles.ROLE_RMA_CONT_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN.equals(i.getRoleName())
@@ -102,7 +104,7 @@ public class SubscrRoleService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrReadonlyRoles() {
-		List<SubscrRole> allRoles = findAll();
+		List<SubscrRole> allRoles = findAllRoles();
 		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_READONLY.equals(i.getRoleName()))
 				.collect(Collectors.toList());
 	}
@@ -113,7 +115,7 @@ public class SubscrRoleService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrCabinetRoles() {
-		List<SubscrRole> allRoles = findAll();
+		List<SubscrRole> allRoles = findAllRoles();
 		return allRoles.stream().filter(i -> SecuredRoles.ROLE_CABINET_USER.equals(i.getRoleName()))
 				.collect(Collectors.toList());
 	}

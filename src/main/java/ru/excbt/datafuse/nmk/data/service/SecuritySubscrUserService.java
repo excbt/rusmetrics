@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
@@ -31,7 +32,8 @@ public class SecuritySubscrUserService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrRole> selectSubscrRoles(long subscrUserId) {
-		return subscrUserRepository.selectSubscrRoles(subscrUserId);
+		List<SubscrRole> result = subscrUserRepository.selectSubscrRoles(subscrUserId);
+		return ObjectFilters.disabledFilter(result);
 	}
 
 }
