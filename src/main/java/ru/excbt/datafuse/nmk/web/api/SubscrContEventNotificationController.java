@@ -162,7 +162,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		checkNotNull(id);
 
-		SubscrContEventNotification result = subscrContEventNotifiicationService.findOneNotification(id);
+		SubscrContEventNotification result = subscrContEventNotifiicationService.findNotification(id);
 
 		if (result == null) {
 
@@ -189,7 +189,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
+				subscrContEventNotifiicationService.updateNotificationsIsNew(isNew, Arrays.asList(notificationIds),
 						currentSubscriberService.getCurrentUserId());
 			}
 		};
@@ -214,7 +214,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
+				subscrContEventNotifiicationService.updateNotificationsIsNew(isNew, Arrays.asList(notificationIds),
 						currentSubscriberService.getCurrentUserId());
 			}
 		};

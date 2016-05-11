@@ -321,7 +321,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
-	public static Sort makeDefaultSort() {
+	private static Sort makeDefaultSort() {
 		return new Sort(Direction.DESC, "contEventTime");
 	}
 
@@ -329,7 +329,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
-	public static Sort makeSort(Direction sortDirection) {
+	private static Sort makeSort(Direction sortDirection) {
 		if (sortDirection == null) {
 			return makeDefaultSort();
 		}
@@ -516,7 +516,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrContEventNotification findOneNotification(Long id) {
+	public SubscrContEventNotification findNotification(Long id) {
 		return subscrContEventNotificationRepository.findOne(id);
 	}
 
@@ -526,7 +526,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrContEventNotification updateNotificationOneIsNew(Boolean isNew, Long subscrContEventNotificationId,
+	public SubscrContEventNotification updateNotificationIsNew(Boolean isNew, Long subscrContEventNotificationId,
 			Long revisionSubscrUserId) {
 
 		checkNotNull(isNew);
@@ -567,12 +567,12 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param notificationIds
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateNotificationIsNew(Boolean isNew, List<Long> notificationIds, Long revisionSubscrUserId) {
+	public void updateNotificationsIsNew(Boolean isNew, List<Long> notificationIds, Long revisionSubscrUserId) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
 		checkNotNull(revisionSubscrUserId);
 		for (Long id : notificationIds) {
-			updateNotificationOneIsNew(isNew, id, revisionSubscrUserId);
+			updateNotificationIsNew(isNew, id, revisionSubscrUserId);
 		}
 	}
 
