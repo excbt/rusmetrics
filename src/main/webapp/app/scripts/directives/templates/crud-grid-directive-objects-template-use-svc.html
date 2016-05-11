@@ -26,7 +26,8 @@
                              class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
                              data-toggle="dropdown" 
                              aria-haspopup="true" 
-                             aria-expanded="false" 
+                             aria-expanded="false"
+                              ng-disabled="!(data.trees.length > 0)"
                          >
                           {{messages.treeMenuHeader}} <span class="caret"></span>
                       </button>
@@ -92,7 +93,8 @@
                                  class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
                                  data-toggle="dropdown" 
                                  aria-haspopup="true" 
-                                 aria-expanded="false" 
+                                 aria-expanded="false"
+                                  ng-disabled="!(groups.length > 0)"
                              >
                               {{messages.groupMenuHeader}} <span class="caret"></span>
                           </button>
@@ -112,6 +114,13 @@
                               </li>
                           </ul>
                         </div>   
+                </div>                
+                <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+                    <button title="Обновить" 
+                            class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
+                            ng-click="refreshObjectsData()" 
+                            >
+                    </button>
                 </div>
                 <div class="col-md-offset-3 col-xs-2 col-md-2">
                         <label class="nmc-form-label">Всего:</label>

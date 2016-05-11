@@ -171,6 +171,12 @@ angular.module('portalNMC')
                     objectSvc.getPromise().then(successGetObjectsCallback);
                 };
                 
+                $scope.refreshObjectsData = function(){                    
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $scope.loading = true;
+                    getObjectsData();
+                };
+                
                 $scope.viewFullObjectList = function(){
                     $scope.objectCtrlSettings.isFullObjectView = true;
                     $scope.messages.treeMenuHeader = 'Полный список объектов'
@@ -396,14 +402,6 @@ angular.module('portalNMC')
 			    };
                 
                 $scope.selectedObject = function(objId){
-//                    var curObject = null;
-//                    $scope.objects.some(function(element){
-//                        if (element.id === objId){
-//                            curObject = angular.copy(element);
-//                            return true;
-//                        }
-//                    });
-//                    $scope.currentObject = curObject;
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
 //console.log($scope.currentObject);                    
                 };
@@ -423,13 +421,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
-                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;
-//                    $scope.objects.some(function(element){
-//                        if (element.id === objId){
-//                            curObject = element;
-//                            return true;
-//                        }
-//                    });                  
+                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                  
                     //if cur object = null => exit function
                     if (curObject == null){
                         return;
@@ -566,16 +558,16 @@ angular.module('portalNMC')
                                 "</i>";
                         
                         if (zpoint.zpointType == 'el'){
-                            trHTML+="<a href='#/objects/indicator-electricity/";
+                            trHTML += "<a href='#/objects/indicator-electricity/";
                         }else{
                                 trHTML+="<a href='#/objects/indicators/";
                         };
-                        trHTML += "?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
-                                    "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
-                                    "title=\"Показания точки учёта\">"+
+                                    "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
+                                    "title=\"Показания точки учёта\">" + 
                                 "</i></a>";
-                        trHTML+="</td>";
+                        trHTML += "</td>";
                         $scope.oldColumns.forEach(function(column){
                             switch (column.name){
                                 case "zpointName": 
@@ -607,15 +599,15 @@ angular.module('portalNMC')
                                             break;   
                                     };                                   
                                     trHTML += "<td>";
-                                    trHTML += "<img height=12 width=12 src=\""+imgPath+"\"> <span class='paddingLeft5'></span>";
-                                    trHTML += (zpoint[column.name] || "Не задано")+"<span ng-show=\"isSystemuser()\">(id = "+zpoint.id+")</span></td>"; 
+                                    trHTML += "<img height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
+                                    trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>"; 
                                     break;
-                                case "zpointLastDataDate" : trHTML +="<td>{{"+zpoint[column.name]+" | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
-                                case "zpointRefRange": trHTML += "<td id=\"zpointRefRange"+zpoint.id+"\"></td>"; break;
-                                default : trHTML += "<td>"+zpoint[column.name]+"</td>"; break;
+                                case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
+                                case "zpointRefRange" : trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
+                                default : trHTML += "<td>"+zpoint[column.name] + "</td>"; break;
                             };
                         });
-                        trHTML +="</tr>";
+                        trHTML += "</tr>";
                     });    
                     trHTML += "</table></td>";
                     trObjZp.innerHTML = trHTML;
@@ -625,14 +617,8 @@ angular.module('portalNMC')
                 
                 $scope.dateFormat = function(millisec){
                     var result ="";
-                    var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone*3600.0*1000.0);
-                    var tmpDate = (new Date(millisec+serverTimeZoneDifferent));
-            //console.log(tmpDate);        
-            //console.log(tmpDate.getUTCFullYear());   
-            //console.log(tmpDate.getUTCMonth());
-            //console.log(tmpDate.getUTCDate());
-            //console.log(tmpDate.getUTCHours());
-            //console.log(tmpDate.getUTCMinutes());        
+                    var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone * 3600.0 * 1000.0);
+                    var tmpDate = (new Date(millisec + serverTimeZoneDifferent));            
                     result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
                     return result;//
                 };
@@ -650,8 +636,8 @@ angular.module('portalNMC')
                             var endDate =  $scope.dateFormat(data[0].periodEndDate);
 //console.log(data[0]);                                    
 //                            zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
-                            zpoint.zpointRefRange = "c "+beginDate+" по "+endDate;
-                            zpoint.zpointRefRangeAuto = data[0].isAuto?"auto":"manual";
+                            zpoint.zpointRefRange = "c " + beginDate + " по " + endDate;
+                            zpoint.zpointRefRangeAuto = data[0].isAuto ? "auto" : "manual";
                         }
                         else {
                             zpoint.zpointRefRange = "Не задан";

@@ -56,7 +56,8 @@
                                     Создать новое дерево                                        
                                 </a>
                             </li>
-                            <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                            <li ng-if="data.treeTemplates.length > 0" 
+                                class="menu-item dropdown dropdown-submenu" role="presentation">
                                 <a href="" 
                                    class="" 
                                    data-toggle="dropdown" 
@@ -80,10 +81,12 @@
                                     </li>                                        
                                 </ul>                                    
                               </li>
-                              <li role="presentation" 
+                              <li ng-if="data.trees.length > 0"
+                                  role="presentation" 
                                   class="divider">
                               </li>
-                              <li class="menu-item" 
+                              <li ng-if="data.trees.length > 0"
+                                  class="menu-item" 
                                   role="presentation" 
                                   ng-repeat="tree in data.trees">
                                   <a href="" class=""
