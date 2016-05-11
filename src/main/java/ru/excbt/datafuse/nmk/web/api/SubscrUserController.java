@@ -119,8 +119,10 @@ public class SubscrUserController extends SubscrApiController {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser) {
 
-		String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
-				: null;
+		//String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
+		//		: null;
+
+		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
 		return updateSubscrUserInternal(getCurrentSubscriber(), subscrUserId, isAdmin, isReadonly, subscrUser,
 				passwords);
