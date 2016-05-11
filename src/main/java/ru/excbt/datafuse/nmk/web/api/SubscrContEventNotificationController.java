@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
@@ -333,8 +334,10 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
+
 		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatusCollapse(getCurrentSubscriberId(),
+				.selectMonitorContEventNotificationStatusCollapse(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(resultList);
@@ -352,6 +355,8 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
+
+		// TODO contGroupId upgrade
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 

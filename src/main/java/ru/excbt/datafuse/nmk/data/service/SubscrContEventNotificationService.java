@@ -841,26 +841,26 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
-	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
-			final Long subscriberId, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
-		checkNotNull(subscriberId);
+			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
+			Boolean noGreenColor) {
+		checkNotNull(subscriberParam);
+		checkNotNull(contObjects);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
-
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
 		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod));
+				selectContEventNotificationInfoList(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, Boolean.TRUE));
+		ContObjectCounterMap allNewMap = new ContObjectCounterMap(selectContEventNotificationInfoList(
+				subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
 
 		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberId, contObjectIds, datePeriod));
+				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberParam.getSubscriberId(), contObjectIds,
+						datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
@@ -1023,8 +1023,10 @@ public class SubscrContEventNotificationService extends AbstractService {
 	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(final SubscriberParam subscriberParam,
 			final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam);
+
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
-				subscriberParam.getSubscriberId(), datePeriod, noGreenColor);
+				subscriberParam, contObjects, datePeriod, noGreenColor);
 
 		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
 				CityMonitorContEventsStatus.FACTORY_INSTANCE);
