@@ -17,8 +17,7 @@ angular.module('portalNMC')
                 $scope.messages.viewProps = "Данные пользователя";                
                 $scope.messages.createTenant = "Создать пользователя";
                 $scope.messages.changeTenantPassword = "Сменить пароль";
-
-                
+ 
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
                 $scope.messages.moveToNode = "Привязать к узлу";
@@ -374,12 +373,66 @@ angular.module('portalNMC')
                     });
                 };
                 
+                var checkEmail = function(cabinet, messageFlag){                   
+                    var result = true;
+                    if (mainSvc.checkUndefinedNull(cabinet.cabinet.subscrUser.contactEmail)){
+                        
+                        if (messageFlag == true) {
+                            notificationFactory.errorInfo("Ошибка", "Не задана эл. почта пользователя");
+                        };
+                        result = false;
+                    };
+                    return result;
+                };
+                
+                var checkEmailsAndViewWarning = function(){
+                    var warningMessage = "У пользователей:\n";
+                    $scope.objects.forEach(function(elem){
+                        if (elem.selected == true && !checkEmail(elem, false)){
+                            warningMessage += "- " + elem.cabinet.subscrCabinetNr + "\n";
+                        };
+                    });
+                    if (warningMessage != "У пользователей:\n"){
+                        warningMessage = "У некоторых пользователей не задана эл. почта. Отправить им письма невозможно. Задайте им эл. почту и повторите отправку.";
+                        notificationFactory.warning(warningMessage);
+                    };
+                };
+                
+                var checkPasswordForSend = function(cabinet, messageFlag){
+                    var result = true;
+                    if (mainSvc.checkUndefinedNull(cabinet.cabinet.subscrUser.passwordPocket)){
+                        if (messageFlag == true) {
+                            notificationFactory.errorInfo("Ошибка", "У пользователя пароль был изменен. Отправка на эл. почту невозможна. Если пароль был утерян, то сгенерируйте ему новый и повторите отправку.");
+                        };
+                        result = false;
+                    };
+                    return result;
+                };
+                
+                var checkPasswordsBeforeSendAndViewWarning = function(){
+                    var warningMessage = "У пользователей:\n";
+                    $scope.objects.forEach(function(elem){
+                        if (elem.selected == true && !checkPasswordForSend(elem, false)){
+                            warningMessage += "- " + elem.cabinet.subscrCabinetNr + "\n";
+                        };
+                    });
+                    if (warningMessage != "У пользователей:\n"){
+                        warningMessage = "У некоторых пользователей пароли были изменены. Отправка на эл. почту невозможна. Если пароли были утеряны, то сгенерируйте им новые и повторите отправку.";
+                        notificationFactory.warning(warningMessage);
+                    };
+                };
+                
                 $scope.sendLDByEmail = function(obj){
                     $scope.data.selectedCabinet = {};
                     var userIds = [];
-                    if (mainSvc.checkUndefinedNull(obj)){
+                    if (mainSvc.checkUndefinedNull(obj)){                        
+                        checkPasswordsBeforeSendAndViewWarning();
+                        checkEmailsAndViewWarning();
                         userIds = prepareUserIdsArray();                        
                     }else{
+                        if (!checkPasswordForSend(obj, true) || !checkEmail(obj, true)){
+                            return "User data is incorrect!";
+                        };
                         $scope.selectCabinet(obj);
                         if (!mainSvc.checkUndefinedNull(obj.cabinet)){
                             userIds.push(obj.cabinet.subscrUser.id);                                
