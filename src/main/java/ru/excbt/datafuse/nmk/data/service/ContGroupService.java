@@ -252,10 +252,10 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectContGroupObjects(Long contGroupId, SubscriberParam subscriberParam) {
+	public List<ContObject> selectContGroupObjects(SubscriberParam subscriberParam, Long contGroupId) {
 		checkNotNull(contGroupId);
 		checkNotNull(subscriberParam);
-		return contGroupItemRepository.selectContGroupObjects(contGroupId, subscriberParam.getSubscriberId());
+		return contGroupItemRepository.selectContGroupObjects(subscriberParam.getSubscriberId(), contGroupId);
 	}
 
 	/**
@@ -265,11 +265,11 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectAvailableContGroupObjects(Long contGroupId, SubscriberParam subscriberParam) {
+	public List<ContObject> selectAvailableContGroupObjects(SubscriberParam subscriberParam, Long contGroupId) {
 		checkNotNull(contGroupId);
 		checkNotNull(subscriberParam);
 
-		return contGroupItemRepository.selectAvailableContGroupObjects(contGroupId, subscriberParam.getSubscriberId());
+		return contGroupItemRepository.selectAvailableContGroupObjects(subscriberParam.getSubscriberId(), contGroupId);
 	}
 
 	/**

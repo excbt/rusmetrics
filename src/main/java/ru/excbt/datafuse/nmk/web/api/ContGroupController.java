@@ -57,7 +57,7 @@ public class ContGroupController extends SubscrApiController {
 	public ResponseEntity<?> getContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
+		List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -71,8 +71,8 @@ public class ContGroupController extends SubscrApiController {
 	public ResponseEntity<?> getAvailableContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService.selectAvailableContGroupObjects(contGroupId,
-				getSubscriberParam());
+		List<ContObject> resultList = contGroupService.selectAvailableContGroupObjects(getSubscriberParam(),
+				contGroupId);
 
 		return ResponseEntity.ok(resultList);
 	}

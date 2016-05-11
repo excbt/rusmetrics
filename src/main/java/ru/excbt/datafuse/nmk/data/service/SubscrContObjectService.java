@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +57,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectService.class);
 
+	private static final List<ContObject> EMPTY_CONT_OBJECTS_LIST = Collections.unmodifiableList(new ArrayList<>());
 	@Autowired
 	private SubscrContObjectRepository subscrContObjectRepository;
 
@@ -65,13 +67,17 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	protected ContGroupService contGroupService;
+
 	/**
+	 * TODO delete. // Comment date 11.05.2016
 	 * 
 	 * @param objects
 	 */
 	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteOne2(List<SubscrContObject> objects) {
+	private void deleteOne2(List<SubscrContObject> objects) {
 		checkNotNull(objects);
 
 		objects.forEach(i -> {
@@ -225,6 +231,27 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam) {
 		checkNotNull(subscriberParam);
 		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
+		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @param contGroupId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam, Long contGroupId) {
+		checkNotNull(subscriberParam);
+
+		List<ContObject> result = EMPTY_CONT_OBJECTS_LIST;
+
+		if (contGroupId == null) {
+			result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
+		} else {
+			result = contGroupService.selectContGroupObjects(subscriberParam, contGroupId);
+		}
+
 		return ObjectFilters.deletedFilter(result);
 	}
 

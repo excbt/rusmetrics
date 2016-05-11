@@ -23,15 +23,15 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci INNER JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) AND" + " sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL"
 			+ " ORDER BY sco.contObject.name, sco.contObject.id ")
-	public List<ContObject> selectContGroupObjects(@Param("contGroupId") long contGroupId,
-			@Param("subscriberId") long subscriberId);
+	public List<ContObject> selectContGroupObjects(@Param("subscriberId") long subscriberId,
+			@Param("contGroupId") long contGroupId);
 
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ "WHERE sco.subscriberId = :subscriberId AND sco.contObjectId NOT IN "
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci LEFT JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) " + " ORDER BY sco.contObject.name, sco.contObject.id ")
-	public List<ContObject> selectAvailableContGroupObjects(@Param("contGroupId") long contGroupId,
-			@Param("subscriberId") long subscriberId);
+	public List<ContObject> selectAvailableContGroupObjects(@Param("subscriberId") long subscriberId,
+			@Param("contGroupId") long contGroupId);
 
 	@Query("SELECT ci.contObjectId FROM ContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
 	public List<Long> selectObjectIds(@Param("contGroupId") long contGroupId);

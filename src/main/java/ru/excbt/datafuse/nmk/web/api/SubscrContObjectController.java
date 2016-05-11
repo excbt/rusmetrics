@@ -69,7 +69,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		if (contGroupId == null) {
 			contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 		} else {
-			contObjectList = contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
+			contObjectList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
 		}
 
 		subscrContObjectService.initRmaHaveSubscr(getSubscriberId(), contObjectList);
@@ -91,7 +91,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		if (contGroupId == null) {
 			return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 		} else {
-			return contGroupService.selectContGroupObjects(contGroupId, getSubscriberParam());
+			return contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
 		}
 	}
 
