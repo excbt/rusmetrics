@@ -90,6 +90,7 @@ angular.module('portalNMC')
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
                 $scope.data = {};
+                $scope.data.currentGroupId = null; //current group id: use for group object filter
                 
                 function findObjectById(objId){
                     var obj = null;                 
@@ -172,9 +173,21 @@ angular.module('portalNMC')
                 };
                 
                 $scope.refreshObjectsData = function(){                    
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $rootScope.$broadcast('objectSvc:requestReloadData', {"contGroupId": $scope.data.currentGroupId});
                     $scope.loading = true;
                     getObjectsData();
+                };
+                                          
+                $scope.objectsDataFilteredByGroup = function(group){
+                    if (mainSvc.checkUndefinedNull(group)){
+                        $scope.messages.groupMenuHeader = "Полный список объектов"
+                        $scope.data.currentGroupId = null;
+                    }else{
+                        $scope.messages.groupMenuHeader = group.contGroupName;
+                        $scope.data.currentGroupId = group.id;
+                    };
+                    
+                    $scope.refreshObjectsData();
                 };
                 
                 $scope.viewFullObjectList = function(){

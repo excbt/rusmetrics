@@ -52,7 +52,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         ,{"name":"period", "header":"Период", "class":"col-xs-2 col-md-2"}
         ,{"name":"fileType", "header":"Тип файла", "class":"col-xs-1 col-md-1"}
     ];
-    $scope.groupUrl = "../api/contGroup";
+    $scope.groupUrl = "../api/subscr/contGroup";
     $scope.crudTableName = "../api/reportParamset"; 
     
         //Headers of modal window

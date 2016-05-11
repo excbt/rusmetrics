@@ -15,7 +15,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings.availableObjectsSuffix = "/availableContObjects";
     $scope.ctrlSettings.subscrObjectsSuffix = "/subscrContObjects";
 
-    $scope.ctrlSettings.groupUrl = "../api/contGroup";
+    $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
     
     //Headers of modal window
     $scope.headers = {}

@@ -47,7 +47,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.TEXT_CAPTION_LENGTH = 20*4-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part     
     $scope.objectsUrl= "../api/subscr/contObjects";
-    $scope.groupUrl = "../api/contGroup";
+    $scope.groupUrl = "../api/subscr/contGroup";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
     $scope.zpointListUrl = $scope.objectsUrl+"/zpoints";//"../api/subscr/contObjects/zpoints";

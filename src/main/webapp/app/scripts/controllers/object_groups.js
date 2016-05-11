@@ -19,7 +19,7 @@ angular.module('portalNMC')
     $scope.orderBy = { field: "contGroupName", asc: true };
     
     $scope.objectUrl = "../api/subscr/contObjects";
-    $scope.groupUrl = "../api/contGroup";
+    $scope.groupUrl = "../api/subscr/contGroup";
     
     var successCallback = function (e) {
         notificationFactory.success();

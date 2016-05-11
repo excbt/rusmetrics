@@ -299,11 +299,11 @@ angular.module('portalNMC')
     $scope.getMonitor = function(group){
         if (monitorSvc.checkUndefinedNull(group)){
             $scope.messages.groupMenuHeader = "Полный список объектов";
-            $scope.monitorSettings.groupId = null;
-            monitorSvc.setMonitorSettings({groupId: null});    
+            $scope.monitorSettings.contGroupId = null;
+            monitorSvc.setMonitorSettings({contGroupId: null});    
         }else{
-            $scope.monitorSettings.groupId = group.id;
-            monitorSvc.setMonitorSettings({groupId: group.id});
+            $scope.monitorSettings.contGroupId = group.id;
+            monitorSvc.setMonitorSettings({contGroupId: group.id});
             $scope.messages.groupMenuHeader = group.contGroupName;
         };
         $scope.refreshData();

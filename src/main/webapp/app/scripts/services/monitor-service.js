@@ -66,8 +66,8 @@ angular.module('portalNMC')
 //console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
             var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
-            if (!checkUndefinedNull(monitorSvcSettings.groupId)){
-                targetUrl += "&groupId=" + monitorSvcSettings.groupId;
+            if (!checkUndefinedNull(monitorSvcSettings.contGroupId)){
+                targetUrl += "&contGroupId=" + monitorSvcSettings.contGroupId;
             };
             $http.get(targetUrl)
                 .success(function(data){

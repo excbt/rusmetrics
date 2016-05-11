@@ -40,7 +40,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     //file types
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
 
-    $scope.groupUrl = "../api/contGroup";
+    $scope.groupUrl = "../api/subscr/contGroup";
     $scope.crudTableName = "../api/reportParamset"; 
     
         //Headers of modal window

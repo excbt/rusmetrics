@@ -9,7 +9,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.ctrlSettings.selectedAll = false;
     
     $scope.crudTableName = "../api/subscr/tariff"; 
-    $scope.groupUrl = "../api/contGroup";
+    $scope.groupUrl = "../api/subscr/contGroup";
     $scope.columns = [
         {"name":"tariffTypeName", "header" : "Вид услуги", "class":"col-md-1"}
         ,{"name":"tariffPlanName", "header" : "Наименование", "class":"col-md-2"}
