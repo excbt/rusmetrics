@@ -39,7 +39,7 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 	 * @return
 	 */
 	@Override
-	protected long getSubscriberId() {
+	public long getSubscriberId() {
 		return 512156297L;
 	}
 
@@ -48,7 +48,7 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 	 * @return
 	 */
 	@Override
-	protected long getSubscrUserId() {
+	public long getSubscrUserId() {
 		return 512156325L;
 	}
 

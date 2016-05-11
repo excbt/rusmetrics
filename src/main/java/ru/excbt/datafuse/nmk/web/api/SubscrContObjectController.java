@@ -6,7 +6,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,17 +65,14 @@ public class SubscrContObjectController extends SubscrApiController {
 	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered) {
 		List<ContObject> contObjectList = null;
 
-		if (contGroupId == null) {
-			contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
-		} else {
-			contObjectList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
-		}
+		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId);
 
 		subscrContObjectService.initRmaHaveSubscr(getSubscriberId(), contObjectList);
 
 		if (isHaveSubscrFiltered) {
-			return contObjectList.stream().filter(i -> Boolean.TRUE.equals(i.get_haveSubscr()))
-					.collect(Collectors.toList());
+
+			return ObjectFilters.filterToList(contObjectList, i -> Boolean.TRUE.equals(i.get_haveSubscr()));
+
 		}
 
 		return contObjectList;
@@ -88,11 +84,8 @@ public class SubscrContObjectController extends SubscrApiController {
 	 * @return
 	 */
 	protected List<ContObject> selectSubscrContObjects(Long contGroupId) {
-		if (contGroupId == null) {
-			return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
-		} else {
-			return contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
-		}
+		return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId);
+
 	}
 
 	/**

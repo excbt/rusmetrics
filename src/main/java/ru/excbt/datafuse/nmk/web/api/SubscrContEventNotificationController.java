@@ -351,10 +351,11 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsCityContObjectsStatusCollapse(
+	public ResponseEntity<?> cityMonitorContEventsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
-			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor,
+			@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
 
 		// TODO contGroupId upgrade
 
@@ -368,7 +369,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
-				.selectMonitoryContObjectCityStatus(getSubscriberParam(),
+				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contGroupId,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
@@ -412,7 +413,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes/statusCollapse",
 			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsContObjectEventTypesStatusCollapse(
+	public ResponseEntity<?> monitorContEventTypesStatusCollapse(
 			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {

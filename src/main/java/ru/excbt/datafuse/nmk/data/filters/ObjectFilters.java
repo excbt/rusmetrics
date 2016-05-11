@@ -119,7 +119,7 @@ public class ObjectFilters {
 	 */
 	public static <T extends DeletableObject> List<T> deletedFilter(List<T> inList) {
 		checkNotNull(inList);
-		return inList.stream().filter(NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
+		return filterToList(inList, NO_DELETED_OBJECT_PREDICATE);
 	}
 
 	/**
@@ -138,7 +138,17 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends ActiveObject> List<T> activeFilter(List<T> inList) {
-		return inList.stream().filter(ACTIVE_OBJECT_PREDICATE).collect(Collectors.toList());
+		return filterToList(inList, ACTIVE_OBJECT_PREDICATE);
+	}
+
+	/**
+	 * 
+	 * @param inList
+	 * @param predicate
+	 * @return
+	 */
+	public static <T> List<T> filterToList(List<T> inList, Predicate<? super T> predicate) {
+		return inList.stream().filter(predicate).collect(Collectors.toList());
 	}
 
 }

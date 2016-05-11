@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -176,6 +177,26 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 		_testUpdateJson(urlStr, testCO);
 
+	}
+
+	@Test
+	public void testGetContObjectsGrouped() throws Exception {
+		//_testGetJson(url)
+		_testGetJson("/api/subscr/contObjects/?contGroupId=488528511");
+	}
+
+	@Override
+	public long getSubscriberId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscrUserId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
 	}
 
 }

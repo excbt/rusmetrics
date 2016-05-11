@@ -14,7 +14,7 @@ public class RmaControllerTest extends AnyControllerTest implements TestExcbtRma
 	 * @return
 	 */
 	@Override
-	protected long getSubscriberId() {
+	public long getSubscriberId() {
 		return EXCBT_RMA_SUBSCRIBER_ID;
 	}
 
@@ -23,7 +23,7 @@ public class RmaControllerTest extends AnyControllerTest implements TestExcbtRma
 	 * @return
 	 */
 	@Override
-	protected long getSubscrUserId() {
+	public long getSubscrUserId() {
 		return EXCBT_RMA_SUBSCRIBER_USER_ID;
 	}
 

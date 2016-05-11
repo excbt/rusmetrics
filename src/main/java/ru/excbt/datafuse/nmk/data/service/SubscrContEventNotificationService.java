@@ -1020,10 +1020,11 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(final SubscriberParam subscriberParam,
-			final LocalDatePeriod datePeriod, Boolean noGreenColor) {
+	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus(final SubscriberParam subscriberParam,
+			final Long contGroupId, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam);
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam,
+				contGroupId);
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
 				subscriberParam, contObjects, datePeriod, noGreenColor);

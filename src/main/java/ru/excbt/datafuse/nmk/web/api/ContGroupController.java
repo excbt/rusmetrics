@@ -54,7 +54,7 @@ public class ContGroupController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contGroupId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
+	public ResponseEntity<?> getGroupContObjects(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
 		List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
@@ -97,7 +97,7 @@ public class ContGroupController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne(
+	public ResponseEntity<?> createGroup(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestBody ContGroup contGroup, HttpServletRequest request) {
 
@@ -127,7 +127,7 @@ public class ContGroupController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne(@PathVariable(value = "contGroupId") final Long contGroupId) {
+	public ResponseEntity<?> deleteGroup(@PathVariable(value = "contGroupId") final Long contGroupId) {
 
 		ApiAction action = new ApiActionAdapter() {
 			@Override
@@ -145,7 +145,7 @@ public class ContGroupController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(@PathVariable(value = "contGroupId") Long contGroupId,
+	public ResponseEntity<?> updateGroup(@PathVariable(value = "contGroupId") Long contGroupId,
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestBody ContGroup contGroup) {
 

@@ -10,11 +10,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
+import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
 		classes = { PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class })
-public class JpaConfigTest extends AbstractJpaConfigTest {
+public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo {
 
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;
@@ -39,7 +40,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest {
 	 * 
 	 * @return
 	 */
-	protected long getSubscriberId() {
+	public long getSubscriberId() {
 		return DEV_SUBSCR_ORG_ID;
 	}
 
@@ -47,7 +48,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest {
 	 * 
 	 * @return
 	 */
-	protected long getSubscrUserId() {
+	public long getSubscrUserId() {
 		return TEST_AUDIT_USER;
 	}
 

@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
+import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -25,7 +26,7 @@ import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
 				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
 				"CABINET_USER" })
-public class AnyControllerTest extends AbstractControllerTest {
+public class AnyControllerTest extends AbstractControllerTest implements SubscriberUserInfo {
 
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;
@@ -63,7 +64,8 @@ public class AnyControllerTest extends AbstractControllerTest {
 	 * 
 	 */
 
-	protected long getSubscriberId() {
+	@Override
+	public long getSubscriberId() {
 		return DEV_SUBSCR_ORG_ID;
 	}
 
@@ -71,7 +73,8 @@ public class AnyControllerTest extends AbstractControllerTest {
 	 * 
 	 * @return
 	 */
-	protected long getSubscrUserId() {
+	@Override
+	public long getSubscrUserId() {
 		return TEST_AUDIT_USER;
 	}
 

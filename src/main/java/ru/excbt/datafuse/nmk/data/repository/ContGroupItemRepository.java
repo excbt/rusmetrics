@@ -19,6 +19,12 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
  */
 public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, Long> {
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contGroupId
+	 * @return
+	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco WHERE sco.contObjectId IN "
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci INNER JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) AND" + " sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL"
@@ -26,6 +32,12 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	public List<ContObject> selectContGroupObjects(@Param("subscriberId") long subscriberId,
 			@Param("contGroupId") long contGroupId);
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contGroupId
+	 * @return
+	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ "WHERE sco.subscriberId = :subscriberId AND sco.contObjectId NOT IN "
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci LEFT JOIN ci.contGroup cg "
@@ -33,13 +45,29 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 	public List<ContObject> selectAvailableContGroupObjects(@Param("subscriberId") long subscriberId,
 			@Param("contGroupId") long contGroupId);
 
+	/**
+	 * 
+	 * @param contGroupId
+	 * @return
+	 */
 	@Query("SELECT ci.contObjectId FROM ContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
 	public List<Long> selectObjectIds(@Param("contGroupId") long contGroupId);
 
+	/**
+	 * 
+	 * @param contGroupId
+	 * @param objectId
+	 * @return
+	 */
 	@Query("SELECT ci.id FROM ContGroupItem ci "
 			+ "WHERE ci.contGroup.id = :contGroupId AND ci.contObjectId = :objectId ")
 	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId, @Param("objectId") long objectId);
 
+	/**
+	 * 
+	 * @param contGroupId
+	 * @return
+	 */
 	@Query("SELECT ci.id FROM ContGroupItem ci " + "WHERE ci.contGroup.id = :contGroupId ")
 	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId);
 
