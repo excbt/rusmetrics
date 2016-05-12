@@ -14,7 +14,7 @@
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Отчеты</a></li>
-        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
@@ -27,15 +27,53 @@
       </div>
     </div>
 </div>
+<div role="tabpanel" class="nmc-tab-panel">
 
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li id="object_groups_3rd_menu_item" 
+        role="presentation" 
+        class="active">
+        <a class="nmc-tab-button" 
+           href="" 
+           aria-controls="object_groups_sets" 
+           data-target="#object_groups_sets" 
+           role="tab" 
+           data-toggle="tab">
+            Группы
+        </a>
+      </li>
+    <li id="object_trees_3rd_menu_item" 
+        role="presentation">
+        <a class="nmc-tab-button" 
+           href="#/settings/object_trees/" 
+           aria-controls="object_trees_sets" 
+           data-target="#object_trees_sets"  
+           role="tab" 
+           data-toggle="tab">
+            Иерархии
+        </a>
+      </li>  
+  </ul>
+
+  <!-- реализация вкладок -->
+  <div class="tab-content">
+<!--      Группы объектов-->
+    <div role="tabpanel" class="tab-pane fade in active" id="object_groups_sets">
+      </div>
+    </div>
+</div>
+
+<!--
 <div class="nmc-main-workspace-header">
     <h2 class="noMargin nmc-h2">Группы объектов</h2>
     <hr>
 </div>    
+-->
 <div role="tabpanel">
     
     <div class="tab-content">
-<!--      Варианты отчетов-->
+<!--      Группы объектов-->
         <div role="tabpanel" class="tab-pane fade in active" id="object_groups">
             <div class="btn-toolbar marginBottom10">
 			<button ng-disabled="isROfield()" id="btn_add_object_group" class="btn nmc-main-add-button" ng-click="addGroup()">Добавить группу объектов</button>
