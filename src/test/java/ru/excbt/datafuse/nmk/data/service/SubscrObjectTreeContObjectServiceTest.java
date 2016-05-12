@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 
@@ -24,7 +25,10 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testGetContObjectIds() throws Exception {
-		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectRmaTreeContObjectIdAllLevels(64166466L, 512111663L);
+
+		SubscriberParam param = SubscriberParam.builder().subscriberId(64166466L).build();
+
+		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(param, 512111663L);
 		assertNotNull(contObjectIds);
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(64166466L,

@@ -75,7 +75,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getRmaSubscriberId());
+		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
@@ -116,7 +116,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 		}
 		////
 
-		List<Long> treeContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIds(getRmaSubscriberId(),
+		List<Long> treeContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIds(getSubscriberParam(),
 				childSubscrObjectTreeId);
 
 		List<Long> resultContObjectIds = viewContObjectShortInfo.stream()
@@ -149,7 +149,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 		}
 
 		List<Long> treeContObjectIds = subscrObjectTreeContObjectService
-				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 		checkNotNull(treeContObjectIds);
 
 		////

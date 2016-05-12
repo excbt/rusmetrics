@@ -62,4 +62,8 @@ public final class SubscriberParam {
 		return subscrUserId;
 	}
 
+	public boolean isRma() {
+		return isRma;
+	}
+
 }

@@ -110,7 +110,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getRmaSubscriberId());
+		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
@@ -133,7 +133,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		SubscrObjectTree subscrObjectTree = subscrObjectTreeService.newSubscrObjectTree(getRmaSubscriberId(),
+		SubscrObjectTree subscrObjectTree = subscrObjectTreeService.newSubscrObjectTree(getSubscriberParam(),
 				requestBody.templateId);
 
 		if (requestBody.objectName != null) {
@@ -225,7 +225,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				subscrObjectTreeService.deleteRootSubscrObjectTree(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				subscrObjectTreeService.deleteRootSubscrObjectTree(getSubscriberParam(), rootSubscrObjectTreeId);
 			}
 		};
 
@@ -262,7 +262,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				subscrObjectTreeService.deleteChildSubscrObjectTreeNode(getRmaSubscriberId(), rootSubscrObjectTreeId,
+				subscrObjectTreeService.deleteChildSubscrObjectTreeNode(getSubscriberParam(), rootSubscrObjectTreeId,
 						childSubscrObjectTreeId);
 			}
 		};
@@ -290,7 +290,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<ContObject> result = subscrObjectTreeContObjectService.selectRmaTreeContObjects(getRmaSubscriberId(),
+		List<ContObject> result = subscrObjectTreeContObjectService.selectRmaTreeContObjects(getSubscriberParam(),
 				childSubscrObjectTreeId);
 
 		return responseOK(ObjectFilters.deletedFilter(result));
@@ -314,7 +314,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		}
 
 		List<Long> contObjectIds = subscrObjectTreeContObjectService
-				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 		checkNotNull(contObjectIds);
 
 		List<ContObject> result = subscrContObjectService
@@ -353,7 +353,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		}
 
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
-				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
 			if (existsingContObjectIds.contains(id)) {
@@ -365,9 +365,9 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {
-				subscrObjectTreeContObjectService.addTreeContObjects(getRmaSubscriberId(), childSubscrObjectTreeId,
+				subscrObjectTreeContObjectService.addTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
 						contObjectIds);
-				return subscrObjectTreeContObjectService.selectRmaTreeContObjects(getRmaSubscriberId(),
+				return subscrObjectTreeContObjectService.selectRmaTreeContObjects(getSubscriberParam(),
 						childSubscrObjectTreeId);
 			}
 		};
@@ -410,7 +410,7 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 		}
 
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
-				.selectRmaTreeContObjectIdAllLevels(getRmaSubscriberId(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
 			if (!existsingContObjectIds.contains(id)) {
@@ -422,9 +422,9 @@ public class RmaSubscrObjectTreeController extends SubscrApiController {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {
-				subscrObjectTreeContObjectService.deleteTreeContObjects(getRmaSubscriberId(), childSubscrObjectTreeId,
+				subscrObjectTreeContObjectService.deleteTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
 						contObjectIds);
-				return subscrObjectTreeContObjectService.selectTreeContObjects(getRmaSubscriberId(),
+				return subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
 						childSubscrObjectTreeId);
 			}
 		};

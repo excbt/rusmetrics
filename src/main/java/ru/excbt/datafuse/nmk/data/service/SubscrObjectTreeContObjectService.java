@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeContObject;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -48,15 +47,8 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 */
-	private void checkValidRma(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
-		checkNotNull(rmaSubscriberId);
-		checkNotNull(subscrObjectTreeId);
-		if (!rmaSubscriberId.equals(subscrObjectTreeService.selectRmaSubscriberId(subscrObjectTreeId))) {
-			throw new PersistenceException(
-					String.format("SubscrObjectTree (id=%d) is not valid for rma", subscrObjectTreeId));
-		}
-		;
-
+	private void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
+		subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 	}
 
 	/**
@@ -66,8 +58,9 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+	public List<ContObject> selectTreeContObjects(final SubscriberParam subscriberParam,
+			final Long subscrObjectTreeId) {
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 	}
 
@@ -78,10 +71,13 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+	public List<ContObject> selectRmaTreeContObjects(final SubscriberParam subscriberParam,
+			final Long subscrObjectTreeId) {
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
-		subscrContObjectService.initRmaHaveSubscr(rmaSubscriberId, result);
+		if (subscriberParam.isRma()) {
+			subscrContObjectService.initRmaHaveSubscr(subscriberParam.getSubscriberId(), result);
+		}
 
 		return result;
 
@@ -94,8 +90,8 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectTreeContObjectIds(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+	public List<Long> selectTreeContObjectIds(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjectIds(subscrObjectTreeId);
 	}
 
@@ -107,10 +103,10 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void saveTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId,
+	public void saveTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
 
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -149,10 +145,10 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void addTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId,
+	public void addTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
 
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 
 		boolean isLinkDeny = subscrObjectTreeService.selectIsLinkDeny(subscrObjectTreeId);
 
@@ -189,10 +185,10 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteTreeContObjects(final Long rmaSubscriberId, final Long subscrObjectTreeId,
+	public void deleteTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
 
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -215,9 +211,9 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteTreeContObjectsAll(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+	public void deleteTreeContObjectsAll(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
 
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -232,24 +228,33 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectRmaTreeContObjectIdAllLevels(final Long rmaSubscriberId, final Long subscrObjectTreeId) {
+	public List<Long> selectTreeContObjectIdsAllLevels(final SubscriberParam subscriberParam,
+			final Long subscrObjectTreeId) {
 
-		checkValidRma(rmaSubscriberId, subscrObjectTreeId);
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 
 		List<Long> resultList = new ArrayList<>();
 
 		ColumnHelper columnHelper = new ColumnHelper("cont_object_id");
-
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" SELECT ");
 		sqlString.append(columnHelper.build());
 		sqlString.append(" FROM ");
-		sqlString.append(
-				" portal.get_subscr_cont_object_tree_cont_object_ids(:p_rma_subscriber_id,:p_subscr_object_tree_id); ");
+
+		String funcName = null;
+
+		if (subscriberParam.isRma()) {
+			funcName = " portal.get_subscr_cont_object_tree_cont_object_ids_rma(:p_subscriber_id,:p_subscr_object_tree_id); ";
+		} else {
+			funcName = " portal.get_subscr_cont_object_tree_cont_object_ids_subscr(:p_subscriber_id,:p_subscr_object_tree_id); ";
+		}
+
+		sqlString.append(funcName);
 
 		Query q1 = em.createNativeQuery(sqlString.toString());
-		q1.setParameter("p_rma_subscriber_id", rmaSubscriberId);
+		q1.setParameter("p_subscriber_id", subscriberParam.getSubscriberId());
 		q1.setParameter("p_subscr_object_tree_id", subscrObjectTreeId);
+
 		List<?> queryResultList = q1.getResultList();
 
 		for (Object object : queryResultList) {
@@ -258,9 +263,8 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 				Long id = value.longValue();
 				resultList.add(id);
 			} else {
-				throw new PersistenceException(String.format(
-						"Invalid return result for portal.get_subscr_cont_object_tree_cont_object_ids(%d)",
-						subscrObjectTreeId));
+				throw new PersistenceException(String.format("Invalid return result for %s, subscrObjectTreeId = %d",
+						funcName, subscrObjectTreeId));
 			}
 		}
 

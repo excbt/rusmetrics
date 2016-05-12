@@ -63,7 +63,7 @@ public class SubscrPrefController extends SubscrApiController {
 			return responseOK();
 		}
 
-		List<SubscrObjectTree> treeList = subscrObjectTreeService.selectSubscrObjectTreeShort(getRmaSubscriberId());
+		List<SubscrObjectTree> treeList = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
 
 		List<SubscrObjectTree> resultList = treeList.stream().filter(i -> treeTypes.contains(i.getObjectTreeType()))
 				.collect(Collectors.toList());
