@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,8 +212,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date getSubscriberCurrentTime(Long subscriberId) {
 		checkNotNull(subscriberId);
-		Object dbResult = em.createNativeQuery("SELECT get_subscriber_current_time(?1);").setParameter(1, subscriberId)
-				.getSingleResult();
+
+		Query q = em.createNativeQuery("SELECT get_subscriber_current_time(?1);");
+		Object dbResult = q.setParameter(1, subscriberId).getSingleResult();
 		if (dbResult == null) {
 			return null;
 		}

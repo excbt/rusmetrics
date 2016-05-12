@@ -67,7 +67,7 @@ public class SubscrContObjectController extends SubscrApiController {
 
 		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId);
 
-		subscrContObjectService.initRmaHaveSubscr(getSubscriberId(), contObjectList);
+		subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
 
 		if (isHaveSubscrFiltered) {
 

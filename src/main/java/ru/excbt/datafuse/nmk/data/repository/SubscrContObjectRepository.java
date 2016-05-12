@@ -40,8 +40,18 @@ public interface SubscrContObjectRepository
 	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
 			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
 			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
-	public List<Long> selectRmaSubscrContObjectIds(@Param("subscriberId") Long subscriberId,
+	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId,
 			@Param("subscrDate") Date subscrDate);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
+			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
+			+ " AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
+	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 * 

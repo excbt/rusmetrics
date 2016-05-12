@@ -41,7 +41,6 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
 
-	@JsonIgnore
 	@Column(name = "subscriber_id")
 	private Long subscriberId;
 

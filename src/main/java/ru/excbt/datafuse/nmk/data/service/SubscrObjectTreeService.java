@@ -77,7 +77,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrObjectTree findSubscrObjectTree(Long id) {
+	public SubscrObjectTree selectSubscrObjectTree(Long id) {
 		return subscrObjectTreeRepository.findOne(id);
 	}
 
@@ -99,6 +99,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 				i.setParentId(node.getId());
 				i.setTemplateId(node.getTemplateId());
 				i.setRmaSubscriberId(node.getRmaSubscriberId());
+				i.setSubscriberId(node.getSubscriberId());
 				i.setIsRma(node.getIsRma());
 				i.setDeleted(node.getDeleted());
 
@@ -149,7 +150,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		checkNotNull(node);
 
 		if (opType == TreeNodeOperator.TYPE.PRE) {
-			logger.info("Process operator for {}", node.getId());
+			logger.info("Process operator for {}", node.isNew() ? "new" : node.getId());
 			operator.doOperation(node);
 		}
 
@@ -248,6 +249,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		child.setObjectName(objectName);
 		child.setParent(node);
 		child.setRmaSubscriberId(node.getRmaSubscriberId());
+		child.setSubscriberId(node.getSubscriberId());
 		child.setIsRma(node.getIsRma());
 		child.setObjectTreeType(node.getObjectTreeType());
 		child.setTemplateId(node.getTemplateId());
@@ -386,6 +388,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrObjectTree saveRootSubscrObjectTree(SubscrObjectTree entity) {
+
 		checkArgument(entity.getParent() == null);
 
 		return saveSubscrObjectTree(entity);
@@ -399,7 +402,10 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteRootSubscrObjectTree(final SubscriberParam subscriberParam, Long subscrObjectTreeId) {
-		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
+
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+
+		SubscrObjectTree node = selectSubscrObjectTree(subscrObjectTreeId);
 		if (node.getParent() != null) {
 			throw new PersistenceException(
 					String.format("Delete not root node (subscrObjectTreeId=%d) is not supported by this method",
@@ -429,7 +435,10 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteChildSubscrObjectTreeNode(final SubscriberParam subscriberParam, Long subscrObjectTreeId,
 			Long childSubscrObjectTreeId) {
-		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
+
+		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+
+		SubscrObjectTree node = selectSubscrObjectTree(subscrObjectTreeId);
 		checkNotNull(node);
 
 		SubscrObjectTree childToDelete = searchObject(node, childSubscrObjectTreeId, null);
@@ -547,17 +556,68 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
-		checkNotNull(subscriberParam);
-		checkNotNull(subscrObjectTreeId);
 
-		Long checkSubscriberId = subscriberParam.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
-				: selectSubscriberId(subscrObjectTreeId);
-
-		if (!Long.valueOf(subscriberParam.getSubscriberId()).equals(checkSubscriberId)) {
+		if (!checkValidSubscriberOk(subscriberParam, subscrObjectTreeId)) {
 			throw new PersistenceException(
 					String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @param subscrObjectTreeId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public boolean checkValidSubscriberOk(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
+		checkNotNull(subscriberParam);
+		checkNotNull(subscrObjectTreeId);
+
+		Long checkTreeSubscriberId = subscriberParam.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
+				: selectSubscriberId(subscrObjectTreeId);
+
+		return Long.valueOf(subscriberParam.getSubscriberId()).equals(checkTreeSubscriberId);
+
+	}
+
+	/**
+	 * 
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private boolean checkSame(Object o1, Object o2) {
+		if (o1 == null && o2 == null) {
+			return true;
+		}
+		if (o1 == null || o2 == null) {
+			return false;
+		}
+
+		return o1.equals(o2);
+	}
+
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public SubscrObjectTree checkSubscrObjectTreeSubscriber(final SubscrObjectTree node) {
+		checkNotNull(node);
+		TreeNodeOperator operator = (i) -> {
+			if (!checkSame(node.getIsRma(), i.getIsRma())) {
+				throw new IllegalStateException("isRma property is not same");
+			}
+			if (!checkSame(node.getRmaSubscriberId(), i.getRmaSubscriberId())) {
+				throw new IllegalStateException("rmaSubscriberId property is not same");
+			}
+			if (!checkSame(node.getSubscriberId(), i.getSubscriberId())) {
+				throw new IllegalStateException("subscriberId property is not same");
+			}
+		};
+		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.PRE);
 	}
 
 }

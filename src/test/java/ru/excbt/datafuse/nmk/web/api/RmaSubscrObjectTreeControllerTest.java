@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
-import ru.excbt.datafuse.nmk.web.api.RmaSubscrObjectTreeController.ObjectNameHolder;
+import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
 
 public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 

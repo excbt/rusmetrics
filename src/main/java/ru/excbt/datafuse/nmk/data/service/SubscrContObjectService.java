@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -193,7 +194,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<Long> selectRmaSubscrContObjectIds(Long subscriberId) {
 		checkNotNull(subscriberId);
 		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
-		return subscrContObjectRepository.selectRmaSubscrContObjectIds(subscriberId, currentDate.toDate());
+		return subscrContObjectRepository.selectRmaSubscribersContObjectIds(subscriberId, currentDate.toDate());
 	}
 
 	/**
@@ -202,11 +203,26 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> selectRmaSubscrContObjectIds(SubscriberParam subscriberParam) {
+	public List<Long> selectRmaSubscribersContObjectIds(SubscriberParam subscriberParam) {
+		return selectRmaSubscribersContObjectIds(subscriberParam, false);
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @param currentDateFilter
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> selectRmaSubscribersContObjectIds(SubscriberParam subscriberParam, boolean currentDateFilter) {
 		checkNotNull(subscriberParam);
-		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberParam.getSubscriberId());
-		return subscrContObjectRepository.selectRmaSubscrContObjectIds(subscriberParam.getSubscriberId(),
-				currentDate.toDate());
+		checkState(subscriberParam.isRma());
+		if (currentDateFilter) {
+			LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberParam.getSubscriberId());
+			return subscrContObjectRepository.selectRmaSubscribersContObjectIds(subscriberParam.getSubscriberId(),
+					currentDate.toDate());
+		}
+		return subscrContObjectRepository.selectRmaSubscribersContObjectIds(subscriberParam.getSubscriberId());
 	}
 
 	/**
@@ -469,7 +485,21 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
 		checkNotNull(rmaSubscriberId);
 		List<ContObject> result = selectSubscriberContObjects(rmaSubscriberId);
-		initRmaHaveSubscr(rmaSubscriberId, result);
+		rmaInitHaveSubscr(rmaSubscriberId, result);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectRmaSubscriberContObjects(SubscriberParam subscriberParam) {
+		checkNotNull(subscriberParam);
+		List<ContObject> result = selectSubscriberContObjects(subscriberParam);
+		rmaInitHaveSubscr(subscriberParam, result);
 
 		return result;
 	}
@@ -486,9 +516,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		checkNotNull(contObjectIds);
 
 		List<ContObject> result = selectSubscriberContObjectsExcludingIds(rmaSubscriberId, contObjectIds);
-
-		initRmaHaveSubscr(rmaSubscriberId, result);
-
+		rmaInitHaveSubscr(rmaSubscriberId, result);
 		return result;
 	}
 
@@ -725,9 +753,34 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param rmaSubscriberId
 	 * @param contObjects
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public void initRmaHaveSubscr(final Long rmaSubscriberId, final List<ContObject> contObjects) {
+	public void rmaInitHaveSubscr(final Long rmaSubscriberId, final List<ContObject> contObjects) {
 		List<Long> subscrContObjectIds = selectRmaSubscrContObjectIds(rmaSubscriberId);
+
+		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+		contObjects.forEach(i -> {
+			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+			i.set_haveSubscr(haveSubscr);
+		});
+
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @param contObjects
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public void rmaInitHaveSubscr(final SubscriberParam subscriberParam, final List<ContObject> contObjects) {
+		checkNotNull(subscriberParam);
+		checkNotNull(contObjects);
+
+		if (!subscriberParam.isRma()) {
+			return;
+		}
+
+		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
 
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
 		contObjects.forEach(i -> {

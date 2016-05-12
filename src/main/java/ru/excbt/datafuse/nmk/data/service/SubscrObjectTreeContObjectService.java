@@ -58,7 +58,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectTreeContObjects(final SubscriberParam subscriberParam,
+	protected List<ContObject> selectTreeContObjects2(final SubscriberParam subscriberParam,
 			final Long subscrObjectTreeId) {
 		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
@@ -71,12 +71,12 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaTreeContObjects(final SubscriberParam subscriberParam,
+	public List<ContObject> selectTreeContObjects(final SubscriberParam subscriberParam,
 			final Long subscrObjectTreeId) {
 		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 		if (subscriberParam.isRma()) {
-			subscrContObjectService.initRmaHaveSubscr(subscriberParam.getSubscriberId(), result);
+			subscrContObjectService.rmaInitHaveSubscr(subscriberParam, result);
 		}
 
 		return result;
