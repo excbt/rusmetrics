@@ -508,7 +508,11 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		emailNotification.setMessageFrom(getEmail(fromSubscrUser));
 		emailNotification.setMessageTo(getEmail(toSubscrUser));
 
-		if (emailNotification.getMessageFrom() == null || emailNotification.getMessageTo() == null) {
+		//		if ((emailNotification.getMessageFrom() == null || emailNotification.getMessageFrom().isEmpty())
+		//				|| (emailNotification.getMessageTo() == null || emailNotification.getMessageTo().isEmpty())) {
+		//			return false;
+		//		}
+		if (emailNotification.getMessageTo() == null || emailNotification.getMessageTo().isEmpty()) {
 			return false;
 		}
 
@@ -527,7 +531,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 * @return
 	 */
 	private String getEmail(SubscrUser subscrUser) {
-		String result = subscrUser.getContactEmail() != null ? subscrUser.getContactEmail() : subscrUser.getUserEMail();
+		String result = subscrUser.getContactEmail() != null && !subscrUser.getContactEmail().isEmpty()
+				? subscrUser.getContactEmail() : subscrUser.getUserEMail();
 		return result;
 	}
 

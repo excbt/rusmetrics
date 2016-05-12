@@ -147,7 +147,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	}
 
 	@Transient
-	private final ContObjectShortInfo contObjectInfo = new ContObjectInfo();
+	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
 
 	@Transient
 	private DataSourceInfo editDataSourceInfo;
@@ -312,7 +312,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		this.deviceObjectDataSources = deviceObjectDataSources;
 	}
 
-	public ContObjectShortInfo getContObjectInfo() {
+	public ContObjectInfo getContObjectInfo() {
 		return contObjectInfo;
 	}
 
