@@ -131,6 +131,8 @@ public class ReportService {
 		reportTypeMap.put(ReportTypeKey.HW_QUALITY_ACT_2_REPORT,
 				ReportType.RPT_HW_QUALITY_ACT_2);
 		reportTypeMap.put(ReportTypeKey.HW_DATA_REPORT, ReportType.RPT_HW_DATA);
+		reportTypeMap.put(ReportTypeKey.EL_QUALITY_REPORT,
+				ReportType.RPT_EL_QUALITY);
 		REPORTS_TYPE_KEYNAME_CONVERTER = Collections
 				.unmodifiableMap(reportTypeMap);
 

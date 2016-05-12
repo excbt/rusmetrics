@@ -52,6 +52,7 @@ public class ReportConstants {
 		public static final String HW_QUALITY_ACT_1_FILE_COMPILED = "jasper_reports/nmk_hw_quality_act_1_report.prpt";
 		public static final String HW_QUALITY_ACT_2_FILE_COMPILED = "jasper_reports/nmk_hw_quality_act_2_report.prpt";
 		public static final String HW_DATA_FILE_COMPILED = "jasper_reports/nmk_hw_data_report.prpt";
+		public static final String EL_QUALITY_FILE_COMPILED = "jasper_reports/nmk_el_quality_report.prpt";
 
 		private Files() {
 
