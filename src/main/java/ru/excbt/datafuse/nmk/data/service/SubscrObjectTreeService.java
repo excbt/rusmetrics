@@ -501,13 +501,15 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort(subscriberParam.getSubscriberId())
 				: subscrObjectTreeRepository.selectSubscrObjectTreeShort(subscriberParam.getSubscriberId());
 
-		ColumnHelper helper = new ColumnHelper("id", "objectTreeType", "objectName");
+		ColumnHelper helper = new ColumnHelper("id", "subscriberId", "rmaSubscriberId", "objectTreeType", "objectName");
 
 		List<SubscrObjectTree> resultList = new ArrayList<>();
 
 		for (Object[] row : results) {
 			SubscrObjectTree t = new SubscrObjectTree();
 			t.setId(helper.getResultAsClass(row, "id", Long.class));
+			t.setSubscriberId(helper.getResultAsClass(row, "subscriberId", Long.class));
+			t.setRmaSubscriberId(helper.getResultAsClass(row, "rmaSubscriberId", Long.class));
 			t.setObjectTreeType(helper.getResultAsClass(row, "objectTreeType", String.class));
 			t.setObjectName(helper.getResultAsClass(row, "objectName", String.class));
 			resultList.add(t);

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 public class SubscrPrefServiceTest extends JpaSupportTest {
 
@@ -38,11 +39,30 @@ public class SubscrPrefServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSubscriberPrefValue() throws Exception {
-		List<SubscrPrefValue> values = subscrPrefService.selectSubscrPrefValue(728L);
+
+		List<SubscrPrefValue> values = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
 		assertTrue(values.size() > 0);
 		for (SubscrPrefValue subscrPrefValue : values) {
 			logger.info("SubscrPref: {}", subscrPrefValue.getSubscrPrefKeyname());
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscriberId() {
+		return TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscrUserId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
 	}
 
 }

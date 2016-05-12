@@ -31,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrPrefValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrTypePrefRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SubscrPrefRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -100,15 +101,16 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrPrefValue> selectSubscrPrefValue(Long subscriberId) {
-		checkNotNull(subscriberId);
+	public List<SubscrPrefValue> selectSubscrPrefValue(SubscriberParam subscriberParam) {
+		checkNotNull(subscriberParam);
 
-		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberId);
+		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberParam.getSubscriberId());
 
-		List<SubscrPrefValue> prefValueList = subscrPrefValueRepository.selectSubscrPrefValue(subscriberId);
+		List<SubscrPrefValue> prefValueList = subscrPrefValueRepository
+				.selectSubscrPrefValue(subscriberParam.getSubscriberId());
 
-		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberId, subscrTypeKey.getKeyname(),
-				prefValueList);
+		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberParam.getSubscriberId(),
+				subscrTypeKey.getKeyname(), prefValueList);
 
 		Collections.sort(result, SUBSCR_PREF_COMPARATOR);
 
@@ -123,14 +125,15 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_SUBSCR_USER })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrPrefValue> saveSubscrPrefValues(Long subscriberId, List<SubscrPrefValue> prefValueList) {
-		checkNotNull(subscriberId);
+	public List<SubscrPrefValue> saveSubscrPrefValues(SubscriberParam subscriberParam,
+			List<SubscrPrefValue> prefValueList) {
+		checkNotNull(subscriberParam);
 		checkNotNull(prefValueList);
 
-		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberId);
+		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberParam.getSubscriberId());
 
-		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberId, subscrTypeKey.getKeyname(),
-				prefValueList);
+		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberParam.getSubscriberId(),
+				subscrTypeKey.getKeyname(), prefValueList);
 		return Lists.newArrayList(subscrPrefValueRepository.save(result));
 	}
 

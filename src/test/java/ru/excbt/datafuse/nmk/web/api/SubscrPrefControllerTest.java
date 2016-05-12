@@ -9,10 +9,10 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class SubscrPrefControllerTest extends AnyControllerTest {
+public class SubscrPrefControllerTest extends RmaControllerTest {
 
 	/**
 	 * 

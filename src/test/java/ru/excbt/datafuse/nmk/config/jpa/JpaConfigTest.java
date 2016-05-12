@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
@@ -40,6 +41,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	 * 
 	 * @return
 	 */
+	@Override
 	public long getSubscriberId() {
 		return DEV_SUBSCR_ORG_ID;
 	}
@@ -48,8 +50,17 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	 * 
 	 * @return
 	 */
+	@Override
 	public long getSubscrUserId() {
 		return TEST_AUDIT_USER;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public SubscriberParam getSubscriberParam() {
+		return SubscriberParam.builder().subscriberId(getSubscriberId()).subscrUserId(getSubscrUserId()).build();
 	}
 
 }

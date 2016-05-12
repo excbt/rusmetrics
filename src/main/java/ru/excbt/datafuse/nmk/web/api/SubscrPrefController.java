@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPrefService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -44,7 +45,7 @@ public class SubscrPrefController extends SubscrApiController {
 	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrPrefValue() {
 
-		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberId());
+		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
@@ -81,8 +82,10 @@ public class SubscrPrefController extends SubscrApiController {
 
 		checkNotNull(requestEntityList);
 
+		final SubscriberParam subscriberParam = getSubscriberParam();
+
 		for (SubscrPrefValue v : requestEntityList) {
-			if (v.getSubscriberId() == null || !v.getSubscriberId().equals(getSubscriberId())) {
+			if (v.getSubscriberId() == null || !v.getSubscriberId().equals(subscriberParam.getSubscriberId())) {
 				return responseBadRequest(ApiResult.validationError("Invalid subscriberId in request"));
 			}
 		}
@@ -92,7 +95,7 @@ public class SubscrPrefController extends SubscrApiController {
 			@Override
 			public List<SubscrPrefValue> processAndReturnResult() {
 
-				return subscrPrefService.saveSubscrPrefValues(getSubscriberId(), requestEntityList);
+				return subscrPrefService.saveSubscrPrefValues(subscriberParam, requestEntityList);
 			}
 		};
 
