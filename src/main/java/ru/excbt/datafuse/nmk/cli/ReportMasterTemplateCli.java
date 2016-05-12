@@ -202,6 +202,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.HW_DATA_REPORT,
 				ReportConstants.Files.HW_DATA_FILE_COMPILED, isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.EL_QUALITY_REPORT,
+				ReportConstants.Files.EL_QUALITY_FILE_COMPILED, isCompiled);
+
 	}
 
 	/**
@@ -233,6 +236,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_ACT_1_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_ACT_2_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_DATA_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.EL_QUALITY_REPORT);
 
 	}
 
