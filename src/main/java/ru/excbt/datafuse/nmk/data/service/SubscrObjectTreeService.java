@@ -383,7 +383,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrObjectTree saveRootSubscrObjectTree(SubscrObjectTree entity) {
 		checkArgument(entity.getParent() == null);
@@ -396,7 +396,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 * 
 	 * @param subscrObjectTreeId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteRootSubscrObjectTree(final SubscriberParam subscriberParam, Long subscrObjectTreeId) {
 		SubscrObjectTree node = findSubscrObjectTree(subscrObjectTreeId);
@@ -425,7 +425,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 * 
 	 * @param subscrObjectTreeId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteChildSubscrObjectTreeNode(final SubscriberParam subscriberParam, Long subscrObjectTreeId,
 			Long childSubscrObjectTreeId) {

@@ -101,7 +101,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void saveTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
@@ -143,7 +143,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void addTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
@@ -183,7 +183,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
@@ -209,7 +209,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteTreeContObjectsAll(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
 
