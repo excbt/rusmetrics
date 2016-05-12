@@ -40,6 +40,9 @@ public class SubscrPrefValue extends JsonAbstractAuditableModel implements Delet
 	@Column(name = "value")
 	private String value;
 
+	@Column(name = "is_active")
+	private Boolean isActive;
+
 	@Column(name = "dev_comment")
 	private String devComment;
 
@@ -115,6 +118,14 @@ public class SubscrPrefValue extends JsonAbstractAuditableModel implements Delet
 
 	public void setDevComment(String devComment) {
 		this.devComment = devComment;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 }
