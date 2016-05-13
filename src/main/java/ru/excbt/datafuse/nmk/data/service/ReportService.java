@@ -265,7 +265,7 @@ public class ReportService {
 
 		checkNotNull(outputStream);
 		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
+				.findReportParamset(reportParamsetId);
 
 		if (reportParamset == null) {
 			throw new PersistenceException(String.format(

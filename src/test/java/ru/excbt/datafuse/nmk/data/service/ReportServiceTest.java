@@ -133,7 +133,7 @@ public class ReportServiceTest extends JpaSupportTest {
 	 */
 	private void testReportBody(long reportParamsetId, String filename, ReportTypeKey reportTypeKey)
 			throws IOException {
-		ReportParamset paramset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset paramset = reportParamsetService.findReportParamset(reportParamsetId);
 		assertNotNull(paramset);
 
 		logger.info("ReportParamset : {}", reportParamsetId);

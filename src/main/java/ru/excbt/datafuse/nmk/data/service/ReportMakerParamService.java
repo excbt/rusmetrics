@@ -60,7 +60,7 @@ public class ReportMakerParamService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId) {
-		ReportParamset reportParamset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
 
 		return newReportMakerParam(reportParamset, null, false);
 
@@ -73,7 +73,7 @@ public class ReportMakerParamService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId, boolean previewMode) {
-		ReportParamset reportParamset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
 
 		return newReportMakerParam(reportParamset, null, previewMode);
 
@@ -86,7 +86,7 @@ public class ReportMakerParamService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds) {
-		ReportParamset reportParamset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
 		return newReportMakerParam(reportParamset, contObjectIds, false);
 	}
 
@@ -97,7 +97,7 @@ public class ReportMakerParamService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds, boolean previewMode) {
-		ReportParamset reportParamset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
 		return newReportMakerParam(reportParamset, contObjectIds, previewMode);
 	}
 

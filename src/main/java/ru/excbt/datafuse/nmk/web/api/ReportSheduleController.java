@@ -122,7 +122,7 @@ public class ReportSheduleController extends WebApiController {
 		checkNotNull(reportShedule);
 		checkArgument(reportShedule.isNew());
 
-		ReportParamset checkParamset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset checkParamset = reportParamsetService.findReportParamset(reportParamsetId);
 
 		if (checkParamset == null) {
 			return ResponseEntity.badRequest().body("ReportParamset is not found");
@@ -171,7 +171,7 @@ public class ReportSheduleController extends WebApiController {
 		checkNotNull(reportShedule);
 		checkArgument(!reportShedule.isNew());
 
-		ReportParamset checkParamset = reportParamsetService.findOne(reportParamsetId);
+		ReportParamset checkParamset = reportParamsetService.findReportParamset(reportParamsetId);
 
 		if (checkParamset == null) {
 			return ResponseEntity.badRequest().body("ReportParamset is not found");

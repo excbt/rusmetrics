@@ -104,7 +104,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 		Long createdId = _testCreateJson(urlStr, reportParamset, extraInializer);
 
-		ReportParamset reportParamsetNew = reportParamsetService.findOne(createdId);
+		ReportParamset reportParamsetNew = reportParamsetService.findReportParamset(createdId);
 
 		reportParamsetNew.getParamSpecialList().clear();
 		{

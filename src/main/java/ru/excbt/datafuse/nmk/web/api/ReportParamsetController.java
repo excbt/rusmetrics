@@ -100,7 +100,7 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(reportParamsetService.findOne(reportParamsetId));
+		return ResponseEntity.ok(reportParamsetService.findReportParamset(reportParamsetId));
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(reportParamsetService.findOne(reportParamsetId));
+		return ResponseEntity.ok(reportParamsetService.findReportParamset(reportParamsetId));
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class ReportParamsetController extends SubscrApiController {
 
 			@Override
 			public ReportParamset processAndReturnResult() {
-				return reportParamsetService.createOne(reportParamset, contObjectIds);
+				return reportParamsetService.createReportParamset(reportParamset, contObjectIds);
 			}
 
 		};
@@ -315,7 +315,7 @@ public class ReportParamsetController extends SubscrApiController {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				reportParamsetService.deleteOne(id);
+				reportParamsetService.deleteReportParamset(id);
 			}
 		};
 
