@@ -37,6 +37,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
  * Контроллер для работы с отчетами
@@ -48,7 +49,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
  */
 @Controller
 @RequestMapping(value = "/api/reportService")
-public class ReportServiceController extends WebApiController {
+public class ReportServiceController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportServiceController.class);
 
@@ -109,7 +110,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/download", method = RequestMethod.GET)
-	public ResponseEntity<?> doDowndloadAnyReport(@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> downloadAnyReportGet(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportParamsetId") long reportParamsetId, HttpServletRequest request) throws IOException {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -134,7 +135,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/preview", method = RequestMethod.GET)
-	public ResponseEntity<?> doDowndloadAnyReportPreview(@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> downloadAnyReportPreview(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportParamsetId") long reportParamsetId) throws IOException {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -160,7 +161,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/download", method = RequestMethod.PUT)
-	public ResponseEntity<?> doPutDowndloadAnyReport(@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> downloadAnyReportCustom(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
@@ -187,8 +188,8 @@ public class ReportServiceController extends WebApiController {
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
 				? new Long[] {} : contObjectIds;
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset,
-				fixContObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newSubscriberReportMakerParam(getSubscriberParam(),
+				reportParamset, fixContObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 
@@ -203,9 +204,9 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/download/zip", method = RequestMethod.PUT,
-			produces = "application/zip")
-	public ResponseEntity<?> doDowndloadReportPutZip(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	//	@RequestMapping(value = "/{reportParamsetId}/download/zip", method = RequestMethod.PUT,
+	//			produces = "application/zip")
+	protected ResponseEntity<?> doDowndloadReportPutZip(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
@@ -218,7 +219,7 @@ public class ReportServiceController extends WebApiController {
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
 				? new Long[] {} : contObjectIds;
 
-		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
+		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
 
 	}
 
@@ -231,8 +232,8 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/download/pdf", method = RequestMethod.PUT, produces = MIME_PDF)
-	public ResponseEntity<?> doDowndloadReportPutPdf(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	//@RequestMapping(value = "/{reportParamsetId}/download/pdf", method = RequestMethod.PUT, produces = MIME_PDF)
+	protected ResponseEntity<?> doDowndloadReportPutPdf(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
@@ -246,7 +247,7 @@ public class ReportServiceController extends WebApiController {
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
 				? new Long[] {} : contObjectIds;
 
-		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
+		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
 
 	}
 
@@ -259,8 +260,9 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/download/xlsx", method = RequestMethod.PUT, produces = MIME_XLSX)
-	public ResponseEntity<?> doDowndloadReportPutXlsx(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	//@RequestMapping(value = "/{reportParamsetId}/download/xlsx", method = RequestMethod.PUT, produces = MIME_XLSX)
+	protected ResponseEntity<?> doDowndloadReportPutXlsx(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
@@ -274,7 +276,7 @@ public class ReportServiceController extends WebApiController {
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
 				? new Long[] {} : contObjectIds;
 
-		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
+		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
 
 	}
 
@@ -287,8 +289,9 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/download/html", method = RequestMethod.PUT, produces = MIME_TEXT)
-	public ResponseEntity<?> doDowndloadReportPutHtml(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	//@RequestMapping(value = "/{reportParamsetId}/download/html", method = RequestMethod.PUT, produces = MIME_TEXT)
+	protected ResponseEntity<?> doDowndloadReportPutHtml(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
@@ -302,7 +305,7 @@ public class ReportServiceController extends WebApiController {
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
 				? new Long[] {} : contObjectIds;
 
-		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
+		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
 
 	}
 
@@ -420,8 +423,8 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 * @throws IOException
 	 */
-	private ResponseEntity<?> procedDownloadAllReports(Long reportParamsetId, Long[] contObjectIds,
-			ReportParamset reportParamset) throws IOException {
+	private ResponseEntity<?> initDownloadProcessAllReports(Long reportParamsetId, ReportParamset reportParamset,
+			Long[] contObjectIds) throws IOException {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -436,7 +439,8 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newSubscriberReportMakerParam(getSubscriberParam(),
+				reportParamset, contObjectIds);
 
 		String reportKeyname = reportParamset.getReportTemplate().getReportTypeKeyname();
 		ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(reportKeyname);
@@ -459,7 +463,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/context/{contObjectId}", method = RequestMethod.GET)
-	public ResponseEntity<?> doDowndloadAnyReportContext(@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> downloadAnyReportContextGet(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportParamsetId") long reportParamsetId, @PathVariable("contObjectId") long contObjectId,
 			HttpServletRequest request) throws IOException {
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -488,9 +492,9 @@ public class ReportServiceController extends WebApiController {
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/contextPreview/{contObjectId}",
 			method = RequestMethod.GET)
-	public ResponseEntity<?> doDowndloadAnyReportContextPreview(@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> downloadAnyReportContextPreviewGet(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportParamsetId") long reportParamsetId, @PathVariable("contObjectId") long contObjectId)
-					throws IOException {
+			throws IOException {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {

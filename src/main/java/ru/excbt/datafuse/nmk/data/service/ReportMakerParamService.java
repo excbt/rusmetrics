@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
@@ -109,6 +110,18 @@ public class ReportMakerParamService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds) {
+		return newReportMakerParam(reportParamset, contObjectIds, false);
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ReportMakerParam newSubscriberReportMakerParam(SubscriberParam subscriberParam,
+			ReportParamset reportParamset, Long[] contObjectIds) {
 		return newReportMakerParam(reportParamset, contObjectIds, false);
 	}
 
