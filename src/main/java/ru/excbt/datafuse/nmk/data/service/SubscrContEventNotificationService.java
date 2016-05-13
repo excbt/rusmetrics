@@ -1023,12 +1023,43 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus(final SubscriberParam subscriberParam,
-			final Long contGroupId, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
+	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus_old(
+			final SubscriberParam subscriberParam, final Long contGroupId, final LocalDatePeriod datePeriod,
+			Boolean noGreenColor) {
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam,
 				contGroupId);
+
+		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
+				subscriberParam, contObjects, datePeriod, noGreenColor);
+
+		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
+				CityMonitorContEventsStatus.FACTORY_INSTANCE);
+
+		Map<UUID, Long> cityEventCount = contEventMonitorService
+				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
+
+		result.forEach((i) -> {
+			Long cnt = cityEventCount.get(i.getCityFiasUUID());
+			i.setMonitorEventCount(cnt != null ? cnt : 0);
+		});
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param contObjects
+	 * @param subscriberParam
+	 * @param datePeriod
+	 * @param noGreenColor
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus(final SubscriberParam subscriberParam,
+			final List<ContObject> contObjects, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
 				subscriberParam, contObjects, datePeriod, noGreenColor);

@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
+import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
@@ -49,6 +53,9 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
+
+	@Autowired
+	protected SubscrContEventNotificationService subscrContEventNotificationService;
 
 	/**
 	 * 
@@ -543,6 +550,48 @@ public class SubscrObjectTreeController extends SubscrApiController {
 			return responseBadRequest(ApiResult.badRequest(INVALID_SUBSCRIBER_MSG, rmaSubscriberId));
 		}
 		return null;
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @param rootSubscrObjectTreeId
+	 * @param childSubscrObjectTreeId
+	 * @return
+	 */
+	@RequestMapping(
+			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/cityStatusCollapse",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrObjectTreeMonitor(@PathVariable("objectTreeType") String objectTreeType,
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
+			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+		}
+
+		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+				childSubscrObjectTreeId);
+
+		List<CityMonitorContEventsStatus> result = subscrContEventNotificationService
+				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
+
+		return responseOK(result);
 	}
 
 }

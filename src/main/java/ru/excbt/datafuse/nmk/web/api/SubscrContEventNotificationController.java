@@ -357,8 +357,6 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor,
 			@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
 
-		// TODO contGroupId upgrade
-
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -368,8 +366,11 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
+				contGroupId);
+
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
-				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contGroupId,
+				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
