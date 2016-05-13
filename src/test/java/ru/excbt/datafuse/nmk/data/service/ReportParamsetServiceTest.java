@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -128,7 +129,8 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 
 	@Test
 	public void testReportParamsetContextLaunch() throws Exception {
-		List<ReportParamset> result = reportParamsetService.selectReportParamsetContextLaunch(64166466L);
+		List<ReportParamset> result = reportParamsetService
+				.selectReportParamsetContextLaunch(SubscriberParam.builder().subscriberId(64166466L).build());
 		assertNotNull(result);
 		result.forEach(i -> {
 			logger.info("Found ReportParamset (id={}): {}", i.getId(), i.getName());

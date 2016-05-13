@@ -82,8 +82,14 @@ public class CurrentSubscriberService {
 	 */
 	public SubscriberParam getSubscriberParam() {
 		if (userSession.getSubscriberParam() == null) {
-			userSession.setSubscriberParam(SubscriberParam.builder().subscriberId(getSubscriberId())
-					.subscrUserId(getCurrentUserId()).isRma(isRma()).build());
+
+			Subscriber subscriber = getSubscriber();
+			checkNotNull(subscriber.getId());
+
+			userSession.setSubscriberParam(SubscriberParam.builder().subscriberId(subscriber.getId())
+					.subscrUserId(getCurrentUserId()).isRma(isRma()).rmaSubscriber(subscriber.getRmaSubscriberId())
+					.parentSubscriber(subscriber.getParentSubscriberId()).subscrTypeKey(subscriber.getSubscrType())
+					.build());
 		}
 		return userSession.getSubscriberParam();
 	}

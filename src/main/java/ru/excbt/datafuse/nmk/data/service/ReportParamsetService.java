@@ -29,10 +29,12 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -654,8 +656,17 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportParamset> selectReportParamsetContextLaunch(Long subscriberId) {
-		List<ReportParamset> result = reportParamsetRepository.selectReportParamsetContextLaunch(subscriberId);
+	public List<ReportParamset> selectReportParamsetContextLaunch(final SubscriberParam subscriberParam) {
+
+		List<ReportParamset> result = null;
+		if (subscriberParam.getSubscrTypeKey() == SubscrTypeKey.SUBSCR_CHILD
+				&& subscriberParam.haveParentSubacriber()) {
+			result = reportParamsetRepository
+					.selectRmaReportParamsetContextLaunchChild(subscriberParam.getParentSubscriberId());
+		} else {
+			result = reportParamsetRepository.selectReportParamsetContextLaunch(subscriberParam.getSubscriberId());
+		}
+
 		result.forEach((s) -> s.getParamSpecialList().size());
 		return result;
 	}

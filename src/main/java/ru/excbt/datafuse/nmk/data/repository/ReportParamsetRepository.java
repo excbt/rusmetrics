@@ -23,11 +23,23 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 
 	public List<ReportParamset> findBySubscriberId(Long subscriberId);
 
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param isActive
+	 * @return
+	 */
 	@Query("SELECT rp FROM ReportParamset rp " + "WHERE rp.reportTemplate.id = :reportTemplateId AND "
 			+ "rp._active = :isActive " + "ORDER BY rp.activeStartDate, rp.name")
 	public List<ReportParamset> selectReportParamset(@Param("reportTemplateId") Long reportTemplateId,
 			@Param("isActive") boolean isActive);
 
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param activeDate
+	 * @return
+	 */
 	@Query("SELECT rp FROM ReportParamset rp " + "WHERE rp.reportTemplate.id = :reportTemplateId AND "
 			+ "rp.activeStartDate <= :activeDate AND "
 			+ " (rp.activeEndDate IS NULL OR rp.activeEndDate >= :activeDate) "
@@ -37,8 +49,8 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 
 	/**
 	 * 
-	 * @param reportType
-	 * @param currentDate
+	 * @param reportTypeKeyname
+	 * @param isActive
 	 * @return
 	 */
 	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt "
@@ -49,8 +61,9 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 
 	/**
 	 * 
-	 * @param reportType
-	 * @param currentDate
+	 * @param reportTypeKeyname
+	 * @param isActive
+	 * @param subscriberId
 	 * @return
 	 */
 	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt "
@@ -71,12 +84,22 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	/**
 	 * 
 	 * @param reportType
-	 * @param currentDate
 	 * @return
 	 */
 	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt LEFT JOIN rt.reportType rtype "
 			+ " WHERE rp.subscriber.id = :subscriberId AND rp._active = true AND rp.isContextLaunch = true "
 			+ " ORDER BY rtype.reportTypeOrder, rp.name NULLS LAST, rp.name")
 	public List<ReportParamset> selectReportParamsetContextLaunch(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param reportType
+	 * @return
+	 */
+	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt LEFT JOIN rt.reportType rtype "
+			+ " WHERE rp.subscriber.id = :rmaSubscriberId AND rp._active = true AND rp.isContextLaunchChild = true "
+			+ " ORDER BY rtype.reportTypeOrder, rp.name NULLS LAST, rp.name")
+	public List<ReportParamset> selectRmaReportParamsetContextLaunchChild(
+			@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 }

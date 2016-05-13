@@ -546,7 +546,7 @@ public class ReportParamsetController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamsetContextLaunch() {
-		List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getCurrentSubscriberId());
+		List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getSubscriberParam());
 		return responseOK(ObjectFilters.deletedFilter(xList));
 	}
 
