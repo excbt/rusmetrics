@@ -9,17 +9,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class RmaSubscrObjectTreeTemplateControllerTest extends RmaControllerTest {
+public class SubscrObjectTreeTemplateControllerTest extends RmaControllerTest {
 
 	@Test
 	public void testRmaSubscrObjectTreeTemplates() throws Exception {
-		String content = _testGetJson("/api/rma/subscrObjectTreeTemplates");
+		String content = _testGetJson("/api/subscr/subscrObjectTreeTemplates");
 
 		List<SubscrObjectTreeTemplate> templates = fromJSON(new TypeReference<List<SubscrObjectTreeTemplate>>() {
 		}, content);
 
 		for (SubscrObjectTreeTemplate i : templates) {
-			_testGetJson(apiRmaUrlTemplate("/subscrObjectTreeTemplates/%d/items", i.getId()));
+			_testGetJson(apiSubscrUrlTemplate("/subscrObjectTreeTemplates/%d/items", i.getId()));
 		}
 
 	}

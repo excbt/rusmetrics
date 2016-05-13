@@ -16,8 +16,8 @@ import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
-@RequestMapping(value = "/api/rma")
-public class RmaSubscrObjectTreeTemplateController extends SubscrApiController {
+@RequestMapping(value = "/api/subscr")
+public class SubscrObjectTreeTemplateController extends SubscrApiController {
 
 	@Autowired
 	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
@@ -30,7 +30,7 @@ public class RmaSubscrObjectTreeTemplateController extends SubscrApiController {
 	public ResponseEntity<?> getSubscrObjectTreeTemplate() {
 
 		List<SubscrObjectTreeTemplate> resultList = subscrObjectTreeTemplateService
-				.selectRmaSubscriberTemplates(getRmaSubscriberId());
+				.selectRmaSubscriberTemplates(getSubscriberParam());
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 

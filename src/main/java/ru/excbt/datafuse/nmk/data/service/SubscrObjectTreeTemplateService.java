@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateRepository;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @Service
 public class SubscrObjectTreeTemplateService {
@@ -27,8 +30,13 @@ public class SubscrObjectTreeTemplateService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrObjectTreeTemplate> selectRmaSubscriberTemplates(Long rmaSubscriberId) {
-		return subscrObjectTreeTemplateRepository.selectRmaSubscriberTemplates(rmaSubscriberId);
+	public List<SubscrObjectTreeTemplate> selectRmaSubscriberTemplates(SubscriberParam subscriberParam) {
+		checkNotNull(subscriberParam);
+		if (subscriberParam.isRma()) {
+			return subscrObjectTreeTemplateRepository.selectRmaSubscriberTemplates(subscriberParam.getSubscriberId());
+		} else {
+			return subscrObjectTreeTemplateRepository.selectSubscriberTemplates(subscriberParam.getSubscriberId());
+		}
 	}
 
 	/**

@@ -23,8 +23,8 @@ public class SubscrObjectTreeTemplate extends JsonAbstractAuditableModel impleme
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
 
-	//	@Column(name = "subscriber_id")
-	//	private Long subscriberId;
+	@Column(name = "subscriber_id")
+	private Long subscriberId;
 
 	@Column(name = "template_name")
 	private String templateName;
@@ -66,13 +66,13 @@ public class SubscrObjectTreeTemplate extends JsonAbstractAuditableModel impleme
 		this.rmaSubscriberId = rmaSubscriberId;
 	}
 
-	//	public Long getSubscriberId() {
-	//		return subscriberId;
-	//	}
-	//
-	//	public void setSubscriberId(Long subscriberId) {
-	//		this.subscriberId = subscriberId;
-	//	}
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
 
 	public String getTemplateName() {
 		return templateName;
