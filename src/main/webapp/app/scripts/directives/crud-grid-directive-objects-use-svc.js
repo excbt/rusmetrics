@@ -1524,8 +1524,7 @@ angular.module('portalNMC')
                     return mainSvc.findNodeInTree(node, tree);
                 };
                 
-                $scope.selectNode = function(item){
-                    
+                $scope.selectNode = function(item){                    
                     var treeForSearch = $scope.data.currentTree;
                     var selectedNode = $scope.data.selectedNode;
                     if (!mainSvc.checkUndefinedNull(selectedNode)){                        
@@ -1554,42 +1553,15 @@ angular.module('portalNMC')
                     childObjectList: []
                 };
                 
-                $scope.data.trees = [
-//                    {
-//                        id: 1,
-//                        name: "Свободное дерево",
-//                        nodes: [
-//                            {
-//                                name: "",
-//                                type: "root",
-//                                nodes: []
-//                            }
-//                        ]
-//                    },{
-//                        id: 2,
-//                        name: "Фиксированное дерево",
-//                        nodes: [{
-//                                name: "",
-//                                type: "root",
-//                                nodes: []
-//                            }
-//                        ]
-//                    }
-                    
-                ];
+                $scope.data.trees = [];
                 
                 $scope.loadTree = function(tree, objId){
-//                    $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     objectSvc.loadSubscrTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
                             mainSvc.sortTreeNodesBy(respTree, "objectName");
-//                            respTree.childObjectList.unshift(angular.copy(ROOT_NODE));
                             $scope.data.currentTree = respTree;
-//                            respTree.childObjectList[0].isSelected = true;
-//                            $scope.data.selectedNode = angular.copy(respTree.childObjectList[0]);
-//                            objectSvc.loadSubscrFreeObjectsByTree(tree.id).then(successGetObjectsCallback);
                             $scope.objects = [];
                             $scope.objectsOnPage = [];
                             $scope.loading = false; 
@@ -1603,14 +1575,13 @@ angular.module('portalNMC')
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
-                            $scope.messages.treeMenuHeader = "Выберете дерево";
+                            $scope.messages.treeMenuHeader = "Выберете иерархию";
                             getObjectsData();
                             return "Object tree array is empty.";
                         };
                         if (mainSvc.checkUndefinedNull($scope.data.defaultTree)){
                             $scope.viewFullObjectList();
-                        }else{
-//                            $scope.loadTree($scope.data.trees[0]);                        
+                        }else{                        
                             $scope.loadTree($scope.data.defaultTree);                        
                         };
                     }, errorCallback);

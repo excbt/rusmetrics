@@ -24,20 +24,7 @@
 </div>
 <div class="tab-content" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
-        <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
-        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle nmc-toggle-monitor col-md-2" role="tablist">
-            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" ng-click="refreshData()">Все объекты</a></li>
-            <li role="presentation" class="nmc-toggle-archive"><a title="Объекты с нештатными ситуациями" class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" ng-click="getNoGreenObjects()">Объекты с НС</a></li>
-        </ul>
-        <div class="col-md-2 noPadding marginTop15 nmc-div-filter-date-interval">
-<!--            ng-controller="DataRangeSettings">   -->
-        <div class="input-group marginRight15">
-            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
-            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
-                type="text" ng-model="monitorSettings.monitorDates" options="monitorSettings.dateRangeSettings" aria-describedby="leftAddon"/>
-        </div>    
-        </div>
-        <div class="col-md-2 noPadding marginTop15 nmc-div-filter-date-interval" ng-controller="ObjectGroupsCtrl">
+        <div class="col-md-2 noPadding nmc-div-filter-date-interval" ng-controller="ObjectGroupsCtrl">
             <div class="btn-group">
                   <button 
                           title="Фильтр по группам объектов" 
@@ -66,7 +53,20 @@
                   </ul>
                 </div>   
         </div>
-        <div class="pull-right col-md-offset-1 col-md-3 marginTop15">
+        <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
+        <ul class="nav nav-pills marginLeft15 nmc-toggle nmc-toggle-monitor col-md-2" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" ng-click="getAllColorObjects()">Все объекты</a></li>
+            <li role="presentation" class="nmc-toggle-archive"><a title="Объекты с нештатными ситуациями" class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" ng-click="getNoGreenObjects()">Объекты с НС</a></li>
+        </ul>
+        <div class="col-md-2 noPadding nmc-div-filter-date-interval">
+<!--            ng-controller="DataRangeSettings">   -->
+        <div class="input-group marginRight15">
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
+            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                type="text" ng-model="monitorSettings.monitorDates" options="monitorSettings.dateRangeSettings" aria-describedby="leftAddon"/>
+        </div>    
+        </div>
+        <div class="pull-right col-md-offset-1 col-md-3">
 <!--            <label class="nmc-form-label">Период обновления:</label>-->
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
             <div class="input-group nmc-input-group-refresh-period">

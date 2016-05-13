@@ -9,36 +9,44 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
-        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
 
     </ul>
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="settings-notices">
+      <div role="tabpanel" class="tab-pane fade in active" id="settings-program">
+      </div>
+    </div>
+</div>
+<div role="tabpanel" class="nmc-tab-panel">
+
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li id="program_tree_settings_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="program_tree_settings" data-target="#program_tree_settings" role="tab" data-toggle="tab">Иерархии</a></li>
+    <li id="program_map_settings_3rd_menu_item" role="presentation"><a class="nmc-tab-button" href="" aria-controls="program_map_settings" data-target="#program_map_settings"  role="tab" data-toggle="tab">Карта</a></li>  
+  </ul>
+
+  <!-- реализация вкладок -->
+  <div class="tab-content">
+<!--      Настройки иерархий-->
+    <div role="tabpanel" class="tab-pane fade in active" id="program_tree_settings">
       </div>
     </div>
 </div>
 
+<!--
 <div class="container-fluid nmc-main-workspace-header">
-<div class="row">
-    <div class="col-md-3 noPadding">
-        <h2 class="noMargin nmc-h2">Уведомления</h2>
-    </div>
-    <div class="input-group col-md-4 filter pull-left nmc-search-form">   
-        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-        <input type="text" class="form-control nmc-text-input-form" ng-model="filter">
-<!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
-    </div>
-    <div class="col-md-5"></div>
-</div>
 <div class="row">
     <div class="col-md-12 noPadding nmc-main-workspace-header">
         <hr>
     </div>
 </div>    
 </div>
+-->
 
 <!--    Непрокручиваямая шапка -->
+<!--
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
         <tr class="nmc-main-table-header">
             <th class="col-md-1 nmc-button-sort nmc-td-for-buttons" ng-click="setOrderBy('color')">
@@ -55,14 +63,41 @@
             </th>
         </tr>
 </table>
+-->
 
 <div class="nmc-tariff-main-div">
+    <div class="well">
+        <div ng-repeat="setting in data.settings">
+            <div ng-switch on="setting.settingType">
+                <div ng-switch-when="checkbox">
+                    <input class="nmc-checkbox-form" type="checkbox" ng-model="settingValue"/> 
+                    <label>{{setting.settingLabel}} </label>
+                </div>
+                <div ng-switch-when="combobox">
+                    {{setting.settingLabel}}
+                    <select class="form-control nmc-select-form" ng-model="settingValue" ng-options="item as item.name for item in data.items[setting.itemName]">
+                    </select>
+                </div>
+                <div ng-switch-when="input">
+                    <label>{{setting.settingLabel}} </label>
+                    <input class="form-control nmc-text-input-form" type="text" ng-model="settingValue"/> 
+                </div>
+                <div ng-switch-default>
+                    {{setting.settingLabel}}
+                </div>
+            </div>         
+        </div>
+        <div class="btn-group pull-right">
+            <button class="btn btn-primary">Сохранить</button>
+            <button class="btn btn-default">Отменить</button>
+        </div>
+    </div>
+<!--
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
         <tr class="nmc-main-table-header nmc-hide">
             <th class="col-md-1 nmc-td-for-buttons">
-
             </th>
-
+            
             <th ng-repeat="column in columns" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
                 <div>
                     {{column.header || column.name}}
@@ -81,6 +116,7 @@
             </td>
         </tr>
     </table>
+-->
 </div>
 
 <!-- window: edit notice settings-->

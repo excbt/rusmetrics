@@ -85,7 +85,7 @@ angular.module('portalNMC')
                     monitorSvcSettings.loadingFlag = false;//data has been loaded
                     $rootScope.$broadcast('monitorObjects:updated');
                 });
-            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
+//            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
         };
         
             //get objects function
@@ -106,7 +106,7 @@ angular.module('portalNMC')
                 .error(function(e){
                     console.log(e);
                 });
-            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
+//            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
         };
         
         //run getObjects

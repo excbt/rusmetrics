@@ -29,8 +29,8 @@ angular.module('portalNMC')
         var urlServiceTypes = urlRmaContObjects + '/contServiceTypes';//'resource/serviceTypes.json';
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
-        var rmaTreeTemplatesUrl = urlRma + '/subscrObjectTreeTemplates';
-        var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';
+        var rmaTreeTemplatesUrl = urlSubscr + '/subscrObjectTreeTemplates';
+        var controlTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
         var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
         
         var rmaTreeTemplates = [];
@@ -389,9 +389,12 @@ angular.module('portalNMC')
        };
                  
        $rootScope.$on('objectSvc:requestReloadData', function(event, args){
-//console.log("Reload objects data.");           
-           var contGroupId = args.contGroupId;
-           loadData(contGroupId);
+//console.log("Reload objects data.");
+            var contGroupId = null;
+            if (!checkUndefinedNull(args) && !checkUndefinedNull(args.contGroupId)){
+                contGroupId = args.contGroupId;
+            }
+            loadData(contGroupId);
        });
         var getPromise = function(){
             return promise;
@@ -482,43 +485,43 @@ angular.module('portalNMC')
         };
                  
         var createTree = function(tree){
-            return $http.post(rmaTreesUrl, tree);
+            return $http.post(controlTreesUrl, tree);
         };
         
         var loadTrees = function(){
-            return $http.get(rmaTreesUrl);
+            return $http.get(controlTreesUrl);
         };
         
         var loadTree = function(treeId){
-            return $http.get(rmaTreesUrl + '/' + treeId);
+            return $http.get(controlTreesUrl + '/' + treeId);
         };
                  
         var updateTree = function(tree){
-            return $http.put(rmaTreesUrl + '/' + tree.id, tree);
+            return $http.put(controlTreesUrl + '/' + tree.id, tree);
         };
                  
         var deleteTree = function(treeId){
-            return $http.delete(rmaTreesUrl + '/' + treeId);
+            return $http.delete(controlTreesUrl + '/' + treeId);
         };
                  
         var deleteTreeNode = function(treeId, nodeId){
-            return $http.delete(rmaTreesUrl + '/' + treeId + '/node/' + nodeId);
+            return $http.delete(controlTreesUrl + '/' + treeId + '/node/' + nodeId);
         };
                  
         var loadObjectsByTreeNode = function(treeId, nodeId){            
-            return $http.get(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
+            return $http.get(controlTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
         };
                  
         var putObjectsToTreeNode = function(treeId, nodeId, objIds){            
-            return $http.put(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/add', objIds);
+            return $http.put(controlTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/add', objIds);
         };
         
         var releaseObjectsFromTreeNode = function(treeId, nodeId, objIds){            
-            return $http.put(rmaTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/remove', objIds);
+            return $http.put(controlTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/remove', objIds);
         };
                  
         var loadFreeObjectsByTree = function(treeId){            
-            return $http.get(rmaTreesUrl + '/' + treeId + '/contObjects/free');
+            return $http.get(controlTreesUrl + '/' + treeId + '/contObjects/free');
         };
                  
         var loadSubscrTrees = function(){

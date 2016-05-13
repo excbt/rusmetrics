@@ -308,8 +308,15 @@ angular.module('portalNMC')
         };
         $scope.refreshData();
     };
+      
+    $scope.getAllColorObjects = function(){
+        $scope.monitorSettings.loadingFlag = true;
+        $scope.monitorSettings.noGreenObjectsFlag = false;
+        monitorSvc.setMonitorSettings({noGreenObjectsFlag: false});               
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+    };
     
-    $scope.getNoGreenObjects= function(){
+    $scope.getNoGreenObjects = function(){
         $scope.monitorSettings.loadingFlag = true;
         $scope.monitorSettings.noGreenObjectsFlag = true;
         monitorSvc.setMonitorSettings({noGreenObjectsFlag: true});               

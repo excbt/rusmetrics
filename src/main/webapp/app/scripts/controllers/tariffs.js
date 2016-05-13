@@ -153,9 +153,10 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.getTariffTypes();
     $scope.getTariffOptions();
     
-    $scope.saveObject = function(){   
-        $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
-        
+    $scope.saveObject = function(){ 
+        if (!mainSvc.checkUndefinedNull($scope.currentObject.tariffOption)){
+            $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
+        }
         
         var stDate = (new Date(moment($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
         var UTCstdt = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());              
@@ -225,12 +226,16 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     };
     
     $scope.checkRequiredFields = function(){      
-        if ((typeof $scope.currentObject.tariffOption=='undefined')||($scope.currentObject.tariffOption==null)){
+        if (/*(typeof $scope.currentObject.tariffOption=='undefined')||
+            ($scope.currentObject.tariffOption==null)||*/
+            mainSvc.checkUndefinedNull($scope.currentObject.rso) ||
+            mainSvc.checkUndefinedNull($scope.currentObject.tariffType)            
+           ){
             return false;
         };       
         return !(($scope.psStartDateFormatted==null) ||
         ($scope.psStartDateFormatted=="") ||
-        ($scope.currentObject.tariffOption.keyname==null) ||
+        /*($scope.currentObject.tariffOption.keyname==null) ||*/
         ($scope.currentObject.rso.id==null) ||
         ($scope.currentObject.tariffType.id==null))
         &&$scope.checkPositiveNumberValue($scope.currentObject.tariffPlanValue)

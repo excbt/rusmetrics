@@ -17,11 +17,11 @@
 
 <div class="row">
     <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
-        <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+        <div class="row nmc-main-workspace-header marginBottom5">
             <div class="col-xs-6 col-md-6">
                 <div class="btn-group">
                       <button 
-                              title="Действия над объектом" 
+                              title="Иерархии объектов" 
                              type="button" 
                              class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
                              data-toggle="dropdown" 
@@ -50,30 +50,8 @@
 
             </div>
             <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
-<!--
-                <span class="input-group-addon nmc-search-form-addon">
-                    <i class="glyphicon glyphicon-search nmc-search-form-button">
-                    </i>
-                </span>
-                <input title="Введите текст для поиска узла" 
-                       type="text" 
-                       class="form-control nmc-text-input-form" 
-                       ng-model="treefilter" 
-                       >
--->
             </div>
         </div>
-<!--
-         <div class="row nmc-tree-with-fixed-header">
-              <div ui-tree="options" data-drag-enabled="false">
-                <ol ui-tree-nodes ng-model="data.currentTree" >
-                  <li ng-repeat="item in data.currentTree.childObjectList" 
-                      ui-tree-node 
-                      ng-include="'subscr_object_tree_items_renderer.html'"></li>
-                </ol>
-              </div>
-         </div>
--->
     </div>
     <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
         <div  ng-show="loading" class="nmc-loading">
@@ -81,11 +59,7 @@
         </div>
         <div class="container-fluid" ng-hide="loading">
             <div class="row nmc-main-workspace-header">
-                <div class="input-group col-xs-3 col-md-3 filter marginBottom10 pull-left nmc-search-form">   
-                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
-                </div>
-                <div class="col-xs-2 col-md-2" ng-controller="ObjectGroupsCtrl">
+                <div class="col-xs-2 col-md-2 noPadding" ng-controller="ObjectGroupsCtrl">
                     <div class="btn-group" ng-show="objectCtrlSettings.isTreeView != true">
                           <button 
                                   title="Фильтр по группам объектов" 
@@ -114,8 +88,12 @@
                               </li>
                           </ul>
                         </div>   
+                </div>
+                <div class="input-group col-xs-3 col-md-3 filter marginBottom10 pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                 </div>                
-                <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+                <div class="col-xs-1 col-md-1 nmc-div-refresh">
                     <button title="Обновить" 
                             class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
                             ng-click="refreshObjectsData()" 
@@ -199,7 +177,7 @@
                                                 </li>
                                                 <li>
                                                     <a href="" ng-click="toggleTreeView()">
-                                                        Включить/выключить отображение дерева объектов</a>
+                                                        Включить/выключить отображение иерархии объектов</a>
                                                 </li>
                                               </ul>
                                             </div>

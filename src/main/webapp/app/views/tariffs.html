@@ -20,6 +20,7 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
 
     </ul>
 
@@ -295,7 +296,7 @@
                                         <td class="col-sm-3"><label for="inputOption" class="nmc-form-label">Опция</label>
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">
-                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffOption.keyname==null)}">
+                                            <div class="form-group noMarginBottom">
                                                 <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputOption" style="" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
                                                 </select>
                                             </div>
