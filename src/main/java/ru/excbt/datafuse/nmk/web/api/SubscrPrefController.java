@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class SubscrPrefController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getSubscrPrefValue() {
+	public ResponseEntity<?> getSubscrPrefValues() {
 
 		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
 
@@ -52,13 +53,33 @@ public class SubscrPrefController extends SubscrApiController {
 
 	/**
 	 * 
+	 * @param subscrPrefKeyname
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrPrefValue", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrPrefValue(@RequestParam("subscrPrefKeyname") String subscrPrefKeyname) {
+
+		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
+
+		Optional<SubscrPrefValue> result = resultList.stream()
+				.filter(i -> i.getSubscrPrefKeyname().equals(subscrPrefKeyname)).findFirst();
+
+		if (result.isPresent()) {
+			return responseOK(ObjectFilters.deletedFilter(result.get()));
+		}
+
+		return responseOK();
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrPrefValues/objectTreeTypes", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getSubscrPrefObjectTreeTypes(@RequestParam("subscrPref") String subscrPref) {
+	public ResponseEntity<?> getSubscrPrefObjectTreeTypes(@RequestParam("subscrPrefKeyname") String subscrPrefKeyname) {
 
-		List<String> treeTypes = subscrPrefService.selectSubscrPrefTreeTypes(subscrPref);
+		List<String> treeTypes = subscrPrefService.selectSubscrPrefTreeTypes(subscrPrefKeyname);
 
 		if (treeTypes.isEmpty()) {
 			return responseOK();
