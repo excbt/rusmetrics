@@ -63,11 +63,11 @@
 -->
 
 <div class="nmc-tariff-main-div">
-    <div class="well">
+    <div class="marginTop5">
         <div class="container-fluid">
-            <div class="row" ng-repeat="setting in data.modifySettings">
+            <div class="row nmc-table-program-settings" ng-repeat="setting in data.modifySettings">
                 <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
-                    <input type="checkbox" ng-model="setting.isActive"/>
+                    <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"/>
                 </div>
                 <div class="col-xs-3 col-md-3 noPadding marginTop3">
                     {{setting.subscrPref.prefName}}
@@ -76,7 +76,7 @@
                     <select class="form-control nmc-select-form" 
                             ng-model="setting.value" 
                             ng-options="item.id as item.objectName for item in data.items[setting.subscrPrefKeyname]"
-                            ng-disabled="!setting.isActive"
+                            ng-disabled="!setting.isActive || isDisabled()"
                             >
                     </select>
                 </div>
@@ -85,8 +85,8 @@
             </div>
         </div>
         <div class="btn-group">
-            <button class="btn btn-primary" ng-click="saveSettings()">Сохранить</button>
-            <button class="btn btn-default" ng-click="cancelSettings()">Отменить</button>
+            <button class="btn btn-primary" ng-click="saveSettings()" ng-disabled="isDisabled()">Сохранить</button>
+            <button class="btn btn-default" ng-click="cancelSettings()" ng-disabled="isDisabled()">Отменить</button>
         </div>
     </div>
 <!--

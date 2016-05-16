@@ -1579,8 +1579,9 @@ angular.module('portalNMC')
                             getObjectsData();
                             return "Object tree array is empty.";
                         };
-                        $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));
-console.log($scope.data.defaultTree);                        
+                        if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
+                            $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));                   
+                        }
                         if (mainSvc.checkUndefinedNull($scope.data.defaultTree)){
                             $scope.viewFullObjectList();
                         }else{                        

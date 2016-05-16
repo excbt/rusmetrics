@@ -98,6 +98,14 @@ angular.module('portalNMC')
         $scope.currentNotice = angular.copy(item);
     };
     
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
+    };
+    
+    $scope.isDisabled = function(){
+        return !$scope.isAdmin();
+    };
+    
     var initCtrl = function(){
         getProgramSettings();
     };    
