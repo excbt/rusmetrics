@@ -346,6 +346,33 @@ angular.module('portalNMC')
     
     ///////////////// end checkers
     
+    var findItemBy =  function(itemArray, fieldName, value){
+        var result = null;
+        if (!angular.isArray(itemArray)){
+            console.log("Input value is no array.");
+            return result;
+        };
+        if (checkUndefinedNull(value)){
+            console.log("value for search is undefined or null.");
+            return result;
+        };
+        if (checkUndefinedNull(fieldName)){
+            itemArray.some(function(item){
+                if (item == value){
+                    result = item;
+                    return true;
+                };
+            });
+        }else{
+            itemArray.some(function(item){
+                if (item[fieldName] == value){
+                    result = item;
+                    return true;
+                };
+            });
+        };
+        return result;
+    };
     // Sort object array by some string field
     var sortItemsBy = function(itemArray, sortField){
         if (!angular.isArray(itemArray)){
@@ -580,6 +607,7 @@ angular.module('portalNMC')
         checkUndefinedEmptyNullValue,
         checkUndefinedNull,
         dateFormating,
+        findItemBy,
         findNodeInTree,
         getConfirmCode,
         getContextIds,

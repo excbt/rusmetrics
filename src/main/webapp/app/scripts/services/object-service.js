@@ -8,6 +8,7 @@ angular.module('portalNMC')
             {fullName: "Ошибка. Объекты не были загружены."
             }
         ];
+        var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";
         var loading = true;
         var urlApi = '../api';
         var urlSubscr = urlApi + '/subscr';
@@ -31,7 +32,9 @@ angular.module('portalNMC')
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
         var rmaTreeTemplatesUrl = urlSubscr + '/subscrObjectTreeTemplates';
         var controlTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
-        var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
+        var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
+                 
+        var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
         var rmaTreeTemplates = [];
 
@@ -539,6 +542,10 @@ angular.module('portalNMC')
         var loadSubscrObjectsByTreeNode = function(treeId, nodeId){            
             return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
         };
+                 
+        var loadDefaultTreeSetting = function(){
+            return $http.get(defaultTreeUrl);
+        };
         
         //service initialization
         var initSvc = function(){
@@ -595,6 +602,7 @@ angular.module('portalNMC')
             getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
+            loadDefaultTreeSetting,
             loadFreeObjectsByTree,
             loadObjectsByTreeNode,
             loading,

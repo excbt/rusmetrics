@@ -1518,7 +1518,7 @@ angular.module('portalNMC')
                 
                 $scope.data.currentTree = {};
                 $scope.data.newTree = {};
-                $scope.data.defaultTree = null;// default tree
+                $scope.data.defaultTree = null;// default tree               
                 
                 var findNodeInTree = function(node, tree){
                     return mainSvc.findNodeInTree(node, tree);
@@ -1570,7 +1570,7 @@ angular.module('portalNMC')
                         }, errorCallback);
                 };
                 
-                var loadTrees = function(){
+                var loadTrees = function(treeSetting){
                     objectSvc.loadSubscrTrees().then(function(resp){
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
@@ -1579,6 +1579,8 @@ angular.module('portalNMC')
                             getObjectsData();
                             return "Object tree array is empty.";
                         };
+                        $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));
+console.log($scope.data.defaultTree);                        
                         if (mainSvc.checkUndefinedNull($scope.data.defaultTree)){
                             $scope.viewFullObjectList();
                         }else{                        
@@ -1594,7 +1596,9 @@ angular.module('portalNMC')
                         getObjectsData();
                     }else{
                     //if tree is on
-                        loadTrees();                    
+                        objectSvc.loadDefaultTreeSetting().then(function(resp){                                                        
+                            loadTrees(resp.data);                    
+                        }, errorCallback);                     
                     };
                 };
                 
@@ -1606,8 +1610,10 @@ angular.module('portalNMC')
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData();
                     }else{
-                    //if tree is on
-                        loadTrees();                    
+                    //if tree is on                         
+                        objectSvc.loadDefaultTreeSetting().then(function(resp){                                                        
+                            loadTrees(resp.data);                    
+                        }, errorCallback);                        
                     };
                 }; 
                 

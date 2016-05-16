@@ -19,21 +19,18 @@
       </div>
     </div>
 </div>
+<!--
 <div role="tabpanel" class="nmc-tab-panel">
-
-  <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
     <li id="program_tree_settings_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="program_tree_settings" data-target="#program_tree_settings" role="tab" data-toggle="tab">Иерархии</a></li>
     <li id="program_map_settings_3rd_menu_item" role="presentation"><a class="nmc-tab-button" href="" aria-controls="program_map_settings" data-target="#program_map_settings"  role="tab" data-toggle="tab">Карта</a></li>  
   </ul>
-
-  <!-- реализация вкладок -->
   <div class="tab-content">
-<!--      Настройки иерархий-->
     <div role="tabpanel" class="tab-pane fade in active" id="program_tree_settings">
       </div>
     </div>
 </div>
+-->
 
 <!--
 <div class="container-fluid nmc-main-workspace-header">
@@ -67,29 +64,29 @@
 
 <div class="nmc-tariff-main-div">
     <div class="well">
-        <div ng-repeat="setting in data.settings">
-            <div ng-switch on="setting.settingType">
-                <div ng-switch-when="checkbox">
-                    <input class="nmc-checkbox-form" type="checkbox" ng-model="settingValue"/> 
-                    <label>{{setting.settingLabel}} </label>
+        <div class="container-fluid">
+            <div class="row" ng-repeat="setting in data.modifySettings">
+                <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
+                    <input type="checkbox" ng-model="setting.isActive"/>
                 </div>
-                <div ng-switch-when="combobox">
-                    {{setting.settingLabel}}
-                    <select class="form-control nmc-select-form" ng-model="settingValue" ng-options="item as item.name for item in data.items[setting.itemName]">
+                <div class="col-xs-3 col-md-3 noPadding marginTop3">
+                    {{setting.subscrPref.prefName}}
+                </div>
+                <div class="col-xs-2 col-md-2 noPadding" >
+                    <select class="form-control nmc-select-form" 
+                            ng-model="setting.value" 
+                            ng-options="item.id as item.objectName for item in data.items[setting.subscrPrefKeyname]"
+                            ng-disabled="!setting.isActive"
+                            >
                     </select>
                 </div>
-                <div ng-switch-when="input">
-                    <label>{{setting.settingLabel}} </label>
-                    <input class="form-control nmc-text-input-form" type="text" ng-model="settingValue"/> 
+                <div class="col-xs-6 col-md-6">                    
                 </div>
-                <div ng-switch-default>
-                    {{setting.settingLabel}}
-                </div>
-            </div>         
+            </div>
         </div>
-        <div class="btn-group pull-right">
-            <button class="btn btn-primary">Сохранить</button>
-            <button class="btn btn-default">Отменить</button>
+        <div class="btn-group">
+            <button class="btn btn-primary" ng-click="saveSettings()">Сохранить</button>
+            <button class="btn btn-default" ng-click="cancelSettings()">Отменить</button>
         </div>
     </div>
 <!--
