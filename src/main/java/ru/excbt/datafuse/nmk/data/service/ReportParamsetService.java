@@ -29,7 +29,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
@@ -659,8 +658,7 @@ public class ReportParamsetService implements SecuredRoles {
 	public List<ReportParamset> selectReportParamsetContextLaunch(final SubscriberParam subscriberParam) {
 
 		List<ReportParamset> result = null;
-		if (subscriberParam.getSubscrTypeKey() == SubscrTypeKey.SUBSCR_CHILD
-				&& subscriberParam.haveParentSubacriber()) {
+		if (subscriberParam.getSubscrTypeKey().isChild() && subscriberParam.haveParentSubacriber()) {
 			result = reportParamsetRepository
 					.selectRmaReportParamsetContextLaunchChild(subscriberParam.getParentSubscriberId());
 		} else {
