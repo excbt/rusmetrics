@@ -133,6 +133,8 @@ public class ReportService {
 		reportTypeMap.put(ReportTypeKey.HW_DATA_REPORT, ReportType.RPT_HW_DATA);
 		reportTypeMap.put(ReportTypeKey.EL_QUALITY_REPORT,
 				ReportType.RPT_EL_QUALITY);
+		reportTypeMap.put(ReportTypeKey.ELECTRIC_CONSUMPTION_ABONENT_REPORT,
+				ReportType.RPT_ELECTRIC_CONSUMPTION_ABONENT);
 		REPORTS_TYPE_KEYNAME_CONVERTER = Collections
 				.unmodifiableMap(reportTypeMap);
 
