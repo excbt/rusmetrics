@@ -103,8 +103,8 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
 
-		boolean requiredPassed = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam)
-				&& reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean requiredPassed = reportMakerParam.isAllCommonRequiredParamsExists()
+				&& reportMakerParam.isAllSpecialRequiredParamsExists();
 
 		reportParamset.setAllRequiredParamsPassed(requiredPassed);
 
@@ -158,8 +158,8 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset);
 
-		boolean requiredPassed = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam)
-				&& reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean requiredPassed = reportMakerParam.isAllCommonRequiredParamsExists()
+				&& reportMakerParam.isAllSpecialRequiredParamsExists();
 
 		reportParamset.setAllRequiredParamsPassed(requiredPassed);
 
@@ -624,9 +624,9 @@ public class ReportParamsetService implements SecuredRoles {
 
 			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(rp);
 
-			boolean commonPassed = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam);
+			boolean commonPassed = reportMakerParam.isAllCommonRequiredParamsExists();
 
-			boolean specialPassed = reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
+			boolean specialPassed = reportMakerParam.isAllSpecialRequiredParamsExists();
 
 			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed, specialPassed);
 

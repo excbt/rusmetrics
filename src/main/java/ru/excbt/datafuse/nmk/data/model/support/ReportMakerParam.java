@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,15 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportMakerParam {
@@ -334,6 +339,173 @@ public class ReportMakerParam {
 		ReportTemplate rt = getParamserReportTemplate();
 		String key = rt.getReportTypeKeyname();
 		return rt != null ? ReportTypeKey.valueOf(key) : null;
+	}
+
+	/**
+	 * 
+	 * @param isRequred
+	 * @param obj
+	 * @return
+	 */
+	private boolean checkRequiredParamNotNull(Boolean isRequired, Object obj) {
+		if (Boolean.TRUE.equals(isRequired)) {
+			return (obj != null);
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param typeKey
+	 * @param param
+	 * @return
+	 */
+	private boolean checkParamSpecialFieldValue(ReportMetaParamSpecialTypeName typeName,
+			ReportParamsetParamSpecial param) {
+
+		boolean result = false;
+
+		switch (typeName) {
+		case STRING:
+			result = param.getTextValue() != null;
+			break;
+		case DATE:
+			result = param.getOneDateValue() != null;
+			break;
+		case DATETIME:
+			result = param.getOneDateValue() != null;
+			break;
+		case BOOL:
+			result = param.getBoolValue() != null;
+			break;
+		case NUMERIC:
+			result = param.getNumericValue() != null;
+			break;
+		case DATE_PERIOD:
+			result = param.getStartDateValue() != null && param.getEndDateValue() != null;
+			break;
+		case DATETIME_PERIOD:
+			result = param.getStartDateValue() != null && param.getEndDateValue() != null;
+			break;
+		case DIRECTORY:
+			result = param.getDirectoryValue() != null;
+			break;
+		default:
+			break;
+		}
+
+		return result;
+	}
+
+	public boolean isAllCommonRequiredParamsExists() {
+
+		boolean result = true;
+
+		ReportType reportType = reportParamset.getReportTemplate().getReportType();
+
+		ReportMetaParamCommon paramCommon = reportType.getReportMetaParamCommon();
+
+		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
+
+			result = result && checkRequiredParamNotNull(paramCommon.getStartDateRequired(),
+					reportParamset.getParamsetStartDate());
+
+			result = result
+					&& checkRequiredParamNotNull(paramCommon.getEndDateRequired(), reportParamset.getParamsetEndDate());
+		}
+
+		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.DAY) {
+			result = result
+					&& checkRequiredParamNotNull(paramCommon.getOneDateRequired(), reportParamset.getParamsetOneDate());
+		}
+
+		// Only one object required
+		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
+				&& Boolean.FALSE.equals(paramCommon.getManyContObjectsRequired())) {
+			result = result && getReportContObjectIds().size() == 1;
+		}
+
+		// More than 0 Objects required
+		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
+				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
+			result = result && getReportContObjectIds().size() > 0;
+		}
+
+		// More than 1 object required
+		if (Boolean.FALSE.equals(paramCommon.getOneContObjectRequired())
+				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
+			result = result && getReportContObjectIds().size() > 1;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportMakerParam
+	 * @return
+	 */
+	public boolean isAllSpecialRequiredParamsExists() {
+
+		boolean result = true;
+
+		ReportType reportType = reportParamset.getReportTemplate().getReportType();
+
+		checkNotNull(reportType.getReportMetaParamSpecialList());
+
+		Collection<ReportMetaParamSpecial> specialParamDefs = reportType.getReportMetaParamSpecialList();
+
+		logger.debug("specialParamDefs. size: {}", specialParamDefs.size());
+		logger.debug("paramSpecialList.size: {}", reportParamset.getParamSpecialList().size());
+
+		List<ReportParamsetParamSpecial> paramValues = new ArrayList<>();
+		paramValues.addAll(reportParamset.getParamSpecialList());
+
+		for (ReportMetaParamSpecial paramDef : specialParamDefs) {
+			logger.debug("Checking paramDef: {}", paramDef.getParamSpecialKeyname());
+			if (result && Boolean.TRUE.equals(paramDef.getParamSpecialRequired())) {
+				logger.debug("paramDef. id:{} keyname:{} ({}) .... required: {}", paramDef.getId(),
+						paramDef.getParamSpecialKeyname(), paramDef.getParamSpecialCaption(),
+						paramDef.getParamSpecialRequired());
+
+				boolean checkRequired = false;
+
+				logger.debug("paramValues.size: {}", paramValues.size());
+
+				List<ReportParamsetParamSpecial> currCheckValues = new ArrayList<>();
+				currCheckValues.addAll(paramValues);
+
+				for (ReportParamsetParamSpecial checkValue : currCheckValues) {
+
+					if (paramDef.getId().equals(checkValue.getReportMetaParamSpecialId())) {
+
+						// String paramTypeKeyname =
+						// paramDef.getParamSpecialType().getKeyname();
+						String paramTypeName = paramDef.getParamSpecialType().getSpecialTypeName();
+
+						logger.debug("Found param value id: {}. paramDef.id: {} paramTypeKeyname: {}",
+								checkValue.getId(), paramDef.getId(), paramDef.getParamSpecialKeyname());
+
+						if (paramTypeName == null) {
+							break;
+						}
+						ReportMetaParamSpecialTypeName typeName = ReportMetaParamSpecialTypeName.valueOf(paramTypeName);
+
+						checkRequired = checkParamSpecialFieldValue(typeName, checkValue);
+
+						// logger.debug("Remove: {}",
+						// paramValues.remove(paramValue));
+						paramValues.remove(checkValue);
+						// break;
+
+					}
+				}
+
+				result = result && checkRequired;
+			}
+		}
+
+		return result;
 	}
 
 }

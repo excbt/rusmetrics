@@ -180,7 +180,7 @@ public class ReportMakerParamService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean isAllCommonRequiredParamsExists(ReportMakerParam reportMakerParam) {
+	public boolean isAllCommonRequiredParamsExists2(ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);
 		// checkState(reportMakerParam.isParamsetValid());
@@ -234,7 +234,7 @@ public class ReportMakerParamService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean isAllSpecialRequiredParamsExists(ReportMakerParam reportMakerParam) {
+	public boolean isAllSpecialRequiredParamsExists2(ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);
 		// checkState(reportMakerParam.isParamsetValid());

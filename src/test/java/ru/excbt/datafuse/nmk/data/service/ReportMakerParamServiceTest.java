@@ -15,8 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 
 public class ReportMakerParamServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportMakerParamServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportMakerParamServiceTest.class);
 
 	private final static long TEST_PARAMSET_COMMERCE = 28618264;
 
@@ -29,16 +28,13 @@ public class ReportMakerParamServiceTest extends JpaSupportTest {
 	@Test
 	public void testRequredCommerce() {
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(TEST_PARAMSET_COMMERCE);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(TEST_PARAMSET_COMMERCE);
 
-		boolean commonCheck = reportMakerParamService
-				.isAllCommonRequiredParamsExists(reportMakerParam);
+		boolean commonCheck = reportMakerParam.isAllCommonRequiredParamsExists();
 
 		assertTrue(commonCheck);
 
-		boolean specialCheck = reportMakerParamService
-				.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean specialCheck = reportMakerParam.isAllSpecialRequiredParamsExists();
 
 		assertTrue(specialCheck);
 	}
@@ -46,16 +42,14 @@ public class ReportMakerParamServiceTest extends JpaSupportTest {
 	@Test
 	public void testParamSpecialValuesMap() {
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(TEST_PARAMSET_COMMERCE);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(TEST_PARAMSET_COMMERCE);
 
-		Map<String, Object> valueMap = reportMakerParamService
-				.getParamSpecialValues(reportMakerParam);
+		Map<String, Object> valueMap = reportMakerParamService.getParamSpecialValues(reportMakerParam);
 		checkNotNull(valueMap);
 
 		for (Map.Entry<String, Object> v : valueMap.entrySet()) {
-			logger.info("value key:{}, value:{}, valueClass:{}", v.getKey(),
-					v.getValue(), v.getValue().getClass().getName());
+			logger.info("value key:{}, value:{}, valueClass:{}", v.getKey(), v.getValue(),
+					v.getValue().getClass().getName());
 		}
 
 	}

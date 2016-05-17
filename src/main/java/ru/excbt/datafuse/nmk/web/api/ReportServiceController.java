@@ -332,8 +332,8 @@ public class ReportServiceController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report Maker Param is not valid"));
 		}
 
-		boolean checkParamsCommon = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam);
-		boolean checParamsSpecial = reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean checkParamsCommon = reportMakerParam.isAllCommonRequiredParamsExists();
+		boolean checParamsSpecial = reportMakerParam.isAllSpecialRequiredParamsExists();
 
 		if (!checkParamsCommon) {
 			return responseBadRequest(ApiResult.validationError("Report Maker Param: Common params is not valid"));
