@@ -37,7 +37,7 @@ public class ReportMakerParam {
 	private final static String PAR_IDPARAM = "PAR_ID_PARAM";
 
 	private final SubscriberParam subscriberParam;
-	private final Long[] contObjectIds;
+	private final Long[] paramContObjectIds;
 	private final Long[] subscrContObjectIds;
 	private final ReportParamset reportParamset;
 	private final boolean previewMode;
@@ -47,17 +47,18 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, Long[] contObjectIds,
-			boolean previewMode) {
+	protected ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset,
+			Long[] paramContObjectIds, Long[] subscrContObjectIds, boolean previewMode) {
 		checkNotNull(subscriberParam);
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
-		checkNotNull(contObjectIds);
-		checkArgument(contObjectIds.length > 0);
+		checkNotNull(paramContObjectIds);
+		checkArgument(paramContObjectIds.length > 0);
 		this.subscriberParam = subscriberParam;
 		this.reportParamset = reportParamset;
-		this.contObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
-		this.subscrContObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
+		this.paramContObjectIds = Arrays.copyOf(paramContObjectIds, paramContObjectIds.length);
+		this.subscrContObjectIds = subscrContObjectIds != null
+				? Arrays.copyOf(subscrContObjectIds, subscrContObjectIds.length) : new Long[0];
 		this.previewMode = previewMode;
 	}
 
@@ -66,47 +67,37 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, Long[] contObjectIds) {
-		this(subscriberParam, reportParamset, contObjectIds, false);
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, Long[] paramContObjectIds) {
+		this(subscriberParam, reportParamset, paramContObjectIds, null, false);
 	}
 
 	/**
 	 * 
 	 * @param reportParamset
-	 * @param contObjectIdList
+	 * @param paramContObjectIdList
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, List<Long> contObjectIdList,
-			List<Long> subscrObjectIdList, boolean previewMode) {
-		this(subscriberParam, reportParamset, contObjectIdList.toArray(new Long[0]), previewMode);
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, List<Long> paramContObjectIdList,
+			List<Long> subscrContObjectIdList, boolean previewMode) {
+		this(subscriberParam, reportParamset, checkNotNull(paramContObjectIdList).toArray(new Long[0]),
+				subscrContObjectIdList != null ? subscrContObjectIdList.toArray(new Long[0]) : null, previewMode);
 	}
 
 	/**
 	 * 
 	 * @param reportParamset
-	 * @param contObjectIdList
+	 * @param paramContObjectIdList
 	 */
 	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset,
-			List<Long> contObjectIdList) {
-		this(subscriberParam, reportParamset, contObjectIdList, null, false);
+			List<Long> paramContObjectIdList) {
+		this(subscriberParam, reportParamset, paramContObjectIdList, null, false);
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public Long[] getContObjectIds() {
-		return contObjectIds == null ? null : Arrays.copyOf(contObjectIds, contObjectIds.length);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<Long> getContObjectList() {
-		if (contObjectIds == null) {
-			return Collections.emptyList();
-		}
-		return Arrays.asList(contObjectIds);
+	public Long[] getParamContObjectIds() {
+		return paramContObjectIds == null ? null : Arrays.copyOf(paramContObjectIds, paramContObjectIds.length);
 	}
 
 	/**
@@ -137,22 +128,14 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
-	 * @return
-	 */
-	public boolean contObjectsEmpty() {
-		return contObjectIds == null || contObjectIds.length == 0;
-	}
-
-	/**
 	 * (
 	 * 
 	 * @return
 	 */
 	public List<Long> getReportContObjectIds() {
 		List<Long> result = new ArrayList<>();
-		if (contObjectIds != null && contObjectIds.length > 0) {
-			result.addAll(Arrays.asList(contObjectIds));
+		if (paramContObjectIds != null && paramContObjectIds.length > 0) {
+			result.addAll(Arrays.asList(paramContObjectIds));
 		} else {
 			if (subscrContObjectIds != null) {
 				result.addAll(Arrays.asList(subscrContObjectIds));
