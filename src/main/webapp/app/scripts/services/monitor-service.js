@@ -1,11 +1,16 @@
 'use strict';
 angular.module('portalNMC')
     .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', function($rootScope, $http, $interval, $cookies, $location, objectSvc){
-//console.log("Monitor service. Run Monitor service.");        
+//console.log("Monitor service. Run Monitor service.");
+        var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
         var objectUrl = notificationsUrl + "/contObject";
-        var cityWithObjectsUrl = objectUrl + "/cityStatusCollapse";
+        var defaultCityWithObjectsUrl = objectUrl + "/cityStatusCollapse";
+        var cityWithObjectsUrl = null; //dinamically param: when tree off - it = defaultCityWithObjectsUrl; when tree on - subscrTreesUrl + treeId + nodeId ...
+        var urlSubscr = "../api/subscr";
+        var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
+        var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS;
         
         var objectsMonitorSvc = [];
         var citiesMonitorSvc = [];   
@@ -62,7 +67,10 @@ angular.module('portalNMC')
         };
         
                     //get cities with objects function
-        var getCitiesAndObjects = function(url, monitorSvcSettings){ 
+        var getCitiesAndObjects = function(url, monitorSvcSettings){
+            if (checkUndefinedNull(url)){
+                return 400;
+            };
 //console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
             var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
@@ -82,6 +90,8 @@ angular.module('portalNMC')
                 })
                 .error(function(e){
                     console.log(e);
+                    citiesMonitorSvc = [];                
+                    objectsMonitorSvc = [];
                     monitorSvcSettings.loadingFlag = false;//data has been loaded
                     $rootScope.$broadcast('monitorObjects:updated');
                 });
@@ -107,10 +117,7 @@ angular.module('portalNMC')
                     console.log(e);
                 });
 //            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
-        };
-        
-        //run getObjects
-        getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+        };        
             
         //get monitor events
        var getMonitorEventsByObject = function(obj){ 
@@ -187,17 +194,89 @@ angular.module('portalNMC')
             var time = (new Date()).toLocaleString();
             monitorSvcSettings.loadingFlag = true;
             getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
-        },Number(monitorSvcSettings.refreshPeriod) * 1000);
+        }, Number(monitorSvcSettings.refreshPeriod) * 1000);
         
+        var getMonitorData = function(){            
+            loadDefaultMonitorTreeSetting().then(function(resp){                
+                monitorSvcSettings.isTreeView = resp.data.isActive;                
+                if (monitorSvcSettings.isTreeView == true && monitorSvcSettings.isFullObjectView != true){                    
+                    monitorSvcSettings.defaultTreeId = Number(resp.data.value);                    
+                    if (checkUndefinedNull(monitorSvcSettings.curTreeId)){
+                        monitorSvcSettings.curTreeId = monitorSvcSettings.defaultTreeId;
+                    };                    
+                    if (checkUndefinedNull(monitorSvcSettings.curTreeNodeId)){
+                        citiesMonitorSvc = [];                
+                        objectsMonitorSvc = [];
+                        monitorSvcSettings.loadingFlag = false;//data has been loaded
+                        $rootScope.$broadcast('monitorObjects:updated');
+                    }else{                        
+                        cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapse';
+                        getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+                    };
+                }else{                                            
+                    cityWithObjectsUrl = angular.copy(defaultCityWithObjectsUrl);
+                    getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+                };
+            }, function(e){
+                console.log(e);
+            });            
+        };
         
         $rootScope.$on('monitor:updateObjectsRequest',function(){
-//console.log("MonitorSvc. monitor:updateObjectsRequest");            
-            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+//console.log("MonitorSvc. monitor:updateObjectsRequest");
+            getMonitorData();
+//            if (monitorSvcSettings.isTreeView == true && checkUndefinedNull(monitorSvcSettings.curTreeId)){                
+//                if (checkUndefinedNull(monitorSvcSettings.curTreeNodeId)){
+//                    citiesMonitorSvc = [];                
+//                    objectsMonitorSvc = [];
+//                    monitorSvcSettings.loadingFlag = false;//data has been loaded
+//                    $rootScope.$broadcast('monitorObjects:updated');
+//                }else{
+//                    cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapse';
+//                    getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+//                };
+//            }else{
+//console.log("here");
+//                cityWithObjectsUrl = angular.copy(defaultCityWithObjectsUrl);
+//                getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+//            };
         });
         
         $rootScope.$on('$destroy',function(){
             stopRefreshing();
         });
+        
+//******************************************************************
+//  Work with trees
+//******************************************************************
+        var loadSubscrTrees = function(){
+            return $http.get(subscrTreesUrl);
+        };
+        
+        var loadSubscrTree = function(treeId){
+            return $http.get(subscrTreesUrl + '/' + treeId);
+        };
+        
+        var loadSubscrFreeObjectsByTree = function(treeId){            
+            return $http.get(subscrTreesUrl + '/' + treeId + '/contObjects/free');
+        };
+                 
+        var loadSubscrObjectsByTreeNode = function(treeId, nodeId){            
+            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/cityStatusCollapse');
+        };
+                 
+        var loadDefaultMonitorTreeSetting = function(){
+            return $http.get(defaultTreeUrl);
+        };
+//******************************************************************
+//******************************************************************
+        
+        var initSvc = function(){
+            //run getObjects
+            getMonitorData();
+//            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+        };
+        initSvc();
         
          return {
             checkUndefinedNull,
@@ -206,6 +285,13 @@ angular.module('portalNMC')
             getLoadingStatus,
             getMonitorEventsByObject, 
             getMonitorSettings,
+             
+//            loadSubscrTree,
+//            loadSubscrTrees,
+//            loadSubscrObjectsByTreeNode,
+             
+            loadDefaultMonitorTreeSetting, 
+             
             setMonitorSettings,
         };
         

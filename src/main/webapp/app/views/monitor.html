@@ -8,140 +8,237 @@
         <li id="monitor_map_2nd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
 
     </ul>
-
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
       </div>
     </div>
 </div>
-<!--
-<div class="" ng-class="{'nmc-hide':!monitorSettings.loadingFlag, 'nmc-show':monitorSettings.loadingFlag}">
-    <i class="fa fa-spinner fa-spin"></i> Загрузка .... 
-</div>
--->
-<div  ng-show="monitorSettings.loadingFlag" class="nmc-loading">
+<div ng-show="monitorSettings.loadingFlag" class="nmc-loading">
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
-<div class="tab-content" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
-    <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
-        <div class="col-md-2 noPadding nmc-div-filter-date-interval" ng-controller="ObjectGroupsCtrl">
-            <div class="btn-group">
-                  <button 
-                          title="Фильтр по группам объектов" 
-                         type="button" 
-                         class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
-                         data-toggle="dropdown" 
-                         aria-haspopup="true" 
-                         aria-expanded="false" 
-                     >
-                      {{messages.groupMenuHeader}} <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu nmc-dropdown-menu">
-                      <li class="menu-item" role="presentation">
-                          <a href="" class=""
-                             ng-click="getMonitor()">
-                              Полный список объектов
-                          </a>
-                      </li>
-                      <li class="divider" role="presentation"></li>
-                      <li class="menu-item" role="presentation" ng-repeat="group in groups">
-                          <a href="" class=""
-                             ng-click="getMonitor(group)">
-                              {{group.contGroupName}}
-                          </a>
-                      </li>
-                  </ul>
-                </div>   
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3 col-md-3 noPadding paddingRight10" ng-show="monitorSettings.isTreeView == true">                    
+            <div class="row nmc-main-workspace-header marginBottom5"
+                 ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
+                <div class="col-xs-6 col-md-6">
+                    <div class="btn-group">
+                          <button 
+                                 title="Иерархии объектов" 
+                                 type="button" 
+                                 class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
+                                 data-toggle="dropdown" 
+                                 aria-haspopup="true" 
+                                 aria-expanded="false"
+                                 ng-disabled="!(data.trees.length > 0)"
+                             >
+                              {{messages.treeMenuHeader}} <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu nmc-dropdown-menu">
+                              <li class="menu-item" role="presentation">
+                                  <a href="" class=""
+                                     ng-click="viewFullObjectList()">
+                                      Полный список объектов
+                                  </a>
+                              </li>
+                              <li class="divider" role="presentation"></li>
+                              <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
+                                  <a href="" class=""
+                                     ng-click="loadTree(tree);">
+                                      {{tree.objectName}}
+                                  </a>
+                              </li>
+                          </ul>
+                        </div>
+
+                </div>
+                <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
+                </div>
+            </div>
         </div>
-        <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
-        <ul class="nav nav-pills marginLeft15 nmc-toggle nmc-toggle-monitor col-md-2" role="tablist">
-            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" ng-click="getAllColorObjects()">Все объекты</a></li>
-            <li role="presentation" class="nmc-toggle-archive"><a title="Объекты с нештатными ситуациями" class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" ng-click="getNoGreenObjects()">Объекты с НС</a></li>
-        </ul>
-        <div class="col-md-2 noPadding nmc-div-filter-date-interval">
-<!--            ng-controller="DataRangeSettings">   -->
-        <div class="input-group marginRight15">
-            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
-            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
-                type="text" ng-model="monitorSettings.monitorDates" options="monitorSettings.dateRangeSettings" aria-describedby="leftAddon"/>
-        </div>    
+        <div class="noPadding" 
+             ng-class="{'col-xs-12 col-md-12': monitorSettings.isTreeView != true, 'col-xs-9 col-md-9': monitorSettings.isTreeView == true}">
+            <div class="tab-content" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
+                <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
+                    <div class="col-md-2 noPadding nmc-div-filter-date-interval" 
+                         ng-controller="ObjectGroupsCtrl" 
+                         ng-show="monitorSettings.isTreeView != true">
+                        <div class="btn-group">
+                              <button 
+                                     title="Фильтр по группам объектов" 
+                                     type="button" 
+                                     class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
+                                     data-toggle="dropdown" 
+                                     aria-haspopup="true" 
+                                     aria-expanded="false" 
+                                 >
+                                  {{messages.groupMenuHeader}} <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu nmc-dropdown-menu">
+                                  <li class="menu-item" role="presentation">
+                                      <a href="" class=""
+                                         ng-click="getMonitor()">
+                                          Полный список объектов
+                                      </a>
+                                  </li>
+                                  <li class="divider" role="presentation"></li>
+                                  <li class="menu-item" role="presentation" ng-repeat="group in groups">
+                                      <a href="" class=""
+                                         ng-click="getMonitor(group)">
+                                          {{group.contGroupName}}
+                                      </a>
+                                  </li>
+                              </ul>
+                            </div>   
+                    </div>
+                    <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
+                    <ul class="nav nav-pills marginLeft15 nmc-toggle nmc-toggle-monitor col-md-2" role="tablist">
+                        <li role="presentation" 
+                            class="active nmc-toggle-active">
+                            <a class="nmc-toggle-button" 
+                               href="" 
+                               aria-controls="active_paramsets" 
+                               data-target="#all_objects" 
+                               role="tab" 
+                               data-toggle="tab" 
+                               ng-click="getAllColorObjects()">Все объекты
+                            </a>
+                        </li>
+                        <li role="presentation" 
+                            class="nmc-toggle-archive">
+                            <a title="Объекты с нештатными ситуациями" 
+                               class="nmc-toggle-button" 
+                               href="" 
+                               aria-controls="arhive_paramsets" 
+                               data-target="#alert_objects" 
+                               role="tab" 
+                               data-toggle="tab" 
+                               ng-click="getNoGreenObjects()">Объекты с НС
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="col-md-2 noPadding nmc-div-filter-date-interval">
+                        <div class="input-group marginRight15">
+                            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
+                            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                                type="text" 
+                                   ng-model="monitorSettings.monitorDates" 
+                                   options="monitorSettings.dateRangeSettings" 
+                                   aria-describedby="leftAddon"/>
+                        </div>    
+                    </div>
+                    <div class="pull-right col-md-offset-1 col-md-3">
+                        <div class="input-group nmc-input-group-refresh-period">
+                            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период обновления: </span>
+                            <select class="form-control nmc-date-interval-form nmc-input-digital-data nmc-select-form" 
+                                    ng-model="monitorSettings.refreshPeriod">
+                                        <option value="60">1 мин</option>
+                                        <option value="180">3 мин</option>
+                                        <option value="300">5 мин</option>
+                                        <option value="1800">30 мин</option>
+                                        <option value="3600">1 час</option>
+                            </select>
+                            <span class="input-group-addon nmc-input-form-suffix">
+                                <i title="Обновить" 
+                                   class="btn btn-xs glyphicon glyphicon-refresh" 
+                                   ng-click="refreshData()"></i>
+                            </span>
+                        </div>    
+                    </div>
+                    <div class="tab-content">
+                        <div role="tabpanel" 
+                             class="tab-pane fade in active" 
+                             id="active_monitor">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="pull-right col-md-offset-1 col-md-3">
-<!--            <label class="nmc-form-label">Период обновления:</label>-->
-    <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-            <div class="input-group nmc-input-group-refresh-period">
-                <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период обновления: </span>
-                <select class="form-control nmc-date-interval-form nmc-input-digital-data nmc-select-form" ng-model="monitorSettings.refreshPeriod">
-<!--                            <option value=30>30 сек</option>-->
-                            <option value="60">1 мин</option>
-                            <option value="180">3 мин</option>
-                            <option value="300">5 мин</option>
-                            <option value="1800">30 мин</option>
-                            <option value="3600">1 час</option>
-        <!--            <option>100</option>-->
-                </select>
-                <span class="input-group-addon nmc-input-form-suffix">
-                    <i title="Обновить" class="btn btn-xs glyphicon glyphicon-refresh" ng-click="refreshData()"></i>
-                </span>
-            </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-3 col-md-3 noPadding paddingRight10" 
+             ng-show="monitorSettings.isTreeView == true && monitorSettings.isFullObjectView == false">                    
+             <div class="row nmc-tree-with-fixed-header"
+                  ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
+                  <div ui-tree="options" data-drag-enabled="false">
+                    <ol ui-tree-nodes ng-model="data.currentTree" >
+                      <li ng-repeat="item in data.currentTree.childObjectList" 
+                          ui-tree-node 
+                          ng-include="'subscr_monitor_tree_items_renderer.html'"></li>
+                    </ol>
+                  </div>
+             </div>
         </div>
-<!--
-        <div class="col-md-2">
-        </div>
--->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="active_monitor">
+        <div class="" ng-class="{'col-xs-12 col-md-12': monitorSettings.isTreeView != true && monitorSettings.isFullObjectView == true, 'col-xs-9 col-md-9': monitorSettings.isTreeView == true && monitorSettings.isFullObjectView == false}">
+<!--        <div class="col-md-12" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">-->
+            <div class="" ng-show="objectsOnPage.length == 0" ng-hide="monitorSettings.loadingFlag || (objectsOnPage.length > 0)">
+                <h3 class="nmc-h3">{{messages.noObjects}}</h3>
+            </div>
+            <div id="divWithMonitorTable"                  
+                 ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}"
+                 class="nmc-tree-with-fixed-header noPadding">
+<!--                class="nmc-table-with-fixed-header" -->
+                <table id="tableMonitor" 
+                       class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                <tr class="" ng-repeat="object in objectsOnPage" 
+                    ng-attr-id="{{'obj'+object.contObject.id}}">
+                    <td>
+                        <table>
+                            <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                                <td class="nmc-td-for-buttons"> 
+                                    <i title="Показать/Скрыть список типов событий" 
+                                       ng-attr-id="{{'btnDetail'+object.contObject.id}}" 
+                                       class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table"
+                                       ng-click="toggleShowGroupDetails(object.contObject.id)">
+                                    </i>
+                                <img ng-attr-id="{{'imgObj'+object.contObject.id}}" title="" height="" width="" 
+                                     ng-src="{{'images/object-state-'+object.statusColor.toLowerCase()+'.png'}}"/>
+                                </td>
+                                <td class="col-xs-1 col-md-1 nmc-td-notices-counts noPadding">
+                                    <a title="Всего уведомлений" 
+                                       ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}" 
+                                       ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}
+                                    </a> 
+                                    (<a title="Новые уведомления" 
+                                        ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}&isNew=true" 
+                                        ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}
+                                    </a>)
+                                </td>
+                                <td class="nmc-td-for-buttons">
+                                    <i title="Показать диаграмму уведомлений" 
+                                       class="btn btn-xs" 
+                                       ng-click="getEventTypesByObject(object.contObject.id, true)">
+                                        <img height="16" width="16" src='images/roundDiagram4.png'/>
+                                    </i>
+                                </td>
+                                <td class="col-xs-9 col-md-9" 
+                                    ng-click="toggleShowGroupDetails(object.contObject.id)">{{object.contObject.fullName}}
+                                    <span ng-if="isSystemuser()">(id = {{object.contObject.id}})</span>
+                                </td>
+                            </tr>
+                            <tr ng-attr-id="{{'trObjEvents'+object.contObject.id}}" class="nmc-tr-object-events">
+                            </tr>
+                        </table>
+                    </td>
+                 </tr>
+                </table>
+
             </div>
         </div>
     </div>
 </div>
-<div class="col-md-12" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
-<!--
-    <table id="objectMonitorTable" class="table table-lighter table-condensed table-striped noMarginBottom nmc-parent-table nmc-parent-object-table">
-        <tbody></tbody>
-    </table>
--->
-    
-    
-<!--    <div infinite-scroll="addMoreObjectsForMonitor()" infinte-scroll-distance='50' >-->
-    <div id="divWithMonitorTable" class="nmc-table-with-fixed-header">
-<!--        style="overflow: scroll;height:685px;position:relative">    -->
-        <table  id="tableMonitor" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-        <tr class="" ng-repeat="object in objectsOnPage" ng-attr-id="{{'obj'+object.contObject.id}}">
-            <td>
-                <table>
-                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
-                        <td class="nmc-td-for-buttons"> <i title="Показать/Скрыть список типов событий" ng-attr-id="{{'btnDetail'+object.contObject.id}}" class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.contObject.id)"></i>
-                        <img ng-attr-id="{{'imgObj'+object.contObject.id}}" title="" height="" width="" ng-src="{{'images/object-state-'+object.statusColor.toLowerCase()+'.png'}}"/>
-                        
-                            </td>
-                        <td class="col-xs-1 col-md-1 nmc-td-notices-counts noPadding"><a title="Всего уведомлений" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}" ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}&isNew=true" ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}</a>)
-
-                        </td>
-                        <td class="nmc-td-for-buttons"><i title="Показать диаграмму уведомлений" class="btn btn-xs" ng-click="getEventTypesByObject(object.contObject.id, true)"><img height="16" width="16" src='images/roundDiagram4.png'/></i></td>
-                        <td class="col-xs-9 col-md-9" ng-click="toggleShowGroupDetails(object.contObject.id)">{{object.contObject.fullName}}
-                            <span ng-if="isSystemuser()">(id = {{object.contObject.id}})</span>
-                        </td>
-<!--                        <td class="col-xs-8 col-md-8"></td>-->
-                    </tr>
-                    <tr ng-attr-id="{{'trObjEvents'+object.contObject.id}}" class="nmc-tr-object-events">
-                    </tr>
-                </table>
-            </td>
-         </tr>
-        </table>
-        
-    </div>
-</div>    
 
 <!-- Окно с графиком-->
 <div id="chartModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="chartLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content nmc-modal-some-wide-dialog nmc-modal-dialog">
-
 		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
 			<h3 id="showNoticeLabel" class="nmc-h3">
 				Диаграмма уведомлений 
 			</h3>
@@ -170,9 +267,7 @@
 <!-- Окно с графиком-->
 <div id="showNoticesModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showNoticesLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content nmc-modal-some-wide-dialog nmc-modal-dialog">
-
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="showNoticesLabel" class="nmc-h3">
@@ -197,4 +292,27 @@
 
 	</div>
 </div>
+    
+    
+<script type="text/ng-template" id="subscr_monitor_tree_items_renderer.html">
+    <div ui-tree-handle ng-click="selectNode(item)"
+         ng-mouseover = "item.isHover = true"
+         ng-mouseleave = "item.isHover = false"
+         ng-class="{'nmc-bg-distinguish': item.isSelected}">
+      <i class="btn btn-xs glyphicon"
+         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
+         data-nodrag ng-click="toggle(this)">                                  
+        </i>
+        <span ng-if = "item.type == 'root'">
+              <strong>\</strong>
+        </span>
+        <span class="nmc-valign-middle">
+            {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
+        </span>
+    </div>
+    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
+      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'subscr_monitor_tree_items_renderer.html'">
+      </li>
+    </ol>
+</script>
 </div>    

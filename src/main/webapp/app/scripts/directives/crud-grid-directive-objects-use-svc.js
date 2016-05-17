@@ -1547,12 +1547,6 @@ angular.module('portalNMC')
                     };                    
                 };
                 
-                var ROOT_NODE = {
-                    objectName: "",
-                    type: "root",
-                    childObjectList: []
-                };
-                
                 $scope.data.trees = [];
                 
                 $scope.loadTree = function(tree, objId){
@@ -1574,20 +1568,21 @@ angular.module('portalNMC')
                     objectSvc.loadSubscrTrees().then(function(resp){
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
-                        if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
-                            $scope.messages.treeMenuHeader = "Выберете иерархию";
-                            getObjectsData();
-                            return "Object tree array is empty.";
-                        };
                         if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
                             $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));                   
-                        }
-                        if (mainSvc.checkUndefinedNull($scope.data.defaultTree)){
-                            $scope.viewFullObjectList();
-                        }else{                        
-                            $scope.loadTree($scope.data.defaultTree);                        
                         };
+                        if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree) ){ 
+                            $scope.viewFullObjectList();
+                            return "View full object list!";
+                        };                        
+                        $scope.loadTree($scope.data.defaultTree);                        
+                        
                     }, errorCallback);
+                };
+                
+                var successLoadTreeSetting = function(resp){
+                    $scope.objectCtrlSettings.isTreeView = resp.data.isActive;
+                    loadTrees(resp.data);
                 };
                 
                 $scope.toggleTreeView = function(){
@@ -1597,9 +1592,7 @@ angular.module('portalNMC')
                         getObjectsData();
                     }else{
                     //if tree is on
-                        objectSvc.loadDefaultTreeSetting().then(function(resp){                                                        
-                            loadTrees(resp.data);                    
-                        }, errorCallback);                     
+                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                     
                     };
                 };
                 
@@ -1612,9 +1605,7 @@ angular.module('portalNMC')
                         getObjectsData();
                     }else{
                     //if tree is on                         
-                        objectSvc.loadDefaultTreeSetting().then(function(resp){                                                        
-                            loadTrees(resp.data);                    
-                        }, errorCallback);                        
+                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                        
                     };
                 }; 
                 

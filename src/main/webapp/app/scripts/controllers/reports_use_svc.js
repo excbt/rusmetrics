@@ -812,6 +812,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
         $scope.messageForUser = checkRes.message;
+//console.log(checkRes);        
         return checkRes.flag;
         
 ////console.log($scope.currentReportType.reportTypeName);        
@@ -1180,7 +1181,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.data = {};
     //получить доступные варианты отчетов
-    $scope.getContextReports = function(){
+    var getContextReports = function(){
         reportSvc.loadReportsContextLaunch().then(successGetContextReports, errorCallback);
     };
     //Если вариантов отчетов больше $scope.ctrlSettings.reportCountList, то распределить варианты отчетов по категориям
@@ -1217,7 +1218,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         });
 //console.log($scope.data.reportEntities);        
     };
-    $scope.getContextReports();
+    getContextReports();
     $scope.createContextReport = function(paramset){
         if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
             return "Entity is category";//exit function

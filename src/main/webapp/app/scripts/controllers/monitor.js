@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc', '$timeout', function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc, $timeout){
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'objectSvc', 'monitorSvc','mainSvc', '$timeout', function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, objectSvc, monitorSvc, mainSvc, $timeout){
          
 //console.log("Monitor Controller.");    
     $rootScope.ctxId = "monitor_page";
@@ -11,6 +11,9 @@ angular.module('portalNMC')
       //user messages
     $scope.messages = {};
     $scope.messages.groupMenuHeader = "Полный список объектов";
+    $scope.messages.treeMenuHeader = "Полный список объектов";
+    $scope.messages.noObjects = "Объектов нет.";
+      
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];           
     //default date interval settings
@@ -45,6 +48,10 @@ angular.module('portalNMC')
     $scope.objectsOnPage.forEach(function(element){
             monitorSvc.getMonitorEventsByObject(element);
     });
+      
+    var errorCallback = function(e){
+        console.log(e);
+    };
     //monitor state
     $scope.monitorState = {};
     $scope.getMonitorState = function(){
@@ -361,6 +368,7 @@ angular.module('portalNMC')
 //The control of the period monitor refresh(Управление перодическим обновлением монитора)
 //**************************************************************************  
     $scope.$on('monitorObjects:updated',function(){
+        $scope.monitorSettings.isTreeView = monitorSvc.getMonitorSettings().isTreeView;
         $scope.objects = monitorSvc.getAllMonitorObjects();
 //console.log($scope.objects);        
 //console.log("Monitor ctrl. Objects was updated."); 
@@ -416,7 +424,7 @@ angular.module('portalNMC')
             elem.scrollTop = 0;
             return;
         };
-        if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){             
+        if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.monitorSettings.objectsOnPage < $scope.objects.length)*/){             
             if ($scope.monitorSettings.objectsOnPage < $scope.objects.length){                            
                 $scope.monitorSettings.loadingFlag = true;    
                 $timeout(function(){$scope.monitorSettings.loadingFlag = false;}, $scope.objects.length);
@@ -589,4 +597,91 @@ angular.module('portalNMC')
     function labelFormatter(label, series) {
 		return "<div style='font-size:8pt; text-align:center; padding:2px; color:black;'>" + label + " (" + Math.round(series.percent) + "%)</div>";
 	}
+      
+    // ********************************************************************************************
+//  TREEVIEW
+//*********************************************************************************************
+    $scope.monitorSettings.isTreeView = true;
+    $scope.monitorSettings.isFullObjectView = false;
+
+    $scope.data.currentTree = {};
+    $scope.data.newTree = {};
+    $scope.data.defaultTree = null;// default tree               
+
+    var findNodeInTree = function(node, tree){
+        return mainSvc.findNodeInTree(node, tree);
+    };
+      
+    $scope.viewFullObjectList = function(){
+        $scope.monitorSettings.isFullObjectView = true;
+        $scope.messages.treeMenuHeader = 'Полный список объектов';
+        monitorSvc.setMonitorSettings({curTreeId: null, curTreeNodeId: null, isFullObjectView: true});
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+    };
+
+    $scope.selectNode = function(item){                    
+        var treeForSearch = $scope.data.currentTree;
+        var selectedNode = $scope.data.selectedNode;
+        if (!mainSvc.checkUndefinedNull(selectedNode)){                        
+            if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
+                return ;
+            };             
+            var preNode = findNodeInTree(selectedNode, treeForSearch);
+            if (!mainSvc.checkUndefinedNull(preNode)){
+                preNode.isSelected = false;
+            }
+        };
+
+        item.isSelected = true;                    
+        $scope.data.selectedNode = angular.copy(item); 
+        $scope.monitorSettings.loadingFlag = true;
+        $scope.messages.noObjects = "Объектов нет.";
+        monitorSvc.setMonitorSettings({loadingFlag: true, curTreeId: $scope.data.currentTree.id, curTreeNodeId: item.id});
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+    };
+
+    $scope.data.trees = [];
+
+    $scope.loadTree = function(tree, objId){
+        objectSvc.loadSubscrTree(tree.id).then(function(resp){
+                $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
+                var respTree = angular.copy(resp.data);
+                mainSvc.sortTreeNodesBy(respTree, "objectName");
+                $scope.data.currentTree = respTree;
+                $scope.objects = [];
+                $scope.objectsOnPage = [];
+                $scope.monitorSettings.isFullObjectView = false;
+                monitorSvc.setMonitorSettings({isFullObjectView: false});
+                $scope.messages.noObjects = "";
+            }, errorCallback);
+    };
+
+    var loadTrees = function(treeSetting){
+        objectSvc.loadSubscrTrees().then(function(resp){
+            mainSvc.sortItemsBy(resp.data, "objectName");
+            $scope.data.trees = angular.copy(resp.data);
+            if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
+                $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));                   
+            };
+            if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree)){ 
+                $scope.viewFullObjectList();
+                return "View full object list";
+            };
+            $scope.loadTree($scope.data.defaultTree);                        
+
+        }, errorCallback);
+    };
+          
+// ********************************************************************************************
+//  END TREEVIEW
+//*********************************************************************************************
+      
+      var initCtrl = function(){
+        monitorSvc.loadDefaultMonitorTreeSetting().then(function(resp){                                                        
+            loadTrees(resp.data);                    
+        }, errorCallback);
+      };
+      
+      initCtrl();
+      
 }]);

@@ -320,7 +320,7 @@ body{
 */
 /*    Классы для настройки интерфейса "Настройки программы"*/
 .nmc-table-program-settings{
-    padding: 5px 0;
+    padding: 5px 0 5px 5px;
 }
 .nmc-table-program-settings:nth-of-type(odd){
     background-color: #eee;

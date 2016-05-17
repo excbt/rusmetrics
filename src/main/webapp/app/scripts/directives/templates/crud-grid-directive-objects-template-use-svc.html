@@ -175,10 +175,12 @@
                                                        ng-click="objectCtrlSettings.extendedInterfaceFlag = !objectCtrlSettings.extendedInterfaceFlag">
                                                         Включить/выключить расширенный интерфейс</a>
                                                 </li>
+<!--
                                                 <li>
                                                     <a href="" ng-click="toggleTreeView()">
                                                         Включить/выключить отображение иерархии объектов</a>
                                                 </li>
+-->
                                               </ul>
                                             </div>
                                         </th>
@@ -388,22 +390,23 @@
             </table>
         <!--        </div>-->
           </div>  
+        <!--    work in report ctrl scope    -->
+            <!--    Report prop window-->
+            <div nmc-paramset-modal></div>
+            <!--    Message window-->
+            <div nmc-view-message-for-user 
+                 message-for-user="{{messageForUser}}" 
+                 btn-click="editParamSet(currentReportType, currentObject, ctrlSettings.openModes.edit, true)"
+                 show-ok-button="{{showMessageForUserModalExFlag}}"
+                 btn-ok-caption="Настройка параметров"
+                 show-cancel-button="true"
+                 btn-cancel-caption="Ok"
+                 >
+            </div>
+        <!--***************-->
         </div><!-- end of scrolling table div -->
     </div>
-</div>
-
-<!--    Report prop window-->
-<div nmc-paramset-modal></div>
-<!--    Message window-->
-<div nmc-view-message-for-user 
-     message-for-user="{{messageForUser}}" 
-     btn-click="editParamSet(currentReportType, currentObject, ctrlSettings.openModes.edit, true)"
-     show-ok-button="{{showMessageForUserModalExFlag}}"
-     btn-ok-caption="Настройка параметров"
-     show-cancel-button="true"
-     btn-cancel-caption="Ok"
-     >
-</div>  
+</div> 
 
 <!--Show Zpoint options-->
 <div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
