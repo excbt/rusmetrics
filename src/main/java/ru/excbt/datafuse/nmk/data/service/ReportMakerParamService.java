@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
@@ -51,6 +52,9 @@ public class ReportMakerParamService {
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 * 
@@ -183,7 +187,8 @@ public class ReportMakerParamService {
 
 		}
 
-		return new ReportMakerParam(reportParamset, resultContObjectIdList, subscrContObjectIds, previewMode);
+		return new ReportMakerParam(currentSubscriberService.getSubscriberParam(), reportParamset,
+				resultContObjectIdList, subscrContObjectIds, previewMode);
 
 	}
 

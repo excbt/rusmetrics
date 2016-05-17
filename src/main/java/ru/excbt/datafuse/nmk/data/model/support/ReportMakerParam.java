@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -35,6 +36,7 @@ public class ReportMakerParam {
 	private final static String MIME_ZIP = "application/zip";
 	private final static String PAR_IDPARAM = "PAR_ID_PARAM";
 
+	private final SubscriberParam subscriberParam;
 	private final Long[] contObjectIds;
 	private final Long[] subscrContObjectIds;
 	private final ReportParamset reportParamset;
@@ -45,11 +47,14 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds, boolean previewMode) {
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, Long[] contObjectIds,
+			boolean previewMode) {
+		checkNotNull(subscriberParam);
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length > 0);
+		this.subscriberParam = subscriberParam;
 		this.reportParamset = reportParamset;
 		this.contObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
 		this.subscrContObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
@@ -61,8 +66,8 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds) {
-		this(reportParamset, contObjectIds, false);
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, Long[] contObjectIds) {
+		this(subscriberParam, reportParamset, contObjectIds, false);
 	}
 
 	/**
@@ -70,16 +75,9 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIdList
 	 */
-	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList, List<Long> subscrObjectIdList,
-			boolean previewMode) {
-		checkNotNull(reportParamset);
-		checkNotNull(reportParamset.getReportTemplate());
-		checkNotNull(contObjectIdList);
-		// checkArgument(!contObjectIdList.isEmpty());
-		this.reportParamset = reportParamset;
-		this.contObjectIds = contObjectIdList.toArray(new Long[0]);
-		this.subscrContObjectIds = subscrObjectIdList != null ? subscrObjectIdList.toArray(new Long[0]) : new Long[0];
-		this.previewMode = previewMode;
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, List<Long> contObjectIdList,
+			List<Long> subscrObjectIdList, boolean previewMode) {
+		this(subscriberParam, reportParamset, contObjectIdList.toArray(new Long[0]), previewMode);
 	}
 
 	/**
@@ -87,8 +85,9 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIdList
 	 */
-	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList) {
-		this(reportParamset, contObjectIdList, null, false);
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset,
+			List<Long> contObjectIdList) {
+		this(subscriberParam, reportParamset, contObjectIdList, null, false);
 	}
 
 	/**
@@ -272,7 +271,7 @@ public class ReportMakerParam {
 			throw new IllegalStateException("Special idParam is not of type String or BigDecimal");
 		}
 
-		return reportParamset.getSubscriberId();
+		return subscriberParam.getSubscriberId();// reportParamset.getSubscriberId();
 	}
 
 	/**
@@ -506,6 +505,10 @@ public class ReportMakerParam {
 		}
 
 		return result;
+	}
+
+	public SubscriberParam getSubscriberParam() {
+		return subscriberParam;
 	}
 
 }
