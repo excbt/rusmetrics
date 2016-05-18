@@ -22,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 /**
@@ -43,9 +42,6 @@ public class ReportMakerParamService {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
-
-	// @Autowired
-	// private SubscriberService subscriberService;
 
 	@Autowired
 	private ReportTypeService reportTypeService;
@@ -75,10 +71,10 @@ public class ReportMakerParamService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ReportMakerParam newReportMakerParam(long reportParamsetId, boolean previewMode) {
+	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId) {
 		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
 
-		return reportMakerParamFactory(reportParamset, null, previewMode);
+		return reportMakerParamFactory(reportParamset, null, PREVIEW_ON);
 
 	}
 
@@ -99,9 +95,9 @@ public class ReportMakerParamService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds, boolean previewMode) {
+	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId, Long[] contObjectIds) {
 		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
-		return reportMakerParamFactory(reportParamset, contObjectIds, previewMode);
+		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_ON);
 	}
 
 	/**
@@ -122,18 +118,6 @@ public class ReportMakerParamService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ReportMakerParam newSubscriberReportMakerParam(SubscriberParam subscriberParam,
-			ReportParamset reportParamset, Long[] contObjectIds) {
-		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_OFF);
-	}
-
-	/**
-	 * 
-	 * @param reportParamset
-	 * @param contObjectIds
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset) {
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_OFF);
 	}
@@ -144,13 +128,13 @@ public class ReportMakerParamService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds,
-			boolean previewMode) {
-
-		return reportMakerParamFactory(reportParamset, contObjectIds, previewMode);
-
-	}
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds,
+	//			boolean previewMode) {
+	//
+	//		return reportMakerParamFactory(reportParamset, contObjectIds, previewMode);
+	//
+	//	}
 
 	/**
 	 * 

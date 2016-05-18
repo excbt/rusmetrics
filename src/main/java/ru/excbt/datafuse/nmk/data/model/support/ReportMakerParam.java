@@ -76,8 +76,8 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param paramContObjectIdList
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, List<Long> paramContObjectIdList,
-			List<Long> subscrContObjectIdList, boolean previewMode) {
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset,
+			List<Long> paramContObjectIdList, List<Long> subscrContObjectIdList, boolean previewMode) {
 		this(subscriberParam, reportParamset, checkNotNull(paramContObjectIdList).toArray(new Long[0]),
 				subscrContObjectIdList != null ? subscrContObjectIdList.toArray(new Long[0]) : null, previewMode);
 	}
@@ -132,7 +132,7 @@ public class ReportMakerParam {
 	 * 
 	 * @return
 	 */
-	public List<Long> getReportContObjectIds() {
+	public List<Long> getReportContObjectIdList() {
 		List<Long> result = new ArrayList<>();
 		if (paramContObjectIds != null && paramContObjectIds.length > 0) {
 			result.addAll(Arrays.asList(paramContObjectIds));
@@ -175,7 +175,7 @@ public class ReportMakerParam {
 		}
 
 		return Boolean.TRUE.equals(reportParamset.getOutputFileZipped())
-				|| (getReportContObjectIds().size() > 1 && Boolean.TRUE.equals(reportParamset.getReportTemplate()
+				|| (getReportContObjectIdList().size() > 1 && Boolean.TRUE.equals(reportParamset.getReportTemplate()
 						.getReportType().getReportMetaParamCommon().getManyContObjectsZipOnly()));
 	}
 
@@ -404,19 +404,19 @@ public class ReportMakerParam {
 		// Only one object required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.FALSE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && getReportContObjectIds().size() == 1;
+			result = result && getReportContObjectIdList().size() == 1;
 		}
 
 		// More than 0 Objects required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && getReportContObjectIds().size() > 0;
+			result = result && getReportContObjectIdList().size() > 0;
 		}
 
 		// More than 1 object required
 		if (Boolean.FALSE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && getReportContObjectIds().size() > 1;
+			result = result && getReportContObjectIdList().size() > 1;
 		}
 
 		return result;
