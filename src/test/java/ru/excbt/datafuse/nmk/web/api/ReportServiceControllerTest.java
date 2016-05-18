@@ -140,7 +140,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		reportMakerParam.getReportParamset().setOutputFileType(ReportOutputFileType.PDF);
 
-		List<Long> contObjectIds = reportMakerParam.getReportContObjectIds().subList(0, 1);
+		List<Long> contObjectIds = reportMakerParam.getReportContObjectIdList().subList(0, 1);
 		reportMakerParam.getReportParamset().setOutputFileZipped(true);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
@@ -183,7 +183,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_COMMERCE;
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
-		List<Long> contObjectIds = reportMakerParam.getReportContObjectIds().subList(0, 1);
+		List<Long> contObjectIds = reportMakerParam.getReportContObjectIdList().subList(0, 1);
 
 		String urlStr = String.format("/api/reportService/commerce/%d/context/%d", reportParamsetId,
 				contObjectIds.get(0));
@@ -220,7 +220,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_COMMERCE;
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
-		List<Long> contObjectIds = reportMakerParam.getReportContObjectIds().subList(0, 1);
+		List<Long> contObjectIds = reportMakerParam.getReportContObjectIdList().subList(0, 1);
 
 		String urlStr = String.format("/api/reportService/commerce/%d/contextPreview/%d", reportParamsetId,
 				contObjectIds.get(0));
@@ -244,7 +244,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		ReportMakerParam srcParam = reportMakerParamService.newReportMakerParam(srcParamsetId);
 
-		List<Long> contObjectIds = srcParam.getReportContObjectIds().subList(0, 1);
+		List<Long> contObjectIds = srcParam.getReportContObjectIdList().subList(0, 1);
 
 		modReportMakerParam.getReportParamset().setReportPeriod(srcParam.getReportParamset().getReportPeriod());
 		modReportMakerParam.getReportParamset()

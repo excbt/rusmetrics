@@ -145,7 +145,7 @@ public class ReportServiceController extends SubscrApiController {
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId, true);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParamPreview(reportParamsetId);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 	}
@@ -188,8 +188,8 @@ public class ReportServiceController extends SubscrApiController {
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
 				? new Long[] {} : contObjectIds;
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newSubscriberReportMakerParam(getSubscriberParam(),
-				reportParamset, fixContObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset,
+				fixContObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 
@@ -439,8 +439,7 @@ public class ReportServiceController extends SubscrApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newSubscriberReportMakerParam(getSubscriberParam(),
-				reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
 
 		String reportKeyname = reportParamset.getReportTemplate().getReportTypeKeyname();
 		ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(reportKeyname);
@@ -505,8 +504,8 @@ public class ReportServiceController extends SubscrApiController {
 
 		Long[] contObjectIds = new Long[] { contObjectId };
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId, contObjectIds,
-				true);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParamPreview(reportParamsetId,
+				contObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 	}

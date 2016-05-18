@@ -14,47 +14,50 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
  *
  */
 public enum ReportTypeKey implements KeynameObject {
-	COMMERCE_REPORT("commerce"), // COMMERCE_M_V,
-	COMMERCE_REPORT_M_V("commerce_m_v"), // COMMERCE_M_V,
-	EVENT_REPORT("event"), //
-	CONS_T1_REPORT("cons_t1"), //
-	CONS_T2_REPORT("cons_t2"), //
-	METROLOGICAL_REPORT("metrological"), //
-	CONSUMPTION_ETALON_REPORT("consumption_etalon"), //
-	CONSUMPTION_REPORT("consumption"), // // deprecated
-	CONSUMPTION_REPORT_V1_1("consumption_v1_1"), //
-	CONSUMPTION_HISTORY_REPORT("consumption_history"), // // deprecated
-	CONSUMPTION_HISTORY_REPORT_V2("consumption_history_v2"), //
-	CONSUMPTION_HISTORY_ETALON_REPORT_V2("consumption_history_etalon_v2"), //
-	CONSUMPTION_HISTORY_ETALON_REPORT("consumption_history_etalon"), // deprecated
-	LOG_JOURNAL_REPORT("log_journal"), //
-	PARTNER_SERVICE_REPORT("partner_service"), //
-	ABONENT_SERVICE_REPORT("abonent_service"), //
-	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"), //
-	ELECTRIC_READINGS_REPORT("electric_readings", ReportSystem.PENTAHO), //
-	HW_QUALITY_REPORT("hw_quality", ReportSystem.PENTAHO), //
-	ELECTRIC_CONSUMPTION_REPORT("electric_consumption", ReportSystem.PENTAHO), //
-	HW_QUALITY_SHEET_REPORT("hw_quality_sheet", ReportSystem.PENTAHO), //
-	HW_QUALITY_SHEET_HOUR_REPORT("hw_quality_sheet_hour", ReportSystem.PENTAHO), //
-	HW_QUALITY_ACT_1_REPORT("hw_quality_act_1", ReportSystem.PENTAHO), //
-	HW_QUALITY_ACT_2_REPORT("hw_quality_act_2", ReportSystem.PENTAHO), //
-	HW_DATA_REPORT("hw_data", ReportSystem.PENTAHO), //
-	EL_QUALITY_REPORT("el_quality", ReportSystem.PENTAHO); //
+	COMMERCE_REPORT(2, "commerce"), // COMMERCE_M_V,
+	COMMERCE_REPORT_M_V(20, "commerce_m_v"), // COMMERCE_M_V,
+	EVENT_REPORT(12, "event"), //
+	CONS_T1_REPORT(3, "cons_t1"), //
+	CONS_T2_REPORT(4, "cons_t2"), //
+	METROLOGICAL_REPORT(14, "metrological"), //
+	CONSUMPTION_ETALON_REPORT(5, "consumption_etalon"), //
+	CONSUMPTION_REPORT(10, "consumption"), // // deprecated
+	CONSUMPTION_REPORT_V1_1(11, "consumption_v1_1"), //
+	CONSUMPTION_HISTORY_REPORT(6, "consumption_history"), // // deprecated
+	CONSUMPTION_HISTORY_REPORT_V2(8, "consumption_history_v2"), //
+	CONSUMPTION_HISTORY_ETALON_REPORT_V2(9, "consumption_history_etalon_v2"), //
+	CONSUMPTION_HISTORY_ETALON_REPORT(7, "consumption_history_etalon"), // deprecated
+	LOG_JOURNAL_REPORT(13, "log_journal"), //
+	PARTNER_SERVICE_REPORT(15, "partner_service"), //
+	ABONENT_SERVICE_REPORT(1, "abonent_service"), //
+	RMA_ABONENT_SERVICE_REPORT(16, "rma_abonent_service"), //
+	ELECTRIC_READINGS_REPORT(18, "electric_readings", ReportSystem.PENTAHO), //
+	HW_QUALITY_REPORT(19, "hw_quality", ReportSystem.PENTAHO), //
+	ELECTRIC_CONSUMPTION_REPORT(21, "electric_consumption", ReportSystem.PENTAHO), //
+	HW_QUALITY_SHEET_REPORT(22, "hw_quality_sheet", ReportSystem.PENTAHO), //
+	HW_QUALITY_SHEET_HOUR_REPORT(23, "hw_quality_sheet_hour", ReportSystem.PENTAHO), //
+	HW_QUALITY_ACT_1_REPORT(24, "hw_quality_act_1", ReportSystem.PENTAHO), //
+	HW_QUALITY_ACT_2_REPORT(25, "hw_quality_act_2", ReportSystem.PENTAHO), //
+	HW_DATA_REPORT(26, "hw_data", ReportSystem.PENTAHO), //
+	EL_QUALITY_REPORT(27, "el_quality", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;
 	private final ReportSystem reportSystem;
+	private final int reportId;
 
-	private ReportTypeKey(String urlName) {
+	private ReportTypeKey(int reportId, String urlName) {
 		this.urlName = urlName;
 		this.defaultFileName = urlName;
 		this.reportSystem = ReportSystem.JASPER;
+		this.reportId = reportId;
 	}
 
-	private ReportTypeKey(String urlName, ReportSystem reportSystem) {
+	private ReportTypeKey(int reportId, String urlName, ReportSystem reportSystem) {
 		this.urlName = urlName;
 		this.defaultFileName = urlName;
 		this.reportSystem = reportSystem;
+		this.reportId = reportId;
 	}
 
 	public String getUrlName() {
@@ -67,8 +70,8 @@ public enum ReportTypeKey implements KeynameObject {
 	 * @return
 	 */
 	public static ReportTypeKey findByUrlName(String urlName) {
-		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values())
-				.filter((i) -> i.urlName.equals(urlName)).findFirst();
+		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values()).filter((i) -> i.urlName.equals(urlName))
+				.findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
 	}
@@ -85,4 +88,9 @@ public enum ReportTypeKey implements KeynameObject {
 	public ReportSystem getReportSystem() {
 		return reportSystem;
 	}
+
+	public int getReportId() {
+		return reportId;
+	}
+
 }

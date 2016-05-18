@@ -43,6 +43,7 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.report.ReportTypeKeynameConverter;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.nmk.reports.NmkReport;
 import ru.excbt.nmk.reports.NmkReport.FileType;
@@ -67,8 +68,6 @@ public class ReportService {
 
 	private final static Map<ReportOutputFileType, FileType> NMK_REPORTS_TYPE_CONVERTER;
 
-	private final static Map<ReportTypeKey, ReportType> REPORTS_TYPE_KEYNAME_CONVERTER;
-
 	static {
 		/**
 		 * Инициализация типов файлов
@@ -80,75 +79,15 @@ public class ReportService {
 		typeMap.put(ReportOutputFileType.XLS, FileType.XLSX);
 		NMK_REPORTS_TYPE_CONVERTER = Collections.unmodifiableMap(typeMap);
 
-		/**
-		 * Инициализация типов отчетов для NMK Reports
-		 */
-		Map<ReportTypeKey, ReportType> reportTypeMap = new HashMap<>();
-		reportTypeMap.put(ReportTypeKey.COMMERCE_REPORT,
-				ReportType.RPT_COMMERCE);
-		reportTypeMap.put(ReportTypeKey.COMMERCE_REPORT_M_V,
-				ReportType.RPT_COMMERCE_M_V);
-		reportTypeMap.put(ReportTypeKey.CONS_T1_REPORT,
-				ReportType.RPT_CONSOLIDATED_1);
-		reportTypeMap.put(ReportTypeKey.CONS_T2_REPORT,
-				ReportType.RPT_CONSOLIDATED_2);
-		reportTypeMap.put(ReportTypeKey.EVENT_REPORT, ReportType.RPT_EVENT);
-
-		reportTypeMap.put(ReportTypeKey.METROLOGICAL_REPORT,
-				ReportType.RPT_METROLOGICAL);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT,
-				ReportType.RPT_CONSUMPTION);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-				ReportType.RPT_CONSUMPTION_HISTORY);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_ETALON_REPORT,
-				ReportType.RPT_CONSUMPTION_ETALON);
-		reportTypeMap.put(ReportTypeKey.LOG_JOURNAL_REPORT,
-				ReportType.RPT_LOG_JOURNAL);
-		reportTypeMap.put(ReportTypeKey.PARTNER_SERVICE_REPORT,
-				ReportType.RPT_PARTNER_SERVICE);
-		reportTypeMap.put(ReportTypeKey.ABONENT_SERVICE_REPORT,
-				ReportType.RPT_ABONENT_SERVICE);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2,
-				ReportType.RPT_CONSUMPTION_HISTORY_V2);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2,
-				ReportType.RPT_CONSUMPTION_HISTORY_ETALON_V2);
-		reportTypeMap.put(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT,
-				ReportType.RPT_RMA_ABONENT_SERVICE);
-		reportTypeMap.put(ReportTypeKey.CONSUMPTION_REPORT_V1_1,
-				ReportType.RPT_CONSUMPTION_V1_1);
-		reportTypeMap.put(ReportTypeKey.ELECTRIC_READINGS_REPORT,
-				ReportType.RPT_ELECTRIC_READINGS);
-		reportTypeMap.put(ReportTypeKey.HW_QUALITY_REPORT,
-				ReportType.RPT_HW_QUALITY);
-		reportTypeMap.put(ReportTypeKey.ELECTRIC_CONSUMPTION_REPORT,
-				ReportType.RPT_ELECTRIC_CONSUMPTION);
-		reportTypeMap.put(ReportTypeKey.HW_QUALITY_SHEET_REPORT,
-				ReportType.RPT_HW_QUALITY_SHEET);
-		reportTypeMap.put(ReportTypeKey.HW_QUALITY_SHEET_HOUR_REPORT,
-				ReportType.RPT_HW_QUALITY_SHEET_HOUR);
-		reportTypeMap.put(ReportTypeKey.HW_QUALITY_ACT_1_REPORT,
-				ReportType.RPT_HW_QUALITY_ACT_1);
-		reportTypeMap.put(ReportTypeKey.HW_QUALITY_ACT_2_REPORT,
-				ReportType.RPT_HW_QUALITY_ACT_2);
-		reportTypeMap.put(ReportTypeKey.HW_DATA_REPORT, ReportType.RPT_HW_DATA);
-		reportTypeMap.put(ReportTypeKey.EL_QUALITY_REPORT,
-				ReportType.RPT_EL_QUALITY);
-		REPORTS_TYPE_KEYNAME_CONVERTER = Collections
-				.unmodifiableMap(reportTypeMap);
-
 	}
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
 	@Autowired
 	private SystemParamService systemParamService;
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
-
-	@Autowired
-	private ReportParamsetService reportParamsetService;
 
 	@Autowired
 	private ReportMakerParamService reportMakerParamService;
@@ -159,17 +98,37 @@ public class ReportService {
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param beginDate
-	 * @param endDate
-	 * @return
-	 */
-	protected String getCommercialReportPathHtml(long contObjectId,
-			DateTime beginDate, DateTime endDate) {
-		return getCommercialReportPath(ReportOutputFileType.HTML, contObjectId,
-				beginDate, endDate);
+	public final ReportServiceProps serviceProps = new ReportServiceProps();
+
+	public final class ReportServiceProps {
+		private ReportServiceProps() {
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public boolean externalJasperServerEnable() {
+			boolean result = false;
+			try {
+				result = systemParamService.getParamValueAsBoolean(ReportConstants.EXTERNAL_JASPER_SERVER_ENABLE);
+			} catch (PersistenceException e) {
+				logger.error(e.toString());
+				result = false;
+			}
+
+			return result;
+		}
+
+		/**
+		 * 
+		 * @return
+		 */
+		public String externalJasperServerUrl() {
+			String result = systemParamService.getParamValueAsString(ReportConstants.EXTERNAL_JASPER_SERVER_URL);
+			return result;
+		}
+
 	}
 
 	/**
@@ -179,10 +138,8 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	protected String getCommercialReportPathPdf(long contObjectId,
-			DateTime beginDate, DateTime endDate) {
-		return getCommercialReportPath(ReportOutputFileType.PDF, contObjectId,
-				beginDate, endDate);
+	protected String getCommercialReportPathHtml(long contObjectId, DateTime beginDate, DateTime endDate) {
+		return getCommercialReportPath(ReportOutputFileType.HTML, contObjectId, beginDate, endDate);
 	}
 
 	/**
@@ -192,50 +149,31 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	protected String getCommercialReportPath(ReportOutputFileType reportType,
-			long contObjectId, DateTime beginDate, DateTime endDate) {
+	protected String getCommercialReportPathPdf(long contObjectId, DateTime beginDate, DateTime endDate) {
+		return getCommercialReportPath(ReportOutputFileType.PDF, contObjectId, beginDate, endDate);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	protected String getCommercialReportPath(ReportOutputFileType reportType, long contObjectId, DateTime beginDate,
+			DateTime endDate) {
 		checkNotNull(reportType);
 		checkArgument(contObjectId > 0);
 		checkNotNull(beginDate);
 		checkNotNull(endDate);
-		checkArgument(beginDate.compareTo(endDate) <= 0,
-				"beginDate is bigger than endDate");
+		checkArgument(beginDate.compareTo(endDate) <= 0, "beginDate is bigger than endDate");
 
-		String defaultUrl = systemParamService
-				.getParamValueAsString(ReportConstants.COMMERCIAL_REPORT_TEMPLATE_PATH);
+		String defaultUrl = systemParamService.getParamValueAsString(ReportConstants.COMMERCIAL_REPORT_TEMPLATE_PATH);
 
 		checkNotNull(defaultUrl);
 
-		return String.format(defaultUrl, reportType.toLowerName(),
-				endDate.toString(DATE_TEMPLATE),
+		return String.format(defaultUrl, reportType.toLowerName(), endDate.toString(DATE_TEMPLATE),
 				beginDate.toString(DATE_TEMPLATE), contObjectId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean externalJasperServerEnable() {
-		boolean result = false;
-		try {
-			result = systemParamService
-					.getParamValueAsBoolean(ReportConstants.EXTERNAL_JASPER_SERVER_ENABLE);
-		} catch (PersistenceException e) {
-			logger.error(e.toString());
-			result = false;
-		}
-
-		return result;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String externalJasperServerUrl() {
-		String result = systemParamService
-				.getParamValueAsString(ReportConstants.EXTERNAL_JASPER_SERVER_URL);
-		return result;
 	}
 
 	/**
@@ -244,41 +182,13 @@ public class ReportService {
 	 * @return
 	 */
 	private InputStream getReportParamsetTemplateBody(long reportParamsetId) {
-		ReportTemplateBody reportTemplateBody = reportTemplateService
-				.getReportTemplateBody(reportParamsetId);
+		ReportTemplateBody reportTemplateBody = reportTemplateService.getReportTemplateBody(reportParamsetId);
 
 		checkNotNull(reportTemplateBody.getBodyCompiled());
 		checkState(reportTemplateBody.getBodyCompiled().length > 0);
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				reportTemplateBody.getBodyCompiled());
+		ByteArrayInputStream is = new ByteArrayInputStream(reportTemplateBody.getBodyCompiled());
 
 		return is;
-	}
-
-	/**
-	 * 
-	 * @param outputStream
-	 * @param reportParamsetId
-	 */
-	private ReportParamset makeReportByParamsetId(long reportParamsetId,
-			LocalDateTime reportDate, OutputStream outputStream) {
-
-		checkNotNull(outputStream);
-		ReportParamset reportParamset = reportParamsetService
-				.findReportParamset(reportParamsetId);
-
-		if (reportParamset == null) {
-			throw new PersistenceException(String.format(
-					"ReportParamset (id=%d) not found", reportParamsetId));
-		}
-
-		// ReportMakerParam reportMakerParam =
-		// getReportMakerParam(reportParamsetId);
-
-		// return makeReportByParamset(reportMakerParam, reportDate,
-		// outputStream);
-
-		return null;
 	}
 
 	/**
@@ -290,8 +200,7 @@ public class ReportService {
 	 * @param isZip
 	 * @return
 	 */
-	public ReportParamset makeReportByParamset(
-			ReportMakerParam reportMakerParam, LocalDateTime reportDate,
+	public ReportParamset makeReportByParamset(ReportMakerParam reportMakerParam, LocalDateTime reportDate,
 			OutputStream outputStream) {
 
 		checkNotNull(outputStream);
@@ -301,20 +210,17 @@ public class ReportService {
 
 		final boolean isZippedStream = reportMakerParam.isOutputFileZipped();
 
-		InputStream is = getReportParamsetTemplateBody(reportParamset
-				.getReportTemplateId());
+		InputStream is = getReportParamsetTemplateBody(reportParamset.getReportTemplateId());
 
 		OutputStream outputStreamWrapper = null;
 		if (isZippedStream) {
-			outputStreamWrapper = new ZipOutputStream(outputStream,
-					UTF8_CHARSET);
+			outputStreamWrapper = new ZipOutputStream(outputStream, UTF8_CHARSET);
 		} else {
 			outputStreamWrapper = outputStream;
 		}
 
 		try {
-			makeJasperReport(reportMakerParam, reportDate, is,
-					outputStreamWrapper, isZippedStream);
+			processNmkReport(reportMakerParam, reportDate, is, outputStreamWrapper, isZippedStream);
 		} finally {
 			if (isZippedStream) {
 				try {
@@ -335,8 +241,7 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	private void makeJasperReport(ReportMakerParam reportMakerParam,
-			LocalDateTime reportDate, InputStream inputStream,
+	private void processNmkReport(ReportMakerParam reportMakerParam, LocalDateTime reportDate, InputStream inputStream,
 			OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(inputStream);
@@ -344,69 +249,50 @@ public class ReportService {
 		checkNotNull(reportMakerParam);
 		checkState(reportMakerParam.isParamsetValid());
 
-		final ReportParamset reportParamset = reportMakerParam
-				.getReportParamset();
+		final ReportParamset reportParamset = reportMakerParam.getReportParamset();
 
 		// Get Start and End dates
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
-			if (reportParamset.getParamsetStartDate() == null
-					|| reportParamset.getParamsetEndDate() == null) {
-				throw new IllegalArgumentException(
-						String.format(
-								"ReportParamset (id=%d) is invalid. "
-										+ "ParamsetStartDate and ParamsetEndDate is not set correctly. "
-										+ "ReportPeriodKey=%s",
-								reportParamset.getId(),
-								ReportPeriodKey.INTERVAL));
+			if (reportParamset.getParamsetStartDate() == null || reportParamset.getParamsetEndDate() == null) {
+				throw new IllegalArgumentException(String.format(
+						"ReportParamset (id=%d) is invalid. "
+								+ "ParamsetStartDate and ParamsetEndDate is not set correctly. " + "ReportPeriodKey=%s",
+						reportParamset.getId(), ReportPeriodKey.INTERVAL));
 			}
-			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset
-					.getParamsetStartDate()));
-			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset
-					.getParamsetEndDate()));
+			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset.getParamsetStartDate()));
+			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
 
-		} else if (reportParamset.getReportPeriodKey().isSettlementDay()
-				&& reportParamset.getSettlementDay() != null
+		} else if (reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null
 				&& reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH) {
 
 			int settlementDay = reportParamset.getSettlementDay();
 
-			final int lastDayOfCurrMonth = reportDate.withMillisOfDay(0)
-					.withDayOfMonth(1).plusMonths(1).minusDays(1)
+			final int lastDayOfCurrMonth = reportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
 					.getDayOfMonth();
 
-			int currentDayOfMonth = reportDate.withMillisOfDay(0)
-					.getDayOfMonth();
+			int currentDayOfMonth = reportDate.withMillisOfDay(0).getDayOfMonth();
 
-			if (currentDayOfMonth >= settlementDay
-					&& settlementDay <= lastDayOfCurrMonth) {
-				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(
-						settlementDay).minusDays(1));
-				dtStart = JodaTimeUtils.startOfDay(reportDate.withDayOfMonth(
-						settlementDay).minusMonths(1));
+			if (currentDayOfMonth >= settlementDay && settlementDay <= lastDayOfCurrMonth) {
+				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(settlementDay).minusDays(1));
+				dtStart = JodaTimeUtils.startOfDay(reportDate.withDayOfMonth(settlementDay).minusMonths(1));
 			} else {
 
 				try {
-					final int lastDayOfPrev1Month = reportDate
-							.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
+					final int lastDayOfPrev1Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
 							.getDayOfMonth();
-					final int lastDayOfPrev2Month = reportDate
-							.withMillisOfDay(0).withDayOfMonth(1)
-							.minusMonths(1).minusDays(1).getDayOfMonth();
-					if (settlementDay <= lastDayOfPrev1Month
-							&& settlementDay <= lastDayOfPrev2Month) {
-						dtEnd = JodaTimeUtils.endOfDay(reportDate
-								.minusMonths(1).withDayOfMonth(settlementDay)
-								.minusDays(1));
-						dtStart = JodaTimeUtils.startOfDay(reportDate
-								.minusMonths(2).withDayOfMonth(settlementDay));
+					final int lastDayOfPrev2Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
+							.minusDays(1).getDayOfMonth();
+					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
+						dtEnd = JodaTimeUtils
+								.endOfDay(reportDate.minusMonths(1).withDayOfMonth(settlementDay).minusDays(1));
+						dtStart = JodaTimeUtils.startOfDay(reportDate.minusMonths(2).withDayOfMonth(settlementDay));
 					}
 
 				} catch (Exception e) {
-					logger.error(
-							"Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}",
-							reportDate, settlementDay);
+					logger.error("Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}", reportDate,
+							settlementDay);
 				}
 			}
 
@@ -414,11 +300,9 @@ public class ReportService {
 			if (dtStart == null || dtEnd == null) {
 				LocalDateTime processedReportDate = reportDate;
 
-				dtStart = ReportParamsetUtils.getStartDateTime(
-						processedReportDate,
+				dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate,
 						reportParamset.getReportPeriodKey());
-				dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate,
-						reportParamset.getReportPeriodKey());
+				dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
 			}
 
 		}
@@ -426,38 +310,32 @@ public class ReportService {
 		else {
 			LocalDateTime processedReportDate = reportDate;
 
-			dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate,
-					reportParamset.getReportPeriodKey());
-			dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate,
-					reportParamset.getReportPeriodKey());
+			dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+			dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
 
 		}
 		// //////////////////////
 
 		// List<Long> makeObjectIds = reportMakerParam.getContObjectList();
-		List<Long> makeObjectIds = reportMakerParam.getReportContObjectIds();
+		List<Long> reportContObjectObjectIdList = reportMakerParam.getReportContObjectIdList();
 
-		long[] objectIds = ArrayUtils.toPrimitive(makeObjectIds
-				.toArray(new Long[0]));
+		long[] objectIds = ArrayUtils.toPrimitive(reportContObjectObjectIdList.toArray(new Long[0]));
 
 		checkNotNull(objectIds, "ContObject for report is not set");
 
 		NmkReport rep = null;
 		try {
 
-			rep = new NmkReport(jasperConfig.getDatasourceUrl(),
-					jasperConfig.getDatasourceUsername(),
+			rep = new NmkReport(jasperConfig.getDatasourceUrl(), jasperConfig.getDatasourceUsername(),
 					jasperConfig.getDatasourcePassword());
 
-			String keyname = reportParamset.getReportTemplate()
-					.getReportTypeKeyname();
+			String keyname = reportParamset.getReportTemplate().getReportTypeKeyname();
 
 			ReportTypeKey rptKey = ReportTypeKey.valueOf(keyname);
 
 			ReportType destReportType = reportTypeConverter(rptKey);
 
-			FileType convertedFileType = NMK_REPORTS_TYPE_CONVERTER
-					.get(reportMakerParam.reportOutputFileType());
+			FileType convertedFileType = NMK_REPORTS_TYPE_CONVERTER.get(reportMakerParam.reportOutputFileType());
 
 			if (convertedFileType == null) {
 				logger.warn(
@@ -468,8 +346,7 @@ public class ReportService {
 
 			// TODO
 
-			Map<String, Object> paramSpecialMap = reportMakerParamService
-					.getParamSpecialValues(reportMakerParam);
+			Map<String, Object> paramSpecialMap = reportMakerParamService.getParamSpecialValues(reportMakerParam);
 
 			long idParam = 0;
 			if (reportMakerParam.isSpecialIdParam()) {
@@ -482,24 +359,21 @@ public class ReportService {
 					"Call nmkGetReport with params (reportType:{}; (is, os); "
 							+ "idParam:{}; startDate:{}; endDate:{}; objectIds:{}; "
 							+ "convertedFileType:{}, isZip: {}, paramSpecialMap...)",
-					destReportType, idParam, dtStart.toDate(), dtEnd.toDate(),
-					Arrays.toString(objectIds), convertedFileType, isZip);
+					destReportType, idParam, dtStart.toDate(), dtEnd.toDate(), Arrays.toString(objectIds),
+					convertedFileType, isZip);
 
-			rep.nmkGetReport(destReportType, inputStream, outputStream,
-					idParam, dtStart.toDate(), dtEnd.toDate(), objectIds,
-					convertedFileType, isZip, paramSpecialMap);
+			rep.nmkGetReport(destReportType, inputStream, outputStream, idParam, dtStart.toDate(), dtEnd.toDate(),
+					objectIds, convertedFileType, isZip, paramSpecialMap);
 
 		} catch (IOException e) {
 			logger.error("NmkReport exception: {}", e);
-			throw new PersistenceException(String.format(
-					"NmkReport exception: %s", e.getMessage()));
+			throw new PersistenceException(String.format("NmkReport exception: %s", e.getMessage()));
 		} catch (ClassNotFoundException e) {
 			logger.error("NmkReport exception: {}", e);
 			throw new IllegalStateException("Can't initialize NmkReport");
 		} catch (SQLException e) {
 			logger.error("NmkReport exception: {}", e);
-			throw new PersistenceException(String.format(
-					"NmkReport exception:", e.getMessage()));
+			throw new PersistenceException(String.format("NmkReport exception:", e.getMessage()));
 		} finally {
 			if (rep != null) {
 				try {
@@ -517,7 +391,7 @@ public class ReportService {
 	 * @return
 	 */
 	private ReportType reportTypeConverter(ReportTypeKey reportTypeKey) {
-		ReportType result = REPORTS_TYPE_KEYNAME_CONVERTER.get(reportTypeKey);
+		ReportType result = ReportTypeKeynameConverter.CONVERTER_MAP.get(reportTypeKey);
 		checkNotNull(result);
 		return result;
 	}
