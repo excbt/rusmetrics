@@ -25,6 +25,7 @@ angular.module('portalNMC')
     $scope.monitorSettings.refreshPeriod = monitorSvc.getMonitorSettings().refreshPeriod;//"180";
     $scope.monitorSettings.createRoundDiagram = false;
     $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;// true;//monitorSvc.monitorSvcSettings.loadingFlag;
+console.log($scope.monitorSettings.loadingFlag);      
 //console.log($scope.monitorSettings.loadingFlag);      
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
@@ -299,7 +300,8 @@ angular.module('portalNMC')
     };
 
     $scope.refreshData = function(){
-        $scope.monitorSettings.loadingFlag = true;             
+        $scope.monitorSettings.loadingFlag = true;
+console.log($scope.monitorSettings.loadingFlag);        
         $rootScope.$broadcast('monitor:updateObjectsRequest');
     };
       
@@ -318,6 +320,7 @@ angular.module('portalNMC')
       
     $scope.getAllColorObjects = function(){
         $scope.monitorSettings.loadingFlag = true;
+console.log($scope.monitorSettings.loadingFlag);        
         $scope.monitorSettings.noGreenObjectsFlag = false;
         monitorSvc.setMonitorSettings({noGreenObjectsFlag: false});               
         $rootScope.$broadcast('monitor:updateObjectsRequest');
@@ -325,6 +328,7 @@ angular.module('portalNMC')
     
     $scope.getNoGreenObjects = function(){
         $scope.monitorSettings.loadingFlag = true;
+console.log($scope.monitorSettings.loadingFlag);        
         $scope.monitorSettings.noGreenObjectsFlag = true;
         monitorSvc.setMonitorSettings({noGreenObjectsFlag: true});               
         $rootScope.$broadcast('monitor:updateObjectsRequest');
@@ -336,7 +340,7 @@ angular.module('portalNMC')
             return;
         };
         $scope.monitorSettings.loadingFlag = true;
-        
+console.log($scope.monitorSettings.loadingFlag);        
         $rootScope.monitorStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.monitorEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
         monitorSvc.setMonitorSettings({
@@ -379,7 +383,7 @@ angular.module('portalNMC')
         $scope.monitorSettings.objectBottomOnPage =34;
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
         $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
-//console.log($scope.monitorSettings.loadingFlag);        
+console.log($scope.monitorSettings.loadingFlag);        
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag;
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;       
@@ -616,12 +620,15 @@ angular.module('portalNMC')
         $scope.monitorSettings.isFullObjectView = true;
         $scope.messages.treeMenuHeader = 'Полный список объектов';
         monitorSvc.setMonitorSettings({curTreeId: null, curTreeNodeId: null, isFullObjectView: true});
+        monitorSvc.setMonitorSettings({currentTree: null, currentTreeNode: null});
         $rootScope.$broadcast('monitor:updateObjectsRequest');
     };
 
     $scope.selectNode = function(item){                    
         var treeForSearch = $scope.data.currentTree;
         var selectedNode = $scope.data.selectedNode;
+console.log(item);        
+console.log(selectedNode);        
         if (!mainSvc.checkUndefinedNull(selectedNode)){                        
             if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
                 return ;
@@ -637,21 +644,29 @@ angular.module('portalNMC')
         $scope.monitorSettings.loadingFlag = true;
         $scope.messages.noObjects = "Объектов нет.";
         monitorSvc.setMonitorSettings({loadingFlag: true, curTreeId: $scope.data.currentTree.id, curTreeNodeId: item.id});
+        monitorSvc.setMonitorSettings({currentTree: angular.copy($scope.data.currentTree), currentTreeNode: angular.copy(item)});
         $rootScope.$broadcast('monitor:updateObjectsRequest');
     };
 
     $scope.data.trees = [];
 
-    $scope.loadTree = function(tree, objId){
+    $scope.loadTree = function(tree, selectedNode){
         objectSvc.loadSubscrTree(tree.id).then(function(resp){
                 $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                 var respTree = angular.copy(resp.data);
                 mainSvc.sortTreeNodesBy(respTree, "objectName");
                 $scope.data.currentTree = respTree;
+                if (!mainSvc.checkUndefinedNull(selectedNode)){
+                    var originalCurrentTree = mainSvc.findItemBy($scope.data.trees, "id", respTree.id);                   
+                    var originalCurrentTreeNode = findNodeInTree(selectedNode, $scope.data.currentTree);
+                    $scope.selectNode(originalCurrentTreeNode);
+                    return "Current node is set."
+                };
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
                 $scope.monitorSettings.isFullObjectView = false;
                 monitorSvc.setMonitorSettings({isFullObjectView: false});
+                monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});
                 $scope.messages.noObjects = "";
             }, errorCallback);
     };
@@ -663,10 +678,18 @@ angular.module('portalNMC')
             if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
                 $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));                   
             };
+            //считать текущее дерево и ноду, и если они заданы переключиться на них
+            var curTree = monitorSvc.getMonitorSettings().currentTree;
+            var curTreeNode = monitorSvc.getMonitorSettings().currentTreeNode;
+            if (!mainSvc.checkUndefinedNull(curTree) && !mainSvc.checkUndefinedNull(curTreeNode)){                
+                $scope.loadTree(curTree, curTreeNode);                
+                return "Current tree and current tree node is defined.";
+            };
             if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree)){ 
                 $scope.viewFullObjectList();
                 return "View full object list";
             };
+            monitorSvc.setMonitorSettings({currentTree: $scope.data.defaultTree, curTreeId: $scope.data.defaultTree.id});
             $scope.loadTree($scope.data.defaultTree);                        
 
         }, errorCallback);
@@ -676,8 +699,9 @@ angular.module('portalNMC')
 //  END TREEVIEW
 //*********************************************************************************************
       
-      var initCtrl = function(){
-        monitorSvc.loadDefaultMonitorTreeSetting().then(function(resp){                                                        
+      var initCtrl = function(){  
+        $scope.data.selectedNode = null;          
+        monitorSvc.loadDefaultMonitorTreeSetting().then(function(resp){
             loadTrees(resp.data);                    
         }, errorCallback);
       };

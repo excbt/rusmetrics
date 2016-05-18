@@ -17,13 +17,14 @@ angular.module('portalNMC')
 
         //monitor settings
         var monitorSvcSettings = {};
-        monitorSvcSettings.refreshPeriod = "180";
+        monitorSvcSettings.refreshPeriod = "300";
         monitorSvcSettings.loadingFlag = true;
+console.log(monitorSvcSettings.loadingFlag);        
         monitorSvcSettings.noGreenObjectsFlag = false;
         monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
         monitorSvcSettings.toDate = moment().endOf('day').format('YYYY-MM-DD');
         
-        var getMonitorSettings = function(){
+        var getMonitorSettings = function(){            
             return monitorSvcSettings;
         };
         
@@ -33,7 +34,7 @@ angular.module('portalNMC')
             };
         };
         
-        var getLoadingStatus = function(){
+        var getLoadingStatus = function(){            
             return monitorSvcSettings.loadingFlag;
         };
         
@@ -66,13 +67,24 @@ angular.module('portalNMC')
             return resultObjectArray;
         };
         
+        var errorLoadingMonitorData = function(e){
+            console.log(e);
+            citiesMonitorSvc = [];                
+            objectsMonitorSvc = [];
+            monitorSvcSettings.loadingFlag = false;//data has been loaded
+console.log(monitorSvcSettings.loadingFlag);                
+            $rootScope.$broadcast('monitorObjects:updated');
+        };
+        
                     //get cities with objects function
         var getCitiesAndObjects = function(url, monitorSvcSettings){
+console.log(url);            
             if (checkUndefinedNull(url)){
                 return 400;
             };
 //console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
+console.log(monitorSvcSettings.loadingFlag);            
             var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
             if (!checkUndefinedNull(monitorSvcSettings.contGroupId)){
                 targetUrl += "&contGroupId=" + monitorSvcSettings.contGroupId;
@@ -86,38 +98,30 @@ angular.module('portalNMC')
                     //sort objects by name
                     objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
                     monitorSvcSettings.loadingFlag = false;//data has been loaded
+console.log(monitorSvcSettings.loadingFlag);                
                     $rootScope.$broadcast('monitorObjects:updated');
                 })
-                .error(function(e){
-                    console.log(e);
-                    citiesMonitorSvc = [];                
-                    objectsMonitorSvc = [];
-                    monitorSvcSettings.loadingFlag = false;//data has been loaded
-                    $rootScope.$broadcast('monitorObjects:updated');
-                });
+                .error(errorLoadingMonitorData);
 //            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
         };
         
             //get objects function
-        var getObjects = function(url, monitorSvcSettings){ 
-//console.log("MonitorSvc. Get objects");    
-            monitorSvcSettings.loadingFlag = true;
-            var targetUrl = url + "/statusCollapse?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
-//console.log(targetUrl);  
-            $http.get(targetUrl)
-                .success(function(data){
-                    objectsMonitorSvc = data;
-//    console.log(data);            
-                    //sort objects by name
-                    objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
-                    monitorSvcSettings.loadingFlag = false;//data has been loaded
-                    $rootScope.$broadcast('monitorObjects:updated');
-                })
-                .error(function(e){
-                    console.log(e);
-                });
-//            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
-        };        
+//        var getObjects = function(url, monitorSvcSettings){    
+//            monitorSvcSettings.loadingFlag = true;
+//console.log(monitorSvcSettings.loadingFlag);            
+//            var targetUrl = url + "/statusCollapse?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag; 
+//            $http.get(targetUrl)
+//                .success(function(data){
+//                    objectsMonitorSvc = data;
+//                    objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
+//                    monitorSvcSettings.loadingFlag = false;
+//console.log(monitorSvcSettings.loadingFlag);                
+//                    $rootScope.$broadcast('monitorObjects:updated');
+//                })
+//                .error(function(e){
+//                    console.log(e);
+//                });
+//        };        
             
         //get monitor events
        var getMonitorEventsByObject = function(obj){ 
@@ -168,6 +172,14 @@ angular.module('portalNMC')
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)
 //**************************************************************************  
         var interval;
+        
+        function startRefreshing(){
+            var time = (new Date()).toLocaleString();
+console.log("Обновление данных для монитора. " + time);            
+            monitorSvcSettings.loadingFlag = true;
+console.log(monitorSvcSettings.loadingFlag);            
+            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+        };
 
         function stopRefreshing(){
             if (angular.isDefined(interval)){
@@ -181,20 +193,12 @@ angular.module('portalNMC')
 //console.log("MonitorSvc monitorSvcSettings.refreshPeriod watch");
             stopRefreshing();
             //set new interval
-            interval = $interval(function(){
-                var time = (new Date()).toLocaleString();
-                monitorSvcSettings.loadingFlag = true;
-                getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
-            }, Number(monitorSvcSettings.refreshPeriod) * 1000);
+            interval = $interval(startRefreshing, Number(monitorSvcSettings.refreshPeriod) * 1000);
 
         }, false);
         
             //Вызвываем с заданным периодом обновление монитора
-        interval = $interval(function(){
-            var time = (new Date()).toLocaleString();
-            monitorSvcSettings.loadingFlag = true;
-            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
-        }, Number(monitorSvcSettings.refreshPeriod) * 1000);
+        interval = $interval(startRefreshing, Number(monitorSvcSettings.refreshPeriod) * 1000);
         
         var getMonitorData = function(){            
             loadDefaultMonitorTreeSetting().then(function(resp){                
@@ -208,6 +212,7 @@ angular.module('portalNMC')
                         citiesMonitorSvc = [];                
                         objectsMonitorSvc = [];
                         monitorSvcSettings.loadingFlag = false;//data has been loaded
+console.log(monitorSvcSettings.loadingFlag);                        
                         $rootScope.$broadcast('monitorObjects:updated');
                     }else{                        
                         cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapse';
@@ -217,9 +222,7 @@ angular.module('portalNMC')
                     cityWithObjectsUrl = angular.copy(defaultCityWithObjectsUrl);
                     getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
                 };
-            }, function(e){
-                console.log(e);
-            });            
+            }, errorLoadingMonitorData);            
         };
         
         $rootScope.$on('monitor:updateObjectsRequest',function(){

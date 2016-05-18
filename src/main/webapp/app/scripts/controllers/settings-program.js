@@ -6,6 +6,7 @@ angular.module('portalNMC')
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.settingsUrl = "../api/subscr/subscrPrefValues";
+    $scope.ctrlSettings.isSaving = false;
     
     $scope.data = {};
     $scope.data.originalSettings = [];
@@ -23,6 +24,8 @@ angular.module('portalNMC')
     
     //callbacks
     var errorCallback = function(e){
+        $scope.ctrlSettings.isSaving = false;
+        
         console.log(e);              
 //        notificationFactory.errorInfo(e.statusText, e.data.description || e.data || e);
 //        console.log(e);
@@ -77,8 +80,10 @@ angular.module('portalNMC')
     };
     
     $scope.saveSettings = function(){
+        $scope.ctrlSettings.isSaving = true;
         $http.put($scope.ctrlSettings.settingsUrl, $scope.data.modifySettings)
         .success(function(data){
+            $scope.ctrlSettings.isSaving = false;
             notificationFactory.success();
             performSettingsData(data);
         })
@@ -103,7 +108,7 @@ angular.module('portalNMC')
     };
     
     $scope.isDisabled = function(){
-        return !$scope.isAdmin();
+        return !$scope.isAdmin() || $scope.ctrlSettings.isSaving == true;
     };
     
     var initCtrl = function(){
