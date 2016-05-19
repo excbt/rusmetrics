@@ -12,7 +12,7 @@ angular.module('portalNMC')
     $scope.messages = {};
     $scope.messages.groupMenuHeader = "Полный список объектов";
     $scope.messages.treeMenuHeader = "Полный список объектов";
-    $scope.messages.noObjects = "Объектов нет.";
+    $scope.messages.noObjects = "";
       
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];           
@@ -51,6 +51,8 @@ console.log($scope.monitorSettings.loadingFlag);
     });
       
     var errorCallback = function(e){
+        $scope.monitorSettings.loadingFlag = false;
+        monitorSvc.setMonitorSettings({loadingFlag: false});
         console.log(e);
     };
     //monitor state
