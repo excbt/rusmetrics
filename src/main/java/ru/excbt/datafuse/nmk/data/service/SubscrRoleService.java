@@ -61,6 +61,7 @@ public class SubscrRoleService {
 						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_CONT_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_ZPOINT_ADMIN.equals(i.getRoleName())
+						|| SecuredRoles.ROLE_SUBSCR.equals(i.getRoleName())
 						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
 						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
@@ -93,6 +94,7 @@ public class SubscrRoleService {
 						|| SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN.equals(i.getRoleName())
 						|| SecuredRoles.ROLE_RMA_ZPOINT_ADMIN.equals(i.getRoleName())
+						|| SecuredRoles.ROLE_RMA.equals(i.getRoleName())
 						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
 						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
@@ -105,7 +107,8 @@ public class SubscrRoleService {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrReadonlyRoles() {
 		List<SubscrRole> allRoles = findAllRoles();
-		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_READONLY.equals(i.getRoleName()))
+		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_READONLY.equals(i.getRoleName())
+				|| SecuredRoles.ROLE_SUBSCR.equals(i.getRoleName()))
 				.collect(Collectors.toList());
 	}
 
@@ -116,7 +119,8 @@ public class SubscrRoleService {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrCabinetRoles() {
 		List<SubscrRole> allRoles = findAllRoles();
-		return allRoles.stream().filter(i -> SecuredRoles.ROLE_CABINET_USER.equals(i.getRoleName()))
+		return allRoles.stream().filter(i -> SecuredRoles.ROLE_CABINET_USER.equals(i.getRoleName())
+				|| SecuredRoles.ROLE_CABINET.equals(i.getRoleName()))
 				.collect(Collectors.toList());
 	}
 
