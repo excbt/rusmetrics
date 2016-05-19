@@ -171,12 +171,13 @@
                             class="nmc-text-align-right" 
                             ng-class="indicator.class || column.dataClass" 
                             ng-attr-id="{{'indicators_td_'+indicator.id+column.fieldName}}"
-                            ng-style="{'background-color': indicator[column.fieldName + '_style']}"
+                            ng-style="{'background-color': indicator[column.fieldName + '_style'].bgcolor, 'cursor': indicator[column.fieldName + '_style'].cursor}"
                             >
                             {{indicator[column.fieldName]}}
                             <span ng-if="column.fieldName==='dataDateString'&&isSystemuser()">(id = {{indicator['id']}})</span>
                         </td>
                     </tr>
+                    <tr><td></td></tr>
 <!--                    Итого -->
                     <tr ng-hide="total.onlyCons&&(ctrlSettings.viewMode!='')" ng-repeat="total in totals">
                         <td ng-repeat="column in tableDef.columns" 

@@ -19,68 +19,37 @@
       </div>
     </div>
 </div>
-<!--
-<div role="tabpanel" class="nmc-tab-panel">
-  <ul class="nav nav-tabs" role="tablist">
-    <li id="program_tree_settings_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="program_tree_settings" data-target="#program_tree_settings" role="tab" data-toggle="tab">Иерархии</a></li>
-    <li id="program_map_settings_3rd_menu_item" role="presentation"><a class="nmc-tab-button" href="" aria-controls="program_map_settings" data-target="#program_map_settings"  role="tab" data-toggle="tab">Карта</a></li>  
-  </ul>
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade in active" id="program_tree_settings">
-      </div>
-    </div>
-</div>
--->
-
-<!--
-<div class="container-fluid nmc-main-workspace-header">
-<div class="row">
-    <div class="col-md-12 noPadding nmc-main-workspace-header">
-        <hr>
-    </div>
-</div>    
-</div>
--->
-
-<!--    Непрокручиваямая шапка -->
-<!--
-<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-        <tr class="nmc-main-table-header">
-            <th class="col-md-1 nmc-button-sort nmc-td-for-buttons" ng-click="setOrderBy('color')">
-                <i class="glyphicon glyphicon-sort"></i>
-                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == 'color'"></i>
-
-            </th>
-
-            <th ng-repeat="column in columns" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
-                <div>
-                    {{column.header || column.name}}
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-        </tr>
-</table>
--->
 
 <div class="nmc-tariff-main-div">
     <div class="marginTop5">
         <div class="container-fluid">
-            <div class="row nmc-table-program-settings" ng-repeat="setting in data.modifySettings">
-                <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
-                    <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"/>
+            <div class="row" ng-repeat="setting in data.modifySettings">
+                <div class="container-fluid">
+                <div class="row nmc-table-program-settings">
+                    <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
+                        <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"/>
+                    </div>
+                    <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                        {{setting.subscrPref.isActiveCaption}}
+                    </div>
+
                 </div>
-                <div class="col-xs-3 col-md-3 noPadding marginTop3">
-                    {{setting.subscrPref.prefName}}
+                <div class="row nmc-table-program-settings"
+                     ng-class="{'nmc-disabled': !setting.isActive}">
+                    <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                        <span class="">{{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
+                    </div>
+                    <div class="col-xs-2 col-md-2 " >
+                        <select class="form-control nmc-select-form" 
+                                ng-model="setting.value" 
+                                ng-options="item.id as item.objectName for item in data.items[setting.subscrPrefKeyname]"
+                                ng-disabled="!setting.isActive || isDisabled()"
+                                >
+                        </select>
+                    </div>
+                    <div class="col-xs-4 col-md-4">                    
+                    </div>
                 </div>
-                <div class="col-xs-2 col-md-2 noPadding" >
-                    <select class="form-control nmc-select-form" 
-                            ng-model="setting.value" 
-                            ng-options="item.id as item.objectName for item in data.items[setting.subscrPrefKeyname]"
-                            ng-disabled="!setting.isActive || isDisabled()"
-                            >
-                    </select>
-                </div>
-                <div class="col-xs-6 col-md-6">                    
                 </div>
             </div>
         </div>
@@ -89,121 +58,4 @@
             <button class="btn btn-default" ng-click="cancelSettings()" ng-disabled="isDisabled()">Отменить</button>
         </div>
     </div>
-<!--
-    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
-        <tr class="nmc-main-table-header nmc-hide">
-            <th class="col-md-1 nmc-td-for-buttons">
-            </th>
-            
-            <th ng-repeat="column in columns" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
-                <div>
-                    {{column.header || column.name}}
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-        </tr>
-
-        <tr ng-repeat="noticeType in noticeTypes | orderBy:ctrlSettings.orderBy.field:!ctrlSettings.orderBy.asc | filter: filter" >
-            <td class="nmc-td-for-buttons">
-                <i title="Настройки уведомлений" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="getNoticeTypeSettings(noticeType)"></i>
-                <img ng-attr-title={{noticeType.title}} ng-class="noticeType.imgclass" ng-src="{{noticeType.imgpath}}">
-            </td>
-            <td ng-repeat="column in columns" ng-class="column.dataClass">
-                {{noticeType[column.name]}}
-            </td>
-        </tr>
-    </table>
--->
-</div>
-
-<!-- window: edit notice settings-->
-<div id="editNoticeModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="editNoticeLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content">
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="editNoticeLabel" class="nmc-h3">
-				Настройка рассылки
-			</h3>
-		</div>
-		<div class="modal-body nmc-modal-body">
-            <div class="container-fluid">
-<!--
-                <div class="row">
-                    <div class="col-md-12">
-                        Уведомление:
-                    </div>                    
-                </div>
--->
-                <div class="row well noPadding">
-<!--
-                    <div class="col-md-1">
-                        Тип:
-                    </div>
--->
-                    <div class="col-md-12">
-                        Тип уведомления:
-                    </div>  
-                    <div class="col-md-12">
-                     <b>{{currentNotice.name}}
-                    </b>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        Список контактов:
-                    </div>                    
-                </div>
-                <div class="row">
-                    <div class="col-md-12 nmc-object-list-in-notices">
-                    <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMargin nmc-main-table">
-                        <tr ng-repeat="contact in currentNotice.contacts">
-                            <td class="col-md-1">
-                                <div>{{contact.userName}}</div>
-                                <div><sup>{{contact.userPhone}}</sup></div>
-                                <div><sup>{{contact.userEmail}}</sup></div>
-                            </td>
-                            <td class="col-md-1">
-                                <div>
-                                <input ng-disabled="!contact.userEmail" type="checkbox" ng-model="contact.isEmail"/>Эл. письмо
-                                </div>
-                                <span class="nmc-alert"
-                                      ng-show="!contact.userEmail"> <sup>Не указан электронный адрес</sup>
-                                </span>
-                            </td>
-                            <td class="col-md-1">
-                                <div>
-                                <input ng-disabled="!contact.userPhone" type="checkbox" ng-model="contact.isSms"/>SMS
-                                </div>
-                                <span class="nmc-alert"
-                                      ng-show="!contact.userPhone"> <sup>Не указан телефон</sup>
-                                </span>
-                            </td>
-
-                        </tr>
-                    </table>
-                    </div>
-                </div>
-            </div>
-		</div>
-		<div class="modal-footer nmc-modal-footer">
-            <div class="container-fluid">
-
-                <div class="row">
-                    <div class="col-xs-offset-6 col-md-3">
-                        <input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
-                            ng-click="putNoticeTypeSettings(currentNotice);"
-                            value="Сохранить" />
-                    </div>
-
-                    <div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
-                        <button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
-                            ng-click="exit('#editNoticeModal');">
-                            Отменить
-                        </button>
-                    </div>
-                </div>
-            </div>		
-		</div>
-	</div>
 </div>

@@ -150,12 +150,21 @@ console.log(columns);
             for (var type = 0; type < elecType.length; type++){
                 //columns for sum
                 for (var kind = 0; kind < elecKind.length; kind++){
-                    var diff = Math.abs(el["" + elecType[type].name + elecKind[kind].name + "_sum"] - el["" + elecType[type].name + elecKind[kind].name]).toFixed($scope.ctrlSettings.precision);
-                    el["" + elecType[type].name + elecKind[kind].name + "_style"] = "aquamarine";
+                    //set default style
+                    el["" + elecType[type].name + elecKind[kind].name + "_style"] = {};
+                    el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = "aquamarine";
+                    el["" + elecType[type].name + elecKind[kind].name + "_style"].cursor = "default";
+                    if (mainSvc.checkUndefinedNull(el["" + elecType[type].name + elecKind[kind].name + "_sum"]) || 
+                        mainSvc.checkUndefinedNull(el["" + elecType[type].name + elecKind[kind].name])){ 
+                        return "Sum is undefined or null."
+                    };
+                    var diff = Math.abs(el["" + elecType[type].name + elecKind[kind].name + "_sum"] - el["" + elecType[type].name + elecKind[kind].name]).toFixed($scope.ctrlSettings.precision);                                        
                     if (diff > 0.001 && diff <= 1){
-                        el["" + elecType[type].name + elecKind[kind].name + "_style"] = "#FFFFA4";
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = "#FFFFA4";
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"].cursor = "pointer";
                     }else if (diff > 1){
-                        el["" + elecType[type].name + elecKind[kind].name + "_style"] = "#FF7171";
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = "#FF7171";
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"].cursor = "pointer";
                     };
                     var elDom = "#indicators_td_"+el.id+ ""+ elecType[type].name + elecKind[kind].name;
                     var detailInfo = "";
