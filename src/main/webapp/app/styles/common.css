@@ -863,6 +863,15 @@ tr.nmc-main-table-header-indicator > th {
 .nmc-el-totals-indicator-highlight{
     background-color: aquamarine;/*azure;*/
 }
+/*diff <= 1 : #FFFFA4*/
+.nmc-el-totals-indicator-highlight-warn{
+    background-color: #FFFFA4;
+}
+/*diff > 1 : #FF7171*/
+.nmc-el-totals-indicator-highlight-err{
+    background-color: #FF7171;
+}
+
 /* Подсветка действующего/активного прайса*/
 tr.nmc-active-price > td{
     background-color: bisque;

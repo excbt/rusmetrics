@@ -169,7 +169,7 @@
                   </div>
              </div>
         </div>
-        <div class="" ng-class="{'col-xs-12 col-md-12': monitorSettings.isTreeView != true && monitorSettings.isFullObjectView == true, 'col-xs-9 col-md-9': monitorSettings.isTreeView == true && monitorSettings.isFullObjectView == false}">
+        <div class="" ng-class="{'col-xs-12 col-md-12 noPadding': monitorSettings.isTreeView != true && monitorSettings.isFullObjectView == true, 'col-xs-9 col-md-9': monitorSettings.isTreeView == true && monitorSettings.isFullObjectView == false}">
 <!--        <div class="col-md-12" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">-->
             <div class="" ng-show="objectsOnPage.length == 0" ng-hide="monitorSettings.loadingFlag || (objectsOnPage.length > 0)">
                 <h3 class="nmc-h3">{{messages.noObjects}}</h3>

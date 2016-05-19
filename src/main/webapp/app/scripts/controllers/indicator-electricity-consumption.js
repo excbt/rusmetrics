@@ -47,10 +47,12 @@ angular.module('portalNMC')
         headerClassTR : "nmc-main-table-header",
         columns : []
     };
-    //create columns
-    var elecType = [{"name":"p_A", "caption": "A"}, {"name":"q_R", "caption":"R"}];
-    var elecKind = [{"name":"p", "caption":"+"}, {"name":"n", "caption":"-"}];
-    var tariffPlans = [1,2,3,4];
+    // ******************** create columns ****************************
+    var elecType = [{"name":"p_A", "caption": "A"}, /* active*/
+                    {"name":"q_R", "caption":"R"}]; /* reactive*/
+    var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
+                    {"name":"n", "caption":"-"}];/*negative*/
+    var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
     var columns = [{
                 header : "Дата",
                 headerClass : "col-md-2 nmc-text-align-center",
@@ -59,7 +61,9 @@ angular.module('portalNMC')
                 type: "string",
                 date: true
             }];
+    //columns for active and reactive parts
     for (var type = 0; type < elecType.length; type++){
+        //columns for tariff plans
         for (var tariff = 0; tariff < tariffPlans.length; tariff++){
             for (var kind = 0; kind < elecKind.length; kind++){
                 var column = {};
@@ -67,20 +71,26 @@ angular.module('portalNMC')
                 column.headerClass = "nmc-view-digital-data";
                 column.dataClass = "nmc-view-digital-data";
                 column.fieldName = "" + elecType[type].name + elecKind[kind].name + "" + tariffPlans[tariff] + "";
+                column.elKind = elecKind[kind].name;
+                column.elType = elecType[type].name;
                 columns.push(column);
             };
         };
         //columns for sum
         for (var kind = 0; kind < elecKind.length; kind++){
                 var column = {};
-                column.header = "\u03A3"+elecType[type].caption+elecKind[kind].caption;
+                column.header = "\u03A3" + elecType[type].caption+elecKind[kind].caption;
                 column.headerClass = "nmc-view-digital-data";
                 column.dataClass = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
-                column.fieldName = ""+elecType[type].name+elecKind[kind].name;
+                column.fieldName = "" + elecType[type].name + elecKind[kind].name;
+                column.isSummary = true;
+                column.elKind = elecKind[kind].name;
+                column.elType = elecType[type].name;
                 columns.push(column);
         };
     };
-//console.log(columns);    
+console.log(columns);    
+    // ******************************* end Create columns **************************
     $scope.tableDef.columns = columns;
     $scope.columns = $scope.tableDef.columns;
     
@@ -96,29 +106,95 @@ angular.module('portalNMC')
         format: $scope.ctrlSettings.dateFormat
     };
     
+    /*  
+    */
+    function initializeElectroSums(dataArr){
+        dataArr.forEach(function(el){
+            for (var type = 0; type < elecType.length; type++){
+                //columns for sum
+                for (var kind = 0; kind < elecKind.length; kind++){
+                    el["" + elecType[type].name + elecKind[kind].name + "_sum"] = -el["" + elecType[type].name + elecKind[kind].name];
+                };
+            };
+        });
+        return dataArr;
+    };
+    
+    function setPrecisionAndGetSum(dataArr){
+        dataArr.forEach(function(el){
+            for(var i in $scope.columns){
+                if ((el[$scope.columns[i].fieldName] != null)&&($scope.columns[i].type !== "string")){                            
+                    el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
+                    // get active/reactive, positive/negative sums
+                    el["" + $scope.columns[i].elType + $scope.columns[i].elKind + "_sum"] += Number(el[$scope.columns[i].fieldName]);   
+                };
+            };                    
+        });
+        return dataArr;
+    };
+    
+    function setSumPrecision(dataArr){
+        dataArr.forEach(function(el){
+            for (var type = 0; type < elecType.length; type++){
+                //columns for sum
+                for (var kind = 0; kind < elecKind.length; kind++){
+                    el["" + elecType[type].name + elecKind[kind].name + "_sum"] = 
+                        el["" + elecType[type].name + elecKind[kind].name + "_sum"].toFixed($scope.ctrlSettings.precision);
+                };
+            };
+        });
+    };
+    
+    function getSumDifference(dataArr){
+        dataArr.forEach(function(el, index){
+            for (var type = 0; type < elecType.length; type++){
+                //columns for sum
+                for (var kind = 0; kind < elecKind.length; kind++){
+                    var diff = Math.abs(el["" + elecType[type].name + elecKind[kind].name + "_sum"] - el["" + elecType[type].name + elecKind[kind].name]).toFixed($scope.ctrlSettings.precision);
+                    el["" + elecType[type].name + elecKind[kind].name + "_style"] = "aquamarine";
+                    if (diff > 0.001 && diff <= 1){
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"] = "#FFFFA4";
+                    }else if (diff > 1){
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"] = "#FF7171";
+                    };
+                    var elDom = "#indicators_td_"+el.id+ ""+ elecType[type].name + elecKind[kind].name;
+                    var detailInfo = "";
+                    detailInfo += "Сумма полученная от сервера: " + el["" + elecType[type].name + elecKind[kind].name];
+                    detailInfo += "<br><br>";
+                    detailInfo += "Рассчитанная сумма: " + el["" + elecType[type].name + elecKind[kind].name + "_sum"];
+                    setToolTip("Детальная информация", detailInfo, elDom, elDom);
+//console.log(el["" + elecType[type].name + elecKind[kind].name + "_sum"] +" - "+el["" + elecType[type].name + elecKind[kind].name]+"="+ diff);                    
+                };
+            };
+        });
+    };
+    
     var getIndicators = function(table, paramString){
         var url = table+paramString;
-        $http.get(url).then(function (response) {
+        $http.get(url).then(
+            function (response) {
                 var tmp = angular.copy(response.data); 
                 if (mainSvc.checkUndefinedNull(tmp)){ return "Electricity indicators undefined or null."};            
-//console.log(response.data);    
-                tmp.forEach(function(el){
-                    for(var i in $scope.columns){
-                        if ((el[$scope.columns[i].fieldName] != null)&&($scope.columns[i].type !== "string")){
-                            
-                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
-                        };
-                    };                    
-                });
+        //console.log(response.data);
+                            //set default active/reactive elec sum = 0
+                initializeElectroSums(tmp);
+                    //set precision
+                setPrecisionAndGetSum(tmp);
+                    //set precision for sum
+                setSumPrecision(tmp);
+                    //get difference between sums from server and our sums
+                getSumDifference(tmp);
+//console.log(tmp);        
                 $scope.data = tmp;
                 $scope.indicatorsPerPage = $scope.data.length;
                 $scope.ctrlSettings.loading = false;
                 if ($scope.ctrlSettings.viewMode=="" && $scope.data.length > 0){
                     getSummary(table+"/summary"+paramString);
                 };
-        }, function(e){
-            $scope.ctrlSettings.loading = false;
-            console.log(e);
+            }, 
+            function(e){
+                $scope.ctrlSettings.loading = false;
+                console.log(e);
         });
     };
     
@@ -128,6 +204,7 @@ angular.module('portalNMC')
 //console.log($(elDom));        
 //console.log($(targetDom));        
         $timeout(function(){
+//console.log($(elDom));            
             $(elDom).qtip({
                 suppress: false,
                 content:{
