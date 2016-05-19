@@ -504,15 +504,24 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		// по которым будет определятся доступ к ресурсам и остальным
 		// данным
 
-		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/devTools/**").permitAll()
-				.antMatchers("/index.html").permitAll().antMatchers("/index").permitAll().antMatchers("/error")
-				.permitAll().antMatchers("/login").permitAll().antMatchers("/saml/**").permitAll();
+		http.authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/devTools/**").permitAll()
+				.antMatchers("/index.html").permitAll()
+				.antMatchers("/index").permitAll()
+				.antMatchers("/error").permitAll()
+				.antMatchers("/login").permitAll()
+				.antMatchers("/saml/**").permitAll();
 
-		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/WEB-INF/**").denyAll()
-				.antMatchers("/app/**").authenticated().antMatchers("/api/**").permitAll().antMatchers("/resources/**")
-				.permitAll()
-
-				.antMatchers("/bower_components/**").permitAll().antMatchers("/vendor_components/**").permitAll().and();
+		http.authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/WEB-INF/**").denyAll()
+				.antMatchers("/app/**").authenticated()
+				.antMatchers("/api/benchmark/**").permitAll()
+				.antMatchers("/api/appStatus/**").permitAll()
+				.antMatchers("/api/**").access(RolesAccess.API_SUBSR_ACCESS) //.authenticated()
+				.antMatchers("/api/rma/**").access(RolesAccess.API_RMA_ACCESS)
+				.antMatchers("/resources/**").permitAll()
+				.antMatchers("/bower_components/**").permitAll()
+				.antMatchers("/vendor_components/**").permitAll().and();
 
 		http.formLogin()
 				// указываем страницу с формой логина

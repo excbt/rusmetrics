@@ -34,9 +34,14 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				// по которым будет определятся доступ к ресурсам и остальным
 				// данным
 				.authorizeRequests().antMatchers("/").permitAll()
-				.antMatchers("/WEB-INF/**").denyAll().antMatchers("/app/**")
-				.authenticated().antMatchers("/api/**").permitAll()
+				.antMatchers("/WEB-INF/**").denyAll()
+				.antMatchers("/app/**").authenticated()
+				.antMatchers("/api/benchmark/**").permitAll()
+				.antMatchers("/api/appStatus/**").permitAll()
+				.antMatchers("/api/**").access(RolesAccess.API_SUBSR_ACCESS)//.authenticated()
+				.antMatchers("/api/rma/**").access(RolesAccess.API_RMA_ACCESS)
 				.antMatchers("/resources/**").permitAll()
+
 				.antMatchers("/bower_components/**").permitAll()
 				.antMatchers("/vendor_components/**").permitAll().and();
 
@@ -54,7 +59,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll();
 
 		http.logout()
-		// разрешаем делать логаут всем
+				// разрешаем делать логаут всем
 				.permitAll()
 				// указываем URL логаута
 				.logoutUrl("/logout")
