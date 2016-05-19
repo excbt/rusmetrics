@@ -44,6 +44,9 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 	@Column(name = "dev_comment")
 	private String devComment;
 
+	@Column(name = "is_active_caption")
+	private String isActiveCaption;
+
 	@Version
 	private int version;
 
@@ -141,6 +144,14 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 
 	public void setSubscrPrefCategory(String subscrPrefCategory) {
 		this.subscrPrefCategory = subscrPrefCategory;
+	}
+
+	public String getIsActiveCaption() {
+		return isActiveCaption;
+	}
+
+	public void setIsActiveCaption(String isActiveCaption) {
+		this.isActiveCaption = isActiveCaption;
 	}
 
 }
