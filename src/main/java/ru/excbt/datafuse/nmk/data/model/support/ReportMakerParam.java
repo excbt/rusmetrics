@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigDecimal;
@@ -53,7 +52,7 @@ public class ReportMakerParam {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(paramContObjectIds);
-		checkArgument(paramContObjectIds.length > 0);
+		//checkArgument(paramContObjectIds.length > 0);
 		this.subscriberParam = subscriberParam;
 		this.reportParamset = reportParamset;
 		this.paramContObjectIds = Arrays.copyOf(paramContObjectIds, paramContObjectIds.length);

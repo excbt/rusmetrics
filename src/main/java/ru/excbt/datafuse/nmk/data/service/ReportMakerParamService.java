@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 /**
@@ -148,31 +149,34 @@ public class ReportMakerParamService {
 
 		checkNotNull(reportParamset);
 
-		List<Long> resultContObjectIdList = Collections.emptyList();
+		List<Long> paramContObjectIdList = Collections.emptyList();
 
 		if (contObjectIds != null && contObjectIds.length > 0) {
-			resultContObjectIdList = Arrays.asList(contObjectIds);
+			paramContObjectIdList = Arrays.asList(contObjectIds);
 		} else if (contObjectIds == null && reportParamset.getId() != null) {
-			resultContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
+			paramContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
 		}
 
 		List<Long> subscrContObjectIds = null;
 
-		if (resultContObjectIdList.isEmpty()) {
+		SubscriberParam subscriberParam = currentSubscriberService.getSubscriberParam();
+
+		if (paramContObjectIdList.isEmpty()) {
 
 			if (!Boolean.TRUE.equals(reportParamset.getReportTemplate().getReportType().getReportMetaParamCommon()
 					.getNoContObjectsRequired())) {
 
-				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset.getSubscriber().getId()
-						: reportParamset.getSubscriberId();
+				//				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset.getSubscriber().getId()
+				//						: reportParamset.getSubscriberId();
+				Long subscriberId = subscriberParam.getSubscriberId();
 
 				subscrContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(subscriberId);
 			}
 
 		}
 
-		return new ReportMakerParam(currentSubscriberService.getSubscriberParam(), reportParamset,
-				resultContObjectIdList, subscrContObjectIds, previewMode);
+		return new ReportMakerParam(subscriberParam, reportParamset,
+				paramContObjectIdList, subscrContObjectIds, previewMode);
 
 	}
 
