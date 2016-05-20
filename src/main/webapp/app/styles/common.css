@@ -1728,7 +1728,7 @@ tr.nmc-inactive-price > td{
 /*.editGroupWindowSelectedObjectsArea{*/
 .nmc-modal-panel-with-objects-tp{  
     height: 500px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .nmc-hr-in-modal{

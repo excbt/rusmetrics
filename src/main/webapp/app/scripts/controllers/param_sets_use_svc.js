@@ -802,6 +802,10 @@ console.log($scope.psEndDateFormatted);
     
     $scope.$watch('currentObject.reportPeriodKey', function (newKey) {
         //отслеживаем изменение периода у варианта отчета
+        if (mainSvc.checkUndefinedNull($scope.reportPeriods)){
+            console.log($scope.reportPeriods);
+            return "reportPeriods is undefined or null.";
+        };
         for (var i = 0; i < $scope.reportPeriods.length; i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
