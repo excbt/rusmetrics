@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,7 +86,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 		List<String> subsctPrefKeynames = typePrefList.stream().map(t -> t.getSubscrPref())
 				.collect(Collectors.toList());
 
-		List<SubscrPref> subsctPrefList = Lists.newArrayList(subscrPrefRepository.findAll());
+		List<SubscrPref> subsctPrefList = Lists.newArrayList(subscrPrefRepository.selectSubscrPref());
 
 		List<SubscrPref> result = subsctPrefList.stream().filter(p -> subsctPrefKeynames.contains(p.getKeyname()))
 				.collect(Collectors.toList());
@@ -112,7 +111,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberParam.getSubscriberId(),
 				subscrTypeKey.getKeyname(), prefValueList);
 
-		Collections.sort(result, SUBSCR_PREF_COMPARATOR);
+		//Collections.sort(result, SUBSCR_PREF_COMPARATOR);
 
 		return result;
 	}
