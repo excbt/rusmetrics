@@ -496,12 +496,12 @@
             <!--      Варианты отчетов-->
                 <div role="tabpanel" class="tab-pane fade in active" id="main_properties">            
                     <div class="container-fluid noPadding">
-                        <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
-                            <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <div class="row well noPadding noMargin">
+                            <div class="col-md-12 noPaddingBottom nmc-modal-panel-with-table" style="">
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr>
                                         <td class="col-sm-3">
-                                            <label for="inputType" class="nmc-form-label">Тип отчета</label>
+                                            <label for="inputType" class="nmc-form-label noMargin">Тип отчета</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
                                         </td>
@@ -618,10 +618,27 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3">
-                                            <label for="inputFileTemplate" class="nmc-form-label">Шаблон имени файла (<small>без расширения</small>)</label>
+                                        <td colspan="2" class="col-sm-3" style="border-bottom: 0; padding-bottom: 0">
+                                            <label for="inputFileTemplate" class="nmc-form-label noMargin">Шаблон имени файла (<small>без расширения</small>):</label>
                                         </td>
+<!--
                                         <td class="col-sm-9 nmc-text-align-left">
+                                            <input class="form-control nmc-text-input-form" 
+                                                   id="inputFileTemplate" 
+                                                   type=text  
+                                                   placeholder="Шаблон имени файла" 
+                                                   ng-model="currentObject.outputFileNameTemplate" 
+                                                   ng-disabled="isDisabled()">
+                                        </td>
+-->
+                                    </tr>
+                                    <tr>
+<!--
+                                        <td class="col-sm-3">
+                                            
+                                        </td>
+-->
+                                        <td colspan="2" class="col-sm-9 nmc-text-align-left" style="border-top: 0">
                                             <input class="form-control nmc-text-input-form" 
                                                    id="inputFileTemplate" 
                                                    type=text  
@@ -643,15 +660,7 @@
                                                     ng-options="fileType for fileType in fileTypes"> 
                                             </select>
                                         </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="2" class="col-sm-3">
-                                            <input type=checkbox 
-                                                   ng-model="currentObject._default" 
-                                                   class="nmc-checkbox-form">По умолчанию
-                                        </td>
-                                    </tr>                            
+                                    </tr>                                                                
                                     <tr>
                                         <td class="col-sm-3">
                                             <label for="inputStartDate" 
@@ -683,7 +692,15 @@
                                         </td>
                                     </tr>
 -->
-                                    <tr>
+<!--
+                                    <tr class="nmc-tr-striped">
+                                        <td colspan="2" class="col-sm-3">
+                                            <input type=checkbox 
+                                                   ng-model="currentObject._default" 
+                                                   class="nmc-checkbox-form">По умолчанию
+                                        </td>
+                                    </tr>
+                                    <tr class="nmc-tr-striped">
                                         <td colspan="2" class="col-sm-3">
                                             <input ng-disabled="checkOutputFileZipped()" 
                                                    type=checkbox 
@@ -691,24 +708,57 @@
                                                    class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="nmc-tr-striped">
                                         <td colspan="2" class="col-sm-3">
                                             <input type=checkbox 
                                                    ng-model="currentObject.isContextLaunch" 
-                                                   class="nmc-checkbox-form" >Разрешить вызов из меню объекта.
+                                                   class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для абонентов).
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="nmc-tr-striped">
                                         <td colspan="2" class="col-sm-3">
                                             <input type=checkbox 
                                                    ng-model="currentObject.isContextLaunchChild" 
-                                                   class="nmc-checkbox-form" >Доступен пользователям объектов.
+                                                   class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для пользователей объектов).
                                         </td>
                                     </tr>
+-->
 
                                 </table>
 
-                            </div> 
+                            </div>
+                            <div class="row well noPadding noMargin">
+                                <div class="col-sm-12">
+                                    
+                                        <input type=checkbox 
+                                               ng-model="currentObject._default" 
+                                               class="nmc-checkbox-form">По умолчанию
+                                    
+                                </div>
+                                <div class="col-sm-12">
+                                    
+                                        <input ng-disabled="checkOutputFileZipped()" 
+                                               type=checkbox 
+                                               ng-model="currentObject.outputFileZipped" 
+                                               class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
+                                    
+                                </div>
+                                <div class="col-sm-12">
+                                    
+                                        <input type=checkbox 
+                                               ng-model="currentObject.isContextLaunch" 
+                                               class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для абонентов).
+                                    
+                                </div>
+                                <div class="col-sm-12">
+                                    
+                                        <input type=checkbox 
+                                               ng-model="currentObject.isContextLaunchChild" 
+                                               class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для пользователей объектов).
+                                    
+                                </div>
+                            </div>
+                            
                         </div>
 
                     </div>
@@ -718,7 +768,7 @@
                        class="tab-pane fade " 
                        id="extra_properties">
                        <div class="container-fluid noPadding">
-                            <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
+                            <div class="row well noPadding noMargin">
                                 <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
     <!--
                         <div class="container-fluid noPadding">

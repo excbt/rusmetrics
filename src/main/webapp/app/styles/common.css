@@ -599,6 +599,10 @@ tr.nmc-tr-odd>td{
     background-color: #eee;
 }
 
+.nmc-tr-striped > td{
+    padding: 0 !important;
+}
+
     /*Стиль колонки с кнопками*/
 .nmc-td-for-button{
     min-width: 35px;
@@ -1725,7 +1729,7 @@ tr.nmc-inactive-price > td{
 .nmc-modal-panel-with-objects-tp{  
     height: 500px;
     overflow-y: scroll;
-}  
+}
 
 .nmc-hr-in-modal{
     -moz-border-bottom-colors: none;
