@@ -9,6 +9,13 @@
         <div  ng-show="mapSettings.loadingFlag" class="nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
         </div>
+        <div ng-if="objects.length > 0" 
+             class="paddingTop5 pull-right">
+            <span class="marginRight15">
+                <label ng-if="data.currentTree.objectName">Показаны объекты для иерархии:</label> {{data.currentTree.objectName}}
+            </span> 
+            <span><label ng-if="data.currentTreeNode.objectName">узел:</label> {{data.currentTreeNode.objectName}}</span>
+        </div>
 
     </ul>
 

@@ -28,7 +28,7 @@ angular.module('portalNMC')
 console.log($scope.monitorSettings.loadingFlag);      
 //console.log($scope.monitorSettings.loadingFlag);      
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
-    $scope.monitorSettings.noGreenObjectsFlag = false;
+    $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag || false;
     
     $scope.monitorSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
     $scope.monitorSettings.objectsOnPage = $scope.monitorSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
@@ -658,6 +658,7 @@ console.log(selectedNode);
                 var respTree = angular.copy(resp.data);
                 mainSvc.sortTreeNodesBy(respTree, "objectName");
                 $scope.data.currentTree = respTree;
+                monitorSvc.setMonitorSettings({currentTree: angular.copy($scope.data.currentTree), curTreeId: $scope.data.currentTree.id});
                 if (!mainSvc.checkUndefinedNull(selectedNode)){
                     var originalCurrentTree = mainSvc.findItemBy($scope.data.trees, "id", respTree.id);                   
                     var originalCurrentTreeNode = findNodeInTree(selectedNode, $scope.data.currentTree);
@@ -683,11 +684,16 @@ console.log(selectedNode);
             //считать текущее дерево и ноду, и если они заданы переключиться на них
             var curTree = monitorSvc.getMonitorSettings().currentTree;
             var curTreeNode = monitorSvc.getMonitorSettings().currentTreeNode;
+            $scope.monitorSettings.isFullObjectView = monitorSvc.getMonitorSettings().isFullObjectView;
             if (!mainSvc.checkUndefinedNull(curTree) && !mainSvc.checkUndefinedNull(curTreeNode)){                
                 $scope.loadTree(curTree, curTreeNode);                
                 return "Current tree and current tree node is defined.";
             };
-            if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree)){ 
+            if (!angular.isArray($scope.data.trees) || 
+                $scope.data.trees.length <= 0 || 
+                mainSvc.checkUndefinedNull($scope.data.defaultTree) ||
+                $scope.monitorSettings.isFullObjectView == true
+               ){ 
                 $scope.viewFullObjectList();
                 return "View full object list";
             };

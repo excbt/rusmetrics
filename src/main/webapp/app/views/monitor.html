@@ -94,7 +94,9 @@
                     <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
                     <ul class="nav nav-pills marginLeft15 nmc-toggle nmc-toggle-monitor col-md-2" role="tablist">
                         <li role="presentation" 
-                            class="active nmc-toggle-active">
+                            class="nmc-toggle-active"
+                            ng-class="{active: !monitorSettings.noGreenObjectsFlag}"
+                            >
                             <a class="nmc-toggle-button" 
                                href="" 
                                aria-controls="active_paramsets" 
@@ -105,7 +107,9 @@
                             </a>
                         </li>
                         <li role="presentation" 
-                            class="nmc-toggle-archive">
+                            class="nmc-toggle-archive"
+                            ng-class="{active: monitorSettings.noGreenObjectsFlag}"
+                            >
                             <a title="Объекты с нештатными ситуациями" 
                                class="nmc-toggle-button" 
                                href="" 

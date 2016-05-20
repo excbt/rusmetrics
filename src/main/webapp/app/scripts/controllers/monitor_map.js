@@ -234,8 +234,7 @@ angular.module('portalNMC')
         objectsArr.forEach(function(obj){
             if ((obj.statusColor === "RED") ||(obj.statusColor === "ORANGE") ){
                 monitorSvc.getMonitorEventsByObject(obj);
-            };
-        });
+            };        });
         $('#showObjectsDetailModal').modal();
     };
     
@@ -615,6 +614,13 @@ console.warn(elem);
     window.setTimeout(function(){
 //console.log("3");            
         setVisibles($scope.mapSettings.ctxId);
-    }, 500);  
+    }, 500);
+    
+    function initCtrl(){
+        $scope.data.currentTree = monitorSvc.getMonitorSettings().currentTree;
+        $scope.data.currentTreeNode = monitorSvc.getMonitorSettings().currentTreeNode;
+    };
+    
+    initCtrl();
     
 });
