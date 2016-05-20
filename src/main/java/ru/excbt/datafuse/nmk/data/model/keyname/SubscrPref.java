@@ -20,6 +20,9 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 	 */
 	private static final long serialVersionUID = 322159788896491335L;
 
+	@Column(name = "caption")
+	private String caption;
+
 	@Column(name = "comment")
 	private String comment;
 
@@ -152,6 +155,14 @@ public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObj
 
 	public void setIsActiveCaption(String isActiveCaption) {
 		this.isActiveCaption = isActiveCaption;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 
 }

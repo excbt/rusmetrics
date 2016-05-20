@@ -15,7 +15,7 @@ public interface SubscrPrefValueRepository extends CrudRepository<SubscrPrefValu
 	 * @param subscriberId
 	 * @return
 	 */
-	@Query("SELECT v FROM SubscrPrefValue v WHERE v.subscriberId = :subscriberId")
+	@Query("SELECT v FROM SubscrPrefValue v WHERE v.subscriberId = :subscriberId ORDER BY v.subscrPref.prefOrder NULLS LAST")
 	public List<SubscrPrefValue> selectSubscrPrefValue(@Param("subscriberId") Long subscriberId);
 
 }
