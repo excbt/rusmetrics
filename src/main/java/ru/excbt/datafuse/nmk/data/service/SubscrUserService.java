@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
@@ -275,8 +276,13 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		//				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getLastName() };
 		String[] stringNames = new String[] { firstName, lastNameName };
 
+		SubscrTypeKey subscrTypeKey = SubscrTypeKey.searchKeyname(subscrUser.getSubscriber().getSubscrType());
+
+		String gidNumber = subscrTypeKey != null && subscrTypeKey.isChild() ? subscrUser.getUserName() : null;
+
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
-				subscrUser.getUserEMail(), subscrUser.getUserDescription());
+				subscrUser.getUserEMail(), subscrUser.getUserDescription(), gidNumber,
+				subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
 		return user;
 
 	}

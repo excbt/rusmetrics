@@ -238,6 +238,9 @@ public class LdapService {
 		if (user.getDescription() != null) {
 			context.setAttributeValue("description", user.getDescription());
 		}
+		if (user.getBusinessCategory() != null) {
+			context.setAttributeValue("businessCategory", user.getBusinessCategory());
+		}
 		ldapTemplate.bind(context);
 		return user;
 	}

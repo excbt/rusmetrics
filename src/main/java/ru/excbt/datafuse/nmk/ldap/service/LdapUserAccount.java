@@ -31,6 +31,7 @@ public final class LdapUserAccount {
 	private final String uidNumber;
 	private final String gidNumber;
 	private final String description;
+	private final String businessCategory;
 
 	/**
 	 * 
@@ -42,7 +43,7 @@ public final class LdapUserAccount {
 	 * @param description
 	 */
 	public LdapUserAccount(Long id, String userName, String[] names, String[] orgUnits, String mail,
-			String description) {
+			String description, String gidNumber, String businessCategory) {
 		checkNotNull(orgUnits);
 		checkNotNull(id);
 		checkNotNull(userName);
@@ -57,8 +58,9 @@ public final class LdapUserAccount {
 		this.mail = mail != null ? mail : userName + DEFAULT_EMAIL_DOMAIN;
 		this.homeDirectory = HOME_DIR + userName;
 		this.uidNumber = id.toString();
-		this.gidNumber = Integer.valueOf(0).toString();
+		this.gidNumber = gidNumber != null ? gidNumber : Integer.valueOf(0).toString();
 		this.description = description;
+		this.businessCategory = businessCategory;
 	}
 
 	/**
@@ -67,9 +69,9 @@ public final class LdapUserAccount {
 	 * @param username
 	 * @param names
 	 */
-	public LdapUserAccount(Long id, String username, String[] names, String[] orgUnits) {
-		this(id, username, names, orgUnits, username + DEFAULT_EMAIL_DOMAIN, null);
-	}
+	//	public LdapUserAccount(Long id, String username, String[] names, String[] orgUnits) {
+	//		this(id, username, names, orgUnits, username + DEFAULT_EMAIL_DOMAIN, null, null);
+	//	}
 
 	/**
 	 * 
@@ -141,6 +143,10 @@ public final class LdapUserAccount {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public String getBusinessCategory() {
+		return businessCategory;
 	}
 
 }
