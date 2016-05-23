@@ -37,12 +37,6 @@ angular.module('portalNMC')
                 
                     //object settings
                 $scope.objectCtrlSettings = {};
-//                $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
-//                $scope.monitorSettings.createRoundDiagram = false;
-//                $scope.monitorSettings.loadingFlag = true;//monitorSvc.monitorSvcSettings.loadingFlag;
-            //console.log($scope.monitorSettings.loadingFlag);      
-                //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
-//                $scope.monitorSettings.noGreenObjectsFlag = false;
                 $scope.objectCtrlSettings.isCtrlEnd =false;
                 $scope.objectCtrlSettings.allSelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
@@ -231,6 +225,7 @@ angular.module('portalNMC')
                 
 //                $scope.objects = objectSvc.getObjects();
                 $scope.loading = objectSvc.getLoadingStatus();//loading;
+                $scope.treeLoading = true;
                 $scope.columns = angular.fromJson($attrs.columns);
                 $scope.captions = angular.fromJson($attrs.captions);
                 $scope.extraProps = angular.fromJson($attrs.exprops);
@@ -366,6 +361,7 @@ angular.module('portalNMC')
                 };
 
                 var errorCallback = function (e) {
+                    $scope.treeLoading = false;
                     console.log(e);
                     var errorCode = "-1";
                     if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
@@ -1551,7 +1547,9 @@ angular.module('portalNMC')
                 
                 $scope.loadTree = function(tree, objId){
                     $scope.loading = true;
+                    $scope.treeLoading = true;
                     objectSvc.loadSubscrTree(tree.id).then(function(resp){
+                            $scope.treeLoading = false;
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
                             mainSvc.sortTreeNodesBy(respTree, "objectName");
@@ -1565,7 +1563,9 @@ angular.module('portalNMC')
                 };
                 
                 var loadTrees = function(treeSetting){
+                    $scope.treeLoading = true;
                     objectSvc.loadSubscrTrees().then(function(resp){
+                        $scope.treeLoading = false;
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
                         if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){

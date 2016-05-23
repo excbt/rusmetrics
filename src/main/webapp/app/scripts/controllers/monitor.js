@@ -25,8 +25,8 @@ angular.module('portalNMC')
     $scope.monitorSettings.refreshPeriod = monitorSvc.getMonitorSettings().refreshPeriod;//"180";
     $scope.monitorSettings.createRoundDiagram = false;
     $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;// true;//monitorSvc.monitorSvcSettings.loadingFlag;
-console.log($scope.monitorSettings.loadingFlag);      
 //console.log($scope.monitorSettings.loadingFlag);      
+    $scope.monitorSettings.treeLoadingFlag = true;  
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag || false;
     
@@ -52,6 +52,7 @@ console.log($scope.monitorSettings.loadingFlag);
       
     var errorCallback = function(e){
         $scope.monitorSettings.loadingFlag = false;
+        $scope.monitorSettings.treeLoadingFlag = false;
         monitorSvc.setMonitorSettings({loadingFlag: false});
         console.log(e);
     };
@@ -303,7 +304,7 @@ console.log($scope.monitorSettings.loadingFlag);
 
     $scope.refreshData = function(){
         $scope.monitorSettings.loadingFlag = true;
-console.log($scope.monitorSettings.loadingFlag);        
+//console.log($scope.monitorSettings.loadingFlag);        
         $rootScope.$broadcast('monitor:updateObjectsRequest');
     };
       
@@ -322,7 +323,7 @@ console.log($scope.monitorSettings.loadingFlag);
       
     $scope.getAllColorObjects = function(){
         $scope.monitorSettings.loadingFlag = true;
-console.log($scope.monitorSettings.loadingFlag);        
+//console.log($scope.monitorSettings.loadingFlag);        
         $scope.monitorSettings.noGreenObjectsFlag = false;
         monitorSvc.setMonitorSettings({noGreenObjectsFlag: false});               
         $rootScope.$broadcast('monitor:updateObjectsRequest');
@@ -330,7 +331,7 @@ console.log($scope.monitorSettings.loadingFlag);
     
     $scope.getNoGreenObjects = function(){
         $scope.monitorSettings.loadingFlag = true;
-console.log($scope.monitorSettings.loadingFlag);        
+//console.log($scope.monitorSettings.loadingFlag);        
         $scope.monitorSettings.noGreenObjectsFlag = true;
         monitorSvc.setMonitorSettings({noGreenObjectsFlag: true});               
         $rootScope.$broadcast('monitor:updateObjectsRequest');
@@ -342,7 +343,7 @@ console.log($scope.monitorSettings.loadingFlag);
             return;
         };
         $scope.monitorSettings.loadingFlag = true;
-console.log($scope.monitorSettings.loadingFlag);        
+//console.log($scope.monitorSettings.loadingFlag);        
         $rootScope.monitorStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.monitorEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
         monitorSvc.setMonitorSettings({
@@ -385,7 +386,7 @@ console.log($scope.monitorSettings.loadingFlag);
         $scope.monitorSettings.objectBottomOnPage =34;
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
         $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
-console.log($scope.monitorSettings.loadingFlag);        
+//console.log($scope.monitorSettings.loadingFlag);        
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag;
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;       
@@ -620,6 +621,7 @@ console.log($scope.monitorSettings.loadingFlag);
       
     $scope.viewFullObjectList = function(){
         $scope.monitorSettings.isFullObjectView = true;
+        $scope.monitorSettings.loadingFlag = true;
         $scope.messages.treeMenuHeader = 'Полный список объектов';
         monitorSvc.setMonitorSettings({curTreeId: null, curTreeNodeId: null, isFullObjectView: true});
         monitorSvc.setMonitorSettings({currentTree: null, currentTreeNode: null});
@@ -629,8 +631,8 @@ console.log($scope.monitorSettings.loadingFlag);
     $scope.selectNode = function(item){                    
         var treeForSearch = $scope.data.currentTree;
         var selectedNode = $scope.data.selectedNode;
-console.log(item);        
-console.log(selectedNode);        
+//console.log(item);        
+//console.log(selectedNode);        
         if (!mainSvc.checkUndefinedNull(selectedNode)){                        
             if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
                 return ;
@@ -653,7 +655,9 @@ console.log(selectedNode);
     $scope.data.trees = [];
 
     $scope.loadTree = function(tree, selectedNode){
+        $scope.monitorSettings.treeLoadingFlag = true;
         objectSvc.loadSubscrTree(tree.id).then(function(resp){
+                $scope.monitorSettings.treeLoadingFlag = false;
                 $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                 var respTree = angular.copy(resp.data);
                 mainSvc.sortTreeNodesBy(respTree, "objectName");
@@ -670,12 +674,14 @@ console.log(selectedNode);
                 $scope.monitorSettings.isFullObjectView = false;
                 monitorSvc.setMonitorSettings({isFullObjectView: false});
                 monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});
-                $scope.messages.noObjects = "";
+                $scope.messages.noObjects = "";                
             }, errorCallback);
     };
 
     var loadTrees = function(treeSetting){
+        $scope.monitorSettings.treeLoadingFlag = true;
         objectSvc.loadSubscrTrees().then(function(resp){
+            $scope.monitorSettings.treeLoadingFlag = false;
             mainSvc.sortItemsBy(resp.data, "objectName");
             $scope.data.trees = angular.copy(resp.data);
             if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
@@ -697,7 +703,7 @@ console.log(selectedNode);
                 $scope.viewFullObjectList();
                 return "View full object list";
             };
-            monitorSvc.setMonitorSettings({currentTree: $scope.data.defaultTree, curTreeId: $scope.data.defaultTree.id});
+            monitorSvc.setMonitorSettings({currentTree: $scope.data.defaultTree, curTreeId: $scope.data.defaultTree.id});          
             $scope.loadTree($scope.data.defaultTree);                        
 
         }, errorCallback);

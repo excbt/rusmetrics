@@ -19,7 +19,7 @@ angular.module('portalNMC')
         var monitorSvcSettings = {};
         monitorSvcSettings.refreshPeriod = "300";
         monitorSvcSettings.loadingFlag = true;
-console.log(monitorSvcSettings.loadingFlag);        
+//console.log(monitorSvcSettings.loadingFlag);        
         monitorSvcSettings.noGreenObjectsFlag = false;
         monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
         monitorSvcSettings.toDate = moment().endOf('day').format('YYYY-MM-DD');
@@ -72,19 +72,19 @@ console.log(monitorSvcSettings.loadingFlag);
             citiesMonitorSvc = [];                
             objectsMonitorSvc = [];
             monitorSvcSettings.loadingFlag = false;//data has been loaded
-console.log(monitorSvcSettings.loadingFlag);                
+//console.log(monitorSvcSettings.loadingFlag);                
             $rootScope.$broadcast('monitorObjects:updated');
         };
         
                     //get cities with objects function
         var getCitiesAndObjects = function(url, monitorSvcSettings){
-console.log(url);            
+//console.log(url);            
             if (checkUndefinedNull(url)){
                 return 400;
             };
 //console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
-console.log(monitorSvcSettings.loadingFlag);            
+//console.log(monitorSvcSettings.loadingFlag);            
             var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
             if (!checkUndefinedNull(monitorSvcSettings.contGroupId)){
                 targetUrl += "&contGroupId=" + monitorSvcSettings.contGroupId;
@@ -98,7 +98,7 @@ console.log(monitorSvcSettings.loadingFlag);
                     //sort objects by name
                     objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
                     monitorSvcSettings.loadingFlag = false;//data has been loaded
-console.log(monitorSvcSettings.loadingFlag);                
+//console.log(monitorSvcSettings.loadingFlag);                
                     $rootScope.$broadcast('monitorObjects:updated');
                 })
                 .error(errorLoadingMonitorData);
@@ -175,9 +175,9 @@ console.log(monitorSvcSettings.loadingFlag);
         
         function startRefreshing(){
             var time = (new Date()).toLocaleString();
-console.log("Обновление данных для монитора. " + time);            
+//console.log("Обновление данных для монитора. " + time);            
             monitorSvcSettings.loadingFlag = true;
-console.log(monitorSvcSettings.loadingFlag);            
+//console.log(monitorSvcSettings.loadingFlag);            
             getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
         };
 
@@ -212,7 +212,7 @@ console.log(monitorSvcSettings.loadingFlag);
                         citiesMonitorSvc = [];                
                         objectsMonitorSvc = [];
                         monitorSvcSettings.loadingFlag = false;//data has been loaded
-console.log(monitorSvcSettings.loadingFlag);                        
+//console.log(monitorSvcSettings.loadingFlag);                        
                         $rootScope.$broadcast('monitorObjects:updated');
                     }else{                        
                         cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapse';

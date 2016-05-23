@@ -574,8 +574,8 @@ angular.module('portalNMC')
                 changeMonth: true,
                 changeYear: true,
                 showButtonPanel: true,
-                closeText: "Готово",
-                currentText: "Сегодня",
+                closeText: "Ок",
+                currentText: "",
                 onClose: function(dateText, inst) { 
                     $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
                     $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
@@ -587,10 +587,12 @@ angular.module('portalNMC')
                 beforeShow: function(){
                     setTimeout(function(){
                         $('.ui-datepicker-calendar').addClass("nmc-hide");
+                        $('.ui-datepicker-current').addClass("nmc-hide");
                     }, 1);
                 },
                 onChangeMonthYear: function(){
                     setTimeout(function(){
+                        $('.ui-datepicker-current').addClass("nmc-hide");
                         $('.ui-datepicker-calendar').addClass("nmc-hide");
                     }, 1);
                 }

@@ -45,7 +45,8 @@ body{
     color: #FFFFFF;
 /*    height: 60px;*/
     border: none;
-    min-width: 1361px;
+/*    min-width: 1361px;*/
+    min-width: 1572px;
     position: absolute;
 }
 
@@ -242,7 +243,7 @@ body{
     padding-top: 20px;
     padding-bottom: 20px;
     font-size: 12px;
-    background-color: #BEBEBE; /*body background color*/
+    background-color: #BEBEBE !important; /*body background color*/
     
 /*
     padding-top: 20px;
@@ -250,11 +251,12 @@ body{
     font-size: 12px;
     background-color: #BEBEBE;
 */
-    background: linear-gradient(to left, #BEBEBE, #969696); /*#A0A0A0 #AAAAAA*/
+    background: linear-gradient(to left, #BEBEBE, #969696) no-repeat; /*#A0A0A0 #AAAAAA*/
     /*background: linear-gradient(to left, #b5bdc8, /*#828c95 36%,*/ #28343b);*/
     
     min-height: 600px;
-    min-width: 800px;
+    min-width: 1572px;
+    overflow-y: hidden;
 }
 
 
@@ -1335,20 +1337,20 @@ tr.nmc-inactive-price > td{
 
 /* Добавить в заголовке рабочей области */
 .nmc-main-add-button {
-    padding: 5px 10px 5px 10px;
+    padding: 3px 10px;
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
 }
 
     /* на кнопку наведен курсор*/
 .nmc-main-add-button:hover {
-    padding: 5px 10px 5px 10px;
+    padding: 3px 10px;
     background: linear-gradient(to top, #CD5F03,#EB5F03);
     color: #fff;
 }
     /* кнопка нажата*/
 .nmc-main-add-button:focus {
-    padding: 5px 10px 5px 10px;
+    padding: 3px 10px;
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
 }

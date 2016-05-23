@@ -17,7 +17,9 @@
 
 <div class="row">
     <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
-        <div class="row nmc-main-workspace-header marginBottom5" ng-hide="loading">
+        <div class="row nmc-main-workspace-header marginBottom5"
+             ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+             >
             <div class="col-xs-6 col-md-6">
                 <div class="btn-group">
                       <button 
@@ -52,12 +54,9 @@
             <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
             </div>
         </div>
-    </div>
-    <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
-        <div  ng-show="loading" class="nmc-loading">
-            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
-        </div>
-        <div class="container-fluid" ng-hide="loading">
+    </div>    
+    <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">            
+        <div class="container-fluid" ng-hide="loading">            
             <div class="row nmc-main-workspace-header">
                 <div class="col-xs-2 col-md-2 noPadding" ng-controller="ObjectGroupsCtrl">
                     <div class="btn-group" ng-show="objectCtrlSettings.isTreeView != true">
@@ -89,7 +88,7 @@
                           </ul>
                         </div>   
                 </div>
-                <div class="input-group col-xs-3 col-md-3 filter marginBottom10 pull-left nmc-search-form">   
+                <div class="input-group col-xs-3 col-md-3 filter marginBottom5 pull-left nmc-search-form">   
                     <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                     <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                 </div>                
@@ -110,8 +109,13 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">                    
-         <div class="row nmc-tree-with-fixed-header">
+    <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
+            <div ng-show="treeLoading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
+        </div>
+         <div class="row nmc-tree-with-fixed-header"
+              ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+              >
               <div ui-tree="options" data-drag-enabled="false">
                 <ol ui-tree-nodes ng-model="data.currentTree" >
                   <li ng-repeat="item in data.currentTree.childObjectList" 
@@ -122,6 +126,9 @@
          </div>
     </div>
     <div class="paddingLeftRight15" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true && objectCtrlSettings.isFullObjectView == true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false}">
+        <div ng-show="loading" class="marginBottom5 nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка объектов... 
+        </div>
 <!--
         <div  ng-show="loading" class="nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
