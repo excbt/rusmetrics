@@ -1912,16 +1912,11 @@ console.log(e);
                     objectSvc.loadSubscrTrees().then(function(resp){
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
-                        if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <=0){ 
-                            $scope.messages.treeMenuHeader = "Выберете иерархию";
-                            getObjectsData();
-                            return "Object tree array is empty.";
-                        };
-                        if (mainSvc.checkUndefinedNull($scope.data.defaultTree)){
+                        if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree) ){ 
                             $scope.viewFullObjectList();
-                        }else{                        
-                            $scope.loadTree($scope.data.defaultTree);                        
-                        };
+                            return "View full object list!";
+                        }; 
+                        $scope.loadTree($scope.data.defaultTree);                        
                     }, errorCallback);
                 };
                 

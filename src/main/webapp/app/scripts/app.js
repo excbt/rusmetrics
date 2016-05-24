@@ -233,6 +233,11 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-rma-temp-sch.html',
         controller: 'TempSchCtrl'
       })
+      
+      .when('/log', {
+        templateUrl: 'views/log-view.html',
+        controller: 'LogViewCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

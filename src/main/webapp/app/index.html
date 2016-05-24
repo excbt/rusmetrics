@@ -181,6 +181,12 @@
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
+                                <a 
+                                   id="log_main_menu_item" 
+                                   class="list-group-item nmc-main-menu-item" 
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
+
+                                   href="#/log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')"><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журнал</span></a>
                                 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
@@ -188,7 +194,9 @@
 
                                    href="#/management/objects/" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon" title="Управление"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
                                     <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i>-->
-                                </a>                                                                <!-- Меню администратора -->
+                                </a>
+
+                                <!-- Меню администратора -->
 <!--
                                 <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showAdminSettings, 'nmc-hide': !showAdminSettings}" id="sidebar-entries" >
 
@@ -449,6 +457,7 @@
       <script src="scripts/controllers/settings-tenants.js"></script>
       <script src="scripts/controllers/settings-object-trees.js"></script>
       <script src="scripts/controllers/settings-program.js"></script>
+      <script src="scripts/controllers/log-view.js"></script>
 <!--      <script src="scripts/controllers/test.js"></script>-->
       
       <!-- Directives -->

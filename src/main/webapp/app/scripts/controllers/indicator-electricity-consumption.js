@@ -89,7 +89,7 @@ angular.module('portalNMC')
                 columns.push(column);
         };
     };
-console.log(columns);    
+//console.log(columns);    
     // ******************************* end Create columns **************************
     $scope.tableDef.columns = columns;
     $scope.columns = $scope.tableDef.columns;

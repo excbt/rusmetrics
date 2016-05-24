@@ -166,7 +166,7 @@ angular.module('portalNMC')
                     objectSvc.getPromise().then(successGetObjectsCallback);
                 };
                 
-                $scope.refreshObjectsData = function(){                    
+                $scope.refreshObjectsData = function(){
                     $rootScope.$broadcast('objectSvc:requestReloadData', {"contGroupId": $scope.data.currentGroupId});
                     $scope.loading = true;
                     getObjectsData();

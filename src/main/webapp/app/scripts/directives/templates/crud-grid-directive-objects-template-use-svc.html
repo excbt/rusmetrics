@@ -95,7 +95,8 @@
                 <div class="col-xs-1 col-md-1 nmc-div-refresh">
                     <button title="Обновить" 
                             class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
-                            ng-click="refreshObjectsData()" 
+                            ng-click="refreshObjectsData()"
+                            ng-show="objectCtrlSettings.isTreeView != true"
                             >
                     </button>
                 </div>
