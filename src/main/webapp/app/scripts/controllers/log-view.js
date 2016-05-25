@@ -7,11 +7,11 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
             name: "colorStatus",
             caption: "",
             type: 'color',
-            headerClass: "col-xs-1 col-md-1 nmc-td-for-button"
+            headerClass: "col-xs-1 col-md-1 nmc-td-for-button noPadding"
         },{
             name: "dataSource",
             caption: "Источник",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-2 col-md-2 noPadding"
         },{
             name: "deviceModel",
             caption: "Модель",
@@ -31,7 +31,7 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
         },{
             name: "author",
             caption: "Инициатор",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-2 col-md-2"
         },{
             name: "currentStatus",
             caption: "Текущий статус",
@@ -40,7 +40,7 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
             name: "totalRow",
             caption: "Число строк данных",
             headerClass: "col-xs-1 col-md-1"
-        },
+        }
         
     ];
     $scope.ctrlSettings.logColumns = [
@@ -63,6 +63,12 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
     $scope.data.sessions = [];
     $scope.data.sessionLog = [];
     
+    $scope.toggleChildSessionsView = function(session){
+        session.isChildView = !session.isChildView;
+    };
+    
+    /*******************************************/
+    /* Test generation*/
     function generate(){
         generateSessions();
         generateSessionLog();
@@ -101,11 +107,12 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
                 for (var j = 0; j <= Math.round(statusColor * 10); j++){
                     var child = angular.copy(ses);
                     child.type = "OP";
-                    child.dataSource = "ПриИст" + rndIntNumber + j;
+                    child.dataSource = "Прибор " + rndIntNumber +"-"+ j;
                     ses.childs.push(child);
                 };
             };  
             sessions.push(ses);
+//console.log(ses);            
         };
         $scope.data.sessions = sessions;
     };
@@ -135,13 +142,14 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
     };
     
     generate();
-    
+    /* end Test generation*/
+    /*************************************************************/
     
     $(document).ready(function(){
         $("#log-upper-part").resizable({
             handles: "s",
             minHeight: 63,
-            maxHeight: 340,
+            maxHeight: 600,
             alsoResize: "#table-container"
         });
 //        $("#table-container").resizable();

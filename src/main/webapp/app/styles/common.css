@@ -251,7 +251,7 @@ body{
     font-size: 12px;
     background-color: #BEBEBE;
 */
-    background: linear-gradient(to left, #BEBEBE, #969696) no-repeat; /*#A0A0A0 #AAAAAA*/
+    background: linear-gradient(to left, #BEBEBE, #969696) repeat-y; /*#A0A0A0 #AAAAAA*/
     /*background: linear-gradient(to left, #b5bdc8, /*#828c95 36%,*/ #28343b);*/
     
     min-height: 600px;
@@ -598,6 +598,10 @@ td {
 /*    background-color: #DCDCDC;*/
 }
 tr.nmc-tr-odd>td{
+    background-color: #eee;
+}
+
+tr.nmc-tr-striped:nth-of-type(odd)>td{
     background-color: #eee;
 }
 
@@ -2297,4 +2301,23 @@ input[type="checkbox"] {
 /********************************************************************/
 .angular-ui-tree-handle {
     cursor:default !important;
+}
+
+/*******************************************************************/
+/*  Классы для настройки resizable компоненты*/
+/*******************************************************************/
+.ui-resizable-s{
+    height: 14px;
+    background-color: #BEBEBE;
+    border-radius: 14px;
+    margin: 0 0 5px 0;
+    text-align: center;
+/*
+    -webkit-box-shadow: 0 0 0 5px #646263;
+    box-shadow: 0 0 0 5px #646263;
+*/
+    text-align: center;
+}
+.ui-resizable-s:before{
+    content: "----------------------------------";    
 }

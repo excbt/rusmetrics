@@ -390,46 +390,99 @@
 </div>
 
 <!-- main table -->
-<div id="log-upper-part" class="nmc-log-upper" style="border-bottom: 5px solid #eee; resize: vertical; overflow: auto; max-height: 600px;">
+<div id="log-upper-part" class="nmc-log-upper" style="resize: vertical; overflow: auto; max-height: 600px">
     <div class="container-fluid">
         <div id="table-container" class="row">
-            <table class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-                <thead>
-                    <tr class="nmc-main-table-header">
-                        <th ng-repeat="scolumn in ctrlSettings.sessionColumns"
-                            ng-class="scolumn.headerClass">
-                            {{scolumn.caption}}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-<!--                    <tr ng-repeat="ln in [1,2,3,4, 5,6,7,8,9,10]">-->
-                    <tr ng-repeat="session in data.sessions">
-                        <td ng-repeat="scolumn in ctrlSettings.sessionColumns">
-                            <span ng-switch on="scolumn.type">
-                                <div ng-switch-when="color"
-                                      style="width: 12px; height: 12px"
-                                      ng-style="{'background-color': session[scolumn.name]}"
-                                      >
+                <div id="divWithObjectTable" class="" ng-hide="loading">
+                    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                    <thead>
+                        <tr class="">
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th class="col-md-1 nmc-td-for-button">
+                                            </th>
+                                            <th ng-repeat="scolumn in ctrlSettings.sessionColumns"
+                                                ng-class="scolumn.headerClass">
+                                                {{scolumn.caption}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat='session in data.sessions' ng-attr-id={{"ses"+session.id}} class="nmc-tr-striped">
+                        <td>
+                            <table>
+                                <tr>
+                                    <td class="col-xs-1 col-md-1 nmc-td-for-button noPadding">
+                                        <i class="btn btn-xs glyphicon glyphicon-chevron-right"
+                                           ng-click="toggleChildSessionsView(session)"
+                                           ng-class="{'nmc-button-disabled':!session.childs}"
+                                           ng-disabled="!session.childs">
+                                        </i>                                        
+                                    </td>
+                                    <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
+                                        ng-class="scolumn.headerClass">                                        
+                                        <span ng-switch on="scolumn.type">
+                                            <div ng-switch-when="color"
+                                                  style="width: 12px; height: 12px"
+                                                  ng-style="{'background-color': session[scolumn.name]}"
+                                                  >
+                                            </div>
+                                            <span ng-switch-default>
+                                                {{session[scolumn.name]}}
+                                            </span>
+                                        </span>                                        
+                                    </td>
                                     
-                                </div>
-                                <span ng-switch-default>
-                                    {{session[scolumn.name]}}
-                                </span>
-                            </span>
-                            
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                </tr>
+                                <tr ng-repeat="child in session.childs" ng-show="session.isChildView">
+                                    <td></td>
+                                    <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
+                                        ng-class="scolumn.headerClass">
+                                        <span ng-switch="scolumn.name">
+                                            <span ng-switch-when="dataSource" class="paddingLeft20">                                                
+                                            </span>
+                                        </span>
+                                        <span ng-switch on="scolumn.type">
+                                            <div ng-switch-when="color"
+                                                  style="width: 12px; height: 12px"
+                                                  ng-style="{'background-color': child[scolumn.name]}"
+                                                  >
+
+                                            </div>
+                                            <span ng-switch-default>
+                                                {{child[scolumn.name]}}
+                                            </span>
+                                        </span>
+
+                                    </td>
+                                    
+                                </tr>
+                            </table>
+                         </td>        
+                     </tr>            
+                    </tbody>
+                </table>            
+              </div>
         </div>
     </div>
 </div>
-<div id="log-footer-part" class="nmc-log-footer" style="overflow: auto; min-height: 60px; max-height: 600px">
+<!--
+<div id="log-separator" style="background-color: #eee; text-align: center;">
+    -
+</div>
+-->
+<div id="log-footer-part" class="nmc-log-footer" style="overflow: auto; min-height: 300px; max-height: 600px">
     <div class="container-fluid">
         <div class="row">
-            <table class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-                <caption><h4>Сообщения сессии</h4></caption>
+            <table class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
+                <caption class="noPadding"><h4>Сообщения сессии</h4></caption>
                 <thead>
                     <tr class="nmc-main-table-header">
                         <th ng-repeat="lcolumn in ctrlSettings.logColumns"
