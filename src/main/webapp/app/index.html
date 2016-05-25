@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <!--[if IE]>
-        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="/public1/bower_components/html5shiv/dist/html5shiv.js"></script>
     <![endif]-->
     <meta charset="utf-8">
     <title></title>
@@ -42,8 +42,8 @@
       
   </head>
   <body class="nmc-main-window-background" ng-app="portalNMC">
-    <!--[if lt IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <!--[if IE]>
+      <p class="">Вы используете браузер, который не поддерживает работу с порталом Rusmetrics. Установите <a href="https://www.google.com/chrome">Chrome</a> или <a href="https://www.firefox.com">Firefox</a>.
     <![endif]-->
 <!--    temp comment: for debug  -->
 <!--
@@ -72,6 +72,7 @@
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
 -->
+      <!--[if !IE]>-->
 <div id="wrap" class="wrap" ng-controller="MainCtrl">
 <!--    ng-class="{'nmc-hide':mainCtrlSettings.loadingServicePermissionFlag,'nmc-show':!mainCtrlSettings.loadingServicePermissionFlag}">-->
 <!--    Навигационная строка в верху страницы-->
@@ -354,8 +355,8 @@
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="/public/bower_components/es5-shim/es5-shim.js"></script>
+    <script src="/public/bower_components/json3/lib/json3.js"></script>
     <![endif]-->
     <!-- endbuild -->
 
@@ -490,6 +491,6 @@
               <img src="https://mc.yandex.ru/watch/35166690" style="position:absolute; left:-9999px;" alt="" />
           </div>
       </noscript>
-
+<!--<![endif]-->
 </body>
 </html>

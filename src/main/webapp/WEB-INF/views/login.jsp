@@ -13,7 +13,10 @@
 
 </head>
 <body class="excbt_login_body">
-
+<!--[if IE]>
+  <p class="">Вы используете браузер, который не поддерживает работу с порталом Rusmetrics. Установите <a href="https://www.google.com/chrome">Chrome</a> или <a href="https://www.firefox.com">Firefox</a>.  
+<![endif]-->	
+<!--[if !IE]>-->
 	<div id="wrap">
 		<div class="container">
 <!-- 			<div class="row"> -->
@@ -105,5 +108,6 @@
 
 				} ]);
 	</script>
+<!--<![endif]-->
 </body>
 </html>
