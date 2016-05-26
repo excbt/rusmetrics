@@ -238,6 +238,9 @@ public class DeviceObjectService implements SecuredRoles {
 				: deviceObjectRepository.findOne(deviceObject.getId());
 
 		boolean isNew = deviceObject.isNew();
+		if (deviceObject.getDeviceObjectLastInfo() != null) {
+			deviceObject.getDeviceObjectLastInfo().setDeviceObject(deviceObject);
+		}
 
 		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
 		if (deviceObjectDataSource != null) {
