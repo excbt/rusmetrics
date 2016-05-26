@@ -177,7 +177,9 @@
                             <span ng-if="column.fieldName==='dataDateString'&&isSystemuser()">(id = {{indicator['id']}})</span>
                         </td>
                     </tr>
-                    <tr><td></td></tr>
+                    <tr ng-hide="(ctrlSettings.viewMode!='')">
+                        <td ng-attr-colspan="{{tableDef.columns.length}}"></td>
+                    </tr>
 <!--                    Итого -->
                     <tr ng-hide="total.onlyCons&&(ctrlSettings.viewMode!='')" ng-repeat="total in totals">
                         <td ng-repeat="column in tableDef.columns" 
