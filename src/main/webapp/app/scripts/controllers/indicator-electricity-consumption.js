@@ -2,6 +2,10 @@ angular.module('portalNMC')
 .controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $window, $timeout){
 //console.log("Run ConsumptionCtrl.");
     
+    var PRECISION_MASK = "0.00000000000000000000";
+    var WARNING_BG_COLOR = "#FFFFA4"; 
+    var ALARM_BG_COLOR = "#FF7171";
+    
     $scope.data = [];
     $scope.totals = [];
     $scope.indicatorsPerPage = $scope.data.length; //default = 25; // this should match however many results your API puts on one page
@@ -158,12 +162,14 @@ angular.module('portalNMC')
                         mainSvc.checkUndefinedNull(el["" + elecType[type].name + elecKind[kind].name])){ 
                         return "Sum is undefined or null."
                     };
-                    var diff = Math.abs(el["" + elecType[type].name + elecKind[kind].name + "_sum"] - el["" + elecType[type].name + elecKind[kind].name]).toFixed($scope.ctrlSettings.precision);                                        
-                    if (diff > 0.001 && diff <= 1){
-                        el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = "#FFFFA4";
+                    var diff = Math.abs(el["" + elecType[type].name + elecKind[kind].name + "_sum"] - el["" + elecType[type].name + elecKind[kind].name]).toFixed($scope.ctrlSettings.precision);
+                    var lengthFractPart = $scope.ctrlSettings.precision;
+                    var difPrecision = Number(PRECISION_MASK.substring(0, lengthFractPart+1)+"1");                
+                    if (diff > difPrecision && diff <= 1){
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = WARNING_BG_COLOR;
                         el["" + elecType[type].name + elecKind[kind].name + "_style"].cursor = "pointer";
                     }else if (diff > 1){
-                        el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = "#FF7171";
+                        el["" + elecType[type].name + elecKind[kind].name + "_style"].bgcolor = ALARM_BG_COLOR;
                         el["" + elecType[type].name + elecKind[kind].name + "_style"].cursor = "pointer";
                     };
                     var elDom = "#indicators_td_"+el.id+ ""+ elecType[type].name + elecKind[kind].name;
@@ -181,10 +187,13 @@ angular.module('portalNMC')
     var getIndicators = function(table, paramString){
         var url = table+paramString;
         $http.get(url).then(
-            function (response) {
+            function (response) {                
                 var tmp = angular.copy(response.data); 
                 if (mainSvc.checkUndefinedNull(tmp)){ return "Electricity indicators undefined or null."};            
         //console.log(response.data);
+                $timeout(function(){
+                    $scope.setScoreStyles();
+                });
                             //set default active/reactive elec sum = 0
                 initializeElectroSums(tmp);
                     //set precision
@@ -243,7 +252,11 @@ angular.module('portalNMC')
     var getSummary = function(table){
         $scope.totals = [];
         var respData = {};
-        $http.get(table).then(function (response) {                        
+        $http.get(table).then(function (response) {
+            $timeout(function(){
+                $scope.setScoreStyles();
+            });
+            
             respData = angular.copy(response.data);
             var usingProps = [
                 {
@@ -332,18 +345,18 @@ angular.module('portalNMC')
                 var totalFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
                 //29.06.2015 - поступило требование - выводить 3 знака после запятой
                 lengthFractPart = 3;//totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
-                var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
+                var precision = Number(PRECISION_MASK.substring(0, lengthFractPart+1)+"1");
                 var difference = Math.abs((respData.diffsAbs[columnName]-respData.totals[columnName])).toFixed(lengthFractPart);
                 if ((difference >precision)&&(difference <= 1))
                 {
-                   element.diffBgColor = "#FFFFA4";
+                   element.diffBgColor = WARNING_BG_COLOR;
                    element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
                    return;
 
                 };
                 if ((difference >1))
                 {         
-                    element.diffBgColor = "#FF7171";
+                    element.diffBgColor = ALARM_BG_COLOR;
                     element.title = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
                     return;
                 };  
@@ -411,38 +424,38 @@ angular.module('portalNMC')
     }, false);
     
     //listen window resize
-//    var wind = angular.element($window);
-//    var windowResize = function(){
+    var wind = angular.element($window);
+    var windowResize = function(){
 //console.log("windowResize");        
-//        if (angular.isDefined($scope.setScoreStyles)){
-//            $scope.setScoreStyles();
-//        };
-//        $scope.$apply();
-//    };
-//    wind.bind('resize', windowResize); 
-//        
-//    $scope.$on('$destroy', function() {
-//        wind.unbind('resize', windowResize);
-//    });
-//    
-//    $scope.setScoreStyles = function(){
-//        //ровняем таблицу, если появляются полосы прокрутки
-//        var tableHeader = document.getElementById("indicatorConsTableHeader");
-//        var tableDiv = document.getElementById("divIndicatorConsTable");
-//        if (!mainSvc.checkUndefinedNull(tableDiv)){
-//            if (tableDiv.offsetWidth > tableDiv.clientWidth){
-//                tableDiv.style.width = tableHeader.offsetWidth + 17 + 'px';
-//            }else{
-//                tableDiv.style.width = tableHeader.offsetWidth + 'px';                    
-//            };
-//        };
-//    };
+        if (angular.isDefined($scope.setScoreStyles)){
+            $scope.setScoreStyles();
+        };
+        $scope.$apply();
+    };
+    wind.bind('resize', windowResize); 
+        
+    $scope.$on('$destroy', function() {
+        wind.unbind('resize', windowResize);
+    });
+    
+    $scope.setScoreStyles = function(){
+        //ровняем таблицу, если появляются полосы прокрутки
+        var tableHeader = document.getElementById("indicatorConsTableHeader");
+        var tableDiv = document.getElementById("divIndicatorConsTable");
+        if (!mainSvc.checkUndefinedNull(tableDiv)){
+            if (tableDiv.offsetWidth > tableDiv.clientWidth){
+                tableDiv.style.width = tableHeader.offsetWidth + 17 + 'px';
+            }else{
+                tableDiv.style.width = tableHeader.offsetWidth + 'px';                    
+            };
+        };
+    };
 //    $scope.onTableLoad = function(){
 //console.log("OnTableLoad");        
 //        $scope.setScoreStyles();
 //    };
     
-    $(document).ready(function() {
+    $(document).ready(function() {        
         $('#inputElConsDate').datepicker({
           dateFormat: "dd.mm.yy",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
