@@ -64,7 +64,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-		logger.info("UserAuthenticationProvider.authenticate");
+		logger.debug("UserAuthenticationProvider.authenticate");
 
 		String username = authentication.getName();
 		String password = authentication.getCredentials().toString();
@@ -150,7 +150,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	private UsernamePasswordAuthenticationToken buildAuthenticationToken(SubscriberUserDetails subscriberUserDetails,
 			Object password, Collection<? extends GrantedAuthority> grantedAuths) {
 
-		logger.info("Login {}: {} ", subscriberUserDetails.getIsSystem() ? "SystemUser" : "SubscrUser",
+		logger.debug("Login {}: {} ", subscriberUserDetails.getIsSystem() ? "SystemUser" : "SubscrUser",
 				subscriberUserDetails.getUsername());
 
 		grantedAuths.forEach((i) -> {
