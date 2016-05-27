@@ -54,6 +54,7 @@ public class ReportConstants {
 		public static final String HW_DATA_FILE_COMPILED = "jasper_reports/nmk_hw_data_report.prpt";
 		public static final String EL_QUALITY_FILE_COMPILED = "jasper_reports/nmk_el_quality_report.prpt";
 		public static final String ELECTRIC_CONSUMPTION_ABONENT_FILE_COMPILED = "jasper_reports/nmk_electric_consumption_abonent_report.jasper";
+		public static final String HW_LAST_EVENT_FILE_COMPILED = "jasper_reports/nmk_hw_last_event_report.prpt";
 
 		private Files() {
 
