@@ -1,7 +1,13 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('LogViewCtrl', ['$scope', function($scope){
+app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http){
+    
+    $scope.messages = {};
+    
     $scope.ctrlSettings = {};
+    $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
+    $scope.ctrlSettings.showObjectsFlag = true;
+    
     $scope.ctrlSettings.sessionColumns = [
         {
             name: "colorStatus",
@@ -63,6 +69,16 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
     $scope.data.sessions = [];
     $scope.data.sessionLog = [];
     
+    $scope.states = {};
+    
+    $scope.states.isSelectedAllObjects = true;
+    
+    $scope.states.isSelectedAllObjectsInWindow = true;
+    
+    $scope.messages.defaultFilterCaption = "Все";
+    $scope.selectedObjects_list = {};//object for object caption params
+    $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+    
     $scope.toggleChildSessionsView = function(session){
         session.isChildView = !session.isChildView;
     };
@@ -115,12 +131,17 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
 //console.log(ses);            
         };
         $scope.data.sessions = sessions;
+        
+        //set session table height
+        $timeout(function(){
+            $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
+        });        
     };
     
     function generateSessionLog(){
         var WORDS = ["Земля", "портфель", "идет", "лопатать", "потом", "дравина", "успел", "растопша", "трап", "мышь", "лететь"];
         var logs = []; 
-        for (var i = 0; i <= 24; i++){
+        for (var i = 0; i <= 124; i++){
             var log = {};
             var rndNum = Math.random();
             log.date = moment().format("DD-MM-YYYY HH:mm");
@@ -139,19 +160,107 @@ app.controller('LogViewCtrl', ['$scope', function($scope){
             logs.push(log);
         };
         $scope.data.sessionLog = logs;
+        
+                //set log table height
+        $timeout(function(){
+            $("#log-footer-part > .rui-resizable-content").height(Number($cookies.heightLogFooterPart));    
+        });  
     };
     
     generate();
     /* end Test generation*/
     /*************************************************************/
     
-    $(document).ready(function(){
-        $("#log-upper-part").resizable({
-            handles: "s",
-            minHeight: 63,
-            maxHeight: 600,
-            alsoResize: "#table-container"
+    $scope.clearObjectFilter = function(){               
+        $scope.objects.forEach(function(el){
+            el.selected = false;
         });
+        $scope.groups.forEach(function(el){
+            el.selected = false;
+        });
+        $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+        $scope.selectedObjects = [];
+        $scope.selectedGroups = [];
+        $scope.states.isSelectedAllObjects = true;
+    };
+    
+        // Открыть окно выбора объектов
+    $scope.selectObjectsClick = function(){
+        $scope.states.isSelectElement = false;
+        $scope.states.isSelectedAllObjectsInWindow = angular.copy($scope.states.isSelectedAllObjects);
+        if ($scope.ctrlSettings.showObjectsFlag == true){
+            $scope.objectsInWindow = angular.copy($scope.objects);
+        }else{
+            $scope.objectsInWindow = angular.copy($scope.groups);
+        };        
+    };
+    
+            //perform objects from groups
+    function getGroupObjects(group){
+        var selectedObjectUrl = $scope.ctrlSettings.groupUrl+"/"+group.id+"/contObject";
+        $http.get(selectedObjectUrl).then(function(response){
+            group.objects = response.data;
+        });
+    };
+    
+    var successCallbackGetObjects = function(response){        
+        $scope.objects = response.data;
+        objectSvc.sortObjectsByFullName($scope.objects);
+    };
+                 //get Objects
+    $scope.getObjects = function(){
+//        crudGridDataFactory($scope.objectsUrl).query(function(data){
+        if (mainSvc.isRma()){
+            objectSvc.rmaPromise.then(successCallbackGetObjects);
+        }else
+            objectSvc.promise.then(successCallbackGetObjects);
+    };
+    
+    $scope.getObjects();
+    
+    //get groups
+    $scope.getGroups = function () {
+        var url = $scope.ctrlSettings.groupUrl;
+        $http.get(url).then(function (response) {
+            var tmp = response.data;
+            tmp.forEach(function(el){
+                getGroupObjects(el);
+            });
+            $scope.groups = tmp;
+//console.log($scope.groups);
+        }, function(e){
+            console.log(e);
+        });
+    };
+    $scope.getGroups();
+    
+    $scope.$on('$destroy', function() {
+        //save session table height
+        $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
+        $cookies.heightLogFooterPart = $("#log-footer-part > .rui-resizable-content").height();
+    });
+    
+    $(document).ready(function(){      
+        $('#object-toggle-view').bootstrapToggle();
+        $('#object-toggle-view').change(function(){
+            $scope.ctrlSettings.showObjectsFlag = Boolean($(this).prop('checked'));
+            $scope.$apply();                        
+            $scope.selectObjectsClick();
+            //If no change for request - change only filter caption and filter object list
+            if ($scope.selectedObjects_list.caption == $scope.messages.defaultFilterCaption){
+                return "Object / group filter. No changes";
+            };
+            $scope.clearObjectFilter();
+            $scope.$broadcast('notices:selectObjects');
+//            $scope.selectObjects();            
+        });
+//        $("#log-upper-part").resizable({
+//            handles: "s",
+//            minHeight: 63,
+//            maxHeight: 600,
+//            alsoResize: "#divWithSessionsTable"
+//        });
 //        $("#table-container").resizable();
     });
+
 }]);

@@ -390,10 +390,10 @@
 </div>
 
 <!-- main table -->
-<div id="log-upper-part" class="nmc-log-upper" style="resize: vertical; overflow: auto; max-height: 600px">
+<div id="log-upper-part" class="nmc-log-upper" style="resize: vertical; overflow-y: hidden; overflow-x: auto; max-height: 600px">
     <div class="container-fluid">
-        <div id="table-container" class="row">
-                <div id="divWithObjectTable" class="" ng-hide="loading">
+        <div id="table-container" class="row" style="overflow-x: auto; min-width: 1632px">
+                <div id="divWithSessionsTable" class="nmc-session-table-with-fixed-header" ng-hide="loading">
                     <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                     <thead>
                         <tr class="">
@@ -450,10 +450,12 @@
                                             </span>
                                         </span>
                                         <span ng-switch on="scolumn.type">
-                                            <div ng-switch-when="color"
-                                                  style="width: 12px; height: 12px"
-                                                  ng-style="{'background-color': child[scolumn.name]}"
+                                            <div ng-switch-when="color"                                                  
+                                                  class="paddingLeft20"                                                  
                                                   >
+                                                <div style="width: 12px; height: 12px"
+                                                     ng-style="{'background-color': child[scolumn.name]}">
+                                                </div>
 
                                             </div>
                                             <span ng-switch-default>
@@ -478,9 +480,15 @@
     -
 </div>
 -->
-<div id="log-footer-part" class="nmc-log-footer" style="overflow: auto; min-height: 300px; max-height: 600px">
+<div id="log-footer-part" class="nmc-log-footer">
+<!--
     <div class="container-fluid">
         <div class="row">
+            <div class="col-xs-12 col-md-12">
+-->
+    <div class="container-fluid">
+        <div id="log-table-container" class="row">
+            <div id="divWithLogTable" class="nmc-session-table-with-fixed-header" ng-hide="loading">
             <table class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
                 <caption class="noPadding"><h4>Сообщения сессии</h4></caption>
                 <thead>
@@ -499,6 +507,12 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
+<!--
+            </div>
+        </div>
+    </div>
+-->
 </div>
