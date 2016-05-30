@@ -25,6 +25,7 @@ var app = angular
       ,'angularFileUpload'
       ,'leaflet-directive'
       ,'ui.select'
+      ,'angularResizable'
   ]);
 
 //routing config
@@ -235,7 +236,7 @@ console.log("Run routeProviderConfig");
       })
       
       .when('/log', {
-        templateUrl: 'views/log-view.html',
+        templateUrl: 'views/log-view-resizable.html',
         controller: 'LogViewCtrl'
       })
       .otherwise({

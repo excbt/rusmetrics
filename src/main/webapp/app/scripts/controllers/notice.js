@@ -22,7 +22,7 @@ app.filter('filterByCategories', function(){
     };
 });
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter, $timeout){
+app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$cookies', '$location', 'crudGridDataFactory', 'objectSvc', 'notificationFactory', 'mainSvc', '$filter', '$timeout', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter, $timeout){
 //console.log("Load NoticeCtrl.");
     
     $rootScope.ctxId = "notice_page";
@@ -1021,9 +1021,9 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     //mark the notices on the current page as revision
     $scope.revisionNoticesOnPage = function(){
-        $scope.notice.forEach(function(el){
-            el.selected;
-        });
+//        $scope.notice.forEach(function(el){
+//            el.selected;
+//        });
         $scope.revisionNotices(false);
     };
     
@@ -1220,4 +1220,4 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     function labelFormatter(label, series) {
 		return "<div style='font-size:8pt; text-align:center; padding:2px; color:black;'>" + label + " (" + Math.round(series.percent) + "%)</div>";
 	}
-});
+}]);

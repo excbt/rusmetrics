@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('portalNMC')
-.controller('ObjectsCtrl', function($scope, $rootScope, $cookies, $http, mainSvc){
-console.log("Objects ctrl.");
+.controller('ObjectsCtrl', ['$scope', '$rootScope', '$cookies', '$http', 'mainSvc', function($scope, $rootScope, $cookies, $http, mainSvc){
+//console.log("Objects ctrl.");
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.pageAccess = false;
@@ -13,4 +13,4 @@ console.log("Objects ctrl.");
     $scope.ctrlSettings.pageAccess = mainSvc.checkContext($scope.ctrlSettings.pageCtxId) || mainSvc.isCabinet();
     
     
-});
+}]);
