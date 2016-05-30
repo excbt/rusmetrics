@@ -291,7 +291,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * 
 	 * @param action
 	 */
-	public final void processLdapAction(SubscrUser subscrUser, LdapAction action) {
+	public void processLdapAction(SubscrUser subscrUser, LdapAction action) {
 		LdapUserAccount user = ldapAccountFactory(subscrUser, subscrUser.getSubscriberId());
 		try {
 			action.doAction(user);
