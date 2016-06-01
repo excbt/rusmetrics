@@ -1,7 +1,24 @@
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsProgramCtrl', function($rootScope, $scope, $http, notificationFactory, mainSvc){
+.controller('SettingsProgramCtrl', function($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout){
 //console.log("Run SettingsNoticeCtrl");
+//    Test data *************************************
+    $scope.testData = {};
+    $scope.testData.smsSetting = {
+        isActive: true,
+        subscrPrefCategory: "SUBSCR_SMS_PREF",
+        subscrPref: {
+            caption: "URL сервиса для отправки СМС",
+            isActiveCaption: "Использовать рассылку СМС",
+            placeholder: "https://service/send.php?login=<Логин>&psw=<Пароль>&phones=##PHONE##&mes=##MSG##",
+            keyname: "SMS_PREF",
+            prefName: "SMS_PREF"            
+        },
+        dayCountValue: 20,
+        hourCountValue: 10
+    };
+//    end Test data ***************************************
+    
     $rootScope.ctxId = "program_tree_settings_page";
     
     $scope.ctrlSettings = {};
@@ -40,6 +57,13 @@ angular.module('portalNMC')
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
+    function prepareSettingsView(){
+        $timeout(function(){
+            $("#inputHourCountValue").inputmask();
+            $("#inputDayCountValue").inputmask();
+        });
+    }
+    
     var performSettingsData = function(data){
         if (angular.isArray(data)){
             data.forEach(function(setting){               
@@ -47,9 +71,13 @@ angular.module('portalNMC')
                     setting.value = Number(setting.value);
                 };
             });
-        };            
+            data.push($scope.testData.smsSetting);
+        };        
         $scope.data.originalSettings = angular.copy(data);
-        $scope.data.modifySettings = angular.copy(data);                        
+        $scope.data.modifySettings = angular.copy(data);
+        
+        prepareSettingsView();
+        
     };
     
     //get all settings
@@ -58,7 +86,9 @@ angular.module('portalNMC')
         .success(function(data){
             if (angular.isArray(data)){
                 data.forEach(function(setting){
-                    getTreesForSetting(setting.subscrPrefKeyname);
+                    if (setting.subscrPrefCategory == "SUBSCR_OBJECT_TREE"){
+                        getTreesForSetting(setting.subscrPrefKeyname);
+                    }
                 });
             };
             performSettingsData(data);
@@ -79,7 +109,95 @@ angular.module('portalNMC')
         .error(errorCallback);
     };
     
+    function checkSMSUrlAndViewMessage(urlStr){        
+        var result = true; //(urlStr.indexOf("##PHONE##") > -1) && (urlStr.indexOf("##MSG##") > -1);
+        if (mainSvc.checkUndefinedNull(urlStr) || urlStr == ""){
+            notificationFactory.errorInfo("Внимание", "Поле \"URL сервиса для отправки СМС\" незаполнено!");
+            return false;
+        };
+        if (urlStr.indexOf("##PHONE##") <= -1){
+            notificationFactory.errorInfo("Внимание", "В url адресе сервиса отсутствует '##PHONE##' - указатель на место подстановки телефонного номера.");
+            result = false;
+        };
+        if (urlStr.indexOf("##MSG##") <= -1){            
+            notificationFactory.errorInfo("Внимание", "В url адресе сервиса отсутствует '##MSG##' - указатель на место подстановки текста сообщения.");            
+            result = false;
+        };        
+        return result;
+    }
+    
+    $scope.checkSMSUrl = function(urlStr){        
+        var result = true; //(urlStr.indexOf("##PHONE##") > -1) && (urlStr.indexOf("##MSG##") > -1);
+        if (mainSvc.checkUndefinedNull(urlStr) || urlStr == ""){
+            return false;
+        };
+        if (urlStr.indexOf("##PHONE##") <= -1){            
+            result = false;
+        };
+        if (urlStr.indexOf("##MSG##") <= -1){                      
+            result = false;
+        };        
+        return result;
+    }
+    
+    $scope.checkAttemptionCount = function(value){
+        var result = true;
+        if (!mainSvc.isNumeric(value) || value <= 0 || value > 100){
+            result = false;
+        }
+        return result;
+    }
+    
+    function checkAttemptionCountAndViewMessage(value){
+        var result = true;
+        if (!mainSvc.isNumeric(value)){
+            notificationFactory.errorInfo("Ошибка", "Для количества повторов введено не числовое значение.");
+            result = false;
+        };
+        if (value <= 0){
+            notificationFactory.errorInfo("Ошибка. Некорректно задано количество повторов", "Введенное значение меньше или равно нулю, а должно быть в интервале от 1 до 100");
+            result = false;
+        };
+        if (value > 100){
+            notificationFactory.errorInfo("Ошибка. Некорректно задано количество повторов", "Введенное значение больше 100, а должно быть в интервале от 1 до 100");
+            result = false;
+        }
+        return result;
+    }
+    
+    function checkAttemptionCountsAndViewMessage(smsSetting){
+        var result = true;
+        result = checkAttemptionCountAndViewMessage(smsSetting.dayCountValue) & checkAttemptionCountAndViewMessage(smsSetting.hourCountValue);
+    }
+    
+    function findSmsSetting(){
+        var result = null;
+        $scope.data.modifySettings.some(function(setting){
+            if (setting.subscrPrefCategory == "SUBSCR_SMS_PREF"){
+                result = setting;
+                return true;
+            }                
+        });
+        return result;
+    }
+    
+    function checkSettings(){
+        var result = true;
+        var smsSetting = findSmsSetting();
+        if (mainSvc.checkUndefinedNull(smsSetting) || !smsSetting.isActive){
+            return result;
+        };
+        return checkSMSUrlAndViewMessage(smsSetting.value) & checkAttemptionCountsAndViewMessage(smsSetting);
+    }
+    
     $scope.saveSettings = function(){
+        //check settings
+        var checkFlag = checkSettings();
+        if (checkFlag == false){
+            return false;
+        };
+        $scope.data.modifySettings.pop();//remove test SMS setting
+        
         $scope.ctrlSettings.isSaving = true;
         $http.put($scope.ctrlSettings.settingsUrl, $scope.data.modifySettings)
         .success(function(data){
@@ -92,6 +210,7 @@ angular.module('portalNMC')
     
     $scope.cancelSettings = function(){
         $scope.data.modifySettings = angular.copy($scope.data.originalSettings);
+        prepareSettingsView();
     };
     
     $scope.setOrderBy = function(column){
@@ -115,4 +234,5 @@ angular.module('portalNMC')
         getProgramSettings();
     };    
     initCtrl();
+
 });

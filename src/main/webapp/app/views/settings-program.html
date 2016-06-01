@@ -25,31 +25,99 @@
         <div class="container-fluid">
             <div class="row" ng-repeat="setting in data.modifySettings">
                 <div class="container-fluid">
-                <div class="row nmc-table-program-settings">
-                    <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
-                        <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"/>
-                    </div>
-                    <div class="col-xs-2 col-md-2 noPadding marginTop3">
-                        {{setting.subscrPref.isActiveCaption}}
-                    </div>
+                <div ng-switch on="setting.subscrPrefCategory">
+                    <div ng-switch-when="SUBSCR_OBJECT_TREE">
+                        <div class="row nmc-table-program-settings">                        
+                            <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
+                                <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"/>
+                            </div>
+                            <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                {{setting.subscrPref.isActiveCaption}}
+                            </div>
 
-                </div>
-                <div class="row nmc-table-program-settings"
-                     ng-class="{'nmc-disabled': !setting.isActive}">
-                    <div class="col-xs-2 col-md-2 noPadding marginTop3">
-                        <span class="">{{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
+                        </div>
+                        <div class="row nmc-table-program-settings"
+                             ng-class="{'nmc-disabled': !setting.isActive}">
+                            <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                <span class="">{{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
+                            </div>
+                            <div class="col-xs-2 col-md-2 " >
+                                <select class="form-control nmc-select-form" 
+                                        ng-model="setting.value" 
+                                        ng-options="item.id as item.objectName for item in data.items[setting.subscrPrefKeyname]"
+                                        ng-disabled="!setting.isActive || isDisabled()"
+                                        >
+                                </select>
+                            </div>
+                            <div class="col-xs-4 col-md-4">                    
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-2 col-md-2 " >
-                        <select class="form-control nmc-select-form" 
-                                ng-model="setting.value" 
-                                ng-options="item.id as item.objectName for item in data.items[setting.subscrPrefKeyname]"
-                                ng-disabled="!setting.isActive || isDisabled()"
-                                >
-                        </select>
+                    <div ng-switch-when="SUBSCR_SMS_PREF">
+                        <div class="row nmc-table-program-settings">                        
+                            <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
+                                <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"/>
+                            </div>
+                            <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                {{setting.subscrPref.isActiveCaption}}
+                            </div>
+
+                        </div>
+                        <div class="row nmc-table-program-settings"
+                             ng-class="{'nmc-disabled': !setting.isActive}">
+                            <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                <span class="">{{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
+                            </div>
+                            <div class="col-xs-5 col-md-5 " >
+                                <div class="form-group noMarginBottom" 
+                                     ng-class="{'has-error': !checkSMSUrl(setting.value)}">
+                                    <input type="text" 
+                                           class="form-control nmc-text-input-form" 
+                                           ng-model="setting.value" 
+                                           ng-disabled="!setting.isActive || isDisabled()"
+                                           ng-attr-placeholder={{setting.subscrPref.placeholder}}
+                                           ng-attr-title={{setting.subscrPref.placeholder}}
+                                           />
+                                </div>
+                            </div>
+                            <div class="col-xs-1 col-md-1">                    
+                            </div>
+                        </div>
+                        <div class="row nmc-table-program-settings"
+                             ng-class="{'nmc-disabled': !setting.isActive}">
+                            <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                <span class="">Количество повторов в день</span>
+                            </div>
+                            <div class="col-xs-1 col-md-1 " >
+                                <div class="form-group noMarginBottom" 
+                                     ng-class="{'has-error': !checkAttemptionCount(setting.dayCountValue)}">
+                                    <input id="inputDayCountValue"
+                                           type="text" 
+                                           class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                           ng-model="setting.dayCountValue" 
+                                           ng-disabled="!setting.isActive || isDisabled()"
+                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                           />
+                                </div>
+                            </div>
+                            <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                <span class="pull-right">Количество повторов в час</span>
+                            </div>
+                            <div class="col-xs-2 col-md-2 " >
+                                <div class="form-group noMarginBottom" 
+                                     ng-class="{'has-error': !checkAttemptionCount(setting.hourCountValue)}">
+                                    <input id="inputHourCountValue"
+                                           type="text" 
+                                           class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                           ng-model="setting.hourCountValue" 
+                                           ng-disabled="!setting.isActive || isDisabled()"
+                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                           />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-xs-4 col-md-4">                    
-                    </div>
-                </div>
+                </div>    
                 </div>
             </div>
         </div>

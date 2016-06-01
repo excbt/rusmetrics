@@ -1143,6 +1143,10 @@ tr.nmc-inactive-price > td{
     padding: 5px;
     resize: none;
 }
+
+.nmc-textarea-form[readonly] {
+    cursor: default;
+}
  
 /* радиобатон */
 .nmc-radio-form {
@@ -2140,6 +2144,10 @@ tr.nmc-inactive-price > td{
     padding-right: 20px;
 }
 
+.paddingLeftRight5I{
+    padding: 5px 0 !important;
+}
+
 .paddingLeftRight15{
     padding-left: 15px;
     padding-right: 15px;
@@ -2200,7 +2208,7 @@ tr.nmc-inactive-price > td{
 }
 
 /*  Стиль изменяет курсор при наведении на уведомление мыши - используется на стр. Уведомления*/
-.nmc-link-notice-detail{
+.nmc-link-notice-detail, .nmc-link{
     cursor: pointer;
 }
 

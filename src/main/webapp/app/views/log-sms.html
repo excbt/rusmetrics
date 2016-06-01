@@ -1,0 +1,147 @@
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="session_log_2nd_menu_item" role="presentation" class=""><a id="sessionLogTab" class="nmc-main-tab-button" href="#/log/session-log/" aria-controls="session-log" data-target="#session-log" role="tab" data-toggle="tab">Журнал загрузки данных</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        
+        <li id="sms_log_2nd_menu_item" role="presentation" class="active"><a id="smsLogTab" class="nmc-main-tab-button" href="" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Журнал отправки СМС уведомлений</a>           </li>
+        
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="session_log">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid noPadding">
+<div class="row noPadding marginBottom10 nmc-filter-row">    
+    <div class="col-xs-2 col-md-2">
+        
+        <div class="input-group">
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon"
+                  ng-disabled="isDisabledFilters()">период: с</span>
+            <input date-range-picker 
+                   class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                   type="text" 
+                   ng-model="data.logDaterange" 
+                   options="ctrlSettings.daterangeOpts" 
+                   aria-describedby="leftAddon"
+                   ng-disabled="isDisabledFilters()"
+                   />
+        </div>    
+    </div>
+    <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+        <button title="Обновить" 
+                class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
+                ng-click=""
+                ng-disabled="isDisabledFilters()">
+        </button>
+    </div>
+
+    <div class="col-xs-5 col-md-4 noPadding nmc-div-page-legend">    
+
+        <div class="col-xs-5 col-md-5 noPadding">
+            <label class="nmc-form-label">Всего:</label>
+             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="data.log.length">
+        </div>
+    </div>
+<!--</div> -->
+</div>
+   
+</div>
+
+<!-- main table -->
+<div id="div-log-sms" class="" style="">
+        <!--    Непрокручиваямая шапка -->
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+            <tr class="nmc-main-table-header">
+                <th ng-repeat="column in ctrlSettings.logColumnsForTable" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
+                    <div>
+                        {{column.caption || column.name}}
+                        <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                    </div>
+                </th>
+            </tr>
+    </table>
+
+    <div class="nmc-tariff-main-div">
+        <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
+            <tr class="nmc-main-table-header nmc-hide">
+                <th ng-repeat="column in ctrlSettings.logColumnsForTable" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
+                    <div>
+                        {{column.caption || column.name}}
+                        <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                    </div>
+                </th>
+            </tr>
+
+            <tr ng-repeat="log in data.log" class="nmc-link">
+                <td ng-repeat="column in ctrlSettings.logColumnsForTable" ng-class="column.dataClass"
+                    ng-click="viewDetail(log, column)">
+                    {{log[column.name]}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<!-- Карточка уведомления-->
+<div id="showLogModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showLogLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showLogLabel" class="nmc-h3">
+                Уведомление <span ng-if="isSystemuser()"> {{currentLog.id}}</span>
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr ng-repeat="column in ctrlSettings.logColumns">
+                                <td class="col-sm-3"><label class="nmc-form-label">{{column.caption}}</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <span ng-switch on="column.type">
+                                        <span ng-switch-when="textarea">
+                                            <textarea class="form-control nmc-textarea-form"                                               
+                                                      cols="71" 
+                                                      ng-model="data.currentLog[column.name]"
+                                                      readonly>
+                                            </textarea>
+                                        </span>                                        
+                                        <span ng-switch-default>
+                                            {{data.currentLog[column.name]}}
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>                            
+                        </table>
+                    </div>
+                    </div> 
+                </div> 
+
+            </div>     
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+
+
+						<div class="col-xs-offset-2 col-md-3 pull-right noPadding">
+							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
+								ng-click="exit('#currentObject');">
+								Ок
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+
+	</div>
+</div>

@@ -85,6 +85,9 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     /*******************************************/
     /* Test generation*/
+    
+    var SESSION_ROW_COUNT = 21;
+    var LOG_ROW_COUNT = 125;
     function generate(){
         generateSessions();
         generateSessionLog();
@@ -92,7 +95,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     function generateSessions(){
         var sessions = [];
-        for (var i = 0; i <= 20; i++){
+        for (var i = 0; i < SESSION_ROW_COUNT; i++){
             var ses = {};
             //color status
             var statusColor = Math.random();
@@ -123,7 +126,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
                 for (var j = 0; j <= Math.round(statusColor * 10); j++){
                     var child = angular.copy(ses);
                     child.type = "OP";
-                    child.dataSource = "Прибор " + rndIntNumber +"-"+ j;
+                    child.dataSource = "Прибор " + rndIntNumber + "-" + j;
                     ses.childs.push(child);
                 };
             };  
@@ -141,7 +144,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     function generateSessionLog(){
         var WORDS = ["Земля", "портфель", "идет", "лопатать", "потом", "дравина", "успел", "растопша", "трап", "мышь", "лететь"];
         var logs = []; 
-        for (var i = 0; i <= 124; i++){
+        for (var i = 0; i < LOG_ROW_COUNT; i++){
             var log = {};
             var rndNum = Math.random();
             log.date = moment().format("DD-MM-YYYY HH:mm");
@@ -153,8 +156,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
                 log.type = "Инфо";
             };
             var msg = "";
-            for (var j = 0; j<= 20; j++){
-                msg += WORDS[Math.round(Math.random()*WORDS.length)]+" ";
+            for (var j = 0; j <= 20; j++){
+                msg += WORDS[Math.round(Math.random() * WORDS.length)] + " ";
             };
             log.text = msg;
             logs.push(log);
@@ -197,7 +200,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
             //perform objects from groups
     function getGroupObjects(group){
-        var selectedObjectUrl = $scope.ctrlSettings.groupUrl+"/"+group.id+"/contObject";
+        var selectedObjectUrl = $scope.ctrlSettings.groupUrl + "/" + group.id + "/contObject";
         $http.get(selectedObjectUrl).then(function(response){
             group.objects = response.data;
         });
@@ -207,6 +210,9 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $scope.objects = response.data;
         objectSvc.sortObjectsByFullName($scope.objects);
     };
+    
+    // ************* Object filter *****************************************
+    
                  //get Objects
     $scope.getObjects = function(){
 //        crudGridDataFactory($scope.objectsUrl).query(function(data){
@@ -234,6 +240,121 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     };
     $scope.getGroups();
     
+    function performObjectsFilter(){
+        $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+        $scope.selectedObjects = [];
+//        $('#selectObjectsModal').modal('hide');
+        $scope.objects = angular.copy($scope.objectsInWindow);
+
+        $scope.objects.map(function(el){
+          if(el.selected){
+//              $scope.selectedObjects_list+=el.fullName+"; ";
+              $scope.selectedObjects.push(el.id);
+          }
+        });
+        if ($scope.selectedObjects.length == 0){
+            $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllObjects = true;
+        }else{
+            $scope.selectedObjects_list.caption = $scope.selectedObjects.length;
+            $scope.states.isSelectedAllObjects = false;
+        };
+    };
+    
+    $scope.joinObjectsFromSelectedGroups = function(groups){
+        var result = [];
+        groups.forEach(function(group){
+                if(group.selected){
+                    Array.prototype.push.apply(result, group.objects);
+//                    totalGroupObjects = group.objects;
+                };
+        });                 
+        return result;
+    };
+    
+    $scope.deleteDoublesObjects = function(targetArray){
+        var arrLength = targetArray.length;
+        while (arrLength>=2){
+            arrLength--;                                               
+            if (targetArray[arrLength].fullName===targetArray[arrLength-1].fullName){                   
+                targetArray.splice(arrLength, 1);
+            };
+        }; 
+    };
+    
+    $scope.addUniqueObjectsFromGroupsToSelectedObjects = function(arrFrom, arrTo){
+        for (var j=0; j < arrFrom.length; j++){
+            var uniqueFlag = true;
+            for (var i = 0; i<arrTo.length; i++){
+                if(arrFrom[j].fullName===arrTo[i].fullName){
+                    uniqueFlag = false;
+                    break;
+                };
+            };
+            if (uniqueFlag){
+                arrTo.push(arrFrom[j]);
+            };
+        }; 
+        
+    };
+    
+    function performGroupsFilter(){
+        $scope.selectedObjects_list.caption = "";
+        $scope.selectedGroups = [];
+        $scope.selectedObjects = [];
+//        $('#selectObjectsModal').modal('hide');
+        $scope.groups = angular.copy($scope.objectsInWindow);
+        
+        var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.groups);   
+//console.log(totalGroupObjects);            
+        objectSvc.sortObjectsByFullName(totalGroupObjects);
+        //del doubles
+        $scope.deleteDoublesObjects(totalGroupObjects);
+        //add groupObjects to selected objects
+            //add only unique objects
+        $scope.addUniqueObjectsFromGroupsToSelectedObjects(totalGroupObjects, $scope.selectedObjects);
+        var tmp = $scope.selectedObjects.map(function(el){
+            return el.id;
+        });
+        $scope.selectedObjects = tmp;
+//console.log($scope.selectedObjects);        
+        $scope.groups.map(function(el){
+          if(el.selected){
+//              $scope.selectedObjects_list+=el.fullName+"; ";
+              $scope.selectedGroups.push(el.id);
+          };
+        });
+        if ($scope.selectedGroups.length == 0){
+            $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllObjects = true;
+        }else{
+            $scope.selectedObjects_list.caption = $scope.selectedGroups.length;
+            $scope.states.isSelectedAllObjects = false;
+        };
+    };
+    
+    var closeFilter = function(){
+                //close filter list
+        var btnGroup = document.getElementsByClassName("btn-group open");   
+        if (!mainSvc.checkUndefinedNull(btnGroup) && (btnGroup.length != 0)){            
+            btnGroup[0].classList.remove("open");
+        };
+        $scope.states.isSelectElement = false;
+    };
+      
+    $scope.selectObjects = function(){  
+        closeFilter();        
+        if ($scope.ctrlSettings.showObjectsFlag == true){
+             performObjectsFilter();
+    //        $scope.states.applyObjects_flag = true;
+        }else{
+            performGroupsFilter();
+        };
+                    //Объекты были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
+        //$scope.getData();
+
+    };
+    
     $scope.$on('$destroy', function() {
         //save session table height
         $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
@@ -251,16 +372,38 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
                 return "Object / group filter. No changes";
             };
             $scope.clearObjectFilter();
-            $scope.$broadcast('notices:selectObjects');
-//            $scope.selectObjects();            
+            $scope.$broadcast('notices:selectObjects');          
         });
-//        $("#log-upper-part").resizable({
-//            handles: "s",
-//            minHeight: 63,
-//            maxHeight: 600,
-//            alsoResize: "#divWithSessionsTable"
-//        });
-//        $("#table-container").resizable();
     });
+    
+    $scope.selectAllElements = function(elements){ 
+        $scope.states.isSelectElement = true;
+        elements.forEach(function(elem){
+            elem.selected = false;
+        });
+    };
+    
+    
+    $scope.selectElement = function(flagName){
+        $scope.states.isSelectElement = true;
+        $scope.states[flagName] = false;        
+        return false;
+    };
+    
+    $scope.isFilterApplyDisabled = function(checkElements, checkFlag){
+        if (mainSvc.checkUndefinedNull(checkElements) || !angular.isArray(checkElements)){
+            return false;
+        }
+        if (checkFlag == true){
+            return false;
+        };
+        return !checkElements.some(function(elem){
+            if (elem.selected == true){
+                return true;
+            };
+        });
+    };
+    
+    // **** end of Object filter
 
 }]);

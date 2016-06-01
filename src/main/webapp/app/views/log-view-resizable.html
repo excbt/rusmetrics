@@ -1,0 +1,637 @@
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="session_log_2nd_menu_item" role="presentation" class="active"><a id="sessionLogTab" class="nmc-main-tab-button" href="" aria-controls="session-log" data-target="#session-log" role="tab" data-toggle="tab">Журнал загрузки данных</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        
+        <li id="sms_log_2nd_menu_item" role="presentation" class=""><a id="smsLogTab" class="nmc-main-tab-button" href="#/log/sms-log/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Журнал отправки СМС уведомлений</a>           </li>
+        
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="session_log">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid noPadding">
+<div class="row noPadding marginBottom10 nmc-filter-row">    
+    <div class="col-xs-1 col-md-1 nmc-td-for-button">
+        <button class="btn btn-default btn-xs glyphicon glyphicon-eject nmc-button-refresh"
+                ng-class="{'gly-rotate-180':!isFiltersEx}"
+           data-target="#filtersCollapse"
+           data-toggle="collapse"
+                aria-expanded="false"
+                aria-controls="filtersCollapse"
+                ng-click="isFiltersEx=!isFiltersEx"
+                title="Фильтры">            
+        </button>
+    </div>
+    <div class="col-xs-2 col-md-2" ng-controller="DataRangeSettings" >   
+        <div class="input-group">
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon"
+                  ng-disabled="isDisabledFilters()">период: с</span>
+            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" aria-describedby="leftAddon"
+                   ng-disabled="isDisabledFilters()"/>
+        </div>    
+    </div>
+    <div class="col-xs-1 col-md-1 noPadding nmc-div-filter-kind">
+            <div class="btn-group" 
+                 ng-init="visibleText='Все сессии'">
+              <button type="button" 
+                      class="btn btn-default btn-xs dropdown-toggle nmc-button-notice-toggle" 
+                      data-toggle="dropdown" 
+                      aria-haspopup="true" 
+                      aria-expanded="false"
+                      ng-disabled="isDisabledFilters()">
+                {{visibleText}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="" ng-click="visibleText='Все сессии';getAllNotices()">Все сессии</a></li>
+                <li><a href="" ng-click="visibleText='Только новые';getOnlyNewNotices()">Только новые</a></li>
+              </ul>
+            </div>
+    </div>
+    <div class="col-xs-1 col-md-1 noPadding nmc-div-filter-remove">
+           <button title="Сбросить все фильтры" 
+                   class="btn btn-xs btn-primary nmc-button-notice-toggle" 
+                   ng-click="clearAllFilters()"
+                   ng-disabled="isDisabledFilters()">Сброс фильтров</button>
+    </div>
+    <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+        <button title="Обновить" 
+                class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
+                ng-click="getResultsPage(1)"
+                ng-disabled="isDisabledFilters()">
+        </button>
+    </div>
+
+    <div class="col-xs-5 col-md-4 noPadding nmc-div-page-legend">    
+ 
+         <div class="col-xs-7 col-md-7 noPadding">
+            <label class="nmc-form-label">Записей на странице:</label>
+    <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
+            <select class="form-control nmc-select-form nmc-view-allcount" ng-model="noticesPerPage"    
+                    ng-disabled="isDisabledFilters()">
+                        <option>15</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option>75</option>
+                        <option>100</option>
+    <!--            <option>100</option>-->
+            </select>
+        </div>
+        <div class="col-xs-5 col-md-5 noPadding">
+            <label class="nmc-form-label">Всего:</label>
+             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="totalNotices">
+        </div>
+    </div>
+<!--</div> -->
+</div>
+<div class="collapse" id="filtersCollapse">
+  <div class="row marginBottom5">
+                  <div class="col-xs-2 col-md-2" >
+        <!--        <label class="nmc-form-label">объекты:</label>-->
+                <div class="input-group nmc-input-data">
+                    <div style="display: table-cell;">
+                        <input id="object-toggle-view" 
+                               ng-model="ctrlSettings.showObjectsFlag" 
+                               data-toggle="toggle"
+                               data-on="Объекты" 
+                               data-off="Группы" 
+                               data-size="mini"
+                               data-width="100"
+                               data-height="26"
+                               type="checkbox" 
+                               class="" 
+                               style=""
+                               checked
+                               ng-disabled="isDisabledFilters()"
+                               />
+                    </div>
+                    <div class="btn-group">
+                        <button ng-disabled="isDisabledFilters()"
+                                data-toggle="dropdown" 
+                                class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
+                                ng-click="selectObjectsClick()"
+                                data-placeholder="false"
+                                ng-class="{'paddingLeft20': selectedObjects_list.caption != messages.defaultFilterCaption}"> 
+                            {{selectedObjects_list.caption}}
+                            <i ng-if="selectedObjects_list.caption != messages.defaultFilterCaption" 
+                               class="">                                
+                                <strong>...</strong>
+                            </i>
+                        </button>
+                        <ul class="dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5 marginBottom5">
+                                <div class="container-fluid noPadding">
+                                <div class="row">
+                                    <div class="col-xs-8 col-md-8">
+                                        <div class="input-group nmc-input-group-filter">
+                                          <span class="input-group-addon nmc-search-form-addon" 
+                                                id="objectFilter-addon">
+                                              <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                              </i>
+                                          </span>
+                                          <input class="form-control nmc-text-input-notice-filter-form" 
+                                                 type="text"
+                                                 aria-describedly="objectFilter-addon"
+                                                 ng-model="objectFilter"
+                                             />
+                                        </div>                              
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                    <div class="col-xs-2 col-md-2">
+                                        <p title="Применить фильтр" 
+                                                type="submit" 
+                                                class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
+                                                ng-click="selectObjects();"
+                                                value="Ок" 
+                                                style=""
+                                                ng-disabled="isFilterApplyDisabled(objectsInWindow, states.isSelectedAllObjectsInWindow)"
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(objectsInWindow, states.isSelectedAllObjectsInWindow)}"
+                                           >
+                                            OK
+                                            <i class="glyphicon glyphicon-filter">
+                                            </i>
+                                        </p>
+                                    </div>
+                                </div>
+                                </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="paddingLeft5 nmc-li-select-all"                                   
+                                 >
+                                <input type="checkbox" 
+                                      ng-attr-id={{"idObjectsAll"}} 
+                                      ng-attr-name={{"idObjectsAll"}} 
+                                      ng-attr-value={{"allObjects"}} 
+                                      ng-model="states.isSelectedAllObjectsInWindow"
+                                      class="nmc-checkbox-dropdown"
+                                      ng-click="selectAllElements(objectsInWindow)" 
+                                      />
+                               <label ng-attr-for={{"idObjectsAll"}}
+                                      class="nmc-label-dropdown"                                      
+                                      >
+                                  Выбрать все
+                               </label>
+                            </li>
+                            <li role="separator" class="divider"></li> 
+                        </ul>
+                        <ul class=" dropdown-menu nmc-filter-list-items nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5" ng-repeat="object in objectsInWindow | filter: objectFilter">
+                                <input type="checkbox" 
+                                       ng-attr-id={{"idObj"+object.id}} 
+                                       ng-attr-name={{"idObj"+object.name}} 
+                                       ng-attr-value={{object.name}} 
+                                       ng-model="object.selected"
+                                       class="nmc-checkbox-dropdown"
+                                       ng-click="selectElement('isSelectedAllObjectsInWindow')"
+                                       />
+                               <label ng-attr-for={{"idObj"+object.id}}
+                                      class="nmc-label-dropdown"                                      
+                                      >
+                                  {{object.contGroupName || object.fullName || object.name}}
+                               </label>
+                            </li>                            
+                        </ul>
+                    </div>
+                    <span class="input-group-addon nmc-input-form-suffix" 
+                          id="rightAddon">
+                        <i title="Очистить фильтр" 
+                           class="btn btn-xs nmc-button-clear-filter" 
+                           ng-click="clearObjectFilter();getResultsPage(1)"
+                           ng-disabled="selectedObjects_list.caption == messages.defaultFilterCaption">
+                            <img height="19" width="19" 
+                                 src="images/clear-filter.png"
+                                 class="nmc-img-clear-filter"/>
+                        </i>
+                    </span>    
+                </div>
+            </div>
+            <div class="col-xs-2 col-md-2" >
+        <!--        <label class="nmc-form-label">Категории:</label>-->
+                <div class="input-group nmc-input-data">
+                    <span class="input-group-addon nmc-filter-form-addon" 
+                          id="leftAddon" 
+                          >Источники:
+                    </span>
+                    <div class="btn-group">
+                        <button ng-disabled="isDisabledFilters()" 
+                                data-toggle="dropdown" 
+                                class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
+                                ng-click="selectNoticeCategoriesClick()"
+                                data-placeholder="false"
+                                ng-class="{'paddingLeft20': selectedNoticeCategories_list.caption != messages.defaultFilterCaption}"> 
+                            {{selectedNoticeCategories_list.caption}}
+                            <i ng-if="selectedNoticeCategories_list.caption != messages.defaultFilterCaption" 
+                               class=""><strong>...</strong></i>
+                        </button>
+                        <ul class="dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5 marginBottom5">
+                                <div class="container-fluid noPadding">
+                                <div class="row">
+                                    <div class="col-xs-8 col-md-8">
+                                      <div class="input-group nmc-input-group-filter">
+                                          <span class="input-group-addon nmc-search-form-addon" 
+                                                id="categoryFilter-addon">
+                                              <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                              </i>
+                                          </span>
+                                          <input class="form-control nmc-text-input-notice-filter-form" 
+                                                 type="text" 
+                                                 ng-model="categoryFilter"
+                                                 aria-describedly="categoryFilter-addon"
+                                                 />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                    <div class="col-xs-2 col-md-2">
+                                        <p title="Применить фильтр" 
+                                                type="submit" 
+                                                class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
+                                                ng-click="selectNoticeCategories()"
+                                                value="Ок" 
+                                                style=""
+                                                ng-disabled="isFilterApplyDisabled(categoriesInWindow, states.isSelectedAllCategoriesInWindow)"
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(categoriesInWindow, states.isSelectedAllCategoriesInWindow)}">
+                                            OK
+                                            <i class="glyphicon glyphicon-filter">
+                                            </i>
+                                        </p>
+                                    </div>
+                                </div>
+                                </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="paddingLeft5 nmc-li-select-all"                                   
+                                 >
+                                <input type="checkbox" 
+                                      ng-attr-id={{"idCategoriesAll"}} 
+                                      ng-attr-name={{"idCategoriesAll"}} 
+                                      ng-attr-value={{"allCategories"}} 
+                                      ng-model="states.isSelectedAllCategoriesInWindow"
+                                      class="nmc-checkbox-dropdown"
+                                    ng-click="selectAllElements(categoriesInWindow)"
+                                      />
+                               <label ng-attr-for={{"idCategoriesAll"}}
+                                      class="nmc-label-dropdown"
+                                      >
+                                  Выбрать все
+                               </label>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                        <ul class="nmc-filter-list-items dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5" ng-repeat="category in categoriesInWindow | filter: categoryFilter">
+                                <input type="checkbox" 
+                                       ng-attr-id={{"idCategory"+category.keyname}} 
+                                       ng-attr-name={{"nameCategory"+category.keyname}} 
+                                       ng-attr-value={{category.keyname}} 
+                                       ng-model="category.selected"
+                                       class="nmc-checkbox-dropdown"
+                                       ng-click="selectElement('isSelectedAllCategoriesInWindow')"
+                                       />
+                               <label ng-attr-for={{"idCategory"+category.keyname}}
+                                      class="nmc-label-dropdown">
+                                  {{category.caption || category.keyname}}
+                               </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon nmc-input-form-suffix" 
+                          id="rightAddon">
+                        <i title="Очистить фильтр" 
+                           class="btn btn-xs nmc-button-clear-filter" 
+                           ng-click="clearCategoryFilter();getResultsPage(1)"
+                           ng-disabled="selectedNoticeCategories_list.caption == messages.defaultFilterCaption">
+                            <img height="19" width="19" 
+                                 src="images/clear-filter.png"
+                                 class="nmc-img-clear-filter"/>
+                        </i>
+                    </span>    
+                </div>
+            </div>
+            <div class="col-xs-2 col-md-2" >
+        <!--        <label class="nmc-form-label">Типы:</label>-->
+                <div class="input-group nmc-input-data">
+                    <span class="input-group-addon nmc-filter-form-addon" 
+                          id="leftAddon" 
+                          >Модель:
+                    </span>
+                    <div class="btn-group">
+                        <button ng-disabled="isDisabledFilters()"
+                                data-toggle="dropdown" 
+                                class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
+                                ng-click="selectNoticeTypesClick()"
+                                data-placeholder="false"
+                                ng-class="{'paddingLeft20': selectedNoticeTypes_list.caption != messages.defaultFilterCaption}"> 
+                            {{selectedNoticeTypes_list.caption}}
+                            <i ng-if="selectedNoticeTypes_list.caption != messages.defaultFilterCaption" 
+                               class=""><strong>...</strong></i>
+                        </button>
+                        <ul class="dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5 marginBottom5">
+                                <div class="container-fluid noPadding">
+                                  <div class="row">
+                                    <div class="col-xs-8 col-md-8">
+                                      <div class="input-group nmc-input-group-filter">
+                                          <span class="input-group-addon nmc-search-form-addon" 
+                                                id="typeFilter-addon">
+                                              <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                              </i>
+                                          </span>
+                                          <input class="form-control nmc-text-input-notice-filter-form" 
+                                                 type="text" 
+                                                 ng-model="typeFilter"
+                                                 aria-describedly="typeFilter-addon"
+                                                 />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                    <div class="col-xs-2 col-md-2">
+                                        <p title="Применить фильтр" 
+                                                type="submit" 
+                                                class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
+                                                ng-click="selectNoticeTypes()"
+                                                value="Ок" 
+                                                style=""
+                                                ng-disabled="isFilterApplyDisabled(typesInWindow, states.isSelectedAllTypesInWindow)"
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(typesInWindow, states.isSelectedAllTypesInWindow)}">
+                                            OK
+                                            <i class="glyphicon glyphicon-filter">
+                                            </i>
+                                        </p>
+                                    </div>
+                                  </div>
+                                </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="paddingLeft5 nmc-li-select-all"                                   
+                                 >
+                                <input type="checkbox" 
+                                      ng-attr-id={{"idTypesAll"}} 
+                                      ng-attr-name={{"idTypesAll"}} 
+                                      ng-attr-value={{"allTypes"}} 
+                                      ng-model="states.isSelectedAllTypesInWindow"
+                                      class="nmc-checkbox-dropdown"
+                                       ng-click="selectAllElements(typesInWindow)"
+                                      />
+                               <label ng-attr-for={{"idTypesAll"}}
+                                      class="nmc-label-dropdown"
+                                      >
+                                  Выбрать все
+                               </label>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                        <ul class="nmc-filter-list-items dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5" ng-repeat="type in typesInWindow | filterByCategories: selectedCategories | filter: typeFilter">
+                                <input type="checkbox" 
+                                       ng-attr-id={{"idType"+type.id}} 
+                                       ng-attr-name={{"idType"+type.name}} 
+                                       ng-attr-value={{type.name}} 
+                                       ng-model="type.selected"
+                                       class="nmc-checkbox-dropdown"
+                                       ng-click="selectElement('isSelectedAllTypesInWindow')"
+                                       />
+                               <label ng-attr-for={{"idType"+type.id}}
+                                      class="nmc-label-dropdown">
+                                  {{type.name || type.id}}
+                               </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon nmc-input-form-suffix" 
+                          id="rightAddon">
+                        <i title="Очистить фильтр" 
+                           class="btn btn-xs nmc-button-clear-filter" 
+                           ng-click="clearTypeFilter();getResultsPage(1)"
+                           ng-disabled="selectedNoticeTypes_list.caption == messages.defaultFilterCaption">
+                            <img height="19" width="19" 
+                                 src="images/clear-filter.png"
+                                 class="nmc-img-clear-filter"/>
+                        </i>
+                    </span>    
+                </div>
+            </div> 
+            <div class="col-xs-2 col-md-2" >
+        <!--        <label class="nmc-form-label">Отклонения:</label>-->
+                <div class="input-group nmc-input-data">
+                    <span class="input-group-addon nmc-filter-form-addon" 
+                          id="leftAddon" 
+                          >Номер прибора:
+                    </span>
+                    <div class="btn-group">
+                        <button  ng-disabled="isDisabledFilters()"
+                                data-toggle="dropdown" 
+                                class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
+                                ng-click="selectNoticeDeviationsClick()"
+                                data-placeholder="false"
+                                ng-class="{'paddingLeft20': selectedNoticeDeviations_list.caption != messages.defaultFilterCaption}"> 
+                            {{selectedNoticeDeviations_list.caption}}
+                            <i ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" 
+                               class=""><strong>...</strong></i>
+                        </button>
+                        <ul class="dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5 marginBottom5">
+                                <div class="container-fluid noPadding">
+                                  <div class="row">
+                                    <div class="col-xs-8 col-md-8">
+                                      <div class="input-group nmc-input-group-filter">
+                                          <span class="input-group-addon nmc-search-form-addon" 
+                                                id="deviationFilter-addon">
+                                              <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                              </i>
+                                          </span>
+                                          <input class="form-control nmc-text-input-notice-filter-form" 
+                                                 type="text" 
+                                                 ng-model="deviationFilter"
+                                                 aria-describedly="deviationFilter-addon"
+                                                 />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                    <div class="col-xs-2 col-md-2">
+                                        <p title="Применить фильтр" 
+                                                type="submit" 
+                                                class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
+                                                ng-click="selectNoticeDeviations()"
+                                                value="Ок" 
+                                                style=""
+                                                ng-disabled="isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)"
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement && !isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)}">
+                                            OK
+                                            <i class="glyphicon glyphicon-filter">
+                                            </i>
+                                        </p>
+                                     </div>
+                                  </div>
+                                </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="paddingLeft5 nmc-li-select-all"                                  
+                                 >
+                                <input type="checkbox" 
+                                      ng-attr-id={{"idDeviationsAll"}} 
+                                      ng-attr-name={{"nameDeviationsAll"}} 
+                                      ng-attr-value={{"allDeviations"}} 
+                                      ng-model="states.isSelectedAllDeviationsInWindow"
+                                      class="nmc-checkbox-dropdown"
+                                    ng-click="selectAllElements(deviationsInWindow)"
+                                      />
+                               <label ng-attr-for={{"idDeviationsAll"}}
+                                      class="nmc-label-dropdown"
+                                      >
+                                  Выбрать все
+                               </label>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                        </ul>
+                        <ul class="nmc-filter-list-items dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5" ng-repeat="deviation in deviationsInWindow | filter: deviationFilter">
+                                <input type="checkbox" 
+                                       ng-attr-id={{"idDeviation"+deviation.keyname}} 
+                                       ng-attr-name={{"nameDeviation"+deviation.keyname}} 
+                                       ng-attr-value={{deviation.keyname}} 
+                                       ng-model="deviation.selected"
+                                       class="nmc-checkbox-dropdown"
+                                       ng-click="selectElement('isSelectedAllDeviationsInWindow')"/>
+                               <label ng-attr-for={{"idDeviation"+deviation.keyname}}
+                                      class="nmc-label-dropdown">
+                                  {{deviation.caption || deviation.keyname}}
+                               </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon nmc-input-form-suffix" 
+                          id="rightAddon">
+                        <i title="Очистить фильтр" 
+                           class="btn btn-xs nmc-button-clear-filter" 
+                           ng-click="clearDeviationFilter();getResultsPage(1)"
+                           ng-disabled="selectedNoticeDeviations_list.caption == messages.defaultFilterCaption">
+                            <img height="19" width="19" 
+                                 src="images/clear-filter.png"
+                                 class="nmc-img-clear-filter"/>
+                        </i>
+                    </span>    
+                </div>
+            </div> 
+
+  </div>
+</div>    
+   
+</div>
+
+<!-- main table -->
+<div id="log-upper-part" class="nmc-log-upper rui-resizable-bottom" style="max-height: 600px">
+    <div class="rui-resizable-content">
+                    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                    <thead>
+                        <tr class="">
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th class="col-md-1 nmc-td-for-button">
+                                            </th>
+                                            <th ng-repeat="scolumn in ctrlSettings.sessionColumns"
+                                                ng-class="scolumn.headerClass">
+                                                {{scolumn.caption}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat='session in data.sessions' ng-attr-id={{"ses"+session.id}} class="nmc-tr-striped">
+                        <td>
+                            <table>
+                                <tr>
+                                    <td class="col-xs-1 col-md-1 nmc-td-for-button noPadding">
+                                        <i class="btn btn-xs glyphicon glyphicon-chevron-right"
+                                           ng-click="toggleChildSessionsView(session)"
+                                           ng-class="{'nmc-button-disabled':!session.childs}"
+                                           ng-disabled="!session.childs">
+                                        </i>                                        
+                                    </td>
+                                    <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
+                                        ng-class="scolumn.headerClass">                                        
+                                        <span ng-switch on="scolumn.type">
+                                            <div ng-switch-when="color"
+                                                  style="width: 12px; height: 12px"
+                                                  ng-style="{'background-color': session[scolumn.name]}"
+                                                  >
+                                            </div>
+                                            <span ng-switch-default>
+                                                {{session[scolumn.name]}}
+                                            </span>
+                                        </span>                                        
+                                    </td>
+                                    
+                                </tr>
+                                <tr ng-repeat="child in session.childs" ng-show="session.isChildView">
+                                    <td></td>
+                                    <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
+                                        ng-class="scolumn.headerClass">
+                                        <span ng-switch="scolumn.name">
+                                            <span ng-switch-when="dataSource" class="paddingLeft20">                                                
+                                            </span>
+                                        </span>
+                                        <span ng-switch on="scolumn.type">
+                                            <div ng-switch-when="color"                                                  
+                                                  class="paddingLeft20"                                                  
+                                                  >
+                                                <div style="width: 12px; height: 12px"
+                                                     ng-style="{'background-color': child[scolumn.name]}">
+                                                </div>
+
+                                            </div>
+                                            <span ng-switch-default>
+                                                {{child[scolumn.name]}}
+                                            </span>
+                                        </span>
+
+                                    </td>
+                                    
+                                </tr>
+                            </table>
+                         </td>        
+                     </tr>            
+                    </tbody>
+                </table>            
+    </div>
+    <div class="rui-resizable-handle"></div>
+</div>
+
+
+
+
+<div id="log-footer-part" class="nmc-log-footer rui-resizable-bottom" style="max-height: 600px">
+    <div class="rui-resizable-content">                    
+        <table class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
+            <caption class="noPadding"><h4>Сообщения сессии</h4></caption>
+            <thead>
+                <tr class="nmc-main-table-header">
+                    <th ng-repeat="lcolumn in ctrlSettings.logColumns"
+                        ng-class="lcolumn.headerClass">
+                        {{lcolumn.caption}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="log in data.sessionLog">
+                    <td ng-repeat="lcolumn in ctrlSettings.logColumns">
+                        {{log[lcolumn.name]}}
+                    </td>                        
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rui-resizable-handle"></div>
+</div>

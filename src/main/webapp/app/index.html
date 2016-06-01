@@ -188,7 +188,7 @@
                                    class="list-group-item nmc-main-menu-item" 
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
 
-                                   href="#/log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')"><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журнал</span></a>
+                                   href="#/log/session-log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')"><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журналы</span></a>
                                 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
@@ -411,7 +411,6 @@
       <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.numeric.extensions.min.js"></script>
       <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.date.extensions.min.js"></script>
       <script src="/public/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js"></script>
-      <script src="bower_components/angular-resizable/angular-resizable.min.js"></script>
       
 <!--      <script src="vendor_components/jquery.inputmask-3.x/dist/jquery.inputmask.bundle.js" type="text/javascript"></script>-->
 <!--      <script src="/public/vendor_components/PickMeUp-master/js/jquery.pickmeup.min.js"></script>-->
@@ -428,13 +427,13 @@
         <script src="scripts/app.js"></script>
 <!--      <script src="scripts_min/app.min.js"></script>-->
     
-<!--        <script src="scripts/controllers/main.js"></script>-->
-      <script src="scripts_min/controllers/main.min.js"></script>
-<!--      <script src="scripts/controllers/notice.js"></script>-->
-      <script src="scripts_min/controllers/notice.min.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+<!--      <script src="scripts_min/controllers/main.min.js"></script>-->
+      <script src="scripts/controllers/notice.js"></script>
+<!--      <script src="scripts_min/controllers/notice.min.js"></script>-->
     <script src="scripts/controllers/directory.js"></script>
-<!--    <script src="scripts/controllers/objects.js"></script>-->
-      <script src="scripts_min/controllers/objects.min.js"></script>
+    <script src="scripts/controllers/objects.js"></script>
+<!--      <script src="scripts_min/controllers/objects.min.js"></script>-->
     <script src="scripts/controllers/reports_use_svc.js"></script>
     <script src="scripts/controllers/indicator.js"></script>
       <script src="scripts/controllers/tariffs.js"></script>
@@ -468,6 +467,7 @@
       <script src="scripts/controllers/settings-object-trees.js"></script>
       <script src="scripts/controllers/settings-program.js"></script>
       <script src="scripts/controllers/log-view.js"></script>
+      <script src="scripts/controllers/log-sms.js"></script>
 <!--      <script src="scripts/controllers/test.js"></script>-->
       
       <!-- Directives -->
