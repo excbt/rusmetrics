@@ -12,6 +12,7 @@ public class DBMetadata {
 
 	public static final String DB_SCHEME = "";
 	public static final String SCHEME_PORTAL = "portal";
+	public static final String SCHEME_SLOG = "slog";
 
 	private DBMetadata() {
 
