@@ -1209,6 +1209,11 @@ tr.nmc-inactive-price > td{
     display: inline;   
 }
 
+    /* Поле ввода количества смс, попыток и т.д.*/
+.nmc-input-count{
+    min-width: 60px;    
+}
+
     /* Поле вывода числовых данных*/
 .nmc-view-digital-data{
     width: 80px;
@@ -1938,6 +1943,11 @@ tr.nmc-inactive-price > td{
 .nmc-textfield{
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     color: #333;
+}
+
+/* Отображение строк с макс. кол-вом смс в настройках*/
+.nmc-sms-prop-row{
+    display: table-cell;
 }
 
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/

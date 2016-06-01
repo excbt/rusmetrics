@@ -19,6 +19,10 @@ angular.module('portalNMC')
     };
 //    end Test data ***************************************
     
+    var SMS_COUNT_LIMIT = 100; //client requirement
+    var DAY_SMS_COUNT_DEFAULT = 20;
+    var HOUR_SMS_COUNT_DEFAULT = 10;
+    
     $rootScope.ctxId = "program_tree_settings_page";
     
     $scope.ctrlSettings = {};
@@ -64,14 +68,26 @@ angular.module('portalNMC')
         });
     }
     
+    $scope.setActiveFlagForSmsSetting = function(value){
+        $scope.data.modifySettings.forEach(function(elem){
+            if (elem.subscrPrefKeyname == 'SUBSCR_DAY_COUNT_SMS_PREF' || elem.subscrPrefKeyname == 'SUBSCR_HOUR_COUNT_SMS_PREF'){
+                elem.isActive = value;                
+            }
+        })
+    };
+    
     var performSettingsData = function(data){
         if (angular.isArray(data)){
             data.forEach(function(setting){               
                 if (mainSvc.isNumeric(setting.value)){
                     setting.value = Number(setting.value);
                 };
+//                //if "SUBSCR_SMS_PREF_TYPE"
+//                if (setting.subscrPrefCategory = "SUBSCR_SMS_PREF_TYPE"){
+//                    
+//                }
             });
-            data.push($scope.testData.smsSetting);
+//            data.push($scope.testData.smsSetting);
         };        
         $scope.data.originalSettings = angular.copy(data);
         $scope.data.modifySettings = angular.copy(data);
@@ -83,7 +99,7 @@ angular.module('portalNMC')
     //get all settings
     var getProgramSettings = function(){
         $http.get($scope.ctrlSettings.settingsUrl)
-        .success(function(data){
+        .success(function(data){            
             if (angular.isArray(data)){
                 data.forEach(function(setting){
                     if (setting.subscrPrefCategory == "SUBSCR_OBJECT_TREE"){
@@ -142,40 +158,38 @@ angular.module('portalNMC')
     
     $scope.checkAttemptionCount = function(value){
         var result = true;
-        if (!mainSvc.isNumeric(value) || value <= 0 || value > 100){
+        if (!mainSvc.isNumeric(value) || value <= 0 || value > SMS_COUNT_LIMIT){
             result = false;
         }
         return result;
     }
     
-    function checkAttemptionCountAndViewMessage(value){
+    function checkAttemptionCountAndViewMessage(smsSetting){
         var result = true;
-        if (!mainSvc.isNumeric(value)){
-            notificationFactory.errorInfo("Ошибка", "Для количества повторов введено не числовое значение.");
+        if (!mainSvc.isNumeric(smsSetting.value)){
+            notificationFactory.errorInfo("Ошибка", "Для \"" + smsSetting.subscrPref.caption + "\" введено не числовое значение.");
             result = false;
         };
-        if (value <= 0){
-            notificationFactory.errorInfo("Ошибка. Некорректно задано количество повторов", "Введенное значение меньше или равно нулю, а должно быть в интервале от 1 до 100");
+        if (smsSetting.value <= 0){
+            notificationFactory.errorInfo("Ошибка. Некорректно задано \"" + smsSetting.subscrPref.caption + "\"", "Введенное значение меньше или равно нулю, а должно быть в интервале от 1 до " + SMS_COUNT_LIMIT);
             result = false;
         };
-        if (value > 100){
-            notificationFactory.errorInfo("Ошибка. Некорректно задано количество повторов", "Введенное значение больше 100, а должно быть в интервале от 1 до 100");
+        if (smsSetting.value > SMS_COUNT_LIMIT){
+            notificationFactory.errorInfo("Ошибка. Некорректно задано \"" + smsSetting.subscrPref.caption + "\"", "Введенное значение больше " + SMS_COUNT_LIMIT + ", а должно быть в интервале от 1 до " + SMS_COUNT_LIMIT);
             result = false;
         }
         return result;
     }
     
     function checkAttemptionCountsAndViewMessage(smsSetting){
-        var result = true;
-        result = checkAttemptionCountAndViewMessage(smsSetting.dayCountValue) & checkAttemptionCountAndViewMessage(smsSetting.hourCountValue);
+        return checkAttemptionCountAndViewMessage(smsSetting["SUBSCR_DAY_COUNT_SMS_PREF"]) & checkAttemptionCountAndViewMessage(smsSetting["SUBSCR_HOUR_COUNT_SMS_PREF"]);
     }
     
-    function findSmsSetting(){
-        var result = null;
-        $scope.data.modifySettings.some(function(setting){
-            if (setting.subscrPrefCategory == "SUBSCR_SMS_PREF"){
-                result = setting;
-                return true;
+    function findSmsSettings(){
+        var result = {};
+        $scope.data.modifySettings.forEach(function(setting){
+            if (setting.subscrPrefCategory == "SUBSCR_SMS_PREF_TYPE"){
+                result[setting.subscrPrefKeyname] = setting;                
             }                
         });
         return result;
@@ -183,20 +197,21 @@ angular.module('portalNMC')
     
     function checkSettings(){
         var result = true;
-        var smsSetting = findSmsSetting();
-        if (mainSvc.checkUndefinedNull(smsSetting) || !smsSetting.isActive){
+        var smsSetting = findSmsSettings();
+        if (mainSvc.checkUndefinedNull(smsSetting) || !smsSetting["SUBSCR_SMS_PREF"].isActive){
             return result;
         };
-        return checkSMSUrlAndViewMessage(smsSetting.value) & checkAttemptionCountsAndViewMessage(smsSetting);
+        return checkSMSUrlAndViewMessage(smsSetting["SUBSCR_SMS_PREF"].value) & checkAttemptionCountsAndViewMessage(smsSetting);
     }
     
     $scope.saveSettings = function(){
         //check settings
         var checkFlag = checkSettings();
         if (checkFlag == false){
+console.log(checkFlag);            
             return false;
         };
-        $scope.data.modifySettings.pop();//remove test SMS setting
+//        $scope.data.modifySettings.pop();//remove test SMS setting
         
         $scope.ctrlSettings.isSaving = true;
         $http.put($scope.ctrlSettings.settingsUrl, $scope.data.modifySettings)
