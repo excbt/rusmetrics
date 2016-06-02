@@ -1,12 +1,21 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http){
+app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory){
     
     $scope.messages = {};
     
     $scope.ctrlSettings = {};
+    $scope.ctrlSettings.sessionsUrl = "../api/rma/logSessions";
+        
     $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
     $scope.ctrlSettings.showObjectsFlag = true;
+    
+    $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");    
+    $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
+    $scope.ctrlSettings.sessionsLogDaterange = {
+        startDate: moment().subtract(6, 'days').startOf('day'),                        
+        endDate: moment().endOf('day')};
+    $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD";
     
     $scope.ctrlSettings.sessionColumns = [
         {
@@ -17,7 +26,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         },{
             name: "dataSource",
             caption: "Источник",
-            headerClass: "col-xs-2 col-md-2 noPadding"
+            headerClass: "col-xs-2 col-md-2 noPadding",
+            type: 'id'
         },{
             name: "deviceModel",
             caption: "Модель",
@@ -29,40 +39,52 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         },{
             name: "startDate",
             caption: "Время начала",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-2 col-md-2 noPadding"
         },{
             name: "endDate",
             caption: "Время завершения",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-2 col-md-2 noPadding"
         },{
             name: "author",
             caption: "Инициатор",
-            headerClass: "col-xs-2 col-md-2"
+            headerClass: "col-xs-1 col-md-1"
         },{
             name: "currentStatus",
             caption: "Текущий статус",
             headerClass: "col-xs-1 col-md-1"
         },{
-            name: "totalRow",
-            caption: "Число строк данных",
+            name: "sessionMessage",
+            caption: "Сообщение",
             headerClass: "col-xs-1 col-md-1"
         }
         
     ];
     $scope.ctrlSettings.logColumns = [
         {
-            name: "date",
+            name: "stepDateStr",
             caption: "Дата-время",
-            headerClass: "col-xs-2 col-md-2"
+            headerClass: "col-xs-2 col-md-2",
+            type: "id"
         },{
-            name: "type",
+            name: "stepType",
             caption: "Тип",
             headerClass: "col-xs-1 col-md-1"
         },{
-            name: "text",
+            name: "stepMessage",
             caption: "Текст",
-            headerClass: "col-xs-9 col-md-9"
-        },
+            headerClass: "col-xs-7 col-md-7"
+        },{
+            name: "isIncremental",
+            caption: "Счетчик",
+            headerClass: "col-xs-1 col-md-1",
+            type: "checkbox"
+            
+        },{
+            name: "sumRows",
+            caption: "Значение",
+            headerClass: "col-xs-1 col-md-1"
+        }
+        
     ];
     
     $scope.data = {};
@@ -81,6 +103,10 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     $scope.toggleChildSessionsView = function(session){
         session.isChildView = !session.isChildView;
+    };
+    
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
     };
     
     /*******************************************/
@@ -134,11 +160,10 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
 //console.log(ses);            
         };
         $scope.data.sessions = sessions;
-        
         //set session table height
         $timeout(function(){
             $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
-        });        
+        }); 
     };
     
     function generateSessionLog(){
@@ -170,7 +195,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         });  
     };
     
-    generate();
+//    generate();
     /* end Test generation*/
     /*************************************************************/
     
@@ -405,5 +430,96 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     };
     
     // **** end of Object filter
+    
+    function errorCallback(e){
+        $scope.ctrlSettings.sessionsLoading = false;
+        $scope.ctrlSettings.logLoading = false;
+        console.log(e);
+        var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);       
+    };
+    
+    // *******************************************************************************
+    // Sessions
+    
+    function loadSessionsData(){
+        $scope.ctrlSettings.sessionsLoading = true;
+        var url = $scope.ctrlSettings.sessionsUrl + "?fromDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat) + "&toDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
+        $http.get(url).then(function(resp){
+            $scope.data.sessions = serverDataParser(angular.copy(resp.data));
+            //set session and tables height
+            $timeout(function(){
+                $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
+                $("#log-footer-part > .rui-resizable-content").height(Number($cookies.heightLogFooterPart));    
+            });                
+        }, errorCallback);
+    }
+    
+    function serverDataParser(data){        
+        var result = data.map(function(dataRow){
+            var tmpParsedRow = {};
+            tmpParsedRow.id = dataRow.id;
+            tmpParsedRow.dataSource = dataRow.dataSourceInfo.caption || dataRow.dataSourceInfo.dataSourceName;
+            tmpParsedRow.deviceModel = dataRow.deviceObjectInfo.deviceModelName;
+            tmpParsedRow.deviceNumber = dataRow.deviceObjectInfo.number;
+            tmpParsedRow.startDate = dataRow.sessionDateStr;
+            tmpParsedRow.endDate = dataRow.sessionEndDateStr;
+            tmpParsedRow.author = dataRow.authorInfo.authorName;
+            tmpParsedRow.currentStatus = dataRow.sessionStatus;
+            tmpParsedRow.sessionMessage = dataRow.sessionMessage;
+            return tmpParsedRow;
+        });
+        return result;        
+    }
+    
+    function defineChildSessions(){
+        var tmpData = angular.copy($scope.data.sessions);
+        var newData = [];
+        var childSessions = [];
+            //find child sessions
+        tmpData.forEach(function(session){
+            if (!mainSvc.checkUndefinedNull(session.masterSessionUuid)){
+                childSessions[session.masterSessionUuid].push(angular.copy(session));
+            }else{
+                newData.push(session);
+            }
+        });
+            //add child sessions to their master sessions
+        for (var uuid in childSessions){    
+            newData.some(function(masterSession){
+                if (uuid == masterSession.sessionUuid){
+                    masterSession.childs = childSessions[uuid];
+                    return true;
+                }
+            });
+        }
+        
+        $scope.data.sessions = newData;
+    }
+    
+    // **********************************************************************
+    // session log
+    
+    $scope.loadLogData = function(session){
+        $scope.data.currentSession = session;
+        var url = $scope.ctrlSettings.sessionsUrl + "/" + session.id + "/steps";
+        $http.get(url).then(function(resp){
+            $scope.data.sessionLog = resp.data;                
+        }, errorCallback)
+    }
+    
+    function initCtrl(){
+        loadSessionsData();
+        defineChildSessions();
+    }
+    
+    initCtrl();
 
 }]);
