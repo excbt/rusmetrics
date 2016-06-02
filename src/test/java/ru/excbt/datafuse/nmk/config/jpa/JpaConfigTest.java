@@ -12,11 +12,12 @@ import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
 		classes = { PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class })
-public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo {
+public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo, TestExcbtRmaIds {
 
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;

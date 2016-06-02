@@ -425,7 +425,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getCurrentSubscriberId());
+		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(getCurrentSubscriberId());
 		if (deviceObject.getActiveDataSource() != null && !result.stream()
 				.anyMatch(i -> i.getId().equals(deviceObject.getActiveDataSource().getSubscrDataSourceId()))) {
 			Long subscrDataSourceId = deviceObject.getActiveDataSource().getSubscrDataSourceId();

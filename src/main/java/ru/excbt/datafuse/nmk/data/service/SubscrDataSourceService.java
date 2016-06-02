@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,9 +122,34 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrDataSource> selectBySubscriber(Long subscriberId) {
+	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
 		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
 		return ObjectFilters.deletedFilter(list);
+	}
+
+	/**
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrDataSource> selectDataSourceByIds(Collection<Long> ids) {
+		if (ids == null || ids.isEmpty()) {
+			return new ArrayList<>();
+		}
+		List<SubscrDataSource> list = subscrDataSourceRepository.selectBySubscrDataSourceIds(ids);
+		return ObjectFilters.deletedFilter(list);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Long> selectDataSourceIdsBySubscriber(Long subscriberId) {
+		List<Long> list = subscrDataSourceRepository.selectIdsBySubscriberId(subscriberId);
+		return list;
 	}
 
 	/**
@@ -132,7 +159,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrDataSource selectByKeyname(Long subscriberId, String keyname) {
+	public SubscrDataSource selectDataSourceByKeyname(Long subscriberId, String keyname) {
 		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
 
 		List<SubscrDataSource> result = ObjectFilters.deletedFilter(list.stream())

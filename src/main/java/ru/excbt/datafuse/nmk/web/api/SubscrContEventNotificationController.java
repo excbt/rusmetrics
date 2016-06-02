@@ -363,7 +363,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+					.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
 		}
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),

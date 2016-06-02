@@ -86,6 +86,12 @@ public class LocalDatePeriod {
 		return endOfDay;
 	}
 
+	public static LocalDatePeriod lastDay() {
+		LocalDatePeriod result = builder().dateFrom(startOfDay(LocalDateTime.now().minusDays(1)))
+				.dateTo(endOfDay(LocalDateTime.now())).build();
+		return result;
+	}
+
 	public static LocalDatePeriod lastWeek() {
 		LocalDatePeriod result = builder().dateFrom(startOfDay(LocalDateTime.now().minusWeeks(1)))
 				.dateTo(endOfDay(LocalDateTime.now())).build();

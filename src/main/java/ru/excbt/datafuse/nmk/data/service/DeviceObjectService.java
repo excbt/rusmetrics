@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -382,6 +383,16 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectByContZPoint(Long contZPointId) {
 		return Lists.newArrayList(deviceObjectRepository.findAll());
+	}
+
+	/**
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceObject> selectDeviceObjectsByIds(Collection<Long> ids) {
+		return deviceObjectRepository.selectDeviceObjectsByIds(ids);
 	}
 
 }

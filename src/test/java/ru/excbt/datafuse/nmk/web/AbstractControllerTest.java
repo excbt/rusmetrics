@@ -110,7 +110,7 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void _testGetJson(String url, RequestExtraInitializer params) throws Exception {
+	protected String _testGetJson(String url, RequestExtraInitializer params) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -124,7 +124,9 @@ public class AbstractControllerTest {
 					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 		};
 
-		_testGet(url, requestExtraInitializer, resultActionsTester);
+		ResultActions resultActions = _testGet(url, requestExtraInitializer, resultActionsTester);
+
+		return resultActions.andReturn().getResponse().getContentAsString();
 	}
 
 	/**
@@ -172,10 +174,10 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void _testGet(String url, RequestExtraInitializer requestExtraInitializer,
+	protected ResultActions _testGet(String url, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
-		_testGetResultActions(url, requestExtraInitializer, resultActionsTester);
+		return _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
 
 	}
 

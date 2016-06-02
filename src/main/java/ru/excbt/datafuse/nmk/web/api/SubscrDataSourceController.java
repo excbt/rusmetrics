@@ -53,7 +53,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSources() {
-		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getCurrentSubscriberId());
+		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
