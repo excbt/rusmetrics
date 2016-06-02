@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertFalse;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -23,6 +24,10 @@ public class LogSessionServiceTest extends JpaSupportTest {
 	@Autowired
 	private SubscrDataSourceService subscrDataSourceService;
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testLogSettionSelect() throws Exception {
 		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(EXCBT_RMA_SUBSCRIBER_ID);
@@ -32,4 +37,18 @@ public class LogSessionServiceTest extends JpaSupportTest {
 		List<LogSessionVO> logSessions = logSessionService.selectLogSessions(ids, LocalDatePeriod.lastWeek());
 		assertFalse(logSessions.isEmpty());
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testLogSessionObjectsSelect() throws Exception {
+		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(EXCBT_RMA_SUBSCRIBER_ID);
+		List<LogSessionVO> logSessions = logSessionService.selectLogSessions(ids, LocalDatePeriod.lastWeek(),
+				Arrays.asList(127858526L));
+		assertFalse(logSessions.isEmpty());
+
+	}
+
 }

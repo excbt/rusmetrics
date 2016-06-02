@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,8 @@ public class RmaSubscrLogSessionController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLogSessionVO(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
-			@RequestParam(value = "toDate", required = true) String toDateStr) {
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "contObjectIds", required = false) List<Long> contObjectIds) {
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
@@ -53,8 +55,24 @@ public class RmaSubscrLogSessionController extends SubscrApiController {
 
 		List<Long> dataSourceIds = subscrDataSourceService.selectDataSourceIdsBySubscriber(getSubscriberId());
 
-		List<LogSessionVO> resultList = logSessionService.selectLogSessions(dataSourceIds,
-				datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+		if (contObjectIds != null && contObjectIds.size() > 0) {
+			if (!canAccessContObject(contObjectIds.toArray(new Long[] {}))) {
+				return responseForbidden();
+			}
+		}
+
+		List<LogSessionVO> resultList = new ArrayList<>();
+
+		if (contObjectIds != null && contObjectIds.size() > 0) {
+			resultList = logSessionService.selectLogSessions(dataSourceIds,
+					datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectIds);
+
+		} else {
+
+			resultList = logSessionService.selectLogSessions(dataSourceIds,
+					datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+
+		}
 
 		return responseOK(resultList);
 	}

@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -51,6 +52,28 @@ public class RmaSubscrLogSessionControllerTest extends RmaControllerTest {
 		for (LogSession logSession : result) {
 			_testGetJson(String.format("/api/rma/logSessions/%d/steps", logSession.getId()));
 		}
+
+	}
+
+	@Test
+	public void testLogSessionObject() throws Exception {
+
+		//127858526
+
+		RequestExtraInitializer params = (b) -> {
+			LocalDatePeriod period = LocalDatePeriod.lastWeek();
+			b.param("fromDate", period.getDateFromStr());
+			b.param("toDate", period.getDateToStr());
+			b.param("contObjectIds", listToString(Arrays.asList(127858526L)));
+		};
+
+		String content = _testGetJson("/api/rma/logSessions", params);
+		List<LogSession> result = fromJSON(new TypeReference<List<LogSession>>() {
+		}, content);
+
+		assertNotNull(result);
+
+		assertFalse(result.isEmpty());
 
 	}
 
