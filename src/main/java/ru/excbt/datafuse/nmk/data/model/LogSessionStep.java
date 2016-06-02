@@ -10,6 +10,7 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session_step")
@@ -164,6 +165,11 @@ public class LogSessionStep extends JsonAbstractAuditableModel implements Deleta
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getStepDateStr() {
+		return stepDate == null ? null
+				: DateFormatUtils.formatDateTime(stepDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
 	}
 
 }

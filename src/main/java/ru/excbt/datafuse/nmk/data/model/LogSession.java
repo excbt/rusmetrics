@@ -12,6 +12,7 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session")
@@ -244,6 +245,16 @@ public class LogSession extends JsonAbstractAuditableModel {
 
 	public void setDeviceObject(DeviceObject deviceObject) {
 		this.deviceObject = deviceObject;
+	}
+
+	public String getSessionDateStr() {
+		return sessionDate == null ? null
+				: DateFormatUtils.formatDateTime(sessionDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
+	}
+
+	public String getSessionEndDateStr() {
+		return sessionEndDate == null ? null
+				: DateFormatUtils.formatDateTime(sessionEndDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
 	}
 
 }
