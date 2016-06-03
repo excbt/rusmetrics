@@ -286,6 +286,10 @@ angular.module('portalNMC')
     ////////////////////////////////////////////////////////
     
     //checkers
+    var checkEmptyObject = function(obj){
+        return Object.keys(obj).length === 0 && obj.constructor === Object
+    }
+    
     var checkEmptyNullValue = function(numvalue){                    
         var result = false;
         if ((numvalue === "") || (numvalue==null)){
@@ -600,6 +604,7 @@ angular.module('portalNMC')
     
     return {
         checkContext,
+        checkEmptyObject,
         checkHHmm,
         checkNumericValue,
         checkPositiveNumberValue,

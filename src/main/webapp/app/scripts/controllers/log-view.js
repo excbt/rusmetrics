@@ -48,15 +48,16 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             name: "author",
             caption: "Инициатор",
             headerClass: "col-xs-1 col-md-1"
-        },{
+        }/*,{
             name: "currentStatus",
             caption: "Текущий статус",
             headerClass: "col-xs-1 col-md-1"
-        },{
+        }
+        ,{
             name: "sessionMessage",
             caption: "Сообщение",
             headerClass: "col-xs-1 col-md-1"
-        }
+        }*/
         
     ];
     $scope.ctrlSettings.logColumns = [
@@ -87,9 +88,11 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         
     ];
     
+    $scope.selectedObjects = [];
     $scope.data = {};
     $scope.data.sessions = [];
     $scope.data.sessionLog = [];
+    $scope.data.currentSession = {};
     
     $scope.states = {};
     
@@ -210,6 +213,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $scope.selectedObjects = [];
         $scope.selectedGroups = [];
         $scope.states.isSelectedAllObjects = true;
+        loadSessionsData();
     };
     
         // Открыть окно выбора объектов
@@ -376,7 +380,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             performGroupsFilter();
         };
                     //Объекты были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
-        //$scope.getData();
+        loadSessionsData();
 
     };
     
@@ -396,8 +400,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             if ($scope.selectedObjects_list.caption == $scope.messages.defaultFilterCaption){
                 return "Object / group filter. No changes";
             };
-            $scope.clearObjectFilter();
-            $scope.$broadcast('notices:selectObjects');          
+            $scope.clearObjectFilter();            
         });
     });
     
@@ -451,15 +454,37 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     function loadSessionsData(){
         $scope.ctrlSettings.sessionsLoading = true;
-        var url = $scope.ctrlSettings.sessionsUrl + "?fromDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat) + "&toDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
-        $http.get(url).then(function(resp){
-            $scope.data.sessions = serverDataParser(angular.copy(resp.data));
-            //set session and tables height
-            $timeout(function(){
-                $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
-                $("#log-footer-part > .rui-resizable-content").height(Number($cookies.heightLogFooterPart));    
-            });                
+        $scope.data.sessions = [];
+        $scope.data.sessionLog = [];
+        $scope.data.currentSession = {};
+        var url = $scope.ctrlSettings.sessionsUrl;
+//        var url = $scope.ctrlSettings.sessionsUrl + "?fromDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat) + "&toDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
+            //define url params
+        var params = {};
+        if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.sessionsLogDaterange.startDate)){
+            params.fromDate = moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat);
+        };
+        if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.sessionsLogDaterange.endDate)){
+            params.toDate = moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
+        };
+        if (!mainSvc.checkUndefinedNull($scope.selectedObjects) && angular.isArray($scope.selectedObjects) && $scope.selectedObjects.length > 0){
+            params.contObjectIds = $scope.selectedObjects;
+        };        
+//        $http.get(url)
+        $http({
+            method: "GET",
+            url: url,
+            params: params
+        })
+            .then(function(resp){                        
+                $scope.data.sessions = serverDataParser(angular.copy(resp.data));
+                $scope.ctrlSettings.sessionsLoading = false;
         }, errorCallback);
+    }
+    
+        //for Refresh button
+    $scope.loadSessionsData = function(){
+        loadSessionsData();
     }
     
     function serverDataParser(data){        
@@ -508,16 +533,35 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     // session log
     
     $scope.loadLogData = function(session){
+        $scope.ctrlSettings.logLoading = true;
         $scope.data.currentSession = session;
         var url = $scope.ctrlSettings.sessionsUrl + "/" + session.id + "/steps";
         $http.get(url).then(function(resp){
             $scope.data.sessionLog = resp.data;                
+            $scope.ctrlSettings.logLoading = false;
         }, errorCallback)
+    }
+    //********************************
+    
+    $scope.$watch('ctrlSettings.sessionsLogDaterange', function(newDates, oldDates){
+        if (newDates.startDate == oldDates.startDate && newDates.endDate == oldDates.endDate){
+            return;
+        }
+        loadSessionsData();
+    })
+    
+    $scope.checkEmptyObject = function(obj){
+        return mainSvc.checkEmptyObject(obj)
     }
     
     function initCtrl(){
         loadSessionsData();
         defineChildSessions();
+        //set session and tables height
+        $timeout(function(){
+            $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
+            $("#log-footer-part > .rui-resizable-content").height(Number($cookies.heightLogFooterPart));    
+        });       
     }
     
     initCtrl();
