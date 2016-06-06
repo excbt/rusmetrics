@@ -122,7 +122,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	 * @param prefValueList
 	 * @return
 	 */
-	@Secured({ ROLE_SUBSCR_USER })
+	@Secured({ ROLE_SUBSCR_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrPrefValue> saveSubscrPrefValues(SubscriberParam subscriberParam,
 			List<SubscrPrefValue> prefValueList) {
