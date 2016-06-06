@@ -1704,10 +1704,23 @@ tr.nmc-inactive-price > td{
     max-height: 520px;
 }
 
-.nmc-object-filter-in-notices, .nmc-types-filter-in-notices, .nmc-filter-list-items{
+.nmc-object-filter-in-notices, .nmc-types-filter-in-notices, .nmc-filter-list-items, .nmc-tree-list-items{
     overflow-y: auto;
     max-height: 520px;
     top: 400%;
+}
+
+/*  Настройка прокрутки списка деревьев в интерфейсе настроек*/
+.nmc-tree-list-items{
+    overflow-y: auto;
+    max-height: 320px;
+    top: 340%;
+}
+    /* в интерфейсах просмотра*/
+.nmc-view-tree-list-items{
+    overflow-y: auto;
+    max-height: 320px;
+    top: 240%;
 }
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {

@@ -73,7 +73,7 @@
                              >
                               {{messages.treeMenuHeader}} <span ng-show="isSystemuser()">(id = {{data.currentTree.id}})</span> <span class="caret"></span>
                           </button>
-                          <ul class="dropdown-menu nmc-dropdown-menu">
+                          <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
                             <li class="menu-item" role="presentation">
                                 <a href=""
                                    class=""
@@ -109,10 +109,8 @@
                                     </li>                                        
                                 </ul>                                    
                               </li>
-                              <li ng-if="data.trees.length > 0"
-                                  role="presentation" 
-                                  class="divider">
-                              </li>
+                        </ul>
+                        <ul class="dropdown-menu nmc-dropdown-menu nmc-tree-list-items nmc-dropdown-menu-filter">
                               <li ng-if="data.trees.length > 0"
                                   class="menu-item" 
                                   role="presentation" 

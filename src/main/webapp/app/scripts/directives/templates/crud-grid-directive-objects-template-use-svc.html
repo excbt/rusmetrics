@@ -33,13 +33,15 @@
                          >
                           {{messages.treeMenuHeader}} <span class="caret"></span>
                       </button>
-                      <ul class="dropdown-menu nmc-dropdown-menu">
+                      <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
                           <li class="menu-item" role="presentation">
                               <a href="" class=""
                                  ng-click="viewFullObjectList()">
                                   Полный список объектов
                               </a>
                           </li>
+                    </ul>
+                    <ul class="dropdown-menu nmc-dropdown-menu nmc-view-tree-list-items nmc-dropdown-menu-filter">
                           <li class="divider" role="presentation"></li>
                           <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
                               <a href="" class=""
@@ -71,14 +73,15 @@
                              >
                               {{messages.groupMenuHeader}} <span class="caret"></span>
                           </button>
-                          <ul class="dropdown-menu nmc-dropdown-menu">
+                          <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
                               <li class="menu-item" role="presentation">
                                   <a href="" class=""
                                      ng-click="objectsDataFilteredByGroup(null)">
                                       Полный список объектов
                                   </a>
                               </li>
-                              <li class="divider" role="presentation"></li>
+                          </ul>
+                          <ul class="dropdown-menu nmc-dropdown-menu nmc-view-tree-list-items nmc-dropdown-menu-filter">
                               <li class="menu-item" role="presentation" ng-repeat="group in groups">
                                   <a href="" class=""
                                      ng-click="objectsDataFilteredByGroup(group)">
