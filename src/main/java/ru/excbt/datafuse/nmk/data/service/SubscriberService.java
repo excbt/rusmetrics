@@ -12,6 +12,8 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,11 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class SubscriberService extends AbstractService implements SecuredRoles {
 
+	private static final Logger logger = LoggerFactory.getLogger(SubscriberService.class);
+
+	private final static String LDAP_DESCRIPTION_SUFFIX_PARAM = "LDAP_CABINETS_DESCRIPTION_SUFFIX";
+	private final static String LDAP_DESCRIPTION_SUFFIX_DEFAULT = "Cabinets-";
+
 	@Autowired
 	protected SubscriberRepository subscriberRepository;
 
@@ -59,6 +66,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	protected SubscrServiceAccessService subscrServiceAccessService;
+
+	@Autowired
+	private SystemParamService systemParamService;
 
 	/**
 	 * 
@@ -331,7 +341,20 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	public String buildChildDescription(Subscriber subscriber) {
 		checkNotNull(subscriber);
 		checkNotNull(subscriber.getSubscriberName());
-		return "Cabinets-" + subscriber.getSubscriberName();
+		String suffix = null;
+		try {
+			suffix = systemParamService.getParamValueAsString(LDAP_DESCRIPTION_SUFFIX_PARAM);
+		} catch (Exception e) {
+			logger.warn("System param {} not found", LDAP_DESCRIPTION_SUFFIX_PARAM);
+		}
+
+		if (suffix == null || suffix.isEmpty()) {
+			logger.warn("System param {} is empty use default: {}", LDAP_DESCRIPTION_SUFFIX_PARAM,
+					LDAP_DESCRIPTION_SUFFIX_DEFAULT);
+			suffix = LDAP_DESCRIPTION_SUFFIX_DEFAULT;
+		}
+
+		return suffix + subscriber.getSubscriberName();
 	}
 
 }

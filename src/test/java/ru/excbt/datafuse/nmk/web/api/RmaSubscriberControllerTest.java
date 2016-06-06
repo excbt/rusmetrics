@@ -48,14 +48,14 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 		subscriber = subscriberService.selectSubscriber(subscriberId);
 		subscriber.setComment("Updated By REST");
 		subscriber.setCanCreateChild(true);
-		_testUpdateJson(apiRmaUrl("/subscribers/", subscriberId), subscriber);
+		_testUpdateJson(apiRmaUrl("/subscribers/" + subscriberId), subscriber);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "false");
 		};
 
-		_testGetJson(apiRmaUrl("/subscribers/", subscriberId));
+		_testGetJson(apiRmaUrl("/subscribers/" + subscriberId));
 
-		_testDeleteJson(apiRmaUrl("/subscribers/", subscriberId), param);
+		_testDeleteJson(apiRmaUrl("/subscribers/" + subscriberId), param);
 	}
 }
