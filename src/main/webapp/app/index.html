@@ -99,7 +99,7 @@
                                 title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
                             </p></a></li>			
 
-                            <li><a href="" 
+                            <li ng-if="userInfo.isReadonly != true"><a href="" 
                                    ng-click="changePasswordInit()"
                                    title='Сменить пароль'
                                    data-target="#changePasswordModal"
