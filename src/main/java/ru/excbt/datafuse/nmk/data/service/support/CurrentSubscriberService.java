@@ -37,8 +37,8 @@ public class CurrentSubscriberService {
 	@Autowired
 	private MockSubscriberService mockSubscriberService;
 
-	@Autowired
-	protected UserSession userSession;
+	//	@Autowired
+	//	protected UserSession userSession;
 
 	@Autowired
 	private MockUserService mockUserService;
@@ -81,17 +81,26 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public SubscriberParam getSubscriberParam() {
-		if (userSession.getSubscriberParam() == null) {
+		//		if (userSession.getSubscriberParam() == null) {
+		//
+		//			Subscriber subscriber = getSubscriber();
+		//			checkNotNull(subscriber.getId());
+		//
+		//			userSession.setSubscriberParam(SubscriberParam.builder().subscriberId(subscriber.getId())
+		//					.subscrUserId(getCurrentUserId()).isRma(isRma()).rmaSubscriber(subscriber.getRmaSubscriberId())
+		//					.parentSubscriber(subscriber.getParentSubscriberId()).subscrTypeKey(subscriber.getSubscrType())
+		//					.build());
+		//		}
+		//		return userSession.getSubscriberParam();
 
-			Subscriber subscriber = getSubscriber();
-			checkNotNull(subscriber.getId());
+		Subscriber subscriber = getSubscriber();
+		checkNotNull(subscriber.getId());
 
-			userSession.setSubscriberParam(SubscriberParam.builder().subscriberId(subscriber.getId())
-					.subscrUserId(getCurrentUserId()).isRma(isRma()).rmaSubscriber(subscriber.getRmaSubscriberId())
-					.parentSubscriber(subscriber.getParentSubscriberId()).subscrTypeKey(subscriber.getSubscrType())
-					.build());
-		}
-		return userSession.getSubscriberParam();
+		return SubscriberParam.builder().subscriberId(subscriber.getId())
+				.subscrUserId(getCurrentUserId()).isRma(isRma()).rmaSubscriber(subscriber.getRmaSubscriberId())
+				.parentSubscriber(subscriber.getParentSubscriberId()).subscrTypeKey(subscriber.getSubscrType())
+				.build();
+
 	}
 
 	/**
