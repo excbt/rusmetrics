@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -14,6 +15,7 @@ import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session_step")
+@SequenceGenerator(name = "abstractEntity", sequenceName = "slog.seq_log_session_id", allocationSize = 1)
 public class LogSessionStep extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
