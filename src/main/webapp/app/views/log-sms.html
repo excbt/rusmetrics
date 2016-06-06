@@ -25,7 +25,7 @@
             <input date-range-picker 
                    class="form-control date-picker nmc-date-interval-form nmc-input-data"
                    type="text" 
-                   ng-model="data.logDaterange" 
+                   ng-model="ctrlSettings.smsLogDaterange" 
                    options="ctrlSettings.daterangeOpts" 
                    aria-describedby="leftAddon"
                    ng-disabled="isDisabledFilters()"
@@ -35,7 +35,7 @@
     <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
         <button title="Обновить" 
                 class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
-                ng-click=""
+                ng-click="loadSmsLogData()"
                 ng-disabled="isDisabledFilters()">
         </button>
     </div>
@@ -65,8 +65,11 @@
                 </th>
             </tr>
     </table>
+    <div ng-show="ctrlSettings.loading" class="marginBottom5 nmc-loading">
+        <i class="fa fa-spinner fa-spin"></i> Загрузка... 
+    </div>
 
-    <div class="nmc-tariff-main-div">
+    <div class="nmc-tariff-main-div" ng-show="!ctrlSettings.loading">
         <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
             <tr class="nmc-main-table-header nmc-hide">
                 <th ng-repeat="column in ctrlSettings.logColumnsForTable" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">

@@ -1875,6 +1875,10 @@ tr.nmc-inactive-price > td{
 .nmc-bg-distinguish{
     background-color: #eee;
 }
+/* Класс, для выделения фона колонки таблицы - используется в журналах*/
+tr.nmc-bg-distinguish > td{
+    background-color: #D2D2D2 !important;
+}
 
  
 /* Заголовки */

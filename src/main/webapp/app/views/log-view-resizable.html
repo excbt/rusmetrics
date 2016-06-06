@@ -218,7 +218,8 @@
             </tr>
         </thead>                    
         <tbody>
-        <tr ng-repeat='session in data.sessions' ng-attr-id={{"ses"+session.id}} class="nmc-tr-striped nmc-link">
+        <tr ng-repeat='session in data.sessions' ng-attr-id={{"ses"+session.id}} class="nmc-tr-striped nmc-link"
+            ng-class="{'nmc-bg-distinguish': session.selected == true}">
             <td>
                 <table>
                     <tr>
@@ -252,7 +253,8 @@
 
                     </tr>
                     <tr ng-repeat="child in session.childs" ng-show="session.isChildView"
-                        ng-click="loadLogData(session)">
+                        ng-click="loadLogData(session)"
+                        ng-class="{'nmc-bg-distinguish': child.selected == true}">
                         <td></td>
                         <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
                             ng-class="scolumn.headerClass">

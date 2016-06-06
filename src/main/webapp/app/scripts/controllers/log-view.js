@@ -532,7 +532,9 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     // **********************************************************************
     // session log
     
-    $scope.loadLogData = function(session){
+    $scope.loadLogData = function(session){        
+        $scope.data.currentSession.selected = false;
+        session.selected = true;
         $scope.ctrlSettings.logLoading = true;
         $scope.data.currentSession = session;
         var url = $scope.ctrlSettings.sessionsUrl + "/" + session.id + "/steps";

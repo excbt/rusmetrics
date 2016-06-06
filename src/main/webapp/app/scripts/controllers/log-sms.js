@@ -8,56 +8,63 @@ app.controller('LogSmsCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obje
     $scope.messages = {};
     
     $scope.ctrlSettings = {};
+    $scope.ctrlSettings.smsLogUrl = "../api/subscr/smsLog";
     $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
     $scope.ctrlSettings.showObjectsFlag = true;
+    $scope.ctrlSettings.smsLogDaterange = {
+        startDate: moment().subtract(6, 'days').startOf('day'),                        
+        endDate: moment().endOf('day')};
+    $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD";
+    $scope.ctrlSettings.userDateFormat = "DD-MM-YYYY HH:mm:ss";
     $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");    
-    $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
+    $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month    
 
     $scope.ctrlSettings.logColumns = [
         {
-            name: "date",
+            name: "smsDateStr",
             caption: "Дата отправления",
             headerClass: "col-xs-1 col-md-1",
-            dataClass: "col-xs-1 col-md-1 noPadding",            
+            dataClass: "col-xs-1 col-md-1 noPadding",
+            type: "datetime"
         },{
-            name: "reciever",
+            name: "smsRecieverName",
             caption: "Кому",
             headerClass: "col-xs-1 col-md-1",
             dataClass: "col-xs-1 col-md-1 noPadding"
         },{
-            name: "recieverPhone",
+            name: "smsRecieverTel",
             caption: "Номер",
             headerClass: "col-xs-1 col-md-1",
             dataClass: "col-xs-1 col-md-1 noPadding"
         },
         {
-            name: "text",
+            name: "smsMessage",
             caption: "Текст",
             headerClass: "col-xs-1 col-md-1",
             dataClass: "col-xs-1 col-md-1 noPadding",
             type: "textarea"
         },{
-            name: "fullUrl",
+            name: "smsProviderUrl",
             caption: "Полный url адрес отправки",
             headerClass: "col-xs-1 col-md-1 paddingLeftRight5I",
             dataClass: "col-xs-1 col-md-1 noPadding",
             isTableView: false,
             type: "textarea"
         },{
-            name: "serverCode",
+            name: "smsProviderResponseCode",
             caption: "Код ответа сервера",
             headerClass: "col-xs-1 col-md-1",
             dataClass: "col-xs-1 col-md-1 text-center noPadding"
         },{
-            name: "serverText",
+            name: "smsProviderResponseBody",
             caption: "Текст ответа сервера",
             headerClass: "col-xs-1 col-md-1",
             dataClass: "col-xs-1 col-md-1 noPadding",
             type: "textarea",
             viewInNewWindow: true
         },{
-            name: "errorField",
-            caption: "Поле ошибки",
+            name: "smsStatus",
+            caption: "Статус",
             headerClass: "col-xs-1 col-md-1",
             dataClass: "col-xs-1 col-md-1 noPadding"
         }        
@@ -88,8 +95,23 @@ app.controller('LogSmsCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obje
     $scope.selectedObjects_list = {};//object for object caption params
     $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
     
+    function errorCallback(e){
+        $scope.ctrlSettings.loading = false;        
+        console.log(e);
+        var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);       
+    };
+    
     function prepareLogForView(logs){
-        logs.forEach(function(el){
+        logs.forEach(function(el){            
+            el.smsDateStr = moment(el.smsDate).format($scope.ctrlSettings.userDateFormat);
             for (var column = 0; column < $scope.ctrlSettings.logColumns.length; column++){                
                 el[$scope.ctrlSettings.logColumns[column].name + COL_NAME_SUFFIX] = el[$scope.ctrlSettings.logColumns[column].name].toString().length >= LOG_VIEW_LENGTH ? el[$scope.ctrlSettings.logColumns[column].name].toString().substr(0, LOG_VIEW_LENGTH) + "..." : el[$scope.ctrlSettings.logColumns[column].name].toString();
             }
@@ -181,9 +203,33 @@ app.controller('LogSmsCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obje
         $scope.data.log = logs;       
     };
     
-    generate();
+//    generate();
     /* end Test generation*/
     /*************************************************************/
+    
+    function loadSmsLogData(){
+        $scope.ctrlSettings.loading = true;
+        var url = $scope.ctrlSettings.smsLogUrl;
+        var params = {};
+        if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.smsLogDaterange.startDate)){
+            params.fromDate = moment($scope.ctrlSettings.smsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat);
+            url += "?fromDate=" + params.fromDate;
+        };
+        if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.smsLogDaterange.endDate)){
+            params.toDate = moment($scope.ctrlSettings.smsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
+            url += "&toDate=" + params.toDate;
+        };   
+        $http.get(url).then(function(resp){
+            var logs = angular.copy(resp.data);
+            prepareLogForView(logs);
+            $scope.data.log = logs;
+            $scope.ctrlSettings.loading = false;
+        }, errorCallback);
+    }
+    
+    $scope.loadSmsLogData = function(){
+        loadSmsLogData();
+    }
     
     $scope.viewDetail = function(log, column){
         if (!mainSvc.checkUndefinedNull(column.viewInNewWindow) && column.viewInNewWindow == true){
@@ -195,4 +241,16 @@ app.controller('LogSmsCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obje
         $scope.data.currentLog = angular.copy(log);
         $("#showLogModal").modal();
     }
+    
+    $scope.$watch('ctrlSettings.smsLogDaterange', function(newDates, oldDates){
+        if (newDates.startDate == oldDates.startDate && newDates.endDate == oldDates.endDate){
+            return;
+        }
+        loadSmsLogData();
+    })
+    
+    function initCtrl(){
+        loadSmsLogData();
+    }
+    initCtrl();
 }]);
