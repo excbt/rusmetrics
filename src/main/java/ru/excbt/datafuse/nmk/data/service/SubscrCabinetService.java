@@ -235,7 +235,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	public void deleteSubscrUserCabinet(Long cabinetSubscriberId) {
-		Subscriber subscriber = subscriberService.findOne(cabinetSubscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(cabinetSubscriberId);
 		if (subscriber == null) {
 
 			throw new PersistenceException(String.format("Subscriber (id=%d) is not found", cabinetSubscriberId));

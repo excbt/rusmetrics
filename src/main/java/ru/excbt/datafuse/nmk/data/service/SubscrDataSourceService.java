@@ -58,7 +58,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 		}
 		subscrDataSource.setDataSourceType(dataSourceType);
 		checkNotNull(subscrDataSource.getSubscriberId());
-		Subscriber subscriber = subscriberService.findOne(subscrDataSource.getSubscriberId());
+		Subscriber subscriber = subscriberService.selectSubscriber(subscrDataSource.getSubscriberId());
 		if (subscriber == null) {
 			throw new PersistenceException(
 					String.format("Subscriber (id=%s) is not found", subscrDataSource.getSubscriberId()));

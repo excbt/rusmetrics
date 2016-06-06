@@ -145,7 +145,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 	@Ignore
 	public void testReportParamsetCreateDefault() throws Exception {
 
-		Subscriber subscriber = subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID);
+		Subscriber subscriber = subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID);
 
 		logger.info("Creating ReportParamset for {}", subscriber.getId());
 

@@ -60,7 +60,7 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 	@Test
 	public void testCreateCabinet() throws Exception {
 
-		Subscriber subsciber = subscriberService.findOne(getSubscriberId());
+		Subscriber subsciber = subscriberService.selectSubscriber(getSubscriberId());
 		assertNotNull(subsciber);
 
 		SubscrCabinetInfo cabinetInfo = subscrCabinetService.createSubscrUserCabinet(subsciber,

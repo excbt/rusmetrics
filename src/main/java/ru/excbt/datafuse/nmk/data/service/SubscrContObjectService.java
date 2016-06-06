@@ -701,7 +701,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			LocalDate subscrBeginDate) {
 
 		LocalDate subscrCurrentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 
 		if (subscrCurrentDate.isBefore(subscrBeginDate)) {
 			throw new PersistenceException(

@@ -30,8 +30,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -166,7 +166,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			if (subscriberId.intValue() == 0) {
 				subscrPriceLists = subscrPriceListService.selectRootPriceLists();
 			} else {
-				Subscriber checkSubscriber = subscriberService.findOne(subscriberId);
+				Subscriber checkSubscriber = subscriberService.selectSubscriber(subscriberId);
 				if (checkSubscriber == null) {
 					return responseBadRequest();
 				}

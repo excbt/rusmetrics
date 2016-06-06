@@ -33,7 +33,7 @@ public class SubscrContEventTypeActionServiceTest extends JpaSupportTest impleme
 	@Test
 	public void testCreateAction() throws Exception {
 
-		Subscriber subscriber = subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID);
+		Subscriber subscriber = subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID);
 		List<ContEventType> availTypes = subscrContEventTypeActionService.selectAvailableContEventTypes();
 		assertTrue(availTypes.size() > 0);
 		ContEventType contEventType = availTypes.get(0);

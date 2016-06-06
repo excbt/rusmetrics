@@ -387,7 +387,8 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkNotNull(rmaSubscriberIds);
 
 		for (Long id : rmaSubscriberIds) {
-			SubscrPriceList createdPriceList = createRmaPriceList(srcPriceListId, subscriberService.findOne(id));
+			SubscrPriceList createdPriceList = createRmaPriceList(srcPriceListId,
+					subscriberService.selectSubscriber(id));
 			boolean isActive = activeIds != null && activeIds.contains(id);
 			LocalDate startDate = subscriberService.getSubscriberCurrentDateJoda(id);
 			if (isActive) {
@@ -463,7 +464,8 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkNotNull(subscriberIds);
 
 		for (Long id : subscriberIds) {
-			SubscrPriceList createdPriceList = createSubscrPriceList(srcPriceListId, subscriberService.findOne(id));
+			SubscrPriceList createdPriceList = createSubscrPriceList(srcPriceListId,
+					subscriberService.selectSubscriber(id));
 			boolean isActive = activeIds != null && activeIds.contains(id);
 			LocalDate startDate = subscriberService.getSubscriberCurrentDateJoda(id);
 			if (isActive) {
@@ -478,7 +480,7 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @return
 	 */
 	private Subscriber initSubscriber(Long id) {
-		return id == null ? null : rmaSubscriberService.findOne(id);
+		return id == null ? null : rmaSubscriberService.selectSubscriber(id);
 	}
 
 	/**

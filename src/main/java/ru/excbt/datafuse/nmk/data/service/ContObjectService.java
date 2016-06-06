@@ -239,7 +239,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		checkArgument(contObject.isNew());
 		checkArgument(contObject.getTimezoneDefKeyname() != null);
 
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		if (subscriber == null) {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}

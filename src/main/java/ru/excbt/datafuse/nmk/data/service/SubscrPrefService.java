@@ -142,7 +142,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	private String getSubscriberType(Long subscriberId) {
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		if (subscriber == null) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) is not found", subscriberId));
 		}
@@ -168,7 +168,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	private SubscrTypeKey getSubscrTypeKey(Long subscriberId) {
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		if (subscriber == null) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) is not found", subscriberId));
 		}

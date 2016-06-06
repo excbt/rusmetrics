@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 public class LdapServiceTest extends JpaSupportTest {
 
@@ -22,6 +25,9 @@ public class LdapServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private LdapConfig ldapConfig;
+
+	@Autowired
+	private SubscrUserService subscrUserService;
 
 	@Test
 	public void testAuth() throws Exception {
@@ -90,6 +96,25 @@ public class LdapServiceTest extends JpaSupportTest {
 				new String[] { "EXCBT-NMK" }, null, null, null, null);
 		ldapService.createUser(user);
 		ldapService.blockLdapUser(user);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCreateCabinetsOU() throws Exception {
+		SubscrUser subscrUser = subscrUserService.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);
+
+		String subscriberName = subscrUser.getSubscriber().getSubscriberName();
+		Long subscriberid = subscrUser.getSubscriberId();
+		String newOuName = "Cabinets-" + subscriberid;
+
+		LdapUserAccount ldapUserAccount = subscrUserService.ldapAccountFactory(subscrUser,
+				TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
+		ldapService.createOU(ldapUserAccount.getOrgUnits(), newOuName,
+				"Объектные пользователи (кабинеты) для " + subscriberName);
+
 	}
 
 }

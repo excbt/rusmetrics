@@ -109,6 +109,15 @@ public class RmaSubscriberService extends SubscriberService {
 					String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
 		}
 
+		if (subscriber.getCanCreateChild()) {
+			Subscriber s = selectSubscriber(subscriber.getId());
+			if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
+				subscriber.setChildLdapOu("Cabinet-" + subscriber.getId());
+			} else {
+				subscriber.setChildLdapOu(s.getChildLdapOu());
+			}
+		}
+
 		return subscriberRepository.save(subscriber);
 	}
 
@@ -124,7 +133,7 @@ public class RmaSubscriberService extends SubscriberService {
 		checkNotNull(subscriberId);
 		checkNotNull(rmaSubscriberId);
 
-		Subscriber subscriber = findOne(subscriberId);
+		Subscriber subscriber = selectSubscriber(subscriberId);
 		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
 			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
 		}
@@ -142,7 +151,7 @@ public class RmaSubscriberService extends SubscriberService {
 		checkNotNull(subscriberId);
 		checkNotNull(rmaSubscriberId);
 
-		Subscriber subscriber = findOne(subscriberId);
+		Subscriber subscriber = selectSubscriber(subscriberId);
 		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
 			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
 		}

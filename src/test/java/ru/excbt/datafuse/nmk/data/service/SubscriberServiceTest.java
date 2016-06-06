@@ -115,7 +115,7 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 	@Ignore
 	@Test
 	public void testInitDefaultReportParamsets() throws Exception {
-		Subscriber subscriber = subscriberService.findOne(RMA_SUBSCRIBER);
+		Subscriber subscriber = subscriberService.selectSubscriber(RMA_SUBSCRIBER);
 		reportParamsetService.createDefaultReportParamsets(subscriber);
 	}
 

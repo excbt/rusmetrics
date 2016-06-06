@@ -37,11 +37,11 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		assertNotNull(nmcPriceList);
 
 		SubscrPriceList rmaSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
+				subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID));
 		assertNotNull(rmaSubscriberPriceList);
 
 		SubscrPriceList rmaSpecialSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
+				subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID));
 		assertNotNull(rmaSpecialSubscriberPriceList);
 
 		List<SubscrPriceList> rmaPrices = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
@@ -98,7 +98,7 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		assertTrue(rmaPriceLists.size() > 0);
 		SubscrPriceList srcPriceList = rmaPriceLists.get(0);
 		subscrPriceListService.createSubscrPriceList(srcPriceList.getId(),
-				subscriberService.findOne(EXCBT_SUBSCRIBER_ID));
+				subscriberService.selectSubscriber(EXCBT_SUBSCRIBER_ID));
 
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListService
 				.selectSubscriberPriceLists(EXCBT_RMA_SUBSCRIBER_ID, EXCBT_SUBSCRIBER_ID);

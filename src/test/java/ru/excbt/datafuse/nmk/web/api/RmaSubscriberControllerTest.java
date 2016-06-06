@@ -45,7 +45,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 
 		Long subscriberId = _testCreateJson(apiRmaUrl("/subscribers"), subscriber);
 
-		subscriber = subscriberService.findOne(subscriberId);
+		subscriber = subscriberService.selectSubscriber(subscriberId);
 		subscriber.setComment("Updated By REST");
 		_testUpdateJson(apiRmaUrl("/subscribers/", subscriberId), subscriber);
 

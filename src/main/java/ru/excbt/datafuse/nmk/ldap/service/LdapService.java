@@ -248,6 +248,44 @@ public class LdapService {
 	/**
 	 * 
 	 * @param user
+	 * @param ouName
+	 */
+	public void createOU(String[] subscriberOurgUnits, String ouName, String description) {
+		checkNotNull(subscriberOurgUnits);
+		checkNotNull(ouName);
+
+		LdapNameBuilder builder = LdapNameBuilder.newInstance().add("ou", "people");
+
+		for (String ou : subscriberOurgUnits) {
+			builder.add("ou", ou);
+		}
+		builder.add("ou", ouName);
+
+		Name dn = builder.build();
+
+		if (dnExists(dn)) {
+			logger.info("FOUND");
+		} else {
+			DirContextAdapter context = new DirContextAdapter(dn);
+			context.setAttributeValues("objectclass", LdapUserAccount.OU_CLASS);
+			context.setAttributeValue("description", description);
+			ldapTemplate.bind(context);
+
+		}
+	}
+
+	private boolean dnExists(Name dn) {
+		try {
+			ldapTemplate.lookup(dn);
+			return true;
+		} catch (org.springframework.ldap.NamingException ne) {
+			return false;
+		}
+	}
+
+	/**
+	 * 
+	 * @param user
 	 * @return
 	 */
 	public LdapUserAccount deleteUser(LdapUserAccount user) {

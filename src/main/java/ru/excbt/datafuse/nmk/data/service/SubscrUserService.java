@@ -117,7 +117,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser.getSubscrRoles());
 		checkArgument(subscrUser.getDeleted() == 0);
 
-		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
+		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
 		subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
@@ -164,7 +164,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is deleted", subscrUser.getId()));
 		}
 
-		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
+		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
 		String newPassword = null;
@@ -254,7 +254,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 		if (Boolean.TRUE.equals(subscrUser.getSubscriber().getIsChild())) {
 			rmaOu = subscriberService.getRmaLdapOu(subscrUser.getSubscriber().getParentSubscriberId());
-			Subscriber parentSubscriber = subscriberService.findOne(subscrUser.getSubscriber().getParentSubscriberId());
+			Subscriber parentSubscriber = subscriberService
+					.selectSubscriber(subscrUser.getSubscriber().getParentSubscriberId());
 			checkNotNull(parentSubscriber);
 
 			childLdapOu = parentSubscriber.getChildLdapOu();
@@ -281,8 +282,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		String gidNumber = subscrTypeKey != null && subscrTypeKey.isChild() ? subscrUser.getUserName() : null;
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
-				subscrUser.getUserEMail(), subscrUser.getUserDescription(), gidNumber,
-				subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
+				subscrUser.getUserEMail(), subscrUser.getUserDescription(),
+				gidNumber, subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
 		return user;
 
 	}

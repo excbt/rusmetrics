@@ -18,6 +18,8 @@ public final class LdapUserAccount {
 	public final static String[] OBJECT_CLASS = new String[] { "inetOrgPerson", "inetuser", "organizationalPerson",
 			"person", "posixAccount", "sunFMSAML2NameIdentifier", "top" };
 
+	public final static String[] OU_CLASS = new String[] { "organizationalUnit", "top" };
+
 	private final static String DEFAULT_EMAIL_DOMAIN = "@rusmetrics.ru";
 	private final static String HOME_DIR = "/home/";
 

@@ -66,7 +66,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 			responseForbidden();
 		}
 
-		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null || subscriber.getRmaSubscriberId() == null
 				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
 			return responseBadRequest();
@@ -89,7 +89,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null) {
 			return responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
@@ -116,7 +116,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 		//				: null;
 		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
-		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null) {
 			return responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}

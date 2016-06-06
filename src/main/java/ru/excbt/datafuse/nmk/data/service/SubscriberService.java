@@ -66,7 +66,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber selectSubscriber(long subscriberId) {
+	public Subscriber selectSubscriber(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
 		if (result == null) {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
@@ -81,7 +81,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOne(long subscriberId) {
+	private Subscriber findOne2(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
 		if (result == null) {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
@@ -117,54 +117,10 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOneSubscriber(long subscriberId) {
+	public Subscriber findOneSubscriber(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
 		return result;
 	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	// public List<ContObject> selectSubscriberContObjects(long subscriberId) {
-	// List<ContObject> result =
-	// subscriberRepository.selectContObjects(subscriberId);
-	// return result;
-	// }
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	// public List<ContObject> selectRmaSubscriberContObjects(long subscriberId)
-	// {
-	// List<ContObject> result =
-	// subscriberRepository.selectContObjects(subscriberId);
-	// List<Long> subscrContObjectIds =
-	// subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
-	// Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-	// result.forEach(i -> {
-	// boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-	// i.set_haveSubscr(haveSubscr);
-	// });
-	// return result;
-	// }
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	// public List<Long> selectSubscriberContObjectIds(long subscriberId) {
-	// List<Long> result =
-	// subscriberRepository.selectContObjectIds(subscriberId);
-	// return result;
-	// }
 
 	/**
 	 * 
@@ -324,6 +280,37 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	public List<Subscriber> selectChildSubscribers(Long parentSubscriberId) {
 		List<Subscriber> result = subscriberRepository.selectChildSubscribers(parentSubscriberId);
 		return ObjectFilters.deletedFilter(result);
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @return
+	 */
+	public String[] getSubscriberLdapOu(Subscriber subscriber) {
+		checkNotNull(subscriber);
+
+		String rmaOu = null;
+		String childLdapOu = null;
+		String[] orgUnits = null;
+
+		if (Boolean.TRUE.equals(subscriber.getIsChild())) {
+			rmaOu = getRmaLdapOu(subscriber.getParentSubscriberId());
+			Subscriber parentSubscriber = selectSubscriber(subscriber.getParentSubscriberId());
+			checkNotNull(parentSubscriber);
+
+			childLdapOu = parentSubscriber.getChildLdapOu();
+
+			orgUnits = new String[] { rmaOu, childLdapOu };
+
+		} else {
+			rmaOu = getRmaLdapOu(subscriber.getId());
+			orgUnits = new String[] { rmaOu };
+		}
+
+		checkNotNull(orgUnits);
+
+		return orgUnits;
 	}
 
 }
