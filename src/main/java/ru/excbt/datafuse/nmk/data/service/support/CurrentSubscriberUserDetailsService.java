@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,11 +16,22 @@ public class CurrentSubscriberUserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberUserDetailsService.class);
 
+	@Autowired
+	private MockUserService mockUserService;
+
 	/**
 	 * 
 	 * @return
 	 */
 	public SubscriberUserDetails getCurrentUserDetails() {
+
+		if (mockUserService.isMockUserEnabled()) {
+			SubscriberUserDetails result = new SubscriberUserDetails(mockUserService.getMockSubscrUser(), "secret",
+					new ArrayList<>());
+
+			return result;
+		}
+
 		Authentication auth = getContextAuth();
 		if (auth == null) {
 			logger.warn("auth is null");

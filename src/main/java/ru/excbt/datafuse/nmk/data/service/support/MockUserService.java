@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.AuditUserService;
 
 /**
@@ -54,6 +55,28 @@ public class MockUserService {
 		logger.warn("ATTENTION!!! Using MockUser");
 		AuditUser result = auditUserService.findOne(mockUserId);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isMockUserEnabled() {
+		return mockUserId != null;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public SubscrUser getMockSubscrUser() {
+		checkState(mockUserId != null, "Mock User Service is Disabled");
+		SubscrUser result = new SubscrUser();
+
+		result.setId(mockUserId);
+		result.setUserName("Mock User");
+		return result;
+
 	}
 
 }
