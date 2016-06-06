@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 public class LdapServiceTest extends JpaSupportTest {
@@ -28,6 +29,9 @@ public class LdapServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private SubscrUserService subscrUserService;
+
+	@Autowired
+	private SubscriberService subscriberService;
 
 	@Test
 	public void testAuth() throws Exception {
@@ -107,12 +111,12 @@ public class LdapServiceTest extends JpaSupportTest {
 		SubscrUser subscrUser = subscrUserService.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);
 
 		String subscriberName = subscrUser.getSubscriber().getSubscriberName();
-		Long subscriberid = subscrUser.getSubscriberId();
-		String newOuName = "Cabinets-" + subscriberid;
+		Long subscriberId = subscrUser.getSubscriberId();
+		String newOuName = subscriberService.buildCabinetsOuName(subscriberId);
 
-		LdapUserAccount ldapUserAccount = subscrUserService.ldapAccountFactory(subscrUser,
-				TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
-		ldapService.createOU(ldapUserAccount.getOrgUnits(), newOuName,
+		String[] ou = subscriberService.buildSubscriberLdapOu(subscrUser.getSubscriber());
+
+		ldapService.createOuIfNotExists(ou, newOuName,
 				"Объектные пользователи (кабинеты) для " + subscriberName);
 
 	}

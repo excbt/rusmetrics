@@ -287,7 +287,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @param subscriber
 	 * @return
 	 */
-	public String[] getSubscriberLdapOu(Subscriber subscriber) {
+	public String[] buildSubscriberLdapOu(Subscriber subscriber) {
 		checkNotNull(subscriber);
 
 		String rmaOu = null;
@@ -311,6 +311,27 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		checkNotNull(orgUnits);
 
 		return orgUnits;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	public String buildCabinetsOuName(Long subscriberId) {
+		checkNotNull(subscriberId);
+		return "Cabinets-" + subscriberId;
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @return
+	 */
+	public String buildChildDescription(Subscriber subscriber) {
+		checkNotNull(subscriber);
+		checkNotNull(subscriber.getSubscriberName());
+		return "Cabinets-" + subscriber.getSubscriberName();
 	}
 
 }

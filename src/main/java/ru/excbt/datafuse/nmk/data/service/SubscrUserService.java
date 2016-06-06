@@ -248,33 +248,13 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 		checkNotNull(subscrUser.getSubscriber());
 
-		String rmaOu = null;
-		String childLdapOu = null;
-		String[] orgUnits = null;
-
-		if (Boolean.TRUE.equals(subscrUser.getSubscriber().getIsChild())) {
-			rmaOu = subscriberService.getRmaLdapOu(subscrUser.getSubscriber().getParentSubscriberId());
-			Subscriber parentSubscriber = subscriberService
-					.selectSubscriber(subscrUser.getSubscriber().getParentSubscriberId());
-			checkNotNull(parentSubscriber);
-
-			childLdapOu = parentSubscriber.getChildLdapOu();
-
-			orgUnits = new String[] { rmaOu, childLdapOu };
-
-		} else {
-			rmaOu = subscriberService.getRmaLdapOu(subscriberId);
-			orgUnits = new String[] { rmaOu };
-		}
+		String[] orgUnits = subscriberService.buildSubscriberLdapOu(subscrUser.getSubscriber());
 
 		checkNotNull(orgUnits);
 
 		String firstName = subscrUser.getUserName();
 		String lastNameName = subscrUser.getUserName();
 
-		//		String[] stringNames = new String[] {
-		//				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getFirstName(),
-		//				subscrUser.getUserNickname() != null ? subscrUser.getUserNickname() : subscrUser.getLastName() };
 		String[] stringNames = new String[] { firstName, lastNameName };
 
 		SubscrTypeKey subscrTypeKey = SubscrTypeKey.searchKeyname(subscrUser.getSubscriber().getSubscrType());

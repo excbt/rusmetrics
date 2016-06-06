@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 /**
  * Сервис для работы с Абонентами РМА
@@ -39,6 +41,9 @@ public class RmaSubscriberService extends SubscriberService {
 
 	@Autowired
 	private OrganizationService organizationService;
+
+	@Autowired
+	private LdapService ldapService;
 
 	/**
 	 * 
@@ -72,12 +77,31 @@ public class RmaSubscriberService extends SubscriberService {
 
 		subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
 
+		// Can Create Child LDAP ou set
+		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+			Subscriber s = selectSubscriber(subscriber.getId());
+			if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
+				subscriber.setChildLdapOu(buildCabinetsOuName(subscriber.getId()));
+			} else {
+				subscriber.setChildLdapOu(s.getChildLdapOu());
+			}
+		}
+		// End of can Create Child LDAP		
+
 		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
 
-		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
+		// Can Create Child LDAP action
+		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+			String[] ldapOu = buildSubscriberLdapOu(subscriber);
+			String childDescription = buildChildDescription(subscriber);
+			ldapService.createOuIfNotExists(ldapOu, subscriber.getChildLdapOu(), childDescription);
+		}
+		// End of can Create Child LDAP action
 
+		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
 		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
 
+		// Make default Report Paramset
 		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
 
 		return resultSubscriber;
@@ -109,16 +133,31 @@ public class RmaSubscriberService extends SubscriberService {
 					String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
 		}
 
-		if (subscriber.getCanCreateChild()) {
+		// Can Create Child LDAP ou set
+		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
 			Subscriber s = selectSubscriber(subscriber.getId());
 			if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
-				subscriber.setChildLdapOu("Cabinet-" + subscriber.getId());
+				subscriber.setChildLdapOu(buildCabinetsOuName(subscriber.getId()));
 			} else {
 				subscriber.setChildLdapOu(s.getChildLdapOu());
 			}
 		}
+		// End of can Create Child LDAP		
 
-		return subscriberRepository.save(subscriber);
+		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
+
+		// Can Create Child LDAP action
+		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+			String[] ldapOu = buildSubscriberLdapOu(subscriber);
+			String childDescription = buildChildDescription(subscriber);
+			ldapService.createOuIfNotExists(ldapOu, subscriber.getChildLdapOu(), childDescription);
+		}
+		// End of can Create Child LDAP action
+
+		// Make default Report Paramset		
+		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
+
+		return resultSubscriber;
 	}
 
 	/**

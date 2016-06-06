@@ -250,7 +250,7 @@ public class LdapService {
 	 * @param user
 	 * @param ouName
 	 */
-	public void createOU(String[] subscriberOurgUnits, String ouName, String description) {
+	public void createOuIfNotExists(String[] subscriberOurgUnits, String ouName, String description) {
 		checkNotNull(subscriberOurgUnits);
 		checkNotNull(ouName);
 
@@ -264,16 +264,22 @@ public class LdapService {
 		Name dn = builder.build();
 
 		if (dnExists(dn)) {
-			logger.info("FOUND");
+			//logger.info("FOUND");
 		} else {
 			DirContextAdapter context = new DirContextAdapter(dn);
 			context.setAttributeValues("objectclass", LdapUserAccount.OU_CLASS);
-			context.setAttributeValue("description", description);
+			if (description != null) {
+				context.setAttributeValue("description", description);
+			}
 			ldapTemplate.bind(context);
-
 		}
 	}
 
+	/**
+	 * 
+	 * @param dn
+	 * @return
+	 */
 	private boolean dnExists(Name dn) {
 		try {
 			ldapTemplate.lookup(dn);
