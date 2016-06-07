@@ -64,13 +64,24 @@ angular.module('portalNMC')
     function prepareSettingsView(){
         $timeout(function(){
             $("#inputHourCountValue").inputmask();
-            $("#inputDayCountValue").inputmask();
+            $("#inputDayCountValue").inputmask();            
+            $("#inputMapValueSUBSCR_ZOOM_MAP_PREF").inputmask();
+            $("#inputMapValueSUBSCR_LNG_MAP_PREF").inputmask();
+            $("#inputMapValueSUBSCR_LAT_MAP_PREF").inputmask();
         });
     }
     
     $scope.setActiveFlagForSmsSetting = function(value){
         $scope.data.modifySettings.forEach(function(elem){
             if (elem.subscrPrefKeyname == 'SUBSCR_DAY_COUNT_SMS_PREF' || elem.subscrPrefKeyname == 'SUBSCR_HOUR_COUNT_SMS_PREF'){
+                elem.isActive = value;                
+            }
+        })
+    };
+    
+    $scope.setActiveFlagForMapSetting = function(value){
+        $scope.data.modifySettings.forEach(function(elem){
+            if (elem.subscrPrefKeyname == 'SUBSCR_LNG_MAP_PREF' || elem.subscrPrefKeyname == 'SUBSCR_LAT_MAP_PREF' || elem.subscrPrefKeyname == 'SUBSCR_ZOOM_MAP_PREF'){
                 elem.isActive = value;                
             }
         })
@@ -195,6 +206,10 @@ angular.module('portalNMC')
         return result;
     }
     
+    $scope.checkPositiveNumberValue = function(value){        
+        return mainSvc.checkPositiveNumberValue(value);
+    }
+    
     function checkSettings(){
         var result = true;
         var smsSetting = findSmsSettings();
@@ -207,8 +222,7 @@ angular.module('portalNMC')
     $scope.saveSettings = function(){
         //check settings
         var checkFlag = checkSettings();
-        if (checkFlag == false){
-console.log(checkFlag);            
+        if (checkFlag == false){           
             return false;
         };
 //        $scope.data.modifySettings.pop();//remove test SMS setting
