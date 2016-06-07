@@ -12,11 +12,13 @@ app.controller('LogSmsCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obje
     $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
     $scope.ctrlSettings.showObjectsFlag = true;
     $scope.ctrlSettings.smsLogDaterange = {
-        startDate: moment().subtract(6, 'days').startOf('day'),                        
+        startDate: moment().startOf('day'),                        
         endDate: moment().endOf('day')};
     $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD";
     $scope.ctrlSettings.userDateFormat = "DD-MM-YYYY HH:mm:ss";
-    $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");    
+    $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");
+    $scope.ctrlSettings.daterangeOpts.startDate = moment().startOf('day');
+    $scope.ctrlSettings.daterangeOpts.endDate = moment().endOf('day');
     $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month    
 
     $scope.ctrlSettings.logColumns = [
