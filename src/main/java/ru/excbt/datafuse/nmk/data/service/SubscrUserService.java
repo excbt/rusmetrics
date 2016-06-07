@@ -3,7 +3,10 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -53,6 +56,9 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private LdapService ldapService;
+
+	@Autowired
+	private SubscrRoleService subscrRoleService;
 
 	/**
 	 * 
@@ -342,4 +348,39 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		subscrUser.setPassword(null);
 		subscrUserRepository.save(subscrUser);
 	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param isAdmin
+	 * @param isReadonly
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrRole> processSubscrRoles(final Subscriber subscriber, final boolean isAdmin,
+			final boolean isReadonly) {
+		List<SubscrRole> subscrRoles = new ArrayList<>();
+
+		if (Boolean.TRUE.equals(isReadonly)) {
+			subscrRoles.addAll(subscrRoleService.subscrReadonlyRoles());
+		} else {
+			if (Boolean.TRUE.equals(isAdmin)) {
+				subscrRoles.addAll(
+						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(subscriber.getCanCreateChild())));
+				if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+					subscrRoles.addAll(subscrRoleService.subscrRmaAdminRoles(subscriber.getCanCreateChild()));
+				}
+			} else {
+				subscrRoles.addAll(subscrRoleService.subscrUserRoles());
+			}
+		}
+
+		Map<Long, SubscrRole> subscrRolesMap = new HashMap<>();
+		for (SubscrRole r : subscrRoles) {
+			subscrRolesMap.put(r.getId(), r);
+		}
+
+		return new ArrayList<>(subscrRolesMap.values());
+	}
+
 }

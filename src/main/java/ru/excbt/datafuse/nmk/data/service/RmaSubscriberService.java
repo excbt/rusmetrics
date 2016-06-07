@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
@@ -44,6 +47,9 @@ public class RmaSubscriberService extends SubscriberService {
 
 	@Autowired
 	private LdapService ldapService;
+
+	@Autowired
+	private SubscrUserService subscrUserService;
 
 	/**
 	 * 
@@ -157,6 +163,8 @@ public class RmaSubscriberService extends SubscriberService {
 		// Make default Report Paramset		
 		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
 
+		setupSubscriberAdminUserRoles(resultSubscriber);
+
 		return resultSubscriber;
 	}
 
@@ -215,6 +223,45 @@ public class RmaSubscriberService extends SubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Subscriber> selectRmaList() {
 		return subscriberRepository.selectRmaList();
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 */
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void setupSubscriberAdminUserRoles(Subscriber subscriber) {
+
+		checkNotNull(subscriber);
+		checkArgument(!subscriber.isNew());
+
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(subscriber.getId());
+		List<SubscrUser> adminUsers = ObjectFilters.filterToList(subscrUsers,
+				i -> Boolean.TRUE.equals(i.getIsAdmin()) && !Boolean.TRUE.equals(i.getIsReadonly())
+						&& !Boolean.TRUE.equals(i.getIsBlocked()));
+
+		adminUsers.forEach(i -> {
+			logger.debug("Update roles for {}. isAdmin: {}, isReadonly: {}", i.getUserName(), i.getIsAdmin(),
+					i.getIsReadonly());
+
+			logger.debug("Exisiting roles:");
+			for (SubscrRole subscrRole : i.getSubscrRoles()) {
+				logger.debug("Role: {}", subscrRole.getRoleName());
+			}
+
+			i.getSubscrRoles().clear();
+			List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(subscriber,
+					Boolean.TRUE.equals(i.getIsAdmin()), Boolean.TRUE.equals(i.getIsReadonly()));
+			i.getSubscrRoles().addAll(subscrRoles);
+
+			logger.debug("New roles:");
+			for (SubscrRole subscrRole : i.getSubscrRoles()) {
+				logger.debug("Role: {}", subscrRole.getRoleName());
+			}
+
+		});
+
 	}
 
 }

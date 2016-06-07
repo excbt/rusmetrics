@@ -143,6 +143,8 @@ public class SubscrUserController extends SubscrApiController {
 	}
 
 	/**
+	 * TODO Method has been moved to SubscrUserService
+	 * Should be deleted
 	 * 
 	 * @param rmaSubscriber
 	 * @param subscrUser
@@ -150,7 +152,8 @@ public class SubscrUserController extends SubscrApiController {
 	 * @param isReadonly
 	 * @return
 	 */
-	private List<SubscrRole> processSubscrRoles(final Subscriber rmaSubscriber, final boolean isAdmin,
+	@Deprecated
+	private List<SubscrRole> processSubscrRoles2(final Subscriber rmaSubscriber, final boolean isAdmin,
 			final boolean isReadonly) {
 		List<SubscrRole> subscrRoles = new ArrayList<>();
 
@@ -212,7 +215,7 @@ public class SubscrUserController extends SubscrApiController {
 			subscrUser.setIsAdmin(false);
 		}
 
-		List<SubscrRole> subscrRoles = processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
+		List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
 
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.getSubscrRoles().addAll(subscrRoles);
@@ -265,7 +268,7 @@ public class SubscrUserController extends SubscrApiController {
 			subscrUser.setIsAdmin(false);
 		}
 
-		List<SubscrRole> subscrRoles = processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
+		List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
 
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.getSubscrRoles().addAll(subscrRoles);
