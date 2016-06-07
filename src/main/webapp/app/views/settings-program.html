@@ -11,9 +11,7 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
-
     </ul>
-
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="settings-program">
       </div>
@@ -24,7 +22,7 @@
     <div class="marginTop5">
         <div class="container-fluid">
             <div class="row" ng-repeat="setting in data.modifySettings"
-                 ng-class="{'nmc-sms-prop-row': setting.subscrPrefKeyname == 'SUBSCR_DAY_COUNT_SMS_PREF' || setting.subscrPrefKeyname == 'SUBSCR_HOUR_COUNT_SMS_PREF'}">
+                 ng-class="{'nmc-sms-prop-row': setting.subscrPrefKeyname == 'SUBSCR_DAY_COUNT_SMS_PREF' || setting.subscrPrefKeyname == 'SUBSCR_HOUR_COUNT_SMS_PREF' || setting.subscrPrefKeyname == 'SUBSCR_ZOOM_MAP_PREF' || setting.subscrPrefKeyname == 'SUBSCR_LNG_MAP_PREF' || setting.subscrPrefKeyname == 'SUBSCR_LAT_MAP_PREF'}">
                 <div class="container-fluid">
                 <div ng-switch on="setting.subscrPrefCategory">
                     <div ng-switch-when="SUBSCR_OBJECT_TREE">
@@ -133,6 +131,44 @@
 <!--                                </div>-->
                         </span>
                     </div>
+<!--
+                    <div ng-switch-when="SUBSCR_MAP_PREF_TYPE">
+                        <span ng-switch on="setting.subscrPrefKeyname">
+                            <span ng-switch-when="SUBSCR_MAP_PREF">
+                                <div class="row nmc-table-program-settings">                        
+                                    <div class="col-xs-1 col-md-1 noPadding nmc-td-for-button" >
+                                        <input type="checkbox" ng-model="setting.isActive" ng-disabled="isDisabled()"
+                                               ng-click="setActiveFlagForMapSetting(setting.isActive)"/>
+                                    </div>
+                                    <div class="col-xs-2 col-md-2 noPadding marginTop3">
+                                        {{setting.subscrPref.isActiveCaption}}
+                                    </div>
+
+                                </div>
+                            </span>                                
+                            <span ng-switch-default>   
+                                 <div class="row marginBottom5 marginTop5"
+                                 ng-class="{'nmc-disabled': !setting.isActive}">
+                                    <div class="col-xs-7 col-md-7 noPadding marginTop3">
+                                        <span class="pull-right">{{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
+                                    </div>
+                                    <div class="col-xs-2 col-md-2 " >
+                                        <div class="form-group noMarginBottom" 
+                                             ng-class="{'has-error': !checkPositiveNumberValue(setting.value)}">
+                                            <input ng-attr-id="{{'inputMapValue' + setting.subscrPrefKeyname}}"
+                                                   type="text" 
+                                                   class="form-control nmc-text-input-form nmc-input-count" 
+                                                   ng-model="setting.value" 
+                                                   ng-disabled="!setting.isActive || isDisabled()"
+                                                   data-inputmask="'alias':'numeric', 'greedy': false"
+                                                   />
+                                        </div>
+                                    </div>
+                                 </div>
+                            </span>
+                        </span>
+                    </div>
+-->
                 </div>    
                 </div>
             </div>
