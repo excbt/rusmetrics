@@ -10,10 +10,12 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
     $scope.ctrlSettings.showObjectsFlag = true;
     
-    $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");    
+    $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");
+    $scope.ctrlSettings.daterangeOpts.startDate = moment().startOf('day');
+    $scope.ctrlSettings.daterangeOpts.endDate = moment().endOf('day');
     $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
     $scope.ctrlSettings.sessionsLogDaterange = {
-        startDate: moment().subtract(6, 'days').startOf('day'),                        
+        startDate: moment().startOf('day'),                        
         endDate: moment().endOf('day')};
     $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD";
     
@@ -487,7 +489,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         loadSessionsData();
     }
     
-    function serverDataParser(data){        
+    function serverDataParser(data){       
         var result = data.map(function(dataRow){
             var tmpParsedRow = {};
             tmpParsedRow.id = dataRow.id;
@@ -500,7 +502,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             tmpParsedRow.currentStatus = dataRow.sessionStatus;
             tmpParsedRow.sessionMessage = dataRow.sessionMessage;
             return tmpParsedRow;
-        });
+        });                
         return result;        
     }
     
