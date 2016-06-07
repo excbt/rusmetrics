@@ -53,7 +53,7 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/objects_map.html',
         controller: 'ObjectsMapCtrl',
         resolve:{
-            permissions: ['mainSvc', function(mainSvc){
+            permissions: ['mainSvc', function(mainSvc){                
                 return mainSvc.getLoadedServicePermission();
             }]
         }

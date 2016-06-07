@@ -50,9 +50,7 @@ angular.module('portalNMC')
     };
     if (angular.isDefined(objectSvc.getObjectSettings().mapCenterLng)){
         mapCenter.lng = Number(objectSvc.getObjectSettings().mapCenterLng);
-    };
-    
-//console.log(mapCenter);    
+    };  
     angular.extend($scope, {
        mapCenter 
     });

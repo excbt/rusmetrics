@@ -2,7 +2,7 @@
 angular.module('portalNMC')
     .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', function($rootScope, $http, $interval, $cookies, $location, objectSvc){
 //console.log("Monitor service. Run Monitor service.");
-        var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";
+        var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
         var objectUrl = notificationsUrl + "/contObject";
@@ -23,6 +23,10 @@ angular.module('portalNMC')
         monitorSvcSettings.noGreenObjectsFlag = false;
         monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
         monitorSvcSettings.toDate = moment().endOf('day').format('YYYY-MM-DD');
+        
+        function errorCallbackConsole(e){
+            console.log(e);
+        }
         
         var getMonitorSettings = function(){            
             return monitorSvcSettings;
@@ -164,9 +168,7 @@ angular.module('portalNMC')
 //console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
                 })
-                .error(function(e){
-                    console.log(e);
-                });        
+                .error(errorCallbackConsole);        
         };
         
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)

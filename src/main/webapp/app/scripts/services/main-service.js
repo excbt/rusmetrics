@@ -3,14 +3,23 @@
 angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc){
     var EMPTY_OBJECT = {};
+    
+    var MAP_PREF = "SUBSCR_MAP_PREF";
+    var LNG_MAP_PREF = "SUBSCR_LNG_MAP_PREF";
+    var LAT_MAP_PREF = "SUBSCR_LAT_MAP_PREF";
+    var ZOOM_MAP_PREF = "SUBSCR_ZOOM_MAP_PREF";
+    
 //    $log.debug("Run main service. main service: row: 5");
     //set services settings
     var mainSvcSettings = {};
     mainSvcSettings.subscrUrl = "../api/subscr";
-    mainSvcSettings.servicePermissionUrl = mainSvcSettings.subscrUrl+"/manage/service/permissions";
+    mainSvcSettings.servicePermissionUrl = mainSvcSettings.subscrUrl + "/manage/service/permissions";
     mainSvcSettings.loadingServicePermissionFlag = false;
     mainSvcSettings.serverTimeZone = 3;//server time zone at Hours
 //    mainSvcSettings.loadedServicePermission = null;
+    mainSvcSettings.mapSettings = {};
+    
+    var prefUrl = mainSvcSettings.subscrUrl + '/subscrPrefValue';
     
     var contextIds = [];
     
@@ -54,6 +63,11 @@ angular.module('portalNMC')
     var setMonitorMapSettings = function(mapSettings){
         monitorMapSettings = mapSettings;
     };
+    
+    // callback for error-respond from server
+    function errorCallbackConsole(e){
+        console.log(e);
+    }
     
     //methods for the work with the dates
     var dateFormating = function(millisec, dateFormat){
@@ -160,33 +174,77 @@ angular.module('portalNMC')
             .success(function(data, satus, headers, config){
                 $rootScope.userInfo = angular.copy(data);
 //console.log($rootScope.userInfo);
-                if (!checkUndefinedNull($rootScope.userInfo.subscriber)){
-//console.log($rootScope.userInfo.subscriber);                    
-                    var mapSettings = {};
-                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLat)){
-                        mapSettings.mapCenterLat = $rootScope.userInfo.subscriber.mapCenterLat;
-                    };
-                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLng)){
-                        mapSettings.mapCenterLng = $rootScope.userInfo.subscriber.mapCenterLng;
-                    };
-                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoom)){
-                        mapSettings.mapZoom = $rootScope.userInfo.subscriber.mapZoom;
-                    };
-                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoomDetail)){
-                        mapSettings.mapZoomDetail = $rootScope.userInfo.subscriber.mapZoomDetail;
-                    };
-//console.log(mapSettings);                     
-                    if (mapSettings!=EMPTY_OBJECT){
-//console.log(mapSettings);                        
-                        objectSvc.setObjectSettings(mapSettings);
-                        monitorSvc.setMonitorSettings(mapSettings);
-                    };
-                    
-                };
+//                if (!checkUndefinedNull($rootScope.userInfo.subscriber)){                    
+//                    var mapSettings = {};
+//                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLat)){
+//                        mapSettings.mapCenterLat = $rootScope.userInfo.subscriber.mapCenterLat;
+//                    };
+//                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLng)){
+//                        mapSettings.mapCenterLng = $rootScope.userInfo.subscriber.mapCenterLng;
+//                    };
+//                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoom)){
+//                        mapSettings.mapZoom = $rootScope.userInfo.subscriber.mapZoom;
+//                    };
+//                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoomDetail)){
+//                        mapSettings.mapZoomDetail = $rootScope.userInfo.subscriber.mapZoomDetail;
+//                    };                  
+//                    if (mapSettings!=EMPTY_OBJECT){                       
+//                        objectSvc.setObjectSettings(mapSettings);
+//                        monitorSvc.setMonitorSettings(mapSettings);
+//                    };
+//                    
+//                };
             })
             .error(function(e){
                 console.log(e);
     });
+    
+    // *************** load map settings *********************
+    // **********************************************************
+    function loadMapSetting(setting, target, broadcastMsg){
+        var url = prefUrl +  "?subscrPrefKeyname=" + setting;
+        $http.get(url).then(function(resp){            
+            mainSvcSettings.mapSettings[target] = resp.data.value;           
+            if (!checkUndefinedNull(broadcastMsg)){
+                $rootScope.$broadcast(broadcastMsg);
+            }
+        }, errorCallbackConsole)
+    }
+    
+    function loadMapCenterLat(){        
+        loadMapSetting(LAT_MAP_PREF, "mapCenterLat", 'mainSvc:loadMapCenterLng')
+    }
+    
+    function loadMapCenterLng(){        
+        loadMapSetting(LNG_MAP_PREF, "mapCenterLng", 'mainSvc:loadMapZoom')
+    }
+    
+    function loadMapZoom(){       
+        loadMapSetting(ZOOM_MAP_PREF, "mapZoom", 'mainSvc:setMapSettingsInServices')
+    }
+
+    function loadMapSettings(){
+        var url = prefUrl + "?subscrPrefKeyname=" + MAP_PREF;
+        $http.get(url).then(function(resp){
+            var mapPref = resp.data;
+            if (mapPref.isActive == true){            
+                $rootScope.$broadcast('mainSvc:loadMapCenterLat');                
+            }
+        }, errorCallbackConsole)
+    }
+    
+    function setMapSettingsInServices(){      
+        if (!checkEmptyObject(mainSvcSettings.mapSettings)){        
+            objectSvc.setObjectSettings(mainSvcSettings.mapSettings);
+            monitorSvc.setMonitorSettings(mainSvcSettings.mapSettings);
+        };
+    }
+    
+    $rootScope.$on('mainSvc:loadMapCenterLat', loadMapCenterLat);
+    $rootScope.$on('mainSvc:loadMapCenterLng', loadMapCenterLng);
+    $rootScope.$on('mainSvc:loadMapZoom', loadMapZoom);
+    $rootScope.$on('mainSvc:setMapSettingsInServices', setMapSettingsInServices);
+    // end of load map settings ****************
     
     var getProp = function(obj, propName){
         var result = false;
@@ -602,6 +660,11 @@ angular.module('portalNMC')
     //                     end Work with trees
     // *********************************************************************************************
     
+    function initSvc(){
+        loadMapSettings();
+    }    
+    initSvc();
+    
     return {
         checkContext,
         checkEmptyObject,
@@ -611,7 +674,7 @@ angular.module('portalNMC')
         checkStrForDate,
         checkUndefinedEmptyNullValue,
         checkUndefinedNull,
-        dateFormating,
+        dateFormating,        
         findItemBy,
         findNodeInTree,
         getConfirmCode,
