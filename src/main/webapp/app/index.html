@@ -185,12 +185,12 @@
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
-                                <a 
+                                <a ng-show="!isCabinet()"
                                    id="log_main_menu_item" 
                                    class="list-group-item nmc-main-menu-item" 
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item, 'nmc-hide':!isCabinet(),'nmc-show':isCabinet()}"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"                                   
 
-                                   href="#/log/session-log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')"><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журналы</span></a>
+                                   href="#/log/session-log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')" ng-cloak><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журналы</span></a>
                                 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
