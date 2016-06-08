@@ -37,6 +37,12 @@
       <link rel="stylesheet" href="/public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.css"/>
       <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.min.css"/>
       
+      <script src="/public/vendor_components/RightsJS/right.js"></script>
+      <script src="/public/vendor_components/RightsJS/right-resizable.js"></script>
+      
+      <script src="/public/bower_components/jquery/dist/jquery.js"></script>
+      <script src="/public/bower_components/angular/angular.min.js"></script>
+      
   </head>
   <body class="nmc-main-window-background" ng-app="portalNMC">
     <!--[if IE]>
@@ -139,7 +145,7 @@
        
         <!-- Side bar menu -->
         <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu" 
-             ng-class="{'nmc-main-menu-minimize':!mainCtrlSettings.showFullMenuFlag}">
+             ng-class="{'nmc-main-menu-minimize':!mainCtrlSettings.showFullMenuFlag, 'nmc-hide':isCabinet(), 'nmc-show':!isCabinet()}" ng-cloak>
                         <nav class="sidebar-nav"
                              role="navigation" 
                              ng-show="!showPrivateOfficeMenu">
@@ -182,7 +188,7 @@
                                 <a 
                                    id="log_main_menu_item" 
                                    class="list-group-item nmc-main-menu-item" 
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item, 'nmc-hide':!isCabinet(),'nmc-show':isCabinet()}"
 
                                    href="#/log/session-log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')"><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журналы</span></a>
                                 
@@ -233,7 +239,7 @@
             </span>
             </div>                
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace" ng-class="{'nmc-main-workspace-maximize':!mainCtrlSettings.showFullMenuFlag}">
+        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace" ng-class="{'nmc-main-workspace-maximize':!mainCtrlSettings.showFullMenuFlag || isCabinet()}" ng-cloak>
 					
 					<div id="main" ng-view></div>
         </div>
@@ -360,11 +366,6 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
 
-    <script src="/public/vendor_components/RightsJS/right.js"></script>
-    <script src="/public/vendor_components/RightsJS/right-resizable.js"></script>
-      
-    <script src="/public/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/public/bower_components/angular/angular.min.js"></script>
     <script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/public/bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="/public/bower_components/angular-cookies/angular-cookies.min.js"></script>
