@@ -109,7 +109,10 @@ public class RmaSubscriberService extends SubscriberService {
 					String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
 		}
 
-		return subscriberRepository.save(subscriber);
+		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
+		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
+
+		return resultSubscriber;
 	}
 
 	/**
