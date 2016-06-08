@@ -149,6 +149,9 @@ public class ReportParamset extends AbstractAuditableModel implements DeletableO
 	@Column(name = "settlement_day")
 	private Integer settlementDay;
 
+	@Column(name = "settlement_month")
+	private Integer settlementMonth;
+
 	public ReportTemplate getReportTemplate() {
 		return reportTemplate;
 	}
@@ -377,6 +380,14 @@ public class ReportParamset extends AbstractAuditableModel implements DeletableO
 
 	public void setIsContextLaunchChild(Boolean isContextLaunchChild) {
 		this.isContextLaunchChild = isContextLaunchChild;
+	}
+
+	public Integer getSettlementMonth() {
+		return settlementMonth;
+	}
+
+	public void setSettlementMonth(Integer settlementMonth) {
+		this.settlementMonth = settlementMonth;
 	}
 
 }

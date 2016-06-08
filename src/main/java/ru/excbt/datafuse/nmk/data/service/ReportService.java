@@ -37,6 +37,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JasperDatabaseConnectionSettings;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.support.ReportParamsetUtils;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
@@ -129,16 +130,6 @@ public class ReportService {
 			return result;
 		}
 
-	}
-
-	private class ReportDates {
-		private final LocalDateTime dtStart;
-		private final LocalDateTime dtEnd;
-
-		public ReportDates(LocalDateTime dtStart, LocalDateTime dtEnd) {
-			this.dtStart = dtStart;
-			this.dtEnd = dtEnd;
-		}
 	}
 
 	/**
@@ -261,70 +252,7 @@ public class ReportService {
 
 		final ReportParamset reportParamset = reportMakerParam.getReportParamset();
 
-		// Get Start and End dates
-		LocalDateTime dtStart = null;
-		LocalDateTime dtEnd = null;
-		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
-			if (reportParamset.getParamsetStartDate() == null || reportParamset.getParamsetEndDate() == null) {
-				throw new IllegalArgumentException(String.format(
-						"ReportParamset (id=%d) is invalid. "
-								+ "ParamsetStartDate and ParamsetEndDate is not set correctly. " + "ReportPeriodKey=%s",
-						reportParamset.getId(), ReportPeriodKey.INTERVAL));
-			}
-			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset.getParamsetStartDate()));
-			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
-
-		} else if (reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null
-				&& reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH) {
-
-			int settlementDay = reportParamset.getSettlementDay();
-
-			final int lastDayOfCurrMonth = reportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
-					.getDayOfMonth();
-
-			int currentDayOfMonth = reportDate.withMillisOfDay(0).getDayOfMonth();
-
-			if (currentDayOfMonth >= settlementDay && settlementDay <= lastDayOfCurrMonth) {
-				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(settlementDay).minusDays(1));
-				dtStart = JodaTimeUtils.startOfDay(reportDate.withDayOfMonth(settlementDay).minusMonths(1));
-			} else {
-
-				try {
-					final int lastDayOfPrev1Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
-							.getDayOfMonth();
-					final int lastDayOfPrev2Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
-							.minusDays(1).getDayOfMonth();
-					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
-						dtEnd = JodaTimeUtils
-								.endOfDay(reportDate.minusMonths(1).withDayOfMonth(settlementDay).minusDays(1));
-						dtStart = JodaTimeUtils.startOfDay(reportDate.minusMonths(2).withDayOfMonth(settlementDay));
-					}
-
-				} catch (Exception e) {
-					logger.error("Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}", reportDate,
-							settlementDay);
-				}
-			}
-
-			// If we havn't process dates
-			if (dtStart == null || dtEnd == null) {
-				LocalDateTime processedReportDate = reportDate;
-
-				dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate,
-						reportParamset.getReportPeriodKey());
-				dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
-			}
-
-		}
-
-		else {
-			LocalDateTime processedReportDate = reportDate;
-
-			dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate, reportParamset.getReportPeriodKey());
-			dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
-
-		}
-		// //////////////////////
+		final LocalDatePeriod reportDatePeriod = getReportPeriod(reportParamset, reportDate);
 
 		// List<Long> makeObjectIds = reportMakerParam.getContObjectList();
 		List<Long> reportContObjectObjectIdList = reportMakerParam.getReportContObjectIdList();
@@ -369,11 +297,12 @@ public class ReportService {
 					"Call nmkGetReport with params (reportType:{}; (is, os); "
 							+ "idParam:{}; startDate:{}; endDate:{}; objectIds:{}; "
 							+ "convertedFileType:{}, isZip: {}, paramSpecialMap...)",
-					destReportType, idParam, dtStart.toDate(), dtEnd.toDate(), Arrays.toString(objectIds),
+					destReportType, idParam, reportDatePeriod.getDateFrom(), reportDatePeriod.getDateTo(),
+					Arrays.toString(objectIds),
 					convertedFileType, isZip);
 
-			rep.nmkGetReport(destReportType, inputStream, outputStream, idParam, dtStart.toDate(), dtEnd.toDate(),
-					objectIds, convertedFileType, isZip, paramSpecialMap);
+			rep.nmkGetReport(destReportType, inputStream, outputStream, idParam, reportDatePeriod.getDateFrom(),
+					reportDatePeriod.getDateTo(), objectIds, convertedFileType, isZip, paramSpecialMap);
 
 		} catch (IOException e) {
 			logger.error("NmkReport exception: {}", e);
@@ -436,7 +365,7 @@ public class ReportService {
 	 * @param reportDate
 	 * @return
 	 */
-	private ReportDates getReportDates(ReportParamset reportParamset, LocalDateTime reportDate) {
+	private LocalDatePeriod getReportPeriod(ReportParamset reportParamset, LocalDateTime reportDate) {
 
 		// Get Start and End dates
 		LocalDateTime dtStart = null;
@@ -453,6 +382,8 @@ public class ReportService {
 
 		} else if (reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null
 				&& reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH) {
+
+			// If Settlement day & LAST MONTH
 
 			int settlementDay = reportParamset.getSettlementDay();
 
@@ -502,7 +433,7 @@ public class ReportService {
 
 		}
 
-		return new ReportDates(dtStart, dtEnd);
+		return LocalDatePeriod.builder().dateFrom(dtStart).dateTo(dtEnd).build();
 	}
 
 }

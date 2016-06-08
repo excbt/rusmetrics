@@ -35,6 +35,9 @@ public class ReportPeriod extends AbstractKeynameEntity implements DisabledObjec
 	@Column(name = "is_settlement_day")
 	private Boolean isSettlementDay;
 
+	@Column(name = "is_settlement_month")
+	private Boolean isSettlementMonth;
+
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
@@ -96,6 +99,10 @@ public class ReportPeriod extends AbstractKeynameEntity implements DisabledObjec
 
 	public Integer getReportPeriodOrder() {
 		return reportPeriodOrder;
+	}
+
+	public Boolean getIsSettlementMonth() {
+		return isSettlementMonth;
 	}
 
 }
