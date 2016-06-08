@@ -571,7 +571,7 @@ angular.module('portalNMC')
                         }else{
                                 trHTML+="<a href='#/objects/indicators/";
                         };
-                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
+                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "' target=\"_blank\"><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
                                     "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
                                     "title=\"Показания точки учёта\">" + 
