@@ -10,15 +10,17 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 @Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_type_cont_service")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_type_cont_service_type")
 @JsonIgnoreProperties(value = { "reportType", "reportTypeKeyname" })
 @JsonInclude(Include.NON_NULL)
-public class ReportTypeContService extends AbstractAuditableModel {
+public class ReportTypeContServiceType extends JsonAbstractAuditableModel {
 
 	/**
 	 * 
@@ -32,8 +34,10 @@ public class ReportTypeContService extends AbstractAuditableModel {
 	@Column(name = "report_type")
 	private String reportTypeKeyname;
 
-	@Column(name = "cont_service_type")
-	private String contServiceType;
+	@JsonUnwrapped
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cont_service_type")
+	private ContServiceType contServiceType;
 
 	public ReportType getReportType() {
 		return reportType;
@@ -43,7 +47,7 @@ public class ReportTypeContService extends AbstractAuditableModel {
 		return reportTypeKeyname;
 	}
 
-	public String getContServiceType() {
+	public ContServiceType getContServiceType() {
 		return contServiceType;
 	}
 

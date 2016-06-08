@@ -6,10 +6,11 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "report_period")
-public class ReportPeriod extends AbstractKeynameEntity {
+public class ReportPeriod extends AbstractKeynameEntity implements DisabledObject {
 
 	/**
 	 * 
@@ -33,6 +34,12 @@ public class ReportPeriod extends AbstractKeynameEntity {
 
 	@Column(name = "is_settlement_day")
 	private Boolean isSettlementDay;
+
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
+
+	@Column(name = "report_period_order")
+	private Integer reportPeriodOrder;
 
 	public String getCaption() {
 		return caption;
@@ -80,6 +87,15 @@ public class ReportPeriod extends AbstractKeynameEntity {
 
 	public void setIsSettlementDay(Boolean isSettlementDay) {
 		this.isSettlementDay = isSettlementDay;
+	}
+
+	@Override
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public Integer getReportPeriodOrder() {
+		return reportPeriodOrder;
 	}
 
 }

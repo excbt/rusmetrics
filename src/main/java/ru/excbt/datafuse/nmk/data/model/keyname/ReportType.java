@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
+import ru.excbt.datafuse.nmk.data.model.ReportTypeContServiceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
@@ -74,6 +75,9 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 
 	@Column(name = "resource_category")
 	private String resourceCategory;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
+	private List<ReportTypeContServiceType> contServiceTypes = new ArrayList<>();
 
 	public String getCaption() {
 		return caption;
@@ -139,6 +143,10 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 
 	public String getResourceCategory() {
 		return resourceCategory;
+	}
+
+	public List<ReportTypeContServiceType> getContServiceTypes() {
+		return contServiceTypes;
 	}
 
 }

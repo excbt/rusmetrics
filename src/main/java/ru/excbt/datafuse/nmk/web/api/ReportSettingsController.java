@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -35,7 +35,7 @@ public class ReportSettingsController extends SubscrApiController {
 	private ReportTypeService reportTypeService;
 
 	@Autowired
-	private ReportPeriodRepository reportPeriodRepository;
+	private ReportPeriodService reportPeriodService;
 
 	@Autowired
 	private ReportSheduleTypeRepository reportSheduleTypeRepository;
@@ -62,8 +62,8 @@ public class ReportSettingsController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/reportPeriod", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportPeriodJson() {
-		return ResponseEntity.ok(reportPeriodRepository.findAll());
+	public ResponseEntity<?> getReportPeriods() {
+		return ResponseEntity.ok(reportPeriodService.selectReportPeriods());
 	}
 
 	/**
