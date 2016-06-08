@@ -540,7 +540,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             
             $scope.paramsetEndDateFormat = (new Date(object.paramsetEndDate));
             $scope.psEndDateFormatted = (object.paramsetEndDate != null) ? moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
-console.log($scope.psEndDateFormatted); 
+//console.log($scope.psEndDateFormatted); 
             
 //            $scope.paramsetEndDateFormatted ={
 //                startDate: moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]),
@@ -816,7 +816,8 @@ console.log($scope.psEndDateFormatted);
                 }
             };
         };
-        if ($scope.currentReportPeriod.isSettlementMonth == true){
+        if (!mainSvc.checkUndefinedNull($scope.currentReportPeriod) && 
+            $scope.currentReportPeriod.isSettlementMonth == true){
             setPropForSettlementMonth();
         }
     }, false);
@@ -1131,7 +1132,7 @@ console.log($scope.psEndDateFormatted);
         $("#inputSettlementDay").inputmask("d", {placeholder: ""});
     });
     
-    var setPropForSettlementMonth = function(){
+    var setPropForSettlementMonth = function(){         
         $('#inputSettlementMonth').datepicker({
           dateFormat: "MM, yy",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
@@ -1145,17 +1146,14 @@ console.log($scope.psEndDateFormatted);
             currentText: "",
             onClose: function(dateText, inst) { 
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-                $scope.currentObject.settlementMonth = inst.selectedMonth;
-                $scope.currentObject.settlementYear = inst.selectedYear;
-                $scope.currentObject.settlementDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
-console.log($scope.currentObject);                
+                $scope.currentObject.settlementMonth = inst.selectedMonth + 1;
+                $scope.currentObject.settlementYear = inst.selectedYear;               
                 setTimeout(function(){
                     $('.ui-datepicker-calendar').addClass("nmc-hide");
                 }, 1);
             },
             beforeShow: function(){
-                setTimeout(function(){
-//                    $scope.currentObject.settlementDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
+                setTimeout(function(){                    
                     $('.ui-datepicker-calendar').addClass("nmc-hide");
                     $('.ui-datepicker-current').addClass("nmc-hide");
                 }, 1);
@@ -1167,6 +1165,8 @@ console.log($scope.currentObject);
                 }, 1);
             }
         });
+        
+        $('#inputSettlementMonth').datepicker('setDate', new Date($scope.currentObject.settlementYear, $scope.currentObject.settlementMonth - 1, 1));
     }; 
 
 }]);

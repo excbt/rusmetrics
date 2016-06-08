@@ -225,7 +225,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr ng-show="currentSign==null">
+                                    <tr ng-show="currentSign==null && currentReportPeriod.isSettlementMonth != true">
                                         <td class="col-sm-3">
                                             <label for="inputPeriod" 
                                                    class="nmc-form-label">
@@ -258,6 +258,19 @@
                                                 </div>
                                                 </span>    
                                             </div>    
+
+                                        </td>
+                                    </tr>
+                                    <tr ng-show="currentReportPeriod.isSettlementMonth == true">
+                                        <td class="col-sm-3">
+                                            <label for="inputPeriod" class="nmc-form-label">Укажите месяц</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">
+                                            <input  
+                                               id="inputReportSettlementMonth" 
+                                               class="form-control date-picker nmc-input-data nmc-date-input-form"
+                                               type="text" 
+                                               />   
 
                                         </td>
                                     </tr>
