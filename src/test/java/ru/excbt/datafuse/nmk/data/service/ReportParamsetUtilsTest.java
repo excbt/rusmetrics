@@ -10,33 +10,30 @@ import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.service.support.ReportParamsetUtils;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
-
 public class ReportParamsetUtilsTest {
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportParamsetUtilsTest.class);
-	
-	
-	private LocalDateTime[] testKey (ReportPeriodKey reportPeriodKey) {
+
+	private LocalDateTime[] testKey(ReportPeriodKey reportPeriodKey) {
 		LocalDateTime[] result = new LocalDateTime[2];
-		LocalDateTime dtStart = ReportParamsetUtils.getStartDate(
+		LocalDateTime dtStart = ReportParamsetUtils.getStartDateTime(
 				LocalDateTime.now(), reportPeriodKey);
-		LocalDateTime dtEnd = ReportParamsetUtils.getEndDate(
+		LocalDateTime dtEnd = ReportParamsetUtils.getEndDateTime(
 				LocalDateTime.now(), reportPeriodKey);
-		
+
 		assertNotNull(dtStart);
 		assertNotNull(dtEnd);
 		logger.info("testing :{}", reportPeriodKey);
 		logger.info("dtStart:{}", dtStart);
 		logger.info("dtEnd:{}", dtEnd);
-	
+
 		result[0] = dtStart;
 		result[1] = dtEnd;
-		
+
 		return result;
 	}
-	
+
 	@Test
 	public void testToday() {
 		LocalDateTime[] res = testKey(ReportPeriodKey.TODAY);

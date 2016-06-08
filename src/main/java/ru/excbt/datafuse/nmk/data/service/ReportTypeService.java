@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
+import ru.excbt.datafuse.nmk.data.model.ReportTypeContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamSpecialRepository;
+import ru.excbt.datafuse.nmk.data.repository.ReportTypeContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
@@ -44,6 +48,9 @@ public class ReportTypeService {
 
 	@Autowired
 	private ReportMetaParamSpecialRepository reportMetaParamSpecialRepository;
+
+	@Autowired
+	private ReportTypeContServiceTypeRepository reportTypeContServiceTypeRepository;
 
 	/**
 	 * 
@@ -95,7 +102,23 @@ public class ReportTypeService {
 				.filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE).sorted(COMP_REPORT_TYPE_ORDER)
 				.collect(Collectors.toList());
 
+		result.forEach(i -> {
+			initReportType(i);
+		});
+
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportType
+	 */
+	public void initReportType(ReportType reportType) {
+		checkNotNull(reportType);
+		checkNotNull(reportType.getContServiceTypes());
+		List<ReportTypeContServiceType> serviceTypes = reportTypeContServiceTypeRepository
+				.selectContServiceTypes(reportType.getKeyname());
+		reportType.getContServiceTypes().addAll(serviceTypes);
 	}
 
 }

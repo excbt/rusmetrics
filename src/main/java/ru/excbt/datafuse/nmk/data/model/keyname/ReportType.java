@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -76,7 +77,7 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Column(name = "resource_category")
 	private String resourceCategory;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
+	@Transient
 	private List<ReportTypeContServiceType> contServiceTypes = new ArrayList<>();
 
 	public String getCaption() {
@@ -148,5 +149,9 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	public List<ReportTypeContServiceType> getContServiceTypes() {
 		return contServiceTypes;
 	}
+
+	//public List<ReportTypeContServiceType> getContServiceTypes() {
+	//	return contServiceTypes;
+	//}
 
 }

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 public enum ReportPeriodKey {
-	CURRENT_MONTH, INTERVAL, LAST_MONTH(true), TODAY, YESTERDAY, DAY;
+	CURRENT_MONTH, INTERVAL, LAST_MONTH(true), TODAY, YESTERDAY, DAY, SETTLEMENT_MONTH(true);
 
 	private final boolean isSettlementDay;
 

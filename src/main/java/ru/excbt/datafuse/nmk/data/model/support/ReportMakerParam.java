@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -379,6 +380,26 @@ public class ReportMakerParam {
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.DAY) {
 			result = result
 					&& checkRequiredParamNotNull(paramCommon.getOneDateRequired(), reportParamset.getParamsetOneDate());
+		}
+
+		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
+			result = result
+					&& (//(reportParamset.getSettlementMonth() == null && reportParamset.getSettlementYear() == null) ||
+					(reportParamset.getSettlementDay() != null && reportParamset.getSettlementMonth() != null && reportParamset.getSettlementYear() != null
+							&& reportParamset.getSettlementDay().intValue() >= 1
+							&& reportParamset.getSettlementDay().intValue() <= 31
+							&& reportParamset.getSettlementMonth().intValue() >= 1
+							&& reportParamset.getSettlementMonth().intValue() <= 12
+							&& reportParamset.getSettlementYear().intValue() >= 2000
+							&& reportParamset.getSettlementYear().intValue() <= 2100));
+
+			try {
+				LocalDateTime checkDate = LocalDateTime.now().withDate(reportParamset.getSettlementYear(),
+						reportParamset.getSettlementMonth(), reportParamset.getSettlementDay());
+			} catch (IllegalArgumentException e) {
+				result = false;
+			}
+
 		}
 
 		// Only one object required

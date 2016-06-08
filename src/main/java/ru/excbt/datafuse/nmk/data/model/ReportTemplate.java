@@ -16,9 +16,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 /**
@@ -33,8 +32,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 @Table(name = "report_template")
 @SQLDelete(sql = "UPDATE report_template SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ReportTemplate extends AbstractAuditableModel {
+public class ReportTemplate extends JsonAbstractAuditableModel {
 
 	/**
 	 * 

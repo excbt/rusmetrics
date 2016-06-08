@@ -22,7 +22,7 @@ public class ReportParamsetUtils {
 	 * @param reportPeriodKey
 	 * @return
 	 */
-	public static LocalDateTime getStartDate(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
+	private static LocalDateTime getStartDate2(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
 		checkNotNull(reportDate);
 		checkNotNull(reportPeriodKey);
 		LocalDateTime result = null;
@@ -36,6 +36,10 @@ public class ReportParamsetUtils {
 			break;
 		}
 		case CURRENT_MONTH: {
+			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			break;
+		}
+		case SETTLEMENT_MONTH: {
 			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
@@ -61,7 +65,7 @@ public class ReportParamsetUtils {
 	 * @param reportPeriodKey
 	 * @return
 	 */
-	public static LocalDateTime getEndDate(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
+	private static LocalDateTime getEndDate2(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
 		checkNotNull(reportDate);
 		checkNotNull(reportPeriodKey);
 		LocalDateTime result = null;
@@ -119,6 +123,10 @@ public class ReportParamsetUtils {
 			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
+		case SETTLEMENT_MONTH: {
+			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			break;
+		}
 		case LAST_MONTH: {
 			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
 			break;
@@ -158,7 +166,11 @@ public class ReportParamsetUtils {
 		case CURRENT_MONTH: {
 			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
 					.plusMonths(1).withDayOfMonth(1).minusDays(1);
-			;
+			break;
+		}
+		case SETTLEMENT_MONTH: {
+			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+					.plusMonths(1).withDayOfMonth(1).minusDays(1);
 			break;
 		}
 		case LAST_MONTH: {

@@ -370,6 +370,7 @@ public class ReportService {
 		// Get Start and End dates
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
+		//--------------------------------------------------------------------
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
 			if (reportParamset.getParamsetStartDate() == null || reportParamset.getParamsetEndDate() == null) {
 				throw new IllegalArgumentException(String.format(
@@ -380,36 +381,55 @@ public class ReportService {
 			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset.getParamsetStartDate()));
 			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
 
-		} else if (reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null
-				&& reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH) {
+		}
+		//--------------------------------------------------------------------			
+		else if ((reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH
+				&& reportParamset.getReportPeriodKey().isSettlementDay()
+				&& reportParamset.getSettlementDay() != null)
+				|| (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH &&
+						reportParamset.getSettlementDay() != null
+						&& reportParamset.getReportPeriodKey().isSettlementDay()
+						&& reportParamset.getSettlementMonth() != null
+						&& reportParamset.getSettlementYear() != null)) {
+
+			LocalDateTime modReportDate = reportDate;
+			if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
+				if (reportParamset.getSettlementMonth() != null) {
+					modReportDate = modReportDate.withMonthOfYear(reportParamset.getSettlementMonth());
+				}
+				if (reportParamset.getSettlementYear() != null) {
+					modReportDate = modReportDate.withYear(reportParamset.getSettlementYear());
+				}
+			}
 
 			// If Settlement day & LAST MONTH
 
 			int settlementDay = reportParamset.getSettlementDay();
 
-			final int lastDayOfCurrMonth = reportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
+			final int lastDayOfCurrMonth = modReportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
 					.getDayOfMonth();
 
-			int currentDayOfMonth = reportDate.withMillisOfDay(0).getDayOfMonth();
+			int currentDayOfMonth = modReportDate.withMillisOfDay(0).getDayOfMonth();
 
 			if (currentDayOfMonth >= settlementDay && settlementDay <= lastDayOfCurrMonth) {
-				dtEnd = JodaTimeUtils.endOfDay(reportDate.withDayOfMonth(settlementDay).minusDays(1));
-				dtStart = JodaTimeUtils.startOfDay(reportDate.withDayOfMonth(settlementDay).minusMonths(1));
+				dtEnd = JodaTimeUtils.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
+				dtStart = JodaTimeUtils.startOfDay(modReportDate.withDayOfMonth(settlementDay).minusMonths(1));
 			} else {
 
 				try {
-					final int lastDayOfPrev1Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
+					final int lastDayOfPrev1Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
 							.getDayOfMonth();
-					final int lastDayOfPrev2Month = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
+					final int lastDayOfPrev2Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
 							.minusDays(1).getDayOfMonth();
 					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
 						dtEnd = JodaTimeUtils
-								.endOfDay(reportDate.minusMonths(1).withDayOfMonth(settlementDay).minusDays(1));
-						dtStart = JodaTimeUtils.startOfDay(reportDate.minusMonths(2).withDayOfMonth(settlementDay));
+								.endOfDay(modReportDate.minusMonths(1).withDayOfMonth(settlementDay).minusDays(1));
+						dtStart = JodaTimeUtils.startOfDay(modReportDate.minusMonths(2).withDayOfMonth(settlementDay));
 					}
 
 				} catch (Exception e) {
-					logger.error("Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}", reportDate,
+					logger.error("Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}",
+							modReportDate,
 							settlementDay);
 				}
 			}
@@ -424,12 +444,21 @@ public class ReportService {
 			}
 
 		}
-
+		//--------------------------------------------------------------------
 		else {
-			LocalDateTime processedReportDate = reportDate;
+			LocalDateTime modReportDate = reportDate;
 
-			dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate, reportParamset.getReportPeriodKey());
-			dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+			if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
+				if (reportParamset.getSettlementMonth() != null) {
+					modReportDate = modReportDate.withMonthOfYear(reportParamset.getSettlementMonth());
+				}
+				if (reportParamset.getSettlementYear() != null) {
+					modReportDate = modReportDate.withYear(reportParamset.getSettlementYear());
+				}
+			}
+
+			dtStart = ReportParamsetUtils.getStartDateTime(modReportDate, reportParamset.getReportPeriodKey());
+			dtEnd = ReportParamsetUtils.getEndDateTime(modReportDate, reportParamset.getReportPeriodKey());
 
 		}
 
