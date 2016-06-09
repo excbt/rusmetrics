@@ -11,6 +11,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
@@ -18,6 +20,7 @@ import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 @Entity
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session")
 @SequenceGenerator(name = "abstractEntity", sequenceName = "slog.seq_log_session_id", allocationSize = 1)
+@JsonInclude(value = Include.NON_NULL)
 public class LogSession extends JsonAbstractAuditableModel {
 
 	/**
