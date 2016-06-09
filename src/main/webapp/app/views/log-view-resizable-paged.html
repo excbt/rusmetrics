@@ -160,13 +160,14 @@
     <div class="col-xs-5 col-md-4 noPadding nmc-div-page-legend">    
         <div class="col-xs-5 col-md-5 noPadding">
             <label class="nmc-form-label">Всего:</label>
-             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="data.sessions.length">
+             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="data.totalSessions">
         </div>
     </div>
 <!--</div> -->
 </div>    
    
 </div>
+
 
 <!-- main table -->
 <div id="log-upper-part" class="nmc-log-upper rui-resizable-bottom" style="max-height: 600px">
@@ -218,8 +219,11 @@
             </tr>
         </thead>                    
         <tbody>
-        <tr ng-repeat='session in data.sessionsOnView track by $index' ng-attr-id={{"ses"+session.id}} class="nmc-tr-striped nmc-link"
-            ng-class="{'nmc-bg-distinguish': session.selected == true}">
+        <tr dir-paginate="session in data.sessionsOnView | itemsPerPage: ctrlSettings.itemPerPage" 
+            total-items="data.totalSessions" 
+            current-page="ctrlSettings.pagination.current"
+            class="nmc-tr-striped nmc-link"
+            ng-class="{'nmc-bg-distinguish': session.selected == true}">    
             <td>
                 <table>
                     <tr>
@@ -233,27 +237,6 @@
                         <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
                             ng-class="scolumn.headerClass"
                             ng-click="loadLogData(session)">                                        
-<!--
-                            <span ng-switch on="scolumn.type">
-                                <div ng-switch-when="color"
-                                      style="width: 12px; height: 12px"
-                                      ng-style="{'background-color': session[scolumn.name]}"
-                                      >
-                                </div>
-                                <div ng-switch-when="id">
-                                    <span ng-bind="session[scolumn.name]"></span>
-                                    {{session[scolumn.name]}}
-                                    <span ng-show="isSystemuser()"> (id = {{session['id']}})</span>
-                                    <span ng-show="isSystemuser()"> (id = <span ng-bind="session['id']"></span>)</span>
-
-                                </div>
-
-                                <span ng-switch-default>
-                                    <span ng-bind="session[scolumn.name]"></span>
-                                    {{session[scolumn.name]}}
-                                </span>
-                            </span>
--->
                             <span ng-bind="session[scolumn.name]"></span>                                
                         </td>
 
@@ -268,21 +251,6 @@
                                 <span ng-switch-when="dataSource" class="paddingLeft20">                                                
                                 </span>
                             </span>
-<!--
-                            <span ng-switch on="scolumn.type">
-                                <div ng-switch-when="color"                                                  
-                                      class="paddingLeft20"                                                  
-                                      >
-                                    <div style="width: 12px; height: 12px"
-                                         ng-style="{'background-color': child[scolumn.name]}">
-                                    </div>
-
-                                </div>
-                                <span ng-switch-default>
-                                    {{child[scolumn.name]}}
-                                </span>
-                            </span>
--->
                             <span ng-bind="child[scolumn.name]"></span>
 
                         </td>
@@ -292,7 +260,12 @@
              </td>        
          </tr>
         </tbody>
-    </table>            
+    </table>
+    <div class="col-md-9 marginTop5">
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" 
+                                 template-url="/public/bower_components/angular-utils-pagination/nmcDirPagination.tpl.html">
+        </dir-pagination-controls>
+    </div>
     </div>
     <div class="rui-resizable-handle"></div>
 </div>

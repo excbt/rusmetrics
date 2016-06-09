@@ -235,7 +235,7 @@ console.log("Run routeProviderConfig");
       })
       
       .when('/log/session-log', {
-        templateUrl: 'views/log-view-resizable.html',
+        templateUrl: 'views/log-view-resizable-paged.html',
         controller: 'LogViewCtrl'
       })
       .when('/log/sms-log', {
