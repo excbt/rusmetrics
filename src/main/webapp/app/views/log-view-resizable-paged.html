@@ -2,10 +2,23 @@
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li id="session_log_2nd_menu_item" role="presentation" class="active"><a id="sessionLogTab" class="nmc-main-tab-button" href="" aria-controls="session-log" data-target="#session-log" role="tab" data-toggle="tab">Журнал загрузки данных</a></li>
-<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
-        
-        <li id="sms_log_2nd_menu_item" role="presentation" class=""><a id="smsLogTab" class="nmc-main-tab-button" href="#/log/sms-log/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Журнал отправки СМС уведомлений</a>           </li>
+        <li id="session_log_2nd_menu_item" role="presentation" class="active">
+            <a id="sessionLogTab" 
+               class="nmc-main-tab-button" 
+               href="" 
+               aria-controls="session-log" 
+               data-target="#session-log" 
+               role="tab" data-toggle="tab">Журнал загрузки данных</a>
+        </li>   
+        <li id="sms_log_2nd_menu_item" role="presentation" class="">
+            <a id="smsLogTab" 
+               class="nmc-main-tab-button" 
+               href="#/log/sms-log/" 
+               aria-controls="datasources" 
+               data-target="#datasources" 
+               role="tab" 
+               data-toggle="tab">Журнал отправки СМС уведомлений</a>           
+        </li>
         
     </ul>
 
@@ -101,17 +114,12 @@
                     <li role="separator" class="divider"></li>
                     <li class="paddingLeft5 nmc-li-select-all"                                   
                          >
-                        <input type="checkbox" 
-                              ng-attr-id={{"idObjectsAll"}} 
-                              ng-attr-name={{"idObjectsAll"}} 
-                              ng-attr-value={{"allObjects"}} 
+                        <input type="checkbox"                               
                               ng-model="states.isSelectedAllObjectsInWindow"
                               class="nmc-checkbox-dropdown"
                               ng-click="selectAllElements(objectsInWindow)" 
                               />
-                       <label ng-attr-for={{"idObjectsAll"}}
-                              class="nmc-label-dropdown"                                      
-                              >
+                       <label class="nmc-label-dropdown">
                           Выбрать все
                        </label>
                     </li>
@@ -119,17 +127,13 @@
                 </ul>
                 <ul class=" dropdown-menu nmc-filter-list-items nmc-dropdown-menu-filter noclose">
                     <li class="paddingLeft5" ng-repeat="object in objectsInWindow | filter: objectFilter">
-                        <input type="checkbox" 
-                               ng-attr-id={{"idObj"+object.id}} 
-                               ng-attr-name={{"idObj"+object.name}} 
+                        <input type="checkbox"                                
                                ng-attr-value={{object.name}} 
                                ng-model="object.selected"
                                class="nmc-checkbox-dropdown"
                                ng-click="selectElement('isSelectedAllObjectsInWindow')"
                                />
-                       <label ng-attr-for={{"idObj"+object.id}}
-                              class="nmc-label-dropdown"                                      
-                              >
+                       <label class="nmc-label-dropdown">
                           {{object.contGroupName || object.fullName || object.name}}
                        </label>
                     </li>                            
@@ -173,7 +177,7 @@
 <div id="log-upper-part" class="nmc-log-upper rui-resizable-bottom" style="max-height: 600px">
     <div class="rui-resizable-content">
         <table ng-show="ctrlSettings.sessionsLoading"
-               id="tableInf" 
+               id="tableSessionsHeader" 
                class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
             <thead>
                 <tr class="">
@@ -183,9 +187,9 @@
                                 <tr class="nmc-child-table-header">
                                     <th class="col-md-1 nmc-td-for-button">
                                     </th>
-                                    <th ng-repeat="scolumn in ctrlSettings.sessionColumns"
-                                        ng-class="scolumn.headerClass">
-                                        {{scolumn.caption}}
+                                    <th ng-repeat="scolumn in ::ctrlSettings.sessionColumns track by $index"
+                                        ng-class="::scolumn.headerClass">
+                                        {{::scolumn.caption}}
                                     </th>
                                 </tr>
                             </thead>
@@ -198,7 +202,7 @@
             <i class="fa fa-spinner fa-spin"></i> Загрузка сессий... 
         </div>
         <table ng-show="!ctrlSettings.sessionsLoading"
-               id="tableInf" 
+               id="tableSessionsData" 
                class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <thead>
             <tr class="">
@@ -208,9 +212,9 @@
                             <tr class="nmc-child-table-header">
                                 <th class="col-md-1 nmc-td-for-button">
                                 </th>
-                                <th ng-repeat="scolumn in ctrlSettings.sessionColumns"
-                                    ng-class="scolumn.headerClass">
-                                    {{scolumn.caption}}
+                                <th ng-repeat="scolumn in ::ctrlSettings.sessionColumns track by $index"
+                                    ng-class="::scolumn.headerClass">
+                                    {{::scolumn.caption}}
                                 </th>
                             </tr>
                         </thead>
@@ -222,11 +226,11 @@
         <tr dir-paginate="session in data.sessionsOnView | itemsPerPage: ctrlSettings.itemPerPage" 
             total-items="data.totalSessions" 
             current-page="ctrlSettings.pagination.current"
-            class="nmc-tr-striped nmc-link"
-            ng-class="{'nmc-bg-distinguish': session.selected == true}">    
+            class="nmc-tr-striped nmc-link"            
+            >    
             <td>
                 <table>
-                    <tr>
+                    <tr ng-class="{'nmc-bg-distinguish': session.selected == true}">
                         <td class="col-xs-1 col-md-1 nmc-td-for-button noPadding">
                             <i class="btn btn-xs glyphicon glyphicon-chevron-right"
                                ng-click="toggleChildSessionsView(session)"
@@ -235,18 +239,18 @@
                             </i>                                        
                         </td>
                         <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
-                            ng-class="scolumn.headerClass"
+                            ng-class="::scolumn.headerClass"
                             ng-click="loadLogData(session)">                                        
                             <span ng-bind="session[scolumn.name]"></span>                                
                         </td>
 
                     </tr>
                     <tr ng-repeat="child in session.childs" ng-show="session.isChildView"
-                        ng-click="loadLogData(session)"
+                        ng-click="loadLogData(child)"
                         ng-class="{'nmc-bg-distinguish': child.selected == true}">
                         <td></td>
-                        <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
-                            ng-class="scolumn.headerClass">
+                        <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
+                            ng-class="::scolumn.headerClass">
                             <span ng-switch="scolumn.name">
                                 <span ng-switch-when="dataSource" class="paddingLeft20">                                                
                                 </span>
@@ -261,7 +265,8 @@
          </tr>
         </tbody>
     </table>
-    <div class="col-md-9 marginTop5">
+    <div ng-show="!ctrlSettings.sessionsLoading"
+         class="col-md-9 marginTop5">
         <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" 
                                  template-url="/public/bower_components/angular-utils-pagination/nmcDirPagination.tpl.html">
         </dir-pagination-controls>
@@ -269,9 +274,6 @@
     </div>
     <div class="rui-resizable-handle"></div>
 </div>
-
-
-
 
 <div id="log-footer-part" class="nmc-log-footer rui-resizable-bottom" style="max-height: 600px">
     <div class="rui-resizable-content">
@@ -285,9 +287,9 @@
             </caption>
             <thead>
                 <tr class="nmc-main-table-header">
-                    <th ng-repeat="lcolumn in ctrlSettings.logColumns"
-                        ng-class="lcolumn.headerClass">
-                        {{lcolumn.caption}}
+                    <th ng-repeat="lcolumn in ctrlSettings.logColumns track by $index"
+                        ng-class="::lcolumn.headerClass">
+                        {{::lcolumn.caption}}
                     </th>
                 </tr>
             </thead>            
@@ -305,16 +307,16 @@
             </caption>
             <thead>
                 <tr class="nmc-main-table-header">
-                    <th ng-repeat="lcolumn in ctrlSettings.logColumns"
-                        ng-class="lcolumn.headerClass">
-                        {{lcolumn.caption}}
+                    <th ng-repeat="lcolumn in ctrlSettings.logColumns track by $index"
+                        ng-class="::lcolumn.headerClass">
+                        {{::lcolumn.caption}}
                     </th>
                 </tr>
             </thead>            
             <tbody>
                 <tr ng-repeat="log in data.sessionLog">
                     <td ng-repeat="lcolumn in ctrlSettings.logColumns">
-                        <div ng-switch on="lcolumn.type">
+                        <div ng-switch on="::lcolumn.type">
                             <span ng-switch-when="id">{{log[lcolumn.name]}}<span ng-show="isSystemuser()"> (id = {{log['id']}})</span>
                             </span>
                             <span ng-switch-when="checkbox">

@@ -4,8 +4,6 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     var ROW_PER_PAGE = 25;
     var COUNT_ROW_PER_SCROLL = 20;
-    var upperIndex = 0
-    var lowerIndex = ROW_PER_PAGE-1;
     
     $scope.messages = {};
     
@@ -26,7 +24,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     $scope.ctrlSettings.sessionsLogDaterange = {
         startDate: moment().startOf('day'),                        
         endDate: moment().endOf('day')};
-    $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD";
+    var ctrlSettings = {};
+    ctrlSettings.systemDateFormat = "YYYY-MM-DD";
     
     $scope.ctrlSettings.sessionColumns = [
         {
@@ -404,6 +403,10 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $scope.data.sessionsOnView = data.sessions.slice(($scope.ctrlSettings.pagination.current-1)*ROW_PER_PAGE, ($scope.ctrlSettings.pagination.current)*ROW_PER_PAGE);
     };
     
+    $scope.isDisabledFilters = function(){
+        return $scope.ctrlSettings.sessionsLoading || $scope.ctrlSettings.logLoading;
+    }
+    
     $scope.$on('$destroy', function() {
         //save session table height
         $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
@@ -478,14 +481,13 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $scope.data.sessionLog = [];
         $scope.data.currentSession = {};
         var url = $scope.ctrlSettings.sessionsUrl;
-//        var url = $scope.ctrlSettings.sessionsUrl + "?fromDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat) + "&toDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
             //define url params
         var params = {};
         if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.sessionsLogDaterange.startDate)){
-            params.fromDate = moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat);
+            params.fromDate = moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format(ctrlSettings.systemDateFormat);
         };
         if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.sessionsLogDaterange.endDate)){
-            params.toDate = moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
+            params.toDate = moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format(ctrlSettings.systemDateFormat);
         };
         if (!mainSvc.checkUndefinedNull($scope.selectedObjects) && angular.isArray($scope.selectedObjects) && $scope.selectedObjects.length > 0){
             params.contObjectIds = $scope.selectedObjects;
@@ -496,12 +498,11 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             url: url,
             params: params
         })
-            .then(function(resp){                
+            .then(function(resp){ 
+                $scope.data.totalSessions = resp.data.length;
                 data.sessions = serverDataParser(angular.copy(resp.data));
                 defineChildSessions();
-                $scope.data.totalSessions = data.sessions.length;
-//                upperIndex = 0;
-//                lowerIndex = ROW_PER_PAGE - 1;
+//                $scope.data.totalSessions = data.sessions.length;
                 $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE-1);
                 $scope.ctrlSettings.sessionsLoading = false;
         }, errorCallback);
@@ -619,7 +620,6 @@ console.timeEnd('Find child sessions');
     
     function initCtrl(){
         loadSessionsData();
-//        defineChildSessions();
         //set session and tables height
         $timeout(function(){
             $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
