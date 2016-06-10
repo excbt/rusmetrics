@@ -2,8 +2,7 @@
 var app = angular.module('portalNMC');
 app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory){
     
-    var ROW_PER_PAGE = 25;
-    var COUNT_ROW_PER_SCROLL = 20;
+    var ROW_PER_PAGE = 20;
     
     $scope.messages = {};
     
@@ -499,11 +498,16 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             params: params
         })
             .then(function(resp){ 
-                $scope.data.totalSessions = resp.data.length;
+//                $scope.data.totalSessions = resp.data.length;
+//console.log(resp.data);            
                 data.sessions = serverDataParser(angular.copy(resp.data));
-                defineChildSessions();
-//                $scope.data.totalSessions = data.sessions.length;
-                $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE-1);
+//console.log(data.sessions);
+                if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0)
+                    data.sessions = defineChildSessions();
+//console.log(data.sessions);            
+                $scope.data.totalSessions = data.sessions.length;
+                $scope.ctrlSettings.pagination.current = 1;
+                $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
                 $scope.ctrlSettings.sessionsLoading = false;
         }, errorCallback);
     }
@@ -550,10 +554,11 @@ console.time('Find child sessions');
                     childSessions[session.masterSessionUuid] = [];
                 }
                 childSessions[session.masterSessionUuid].push(angular.copy(session));
-            }else{
+            }else{          
                 newData.push(session);
             }
         });
+//console.log(childSessions);        
             //add child sessions to their master sessions
         for (var uuid in childSessions){               
             newData.some(function(masterSession){                
@@ -563,8 +568,10 @@ console.time('Find child sessions');
                 }
             });
         }        
-        data.sessions = newData;
-console.timeEnd('Find child sessions');                
+//        data.sessions = newData;
+console.timeEnd('Find child sessions');
+//console.log(newData);                
+        return newData;
 //console.log(data.sessions);        
     }
     
