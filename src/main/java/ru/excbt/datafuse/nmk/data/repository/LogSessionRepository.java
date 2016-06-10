@@ -31,7 +31,7 @@ public interface LogSessionRepository extends JpaRepository<LogSession, Long> {
 	 */
 	@Query("SELECT s FROM LogSession s WHERE (s.sessionDate BETWEEN :startDate AND :endDate) "
 			+ " AND s.deleted = 0 "
-			+ " AND (s.deviceObjectId IS NULL OR s.deviceObjectId IN "
+			+ " AND (s.deviceObjectId IN "
 			+ "  (SELECT d.id FROM DeviceObject d WHERE d.contObject.id IN (:contObjectIds)) "
 			+ " ) AND s.dataSourceId IN (:dataSourceIds) ")
 	public List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
