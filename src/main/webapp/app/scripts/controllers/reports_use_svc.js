@@ -1154,7 +1154,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 saveAs(file, fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
             $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
-        }, errorCallback)
+        }, function(e){
+            var previewWin = window.open(url, 'PreviewWin');
+            if (!mainSvc.checkUndefinedNull(previewWin))
+                previewWin.document.write(e.status + ", " + e.statusText);
+            errorCallback(e)
+        })
         .catch(errorCallback);
     };
 
