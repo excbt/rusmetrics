@@ -118,7 +118,7 @@ console.log("Run routeProviderConfig");
         controller: 'DirectoryCtrl'
       })
       .when('/reports', {
-        templateUrl: 'views/reports.html',
+        templateUrl: 'views/reports_with_cst.html',
         controller: 'ReportsCtrl'
       })
       .when('/reports/commercial_report', {

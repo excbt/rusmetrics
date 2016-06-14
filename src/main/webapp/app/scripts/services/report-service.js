@@ -1,6 +1,6 @@
 'use strict';
-angular.module('portalNMC')
-.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactory', 'mainSvc',
+app = angular.module('portalNMC');
+app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactory', 'mainSvc',
 function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     //url к данным
     var reportTypesUrl = "../api/reportSettings/reportType";
@@ -69,9 +69,31 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         }
     ];
     
+    var contServiceTypes = [
+        {
+            keyname: "heat",
+            caption: "Теплоснабжение",
+            class: "active"
+        },{
+            keyname: "hw",
+            caption: "ГВС"
+        },{
+            keyname: "cw",
+            caption: "ХВС"
+        },{
+            keyname: "el",
+            caption: "Электроснабжение"
+        }
+    ]
+    
     var getResourceCategories = function(){
         return resourceCategories;
     };
+    
+    var getContServiceTypes = function(){
+        return contServiceTypes;
+    };
+    
     var getDefaultResourceCategory = function(){
         var defResCat = null;
         resourceCategories.some(function(resCat){
@@ -111,6 +133,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
                 newObject.reportTypeName = data[i].caption;
                 newObject.reportCategory = data[i].reportCategory;
                 newObject.resourceCategory = data[i].resourceCategory;
+                newObject.contServiceTypes = data[i].contServiceTypes;
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
@@ -128,6 +151,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
             reportTypes = newObjects;         
             $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');
             setReportTypesIsLoaded(true);
+console.log(reportCategories);            
         });
     };
 //    loadReportTypes();
@@ -342,6 +366,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     
     return {
         checkPSRequiredFieldsOnSave,
+        getContServiceTypes,
         getDefaultResourceCategory,
         getParamsetsForTypes,
         getReportCategories,
@@ -353,3 +378,42 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         loadReportsContextLaunch
     }
 }]);
+
+app.filter('resourceCategoryFilter', function(){
+    return function(items, props){
+        if (props.isAll == true){
+            return items;
+        };
+        var filteredItems = [];      
+        items.forEach(function(item){
+            if (item.resourceCategory == props.name){
+                filteredItems.push(item);
+            };
+        });     
+        return filteredItems;
+    }
+});
+
+app.filter('serviceTypesFilter', function(){
+    return function(items, props){
+//console.log(items);
+//console.log(props);
+        var filteredItems = [];      
+        items.forEach(function(item){
+            if (angular.isUndefined(item.contServiceTypes) || item.contServiceTypes.length <= 0){
+                filteredItems.push(item);
+                return;
+            };
+            if (angular.isArray(item.contServiceTypes)){
+                item.contServiceTypes.some(function(elem){
+                    if (elem.keyname == props.keyname){
+                        filteredItems.push(item);
+                        return true;
+                    }
+                })
+            };
+        });     
+//console.log(filteredItems);        
+        return filteredItems;
+    }
+});

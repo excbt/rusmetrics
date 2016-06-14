@@ -1,19 +1,5 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.filter('resourceCategoryFilter', function(){
-    return function(items, props){
-        if (props.isAll == true){
-            return items;
-        };
-        var filteredItems = [];      
-        items.forEach(function(item){
-            if (item.resourceCategory == props.name){
-                filteredItems.push(item);
-            };
-        });     
-        return filteredItems;
-    }
-});
 app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc){
     
     $rootScope.ctxId = "reports_page";
@@ -37,6 +23,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         }
     };
     $scope.ctrlSettings.currentReportPreviewEnabledFlag = false;
+    
+    $scope.contServiceTypes = reportSvc.getContServiceTypes();
     
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -1176,9 +1164,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         
     };
     
-    $scope.selectedCategory = function(cat){
-        $scope.curCategory = angular.copy(cat);
+//    $scope.selectedCategory = function(cat){
+//        $scope.curCategory = angular.copy(cat);
+//    };
+    $scope.setCurrentServiceType = function(servType){
+        $scope.currentServiceType = angular.copy(servType);        
     };
+    
+    $scope.setCurrentServiceType($scope.contServiceTypes[0]);
     
     // *************************************************************************************
     // Отчеты для контекстного меню объект
