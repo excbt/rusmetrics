@@ -1,6 +1,6 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory){
+app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', 'logSvc', '$rootScope', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory, logSvc, $rootScope){
     
     var ROW_PER_PAGE = 20;
     
@@ -20,15 +20,16 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     $scope.ctrlSettings.daterangeOpts.startDate = moment().startOf('day');
     $scope.ctrlSettings.daterangeOpts.endDate = moment().endOf('day');
     $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
-    $scope.ctrlSettings.sessionsLogDaterange = {
-        startDate: moment().startOf('day'),                        
-        endDate: moment().endOf('day')};
+    $scope.ctrlSettings.sessionsLogDaterange = logSvc.getSessionsLogDaterange();
+//        {
+//        startDate: moment().startOf('day'),                        
+//        endDate: moment().endOf('day')};
     var ctrlSettings = {};
     ctrlSettings.systemDateFormat = "YYYY-MM-DD";
     
     $scope.ctrlSettings.sessionColumns = [
         {
-            name: "colorStatus",
+            name: "currentStatusColor",
             caption: "",
             type: 'color',
             headerClass: "col-xs-1 col-md-1 nmc-td-for-button noPadding"
@@ -57,16 +58,16 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             name: "author",
             caption: "Инициатор",
             headerClass: "col-xs-1 col-md-1"
-        }/*,{
+        },{
             name: "currentStatus",
             caption: "Текущий статус",
             headerClass: "col-xs-1 col-md-1"
         }
-        ,{
-            name: "sessionMessage",
-            caption: "Сообщение",
-            headerClass: "col-xs-1 col-md-1"
-        }*/
+//        ,{
+//            name: "sessionMessage",
+//            caption: "Сообщение",
+//            headerClass: "col-xs-1 col-md-1"
+//        }
         
     ];
     $scope.ctrlSettings.logColumns = [
@@ -490,32 +491,38 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         };
         if (!mainSvc.checkUndefinedNull($scope.selectedObjects) && angular.isArray($scope.selectedObjects) && $scope.selectedObjects.length > 0){
             params.contObjectIds = $scope.selectedObjects;
-        };        
+        };
+        $rootScope.$broadcast('logSvc:requestSessionsLoading', {params: params});
+        
 //        $http.get(url)
-        $http({
-            method: "GET",
-            url: url,
-            params: params
-        })
-            .then(function(resp){ 
-//                $scope.data.totalSessions = resp.data.length;
-//console.log(resp.data);            
-                data.sessions = serverDataParser(angular.copy(resp.data));
-//console.log(data.sessions);
-                if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0)
-                    data.sessions = defineChildSessions();
-//console.log(data.sessions);            
-                $scope.data.totalSessions = data.sessions.length;
-                $scope.ctrlSettings.pagination.current = 1;
-                $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
-                $scope.ctrlSettings.sessionsLoading = false;
-        }, errorCallback);
+//        $http({
+//            method: "GET",
+//            url: url,
+//            params: params
+//        })
+//            .then(function(resp){         
+//                data.sessions = serverDataParser(angular.copy(resp.data));
+//                if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0)
+//                    data.sessions = defineChildSessions();          
+//                $scope.data.totalSessions = data.sessions.length;
+//                $scope.ctrlSettings.pagination.current = 1;
+//                $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
+//                $scope.ctrlSettings.sessionsLoading = false;
+//        }, errorCallback);
     }
     
         //for Refresh button
     $scope.loadSessionsData = function(){
         loadSessionsData();
     }
+    
+    $scope.$on('logSvc:sessionsLoaded', function(){
+        data.sessions = logSvc.getSessions();
+        $scope.data.totalSessions = data.sessions.length;
+        $scope.ctrlSettings.pagination.current = 1;
+        $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
+        $scope.ctrlSettings.sessionsLoading = false;    
+    })
     
     function serverDataParser(data){
 //var startTime = new Date();        

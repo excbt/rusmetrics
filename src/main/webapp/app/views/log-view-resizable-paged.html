@@ -240,8 +240,18 @@
                         </td>
                         <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
                             ng-class="::scolumn.headerClass"
-                            ng-click="loadLogData(session)">                                        
-                            <span ng-bind="session[scolumn.name]"></span>                                
+                            ng-click="loadLogData(session)">
+                            <span ng-switch on="scolumn.type">
+                                <div ng-switch-when="color"
+                                      style="width: 12px; height: 12px"
+                                      ng-style="{'background-color': session[scolumn.name]}"
+                                      >
+                                </div>                                
+                                <span ng-switch-default>
+                                    <span ng-bind="session[scolumn.name]"></span>                                   
+                                </span>
+                            </span>
+<!--                            <span ng-bind="session[scolumn.name]"></span>                                -->
                         </td>
 
                     </tr>

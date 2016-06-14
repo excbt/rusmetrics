@@ -150,8 +150,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
             };        
             reportTypes = newObjects;         
             $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');
-            setReportTypesIsLoaded(true);
-console.log(reportCategories);            
+            setReportTypesIsLoaded(true);           
         });
     };
 //    loadReportTypes();
