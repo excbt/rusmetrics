@@ -2,9 +2,15 @@
 var app = angular.module('portalNMC');
 app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory){
     
+    var ROW_PER_PAGE = 20;
+    
     $scope.messages = {};
     
     $scope.ctrlSettings = {};
+    $scope.ctrlSettings.itemPerPage = ROW_PER_PAGE;
+    $scope.ctrlSettings.pagination = {
+        current: 1
+    };
     $scope.ctrlSettings.sessionsUrl = "../api/rma/logSessions";
         
     $scope.ctrlSettings.groupUrl = "../api/subscr/contGroup";
@@ -17,7 +23,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     $scope.ctrlSettings.sessionsLogDaterange = {
         startDate: moment().startOf('day'),                        
         endDate: moment().endOf('day')};
-    $scope.ctrlSettings.systemDateFormat = "YYYY-MM-DD";
+    var ctrlSettings = {};
+    ctrlSettings.systemDateFormat = "YYYY-MM-DD";
     
     $scope.ctrlSettings.sessionColumns = [
         {
@@ -92,7 +99,9 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     $scope.selectedObjects = [];
     $scope.data = {};
-    $scope.data.sessions = [];
+//    $scope.data.sessionsOnView = []; //sessions which view in table
+    var data = {}
+    data.sessions = []; //all sessions
     $scope.data.sessionLog = [];
     $scope.data.currentSession = {};
     
@@ -164,7 +173,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             sessions.push(ses);
 //console.log(ses);            
         };
-        $scope.data.sessions = sessions;
+        $scope.data.sessionsOnView = sessions;
         //set session table height
         $timeout(function(){
             $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
@@ -386,6 +395,17 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
 
     };
     
+    $scope.pageChanged = function(newPage) {       
+//console.log("pageChanged");        
+//        $scope.getResultsPage(newPage);
+        $scope.ctrlSettings.pagination.current = newPage;
+        $scope.data.sessionsOnView = data.sessions.slice(($scope.ctrlSettings.pagination.current-1)*ROW_PER_PAGE, ($scope.ctrlSettings.pagination.current)*ROW_PER_PAGE);
+    };
+    
+    $scope.isDisabledFilters = function(){
+        return $scope.ctrlSettings.sessionsLoading || $scope.ctrlSettings.logLoading;
+    }
+    
     $scope.$on('$destroy', function() {
         //save session table height
         $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
@@ -403,7 +423,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
                 return "Object / group filter. No changes";
             };
             $scope.clearObjectFilter();            
-        });
+        });       
     });
     
     $scope.selectAllElements = function(elements){ 
@@ -456,18 +476,17 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     function loadSessionsData(){
         $scope.ctrlSettings.sessionsLoading = true;
-        $scope.data.sessions = [];
+//        $scope.data.sessionsOnView = [];
         $scope.data.sessionLog = [];
         $scope.data.currentSession = {};
         var url = $scope.ctrlSettings.sessionsUrl;
-//        var url = $scope.ctrlSettings.sessionsUrl + "?fromDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat) + "&toDate=" + moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
             //define url params
         var params = {};
         if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.sessionsLogDaterange.startDate)){
-            params.fromDate = moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format($scope.ctrlSettings.systemDateFormat);
+            params.fromDate = moment($scope.ctrlSettings.sessionsLogDaterange.startDate).format(ctrlSettings.systemDateFormat);
         };
         if (!mainSvc.checkUndefinedNull($scope.ctrlSettings.sessionsLogDaterange.endDate)){
-            params.toDate = moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format($scope.ctrlSettings.systemDateFormat);
+            params.toDate = moment($scope.ctrlSettings.sessionsLogDaterange.endDate).format(ctrlSettings.systemDateFormat);
         };
         if (!mainSvc.checkUndefinedNull($scope.selectedObjects) && angular.isArray($scope.selectedObjects) && $scope.selectedObjects.length > 0){
             params.contObjectIds = $scope.selectedObjects;
@@ -478,8 +497,17 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             url: url,
             params: params
         })
-            .then(function(resp){                        
-                $scope.data.sessions = serverDataParser(angular.copy(resp.data));
+            .then(function(resp){ 
+//                $scope.data.totalSessions = resp.data.length;
+//console.log(resp.data);            
+                data.sessions = serverDataParser(angular.copy(resp.data));
+//console.log(data.sessions);
+                if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0)
+                    data.sessions = defineChildSessions();
+//console.log(data.sessions);            
+                $scope.data.totalSessions = data.sessions.length;
+                $scope.ctrlSettings.pagination.current = 1;
+                $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
                 $scope.ctrlSettings.sessionsLoading = false;
         }, errorCallback);
     }
@@ -489,7 +517,9 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         loadSessionsData();
     }
     
-    function serverDataParser(data){       
+    function serverDataParser(data){
+//var startTime = new Date();        
+console.time('Data parsing');        
         var result = data.map(function(dataRow){
             var tmpParsedRow = {};
             tmpParsedRow.id = dataRow.id;
@@ -501,34 +531,48 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             tmpParsedRow.author = dataRow.authorInfo.authorName;
             tmpParsedRow.currentStatus = dataRow.sessionStatus;
             tmpParsedRow.sessionMessage = dataRow.sessionMessage;
+            tmpParsedRow.sessionUuid = dataRow.sessionUuid;
+            tmpParsedRow.masterSessionUuid = dataRow.masterSessionUuid;
             return tmpParsedRow;
-        });                
+        });
+console.timeEnd('Data parsing');                
+//var endTime = new Date();        
+//console.log("parsing time (ye)= " + (endTime.getTime() - startTime.getTime()));        
+//console.log("parsing time (ms)= " + (endTime.getMilliseconds() - startTime.getMilliseconds()));                
         return result;        
     }
     
     function defineChildSessions(){
-        var tmpData = angular.copy($scope.data.sessions);
+console.time('Find child sessions');        
+        var tmpData = angular.copy(data.sessions);
         var newData = [];
         var childSessions = [];
-            //find child sessions
+            //find child sessions      
         tmpData.forEach(function(session){
             if (!mainSvc.checkUndefinedNull(session.masterSessionUuid)){
+                if (mainSvc.checkUndefinedNull(childSessions[session.masterSessionUuid])){
+                    childSessions[session.masterSessionUuid] = [];
+                }
                 childSessions[session.masterSessionUuid].push(angular.copy(session));
-            }else{
+            }else{          
                 newData.push(session);
             }
         });
+//console.log(childSessions);        
             //add child sessions to their master sessions
-        for (var uuid in childSessions){    
-            newData.some(function(masterSession){
+        for (var uuid in childSessions){               
+            newData.some(function(masterSession){                
                 if (uuid == masterSession.sessionUuid){
                     masterSession.childs = childSessions[uuid];
                     return true;
                 }
             });
-        }
-        
-        $scope.data.sessions = newData;
+        }        
+//        data.sessions = newData;
+console.timeEnd('Find child sessions');
+//console.log(newData);                
+        return newData;
+//console.log(data.sessions);        
     }
     
     // **********************************************************************
@@ -558,9 +602,31 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         return mainSvc.checkEmptyObject(obj)
     }
     
+    //function add more objects for table on user screen
+    var addMoreObjects = function(){                 
+        if (($scope.objects.length <= 0)){
+            return;
+        };
+
+        //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
+        var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
+        if((endIndex >= $scope.objects.length)){
+            endIndex = $scope.objects.length;
+        };
+        //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
+        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
+            //добавляем к выведимому на экран массиву новый блок элементов
+        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+        if(endIndex >= ($scope.objects.length)){
+            $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
+        }else{
+            $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
+        };
+    };     
+    
+    
     function initCtrl(){
         loadSessionsData();
-        defineChildSessions();
         //set session and tables height
         $timeout(function(){
             $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    

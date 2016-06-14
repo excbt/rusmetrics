@@ -9,6 +9,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
@@ -56,6 +58,10 @@ public class LogSessionStep extends JsonAbstractAuditableModel implements Deleta
 
 	@Column(name = "last_increment_date")
 	private Date lastIncrementDate;
+
+	@JsonIgnore
+	@Column(name = "step_order")
+	private Integer stepOrder;
 
 	@Version
 	private int version;
@@ -167,6 +173,14 @@ public class LogSessionStep extends JsonAbstractAuditableModel implements Deleta
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Integer getStepOrder() {
+		return stepOrder;
+	}
+
+	public void setStepOrder(Integer stepOrder) {
+		this.stepOrder = stepOrder;
 	}
 
 	public String getStepDateStr() {

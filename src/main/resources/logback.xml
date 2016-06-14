@@ -6,16 +6,17 @@
 		key "bySecond" into the logger context. This value will be available to all 
 		subsequent configuration elements. -->
 
-    <timestamp key="bySecond" datePattern="yyyy-MM-dd_HHmmss" />
+    <timestamp key="bySecond" datePattern="yyyy-MM-dd_'t'HHmmss" />
 
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${catalina.base:-.}/logs/nmk-logFile-${bySecond}.log</File>
+		<File>${catalina.base:-.}/logs/nmk.${bySecond}.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>nmk-logFile.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>nmk.%d{yyyy-MM-dd}.log</FileNamePattern>
 		</rollingPolicy>
  
 		<encoder>
-    		<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    		<!-- <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+    		<pattern>%date{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}[%file:%line] %msg%n</pattern>
   		</encoder>
  
 	</appender>
@@ -26,8 +27,8 @@
 
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n
-			</pattern>
+			<!-- <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern> -->
+			<pattern>%date{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}[%file:%line] %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -43,7 +44,7 @@
 	
 	<logger name="org.hibernate.SQL" level="info" />
 	
-	<logger name="org.springframework.web" level="trace" />
+	<logger name="org.springframework.web" level="info" />
 
 	<logger name="org.springframework.security.saml" level="info" />
 

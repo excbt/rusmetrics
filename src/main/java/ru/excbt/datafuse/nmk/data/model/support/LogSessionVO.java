@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -25,6 +27,7 @@ public class LogSessionVO implements Serializable {
 	 * @since 02.06.2016
 	 *
 	 */
+	@JsonInclude(value = Include.NON_NULL)
 	public class DataSourceInfo {
 		private final Long id;
 		private final String keyname;
@@ -70,6 +73,7 @@ public class LogSessionVO implements Serializable {
 	 * @since 02.05.2016
 	 *
 	 */
+	@JsonInclude(value = Include.NON_NULL)
 	public class DeviceObjectInfo {
 		private final Long id;
 		private final String number;

@@ -10,7 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.LogSessionStep;
 
 public interface LogSessionStepRepository extends JpaRepository<LogSessionStep, Long> {
 
-	@Query("SELECT s FROM LogSessionStep s WHERE s.sessionId = :sessionId ORDER BY s.stepDate, s.createdDate")
+	@Query("SELECT s FROM LogSessionStep s WHERE s.sessionId = :sessionId ORDER BY s.stepDate, coalesce(s.stepOrder, s.id)")
 	public List<LogSessionStep> selectSessionSteps(@Param("sessionId") long sessionId);
 
 }

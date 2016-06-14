@@ -435,12 +435,13 @@
                                                   >
                                             </div>
                                             <span ng-switch-default>
-                                                {{session[scolumn.name]}}
+                                                {{::session[scolumn.name]}}
                                             </span>
                                         </span>                                        
                                     </td>
                                     
                                 </tr>
+<!--
                                 <tr ng-repeat="child in session.childs" ng-show="session.isChildView">
                                     <td></td>
                                     <td ng-repeat="scolumn in ctrlSettings.sessionColumns"
@@ -466,6 +467,7 @@
                                     </td>
                                     
                                 </tr>
+-->
                             </table>
                          </td>        
                      </tr>            
