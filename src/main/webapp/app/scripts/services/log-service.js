@@ -24,13 +24,16 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
         }
     ];
     var REFRESH_PERIOD = 30000;
+    var SYSTEM_DATE_FORMAT = "YYYY-MM-DD";
     var sessionsUrl = "../api/rma/logSessions";
     var sessions = null;
-    var params = null;
+    var params = {};
     var sessionsLogDaterange = {
         startDate: moment().startOf('day'),                        
         endDate: moment().endOf('day')
     };
+    params.fromDate = sessionsLogDaterange.startDate.format(SYSTEM_DATE_FORMAT);
+    params.toDate = sessionsLogDaterange.endDate.format(SYSTEM_DATE_FORMAT);
     
     function getSessionsLogDaterange(){
         return sessionsLogDaterange;

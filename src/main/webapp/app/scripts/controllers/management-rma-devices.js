@@ -476,11 +476,7 @@ angular.module('portalNMC')
     };
     
     $scope.startLoadData = function(params){
-        var url = "";
-        var params = {};
-        $http.put().then(function(resp){
-            
-        }, errorCallback);
+        $interval
     };
     
     //keydown listener

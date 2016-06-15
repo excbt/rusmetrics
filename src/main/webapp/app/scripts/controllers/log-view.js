@@ -515,13 +515,20 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         loadSessionsData();
     }
     
-    $scope.$on('logSvc:sessionsLoaded', function(){
+    function getSessionsData(){
         data.sessions = logSvc.getSessions();
+        $scope.ctrlSettings.sessionsLoading = false;    
+        if (mainSvc.checkUndefinedNull(data.sessions) || data.sessions.length == 0){
+            loadSessionsData();
+            return "Session array is empty";
+        }
         $scope.data.totalSessions = data.sessions.length;
         $scope.ctrlSettings.pagination.current = 1;
         $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
-        $scope.ctrlSettings.sessionsLoading = false;    
-    })
+        
+    }
+    
+    $scope.$on('logSvc:sessionsLoaded', getSessionsData)
     
     function serverDataParser(data){
 //var startTime = new Date();        
@@ -598,7 +605,7 @@ console.timeEnd('Find child sessions');
     //********************************
     
     $scope.$watch('ctrlSettings.sessionsLogDaterange', function(newDates, oldDates){
-        if (newDates.startDate == oldDates.startDate && newDates.endDate == oldDates.endDate){
+        if(oldDates == newDates){
             return;
         }
         loadSessionsData();
@@ -632,7 +639,8 @@ console.timeEnd('Find child sessions');
     
     
     function initCtrl(){
-        loadSessionsData();
+        getSessionsData();
+//        loadSessionsData();
         //set session and tables height
         $timeout(function(){
             $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    
