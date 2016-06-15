@@ -18,6 +18,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -585,6 +587,16 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	public Long selectContObjectId(long contZPointId) {
 		List<Long> ids = contZPointRepository.selectContObjectByContZPointId(contZPointId);
 		return ids.isEmpty() ? null : ids.get(0);
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContZPoint> selectContPointsByDeviceObject(Long deviceObjectId) {
+		return Lists.newArrayList(contZPointRepository.selectContZPointsByDeviceObjectId(deviceObjectId));
 	}
 
 }

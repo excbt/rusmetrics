@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.springframework.core.env.Environment;
 
-import ru.excbt.datafuse.hibernate.dialect.JSONBPostgreSQLDialect;
+import ru.excbt.datafuse.hibernate.dialect.ExPostgreSQLDialect;
 
 public class HibernateProps {
 
@@ -32,7 +32,7 @@ public class HibernateProps {
 
 		Properties properties = new Properties();
 		properties.put(HibernateProps.DIALECT,
-				JSONBPostgreSQLDialect.class.getName());
+				ExPostgreSQLDialect.class.getName());
 		properties.put(HibernateProps.SHOW_SQL,
 				env.getProperty(String.format("%s.show_sql", prefix)));
 		properties.put(HibernateProps.FORMAT_SQL,

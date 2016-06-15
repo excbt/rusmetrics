@@ -13,13 +13,15 @@
 package ru.excbt.datafuse.hibernate.dialect;
 
 import java.sql.Types;
+
 import org.hibernate.dialect.PostgreSQL9Dialect;
 
-public class JSONBPostgreSQLDialect extends PostgreSQL9Dialect {
+public class ExPostgreSQLDialect extends PostgreSQL9Dialect {
 
-  public JSONBPostgreSQLDialect() {
-    super();
-    registerColumnType(Types.JAVA_OBJECT, "jsonb");
-  }
+	public ExPostgreSQLDialect() {
+		super();
+		registerColumnType(Types.JAVA_OBJECT, "jsonb");
+		registerColumnType(Types.ARRAY, "text[]");
+	}
 
 }
