@@ -10,6 +10,10 @@ import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCreateSubscrSessionTask() throws Exception {
 
@@ -19,6 +23,24 @@ public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 		//task.setContZpointId(contZpointId);
 		Long id = _testCreateJson("/api/rma/subscrSessionTask", task);
 		assertNotNull(id);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetSubscrSessionTask() throws Exception {
+		_testGetJson("/api/rma/subscrSessionTask/" + 127990559);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetContZPointSessionDetailType() throws Exception {
+		_testGetJson("/api/rma/subscrSessionTask/contZPointSessionDetailType/byDeviceObject/" + 719);
 	}
 
 }
