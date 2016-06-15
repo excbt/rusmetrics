@@ -1942,6 +1942,10 @@ tr.nmc-bg-distinguish > td{
     border-right: 1px solid black;
 }
 
+.nmc-line-left{
+    border-left: 1px solid black;
+}
+
 .nmc-vdivide {
     /* background: #e0e0e0; */
     /* width: 5px; */
@@ -2161,6 +2165,10 @@ tr.nmc-bg-distinguish > td{
     padding-top: 0;
     padding-right: 0;
     padding-left: 5px !important;
+}
+
+.paddingRight5{
+    padding-right: 5px;
 }
 
 .paddingRight10{

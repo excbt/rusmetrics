@@ -132,6 +132,14 @@
                             Редактировать свойства прибора
                         </a>
                     </li>
+                    <li>
+                        <a href
+                           data-target="#deviceSessionModal"
+                           data-toggle="modal"
+                           ng-click="selectedItem(device)">
+                            Ручная загрузка данных
+                        </a>
+                    </li>
                     <li ng-if = "isDirectDevice(device)">
                         <a href="" ng-click="getDeviceSchedulerSettings(device.contObjectId, device)">
                             Расписание опроса прибора
@@ -803,6 +811,239 @@
 								ng-click="exit('#currentDevice')">
 								Отменить
 							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<div id="deviceSessionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deviceSessionLabel" tabindex="-1">
+
+	<div class="modal-dialog modal-content nmc-modal-wide-dialog">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deviceSessionLabel" class="nmc-h3">
+                Ручная загрузка данных с прибора 
+                <span ng-bind="data.currentObject.number"></span>, 
+                {{data.currentObject.deviceModel.caption || data.currentObject.deviceModel.modelName}}
+<!--                <span ng-bind="data.currentObject.contObjectInfo.fullName"></span>" -->
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid noPadding">
+                <div class="row">
+                    <div id="manualSessionOptions" class="col-xs-2 col-md-2 marginBottom5 noPadding paddingLeft10 paddingRight5">
+                        <div class="">
+                            <label>Задайте период
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon"
+                                      ng-disabled="isDisabledFilters()">с</span>
+                                <input date-range-picker 
+                                       class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                                       type="text" 
+                                       ng-model="ctrlSettings.dataLoadDaterange" 
+                                       options="ctrlSettings.daterangeOpts" 
+                                       aria-describedby="leftAddon"
+                                       ng-disabled="isDisabledFilters()"/>
+                            </div>    
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <label>Укажите точку учета
+                                </label>
+                                <select class="form-control nmc-select-form">
+                                    <option>Точка 1</option>
+                                    <option>Точка 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Выберете типы загружаемых данных
+                            </label>
+                            <div><input type="checkbox">Часовые</div>
+                            <div><input type="checkbox">Суточные</div>
+                            <div><input type="checkbox">Интеграторы</div>
+                        </div>
+                        <div>
+                            <p class="btn btn-xs btn-primary"
+                               ng-click="startLoadData()">
+                                Загрузить
+                            </p>
+                        </div>
+                    </div>
+                    <div id="divSessionsData" class="col-xs-10 col-md-10 noPadding paddingLeft5 paddingRight10 nmc-line-left"
+                         >
+                        <div id="divManualSessions" style="max-height: 300px; overflow: auto">
+                            <table ng-show="ctrlSettings.sessionsLoading"
+                           id="tableSessionsHeader" 
+                           class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                                <caption class="noPadding">
+                                    <h4>Сессии загрузки</h4>
+                                </caption>
+                                <thead>
+                                    <tr class="">
+                                        <th style="padding: 0; border-bottom-width: 0px;">
+                                            <table class="crud-grid table table-lighter table-condensed noMargin">
+                                                <thead>
+                                                    <tr class="nmc-child-table-header">
+                                                        <th class="col-md-1 nmc-td-for-button">
+                                                        </th>
+                                                        <th ng-repeat="scolumn in ::ctrlSettings.sessionColumns track by $index"
+                                                            ng-class="::scolumn.headerClass">
+                                                            {{::scolumn.caption}}
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div ng-show="ctrlSettings.sessionsLoading" class="marginBottom5 nmc-loading">
+                                <i class="fa fa-spinner fa-spin"></i> Загрузка сессий... 
+                            </div>
+                            <table ng-show="!ctrlSettings.sessionsLoading"
+                                   id="tableSessionsData" 
+                                   class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                                <caption class="noPadding">
+                                <h4>Сессии загрузки</h4>
+                            </caption>
+                            <thead>
+                                <tr class="">
+                                    <th style="padding: 0; border-bottom-width: 0px;">
+                                        <table class="crud-grid table table-lighter table-condensed noMargin">
+                                            <thead>
+                                                <tr class="nmc-child-table-header">
+                                                    <th class="col-md-1 nmc-td-for-button">
+                                                    </th>
+                                                    <th ng-repeat="scolumn in ::ctrlSettings.sessionColumns track by $index"
+                                                        ng-class="::scolumn.headerClass">
+                                                        {{::scolumn.caption}}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </th>
+                                </tr>
+                            </thead>                    
+                            <tbody>
+                            <tr ng-repeat="session in data.sessionsOnView " 
+                                class="nmc-tr-striped nmc-link"            
+                                >    
+                                <td>
+                                    <table>
+                                        <tr ng-class="{'nmc-bg-distinguish': session.selected == true}">
+                                            <td class="col-xs-1 col-md-1 nmc-td-for-button noPadding">
+                                                <i class="btn btn-xs glyphicon glyphicon-chevron-right"
+                                                   ng-click="toggleChildSessionsView(session)"
+                                                   ng-class="{'nmc-button-disabled':!session.childs}"
+                                                   ng-disabled="!session.childs">
+                                                </i>                                        
+                                            </td>
+                                            <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
+                                                ng-class="::scolumn.headerClass"
+                                                ng-click="loadLogData(session)">
+                                                <span ng-switch on="scolumn.type">
+                                                    <div ng-switch-when="color"
+                                                          style="width: 12px; height: 12px"
+                                                          ng-style="{'background-color': session[scolumn.name]}"
+                                                          >
+                                                    </div>                                
+                                                    <span ng-switch-default>
+                                                        <span ng-bind="session[scolumn.name]"></span>                                   
+                                                    </span>
+                                                </span>
+                    <!--                            <span ng-bind="session[scolumn.name]"></span>                                -->
+                                            </td>
+
+                                        </tr>
+                                        <tr ng-repeat="child in session.childs" ng-show="session.isChildView"
+                                            ng-click="loadLogData(child)"
+                                            ng-class="{'nmc-bg-distinguish': child.selected == true}">
+                                            <td></td>
+                                            <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
+                                                ng-class="::scolumn.headerClass">
+                                                <span ng-switch="scolumn.name">
+                                                    <span ng-switch-when="dataSource" class="paddingLeft20">                                                
+                                                    </span>
+                                                </span>
+                                                <span ng-bind="child[scolumn.name]"></span>
+
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                 </td>        
+                             </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div id="divManualSessionLog" style="max-height: 300px; overflow: auto">
+                          <table ng-show="ctrlSettings.logLoading"
+                           class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
+                            <caption class="noPadding">
+                                <h4>Сообщения сессии</h4>
+                            </caption>
+                            <thead>
+                                <tr class="nmc-main-table-header">
+                                    <th ng-repeat="lcolumn in ctrlSettings.logColumns track by $index"
+                                        ng-class="::lcolumn.headerClass">
+                                        {{::lcolumn.caption}}
+                                    </th>
+                                </tr>
+                            </thead>            
+                          </table>
+                          <div ng-show="ctrlSettings.logLoading" class="marginBottom5 nmc-loading">
+                            <i class="fa fa-spinner fa-spin"></i> Загрузка сообщений сессии... 
+                          </div>
+                          <table ng-show="!ctrlSettings.logLoading"
+                               class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
+                            <caption class="noPadding">
+                                <h4>Сообщения сессии</h4>
+                            </caption>
+                            <thead>
+                                <tr class="nmc-main-table-header">
+                                    <th ng-repeat="lcolumn in ctrlSettings.logColumns track by $index"
+                                        ng-class="::lcolumn.headerClass">
+                                        {{::lcolumn.caption}}
+                                    </th>
+                                </tr>
+                            </thead>            
+                            <tbody>
+                                <tr ng-repeat="log in data.sessionLog">
+                                    <td ng-repeat="lcolumn in ctrlSettings.logColumns">
+                                        <div ng-switch on="::lcolumn.type">
+                                            <span ng-switch-when="id">{{log[lcolumn.name]}}<span ng-show="isSystemuser()"> (id = {{log['id']}})</span>
+                                            </span>
+                                            <span ng-switch-when="checkbox">
+                                                <input type="checkbox" ng-model="log[lcolumn.name]" disabled/>
+                                            </span>
+                                            <span ng-switch-default >
+                                                {{log[lcolumn.name]}}
+                                            </span>
+                                        </div>
+                                    </td>                        
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal"
+								ng-click="exit('#data.currentObject');">
+								Закрыть
+							</button>                            
 						</div>
 					</div>
 				</div>		

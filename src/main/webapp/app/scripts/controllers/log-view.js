@@ -407,7 +407,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         return $scope.ctrlSettings.sessionsLoading || $scope.ctrlSettings.logLoading;
     }
     
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function(){
         //save session table height
         $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
         $cookies.heightLogFooterPart = $("#log-footer-part > .rui-resizable-content").height();
@@ -433,7 +433,6 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             elem.selected = false;
         });
     };
-    
     
     $scope.selectElement = function(flagName){
         $scope.states.isSelectElement = true;

@@ -8,6 +8,87 @@ angular.module('portalNMC')
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
     $scope.ctrlSettings.loading = true;
     $scope.ctrlSettings.userDateFormat = "DD.MM.YYYY";
+    
+    $scope.ctrlSettings.sessionColumns = [
+        {
+            name: "currentStatusColor",
+            caption: "",
+            type: 'color',
+            headerClass: "col-xs-1 col-md-1 nmc-td-for-button noPadding"
+        },{
+            name: "dataSource",
+            caption: "Источник",
+            headerClass: "col-xs-2 col-md-2 noPadding",
+            type: 'id'
+        },{
+            name: "deviceModel",
+            caption: "Модель",
+            headerClass: "col-xs-1 col-md-1"
+        },{
+            name: "deviceNumber",
+            caption: "Номер прибора",
+            headerClass: "col-xs-1 col-md-1"
+        },{
+            name: "startDate",
+            caption: "Время начала",
+            headerClass: "col-xs-2 col-md-2 noPadding"
+        },{
+            name: "endDate",
+            caption: "Время завершения",
+            headerClass: "col-xs-2 col-md-2 noPadding"
+        },{
+            name: "author",
+            caption: "Инициатор",
+            headerClass: "col-xs-1 col-md-1"
+        },{
+            name: "currentStatus",
+            caption: "Текущий статус",
+            headerClass: "col-xs-1 col-md-1"
+        }
+//        ,{
+//            name: "sessionMessage",
+//            caption: "Сообщение",
+//            headerClass: "col-xs-1 col-md-1"
+//        }
+        
+    ];
+    
+    $scope.ctrlSettings.logColumns = [
+        {
+            name: "stepDateStr",
+            caption: "Дата-время",
+            headerClass: "col-xs-2 col-md-2",
+            type: "id"
+        },{
+            name: "stepType",
+            caption: "Тип",
+            headerClass: "col-xs-1 col-md-1"
+        },{
+            name: "stepMessage",
+            caption: "Текст",
+            headerClass: "col-xs-7 col-md-7"
+        },{
+            name: "isIncremental",
+            caption: "Счетчик",
+            headerClass: "col-xs-1 col-md-1",
+            type: "checkbox"
+            
+        },{
+            name: "sumRows",
+            caption: "Значение",
+            headerClass: "col-xs-1 col-md-1"
+        }
+        
+    ];
+    
+    $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");
+    $scope.ctrlSettings.daterangeOpts.startDate = moment().startOf('day');
+    $scope.ctrlSettings.daterangeOpts.endDate = moment().endOf('day');
+    $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
+    $scope.ctrlSettings.dataLoadDaterange = {
+        startDate: moment().startOf('day'),                        
+        endDate: moment().endOf('day')
+    };
     //data
     $scope.data = {};
     $scope.data.dataSources = [];
@@ -386,6 +467,22 @@ angular.module('portalNMC')
         singleDatePicker: true
     };
     
+    $scope.startLoadData = function(params){
+        var url = "";
+        var params = {};
+        $http.put().then(function(resp){
+            
+        }, errorCallback);
+    };
+    
+    $scope.startLoadData = function(params){
+        var url = "";
+        var params = {};
+        $http.put().then(function(resp){
+            
+        }, errorCallback);
+    };
+    
     //keydown listener
     $scope.$on('$destroy', function() {
         window.onkeydown = undefined;
@@ -510,4 +607,86 @@ angular.module('portalNMC')
     $("#showDeviceModal").on("hidden.bs.modal", function(){
         setMainPropertiesActiveTab();
     });
+    
+    /*******************************************/
+    /* Test generation*/
+    
+    var SESSION_ROW_COUNT = 21;
+    var LOG_ROW_COUNT = 1;
+    function generate(){
+        generateSessions();
+        generateSessionLog();
+    };
+    
+    function generateSessions(){
+        var sessions = [];
+        for (var i = 0; i < SESSION_ROW_COUNT; i++){
+            var ses = {};
+            //color status
+            var statusColor = Math.random();
+//            if (statusColor >= 0 && statusColor <= 0.3){
+//                ses.colorStatus = "RED";
+//            }else if (statusColor > 0.3 && statusColor <= 0.6){
+//                ses.colorStatus = "YELLOW";
+//            }else if (statusColor > 0.6 && statusColor <= 1){
+//                ses.colorStatus = "GREEN";
+//            };
+            //data device: source, model, number
+            var rndIntNumber = Math.round(statusColor * 100);
+            ses.dataSource = "Источник " + rndIntNumber;
+            ses.deviceModel = "Модель " + rndIntNumber;
+            ses.deviceNumber = "№ 0000" + rndIntNumber;
+            //time
+            ses.startDate = moment().subtract(Math.round(statusColor * 10), 'days').format("DD-MM-YYYY HH:mm");
+            ses.endDate = moment().subtract(Math.round(statusColor * 10 + 1), 'days').format("DD-MM-YYYY HH:mm");
+            //other
+            ses.author = statusColor > 0.5 ? "Артамонов А.А" : "Расписание";
+            ses.currentStatus = statusColor < .2 ? "Закрыта" : "Открыта";
+            ses.colorStatus = statusColor < .2 ? "RED" : "GREEN";
+            ses.totalRow = Math.round(statusColor * 10);
+            
+            if (statusColor <= 0.3){
+                ses.type = "OID";
+                ses.childs = [];
+                for (var j = 0; j <= Math.round(statusColor * 10); j++){
+                    var child = angular.copy(ses);
+                    child.type = "OP";
+                    child.dataSource = "Прибор " + rndIntNumber + "-" + j;
+                    ses.childs.push(child);
+                };
+            };  
+            sessions.push(ses);
+//console.log(ses);            
+        };
+        $scope.data.sessionsOnView = sessions; 
+    };
+    
+    function generateSessionLog(){
+        var WORDS = ["Земля", "портфель", "идет", "лопатать", "потом", "дравина", "успел", "растопша", "трап", "мышь", "лететь"];
+        var logs = []; 
+        for (var i = 0; i < LOG_ROW_COUNT; i++){
+            var log = {};
+            var rndNum = Math.random();
+            log.stepDateStr = moment().format("DD-MM-YYYY HH:mm");
+            if (rndNum <= 0.3){
+                log.stepType = "Аларм";
+            }else if (rndNum > .3 && rndNum <= .6){
+                log.stepType = "Варнинг";
+            }else{
+                log.stepType = "Инфо";
+            };
+            var msg = "";
+            for (var j = 0; j <= 20; j++){
+                msg += WORDS[Math.round(Math.random() * WORDS.length)] + " ";
+            };
+            log.stepMessage = msg;
+            logs.push(log);
+        };
+        $scope.data.sessionLog = logs;
+        
+    };
+    
+//    generate();
+    /* end Test generation*/
+    /*************************************************************/
 }]);
