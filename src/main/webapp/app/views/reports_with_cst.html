@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-xs-11 col-md-11 noPadding">
                         <label class="noMarginBottom marginTop5">{{category.caption}} 
-                            <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+<!--                            <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>-->
                         </label>
                     </div>
                 </div>
@@ -168,51 +168,4 @@
      >
 </div>
 
-<!--
-<div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="messageForUserLabel" tabindex="-1">
-
-	<div class="modal-dialog modal-content nmc-modal-dialog-low">
-
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="messageForUserLabel" class="nmc-h3">
-				Внимание! 
-			</h3>
-		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-			<form name="moveForm" novalidate>
-                <pre class="nmc-textfield">
-                    {{'\n'+messageForUser}}  
-                </pre>
-			</form>
-		</div>
-		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid">
-
-					<div class="row">
-						<div class="col-xs-offset-4 col-md-5">
-							<button ng-show="showMessageForUserModalExFlag" class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal" data-target="#main_properties" data-toggle="tab"
-								ng-click="editParamSet(currentReportType, currentObject, ctrlSettings.openModes.edit)">
-								Настройка параметров
-							</button>
-						</div>
-
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
-							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
-								ng-click="exit('#moveToArchive');">
-								Ок
-							</button>                            
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
--->
 </div>
