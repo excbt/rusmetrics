@@ -7,10 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -46,35 +46,39 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Column(name = "subscriber_id", insertable = false, updatable = false)
 	private Long subscriberId;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cont_event_id")
+	//@OneToOne(fetch = FetchType.EAGER)
+	//@JoinColumn(name = "cont_event_id")
+	@Transient
 	private ContEvent contEvent;
 
-	@Column(name = "cont_event_level")
+	@Column(name = "cont_event_id", insertable = false, updatable = false)
+	private Long contEventId;
+
+	@Column(name = "cont_event_level", insertable = false, updatable = false)
 	private Integer contEventLevel;
 
-	@Column(name = "cont_event_level_color")
+	@Column(name = "cont_event_level_color", insertable = false, updatable = false)
 	private String contEventLevelColor;
 
-	@Column(name = "cont_event_time")
+	@Column(name = "cont_event_time", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonIgnore
 	private Date contEventTime;
 
-	@Column(name = "cont_object_id")
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
-	@Column(name = "cont_event_type_id")
+	@Column(name = "cont_event_type_id", insertable = false, updatable = false)
 	private Long contEventTypeId;
 
 	@Column(name = "is_new")
 	private Boolean isNew;
 
-	@Column(name = "notification_time")
+	@Column(name = "notification_time", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date notificationTime;
 
-	@Column(name = "notification_time_tz")
+	@Column(name = "notification_time_tz", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date notificationTimeTZ;
 
@@ -89,10 +93,10 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Column(name = "revision_subscr_user_id")
 	private Long revisionSubscrUserId;
 
-	@Column(name = "cont_event_category")
+	@Column(name = "cont_event_category", insertable = false, updatable = false)
 	private String contEventCategoryKeyname;
 
-	@Column(name = "cont_event_deviation")
+	@Column(name = "cont_event_deviation", insertable = false, updatable = false)
 	private String contEventDeviationKeyname;
 
 	public Subscriber getSubscriber() {
@@ -221,6 +225,14 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setContEventDeviationKeyname(String contEventDeviationKeyname) {
 		this.contEventDeviationKeyname = contEventDeviationKeyname;
+	}
+
+	public Long getContEventId() {
+		return contEventId;
+	}
+
+	public void setContEventId(Long contEventId) {
+		this.contEventId = contEventId;
 	}
 
 }

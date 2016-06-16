@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -95,5 +96,12 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	public Page<ContEvent> selectBySubscriberAndDateAndContObjects(@Param("subscriberId") long subscriberId,
 			@Param("eventStartDate") Date eventStartDate, @Param("eventEndDate") Date eventEndDate,
 			@Param("contObjectIds") List<Long> contObjectIds, Pageable pageable);
+
+	/**
+	 * @param contEventsIds
+	 * @return
+	 */
+	@Query("SELECT ce FROM ContEvent ce WHERE ce.id IN (:contEventsIds)")
+	public List<ContEvent> selectContEventsByIds(@Param("contEventsIds") Collection<Long> contEventsIds);
 
 }

@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -203,6 +204,15 @@ public class ContEventService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContEventDeviation> findContEventDeviation() {
 		return Lists.newArrayList(contEventDeviationRepository.selectContEventDeviation());
+	}
+
+	/**
+	 * 
+	 * @param contEventsIds
+	 * @return
+	 */
+	public List<ContEvent> selectContEventsByIds(Collection<Long> contEventsIds) {
+		return contEventRepository.selectContEventsByIds(contEventsIds);
 	}
 
 }

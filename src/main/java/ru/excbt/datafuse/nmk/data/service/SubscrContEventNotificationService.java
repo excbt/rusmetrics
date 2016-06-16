@@ -6,12 +6,14 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -31,10 +33,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
-import ru.excbt.datafuse.nmk.data.model.ContEventType_;
-import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
@@ -88,6 +89,9 @@ public class SubscrContEventNotificationService extends AbstractService {
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
+
+	@Autowired
+	private ContEventService contEventService;
 
 	/**
 	 * 
@@ -236,6 +240,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotificationRepository
 				.findAll(Specifications.where(specSubscriberId(subscriberId)).and(specIsNew(isNew)), pageRequest);
 
+		initContEvent(resultPage.getContent());
+
 		return resultPage;
 
 	}
@@ -286,6 +292,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 		Specifications<SubscrContEventNotification> specs = specsAndFilterBuild(andFilter);
 
 		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
+
+		initContEvent(result.getContent());
 
 		return result;
 
@@ -494,8 +502,12 @@ public class SubscrContEventNotificationService extends AbstractService {
 			if (contEventCategoryList == null || contEventCategoryList.size() == 0) {
 				return null;
 			}
-			return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
-					.get(ContEventType_.contEventCategory).in(contEventCategoryList));
+
+			return cb.or(root.get(SubscrContEventNotification_.contEventCategoryKeyname).in(contEventCategoryList));
+			//. (ContEvent_.contEventType)
+			//.get(ContEventType_.contEventCategory).in(contEventCategoryList));
+			//return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
+			//		.get(ContEventType_.contEventCategory).in(contEventCategoryList));
 		};
 	}
 
@@ -505,8 +517,9 @@ public class SubscrContEventNotificationService extends AbstractService {
 			if (contEventDeviationList == null || contEventDeviationList.size() == 0) {
 				return null;
 			}
-			return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
-					.in(contEventDeviationList));
+			return cb.or(root.get(SubscrContEventNotification_.contEventDeviationKeyname).in(contEventDeviationList));
+			//			return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
+			//					.in(contEventDeviationList));
 		};
 	}
 
@@ -517,7 +530,9 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public SubscrContEventNotification findNotification(Long id) {
-		return subscrContEventNotificationRepository.findOne(id);
+		SubscrContEventNotification result = subscrContEventNotificationRepository.findOne(id);
+		initContEvent(result);
+		return result;
 	}
 
 	/**
@@ -559,7 +574,9 @@ public class SubscrContEventNotificationService extends AbstractService {
 		subscrContEventNotification.setRevisionTime(revisionDate);
 		subscrContEventNotification.setRevisionTimeTZ(revisionDate);
 		subscrContEventNotification.setRevisionSubscrUserId(revisionSubscrUserId);
-		return subscrContEventNotificationRepository.save(subscrContEventNotification);
+		SubscrContEventNotification result = subscrContEventNotificationRepository.save(subscrContEventNotification);
+		initContEvent(result);
+		return result;
 	}
 
 	/**
@@ -1076,6 +1093,33 @@ public class SubscrContEventNotificationService extends AbstractService {
 		});
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param notifications
+	 */
+	private void initContEvent(Collection<SubscrContEventNotification> notifications) {
+
+		Collection<Long> contEventIds = notifications.stream().map(i -> i.getContEventId()).collect(Collectors.toSet());
+		List<ContEvent> contEvents = contEventService.selectContEventsByIds(contEventIds);
+
+		final Map<Long, ContEvent> contEventsMap = contEvents.stream()
+				.collect(Collectors.toMap(ContEvent::getId,
+						Function.identity()));
+
+		notifications.forEach(i -> {
+			i.setContEvent(contEventsMap.get(i.getContEventId()));
+		});
+
+	}
+
+	/**
+	 * 
+	 * @param notification
+	 */
+	private void initContEvent(SubscrContEventNotification notification) {
+		initContEvent(Arrays.asList(notification));
 	}
 
 }
