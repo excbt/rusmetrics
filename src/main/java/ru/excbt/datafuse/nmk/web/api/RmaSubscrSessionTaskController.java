@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.model.keyname.SessionDetailType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointSessionDetailType;
@@ -93,9 +94,9 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contZPointSessionDetailType/byDeviceObject/{id}", method = RequestMethod.GET,
+	@RequestMapping(value = "/contZPointSessionDetailType/byDeviceObject/{deviceObjectId}", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointSessionDetailType(@PathVariable("id") Long deviceObjectId) {
+	public ResponseEntity<?> getContZPointSessionDetailType(@PathVariable("deviceObjectId") Long deviceObjectId) {
 		List<ContZPoint> contZPoints = contZPointService.selectContPointsByDeviceObject(deviceObjectId);
 
 		Long[] contZPointIds = contZPoints.stream().map(i -> i.getId()).collect(Collectors.toList())
@@ -114,6 +115,19 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 		}).collect(Collectors.toList());
 
 		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param subscrSessionTaskId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscrSessionTaskId}/logSessions", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrSessionTaskLogSession(
+			@PathVariable("subscrSessionTaskId") Long subscrSessionTaskId) {
+		List<LogSession> result = subscrSessionTaskService.selectTaskLogSessions(subscrSessionTaskId);
+		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 }

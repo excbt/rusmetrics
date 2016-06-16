@@ -31,7 +31,12 @@ public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testGetSubscrSessionTask() throws Exception {
-		_testGetJson("/api/rma/subscrSessionTask/" + 127990559);
+		_testGetJson("/api/rma/subscrSessionTask/" + 127990560);
+	}
+
+	@Test
+	public void testGetSubscrSessionTaskSession() throws Exception {
+		_testGetJson("/api/rma/subscrSessionTask/" + 127990560 + "/logSessions");
 	}
 
 	/**

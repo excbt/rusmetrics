@@ -15,13 +15,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session")
 @SequenceGenerator(name = "abstractEntity", sequenceName = "slog.seq_log_session_id", allocationSize = 1)
 @JsonInclude(value = Include.NON_NULL)
-public class LogSession extends JsonAbstractAuditableModel {
+public class LogSession extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
 		 * 
@@ -228,10 +229,12 @@ public class LogSession extends JsonAbstractAuditableModel {
 		this.version = version;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
 	}
