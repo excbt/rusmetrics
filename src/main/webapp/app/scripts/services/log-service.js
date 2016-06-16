@@ -67,17 +67,24 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     }
     
     function serverDataParser(data){ 
-//console.time('Data parsing');        
+//console.time('Data parsing');
+        if (mainSvc.checkUndefinedNull(data) || !angular.isArray(data) || data.length == 0)
+            return null;
         var result = data.map(function(dataRow){
             var tmpParsedRow = {};
             tmpParsedRow.id = dataRow.id;
-            tmpParsedRow.dataSource = dataRow.dataSourceInfo.caption || dataRow.dataSourceInfo.dataSourceName;
-            tmpParsedRow.deviceModel = dataRow.deviceObjectInfo.deviceModelName;
-            tmpParsedRow.deviceNumber = dataRow.deviceObjectInfo.number;
+            if (!mainSvc.checkUndefinedNull(dataRow.dataSourceInfo))
+                tmpParsedRow.dataSource = dataRow.dataSourceInfo.caption || dataRow.dataSourceInfo.dataSourceName;
+            if (!mainSvc.checkUndefinedNull(dataRow.deviceObjectInfo)){
+                tmpParsedRow.deviceModel = dataRow.deviceObjectInfo.deviceModelName;
+                tmpParsedRow.deviceNumber = dataRow.deviceObjectInfo.number;
+            }
             tmpParsedRow.startDate = dataRow.sessionDateStr;
             tmpParsedRow.endDate = dataRow.sessionEndDateStr;
-            tmpParsedRow.author = dataRow.authorInfo.authorName;
+            if (!mainSvc.checkUndefinedNull(dataRow.authorInfo))
+                tmpParsedRow.author = dataRow.authorInfo.authorName;
             tmpParsedRow.currentStatus = dataRow.sessionStatus;
+            tmpParsedRow.statusMessage = dataRow.statusMessage;
             tmpParsedRow.sessionMessage = dataRow.sessionMessage;
             tmpParsedRow.sessionUuid = dataRow.sessionUuid;
             tmpParsedRow.masterSessionUuid = dataRow.masterSessionUuid;
@@ -140,6 +147,7 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     return {
         getSessions,
         getSessionsLogDaterange,
+        serverDataParser,
         setSessionsLogDaterange
     }
 }])

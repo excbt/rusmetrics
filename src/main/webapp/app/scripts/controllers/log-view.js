@@ -2,8 +2,7 @@
 var app = angular.module('portalNMC');
 app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', 'logSvc', '$rootScope', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory, logSvc, $rootScope){
     
-    var ROW_PER_PAGE = 20;
-    
+    var ROW_PER_PAGE = 20; 
     $scope.messages = {};
     
     $scope.ctrlSettings = {};
@@ -49,11 +48,11 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         },{
             name: "startDate",
             caption: "Время начала",
-            headerClass: "col-xs-2 col-md-2 noPadding"
+            headerClass: "col-xs-1 col-md-1 noPadding"
         },{
             name: "endDate",
             caption: "Время завершения",
-            headerClass: "col-xs-2 col-md-2 noPadding"
+            headerClass: "col-xs-1 col-md-1 noPadding"
         },{
             name: "author",
             caption: "Инициатор",
@@ -63,11 +62,11 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             caption: "Текущий статус",
             headerClass: "col-xs-1 col-md-1"
         }
-//        ,{
-//            name: "sessionMessage",
-//            caption: "Сообщение",
-//            headerClass: "col-xs-1 col-md-1"
-//        }
+        ,{
+            name: "statusMessage",
+            caption: "Сообщение",
+            headerClass: "col-xs-3 col-md-3"
+        }
         
     ];
     $scope.ctrlSettings.logColumns = [
@@ -400,7 +399,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
 //console.log("pageChanged");        
 //        $scope.getResultsPage(newPage);
         $scope.ctrlSettings.pagination.current = newPage;
-        $scope.data.sessionsOnView = data.sessions.slice(($scope.ctrlSettings.pagination.current-1)*ROW_PER_PAGE, ($scope.ctrlSettings.pagination.current)*ROW_PER_PAGE);
+        $scope.data.sessionsOnView = data.sessions.slice(($scope.ctrlSettings.pagination.current-1) * $scope.ctrlSettings.itemPerPage, ($scope.ctrlSettings.pagination.current) * $scope.ctrlSettings.itemPerPage);
     };
     
     $scope.isDisabledFilters = function(){
@@ -492,22 +491,6 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             params.contObjectIds = $scope.selectedObjects;
         };
         $rootScope.$broadcast('logSvc:requestSessionsLoading', {params: params});
-        
-//        $http.get(url)
-//        $http({
-//            method: "GET",
-//            url: url,
-//            params: params
-//        })
-//            .then(function(resp){         
-//                data.sessions = serverDataParser(angular.copy(resp.data));
-//                if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0)
-//                    data.sessions = defineChildSessions();          
-//                $scope.data.totalSessions = data.sessions.length;
-//                $scope.ctrlSettings.pagination.current = 1;
-//                $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
-//                $scope.ctrlSettings.sessionsLoading = false;
-//        }, errorCallback);
     }
     
         //for Refresh button
@@ -524,69 +507,24 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         }
         $scope.data.totalSessions = data.sessions.length;
         $scope.ctrlSettings.pagination.current = 1;
-        $scope.data.sessionsOnView = data.sessions.slice(0, ROW_PER_PAGE);
+        var tmpCurSession = null;
+        //save current session before update table, that don't lost it
+        if (!mainSvc.checkUndefinedNull($scope.data.currentSession))
+            tmpCurSession = angular.copy($scope.data.currentSession);
+        $scope.data.sessionsOnView = data.sessions.slice(0, $scope.ctrlSettings.itemPerPage);
+        if (!mainSvc.checkUndefinedNull(tmpCurSession)){
+            $scope.data.sessionsOnView.some(function(elem){
+                if (elem.id == tmpCurSession.id){
+                    $scope.loadLogData(elem);
+                }
+            })
+        }
         
     }
     
     $scope.$on('logSvc:sessionsLoaded', getSessionsData)
     
-    function serverDataParser(data){
-//var startTime = new Date();        
-console.time('Data parsing');        
-        var result = data.map(function(dataRow){
-            var tmpParsedRow = {};
-            tmpParsedRow.id = dataRow.id;
-            tmpParsedRow.dataSource = dataRow.dataSourceInfo.caption || dataRow.dataSourceInfo.dataSourceName;
-            tmpParsedRow.deviceModel = dataRow.deviceObjectInfo.deviceModelName;
-            tmpParsedRow.deviceNumber = dataRow.deviceObjectInfo.number;
-            tmpParsedRow.startDate = dataRow.sessionDateStr;
-            tmpParsedRow.endDate = dataRow.sessionEndDateStr;
-            tmpParsedRow.author = dataRow.authorInfo.authorName;
-            tmpParsedRow.currentStatus = dataRow.sessionStatus;
-            tmpParsedRow.sessionMessage = dataRow.sessionMessage;
-            tmpParsedRow.sessionUuid = dataRow.sessionUuid;
-            tmpParsedRow.masterSessionUuid = dataRow.masterSessionUuid;
-            return tmpParsedRow;
-        });
-console.timeEnd('Data parsing');                
-//var endTime = new Date();        
-//console.log("parsing time (ye)= " + (endTime.getTime() - startTime.getTime()));        
-//console.log("parsing time (ms)= " + (endTime.getMilliseconds() - startTime.getMilliseconds()));                
-        return result;        
-    }
-    
-    function defineChildSessions(){
-console.time('Find child sessions');        
-        var tmpData = angular.copy(data.sessions);
-        var newData = [];
-        var childSessions = [];
-            //find child sessions      
-        tmpData.forEach(function(session){
-            if (!mainSvc.checkUndefinedNull(session.masterSessionUuid)){
-                if (mainSvc.checkUndefinedNull(childSessions[session.masterSessionUuid])){
-                    childSessions[session.masterSessionUuid] = [];
-                }
-                childSessions[session.masterSessionUuid].push(angular.copy(session));
-            }else{          
-                newData.push(session);
-            }
-        });
-//console.log(childSessions);        
-            //add child sessions to their master sessions
-        for (var uuid in childSessions){               
-            newData.some(function(masterSession){                
-                if (uuid == masterSession.sessionUuid){
-                    masterSession.childs = childSessions[uuid];
-                    return true;
-                }
-            });
-        }        
-//        data.sessions = newData;
-console.timeEnd('Find child sessions');
-//console.log(newData);                
-        return newData;
-//console.log(data.sessions);        
-    }
+ 
     
     // **********************************************************************
     // session log
@@ -611,32 +549,16 @@ console.timeEnd('Find child sessions');
         loadSessionsData();
     })
     
+    $scope.$watch('ctrlSettings.itemPerPage', function(newVal, oldVal){
+        if(newVal == oldVal){
+            return;
+        }
+        $scope.pageChanged(1);
+    })
+    
     $scope.checkEmptyObject = function(obj){
         return mainSvc.checkEmptyObject(obj)
-    }
-    
-    //function add more objects for table on user screen
-    var addMoreObjects = function(){                 
-        if (($scope.objects.length <= 0)){
-            return;
-        };
-
-        //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
-        var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
-        if((endIndex >= $scope.objects.length)){
-            endIndex = $scope.objects.length;
-        };
-        //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
-        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
-            //добавляем к выведимому на экран массиву новый блок элементов
-        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-        if(endIndex >= ($scope.objects.length)){
-            $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
-        }else{
-            $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
-        };
-    };     
-    
+    }      
     
     function initCtrl(){
         getSessionsData();
