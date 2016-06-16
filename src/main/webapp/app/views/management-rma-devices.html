@@ -132,16 +132,14 @@
                             Редактировать свойства прибора
                         </a>
                     </li>
-<!--
                     <li>
                         <a href
                            data-target="#deviceSessionModal"
                            data-toggle="modal"
-                           ng-click="selectedItem(device)">
+                           ng-click="initManualLoading(device)">
                             Ручная загрузка данных
                         </a>
                     </li>
--->
                     <li ng-if = "isDirectDevice(device)">
                         <a href="" ng-click="getDeviceSchedulerSettings(device.contObjectId, device)">
                             Расписание опроса прибора
@@ -825,7 +823,7 @@
 
 	<div class="modal-dialog modal-content nmc-modal-wide-dialog">
 
-		<div class="modal-header nmc-modal-header">
+		<div class="modal-header nmc-modal-header nmc-bg-alert">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deviceSessionLabel" class="nmc-h3">
                 Ручная загрузка данных с прибора 
@@ -854,21 +852,23 @@
                             </div>    
                         </div>
                         <div>
-                            <div class="input-group">
+                            <div class="marginBottom5">
                                 <label>Укажите точку учета
                                 </label>
-                                <select class="form-control nmc-select-form">
-                                    <option>Точка 1</option>
-                                    <option>Точка 2</option>
-                                </select>
+                                <span class="form-group" ng-class="{'has-error': !data.currentContZpoint}">
+                                    <select class="form-control nmc-select-form" ng-model="data.currentContZpoint"
+                                            ng-options="zp as zp.customServiceName for zp in data.sessionDetailType"
+                                            ng-change="changeSessionDetailType()">
+                                    </select>
+                                </span>
                             </div>
                         </div>
-                        <div>
+                        <div ng-if="data.currentContZpoint">
                             <label>Выберете типы загружаемых данных
                             </label>
-                            <div><input type="checkbox">Часовые</div>
-                            <div><input type="checkbox">Суточные</div>
-                            <div><input type="checkbox">Интеграторы</div>
+                            <div ng-repeat="detailType in data.detailTypes">
+                                <input type="checkbox" ng-model="detailType.selected"><span ng-bind="detailType.caption"></span>
+                            </div>
                         </div>
                         <div>
                             <p class="btn btn-xs btn-primary"

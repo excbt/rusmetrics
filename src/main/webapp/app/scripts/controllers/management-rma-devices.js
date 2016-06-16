@@ -1,9 +1,15 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc){
+.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', '$interval', 'logSvc', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc, $interval, logSvc){
 //console.log('Run devices management controller.');
     $rootScope.ctxId = "management_rma_devices_page";
     //settings
+    var SESSION_TASK_URL = "../api/rma/subscrSessionTask";
+    var SESSION_DETAIL_TYPE_URL = SESSION_TASK_URL + "/contZPointSessionDetailType/byDeviceObject";
+    var REFRESH_PERIOD = 10000;//10 sec
+    
+    var interval = null;//interval for load session data
+    
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
     $scope.ctrlSettings.loading = true;
@@ -16,19 +22,6 @@ angular.module('portalNMC')
             type: 'color',
             headerClass: "col-xs-1 col-md-1 nmc-td-for-button noPadding"
         },{
-            name: "dataSource",
-            caption: "Источник",
-            headerClass: "col-xs-2 col-md-2 noPadding",
-            type: 'id'
-        },{
-            name: "deviceModel",
-            caption: "Модель",
-            headerClass: "col-xs-1 col-md-1"
-        },{
-            name: "deviceNumber",
-            caption: "Номер прибора",
-            headerClass: "col-xs-1 col-md-1"
-        },{
             name: "startDate",
             caption: "Время начала",
             headerClass: "col-xs-2 col-md-2 noPadding"
@@ -37,19 +30,14 @@ angular.module('portalNMC')
             caption: "Время завершения",
             headerClass: "col-xs-2 col-md-2 noPadding"
         },{
-            name: "author",
-            caption: "Инициатор",
-            headerClass: "col-xs-1 col-md-1"
-        },{
             name: "currentStatus",
             caption: "Текущий статус",
             headerClass: "col-xs-1 col-md-1"
+        },{
+            name: "statusMessage",
+            caption: "Сообщение",
+            headerClass: "col-xs-1 col-md-1"
         }
-//        ,{
-//            name: "sessionMessage",
-//            caption: "Сообщение",
-//            headerClass: "col-xs-1 col-md-1"
-//        }
         
     ];
     
@@ -314,6 +302,8 @@ angular.module('portalNMC')
         $scope.data.currentObject.isSaving = false;
         //reset saving csheduler flag
         $scope.data.currentScheduler.isSaving = false;
+        //session data load flag
+        $scope.ctrlSettings.sessionsLoading = false;
     };
     
     $scope.saveDevice = function(device){
@@ -467,21 +457,102 @@ angular.module('portalNMC')
         singleDatePicker: true
     };
     
-    $scope.startLoadData = function(params){
-        var url = "";
-        var params = {};
-        $http.put().then(function(resp){
-            
+    function checkTaskSettings(){
+        var result = true;
+        if (mainSvc.checkUndefinedNull($scope.data.currentContZpoint.contZPointId)){
+            result = false;
+            notificationFactory.errorInfo("Ошибка", "Не выбрана точка учета.");
+        };
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.id)){
+            result = false;
+            notificationFactory.errorInfo("Ошибка", "Некорректно задан прибор.");
+        };
+        if (mainSvc.checkUndefinedNull($scope.ctrlSettings.dataLoadDaterange.startDate)){
+            result = false;
+            notificationFactory.errorInfo("Ошибка", "Некорректно задано начало периода.");
+        };
+        if (mainSvc.checkUndefinedNull($scope.ctrlSettings.dataLoadDaterange.endDate)){
+            result = false;
+            notificationFactory.errorInfo("Ошибка", "Некорректно задан конец периода.");
+        };
+        return result;
+    }
+
+    // task structure
+//	private Long contZPointId;
+//	private Long deviceObjectId;
+//	private Date periodBeginDate;
+//	private Date periodEndDate;
+//	private String[] sessionDetailTypes;
+    
+    $scope.startLoadData = function(){     
+        var check = checkTaskSettings();
+        if (check == false){
+            return;
+        }
+        var task = {};
+        task.contZPointId = $scope.data.currentContZpoint.contZPointId;
+        task.deviceObjectId = $scope.data.currentObject.id;
+        task.periodBeginDate = $scope.ctrlSettings.dataLoadDaterange.startDate;
+        task.periodEndDate = $scope.ctrlSettings.dataLoadDaterange.endDate;
+        task.sessionDetailTypes = [];
+        $scope.data.detailTypes.forEach(function(dt){
+            if (dt.selected == true){
+                task.sessionDetailTypes.push(dt.keyname);
+            }
+        });       
+        
+        var url = SESSION_TASK_URL;        
+        $http.post(url, task).then(function(resp){
+            if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)){                
+                return;
+            };
+            $scope.data.currentSessionTask = resp.data;
+            interval = $interval(loadDeviceSessionsData, REFRESH_PERIOD)
         }, errorCallback);
     };
     
-    $scope.startLoadData = function(params){
-        $interval
-    };
+    function loadDeviceSessionsData(){
+        $scope.ctrlSettings.sessionsLoading = true;
+        var url = SESSION_TASK_URL + "/" +$scope.data.currentSessionTask.id + "/logSessions";
+        $http.get(url).then(function(resp){
+console.log(resp);            
+            $scope.data.sessionsOnView = logSvc.serverDataParser(angular.copy(resp.data));
+            $scope.ctrlSettings.sessionsLoading = false;
+        }, errorCallback);
+    }
+    
+    function loadContZPointSessionDetailType(device){
+        var url = SESSION_DETAIL_TYPE_URL + "/" + device.id;
+        $http.get(url).then(function(resp){
+            if(mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)){
+                console.log("Session detail type is empty.");
+                return "Session detail type is empty.";
+            }
+            $scope.data.sessionDetailType = resp.data;
+        }, errorProtoCallback)
+    }
+    
+    $scope.initManualLoading = function(device){
+        $scope.data.currentContZpoint = null;
+        $scope.data.sessionDetailType = [];
+        $scope.data.detailTypes = [];
+        $scope.selectedItem(device);
+        loadContZPointSessionDetailType(device);
+    }
+    
+    $scope.changeSessionDetailType = function(){
+        $scope.data.detailTypes = angular.copy($scope.data.currentContZpoint.sessionDetailTypes);        
+    }
+    
+    $("#deviceSessionModal").on('hidden.bs.modal', function(){
+         if (!mainSvc.checkUndefinedNull(interval))
+            $interval.cancel(interval);
+    });
     
     //keydown listener
     $scope.$on('$destroy', function() {
-        window.onkeydown = undefined;
+        window.onkeydown = undefined;       
     }); 
     
     //keydown listener for ctrl+end

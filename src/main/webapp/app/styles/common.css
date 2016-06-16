@@ -1884,6 +1884,10 @@ tr.nmc-inactive-price > td{
     color:green;
 }
 
+.nmc-bg-alert{
+    background-color: red;
+}
+
 /* Класс, для выделения фона элемента - используется на карте объектов в попапах*/
 .nmc-bg-distinguish{
     background-color: #eee;
