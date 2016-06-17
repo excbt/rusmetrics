@@ -438,9 +438,11 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	 */
 	@JsonIgnore
 	public void saveDeviceObjectInfo() {
-		if (deviceLoginInfo != null && deviceLoginInfo.deviceLogin != null && deviceLoginInfo.devicePassword != null) {
-			this.deviceLogin = deviceLoginInfo.deviceLogin;
-			this.devicePassword = deviceLoginInfo.devicePassword;
+		if (deviceLoginInfo != null
+		//&& deviceLoginInfo.deviceLogin != null && deviceLoginInfo.devicePassword != null
+		) {
+			this.deviceLogin = deviceLoginInfo.deviceLogin != null ? deviceLoginInfo.deviceLogin : "";
+			this.devicePassword = deviceLoginInfo.devicePassword != null ? deviceLoginInfo.devicePassword : "";
 		}
 	}
 
