@@ -13,6 +13,7 @@ public interface SubscrSessionTaskLogRepository extends JpaRepository<SubscrSess
 
 	@Query("SELECT s FROM LogSession s "
 			+ " WHERE s.id IN (SELECT t.logSessionId FROM SubscrSessionTaskLog t "
-			+ " WHERE t.subscrSessionTaskId = :subscrSessionTaskId AND (t.logSessionId <> 0 AND t.logSessionId IS NOT NULL))")
+			+ " WHERE t.subscrSessionTaskId = :subscrSessionTaskId AND (t.logSessionId <> 0 AND t.logSessionId IS NOT NULL))"
+			+ " ORDER BY s.sessionDate DESC ")
 	public List<LogSession> selectTaskLogSessions(@Param("subscrSessionTaskId") long subscrSessionTaskId);
 }

@@ -18,7 +18,7 @@ public interface LogSessionRepository extends JpaRepository<LogSession, Long> {
 	 * @return
 	 */
 	@Query("SELECT s FROM LogSession s WHERE (s.sessionDate BETWEEN :startDate AND :endDate) AND s.deleted = 0 "
-			+ " AND (s.dataSourceId IN (:dataSourceIds) )")
+			+ " AND (s.dataSourceId IN (:dataSourceIds) ) ORDER BY s.sessionDate DESC ")
 	public List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
 			@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
@@ -33,7 +33,7 @@ public interface LogSessionRepository extends JpaRepository<LogSession, Long> {
 			+ " AND s.deleted = 0 "
 			+ " AND (s.deviceObjectId IN "
 			+ "  (SELECT d.id FROM DeviceObject d WHERE d.contObject.id IN (:contObjectIds)) "
-			+ " ) AND s.dataSourceId IN (:dataSourceIds) ")
+			+ " ) AND s.dataSourceId IN (:dataSourceIds) ORDER BY s.sessionDate DESC ")
 	public List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
 			@Param("startDate") Date startDate, @Param("endDate") Date endDate,
 			@Param("contObjectIds") List<Long> contObjectIds);
