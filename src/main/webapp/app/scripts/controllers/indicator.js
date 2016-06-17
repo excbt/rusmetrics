@@ -219,63 +219,63 @@ angular.module('portalNMC')
             }];
 
           
-    $scope.integratorColumns = [
-        {
-            header : "Дата",
-            headerClass : "col-xs-2 col-md-2",
-            dataClass : "col-xs-2 col-md-2",
-            fieldName: "dataDate"
-        }, 
-        {
-            header : "Время наработки, час",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "workTime"
-        },
-        {
-            header : "Потребление тепла, ГКал",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "h_delta"
-        }, 
-        {
-            header : "Масса подачи, т",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "m_in"
-        }, 
-        {
-            header : "Масса обратки, т",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "m_out"
-        },
-        {
-            header : "Объем подачи, м3",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "v_in"
-        },
-        {
-            header : "Объем обратки, м3",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "v_out"
-        },
-        {
-            header : "ГКал на входе",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "h_in"
-        },
-        {
-            header : "ГКал на выходе",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "h_out"
-        }
-    ];
-    
+//    $scope.integratorColumns = [
+//        {
+//            header : "Дата",
+//            headerClass : "col-xs-2 col-md-2",
+//            dataClass : "col-xs-2 col-md-2",
+//            fieldName: "dataDate"
+//        }, 
+//        {
+//            header : "Время наработки, час",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "workTime"
+//        },
+//        {
+//            header : "Потребление тепла, ГКал",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "h_delta"
+//        }, 
+//        {
+//            header : "Масса подачи, т",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "m_in"
+//        }, 
+//        {
+//            header : "Масса обратки, т",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "m_out"
+//        },
+//        {
+//            header : "Объем подачи, м3",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "v_in"
+//        },
+//        {
+//            header : "Объем обратки, м3",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "v_out"
+//        },
+//        {
+//            header : "ГКал на входе",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "h_in"
+//        },
+//        {
+//            header : "ГКал на выходе",
+//            headerClass : "col-xs-1 col-md-1",
+//            dataClass : "col-xs-1 col-md-1",
+//            fieldName: "h_out"
+//        }
+//    ];
+        
     $scope.indicatorColumns = [{
                 header : "Дата",
                 headerClass : "col-xs-2 col-md-2",

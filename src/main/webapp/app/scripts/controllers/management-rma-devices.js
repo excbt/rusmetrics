@@ -465,12 +465,12 @@ angular.module('portalNMC')
     //                      Work with sessions
     ////////////////////////////////////////////////////////////////////////////////////////
     function checkTaskSettings(){
-        var result = true;
-        if (mainSvc.checkUndefinedNull($scope.data.currentContZpoint.contZPointId)){
+        var result = true;       
+        if (mainSvc.checkUndefinedNull($scope.data.currentContZpoint) || mainSvc.checkUndefinedNull($scope.data.currentContZpoint.contZPointId)){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Не выбрана точка учета.");
         };
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.id)){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.id)){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно задан прибор.");
         };
@@ -482,6 +482,21 @@ angular.module('portalNMC')
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно задан конец периода.");
         };
+        if ($scope.ctrlSettings.dataLoadDaterange.endDate < $scope.ctrlSettings.dataLoadDaterange.startDate){
+            result = false;
+            notificationFactory.errorInfo("Ошибка", "Некорректно заданы границы периода.");
+        };
+        var isSelectedDT = false;
+        $scope.data.detailTypes.some(function(dt){
+            if (dt.selected == true){
+                isSelectedDT = true;
+                return true;
+            }
+        });
+        if (isSelectedDT == false){
+            result = false;
+            notificationFactory.warning("Не выбрано ни одного типа загружаемых данных. Загрузка не будет запущена.");
+        }
         return result;
     }
 
@@ -505,12 +520,13 @@ angular.module('portalNMC')
         task.periodBeginDate = $scope.ctrlSettings.dataLoadDaterange.startDate;
         task.periodEndDate = $scope.ctrlSettings.dataLoadDaterange.endDate;
         task.sessionDetailTypes = [];
-        $scope.data.detailTypes.forEach(function(dt){
-            if (dt.selected == true){
-                task.sessionDetailTypes.push(dt.keyname);
-            }
-        });       
-        
+        if (angular.isArray($scope.data.detailTypes) && $scope.data.detailTypes.length > 0){
+            $scope.data.detailTypes.forEach(function(dt){
+                if (dt.selected == true){
+                    task.sessionDetailTypes.push(dt.keyname);
+                }
+            });       
+        }
         var url = SESSION_TASK_URL;        
         $http.post(url, task).then(function(resp){
             if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)){                
@@ -614,6 +630,11 @@ angular.module('portalNMC')
          if (!mainSvc.checkUndefinedNull(interval))
             $interval.cancel(interval);
     });
+    
+    $scope.isDisabledStartButton = function(){
+        //if $scope.data.currentSessionTask have id, that mean task start and we need block Start button
+        return !mainSvc.checkUndefinedNull($scope.data.currentSessionTask) && !mainSvc.checkUndefinedNull($scope.data.currentSessionTask.id);
+    }
     
     //************************************************
     //
