@@ -14,6 +14,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
     $scope.ctrlSettings.loading = true;
     $scope.ctrlSettings.userDateFormat = "DD.MM.YYYY";
+    $scope.ctrlSettings.sessionsUrl = "../api/rma/logSessions";
     
     $scope.ctrlSettings.sessionColumns = [
         {
@@ -36,10 +37,12 @@ angular.module('portalNMC')
         },{
             name: "statusMessage",
             caption: "Сообщение",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-5 col-md-5"
         }
         
     ];
+    
+    var SESSION_TERMINATE_STATUSES = ["COMPLETE", "COMPLETE WITH ERROR", "FAILURE"];
     
     $scope.ctrlSettings.logColumns = [
         {
@@ -85,7 +88,8 @@ angular.module('portalNMC')
     $scope.data.deviceModels = [];
     $scope.data.currentObject = {};
     $scope.data.currentScheduler = {};
-
+    $scope.data.currentSession = {};
+    
     $scope.data.metadataSchema = [
         {
             header: 'Поле источник',
@@ -381,7 +385,7 @@ angular.module('portalNMC')
         })
         .then(
             function(response){
-                $scope.currentObject =  {};
+                $scope.currentObject = {};
                 $('#metaDataEditorModal').modal('hide');
                 notificationFactory.success();
             },
@@ -457,6 +461,9 @@ angular.module('portalNMC')
         singleDatePicker: true
     };
     
+    //**************************************************************************************
+    //                      Work with sessions
+    ////////////////////////////////////////////////////////////////////////////////////////
     function checkTaskSettings(){
         var result = true;
         if (mainSvc.checkUndefinedNull($scope.data.currentContZpoint.contZPointId)){
@@ -485,7 +492,9 @@ angular.module('portalNMC')
 //	private Date periodEndDate;
 //	private String[] sessionDetailTypes;
     
-    $scope.startLoadData = function(){     
+    $scope.startLoadData = function(){
+        $scope.data.sessionsOnView = [];        
+        $scope.data.sessionLog = [];
         var check = checkTaskSettings();
         if (check == false){
             return;
@@ -508,17 +517,54 @@ angular.module('portalNMC')
                 return;
             };
             $scope.data.currentSessionTask = resp.data;
-            interval = $interval(loadDeviceSessionsData, REFRESH_PERIOD)
+            interval = $interval(refreshData, REFRESH_PERIOD)
         }, errorCallback);
     };
     
-    function loadDeviceSessionsData(){
+    function loadSessionTask(){
+        var url = SESSION_TASK_URL + "/" + $scope.data.currentSessionTask.id;
+        $http.get(url).then(function(resp){
+            $scope.data.currentSessionTask = resp.data;
+        }, errorProtoCallback)
+    }
+    
+    function refreshData(){
+        loadSessionTask();
+        loadDeviceSessionsData();
+    }
+    
+    function checkSessionsForComplete(sessions){
+        $scope.ctrlSettings.dataIsLoaded = false;
+        var compledSessionsCount = 0;
+        sessions.forEach(function(session){
+            if (SESSION_TERMINATE_STATUSES.indexOf(session.currentStatus) != -1)
+                compledSessionsCount++;
+        })
+        if (compledSessionsCount == sessions.length)
+            $scope.ctrlSettings.dataIsLoaded = true;
+    }
+                        
+    function loadDeviceSessionsData(){        
         $scope.ctrlSettings.sessionsLoading = true;
         var url = SESSION_TASK_URL + "/" +$scope.data.currentSessionTask.id + "/logSessions";
-        $http.get(url).then(function(resp){
-console.log(resp);            
+        $http.get(url).then(function(resp){            
+            $scope.ctrlSettings.sessionsLoading = false;            
+            if (mainSvc.checkUndefinedNull(resp.data) || resp.data.length == 0){                
+                return "Session array is empty";
+            }
+                //save current session before update table, that don't lost it
+            var tmpCurSession = null;        
+            if (!mainSvc.checkUndefinedNull($scope.data.currentSession))
+                tmpCurSession = angular.copy($scope.data.currentSession);
             $scope.data.sessionsOnView = logSvc.serverDataParser(angular.copy(resp.data));
-            $scope.ctrlSettings.sessionsLoading = false;
+            checkSessionsForComplete($scope.data.sessionsOnView);
+            if (!mainSvc.checkUndefinedNull(tmpCurSession)){
+                $scope.data.sessionsOnView.some(function(elem){
+                    if (elem.id == tmpCurSession.id){
+                        $scope.loadLogData(elem);
+                    }
+                })
+            }                    
         }, errorCallback);
     }
     
@@ -534,6 +580,10 @@ console.log(resp);
     }
     
     $scope.initManualLoading = function(device){
+        $scope.data.sessionsOnView = [];
+        $scope.data.currentSession = {};
+        $scope.data.currentSessionTask = {};
+        $scope.data.sessionLog = [];
         $scope.data.currentContZpoint = null;
         $scope.data.sessionDetailType = [];
         $scope.data.detailTypes = [];
@@ -545,10 +595,29 @@ console.log(resp);
         $scope.data.detailTypes = angular.copy($scope.data.currentContZpoint.sessionDetailTypes);        
     }
     
+        // **********************************************************************
+    // session log
+    
+    $scope.loadLogData = function(session){        
+        $scope.data.currentSession.selected = false;
+        session.selected = true;
+        $scope.ctrlSettings.logLoading = true;
+        $scope.data.currentSession = session;
+        var url = $scope.ctrlSettings.sessionsUrl + "/" + session.id + "/steps";
+        $http.get(url).then(function(resp){
+            $scope.data.sessionLog = resp.data;                
+            $scope.ctrlSettings.logLoading = false;
+        }, errorCallback)
+    }
+    
     $("#deviceSessionModal").on('hidden.bs.modal', function(){
          if (!mainSvc.checkUndefinedNull(interval))
             $interval.cancel(interval);
     });
+    
+    //************************************************
+    //
+    ////////////////////////////////////////////////////
     
     //keydown listener
     $scope.$on('$destroy', function() {

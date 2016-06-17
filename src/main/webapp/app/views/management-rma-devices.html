@@ -879,6 +879,19 @@
                     </div>
                     <div id="divSessionsData" class="col-xs-10 col-md-10 noPadding paddingLeft5 paddingRight10 nmc-line-left"
                          >
+                        <div>
+                            <span ng-if="data.currentSessionTask.id && data.currentSessionTask.taskIsComplete != true">                   
+                                <h4>
+                                    <i class="fa fa-spinner fa-spin"></i> 
+                                    Задача по загрузке данных поставлена в очередь на выполнение
+                                </h4>
+                            </span>
+                            <span ng-if="data.currentSessionTask.taskIsComplete == true && ctrlSettings.dataIsLoaded != true">
+                                <h4><i class="fa fa-spinner fa-spin"></i> Задача выполняется</h4>
+                            </span>
+                            <span ng-if="ctrlSettings.dataIsLoaded == true"><h4> Загрузка данных завершена</h4>
+                            </span>
+                        </div>
                         <div id="divManualSessions" style="max-height: 300px; overflow: auto">
                             <table ng-show="ctrlSettings.sessionsLoading"
                            id="tableSessionsHeader" 

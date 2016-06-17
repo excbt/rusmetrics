@@ -102,7 +102,9 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     }
     
     function defineChildSessions(){
-//console.time('Find child sessions');        
+//console.time('Find child sessions');
+        if (mainSvc.checkUndefinedNull(sessions) || !angular.isArray(sessions) || sessions.length == 0)
+            return;
         var tmpData = angular.copy(sessions);
         var newData = [];
         var childSessions = [];

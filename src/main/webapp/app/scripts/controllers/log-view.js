@@ -507,8 +507,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         }
         $scope.data.totalSessions = data.sessions.length;
         $scope.ctrlSettings.pagination.current = 1;
-        var tmpCurSession = null;
         //save current session before update table, that don't lost it
+        var tmpCurSession = null;        
         if (!mainSvc.checkUndefinedNull($scope.data.currentSession))
             tmpCurSession = angular.copy($scope.data.currentSession);
         $scope.data.sessionsOnView = data.sessions.slice(0, $scope.ctrlSettings.itemPerPage);
