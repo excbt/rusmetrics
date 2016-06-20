@@ -61,7 +61,7 @@ angular.module('portalNMC')
                 header : "Потребление тепла, ГКал",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "h_delta",
+                fieldName: "h_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -70,7 +70,7 @@ angular.module('portalNMC')
                 header : "Масса подачи, т",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "m_in",
+                fieldName: "m_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -79,7 +79,7 @@ angular.module('portalNMC')
                 header : "Масса обратки, т",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "m_out",
+                fieldName: "m_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -89,7 +89,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "m_delta",
+                fieldName: "m_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -99,7 +99,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_in",
+                fieldName: "t_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -110,7 +110,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_out",
+                fieldName: "t_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -121,7 +121,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",    
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_cold",
+                fieldName: "t_cold",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -132,7 +132,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_outdoor",
+                fieldName: "t_outdoor",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -142,7 +142,7 @@ angular.module('portalNMC')
                 header : "Объем подачи, м3",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "v_in",
+                fieldName: "v_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -151,7 +151,7 @@ angular.module('portalNMC')
                 header : "Объем обратки, м3",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "v_out",
+                fieldName: "v_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -162,7 +162,7 @@ angular.module('portalNMC')
                 
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "v_delta",
+                fieldName: "v_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -172,7 +172,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "h_in",
+                fieldName: "h_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -182,7 +182,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "h_out",
+                fieldName: "h_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -192,7 +192,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "p_in",
+                fieldName: "p_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -202,7 +202,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "p_out",
+                fieldName: "p_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -212,71 +212,14 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "p_delta",
+                fieldName: "p_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             }];
-
-          
-//    $scope.integratorColumns = [
-//        {
-//            header : "Дата",
-//            headerClass : "col-xs-2 col-md-2",
-//            dataClass : "col-xs-2 col-md-2",
-//            fieldName: "dataDate"
-//        }, 
-//        {
-//            header : "Время наработки, час",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "workTime"
-//        },
-//        {
-//            header : "Потребление тепла, ГКал",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "h_delta"
-//        }, 
-//        {
-//            header : "Масса подачи, т",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "m_in"
-//        }, 
-//        {
-//            header : "Масса обратки, т",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "m_out"
-//        },
-//        {
-//            header : "Объем подачи, м3",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "v_in"
-//        },
-//        {
-//            header : "Объем обратки, м3",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "v_out"
-//        },
-//        {
-//            header : "ГКал на входе",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "h_in"
-//        },
-//        {
-//            header : "ГКал на выходе",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "h_out"
-//        }
-//    ];
         
-    $scope.indicatorColumns = [{
+    $scope.indicatorColumns = indicatorSvc.getWaterColumns();
+        /*[{
                 header : "Дата",
                 headerClass : "col-xs-2 col-md-2",
                 dataClass : "col-xs-2 col-md-2",
@@ -435,7 +378,7 @@ angular.module('portalNMC')
                 "24h" : "24h"
             }
     ];
-    
+    */
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
         hideHeader : false,
@@ -740,8 +683,8 @@ angular.module('portalNMC')
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
 //            $scope.intotalColumns.forEach(function(element){
             $scope.intotalColumns.some(function(element){    
-                var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                var indicatorHead = document.getElementById("indicators_head_"+element.name);
+                var indicatorTh = document.getElementById("indicators_th_"+element.fieldName);
+                var indicatorHead = document.getElementById("indicators_head_"+element.fieldName);
                 if ((angular.isDefined(indicatorTh))&&(indicatorTh!=null)){
                     element.ngstyle =indicatorTh.offsetWidth;
 //                    indicatorHead.width = indicatorTh.offsetWidth;
@@ -770,7 +713,7 @@ angular.module('portalNMC')
         //prepare summary data to the view - apply toFixed
         var prepareSummary = function(arr){
             $scope.intotalColumns.forEach(function(element){                       
-                var columnName = element.name;
+                var columnName = element.fieldName;
                 if (arr.hasOwnProperty(columnName) &&(!isNaN(arr[columnName]))&&(arr[columnName]!=null)){                
                     arr[columnName] = arr[columnName].toFixed(3);
                 }else{
@@ -803,7 +746,7 @@ angular.module('portalNMC')
                 if ($scope.summary.hasOwnProperty('diffs')){
                     prepareSummary($scope.summary.diffs);
 //                    $scope.intotalColumns.forEach(function(element){
-//                        var columnName = element.name;
+//                        var columnName = element.fieldName;
 //                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
 //                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
 //                        }else{
@@ -814,7 +757,7 @@ angular.module('portalNMC')
                 if ($scope.summary.hasOwnProperty('totals')){ 
                     prepareSummary($scope.summary.totals);
 //                    $scope.intotalColumns.forEach(function(element){                       
-//                        var columnName = element.name;
+//                        var columnName = element.fieldName;
 //                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
 //                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
 //                        }else{
@@ -831,7 +774,7 @@ angular.module('portalNMC')
                         //work with fractional part
                 //search the shortest fractional part
                 $scope.intotalColumns.forEach(function(element, index, array){                
-                    var columnName = element.name;                  
+                    var columnName = element.fieldName;                  
                     if (angular.isUndefined($scope.summary.firstData) || angular.isUndefined($scope.summary.lastData) || ($scope.summary.firstData===null) || ($scope.summary.lastData===null) || !$scope.summary.firstData.hasOwnProperty(columnName) || !$scope.summary.lastData.hasOwnProperty(columnName)){
                         return;
                     };

@@ -280,8 +280,8 @@ console.log("Run main, object and monitor services.");
 **********************************************************************************************************
 */
 app.filter('columnFilter', function() {
-  return function(items, props) {
-      var props = [props];
+  return function(items, props) {      
+    var props = [props];
     var out = [];
     if (angular.isArray(items)) {
       items.forEach(function(item) {

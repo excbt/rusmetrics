@@ -193,7 +193,7 @@
                     </th>
                     <th ng-repeat="column in intotalColumns" 
                         ng-class="column.class" 
-                        ng-attr-id="{{'totals_th_'+column.name}}" 
+                        ng-attr-id="{{'totals_th_'+column.fieldName}}" 
                         ng-style="{'min-width': column.ngstyle+'px'}">
                         {{column.header}}<span ng-if="column.dataType === 'temperature'">,&deg;C</span>
                             <img ng-class="column.imgclass" 
@@ -205,9 +205,9 @@
                     <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Среднее значение:</td>
                     <td ng-repeat="column in intotalColumns" 
                         class="nmc-text-align-right" 
-                        ng-class="{'nmc-text-align-right':summary.average[column.name]!='-','nmc-text-align-center':summary.average[column.name]==='-'}" 
+                        ng-class="{'nmc-text-align-right':summary.average[column.fieldName]!='-','nmc-text-align-center':summary.average[column.fieldName]==='-'}" 
                         ng-style="{'min-width': column.ngstyle+'px'}">
-                        {{summary.average[column.name]}}
+                        {{summary.average[column.fieldName]}}
                     </td>
                 </tr> 
                 <tr>
@@ -215,9 +215,9 @@
                         ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
                     <td ng-repeat="column in intotalColumns" 
                         class="nmc-text-align-right nmc-totals-indicator-highlight" 
-                        ng-class="{'nmc-text-align-right': summary.totals[column.name] != '-', 'nmc-text-align-center': summary.totals[column.name] === '-'}" 
+                        ng-class="{'nmc-text-align-right': summary.totals[column.fieldName] != '-', 'nmc-text-align-center': summary.totals[column.fieldName] === '-'}" 
                         ng-style="{'min-width': column.ngstyle + 'px'}">
-                        {{summary.totals[column.name]}}
+                        {{summary.totals[column.fieldName]}}
                     </td>
                 </tr> 
                 <tr>
@@ -226,12 +226,12 @@
                         <span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
                     </td>
                     <td  ng-repeat="column in intotalColumns" 
-                        ng-attr-id="{{'total'+column.name}}" 
+                        ng-attr-id="{{'total'+column.fieldName}}" 
                         class="nmc-text-align-right nmc-totals-indicator-highlight" 
-                        ng-class="{'nmc-text-align-right': summary.diffs[column.name] != '-', 'nmc-text-align-center': summary.diffs[column.name] === '-'}" 
+                        ng-class="{'nmc-text-align-right': summary.diffs[column.fieldName] != '-', 'nmc-text-align-center': summary.diffs[column.fieldName] === '-'}" 
                         ng-style="{width: column.ngstyle + 'px'}">
-    <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
-                        {{summary.diffs[column.name]}}
+    <!--                    ng-attr-title="{{setTitle(column.fieldName)}} "-->
+                        {{summary.diffs[column.fieldName]}}
                     </td>
                 </tr>
                 <tr>
@@ -240,8 +240,8 @@
                     <td  ng-repeat="column in intotalColumns" 
                         class="nmc-text-align-right" 
                         ng-style="{width: column.ngstyle+'px', border: 0}">
-                        <span ng-if="summary.diffs[column.name] != '-' && column.name != 'm_delta' && column.name != 'v_delta'">
-                             <p ng-attr-id="{{'diffBtn'+column.name}}" 
+                        <span ng-if="summary.diffs[column.fieldName] != '-' && column.fieldName != 'm_delta' && column.fieldName != 'v_delta'">
+                             <p ng-attr-id="{{'diffBtn'+column.fieldName}}" 
                                 class="btn btn-xs" >
                                  <i title="Показать детали по интеграторам" 
                                     class="glyphicon glyphicon-eject gly-rotate-180">

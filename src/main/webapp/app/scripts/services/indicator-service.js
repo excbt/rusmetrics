@@ -1,5 +1,5 @@
-angular.module('portalNMC')
-.service('indicatorSvc', function(){
+var app = angular.module('portalNMC');
+app.service('indicatorSvc', function(){
     var contObjectId = null;
     var contZpointId = null;
     var contObjectName = null;
@@ -13,7 +13,7 @@ angular.module('portalNMC')
                 header : "Потребление тепла, ГКал",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "h_delta",
+                fieldName: "h_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -22,7 +22,7 @@ angular.module('portalNMC')
                 header : "Масса подачи, т",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "m_in",
+                fieldName: "m_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -31,7 +31,7 @@ angular.module('portalNMC')
                 header : "Масса обратки, т",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "m_out",
+                fieldName: "m_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -41,7 +41,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "m_delta",
+                fieldName: "m_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -51,7 +51,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_in",
+                fieldName: "t_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -62,7 +62,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_out",
+                fieldName: "t_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -73,7 +73,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",    
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_cold",
+                fieldName: "t_cold",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -84,7 +84,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "t_outdoor",
+                fieldName: "t_outdoor",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -94,7 +94,7 @@ angular.module('portalNMC')
                 header : "Объем подачи, м3",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "v_in",
+                fieldName: "v_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -103,7 +103,7 @@ angular.module('portalNMC')
                 header : "Объем обратки, м3",
 //                header : "",
                 class : "col-xs-1 col-md-1",
-                name: "v_out",
+                fieldName: "v_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -114,7 +114,7 @@ angular.module('portalNMC')
                 
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "v_delta",
+                fieldName: "v_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -124,7 +124,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "h_in",
+                fieldName: "h_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -134,7 +134,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "h_out",
+                fieldName: "h_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -144,7 +144,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "p_in",
+                fieldName: "p_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -154,7 +154,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "p_out",
+                fieldName: "p_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -164,7 +164,7 @@ angular.module('portalNMC')
 //                header : "",
                 class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
-                name: "p_delta",
+                fieldName: "p_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -177,7 +177,8 @@ angular.module('portalNMC')
                 fieldName: "dataDate",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: false
             }, 
             {
                 header : "Время наработки, час",
@@ -186,7 +187,8 @@ angular.module('portalNMC')
                 fieldName: "workTime",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: false
             }, 
             {
                 header : "Потребление тепла, ГКал",
@@ -195,7 +197,8 @@ angular.module('portalNMC')
                 fieldName: "h_delta",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             }, 
             {
                 header : "Масса подачи, т",
@@ -204,7 +207,8 @@ angular.module('portalNMC')
                 fieldName: "m_in",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             }, 
             {
                 header : "Масса обратки, т",
@@ -213,7 +217,8 @@ angular.module('portalNMC')
                 fieldName: "m_out",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             },
             {
                 header : "Разность масс, т",
@@ -221,7 +226,8 @@ angular.module('portalNMC')
                 dataClass : "col-xs-1 col-md-1",
                 fieldName: "m_delta",
                 "1h": "1h",
-                "24h" : "24h"
+                "24h" : "24h",
+                istunable: "istunable"
             },
             {
                 header : "Темп. подачи",
@@ -230,7 +236,8 @@ angular.module('portalNMC')
                 fieldName: "t_in"
                 ,dataType: "temperature",
                 "1h": "1h",
-                "24h" : "24h"               
+                "24h" : "24h",
+                istunable: "istunable"               
             }, 
             {
                 header : "Темп. обратки",
@@ -239,7 +246,8 @@ angular.module('portalNMC')
                 fieldName: "t_out"
                 ,dataType: "temperature",
                 "1h": "1h",
-                "24h" : "24h"                
+                "24h" : "24h",
+                istunable: "istunable"                
             } , 
             {
                 header : "Темп. ХВС",
@@ -248,7 +256,8 @@ angular.module('portalNMC')
                 fieldName: "t_cold"
                 ,dataType: "temperature",
                 "1h": "1h",
-                "24h" : "24h"               
+                "24h" : "24h",
+                istunable: "istunable"               
             } ,
             {
                 header : "Темп. окр. среды",
@@ -257,7 +266,8 @@ angular.module('portalNMC')
                 fieldName: "t_outdoor"
                 ,dataType: "temperature",
                 "1h": "1h",
-                "24h" : "24h"                
+                "24h" : "24h",
+                istunable: "istunable"                
             },
 
             {
@@ -267,7 +277,8 @@ angular.module('portalNMC')
                 fieldName: "v_in",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             },
             {
                 header : "Объем обратки, м3",
@@ -276,7 +287,8 @@ angular.module('portalNMC')
                 fieldName: "v_out",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             },
             {
                 header : "Разность объемов, м3",
@@ -284,7 +296,8 @@ angular.module('portalNMC')
                 dataClass : "col-xs-1 col-md-1",
                 fieldName: "v_delta",
                 "1h": "1h",
-                "24h" : "24h"
+                "24h" : "24h",
+                istunable: "istunable"
             },
             {
                 header : "ГКал на входе",
@@ -293,7 +306,8 @@ angular.module('portalNMC')
                 fieldName: "h_in",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             },
             {
                 header : "ГКал на выходе",
@@ -302,7 +316,8 @@ angular.module('portalNMC')
                 fieldName: "h_out",
                 "1h": "1h",
                 "24h" : "24h",
-                "1h_abs" : "1h_abs"
+                "1h_abs" : "1h_abs",
+                istunable: "istunable"
             },
             {
                 header : "Давление на подаче, Мпа",
@@ -310,7 +325,8 @@ angular.module('portalNMC')
                 dataClass : "col-xs-1 col-md-1",
                 fieldName: "p_in",
                 "1h": "1h",
-                "24h" : "24h"
+                "24h" : "24h",
+                istunable: "istunable"
             },
             {
                 header : "Давление на обратке, Мпа",
@@ -318,7 +334,8 @@ angular.module('portalNMC')
                 dataClass : "col-xs-1 col-md-1",
                 fieldName: "p_out",
                 "1h": "1h",
-                "24h" : "24h"
+                "24h" : "24h",
+                istunable: "istunable"
             },
             {
                 header : "Разность давлений, Мпа",
@@ -326,67 +343,64 @@ angular.module('portalNMC')
                 dataClass : "col-xs-1 col-md-1",
                 fieldName: "p_delta",
                 "1h": "1h",
-                "24h" : "24h"
+                "24h" : "24h",
+                istunable: "istunable"
             }
-    ];    
-
-          
-//    $scope.integratorColumns = [
-//        {
-//            header : "Дата",
-//            headerClass : "col-xs-2 col-md-2",
-//            dataClass : "col-xs-2 col-md-2",
-//            fieldName: "dataDate"
-//        }, 
-//        {
-//            header : "Время наработки, час",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "workTime"
-//        },
-//        {
-//            header : "Потребление тепла, ГКал",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "h_delta"
-//        }, 
-//        {
-//            header : "Масса подачи, т",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "m_in"
-//        }, 
-//        {
-//            header : "Масса обратки, т",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "m_out"
-//        },
-//        {
-//            header : "Объем подачи, м3",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "v_in"
-//        },
-//        {
-//            header : "Объем обратки, м3",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "v_out"
-//        },
-//        {
-//            header : "ГКал на входе",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "h_in"
-//        },
-//        {
-//            header : "ГКал на выходе",
-//            headerClass : "col-xs-1 col-md-1",
-//            dataClass : "col-xs-1 col-md-1",
-//            fieldName: "h_out"
-//        }
-//    ];
+    ];
+    
+    // ******************** create columns ****************************
+    var electricityColumns = [];
+    
+    function initElectricityColumns(){
+        var elecType = [{"name":"p_A", "caption": "A"}, /* active*/
+                    {"name":"q_R", "caption":"R"}]; /* reactive*/
+        var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
+                        {"name":"n", "caption":"-"}];/*negative*/
+        var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
+        var columns = [{
+                    header : "Дата",
+                    headerClass : "col-md-2 nmc-text-align-center",
+                    dataClass : "col-md-2",
+                    fieldName: "dataDateString",
+                    type: "string",
+                    date: true,
+                    istunable: false
+                }];
+        //columns for active and reactive parts
+        for (var type = 0; type < elecType.length; type++){
+            //columns for tariff plans
+            for (var tariff = 0; tariff < tariffPlans.length; tariff++){
+                for (var kind = 0; kind < elecKind.length; kind++){
+                    var column = {};
+                    column.header = "" + elecType[type].caption + elecKind[kind].caption + " (T" + tariffPlans[tariff] + ")";
+                    column.headerClass = "nmc-view-digital-data";
+                    column.dataClass = "nmc-view-digital-data";
+                    column.fieldName = "" + elecType[type].name + elecKind[kind].name + "" + tariffPlans[tariff] + "";
+                    column.elKind = elecKind[kind].name;
+                    column.elType = elecType[type].name;
+                    column.istunable = "istunable";
+                    columns.push(column);
+                };
+            };
+            //columns for sum
+            for (var kind = 0; kind < elecKind.length; kind++){
+                    var column = {};
+                    column.header = "\u03A3" + elecType[type].caption + elecKind[kind].caption;
+                    column.headerClass = "nmc-view-digital-data";
+                    column.dataClass = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
+                    column.fieldName = "" + elecType[type].name + elecKind[kind].name;
+                    column.isSummary = true;
+                    column.elKind = elecKind[kind].name;
+                    column.elType = elecType[type].name;
+                    column.istunable = "istunable";
+                    columns.push(column);
+            };
+        };
+        electricityColumns = columns;
+        return columns;
+    }
+//console.log(columns);    
+    // ******************************* end Create columns **************************
 
     var getContObjectId = function(){
         return contObjectId;
@@ -449,10 +463,25 @@ angular.module('portalNMC')
         return intotalColumns;
     };
     
+    var getElectricityColumns = function(){
+        return electricityColumns;
+    }
+    
+    var getWaterColumns = function(){
+        return indicatorColumns;
+    }
+    
+    function initSvc(){
+        initElectricityColumns();
+    }
+    initSvc();
+    
     return {
         getContObjectId,
         getContObjectName,
+        getElectricityColumns,        
         getFromDate,
+        getWaterColumns,
         getTimeDetailType,
         getToDate,
         getZpointId,

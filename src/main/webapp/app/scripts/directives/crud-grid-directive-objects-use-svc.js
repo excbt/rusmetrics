@@ -17,8 +17,8 @@ angular.module('portalNMC')
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc) {
                 
 //console.log("Objects directive.");
                 
@@ -34,6 +34,8 @@ angular.module('portalNMC')
                 $scope.messages.noObjects = "Объектов нет.";
                 
                 $scope.messages.groupMenuHeader = "Полный список объектов";
+                
+                $scope.messages.setIndicatorInterface = "Настройка интефейса просмотра показаний";
                 
                     //object settings
                 $scope.objectCtrlSettings = {};
@@ -1599,6 +1601,118 @@ angular.module('portalNMC')
 // ********************************************************************************************
 //  END TREEVIEW
 //*********************************************************************************************
+
+// ***********************************************************************************************
+//                      Indicator columns editor
+// ***********************************************************************************************
+                var waterColumns = indicatorSvc.getWaterColumns();
+                $scope.data.waterColumns = angular.copy(waterColumns);
+                var electricityColumns = indicatorSvc.getElectricityColumns();
+                $scope.data.electricityColumns = angular.copy(electricityColumns);
+                                
+                function setIndicatorColumnPrefForObject(contObj, resourceKind, columnArr){
+                    var selectedItems = [];
+                    columnArr.forEach(function(elem){
+                        if(elem.isVisible == true){
+                            selectedItems.push(elem.fieldName);
+                        }
+                    });                   
+                    if (selectedItems.length > 0)
+                        $cookies["indicator" + resourceKind + contObj.id] = selectedItems;                   
+                }
+                
+                function readIndicatorColumnPrefForObject(contObj, resourceKind){
+                    var columnPrefs = $cookies["indicator" + resourceKind + contObj.id];
+                    if (mainSvc.checkUndefinedNull(columnPrefs)){
+                        return null;
+                    }
+                    return columnPrefs.split(',');                    
+                }
+                
+                function IntersecArrays(A,B)
+                {
+                    var m = A.length, n = B.length, c = 0, C = [];
+                    for (var i = 0; i < m; i++)
+                     { var j = 0, k = 0;
+                       while (B[j] !== A[ i ] && j < n) j++;
+                       while (C[k] !== A[ i ] && k < c) k++;
+                       if (j != n && k == c) C[c++] = A[ i ];
+                     }
+                   return C;
+                }
+                
+                function MultiIntersecArrays(k,A)  // При вызовах всегда полагать k=0. А - это двумерный (!)
+                {                                   //  массив, элементы которого A[ i ] - также массивы,
+                    var n = A.length;               //  пересечение которых нужно найти.
+                    if (k == n-2)
+                       return IntersecArrays( A[n-2], A[n-1] );   // Функцию IntersecArrays см. выше.
+                    else
+                       return IntersecArrays( A[k], MultiIntersecArrays(k+1,A) );   
+                }
+                
+                $scope.initIndicatorColumnsPref = function(){
+                    $scope.data.waterColumns = angular.copy(waterColumns);
+                    $scope.data.electricityColumns = angular.copy(electricityColumns);
+                    //read all selected objects indicator columns pref
+                    //make "AND" for this sets and create common set
+                    //open window with common set
+                    var waterSettings = [];
+                    var elecSettings = [];
+                    $scope.objectsOnPage.forEach(function(el){
+                        if(el.selected === true){
+                            var tmpPrefs = readIndicatorColumnPrefForObject(el, "hw");
+                            if (!mainSvc.checkUndefinedNull(tmpPrefs))
+                                waterSettings.push(tmpPrefs);//= MultiIntersecArrays(0, tmpPrefs);
+                            tmpPrefs = readIndicatorColumnPrefForObject(el, "el");                                               
+                            if (!mainSvc.checkUndefinedNull(tmpPrefs))
+                                elecSettings.push(tmpPrefs);//= MultiIntersecArrays(0, tmpPrefs);
+                        };
+                    });
+                    if (waterSettings.length > 0){
+                        waterSettings = MultiIntersecArrays(0, waterSettings);
+                        waterSettings.forEach(function(ws){
+                            $scope.data.waterColumns.some(function(wc){
+                                if (wc.fieldName == ws){
+                                    wc.isVisible = true;
+                                    return true;
+                                }
+                            })
+                        })
+                        
+                    }
+                    if (elecSettings.length > 0){
+                        elecSettings = MultiIntersecArrays(0, elecSettings);
+                        elecSettings.forEach(function(ws){
+                            $scope.data.waterColumns.some(function(wc){
+                                if (wc.fieldName == ws){
+                                    wc.isVisible = true;
+                                    return true;
+                                }
+                            })
+                        })
+                    }
+                  
+                    //set common prefs
+                    $('#columnSettingsModal').modal();
+                }
+                
+                $scope.setIndicatorColumnsPref = function(){
+                    //selected objects
+                    $scope.objectsOnPage.forEach(function(el){
+                        if(el.selected === true){
+                            setIndicatorColumnPrefForObject(el, "hw", $scope.data.waterColumns);
+                            setIndicatorColumnPrefForObject(el, "el", $scope.data.electricityColumns);
+                        };
+                    });
+                    
+                    $('#columnSettingsModal').modal('hide');
+                };
+                
+                $scope.data.selectedWaterColumns = [];
+                $scope.data.selectedElectricityColumns = [];
+// ***********************************************************************************************
+//                      end Indicator columns editor
+// ***********************************************************************************************                
                 var initCtrl = function(){
                                         //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){

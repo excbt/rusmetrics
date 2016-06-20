@@ -95,7 +95,7 @@ angular.module('portalNMC')
     };
 //console.log(columns);    
     // ******************************* end Create columns **************************
-    $scope.tableDef.columns = columns;
+    $scope.tableDef.columns = indicatorSvc.getElectricityColumns();//columns;
     $scope.columns = $scope.tableDef.columns;
     
     $scope.dateOptsParamsetRu ={
