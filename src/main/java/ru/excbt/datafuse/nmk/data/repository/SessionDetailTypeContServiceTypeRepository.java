@@ -12,8 +12,23 @@ import ru.excbt.datafuse.nmk.data.model.keyname.SessionDetailType;
 public interface SessionDetailTypeContServiceTypeRepository
 		extends JpaRepository<SessionDetailTypeContServiceType, Long> {
 
+	/**
+	 * 
+	 * @param contServiceType
+	 * @return
+	 */
 	@Query("SELECT d.sessionDetailType FROM SessionDetailTypeContServiceType d "
 			+ " WHERE d.contServiceType = :contServiceType ORDER BY d.orderIdx ")
 	public List<SessionDetailType> selectSessionDetailType(@Param("contServiceType") String contServiceType);
+
+	/**
+	 * 
+	 * @param contServiceType
+	 * @return
+	 */
+	@Query("SELECT d FROM SessionDetailTypeContServiceType d "
+			+ " WHERE d.contServiceType = :contServiceType ORDER BY d.orderIdx ")
+	public List<SessionDetailTypeContServiceType> selectSessionDetailTypeContServiceType(
+			@Param("contServiceType") String contServiceType);
 
 }

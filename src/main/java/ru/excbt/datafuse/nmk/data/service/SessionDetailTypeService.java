@@ -1,14 +1,15 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.keyname.SessionDetailType;
+import ru.excbt.datafuse.nmk.data.model.SessionDetailTypeContServiceType;
+import ru.excbt.datafuse.nmk.data.model.support.SessionDetailTypeInfo;
 import ru.excbt.datafuse.nmk.data.repository.SessionDetailTypeContServiceTypeRepository;
 
 @Service
@@ -23,10 +24,13 @@ public class SessionDetailTypeService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SessionDetailType> selectByContServiceType(String contServiceType) {
-		List<SessionDetailType> result = sessionDetailTypeContServiceTypeRepository
-				.selectSessionDetailType(contServiceType);
-		return ObjectFilters.deletedFilter(result);
+	public List<SessionDetailTypeInfo> selectByContServiceType(String contServiceType) {
+		List<SessionDetailTypeContServiceType> preResult = sessionDetailTypeContServiceTypeRepository
+				.selectSessionDetailTypeContServiceType(contServiceType);
+
+		List<SessionDetailTypeInfo> result = preResult.stream().map(i -> new SessionDetailTypeInfo(i))
+				.collect(Collectors.toList());
+		return result;
 	}
 
 }

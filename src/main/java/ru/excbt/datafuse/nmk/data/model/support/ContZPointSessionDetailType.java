@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.keyname.SessionDetailType;
 
 public class ContZPointSessionDetailType implements Serializable {
 
@@ -55,14 +54,14 @@ public class ContZPointSessionDetailType implements Serializable {
 	@JsonUnwrapped
 	private final ContZPointInfo contZPointInfo;
 
-	private final List<SessionDetailType> sessionDetailTypes;
+	private final List<SessionDetailTypeInfo> sessionDetailTypes;
 
-	public ContZPointSessionDetailType(ContZPoint contZPoint, List<SessionDetailType> sessionDetailTypes) {
+	public ContZPointSessionDetailType(ContZPoint contZPoint, List<SessionDetailTypeInfo> sessionDetailTypes) {
 		this.contZPointInfo = new ContZPointInfo(contZPoint);
 		this.sessionDetailTypes = sessionDetailTypes;
 	}
 
-	public List<SessionDetailType> getSessionDetailTypes() {
+	public List<SessionDetailTypeInfo> getSessionDetailTypes() {
 		return sessionDetailTypes;
 	}
 

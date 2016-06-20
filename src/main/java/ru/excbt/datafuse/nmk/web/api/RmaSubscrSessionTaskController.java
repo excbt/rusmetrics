@@ -19,8 +19,8 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
-import ru.excbt.datafuse.nmk.data.model.keyname.SessionDetailType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointSessionDetailType;
+import ru.excbt.datafuse.nmk.data.model.support.SessionDetailTypeInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SessionDetailTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrSessionTaskService;
@@ -109,7 +109,7 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 		logger.info("Prepare ContZPointSessionDetailType");
 
 		List<ContZPointSessionDetailType> resultList = contZPoints.stream().map(i -> {
-			final List<SessionDetailType> sessionDetailTypes = sessionDetailTypeService
+			final List<SessionDetailTypeInfo> sessionDetailTypes = sessionDetailTypeService
 					.selectByContServiceType(i.getContServiceTypeKeyname());
 			return new ContZPointSessionDetailType(i, sessionDetailTypes);
 		}).collect(Collectors.toList());

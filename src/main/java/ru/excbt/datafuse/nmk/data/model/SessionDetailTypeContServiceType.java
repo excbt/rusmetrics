@@ -31,6 +31,15 @@ public class SessionDetailTypeContServiceType extends AbstractAuditableModel imp
 	@Column(name = "order_idx", insertable = false, updatable = false)
 	private Integer orderIdx;
 
+	@Column(name = "caption")
+	private String caption;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "comment")
+	private String comment;
+
 	@Version
 	private int version;
 
@@ -77,6 +86,30 @@ public class SessionDetailTypeContServiceType extends AbstractAuditableModel imp
 
 	public void setSessionDetailType(SessionDetailType sessionDetailType) {
 		this.sessionDetailType = sessionDetailType;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }
