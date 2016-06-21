@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.RawModemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -46,6 +48,9 @@ public class SubscrDataSourceController extends SubscrApiController {
 
 	@Autowired
 	private DataSourceTypeRepository dataSourceTypeRepository;
+
+	@Autowired
+	private RawModemService rawModemService;
 
 	/**
 	 * 
@@ -163,6 +168,17 @@ public class SubscrDataSourceController extends SubscrApiController {
 		List<DataSourceType> result = dataSourceTypeRepository.findAll();
 		result.sort((a, b) -> Integer.compare(a.getTypeOrder(), b.getTypeOrder()));
 		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getRawModemModel() {
+		List<RawModemModel> resultList = rawModemService.selectRawModels();
+		return responseOK(resultList);
 	}
 
 }

@@ -103,6 +103,28 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 	@Column(name = "raw_reconnect_timeout")
 	private Integer rawReconnectTimeout = 90000;
 
+	@Column(name = "raw_connection_type")
+	private String rawConnectionType;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "raw_modem_model_id", insertable = false, updatable = false)
+	private RawModemModel rawModemModel;
+
+	@Column(name = "raw_modem_model_id")
+	private Long rawModemModelId;
+
+	@Column(name = "raw_modem_serial")
+	private String rawModemSerial;
+
+	@Column(name = "raw_modem_mac_addr")
+	private String rawModemMacAddr;
+
+	@Column(name = "raw_modem_dial_enable")
+	private Boolean rawModemDialEnable;
+
+	@Column(name = "raw_modem_dial_tel")
+	private String rawModemDialTel;
+
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}
@@ -279,6 +301,62 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 
 	public void setRawReconnectTimeout(Integer rawReconnectTimeout) {
 		this.rawReconnectTimeout = rawReconnectTimeout;
+	}
+
+	public String getRawConnectionType() {
+		return rawConnectionType;
+	}
+
+	public void setRawConnectionType(String rawConnectionType) {
+		this.rawConnectionType = rawConnectionType;
+	}
+
+	public String getRawModemMacAddr() {
+		return rawModemMacAddr;
+	}
+
+	public void setRawModemMacAddr(String rawModemMacAddr) {
+		this.rawModemMacAddr = rawModemMacAddr;
+	}
+
+	public RawModemModel getRawModemModel() {
+		return rawModemModel;
+	}
+
+	public void setRawModemModel(RawModemModel rawModemModel) {
+		this.rawModemModel = rawModemModel;
+	}
+
+	public Long getRawModemModelId() {
+		return rawModemModelId;
+	}
+
+	public void setRawModemModelId(Long rawModemModelId) {
+		this.rawModemModelId = rawModemModelId;
+	}
+
+	public String getRawModemSerial() {
+		return rawModemSerial;
+	}
+
+	public void setRawModemSerial(String rawModemSerial) {
+		this.rawModemSerial = rawModemSerial;
+	}
+
+	public Boolean getRawModemDialEnable() {
+		return rawModemDialEnable;
+	}
+
+	public void setRawModemDialEnable(Boolean rawModemDialEnable) {
+		this.rawModemDialEnable = rawModemDialEnable;
+	}
+
+	public String getRawModemDialTel() {
+		return rawModemDialTel;
+	}
+
+	public void setRawModemDialTel(String rawModemDialTel) {
+		this.rawModemDialTel = rawModemDialTel;
 	}
 
 }

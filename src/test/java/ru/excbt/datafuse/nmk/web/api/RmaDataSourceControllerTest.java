@@ -2,12 +2,15 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
@@ -62,6 +65,22 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 		dataSource.setDataSourceComment("DataSource CRUD test at " + System.currentTimeMillis());
 		_testUpdateJson(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
 		_testDeleteJson(apiRmaUrl("/dataSources/" + dataSourceId.toString()));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testRawModelModels() throws Exception {
+
+		String content = _testGetJson("/api/rma/dataSources/rawModemModels");
+
+		List<RawModemModel> result = fromJSON(new TypeReference<List<RawModemModel>>() {
+		}, content);
+
+		assertNotNull(result);
+
 	}
 
 }

@@ -43,6 +43,12 @@ public class SubscrDataSourceLoadingSettings extends AbstractAuditableModel impl
 	@Column(name = "loading_retry_interval")
 	private String loadingRetryInterval;
 
+	@Column(name = "nodata_request_enabled")
+	private Boolean nodataRequestEnabled;
+
+	@Column(name = "nodata_idle_time")
+	private String nodataIdleTime;
+
 	@Version
 	private int version;
 
@@ -124,6 +130,22 @@ public class SubscrDataSourceLoadingSettings extends AbstractAuditableModel impl
 
 	public void setDataSourceName(String dataSourceName) {
 		this.dataSourceName = dataSourceName;
+	}
+
+	public Boolean getNodataRequestEnabled() {
+		return nodataRequestEnabled;
+	}
+
+	public void setNodataRequestEnabled(Boolean nodataRequestEnabled) {
+		this.nodataRequestEnabled = nodataRequestEnabled;
+	}
+
+	public String getNodataIdleTime() {
+		return nodataIdleTime;
+	}
+
+	public void setNodataIdleTime(String nodataIdleTime) {
+		this.nodataIdleTime = nodataIdleTime;
 	}
 
 }
