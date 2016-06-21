@@ -107,19 +107,23 @@
                        class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" 
                        ng-class="tableDef.tableClass" >
                     <tr ng-class="tableDef.headerClassTR">
-                        <th>
+                        <th class=" col-xs-2 col-md-2">
                         </th>
-                        <th colspan="10" class="nmc-text-align-center">
+                        <th ng-if="ctrlSettings.activeEnergyColCount > 0"
+                            ng-attr-colspan="{{ctrlSettings.activeEnergyColCount}}" 
+                            class="nmc-text-align-center col-xs-5 col-md-5">
                             <span class="nmc-text-align-center">Активная электроэнергия, кВт/ч
                                 </span>
                         </th>
-                        <th colspan="10" class="nmc-text-align-center">
+                        <th ng-if="ctrlSettings.reactiveEnergyColCount > 0"
+                            ng-attr-colspan="{{ctrlSettings.reactiveEnergyColCount}}"
+                            class="nmc-text-align-center col-xs-5 col-md-5">
                             <span class="nmc-text-align-center">Реактивная электроэнергия, кВАр/ч
                                 </span>
                         </th>
                     </tr>
                     <tr ng-class="tableDef.headerClassTR">
-                        <th ng-repeat="column in tableDef.columns" 
+                        <th ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" 
                             ng-attr-id="{{'indicators_head_'+column.fieldName}}" 
                             ng-class="column.headerClass">
                             {{column.header}}
@@ -131,8 +135,8 @@
                             <span ng-if="column.dataType==='temperature'">,&deg;C</span>
                         </th>
                     </tr>
-                    <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" class="nmc-transparent">
-                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
+                    <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter" class="nmc-transparent">
+                        <td ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
                             {{indicator[column.fieldName]}}
                             <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
                         </td>
@@ -142,24 +146,28 @@
             </div>
         </div>
         <div id="divIndicatorConsTable" class="container-fluid nmc-indicator-table-without-fixed-header">
-            <div class="row" ng-show="data.length >0">
+            <div class="row" ng-show="data.length > 0">
     <!--            style="margin-top: -79px;"-->
                 <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus57" ng-class="tableDef.tableClass">
         <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                     <tr ng-class="tableDef.headerClassTR">
-                        <th>
+                        <th class="col-xs-2 col-md-2">
                         </th>
-                        <th colspan="10" class="nmc-text-align-center">
+                        <th ng-if="ctrlSettings.activeEnergyColCount > 0"
+                            ng-attr-colspan="{{ctrlSettings.activeEnergyColCount}}" 
+                            class="nmc-text-align-center col-xs-5 col-md-5">
                             <span class="nmc-text-align-center">Активная электроэнергия, кВт/ч
                                 </span>
                         </th>
-                        <th colspan="10" class="nmc-text-align-center">
+                        <th ng-if="ctrlSettings.reactiveEnergyColCount > 0"
+                            ng-attr-colspan="{{ctrlSettings.reactiveEnergyColCount}}" 
+                            class="nmc-text-align-center col-xs-5 col-md-5">
                             <span class="nmc-text-align-center">Реактивная электроэнергия, кВАр/ч
                                 </span>
                         </th>
                     </tr>
                     <tr class="" ng-class="tableDef.headerClassTR">
-                        <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
+                        <th ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
                             {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
                         </th>
 
@@ -167,7 +175,7 @@
                     <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
                         total-items="data.length" 
                         current-page="pagination.current">
-                        <td ng-repeat="column in tableDef.columns" 
+                        <td ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" 
                             class="nmc-text-align-right" 
                             ng-class="indicator.class || column.dataClass" 
                             ng-attr-id="{{'indicators_td_'+indicator.id+column.fieldName}}"
@@ -182,7 +190,7 @@
                     </tr>
 <!--                    Итого -->
                     <tr ng-hide="total.onlyCons&&(ctrlSettings.viewMode!='')" ng-repeat="total in totals">
-                        <td ng-repeat="column in tableDef.columns" 
+                        <td ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" 
                             class="nmc-text-align-right" 
                             ng-class="total.class || column.dataClass"
                             ng-style="{'background-color': column.diffBgColor}"
@@ -193,7 +201,7 @@
                     </tr>
 <!--                    Доп. информация для интеграторов-->
                     <tr ng-hide="!(totals.length > 0) || ctrlSettings.viewMode != ''">
-                        <td  ng-repeat="column in tableDef.columns" 
+                        <td  ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" 
                             class="nmc-text-align-right"                                                         
                             >
 <!--                            Отображать кнопку "Детали" для нестроковых колонок и там, где данные больше 0-->

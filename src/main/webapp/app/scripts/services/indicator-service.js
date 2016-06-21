@@ -178,7 +178,8 @@ app.service('indicatorSvc', function(){
                 "1h": "1h",
                 "24h" : "24h",
                 "1h_abs" : "1h_abs",
-                istunable: false
+                istunable: false,
+                isvisible: 'isvisible'
             }, 
             {
                 header : "Время наработки, час",
@@ -188,7 +189,8 @@ app.service('indicatorSvc', function(){
                 "1h": "1h",
                 "24h" : "24h",
                 "1h_abs" : "1h_abs",
-                istunable: false
+                istunable: false,
+                isvisible: 'isvisible'
             }, 
             {
                 header : "Потребление тепла, ГКал",
@@ -359,12 +361,13 @@ app.service('indicatorSvc', function(){
         var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
         var columns = [{
                     header : "Дата",
-                    headerClass : "col-md-2 nmc-text-align-center",
-                    dataClass : "col-md-2",
+                    headerClass : "col-xs-2 col-md-2 nmc-text-align-center",
+                    dataClass : "col-xs-2 col-md-2",
                     fieldName: "dataDateString",
                     type: "string",
                     date: true,
-                    istunable: false
+                    istunable: false,
+                    isvisible: 'isvisible'
                 }];
         //columns for active and reactive parts
         for (var type = 0; type < elecType.length; type++){
@@ -481,6 +484,7 @@ app.service('indicatorSvc', function(){
         getContObjectName,
         getElectricityColumns,        
         getFromDate,
+        getIntotalColumns,
         getWaterColumns,
         getTimeDetailType,
         getToDate,

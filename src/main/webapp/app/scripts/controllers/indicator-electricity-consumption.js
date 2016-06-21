@@ -97,6 +97,42 @@ angular.module('portalNMC')
     // ******************************* end Create columns **************************
     $scope.tableDef.columns = indicatorSvc.getElectricityColumns();//columns;
     $scope.columns = $scope.tableDef.columns;
+    $scope.ctrlSettings.activeEnergyColCount = 10;
+    $scope.ctrlSettings.reactiveEnergyColCount = 10;
+    
+    function setColumnPref(columnPrefs){        
+        //if columnPrefs not set, that mean - view all columns
+        if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length == 0){
+            //indicator columns
+            $scope.ctrlSettings.activeEnergyColCount = 10;
+            $scope.ctrlSettings.reactiveEnergyColCount = 10;
+            for (var i = 1; i < $scope.columns.length; i++){                
+                $scope.columns[i].isvisible = 'isvisible';
+            }
+            return;
+        }
+        var colCount = {};
+        colCount["p_A"] = 0;
+        colCount["q_R"] = 0;        
+        //set preferences for indicator columns: date column is view always
+        for (var i = 1; i < $scope.columns.length; i++){
+            columnPrefs.forEach(function(pref){
+                if (pref == $scope.columns[i].fieldName){
+                    $scope.columns[i].isvisible = 'isvisible';
+                    colCount[$scope.columns[i].elType] += 1;
+                }
+            })
+        }
+        $scope.ctrlSettings.activeEnergyColCount = colCount["p_A"];
+        $scope.ctrlSettings.reactiveEnergyColCount = colCount["q_R"];
+    }
+        
+    function readIndicatorColumnPref(contObjId){
+        var columnPrefs = $cookies["indicator" + "el" + contObjId];
+        if (!mainSvc.checkUndefinedNull(columnPrefs))
+            columnPrefs = columnPrefs.split(',');
+        setColumnPref(columnPrefs);
+    } 
     
     $scope.dateOptsParamsetRu ={
         locale : {
@@ -379,6 +415,8 @@ angular.module('portalNMC')
          };
          
          timeDetailType += $scope.ctrlSettings.viewMode;
+         if (!mainSvc.checkUndefinedNull($scope.contObject))
+            readIndicatorColumnPref($scope.contObject);
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceElCons/" + timeDetailType + "/" + $scope.contZPoint;// + "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
          if ($scope.timeDetailType=="1h"){
              var requestDate = moment($scope.ctrlSettings.dataDate, $scope.ctrlSettings.userFormat).format($scope.ctrlSettings.requestFormat);

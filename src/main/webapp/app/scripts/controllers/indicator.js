@@ -56,7 +56,8 @@ angular.module('portalNMC')
     var EMPTY_IMG_PATH = "images/plug.png";    
         //Определеяю названия колонок
         
-      $scope.intotalColumns = [
+    $scope.intotalColumns = indicatorSvc.getIntotalColumns();
+    var intTmpCols = [
             {
                 header : "Потребление тепла, ГКал",
 //                header : "",
@@ -522,7 +523,7 @@ angular.module('portalNMC')
                 $scope.timeDetailType = pathParams.timeDetailType;
             }else{
 //console.log($cookies.timeDetailType);                
-                if (angular.isDefined($cookies.timeDetailType)&&($cookies.timeDetailType!="undefined")&&($cookies.timeDetailType!="null")){
+                if (angular.isDefined($cookies.timeDetailType) && ($cookies.timeDetailType != "undefined") && ($cookies.timeDetailType != "null")){
                     $scope.timeDetailType = $cookies.timeDetailType;
                 }else{
 //console.log("param TDT and COOKie TDT is undefined");                    
@@ -532,9 +533,11 @@ angular.module('portalNMC')
         };
         
         $scope.contZPoint = indicatorSvc.getZpointId();
-        $scope.contZPointName = (indicatorSvc.getZpointName()!="undefined")?indicatorSvc.getZpointName() : "Без названия";
+        $scope.contZPointName = (indicatorSvc.getZpointName() != "undefined") ? indicatorSvc.getZpointName() : "Без названия";
         $scope.contObject = indicatorSvc.getContObjectId();
-        $scope.contObjectName = (indicatorSvc.getContObjectName()!="undefined")?indicatorSvc.getContObjectName() : "Без названия";     
+        if (!mainSvc.checkUndefinedNull($scope.contObject))
+            readIndicatorColumnPref($scope.contObject);
+        $scope.contObjectName = (indicatorSvc.getContObjectName() != "undefined") ? indicatorSvc.getContObjectName() : "Без названия";     
         
         //clear cookies
 //console.log($cookies);        
@@ -675,8 +678,8 @@ angular.module('portalNMC')
 //console.log(indicatorThDataDate.clientWidth);
 //console.log(angular.isDefined(indicatorThWorkTime.clientWidth));
 //console.log(indicatorThWorkTime.clientWidth);            
-            if ((angular.isDefined(indicatorThDataDate))&&(indicatorThDataDate!=null)&&(angular.isDefined(indicatorThWorkTime))&&(indicatorThWorkTime!=null)){
-                $scope.totals_th_head_style = indicatorThDataDate.offsetWidth+indicatorThWorkTime.offsetWidth+4;
+            if ((angular.isDefined(indicatorThDataDate)) && (indicatorThDataDate != null) && (angular.isDefined(indicatorThWorkTime)) && (indicatorThWorkTime != null)){
+                $scope.totals_th_head_style = indicatorThDataDate.offsetWidth + indicatorThWorkTime.offsetWidth + 4;
                 
             };
             
@@ -990,9 +993,45 @@ angular.module('portalNMC')
     };
         
     $scope.isTDTabs = function(tdt){
-console.log(tdt == "1h_abs");        
+//console.log(tdt == "1h_abs");        
         return (tdt == "1h_abs");
     };
+        
+    function setColumnPref(columnPrefs){
+        //if columnPrefs not set, that mean - view all columns
+        if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length == 0){
+            //indicator columns
+            for (var i = 2; i < $scope.indicatorColumns.length; i++){
+                $scope.indicatorColumns[i].isvisible = 'isvisible';
+            }
+            //total columns
+            for (var i = 0; i < $scope.intotalColumns.length; i++){
+                $scope.intotalColumns[i].isvisible = 'isvisible';
+            }
+            return;
+        }
+        //set preferences for indicator columns: date and worktime columns are view always
+        for (var i = 2; i < $scope.indicatorColumns.length; i++){
+            columnPrefs.forEach(function(pref){
+                if (pref == $scope.indicatorColumns[i].fieldName)
+                    $scope.indicatorColumns[i].isvisible = 'isvisible';
+            })
+        }
+        //set prefernces for total columns
+        for (var i = 0; i < $scope.intotalColumns.length; i++){
+            columnPrefs.forEach(function(pref){
+                if (pref == $scope.intotalColumns[i].fieldName)
+                    $scope.intotalColumns[i].isvisible = 'isvisible';
+            })
+        }
+    }
+        
+    function readIndicatorColumnPref(contObjId){
+        var columnPrefs = $cookies["indicator" + "hw" + contObjId];
+        if (!mainSvc.checkUndefinedNull(columnPrefs))
+            columnPrefs = columnPrefs.split(',');
+        setColumnPref(columnPrefs);
+    }        
         
         //control visibles
     var setVisibles = function(ctxId){

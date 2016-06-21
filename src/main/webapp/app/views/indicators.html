@@ -122,7 +122,8 @@
             <table id="indicatorTableHeader" class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" 
                    ng-class="tableDef.tableClass" >
                 <tr ng-class="tableDef.headerClassTR">
-                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType"  
+<!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate', column.headerClass}"-->
+                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'"  
                         ng-attr-id="{{'indicators_head_'+column.fieldName}}" 
                         ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" 
                         ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
@@ -138,7 +139,7 @@
 <!--                style="opacity:0;"-->
                 <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
                     class="nmc-transparent">
-                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType" 
+                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right" 
                         ng-class="column.headerClass" 
                         ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
@@ -156,18 +157,18 @@
             <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus79" 
                    ng-class="tableDef.tableClass">
     <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
-                <tr class="" ng-class="tableDef.headerClassTR">
-                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType" 
-                        ng-class="column.headerClass" 
-                        ng-attr-id="{{'indicators_th_' + column.fieldName}}">
-                        {{column.header}}<span ng-if="column.dataType === 'temperature'">,&deg;C</span>
+                <tr class="" ng-class = "tableDef.headerClassTR">
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                        ng-class = "column.headerClass" 
+                        ng-attr-id = "{{'indicators_th_' + column.fieldName}}">
+                        {{column.header}}<span ng-if = "column.dataType === 'temperature'">,&deg;C</span>
                     </th>
 
                 </tr>
                 <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
                     total-items="totalIndicators" 
                     current-page="pagination.current">
-                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType" 
+                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right" 
                         ng-class="column.headerClass" 
                         ng-attr-id="{{'indicators_td_'+column.fieldName}}">
@@ -191,7 +192,7 @@
                         class="col-md-3" 
                         ng-style="{'min-width': totals_th_head_style+'px'}">
                     </th>
-                    <th ng-repeat="column in intotalColumns" 
+                    <th ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
                         ng-class="column.class" 
                         ng-attr-id="{{'totals_th_'+column.fieldName}}" 
                         ng-style="{'min-width': column.ngstyle+'px'}">
@@ -203,7 +204,7 @@
                 </tr>
                 <tr>
                     <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Среднее значение:</td>
-                    <td ng-repeat="column in intotalColumns" 
+                    <td ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right" 
                         ng-class="{'nmc-text-align-right':summary.average[column.fieldName]!='-','nmc-text-align-center':summary.average[column.fieldName]==='-'}" 
                         ng-style="{'min-width': column.ngstyle+'px'}">
@@ -213,7 +214,7 @@
                 <tr>
                     <td class="col-md-3 nmc-totals-indicator-highlight" 
                         ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
-                    <td ng-repeat="column in intotalColumns" 
+                    <td ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right nmc-totals-indicator-highlight" 
                         ng-class="{'nmc-text-align-right': summary.totals[column.fieldName] != '-', 'nmc-text-align-center': summary.totals[column.fieldName] === '-'}" 
                         ng-style="{'min-width': column.ngstyle + 'px'}">
@@ -225,7 +226,7 @@
                         ng-style="{width: totals_th_head_style+'px'}">
                         <span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
                     </td>
-                    <td  ng-repeat="column in intotalColumns" 
+                    <td  ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
                         ng-attr-id="{{'total'+column.fieldName}}" 
                         class="nmc-text-align-right nmc-totals-indicator-highlight" 
                         ng-class="{'nmc-text-align-right': summary.diffs[column.fieldName] != '-', 'nmc-text-align-center': summary.diffs[column.fieldName] === '-'}" 
@@ -237,7 +238,7 @@
                 <tr>
                     <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
                     </td>
-                    <td  ng-repeat="column in intotalColumns" 
+                    <td  ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right" 
                         ng-style="{width: column.ngstyle+'px', border: 0}">
                         <span ng-if="summary.diffs[column.fieldName] != '-' && column.fieldName != 'm_delta' && column.fieldName != 'v_delta'">

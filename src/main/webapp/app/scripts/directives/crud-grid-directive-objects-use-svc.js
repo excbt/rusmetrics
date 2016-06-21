@@ -1617,8 +1617,11 @@ angular.module('portalNMC')
                             selectedItems.push(elem.fieldName);
                         }
                     });                   
-                    if (selectedItems.length > 0)
-                        $cookies["indicator" + resourceKind + contObj.id] = selectedItems;                   
+                    if (selectedItems.length > 0){
+                        $cookies["indicator" + resourceKind + contObj.id] = selectedItems;                  
+                    }else{
+                        $cookies["indicator" + resourceKind + contObj.id] = null;
+                    }
                 }
                 
                 function readIndicatorColumnPrefForObject(contObj, resourceKind){
@@ -1650,6 +1653,18 @@ angular.module('portalNMC')
                        return IntersecArrays( A[k], MultiIntersecArrays(k+1,A) );   
                 }
                 
+                $scope.selectAllWaterColumns = function(){
+                    $scope.data.waterColumns.forEach(function(wc){
+                        wc.isVisible = $scope.selectAllWaterColumnFlag;
+                    })
+                }
+                
+                $scope.selectAllElectricityColumns = function(){
+                    $scope.data.electricityColumns.forEach(function(ec){
+                        ec.isVisible = $scope.selectAllElectricityColumnFlag;
+                    })
+                }
+                
                 $scope.initIndicatorColumnsPref = function(){
                     $scope.data.waterColumns = angular.copy(waterColumns);
                     $scope.data.electricityColumns = angular.copy(electricityColumns);
@@ -1668,8 +1683,12 @@ angular.module('portalNMC')
                                 elecSettings.push(tmpPrefs);//= MultiIntersecArrays(0, tmpPrefs);
                         };
                     });
-                    if (waterSettings.length > 0){
-                        waterSettings = MultiIntersecArrays(0, waterSettings);
+                    if (waterSettings.length == 1){
+                        waterSettings = waterSettings[0];
+                    }else if (waterSettings.length > 1){
+                        waterSettings = MultiIntersecArrays(0, waterSettings);                                            
+                    }
+                    if (waterSettings.length != 0)
                         waterSettings.forEach(function(ws){
                             $scope.data.waterColumns.some(function(wc){
                                 if (wc.fieldName == ws){
@@ -1677,13 +1696,15 @@ angular.module('portalNMC')
                                     return true;
                                 }
                             })
-                        })
-                        
-                    }
-                    if (elecSettings.length > 0){
+                        })                        
+                    if (elecSettings.length == 1){
+                        elecSettings = elecSettings[0];
+                    }else if (elecSettings.length > 1){ 
                         elecSettings = MultiIntersecArrays(0, elecSettings);
+                    }                    
+                    if (elecSettings.length != 0){                      
                         elecSettings.forEach(function(ws){
-                            $scope.data.waterColumns.some(function(wc){
+                            $scope.data.electricityColumns.some(function(wc){
                                 if (wc.fieldName == ws){
                                     wc.isVisible = true;
                                     return true;
