@@ -178,7 +178,7 @@
                        >Параметры подключения
                     </a>
                   </li>
-                  <li ng-if="data.currentObject.deviceModeKey == 'SERVER'"
+                  <li ng-if="data.currentObject.rawConnectionType == 'SERVER'"
                       role="presentation" 
                     id="modem_properties_tab"                                         
                     > 
@@ -221,7 +221,7 @@
                                             <td colspan="2" class="nmc-text-align-left">
                                                 <select class="form-control nmc-select-form" 
                                                         id="inputDeviceMode" 
-                                                        ng-model="data.currentObject.deviceModeKey" 
+                                                        ng-model="data.currentObject.rawConnectionType" 
                                                         ng-options="dmode.keyname as dmode.caption for dmode in ctrlSettings.DEVICE_MODES">
                                                 </select>
                                             </td>
@@ -397,7 +397,7 @@
                             <div class="row">
                                 <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                                     <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
                                             <td class="col-sm-4">
                                                 <label for="inputMode">Модель</label>
                                             </td>
@@ -413,7 +413,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
                                             <td class="col-sm-4">
                                                 <label for="inputMode">Серийный номер</label>
                                             </td>
@@ -429,7 +429,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
                                             <td class="col-sm-4">                                                
                                                 <label for="inputMode">MAC-адрес</label>
                                             </td>
@@ -444,19 +444,20 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
                                             <td class="col-sm-4">
-                                                <input type="checkbox" ng-model="data.currentObject.dialEnable"/>
+                                                <input type="checkbox" ng-model="data.currentObject.rawModemDialEnable"/>
                                                 <label for="inputMode">Поддержка дозвона</label>
                                             </td>
                                             <td colspan="2" 
                                                 class="nmc-text-align-left col-sm-8">
                                                 <div class="form-group noMarginBottom pull-right" 
-                                                     ng-class="{'has-error': !data.currentObject.ramModemDialTel}">
+                                                     ng-class="{'has-error': !data.currentObject.rawModemDialTel}">
                                                     <label>Номер</label>
                                                     <input class="form-control nmc-text-input-form nmc-input-data-with-label" 
                                                         id="inputClientNumber" 
-                                                        ng-model="data.currentObject.ramModemDialTel" 
+                                                        ng-model="data.currentObject.rawModemDialTel" 
+                                                        ng-disabled="!data.currentObject.rawModemDialEnable"
                                                         />
                                                     
                                                 </div>

@@ -1105,7 +1105,7 @@ tr.nmc-inactive-price > td{
     padding: 5px;
 }
 /* вывод строки*/
-.nmc-text-ouput{
+.nmc-text-output{
     min-height: 25px;
     padding: 3px 0 0 5px;
 }
@@ -1626,6 +1626,10 @@ tr.nmc-inactive-price > td{
 
 .nmc-modal-narrow-dialog{
     width: 300px; 
+}
+
+.nmc-modal-dialog-w450{
+    width: 450px; 
 }
 
 /* Заголовок */

@@ -725,7 +725,7 @@
 <!--shedule editor-->
 <div id="sheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="sheduleEditorLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-narrow-dialog">
+	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-dialog-w450">
 		<div class="modal-header nmc-modal-header-scheduler">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="sheduleEditorLabel" class="nmc-h3 noMargin">
@@ -739,10 +739,15 @@
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td colspan="2">
-                                    <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentScheduler.isLoadingAuto"/>
+                                    <input type="checkbox" 
+                                           class="nmc-checkbox-form" 
+                                           ng-model="data.currentScheduler.isLoadingAuto"
+                                           ng-disabled="checkAutoLoadingDisabled()"
+                                           />
                                     <label class="nmc-form-label">
                                         Автоматический опрос
                                     </label>
+                                    <small ng-if="checkAutoLoadingDisabled()" class="text-danger">Автоматический опрос не возможен, потому что у источника данных прибора не включена поддержка дозвона</small>
                                 </td>
                             </tr>
                             <tr>
@@ -789,7 +794,22 @@
 <!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
                                     </span>
                                 </td>
-                            </tr>                                   
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-xs-12 col-md-12">
+                                    <input type="checkbox" class="nmc-checkbox-form" 
+                                           ng-model="data.currentScheduler.nodataRequestEnabled"
+                                           ng-disabled="!data.currentScheduler.isLoadingAuto"/>
+                                    <span class="nmc-form-label">
+                                        Опрашивать только, если нет данных свыше 
+                                    </span>
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                           type="text"
+                                           ng-disabled="!data.currentScheduler.isLoadingAuto"
+                                           ng-model="data.currentScheduler.nodataIdleTime"/>
+                                    <span>часов</span>
+                                </td>                                
+                            </tr> 
                         </table>
                     </div>    
                 </div>  

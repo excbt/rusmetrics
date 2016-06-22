@@ -26,17 +26,6 @@ angular.module('portalNMC')
         }
     ];
     
-    //Temp 
-    $scope.ctrlSettings.serverTypes = [
-        {
-            caption: "Ethernet-конвертор",
-            name: "ethernet-converter"
-        },{
-            caption: "GPRS-модем",
-            name: "gprs-modem"
-        }
-    ];
-    
 //    $scope.ctrlSettings.inputIpComplete = false;
     //data initial 
     $scope.data = {};
@@ -267,6 +256,10 @@ angular.module('portalNMC')
         var tab = document.getElementById('con_properties_tab');     
         tab.classList.remove("active");
         var tab = document.getElementById('con_properties');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('modem_properties_tab');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('modem_properties');     
         tab.classList.remove("active");
         
         var tab = document.getElementById("main_properties_tab");        
