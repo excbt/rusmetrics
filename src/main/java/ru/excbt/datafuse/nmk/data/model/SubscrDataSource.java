@@ -106,10 +106,6 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 	@Column(name = "raw_connection_type")
 	private String rawConnectionType;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "raw_modem_model_id", insertable = false, updatable = false)
-	private RawModemModel rawModemModel;
-
 	@Column(name = "raw_modem_model_id")
 	private Long rawModemModelId;
 
@@ -317,14 +313,6 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 
 	public void setRawModemMacAddr(String rawModemMacAddr) {
 		this.rawModemMacAddr = rawModemMacAddr;
-	}
-
-	public RawModemModel getRawModemModel() {
-		return rawModemModel;
-	}
-
-	public void setRawModemModel(RawModemModel rawModemModel) {
-		this.rawModemModel = rawModemModel;
 	}
 
 	public Long getRawModemModelId() {
