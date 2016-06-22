@@ -15,6 +15,33 @@ angular.module('portalNMC')
     $scope.ctrlSettings.subscrUrl = "../api/rma";
     $scope.ctrlSettings.datasourcesUrl = $scope.ctrlSettings.subscrUrl+"/dataSources";
     $scope.ctrlSettings.datasourceTypesUrl = $scope.ctrlSettings.subscrUrl+"/dataSourceTypes";
+    $scope.ctrlSettings.DEVICE_MODES = [
+        {
+            caption: "Клиент",
+            keyname: "CLIENT"
+        },{
+            caption: "Сервер",
+            keyname: "SERVER"
+        }
+    ];
+    
+    //Temp 
+    $scope.ctrlSettings.serverModels = [
+        {
+            caption: "АССВ-030",
+            name: "ACCB-030"
+        }
+    ];
+    $scope.ctrlSettings.serverTypes = [
+        {
+            caption: "Ethernet-конвертор",
+            name: "ethernet-converter"
+        },{
+            caption: "GPRS-модем",
+            name: "gprs-modem"
+        }
+    ];
+    
 //    $scope.ctrlSettings.inputIpComplete = false;
     //data initial 
     $scope.data = {};

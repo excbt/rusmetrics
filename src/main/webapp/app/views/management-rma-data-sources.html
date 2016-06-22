@@ -202,6 +202,17 @@
                                                 </select>
                                             </td>
                                         </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
+                                            <td class="col-sm-3"><label for="inputAddress">Режим</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <select class="form-control nmc-select-form" 
+                                                        id="inputDeviceMode" 
+                                                        ng-model="data.currentObject.deviceModeKey" 
+                                                        ng-options="dmode.keyname as dmode.caption for dmode in ctrlSettings.DEVICE_MODES">
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td class="col-sm-3"><label for="inputName">Наименование</label>
                                             </td>
@@ -294,7 +305,7 @@
                                                        ng-model="data.currentObject.dbPassword">
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'CLIENT'">
                                             <td colspan="2" class="col-sm-9"><label for="inputMode">Время ожидания ответа, сек</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
@@ -307,7 +318,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'CLIENT'">
                                             <td colspan="2" class="col-sm-9"><label for="inputMode">Интервал проверки получения ответа, мс</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
@@ -320,7 +331,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'CLIENT'">
                                             <td colspan="2" class="col-sm-9"><label for="inputMode">Количество попыток переотправки пакета</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-3">
@@ -333,7 +344,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'CLIENT'">
                                             <td colspan="2" class="col-sm-9">
                                                 <label for="inputMode">Количество переподключений в случае ошибки</label>
                                             </td>
@@ -347,7 +358,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'CLIENT'">
                                             <td colspan="2" class="col-sm-9">
                                                 <label for="inputMode">Пауза между переподключениями, сек</label>
                                             </td>
@@ -358,6 +369,63 @@
                                                            data-inputmask="'alias':'numeric', 'greedy': false"
                                                            type="text" 
                                                            ng-model="data.currentObject.rawReconnectTimeout">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                            <td colspan="2" class="col-sm-9">
+                                                <label for="inputMode">Модель клиента</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': !data.currentObject.clientModel}">
+                                                    <select class="form-control nmc-select-form" 
+                                                        id="inputDeviceMode" 
+                                                        ng-model="data.currentObject.clientModel" 
+                                                        ng-options="smodel as smodel.caption for smodel in ctrlSettings.serverModels">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                            <td colspan="2" class="col-sm-9">
+                                                <label for="inputMode">Тип устройства</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': !data.currentObject.clientType}">
+                                                    <select class="form-control nmc-select-form" 
+                                                        id="inputDeviceMode" 
+                                                        ng-model="data.currentObject.clientType" 
+                                                        ng-options="ctype as ctype.caption for ctype in ctrlSettings.serverTypes">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                            <td colspan="2" class="col-sm-9">
+                                                <label for="inputMode">Серийный номер</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': !data.currentObject.clientNumber}">
+                                                    <input class="form-control nmc-text-input-form" 
+                                                        id="inputClientNumber" 
+                                                        ng-model="data.currentObject.clientNumber" 
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.deviceModeKey == 'SERVER'">
+                                            <td colspan="2" class="col-sm-9">
+                                                <input type="checkbox" ng-model="data.currentObject.isDial"/><label for="inputMode">Поддержка дозвона</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': !data.currentObject.clientPhone}">
+                                                    <label>Номер</label>
+                                                    <input class="form-control nmc-text-input-form" 
+                                                        id="inputClientNumber" 
+                                                        ng-model="data.currentObject.clientPhone" 
+                                                        />
+                                                    
                                                 </div>
                                             </td>
                                         </tr>
