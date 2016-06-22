@@ -15,6 +15,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings.subscrUrl = "../api/rma";
     $scope.ctrlSettings.datasourcesUrl = $scope.ctrlSettings.subscrUrl+"/dataSources";
     $scope.ctrlSettings.datasourceTypesUrl = $scope.ctrlSettings.subscrUrl+"/dataSourceTypes";
+    $scope.ctrlSettings.rawModemModelsUrl = $scope.ctrlSettings.subscrUrl + "/dataSources/rawModemModels";
     $scope.ctrlSettings.DEVICE_MODES = [
         {
             caption: "Клиент",
@@ -26,12 +27,6 @@ angular.module('portalNMC')
     ];
     
     //Temp 
-    $scope.ctrlSettings.serverModels = [
-        {
-            caption: "АССВ-030",
-            name: "ACCB-030"
-        }
-    ];
     $scope.ctrlSettings.serverTypes = [
         {
             caption: "Ethernet-конвертор",
@@ -47,6 +42,7 @@ angular.module('portalNMC')
     $scope.data = {};
     $scope.data.dataSources = [];
     $scope.data.dataSourcesTypes = [];
+    $scope.data.rawModemModels = [];
     $scope.data.currentObject = {};
     $scope.data.currentObject.dataSourceTypeKey = "DEVICE";
     
@@ -99,6 +95,13 @@ angular.module('portalNMC')
             $scope.data.currentObject.rawReconnectTimeout = RECONNECT_TIMEOUT;
         }
     };
+    
+    function getRawModemModels(){
+        $http.get($scope.ctrlSettings.rawModemModelsUrl).then(function(resp){            
+            $scope.data.rawModemModels = resp.data;
+        }, errorCallback)
+    }
+    getRawModemModels();
     
     $scope.addDatasource = function(){
         $scope.data.currentObject = {};

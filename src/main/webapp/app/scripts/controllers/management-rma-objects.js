@@ -482,7 +482,8 @@ console.log(e);
                     errorProtoCallback(e);
                     //zpoint settings saving flag reset
                     $scope.zpointSettings.isSaving = false;
-                    $scope.currentObject.isSaving = false;
+                    if(!mainSvc.checkUndefinedNull($scope.currentObject))
+                        $scope.currentObject.isSaving = false;
                 };
 
                 $scope.addObject = function (url, obj) {                    
