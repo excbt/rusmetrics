@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
@@ -31,6 +33,13 @@ public class RawModemModel extends JsonAbstractAuditableModel implements Deletab
 
 	@Column(name = "is_dialup")
 	private Boolean isDialup;
+
+	@Column(name = "dev_comment")
+	private String devComment;
+
+	@JsonIgnore
+	@Column(name = "is_protected", insertable = false, updatable = false)
+	private Boolean isProtected;
 
 	@Version
 	private int version;
@@ -94,6 +103,22 @@ public class RawModemModel extends JsonAbstractAuditableModel implements Deletab
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getDevComment() {
+		return devComment;
+	}
+
+	public void setDevComment(String devComment) {
+		this.devComment = devComment;
+	}
+
+	public Boolean getIsProtected() {
+		return isProtected;
+	}
+
+	public void setIsProtected(Boolean isProtected) {
+		this.isProtected = isProtected;
 	}
 
 }

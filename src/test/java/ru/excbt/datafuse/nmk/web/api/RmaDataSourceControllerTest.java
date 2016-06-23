@@ -83,4 +83,29 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testCreateModel() throws Exception {
+		RawModemModel newModel = new RawModemModel();
+		newModel.setRawModemType("GPRS-MODEM");
+		newModel.setRawModemModelName("Модель для теста + ");
+		newModel.setIsDialup(true);
+		newModel.setDevComment("Created by REST");
+		Long id = _testCreateJson("/api/rma/dataSources/rawModemModels", newModel);
+
+		String content = _testGetJson("/api/rma/dataSources/rawModemModels/" + id);
+
+		RawModemModel result = fromJSON(new TypeReference<RawModemModel>() {
+		}, content);
+
+		assertNotNull(result);
+
+		result.setDevComment("Edited By REST");
+		_testUpdateJson("/api/rma/dataSources/rawModemModels/" + id, result);
+
+		_testDeleteJson("/api/rma/dataSources/rawModemModels/" + id);
+	}
+
 }

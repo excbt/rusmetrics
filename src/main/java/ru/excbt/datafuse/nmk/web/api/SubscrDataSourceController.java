@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -179,6 +180,92 @@ public class SubscrDataSourceController extends SubscrApiController {
 	public ResponseEntity<?> getRawModemModel() {
 		List<RawModemModel> resultList = rawModemService.selectRawModels();
 		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param rawModemModelId
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
+		RawModemModel resultList = rawModemService.selectRawModel(rawModemModelId);
+		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @param rawModemModelId
+	 * @param requestEntity
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId,
+			@RequestBody RawModemModel requestEntity) {
+
+		ApiAction action = new ApiActionEntityAdapter<RawModemModel>(requestEntity) {
+
+			@Override
+			public RawModemModel processAndReturnResult() {
+
+				return rawModemService.saveRawModemModel(entity);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param requestEntity
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.POST)
+	public ResponseEntity<?> postRawModemModel(
+			@RequestBody RawModemModel requestEntity, HttpServletRequest request) {
+
+		if (requestEntity.getRawModemType() == null) {
+			return responseBadRequest();
+		}
+
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<RawModemModel, Long>(requestEntity, request) {
+
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+
+			@Override
+			public RawModemModel processAndReturnResult() {
+				return rawModemService.saveRawModemModel(entity);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
+
+	}
+
+	/**
+	 * 
+	 * @param rawModemModelId
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
+
+		ApiAction action = new ApiActionAdapter() {
+
+			@Override
+			public void process() {
+				rawModemService.deleteRawModemModel(rawModemModelId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 }
