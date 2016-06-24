@@ -25,6 +25,7 @@ var app = angular
       ,'angularFileUpload'
       ,'leaflet-directive'
       ,'ui.select'
+      ,'ui.mask'
   ]);
 
 //routing config

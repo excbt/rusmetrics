@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', 'logSvc', '$rootScope', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory, logSvc, $rootScope){
-    
+    var REFRESH_PERIOD = 300000;
     var ROW_PER_PAGE = 20; 
     $scope.messages = {};
     
@@ -490,6 +490,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         if (!mainSvc.checkUndefinedNull($scope.selectedObjects) && angular.isArray($scope.selectedObjects) && $scope.selectedObjects.length > 0){
             params.contObjectIds = $scope.selectedObjects;
         };
+//console.log('$broadcast logSvc:requestSessionsLoading');        
         $rootScope.$broadcast('logSvc:requestSessionsLoading', {params: params});
     }
     
@@ -499,10 +500,14 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     }
     
     function getSessionsData(){
+//console.log("Get session data");        
         data.sessions = logSvc.getSessions();
         $scope.ctrlSettings.sessionsLoading = false;    
         if (mainSvc.checkUndefinedNull(data.sessions) || data.sessions.length == 0){
-            loadSessionsData();
+            $scope.data.totalSessions = 0;
+            $scope.data.sessionsOnView = [];            
+//console.log("data.sessions is null -> send request to load data");            
+            $timeout(loadSessionsData, REFRESH_PERIOD);
             return "Session array is empty";
         }
         $scope.data.totalSessions = data.sessions.length;
@@ -521,8 +526,12 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         }
         
     }
+    function sessionsLoadedListener(){
+//console.log("on logSvc:sessionsLoaded");        
+        getSessionsData();
+    }
     
-    $scope.$on('logSvc:sessionsLoaded', getSessionsData)
+    $scope.$on('logSvc:sessionsLoaded', sessionsLoadedListener)
     
  
     
@@ -561,6 +570,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     }      
     
     function initCtrl(){
+//console.log("Init ctrl");        
         getSessionsData();
 //        loadSessionsData();
         //set session and tables height

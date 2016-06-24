@@ -212,7 +212,7 @@
         </table>
         <div ng-show="ctrlSettings.sessionsLoading" class="marginBottom5 nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка сессий... 
-        </div>
+        </div>        
         <table ng-show="!ctrlSettings.sessionsLoading"
                id="tableSessionsData" 
                class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
@@ -235,6 +235,13 @@
             </tr>
         </thead>                    
         <tbody>
+        <tr 
+            class="" 
+            class="nmc-hide" 
+            ng-show="data.sessionsOnView.length == 0" 
+            ng-hide="ctrlSettings.sessionsLoading || (data.sessionsOnView.length > 0)">
+                <td><h3 class="nmc-h3">Сессий нет.</h3></td>
+        </tr>
         <tr dir-paginate="session in data.sessionsOnView | itemsPerPage: ctrlSettings.itemPerPage" 
             total-items="data.totalSessions" 
             current-page="ctrlSettings.pagination.current"

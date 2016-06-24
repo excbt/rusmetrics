@@ -48,9 +48,17 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     }
     
     function successCallback(e){
+//console.log(e.data);
+        if (mainSvc.checkUndefinedNull(e.data) || !angular.isArray(e.data) || e.data.length == 0){
+//console.log("Session loading. Response is empty.");            
+            sessions = [];
+            $rootScope.$broadcast('logSvc:sessionsLoaded');
+            return;
+        }
         sessions = serverDataParser(angular.copy(e.data));
-        if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0)
+        if (mainSvc.checkUndefinedNull(params.contObjectIds) || params.contObjectIds.length <= 0){
             sessions = defineChildSessions();
+        }
         $rootScope.$broadcast('logSvc:sessionsLoaded');
     }
     
@@ -134,7 +142,8 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     }
     
 //    $rootScope.$broadcast('logSvc:requestSessionsLoading', {params: params});
-    $rootScope.$on('logSvc:requestSessionsLoading', function(even, args){      
+    $rootScope.$on('logSvc:requestSessionsLoading', function(even, args){
+//console.log("logSvc:requestSessionsLoading");        
         params = args.params;
         setSessionsLogDaterange({startDate: params.fromDate, endDate: params.toDate});
         loadSessions();

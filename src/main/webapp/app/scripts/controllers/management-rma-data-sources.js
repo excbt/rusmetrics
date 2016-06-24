@@ -257,8 +257,9 @@ angular.module('portalNMC')
         tab.classList.remove("active");
         var tab = document.getElementById('con_properties');     
         tab.classList.remove("active");
-        var tab = document.getElementById('modem_properties_tab');     
-        tab.classList.remove("active");
+        var tab = document.getElementById('modem_properties_tab');
+        if (!mainSvc.checkUndefinedNull(tab))
+            tab.classList.remove("active");
         var tab = document.getElementById('modem_properties');     
         tab.classList.remove("active");
         

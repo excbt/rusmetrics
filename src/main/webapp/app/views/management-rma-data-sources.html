@@ -189,7 +189,7 @@
                   </li>
                   <li ng-if="data.currentObject.rawConnectionType == 'SERVER'"
                       role="presentation" 
-                    id="modem_properties_tab"                                         
+                      id="modem_properties_tab"                                         
                     > 
                     <a class="nmc-tab-button"
                        href="" 
@@ -463,11 +463,21 @@
                                                 <div class="form-group noMarginBottom pull-right" 
                                                      ng-class="{'has-error': !data.currentObject.rawModemDialTel}">
                                                     <label>Номер</label>
+<!--
                                                     <input class="form-control nmc-text-input-form nmc-input-data-with-label" 
                                                         id="inputClientNumber" 
                                                         ng-model="data.currentObject.rawModemDialTel" 
                                                         ng-disabled="!data.currentObject.rawModemDialEnable"
                                                         />
+-->
+                                                    <input type="text"
+                                                           class="form-control nmc-text-input-form nmc-input-data-with-label" 
+                                                           id="inputClientNumber"
+                                                           ng-model="data.currentObject.rawModemDialTel" 
+                                                           ui-mask="(999)999-9999" 
+                                                           ui-mask-placeholder ui-mask-placeholder-char="_"
+                                                           ng-disabled="!data.currentObject.rawModemDialEnable"
+                                                           />
                                                     
                                                 </div>
                                             </td>
