@@ -8,6 +8,7 @@ angular.module('portalNMC')
     var RESENDS = 3;
     var RECONNECTS = 1;
     var RECONNECT_TIMEOUT = 60;
+    var MODEM_DIAL_TEL_LENGTH = 10;
 
     $rootScope.ctxId = "management_rma_data_sources_page";
     //ctrl variables
@@ -198,8 +199,15 @@ angular.module('portalNMC')
                     notificationFactory.errorInfo("Ошибка","Не корректно задана пауза между переподключениями.");
                     checkDsourceFlag = false;
                 }
-            };
+            };            
         };
+        
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'SERVER'){           
+            if (dsource.rawModemDialTel.length != MODEM_DIAL_TEL_LENGTH){
+                notificationFactory.errorInfo("Ошибка","Не корректно задан телефонный номер модема");
+                checkDsourceFlag = false;
+            };
+        }
 
         if (checkDsourceFlag === false){
             return;
