@@ -41,7 +41,8 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_DATA_REPORT(26, "hw_data", ReportSystem.PENTAHO), //
 	EL_QUALITY_REPORT(27, "el_quality", ReportSystem.PENTAHO),
 	ELECTRIC_CONSUMPTION_ABONENT_REPORT(28, "electric_consumption_abonent"), //
-	HW_LAST_EVENT_REPORT(29, "hw_last_event", ReportSystem.PENTAHO);
+	HW_LAST_EVENT_REPORT(29, "hw_last_event", ReportSystem.PENTAHO),
+	CW_CONSUMPTION_REPORT(30, "cw_consumption", ReportSystem.PENTAHO);
 
 	private final String urlName;
 	private final String defaultFileName;

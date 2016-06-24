@@ -213,6 +213,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.HW_LAST_EVENT_REPORT,
 				ReportConstants.Files.HW_LAST_EVENT_FILE_COMPILED, isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.CW_CONSUMPTION_REPORT,
+				ReportConstants.Files.CW_CONSUMPTION_FILE_COMPILED, isCompiled);
+
 	}
 
 	/**
@@ -247,6 +250,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.EL_QUALITY_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_CONSUMPTION_ABONENT_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_LAST_EVENT_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CW_CONSUMPTION_REPORT);
 
 	}
 
