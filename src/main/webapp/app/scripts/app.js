@@ -233,6 +233,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-rma-temp-sch.html',
         controller: 'TempSchCtrl'
       })
+      .when('/management/modems', {
+        templateUrl: 'views/management-rma-modems.html',
+        controller: 'MngmtModemsCtrl'
+      })
       
       .when('/log/session-log', {
         templateUrl: 'views/log-view-resizable-paged.html',
