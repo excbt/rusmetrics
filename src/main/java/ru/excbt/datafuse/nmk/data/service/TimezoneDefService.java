@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimezoneDefRepository;
 
@@ -63,8 +64,9 @@ public class TimezoneDefService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<TimezoneDef> findAll() {
-		return timezoneDefRepository.findAll();
+	public List<TimezoneDef> selectTimeZoneDefs() {
+		List<TimezoneDef> result = timezoneDefRepository.selectAll();
+		return ObjectFilters.deletedFilter(result);
 	}
 
 	/**
@@ -73,7 +75,7 @@ public class TimezoneDefService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public TimezoneDef findOne(String keyname) {
+	public TimezoneDef findTimeZoneDef(String keyname) {
 		if (keyname == null) {
 			return null;
 		}

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
-import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
  */
 public class ObjectFilters {
 
-	public static final Predicate<? super DeletableObject> NO_DELETED_OBJECT_PREDICATE = (i) -> i.getDeleted() == 0;
+	public static final Predicate<? super DeletedMarker> NO_DELETED_OBJECT_PREDICATE = (i) -> i.getDeleted() == 0;
 	public static final Predicate<? super ActiveObject> ACTIVE_OBJECT_PREDICATE = (i) -> Boolean.TRUE
 			.equals(i.getIsActive());
 	public static final Predicate<? super DevModeObject> NO_DEV_MODE_OBJECT_PREDICATE = (
@@ -95,7 +95,7 @@ public class ObjectFilters {
 	 * @param inStream
 	 * @return
 	 */
-	public static <T extends DeletableObject> Stream<T> deletedFilter(Stream<T> inStream) {
+	public static <T extends DeletedMarker> Stream<T> deletedFilter(Stream<T> inStream) {
 		checkNotNull(inStream);
 		return inStream.filter(NO_DELETED_OBJECT_PREDICATE);
 	}
@@ -105,7 +105,7 @@ public class ObjectFilters {
 	 * @param inObject
 	 * @return
 	 */
-	public static <T extends DeletableObject> T deletedFilter(T inObject) {
+	public static <T extends DeletedMarker> T deletedFilter(T inObject) {
 		if (inObject == null) {
 			return null;
 		}
@@ -117,7 +117,7 @@ public class ObjectFilters {
 	 * @param inStream
 	 * @return
 	 */
-	public static <T extends DeletableObject> List<T> deletedFilter(List<T> inList) {
+	public static <T extends DeletedMarker> List<T> deletedFilter(List<T> inList) {
 		checkNotNull(inList);
 		return filterToList(inList, NO_DELETED_OBJECT_PREDICATE);
 	}

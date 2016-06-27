@@ -32,7 +32,7 @@ public class TimezoneDefController extends WebApiController {
 	 */
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<?> getTimezoneDef() {
-		List<TimezoneDef> resultList = timezoneDefService.findAll();
+		List<TimezoneDef> resultList = timezoneDefService.selectTimeZoneDefs();
 		return responseOK(resultList);
 	}
 }

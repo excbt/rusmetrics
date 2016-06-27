@@ -133,7 +133,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setHeatArea(contObject.getHeatArea());
 
 		if (contObject.getTimezoneDefKeyname() != null) {
-			currContObject.setTimezoneDef(timezoneDefService.findOne(contObject.getTimezoneDefKeyname()));
+			currContObject.setTimezoneDef(timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname()));
 		} else {
 			currContObject.setTimezoneDef(null);
 		}
@@ -244,7 +244,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}
 
-		TimezoneDef timezoneDef = timezoneDefService.findOne(contObject.getTimezoneDefKeyname());
+		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname());
 		contObject.setTimezoneDef(timezoneDef);
 		contObject.setIsManual(true);
 

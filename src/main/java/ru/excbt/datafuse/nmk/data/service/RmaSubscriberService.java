@@ -78,7 +78,7 @@ public class RmaSubscriberService extends SubscriberService {
 
 		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
-		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
 
 		subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
@@ -130,7 +130,7 @@ public class RmaSubscriberService extends SubscriberService {
 
 		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
-		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
 
 		Subscriber checkSubscriber = subscriberRepository.findOne(subscriber.getId());
