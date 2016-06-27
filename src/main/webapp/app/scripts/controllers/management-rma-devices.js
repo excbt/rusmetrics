@@ -210,7 +210,8 @@ angular.module('portalNMC')
         $http.get(targetUrl)
         .then(function(response){
             var tmp = response.data;      
-            $scope.data.dataSources = tmp;           
+            $scope.data.dataSources = tmp;
+            mainSvc.sortItemsBy($scope.data.dataSources, 'dataSourceName');
         },
               function(e){
             console.log(e);

@@ -115,7 +115,7 @@
             </th>
         </tr>
 
-        <tr ng-repeat="dataSource in data.dataSources | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+        <tr ng-repeat="dataSource in data.dataSources | filter: filter" >
             <td class="nmc-td-for-button">
                 <div class="btn-toolbar">
                     <div class="btn-group">

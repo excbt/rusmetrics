@@ -1380,6 +1380,7 @@ console.log(e);
                     .then(function(response){
                         var tmp = response.data;      
                         $scope.data.dataSources = tmp;
+                        mainSvc.sortItemsBy($scope.data.dataSources, 'dataSourceName');
             //console.log(tmp);            
                     },
                           errorCallback/*function(e){
