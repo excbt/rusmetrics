@@ -190,7 +190,13 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {
-				return subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds, subscrBeginDate);
+
+				List<ContObject> result = subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds,
+						subscrBeginDate);
+
+				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), result);
+
+				return result;
 			}
 		};
 
