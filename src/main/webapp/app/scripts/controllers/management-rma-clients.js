@@ -114,7 +114,7 @@ angular.module('portalNMC')
         objectSvc.getTimezones()
         .then(function(response){
             $scope.data.timezones = response.data;
-            mainSvc.sortItemsBy($scope.data.timezones, 'caption');
+//            mainSvc.sortItemsBy($scope.data.timezones, 'caption');
             getOrganizations();
         });
     };
