@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -165,7 +166,12 @@ public class SubscrContObjectController extends SubscrApiController {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.updateContObject(entity, cmOrganizationId);
+
+				ContObject result = contObjectService.updateContObject(entity, cmOrganizationId);
+
+				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
+
+				return result;
 			}
 
 		};
