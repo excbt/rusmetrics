@@ -561,12 +561,17 @@ angular.module('portalNMC')
                 return "Session array is empty";
             }
                 //save current session before update table, that don't lost it
-            var tmpCurSession = null;        
-            if (!mainSvc.checkUndefinedNull($scope.data.currentSession))
-                tmpCurSession = angular.copy($scope.data.currentSession);
+            var tmpCurSession = null;                               
+            if (!mainSvc.checkUndefinedNull($scope.data.currentSession) && !mainSvc.checkEmptyObject($scope.data.currentSession))
+                tmpCurSession = angular.copy($scope.data.currentSession);            
             $scope.data.sessionsOnView = logSvc.serverDataParser(angular.copy(resp.data));
             checkSessionsForComplete($scope.data.sessionsOnView);
-            if (!mainSvc.checkUndefinedNull(tmpCurSession)){
+            //if currentSession is not set -> currentSession = first session from array           
+            if (mainSvc.checkUndefinedNull(tmpCurSession) || mainSvc.checkEmptyObject(tmpCurSession)){
+                $scope.data.currentSession = $scope.data.sessionsOnView[0];
+                tmpCurSession = angular.copy($scope.data.currentSession);
+            }
+            if (!mainSvc.checkUndefinedNull(tmpCurSession) && !mainSvc.checkEmptyObject(tmpCurSession)){
                 $scope.data.sessionsOnView.some(function(elem){
                     if (elem.id == tmpCurSession.id){
                         $scope.loadLogData(elem);

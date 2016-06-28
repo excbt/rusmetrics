@@ -923,6 +923,7 @@
                             </span>
                         </div>
                         <div id="divManualSessions" style="max-height: 300px; overflow: auto">
+<!--
                             <table ng-show="ctrlSettings.sessionsLoading"
                            id="tableSessionsHeader" 
                            class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
@@ -948,10 +949,12 @@
                                     </tr>
                                 </thead>
                             </table>
-                            <div ng-show="ctrlSettings.sessionsLoading" class="marginBottom5 nmc-loading">
+                            <div ng-if="!(data.currentSessionTask.id && data.currentSessionTask.taskIsComplete != true)"
+                                 ng-show="ctrlSettings.sessionsLoading" class="marginBottom5 nmc-loading">
                                 <i class="fa fa-spinner fa-spin"></i> Загрузка сессий... 
                             </div>
-                            <table ng-show="!ctrlSettings.sessionsLoading"
+-->
+                            <table 
                                    id="tableSessionsData" 
                                    class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                                 <caption class="noPadding">
@@ -1028,6 +1031,7 @@
                         </table>
                         </div>
                         <div id="divManualSessionLog" style="max-height: 300px; overflow: auto">
+<!--
                           <table ng-show="ctrlSettings.logLoading"
                            class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
                             <caption class="noPadding">
@@ -1042,10 +1046,12 @@
                                 </tr>
                             </thead>            
                           </table>
-                          <div ng-show="ctrlSettings.logLoading" class="marginBottom5 nmc-loading">
+                          <div ng-if="!(data.currentSessionTask.id && data.currentSessionTask.taskIsComplete != true)"
+                               ng-show="ctrlSettings.logLoading" class="marginBottom5 nmc-loading">
                             <i class="fa fa-spinner fa-spin"></i> Загрузка сообщений сессии... 
                           </div>
-                          <table ng-show="!ctrlSettings.logLoading"
+-->
+                          <table 
                                class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
                             <caption class="noPadding">
                                 <h4>Сообщения сессии</h4>
