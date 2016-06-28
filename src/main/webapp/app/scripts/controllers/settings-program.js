@@ -250,15 +250,31 @@ angular.module('portalNMC')
         return checkPositiveNumberValueAndViewMessage(mapSetting["SUBSCR_ZOOM_MAP_PREF"]) & checkNumericValueAndViewMessage(mapSetting["SUBSCR_LNG_MAP_PREF"]) & checkNumericValueAndViewMessage(mapSetting["SUBSCR_LAT_MAP_PREF"]);
     }
     
+    function smsSettingIsOn(smsSetting){
+        return !mainSvc.checkUndefinedNull(smsSetting) && smsSetting["SUBSCR_SMS_PREF"].isActive == true;
+    }
+    
+    function mapSettingIsOn(mapSetting){
+        return !mainSvc.checkUndefinedNull(mapSetting) && mapSetting["SUBSCR_MAP_PREF"].isActive == true;
+    }
+    
     function checkSettings(){
         var result = true;
         var smsSetting = findSmsSettings();
         var mapSetting = findMapSettings();
         //TODO: divide check sms and map settings
-        if ((mainSvc.checkUndefinedNull(smsSetting) || !smsSetting["SUBSCR_SMS_PREF"].isActive) && (mainSvc.checkUndefinedNull(mapSetting) || !mapSetting["SUBSCR_MAP_PREF"].isActive)){
+        if ( !smsSettingIsOn(smsSetting) && !mapSettingIsOn(mapSetting)){
             return result;
         };
-        return checkSMSUrlAndViewMessage(smsSetting["SUBSCR_SMS_PREF"].value) & checkAttemptionCountsAndViewMessage(smsSetting) & checkMapSettingsAndViewMessage(mapSetting);
+        var checkSmsSettings = true;
+        if (smsSettingIsOn(smsSetting)){
+            checkSmsSettings = checkSMSUrlAndViewMessage(smsSetting["SUBSCR_SMS_PREF"].value) & checkAttemptionCountsAndViewMessage(smsSetting);
+        }
+        var checkMapSetting = true;
+        if (mapSettingIsOn(mapSetting)){
+            checkMapSetting = checkMapSettingsAndViewMessage(mapSetting);
+        }
+        return checkSmsSettings && checkMapSetting;
     }
     
     $scope.saveSettings = function(){
