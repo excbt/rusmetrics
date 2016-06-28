@@ -265,4 +265,9 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 				: DateFormatUtils.formatDateTime(sessionEndDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
 	}
 
+	public String getStatusDateStr() {
+		return statusDate == null ? null
+				: DateFormatUtils.formatDateTime(statusDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
+	}
+
 }
