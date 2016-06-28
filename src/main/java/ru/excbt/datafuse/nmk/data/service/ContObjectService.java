@@ -5,12 +5,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -29,10 +33,12 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -485,6 +491,87 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		}
 		return String.format(GEO_POS_JSON_TEMPLATE, contObjectDaData.getDataGeoLon().toString(),
 				contObjectDaData.getDataGeoLat().toString());
+	}
+
+	/**
+	 * 
+	 * @param contObjectWrappers
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public void calculateContObjectWrappersStats(List<ContObjectWrapper> contObjectWrappers) {
+		checkNotNull(contObjectWrappers);
+
+		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getContObject().getId())
+				.collect(Collectors.toSet());
+
+		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+
+		contObjectWrappers.forEach(i -> {
+			Integer res = contObjectStats.get(i.getContObject().getId());
+			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+		});
+	}
+
+	/**
+	 * 
+	 * @param contObjects
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectWrapper> wrapContObjectsStats(List<ContObject> contObjects) {
+		checkNotNull(contObjects);
+
+		List<ContObjectWrapper> contObjectWrappers = ContObjectWrapper.wrapContObjects(contObjects);
+
+		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getContObject().getId())
+				.collect(Collectors.toSet());
+
+		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+
+		contObjectWrappers.forEach(i -> {
+			Integer res = contObjectStats.get(i.getContObject().getId());
+			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+		});
+
+		return contObjectWrappers;
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContObjectWrapper wrapContObjectsStats(ContObject contObject) {
+		List<ContObjectWrapper> preResult = wrapContObjectsStats(Arrays.asList(contObject));
+		return preResult.isEmpty() ? null : preResult.get(0);
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	private Map<Long, Integer> selectContObjectZpointCounter(Collection<Long> contObjectIds) {
+
+		StringBuilder sqlString = new StringBuilder();
+		sqlString.append(" SELECT cont_object_id, count(*) ");
+		sqlString.append(" FROM cont_zpoint ");
+		sqlString.append(" WHERE cont_object_id IN ( :contObjectIds ) AND deleted = 0 ");
+		sqlString.append(" GROUP BY cont_object_id");
+
+		logger.debug("SQL: {}", sqlString.toString());
+
+		Query q1 = em.createNativeQuery(sqlString.toString());
+
+		q1.setParameter("contObjectIds", contObjectIds);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> resultList = q1.getResultList();
+
+		return resultList.stream()
+				.collect(Collectors.toMap(i -> DBRowUtils.asLong(i[0]), i -> DBRowUtils.asInteger(i[1])));
+
 	}
 
 }

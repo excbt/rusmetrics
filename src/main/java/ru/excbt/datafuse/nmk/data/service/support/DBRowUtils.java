@@ -41,6 +41,16 @@ public class DBRowUtils {
 	 * @param arg
 	 * @return
 	 */
+	public static Integer asInteger(Object arg) {
+		Long value = asLong(arg);
+		return value.intValue();
+	}
+
+	/**
+	 * 
+	 * @param arg
+	 * @return
+	 */
 	public static BigDecimal asBigDecimal(Object arg) {
 		if (arg == null) {
 			return null;

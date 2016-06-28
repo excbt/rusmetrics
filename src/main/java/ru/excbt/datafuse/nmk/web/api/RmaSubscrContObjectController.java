@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -47,7 +48,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createContObject(
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
-			@RequestBody ContObject contObject, HttpServletRequest request) {
+			final @RequestBody ContObject contObject, HttpServletRequest request) {
 
 		checkNotNull(contObject);
 
@@ -57,17 +58,20 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObject, Long>(contObject, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectWrapper, Long>(request) {
 
 			@Override
-			public ContObject processAndReturnResult() {
-				return contObjectService.createContObject(entity, getCurrentSubscriberId(), rmaBeginDate,
+			public ContObjectWrapper processAndReturnResult() {
+				ContObject result = contObjectService.createContObject(contObject, getCurrentSubscriberId(),
+						rmaBeginDate,
 						cmOrganizationId);
+
+				return contObjectService.wrapContObjectsStats(result);
 			}
 
 			@Override
 			protected Long getLocationId() {
-				return getResultEntity().getId();
+				return getResultEntity().getContObject().getId();
 			}
 		};
 
@@ -155,7 +159,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 		List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
-		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
+		return responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
@@ -169,7 +173,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
 				getCurrentSubscriberId());
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**

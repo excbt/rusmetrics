@@ -23,11 +23,11 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -99,7 +99,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true)
 				: selectSubscrContObjects(contGroupId);
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		}
 
 		ContObject result = contObjectService.findContObject(contObjectId);
-		return responseOK(result);
+		return responseOK(contObjectService.wrapContObjectsStats(result));
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
-			@RequestBody ContObject contObject) {
+			final @RequestBody ContObject contObject) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(contObject);
@@ -162,16 +162,16 @@ public class SubscrContObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<ContObject>(contObject) {
+		ApiAction action = new ApiActionEntityAdapter<ContObjectWrapper>() {
 
 			@Override
-			public ContObject processAndReturnResult() {
+			public ContObjectWrapper processAndReturnResult() {
 
-				ContObject result = contObjectService.updateContObject(entity, cmOrganizationId);
+				ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
 
 				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
-				return result;
+				return contObjectService.wrapContObjectsStats(result);
 			}
 
 		};

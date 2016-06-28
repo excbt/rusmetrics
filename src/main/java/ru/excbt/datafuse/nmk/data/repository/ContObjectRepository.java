@@ -17,4 +17,5 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 public interface ContObjectRepository extends JpaRepository<ContObject, Long> {
 
 	public List<ContObject> findByFullNameLikeIgnoreCase(String str);
+
 }
