@@ -1609,16 +1609,24 @@ angular.module('portalNMC')
                 $scope.data.waterColumns = angular.copy(waterColumns);
                 var electricityColumns = indicatorSvc.getElectricityColumns();
                 $scope.data.electricityColumns = angular.copy(electricityColumns);
-                                
-                function setIndicatorColumnPrefForObject(contObj, resourceKind, columnArr){
+                
+                function getSelectedColumns(columnArr){
                     var selectedItems = [];
                     columnArr.forEach(function(elem){
                         if(elem.isVisible == true){
                             selectedItems.push(elem.fieldName);
                         }
-                    });                   
+                    });
+                    return selectedItems;
+                }
+                                
+                function setIndicatorColumnPrefForObject(contObj, resourceKind, columnArr){
+                    var selectedItems = getSelectedColumns(columnArr);                    
                     if (selectedItems.length > 0){
-                        $cookies["indicator" + resourceKind + contObj.id] = selectedItems;                  
+//                        $cookies["indicator" + resourceKind + contObj.id] = selectedItems;
+                        var now = new Date();
+                        var exp = new Date(now.getFullYear() + 10, now.getMonth(), now.getDate());
+                        document.cookie = "indicator" + resourceKind + contObj.id + "=" + selectedItems + ";expires=" + exp.toUTCString();
                     }else{
                         $cookies["indicator" + resourceKind + contObj.id] = null;
                     }
@@ -1717,7 +1725,26 @@ angular.module('portalNMC')
                     $('#columnSettingsModal').modal();
                 }
                 
+                function checkSelectedColumns(){
+                    var result = true;
+                    var hwcols = getSelectedColumns($scope.data.waterColumns);
+                    if (hwcols.length == 0){
+                        notificationFactory.errorInfo("Ошибка", "Выберете хотя бы одну колонку для водных показаний");
+                        result = false;
+                    }
+                    var elcols = getSelectedColumns($scope.data.electricityColumns);
+                    if (elcols.length == 0){
+                        notificationFactory.errorInfo("Ошибка", "Выберете хотя бы одну колонку для электрических показаний");
+                        result = false;
+                    }
+                    return result;
+                }
+                
                 $scope.setIndicatorColumnsPref = function(){
+                    //check columns
+                    var check = checkSelectedColumns();
+                    if (check == false)
+                        return "Columns are not tested.";
                     //selected objects
                     $scope.objectsOnPage.forEach(function(el){
                         if(el.selected === true){
