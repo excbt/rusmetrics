@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,6 +103,10 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 		Long[] contZPointIds = contZPoints.stream().map(i -> i.getId()).collect(Collectors.toList())
 				.toArray(new Long[] {});
 
+		if (contZPointIds == null || contZPointIds.length == 0) {
+			return responseOK(new ArrayList<>());
+		}
+
 		if (!canAccessContZPoint(contZPointIds)) {
 			return responseForbidden();
 		}
@@ -128,12 +133,20 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 		Long[] contZPointIds = contZPoints.stream().map(i -> i.getId()).collect(Collectors.toList())
 				.toArray(new Long[] {});
 
+		if (contZPointIds == null || contZPointIds.length == 0) {
+			return responseOK(new ArrayList<>());
+		}
+
 		if (!canAccessContZPoint(contZPointIds)) {
 			return responseForbidden();
 		}
 
 		List<String> contServiceTypes = contZPoints.stream().map(i -> i.getContServiceTypeKeyname()).distinct()
 				.collect(Collectors.toList());
+
+		if (contServiceTypes.isEmpty()) {
+			contServiceTypes.add("");
+		}
 
 		List<SessionDetailTypeInfo> resultList = sessionDetailTypeService
 				.selectByContServiceType(contServiceTypes);
