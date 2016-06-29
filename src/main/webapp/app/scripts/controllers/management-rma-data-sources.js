@@ -160,14 +160,14 @@ angular.module('portalNMC')
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
-    $scope.saveDatasource = function(dsource){ 
+    function checkDatasource(dsource){
         var checkDsourceFlag = true;
-        if (!$scope.checkPositiveNumberValue(dsource.dataSourcePort)){
+        if ((dsource.rawConnectionType != 'CLIENT') && (!$scope.checkPositiveNumberValue(dsource.dataSourcePort))){
             notificationFactory.errorInfo("Ошибка","Не корректно задан порт источника данных.");
             checkDsourceFlag = false;
         };
 //        if (!$("#inputIP").inputmask("isComplete")){
-        if (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === "")){
+        if ((dsource.rawConnectionType != 'CLIENT') && (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === ""))){
             notificationFactory.errorInfo("Ошибка","Не заполнен ip \\ hostname источника данных.");
             checkDsourceFlag = false;
         };
@@ -229,12 +229,42 @@ angular.module('portalNMC')
             };            
         };
         
+        
         if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT'){           
-            if (dsource.rawModemDialTel.length != MODEM_DIAL_TEL_LENGTH){
+            if (mainSvc.checkUndefinedNull(dsource.rawModemModelId)){
+                notificationFactory.errorInfo("Ошибка","Не задана модель модема");
+                checkDsourceFlag = false;
+            };
+        };
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemDialEnable == true){           
+            if (mainSvc.checkUndefinedNull(dsource.rawModemDialTel) || dsource.rawModemDialTel.length < MODEM_DIAL_TEL_LENGTH){
                 notificationFactory.errorInfo("Ошибка","Не корректно задан телефонный номер модема");
                 checkDsourceFlag = false;
             };
-        }
+        };
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'SERIAL_NR'){
+            if (mainSvc.checkUndefinedNull(dsource.rawModemSerial) || dsource.rawModemSerial.length == 0){
+                notificationFactory.errorInfo("Ошибка","Не корректно задан серийный номер модема");
+                checkDsourceFlag = false;
+            };
+        };
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'MAC_ADDR'){
+            if (mainSvc.checkUndefinedNull(dsource.rawModemMacAddr) || dsource.rawModemMacAddr.length == 0){
+                notificationFactory.errorInfo("Ошибка","Не корректно задан MAC-адрес модема");
+                checkDsourceFlag = false;
+            };
+        };
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'IMEI'){
+            if (mainSvc.checkUndefinedNull(dsource.rawModemImei) || dsource.rawModemImei.length == 0){
+                notificationFactory.errorInfo("Ошибка","Не корректно задан IMEI модема");
+                checkDsourceFlag = false;
+            };
+        };
+        return checkDsourceFlag;
+    }
+    
+    $scope.saveDatasource = function(dsource){ 
+        var checkDsourceFlag = checkDatasource(dsource);
 
         if (checkDsourceFlag === false){
             return;

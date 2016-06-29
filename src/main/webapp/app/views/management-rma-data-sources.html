@@ -348,14 +348,14 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT' && data.currentObject.rawModemIdentity == 'MAC_ADDR'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT' && data.currentObject.rawModemIdentity == 'IMEI'">
                                             <td class="col-sm-4">                                                
                                                 <label for="inputClientMac">IMEI</label>
                                             </td>
                                             <td colspan="2" 
                                                 class="nmc-text-align-left col-sm-8">
                                                 <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error': !data.currentObject.rawModemMacAddr}">                        <input class="form-control nmc-text-input-form" 
+                                                     ng-class="{'has-error': !data.currentObject.rawModemImei}">                        <input class="form-control nmc-text-input-form" 
                                                         id="inputClientMac" 
                                                         ng-model="data.currentObject.rawModemImei" ui-mask="99-999999-999999-9" 
                                                         ui-mask-placeholder ui-mask-placeholder-char="_"                             
