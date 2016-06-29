@@ -61,8 +61,38 @@ angular.module('portalNMC')
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
+    function setQtip(btnId, text){
+        $('#prefHelpButton' + btnId).qtip({
+            suppress: false,
+            content:{
+                text: text,                            
+                button : true
+            },
+            show:{
+                event: 'click'
+            },
+            hide: {
+                event: 'unfocus'
+            },
+            style:{
+                classes: 'qtip-nmc-indicator-tooltip',
+                width: 1000
+            },
+            position:{
+                my: 'bottom left',
+                at: 'top right',
+                target: $('#prefHelpButton' + btnId)
+            }
+        });
+    }
+    
     function prepareSettingsView(){
         $timeout(function(){
+            $scope.data.modifySettings.forEach(function(setting){
+                if (!mainSvc.checkUndefinedNull(setting.subscrPref.prefDescription)){
+                    setQtip(setting.id, setting.subscrPref.prefDescription);
+                }
+            });
             $("#inputHourCountValue").inputmask();
             $("#inputDayCountValue").inputmask();            
             $("#inputMapValueSUBSCR_ZOOM_MAP_PREF").inputmask();
@@ -93,11 +123,13 @@ angular.module('portalNMC')
                 if (mainSvc.isNumeric(setting.value)){
                     setting.value = Number(setting.value);
                 };
+                
 //                //if "SUBSCR_SMS_PREF_TYPE"
 //                if (setting.subscrPrefCategory = "SUBSCR_SMS_PREF_TYPE"){
 //                    
 //                }
             });
+            
 //            data.push($scope.testData.smsSetting);
         };        
         $scope.data.originalSettings = angular.copy(data);

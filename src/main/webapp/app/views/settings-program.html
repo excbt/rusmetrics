@@ -33,6 +33,14 @@
                             </div>
                             <div class="col-xs-3 col-md-3 noPadding marginTop3">
                                 {{setting.subscrPref.isActiveCaption}}
+                                <p ng-if="setting.subscrPref.prefDescription"
+                                           ng-attr-id="{{'prefHelpButton' + setting.id}}"
+                                                type="button" 
+                                                class="btn btn-xs"
+                                           title="Помощь"
+                                                >
+                                            <span>?</span>
+                                        </p>
                             </div>
 
                         </div>
@@ -63,6 +71,14 @@
                                     </div>
                                     <div class="col-xs-2 col-md-2 noPadding marginTop3">
                                         {{setting.subscrPref.isActiveCaption}}
+                                        <p ng-if="setting.subscrPref.prefDescription"
+                                           ng-attr-id="{{'prefHelpButton' + setting.id}}"
+                                                type="button" 
+                                                class="btn btn-xs"
+                                           title="Помощь"
+                                                >
+                                            <span>?</span>
+                                        </p>
                                     </div>
 
                                 </div>
@@ -141,9 +157,18 @@
                                     </div>
                                     <div class="col-xs-2 col-md-2 noPadding marginTop3">
                                         {{setting.subscrPref.isActiveCaption}}
+                                        <p ng-if="setting.subscrPref.prefDescription"
+                                           ng-attr-id="{{'prefHelpButton' + setting.id}}"
+                                                type="button" 
+                                                class="btn btn-xs"
+                                           title="Помощь"
+                                                >
+                                            <span>?</span>
+                                        </p>
                                     </div>
                                     <div>
-                                        <small>Координаты вводятся в градусах в виде десятичной дроби</small>
+<!--                                        <small>Координаты вводятся в градусах в виде десятичной дроби</small>-->
+                                        
                                     </div>
                                 </div>
                             </span>                                
