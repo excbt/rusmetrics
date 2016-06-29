@@ -106,13 +106,37 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		logger.info("Prepare ContZPointSessionDetailType");
-
 		List<ContZPointSessionDetailType> resultList = contZPoints.stream().map(i -> {
 			final List<SessionDetailTypeInfo> sessionDetailTypes = sessionDetailTypeService
 					.selectByContServiceType(i.getContServiceTypeKeyname());
 			return new ContZPointSessionDetailType(i, sessionDetailTypes);
 		}).collect(Collectors.toList());
+
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/sessionDetailTypes/byDeviceObject/{deviceObjectId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSessionDetailType(@PathVariable("deviceObjectId") Long deviceObjectId) {
+		List<ContZPoint> contZPoints = contZPointService.selectContPointsByDeviceObject(deviceObjectId);
+
+		Long[] contZPointIds = contZPoints.stream().map(i -> i.getId()).collect(Collectors.toList())
+				.toArray(new Long[] {});
+
+		if (!canAccessContZPoint(contZPointIds)) {
+			return responseForbidden();
+		}
+
+		List<String> contServiceTypes = contZPoints.stream().map(i -> i.getContServiceTypeKeyname()).distinct()
+				.collect(Collectors.toList());
+
+		List<SessionDetailTypeInfo> resultList = sessionDetailTypeService
+				.selectByContServiceType(contServiceTypes);
 
 		return responseOK(resultList);
 	}

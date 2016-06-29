@@ -48,4 +48,9 @@ public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 		_testGetJson("/api/rma/subscrSessionTask/contZPointSessionDetailType/byDeviceObject/" + 719);
 	}
 
+	@Test
+	public void testGetSessionDetailTypes() throws Exception {
+		_testGetJson("/api/rma/subscrSessionTask/sessionDetailTypes/byDeviceObject/" + 719);
+	}
+
 }

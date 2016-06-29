@@ -33,4 +33,19 @@ public class SessionDetailTypeService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param contServiceTypes
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SessionDetailTypeInfo> selectByContServiceType(List<String> contServiceTypes) {
+		List<SessionDetailTypeContServiceType> preResult = sessionDetailTypeContServiceTypeRepository
+				.selectSessionDetailTypeContServiceType(contServiceTypes);
+
+		List<SessionDetailTypeInfo> result = preResult.stream().map(i -> new SessionDetailTypeInfo(i))
+				.collect(Collectors.toList());
+		return result;
+	}
+
 }

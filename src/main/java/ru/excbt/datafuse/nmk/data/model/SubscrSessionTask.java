@@ -31,8 +31,8 @@ public class SubscrSessionTask extends JsonAbstractAuditableModel implements Del
 	@Column(name = "subscr_user_id", updatable = false)
 	private Long subscrUserId;
 
-	@Column(name = "cont_zpoint_id", updatable = false)
-	private Long contZPointId;
+	//	@Column(name = "cont_zpoint_id", updatable = false)
+	//	private Long contZPointId;
 
 	@Column(name = "device_object_id", updatable = false)
 	private Long deviceObjectId;
@@ -88,13 +88,13 @@ public class SubscrSessionTask extends JsonAbstractAuditableModel implements Del
 		this.subscrUserId = subscrUserId;
 	}
 
-	public Long getContZPointId() {
-		return contZPointId;
-	}
-
-	public void setContZPointId(Long contZPointId) {
-		this.contZPointId = contZPointId;
-	}
+	//	public Long getContZPointId() {
+	//		return contZPointId;
+	//	}
+	//
+	//	public void setContZPointId(Long contZPointId) {
+	//		this.contZPointId = contZPointId;
+	//	}
 
 	public Long getDeviceObjectId() {
 		return deviceObjectId;
