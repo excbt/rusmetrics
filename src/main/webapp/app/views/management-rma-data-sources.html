@@ -309,12 +309,14 @@
                                                     <select class="form-control nmc-select-form" 
                                                         id="inputDeviceMode" 
                                                         ng-model="data.currentObject.rawModemModelId" 
-                                                        ng-options="smodel.id as smodel.rawModemModelName for smodel in data.rawModemModels">
+                                                        ng-options="smodel.id as smodel.rawModemModelName for smodel in data.rawModemModels"
+                                                        ng-change="changeModemModel()"
+                                                            >
                                                     </select>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT' && data.currentObject.rawModemIdentity == 'SERIAL_NR'">
                                             <td class="col-sm-4">
                                                 <label for="inputMode">Серийный номер</label>
                                             </td>
@@ -330,7 +332,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT' && data.currentObject.rawModemIdentity == 'MAC_ADDR'">
                                             <td class="col-sm-4">                                                
                                                 <label for="inputClientMac">MAC-адрес</label>
                                             </td>
@@ -340,6 +342,22 @@
                                                      ng-class="{'has-error': !data.currentObject.rawModemMacAddr}">                        <input class="form-control nmc-text-input-form" 
                                                         id="inputClientMac" 
                                                         ng-model="data.currentObject.rawModemMacAddr"                                   ui-mask="MM-MM-MM-MM-MM-MM" 
+                                                        ui-mask-placeholder ui-mask-placeholder-char="_"                             
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT' && data.currentObject.rawModemIdentity == 'MAC_ADDR'">
+                                            <td class="col-sm-4">                                                
+                                                <label for="inputClientMac">IMEI</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !data.currentObject.rawModemMacAddr}">                        <input class="form-control nmc-text-input-form" 
+                                                        id="inputClientMac" 
+                                                        ng-model="data.currentObject.rawModemImei" ui-mask="99-999999-999999-9" 
                                                         ui-mask-placeholder ui-mask-placeholder-char="_"                             
                                                         />
                                                     

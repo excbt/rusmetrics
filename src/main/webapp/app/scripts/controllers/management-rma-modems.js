@@ -10,6 +10,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.rmaUrl = "../api/rma";
     $scope.ctrlSettings.modemsUrl = $scope.ctrlSettings.rmaUrl + "/dataSources/rawModemModels";
+    $scope.ctrlSettings.modemsIdentityUrl = $scope.ctrlSettings.modemsUrl + "/rawModemModelIdentity" ;
     
     //Headers of modal window
     $scope.headers = {}
@@ -57,6 +58,17 @@ angular.module('portalNMC')
         }
     ];
     
+    $scope.data.modemIdentities = [];
+    
+    function getModemIdentity(){
+        var url = $scope.ctrlSettings.modemsIdentityUrl;
+        $http.get(url).then(function(resp){
+            $scope.data.modemIdentities = resp.data;
+        }, function(e){
+            console.log(e);
+        })
+    }
+    
 //    get modems
     var getModems = function(){
         var targetUrl = $scope.ctrlSettings.modemsUrl;
@@ -102,6 +114,7 @@ angular.module('portalNMC')
     $scope.addModem = function(){
         $scope.data.currentModem = {};
         $scope.data.currentModem.rawModemType = $scope.data.modemTypes[0].keyname;
+        $scope.data.currentModem.rawModemModelIdentity = $scope.data.modemIdentities[0].keyname;
         $('#showModemOptionModal').modal();
     };
     
@@ -142,6 +155,10 @@ angular.module('portalNMC')
         var result = true;
         if (angular.isUndefined(obj) || (obj == null) || angular.isUndefined(obj.rawModemModelName) || (obj.rawModemModelName==null) || (obj.rawModemModelName == "")){
             notificationFactory.errorInfo("Ошибка", "Не задано наименование модели модема!");
+            result = false;
+        };
+        if (angular.isUndefined(obj) || (obj == null) || angular.isUndefined(obj.rawModemModelIdentity) || (obj.rawModemModelIdentity==null) || (obj.rawModemModelIdentity == "")){
+            notificationFactory.errorInfo("Ошибка", "Не задан вид идентификации!");
             result = false;
         };
         return result;
@@ -190,6 +207,7 @@ angular.module('portalNMC')
     
     // controller initialization
     $scope.initCtrl = function(){
+        getModemIdentity();
         getModems();
     };
     

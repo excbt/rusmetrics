@@ -71,6 +71,23 @@ angular.module('portalNMC')
     
     getDatasources($scope.ctrlSettings.datasourcesUrl);
     
+    function findModemIdentity(mmId){
+        if ($scope.data.rawModemModels.length == 0)
+            return null;
+        var result = null;
+        $scope.data.rawModemModels.some(function(model){
+            if (model.id == mmId){
+                result = model;
+                return true;
+            }
+        })
+        return result;
+    }
+    
+    $scope.changeModemModel = function(){
+        $scope.data.currentObject.rawModemIdentity = findModemIdentity($scope.data.currentObject.rawModemModelId).rawModemModelIdentity;
+    }
+    
     $scope.selectedItem = function(item){
         $scope.data.currentObject = angular.copy(item);
         if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawTimeout)){
@@ -87,6 +104,10 @@ angular.module('portalNMC')
         }
         if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectTimeout)){
             $scope.data.currentObject.rawReconnectTimeout = RECONNECT_TIMEOUT;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemIdentity) &&
+            !mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemModelId)){
+            $scope.data.currentObject.rawModemIdentity = findModemIdentity($scope.data.currentObject.rawModemModelId).rawModemModelIdentity;
         }
     };
     
@@ -208,7 +229,7 @@ angular.module('portalNMC')
             };            
         };
         
-        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'SERVER'){           
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT'){           
             if (dsource.rawModemDialTel.length != MODEM_DIAL_TEL_LENGTH){
                 notificationFactory.errorInfo("Ошибка","Не корректно задан телефонный номер модема");
                 checkDsourceFlag = false;

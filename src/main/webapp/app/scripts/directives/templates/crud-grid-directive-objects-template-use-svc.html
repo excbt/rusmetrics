@@ -394,9 +394,16 @@
                                 </td>
                                 <td ng-click="toggleShowGroupDetails(object.id)">
                                     {{object.fullName}}
-                                    <small>количество точек учета: 
+                                    <small>точек учета: 
                                         <span ng-bind="object.contObjectStats.contZpointCount"></span>
                                     </small>
+<!--
+                                    <small>
+                                        <span class="badge">
+                                            <span ng-bind="object.contObjectStats.contZpointCount"></span>
+                                        </span>
+                                    </small>
+-->
                                     <span ng-show="isSystemuser()">(id = {{object.id}})</span>
                                 </td>
                             </tr>
