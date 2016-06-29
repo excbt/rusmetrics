@@ -283,7 +283,11 @@
                                         <span ng-show="!object._haveSubscr">
                                             <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
                                         </span>
-                                        {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                                        {{object.fullName}}
+                                        <small>количество точек учета: 
+                                            <span ng-bind="object.contObjectStats.contZpointCount"></span>
+                                        </small>
+                                        <span ng-show="isSystemuser()">(id = {{object.id}})</span>
                                     </td>
                                     <td>
                                         <div class="btn-toolbar">

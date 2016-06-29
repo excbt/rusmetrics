@@ -393,7 +393,11 @@
                                     </i>                            
                                 </td>
                                 <td ng-click="toggleShowGroupDetails(object.id)">
-                                    {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                                    {{object.fullName}}
+                                    <small>количество точек учета: 
+                                        <span ng-bind="object.contObjectStats.contZpointCount"></span>
+                                    </small>
+                                    <span ng-show="isSystemuser()">(id = {{object.id}})</span>
                                 </td>
                             </tr>
                             <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
