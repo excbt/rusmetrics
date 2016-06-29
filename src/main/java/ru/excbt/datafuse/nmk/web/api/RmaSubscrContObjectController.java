@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -144,7 +143,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
 		List<ContObject> resultList = selectRmaContObjects(contGroupId, false);
-		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
+		return responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
