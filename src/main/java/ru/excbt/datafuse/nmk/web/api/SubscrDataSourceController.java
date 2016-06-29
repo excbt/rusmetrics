@@ -296,9 +296,10 @@ public class SubscrDataSourceController extends SubscrApiController {
 		}
 
 		RawModemIdentity serial = new RawModemIdentity("SERIAL_NR", "Серийный номер");
+		RawModemIdentity macImei = new RawModemIdentity("IMEI", "IMEI");
 		RawModemIdentity macAddr = new RawModemIdentity("MAC_ADDR", "MAC адрес");
 
-		List<RawModemIdentity> result = Arrays.asList(serial, macAddr);
+		List<RawModemIdentity> result = Arrays.asList(serial, macImei, macAddr);
 
 		return responseOK(result);
 	}

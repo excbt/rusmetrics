@@ -115,6 +115,9 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 	@Column(name = "raw_modem_mac_addr")
 	private String rawModemMacAddr;
 
+	@Column(name = "raw_modem_imei")
+	private String rawModemImei;
+
 	@Column(name = "raw_modem_dial_enable")
 	private Boolean rawModemDialEnable;
 
@@ -345,6 +348,14 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 
 	public void setRawModemDialTel(String rawModemDialTel) {
 		this.rawModemDialTel = rawModemDialTel;
+	}
+
+	public String getRawModemImei() {
+		return rawModemImei;
+	}
+
+	public void setRawModemImei(String rawModemImei) {
+		this.rawModemImei = rawModemImei;
 	}
 
 }
