@@ -6,6 +6,7 @@ angular.module('portalNMC')
     //settings
     var SESSION_TASK_URL = "../api/rma/subscrSessionTask";
     var SESSION_DETAIL_TYPE_URL = SESSION_TASK_URL + "/contZPointSessionDetailType/byDeviceObject";
+    var SESSION_DETAIL_TYPE_FOR_DEVICE_URL = SESSION_TASK_URL + "/sessionDetailTypes/byDeviceObject";
     var REFRESH_PERIOD = 10000;//10 sec
     
     var interval = null;//interval for load session data
@@ -589,6 +590,19 @@ angular.module('portalNMC')
                 return "Session detail type is empty.";
             }
             $scope.data.sessionDetailType = resp.data;
+            
+        }, errorProtoCallback)
+    }
+    
+    function loadSessionDetailType(device){
+        var url = SESSION_DETAIL_TYPE_FOR_DEVICE_URL + "/" + device.id;
+        $http.get(url).then(function(resp){
+            if(mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)){
+                console.log("Session detail type is empty.");
+                return "Session detail type is empty.";
+            }            
+            $scope.data.detailTypes = angular.copy(resp.data);
+            
         }, errorProtoCallback)
     }
     
@@ -602,6 +616,7 @@ angular.module('portalNMC')
         $scope.data.detailTypes = [];
         $scope.selectedItem(device);
         loadContZPointSessionDetailType(device);
+        loadSessionDetailType(device);
     }
     
     $scope.changeSessionDetailType = function(){
