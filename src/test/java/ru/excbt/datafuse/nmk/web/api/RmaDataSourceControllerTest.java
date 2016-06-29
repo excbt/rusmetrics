@@ -108,4 +108,14 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 		_testDeleteJson("/api/rma/dataSources/rawModemModels/" + id);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testModemModelIdentity() throws Exception {
+		_testGetJson("/api/rma/dataSources/rawModemModels/rawModemModelIdentity");
+
+	}
+
 }

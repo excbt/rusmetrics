@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -266,6 +267,40 @@ public class SubscrDataSourceController extends SubscrApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionDelete(action);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/dataSources/rawModemModels/rawModemModelIdentity", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getRawModemIdentity() {
+
+		class RawModemIdentity {
+			private final String keyname;
+			private final String caption;
+
+			public RawModemIdentity(String... args) {
+				this.keyname = args[0];
+				this.caption = args[1];
+			}
+
+			public String getKeyname() {
+				return keyname;
+			}
+
+			public String getCaption() {
+				return caption;
+			}
+		}
+
+		RawModemIdentity serial = new RawModemIdentity("SERIAL_NR", "Серийный номер");
+		RawModemIdentity macAddr = new RawModemIdentity("MAC_ADDR", "MAC адрес");
+
+		List<RawModemIdentity> result = Arrays.asList(serial, macAddr);
+
+		return responseOK(result);
 	}
 
 }

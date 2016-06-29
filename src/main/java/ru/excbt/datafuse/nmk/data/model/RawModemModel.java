@@ -31,6 +31,9 @@ public class RawModemModel extends JsonAbstractAuditableModel implements Deletab
 	@Column(name = "raw_modem_model_description")
 	private String rawModemModelDescription;
 
+	@Column(name = "raw_modem_model_identity")
+	private String rawModemModelIdentity;
+
 	@Column(name = "is_dialup")
 	private Boolean isDialup;
 
@@ -119,6 +122,14 @@ public class RawModemModel extends JsonAbstractAuditableModel implements Deletab
 
 	public void setIsProtected(Boolean isProtected) {
 		this.isProtected = isProtected;
+	}
+
+	public String getRawModemModelIdentity() {
+		return rawModemModelIdentity;
+	}
+
+	public void setRawModemModelIdentity(String rawModemModelIdentity) {
+		this.rawModemModelIdentity = rawModemModelIdentity;
 	}
 
 }

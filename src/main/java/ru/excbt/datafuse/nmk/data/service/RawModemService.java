@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +14,10 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.repository.RawModemModelRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class RawModemService {
+public class RawModemService implements SecuredRoles {
 
 	@Autowired
 	private RawModemModelRepository rawModemModelRepository;
@@ -44,6 +46,7 @@ public class RawModemService {
 	 * @param entity
 	 * @return
 	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public RawModemModel saveRawModemModel(RawModemModel entity) {
 		return rawModemModelRepository.save(entity);
@@ -53,6 +56,8 @@ public class RawModemService {
 	 * 
 	 * @param rawModemModelId
 	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public void deleteRawModemModel(Long rawModemModelId) {
 		RawModemModel deleteCadidate = rawModemModelRepository.findOne(rawModemModelId);
 		checkNotNull(rawModemModelId);
