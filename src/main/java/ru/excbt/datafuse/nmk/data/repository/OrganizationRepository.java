@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.Organization;
 
@@ -17,17 +18,51 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
  */
 public interface OrganizationRepository extends CrudRepository<Organization, Long> {
 
-	@Query("SELECT o FROM Organization o WHERE o.flagRso = true ORDER BY o.organizationFullName")
-	public List<Organization> selectRsoOrganizations();
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT o FROM Organization o WHERE o.flagRso = true AND (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
+			+ " ORDER BY o.organizationFullName")
+	public List<Organization> selectRsoOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
-	@Query("SELECT o FROM Organization o WHERE o.flagRma = true ORDER BY o.organizationFullName")
-	public List<Organization> selectRmaOrganizations();
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT o FROM Organization o WHERE o.flagRma = true AND (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
+			+ " ORDER BY o.organizationFullName")
+	public List<Organization> selectRmaOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
-	@Query("SELECT o FROM Organization o WHERE o.flagCm = true ORDER BY o.organizationFullName")
-	public List<Organization> selectCmOrganizations();
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT o FROM Organization o WHERE o.flagCm = true AND (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
+			+ " ORDER BY o.organizationFullName")
+	public List<Organization> selectCmOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
-	@Query("SELECT o FROM Organization o ORDER BY o.organizationFullName")
-	public List<Organization> selectOrganizations();
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
+			+ " ORDER BY o.organizationFullName")
+	public List<Organization> selectOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
-	public List<Organization> findByKeyname(String keyname);
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param keyname
+	 * @return
+	 */
+	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) AND"
+			+ " o.keyname = :keyname "
+			+ " ORDER BY o.organizationFullName")
+	public List<Organization> selectByKeyname(@Param("rmaSubscriberId") Long rmaSubscriberId,
+			@Param("keyname") String keyname);
 }

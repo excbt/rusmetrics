@@ -40,7 +40,7 @@ public class RmaOrganizationController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationsGet() {
-		List<Organization> resultList = organizationService.selectOrganizations();
+		List<Organization> resultList = organizationService.selectOrganizations(getSubscriberParam());
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
@@ -70,6 +70,17 @@ public class RmaOrganizationController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
+		if (Boolean.TRUE.equals(organization.getIsCommon())) {
+			return responseForbidden();
+		}
+
+		if (organization.getRmaSubscriberId() == null
+				|| !organization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
+			return responseForbidden();
+		}
+
+		organization.setRmaSubscriberId(getSubscriberParam().getRmaSubscriberId());
+
 		ApiAction action = new ApiActionEntityAdapter<Organization>(requestEntity) {
 
 			@Override
@@ -89,6 +100,16 @@ public class RmaOrganizationController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationPost(@RequestBody Organization requestEntity, HttpServletRequest request) {
+
+		if (!requestEntity.isNew()) {
+			return responseBadRequest();
+		}
+
+		if (Boolean.TRUE.equals(requestEntity.getIsCommon())) {
+			return responseForbidden();
+		}
+
+		requestEntity.setRmaSubscriberId(getSubscriberParam().getRmaSubscriberId());
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<Organization, Long>(requestEntity, request) {
 
@@ -118,6 +139,15 @@ public class RmaOrganizationController extends SubscrApiController {
 		Organization organization = organizationService.selectOrganization(organizationId);
 		if (organization == null) {
 			return responseBadRequest();
+		}
+
+		if (Boolean.TRUE.equals(organization.getIsCommon())) {
+			return responseForbidden();
+		}
+
+		if (organization.getRmaSubscriberId() == null
+				|| !organization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
+			return responseForbidden();
 		}
 
 		ApiAction action = new ApiActionAdapter() {

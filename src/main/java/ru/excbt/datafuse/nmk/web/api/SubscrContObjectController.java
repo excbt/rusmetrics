@@ -238,7 +238,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects/cmOrganizations", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getCmOrganizations() {
-		List<Organization> organizations = organizationService.selectCmOrganizations();
+		List<Organization> organizations = organizationService.selectCmOrganizations(getSubscriberParam());
 		return responseOK(organizations);
 	}
 
@@ -248,7 +248,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects/organizations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
-		List<Organization> organizations = organizationService.selectOrganizations();
+		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
 		return responseOK(organizations);
 	}
 

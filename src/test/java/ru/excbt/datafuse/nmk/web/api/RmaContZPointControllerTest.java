@@ -20,6 +20,8 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class RmaContZPointControllerTest extends AnyControllerTest {
@@ -86,7 +88,9 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	private Long randomRsoOrganizationId() {
 		int idx = ThreadLocalRandom.current().nextInt(0, 2);
 
-		Organization o = organizationService.selectByKeyname(RSO_ORGANIZATIONS[idx]);
+		SubscriberParam param = SubscriberParam.builder().subscriberId(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID)
+				.rmaSubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID).build();
+		Organization o = organizationService.selectByKeyname(param, RSO_ORGANIZATIONS[idx]);
 		return o == null ? null : o.getId();
 	}
 

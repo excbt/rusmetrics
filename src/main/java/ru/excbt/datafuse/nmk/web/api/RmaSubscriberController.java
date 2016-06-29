@@ -173,7 +173,7 @@ public class RmaSubscriberController extends SubscriberController {
 	 */
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
-		List<Organization> organizations = organizationService.selectOrganizations();
+		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
 		return responseOK(organizations);
 	}
 

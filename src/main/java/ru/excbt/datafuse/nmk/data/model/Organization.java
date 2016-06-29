@@ -94,6 +94,13 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Column(name = "organization_description")
 	private String organizationDescription;
 
+	@JsonIgnore
+	@Column(name = "is_common", insertable = false, updatable = false)
+	private Boolean isCommon;
+
+	@Column(name = "rma_subscriber_id")
+	private Long rmaSubscriberId;
+
 	public String getExCode() {
 		return exCode;
 	}
@@ -200,6 +207,18 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	public void setOrganizationDecription(String organizationDescription) {
 		this.organizationDescription = organizationDescription;
+	}
+
+	public Boolean getIsCommon() {
+		return isCommon;
+	}
+
+	public Long getRmaSubscriberId() {
+		return rmaSubscriberId;
+	}
+
+	public void setRmaSubscriberId(Long rmaSubscriberId) {
+		this.rmaSubscriberId = rmaSubscriberId;
 	}
 
 }
