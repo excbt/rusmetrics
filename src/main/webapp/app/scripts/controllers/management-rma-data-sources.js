@@ -9,6 +9,8 @@ angular.module('portalNMC')
     var RECONNECTS = 1;
     var RECONNECT_TIMEOUT = 60;
     var MODEM_DIAL_TEL_LENGTH = 10;
+    var DATA_SOURCE_TYPE_KEY_DEFAULT = "DEVICE";
+    var RAW_CONNECTION_TYPE_DEFAULT = "SERVER";
 
     $rootScope.ctxId = "management_rma_data_sources_page";
     //ctrl variables
@@ -19,11 +21,12 @@ angular.module('portalNMC')
     $scope.ctrlSettings.rawModemModelsUrl = $scope.ctrlSettings.subscrUrl + "/dataSources/rawModemModels";
     $scope.ctrlSettings.DEVICE_MODES = [
         {
-            caption: "Клиент",
-            keyname: "CLIENT"
-        },{
             caption: "Сервер",
             keyname: "SERVER"
+        },
+        {
+            caption: "Клиент",
+            keyname: "CLIENT"
         }
     ];
     
@@ -34,7 +37,7 @@ angular.module('portalNMC')
     $scope.data.dataSourcesTypes = [];
     $scope.data.rawModemModels = [];
     $scope.data.currentObject = {};
-    $scope.data.currentObject.dataSourceTypeKey = "DEVICE";
+//    $scope.data.currentObject.dataSourceTypeKey = "DEVICE";
     
     //ctrl methods
         //get data source types
@@ -96,7 +99,8 @@ angular.module('portalNMC')
     
     $scope.addDatasource = function(){
         $scope.data.currentObject = {};
-        $scope.data.currentObject.dataSourceTypeKey = "DEVICE";
+        $scope.data.currentObject.dataSourceTypeKey = DATA_SOURCE_TYPE_KEY_DEFAULT;
+        $scope.data.currentObject.rawConnectionType = RAW_CONNECTION_TYPE_DEFAULT;
         $scope.data.currentObject.rawTimeout = TIMEOUT;
         $scope.data.currentObject.rawSleepTime = SLEEPTIME;
         $scope.data.currentObject.rawResendAttempts = RESENDS;
@@ -117,7 +121,8 @@ angular.module('portalNMC')
         $('#showDatasourceModal').modal('hide');
         $('#deleteObjectModal').modal('hide');
         $scope.data.currentObject = {};
-        $scope.data.currentObject.dataSourceTypeKey = "DEVICE";
+        $scope.data.currentObject.dataSourceTypeKey = DATA_SOURCE_TYPE_KEY_DEFAULT;
+        $scope.data.currentObject.rawConnectionType = RAW_CONNECTION_TYPE_DEFAULT;
     };
     
     var errorCallback = function(e){
@@ -266,10 +271,10 @@ angular.module('portalNMC')
         tab.classList.remove("active");
         var tab = document.getElementById('con_properties');     
         tab.classList.remove("active");
-        var tab = document.getElementById('modem_properties_tab');
+        var tab = document.getElementById('ex_properties_tab');
         if (!mainSvc.checkUndefinedNull(tab))
             tab.classList.remove("active");
-        var tab = document.getElementById('modem_properties');     
+        var tab = document.getElementById('ex_properties');     
         tab.classList.remove("active");
         
         var tab = document.getElementById("main_properties_tab");        

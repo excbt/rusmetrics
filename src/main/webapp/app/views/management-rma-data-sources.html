@@ -187,19 +187,18 @@
                        >Параметры подключения
                     </a>
                   </li>
-                  <li ng-if="data.currentObject.rawConnectionType == 'SERVER'"
-                      role="presentation" 
-                      id="modem_properties_tab"                                         
+                  <li role="presentation" 
+                    id="ex_properties_tab"                                         
                     > 
                     <a class="nmc-tab-button"
                        href="" 
-                       aria-controls="modem_properties" 
-                       data-target="#modem_properties" 
+                       aria-controls="ex_properties" 
+                       data-target="#ex_properties" 
                        role="tab" 
                        data-toggle="tab" 
-                       >Модем
+                       >Дополнительные параметры
                     </a>
-                  </li>
+                  </li>                  
               </ul>
 
               <!-- реализация вкладок -->
@@ -260,7 +259,21 @@
                                                 </textarea>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        
+                                    </table>
+                                </div>    
+                            </div>  
+                        </div> 
+                  </div>
+                  <div role="tabpanel" 
+                     class="tab-pane fade" 
+                     id="con_properties">
+                    
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey != 'DEVICE' || data.currentObject.rawConnectionType != 'CLIENT'">
                                             <td class="col-sm-3"><label for="inputThv">IP \ Hostname</label>
                                             </td>
                                             <td colspan="2" class="nmc-text-align-left">
@@ -276,7 +289,7 @@
                                                 </div>
                                             </td>                               
                                         </tr>                           
-                                        <tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey != 'DEVICE' || data.currentObject.rawConnectionType != 'CLIENT'">
                                             <td class="col-sm-3"><label for="inputSquare">Порт</label>
                                             </td>
                                             <td colspan="2" class="nmc-text-align-left">
@@ -285,14 +298,91 @@
                                                 </div>        
                                             </td>
                                         </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                            <td class="col-sm-4">
+                                                <label for="inputMode">Модель</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !data.currentObject.rawModemModelId}">
+                                                    <select class="form-control nmc-select-form" 
+                                                        id="inputDeviceMode" 
+                                                        ng-model="data.currentObject.rawModemModelId" 
+                                                        ng-options="smodel.id as smodel.rawModemModelName for smodel in data.rawModemModels">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                            <td class="col-sm-4">
+                                                <label for="inputMode">Серийный номер</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !data.currentObject.rawModemSerial}">
+                                                    <input class="form-control nmc-text-input-form" 
+                                                        id="inputClientNumber" 
+                                                        ng-model="data.currentObject.rawModemSerial" 
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                            <td class="col-sm-4">                                                
+                                                <label for="inputClientMac">MAC-адрес</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !data.currentObject.rawModemMacAddr}">                        <input class="form-control nmc-text-input-form" 
+                                                        id="inputClientMac" 
+                                                        ng-model="data.currentObject.rawModemMacAddr"                                   ui-mask="MM-MM-MM-MM-MM-MM-MM-MM" 
+                                                        ui-mask-placeholder ui-mask-placeholder-char="_"                             
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                            <td class="col-sm-4">
+                                                <input type="checkbox" ng-model="data.currentObject.rawModemDialEnable"/>
+                                                <label for="inputMode">Поддержка дозвона</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom pull-right" 
+                                                     ng-class="{'has-error': !data.currentObject.rawModemDialTel}">
+                                                    <label>Номер</label>
+<!--
+                                                    <input class="form-control nmc-text-input-form nmc-input-data-with-label" 
+                                                        id="inputClientNumber" 
+                                                        ng-model="data.currentObject.rawModemDialTel" 
+                                                        ng-disabled="!data.currentObject.rawModemDialEnable"
+                                                        />
+-->
+                                                    <input type="text"
+                                                           class="form-control nmc-text-input-form nmc-input-data-with-label" 
+                                                           id="inputClientNumber"
+                                                           ng-model="data.currentObject.rawModemDialTel" 
+                                                           ui-mask="(999)999-9999" 
+                                                           ui-mask-placeholder ui-mask-placeholder-char="_"
+                                                           ng-disabled="!data.currentObject.rawModemDialEnable"
+                                                           />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </table>
-                                </div>    
-                            </div>  
-                        </div> 
+                                </div>
+                            </div>
+                      </div>
                   </div>
                   <div role="tabpanel" 
                      class="tab-pane fade" 
-                     id="con_properties">
+                     id="ex_properties">
                     
                         <div class="container-fluid">
                             <div class="row">
@@ -399,95 +489,6 @@
                             </div>
                       </div>
                   </div>
-                  <div role="tabpanel" 
-                     class="tab-pane fade" 
-                     id="modem_properties">
-                      <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
-                                            <td class="col-sm-4">
-                                                <label for="inputMode">Модель</label>
-                                            </td>
-                                            <td colspan="2" 
-                                                class="nmc-text-align-left col-sm-8">
-                                                <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error': !data.currentObject.rawModemModelId}">
-                                                    <select class="form-control nmc-select-form" 
-                                                        id="inputDeviceMode" 
-                                                        ng-model="data.currentObject.rawModemModelId" 
-                                                        ng-options="smodel.id as smodel.rawModemModelName for smodel in data.rawModemModels">
-                                                    </select>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
-                                            <td class="col-sm-4">
-                                                <label for="inputMode">Серийный номер</label>
-                                            </td>
-                                            <td colspan="2" 
-                                                class="nmc-text-align-left col-sm-8">
-                                                <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error': !data.currentObject.rawModemSerial}">
-                                                    <input class="form-control nmc-text-input-form" 
-                                                        id="inputClientNumber" 
-                                                        ng-model="data.currentObject.rawModemSerial" 
-                                                        />
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
-                                            <td class="col-sm-4">                                                
-                                                <label for="inputMode">MAC-адрес</label>
-                                            </td>
-                                            <td colspan="2" 
-                                                class="nmc-text-align-left col-sm-8">
-                                                <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error': !data.currentObject.rawModemMacAddr}">                        <input class="form-control nmc-text-input-form" 
-                                                        id="inputClientNumber" 
-                                                        ng-model="data.currentObject.rawModemMacAddr" 
-                                                        />
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'SERVER'">
-                                            <td class="col-sm-4">
-                                                <input type="checkbox" ng-model="data.currentObject.rawModemDialEnable"/>
-                                                <label for="inputMode">Поддержка дозвона</label>
-                                            </td>
-                                            <td colspan="2" 
-                                                class="nmc-text-align-left col-sm-8">
-                                                <div class="form-group noMarginBottom pull-right" 
-                                                     ng-class="{'has-error': !data.currentObject.rawModemDialTel}">
-                                                    <label>Номер</label>
-<!--
-                                                    <input class="form-control nmc-text-input-form nmc-input-data-with-label" 
-                                                        id="inputClientNumber" 
-                                                        ng-model="data.currentObject.rawModemDialTel" 
-                                                        ng-disabled="!data.currentObject.rawModemDialEnable"
-                                                        />
--->
-                                                    <input type="text"
-                                                           class="form-control nmc-text-input-form nmc-input-data-with-label" 
-                                                           id="inputClientNumber"
-                                                           ng-model="data.currentObject.rawModemDialTel" 
-                                                           ui-mask="(999)999-9999" 
-                                                           ui-mask-placeholder ui-mask-placeholder-char="_"
-                                                           ng-disabled="!data.currentObject.rawModemDialEnable"
-                                                           />
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                          </div>
-                      </div>
-                      
-                  </div>
                   
                 </div>
             </div>
@@ -560,11 +561,6 @@
 						</div>
 					</div>
 				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
+		</div>		
 	</div>
 </div>

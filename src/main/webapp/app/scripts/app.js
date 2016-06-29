@@ -273,6 +273,10 @@ app.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
 
+app.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
+  uiMaskConfigProvider.maskDefinitions({'a':/[a-z]/, 'A': /[A-Z]/, '*': /[a-zA-Z0-9]/, '9':/\d/, 'M': /[A-F0-9]/});
+}]);
+
 app.run(['objectSvc', 'monitorSvc', 'mainSvc', 'reportSvc', function(objectSvc, monitorSvc, mainSvc, reportSvc){
 console.log("Run main, object and monitor services.");  
     var mainSvcInit = mainSvc.getUserServicesPermissions();
