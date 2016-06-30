@@ -85,7 +85,9 @@ angular.module('portalNMC')
     }
     
     $scope.changeModemModel = function(){
-        $scope.data.currentObject.rawModemIdentity = findModemIdentity($scope.data.currentObject.rawModemModelId).rawModemModelIdentity;
+        var modemModel = findModemIdentity($scope.data.currentObject.rawModemModelId);
+        $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;        
+        $scope.data.currentObject.rawModemDialupAvailable = modemModel.isDialup;
     }
     
     $scope.selectedItem = function(item){
@@ -107,7 +109,9 @@ angular.module('portalNMC')
         }
         if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemIdentity) &&
             !mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemModelId)){
-            $scope.data.currentObject.rawModemIdentity = findModemIdentity($scope.data.currentObject.rawModemModelId).rawModemModelIdentity;
+            var modemModel = findModemIdentity($scope.data.currentObject.rawModemModelId);
+            $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;
+            $scope.data.currentObject.rawModemDialupAvailable = modemModel.isDialup;
         }
     };
     

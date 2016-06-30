@@ -364,7 +364,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT'">
+                                        <tr ng-if="data.currentObject.dataSourceTypeKey == 'DEVICE' && data.currentObject.rawConnectionType == 'CLIENT' && data.currentObject.rawModemDialupAvailable == true">
                                             <td class="col-sm-4">
                                                 <input type="checkbox" ng-model="data.currentObject.rawModemDialEnable"/>
                                                 <label for="inputMode">Поддержка дозвона</label>
