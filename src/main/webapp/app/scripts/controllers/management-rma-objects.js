@@ -129,10 +129,10 @@ angular.module('portalNMC')
                 
                 var getCmOrganizations = function(){
                     objectSvc.getCmOrganizations()
-                    .then(function(response){
-                        $scope.data.cmOrganizations = response.data;
+                    .then(function(response){                        
                         //sort cm by organizationName
-                        mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
+                        mainSvc.sortOrganizationsByName(response.data);
+                        $scope.data.cmOrganizations = response.data;                       
                     });
                 };
                 
@@ -1356,6 +1356,9 @@ console.log(e);
                     if (!mainSvc.checkUndefinedNull($cookies.recentTimezone)){
                         $scope.currentObject.timezoneDefKeyname = $cookies.recentTimezone;
                     }
+                    if (!mainSvc.checkUndefinedNull($cookies.recentContManagementId)){
+                        $scope.currentObject.contManagementId = Number($cookies.recentContManagementId);
+                    } 
                     checkGeo();
                     $('#showObjOptionModal').modal();
                     $('#showObjOptionModal').css("z-index", "1041");
@@ -1365,6 +1368,11 @@ console.log(e);
                 $scope.changeTimeZone = function(){                    
                     if (!mainSvc.checkUndefinedNull($scope.currentObject.timezoneDefKeyname)){
                         $cookies.recentTimezone = $scope.currentObject.timezoneDefKeyname;
+                    }
+                };
+                $scope.changeContManagement = function(){                    
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject.contManagementId)){
+                        $cookies.recentContManagementId = $scope.currentObject.contManagementId;
                     }
                 };
                 
