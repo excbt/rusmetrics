@@ -1029,7 +1029,12 @@
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.timezoneDefKeyname)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.timezoneDefKeyname" ng-options="timezone.keyname as timezone.caption for timezone in data.timezones">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                id="inputMode" 
+                                                ng-model="currentObject.timezoneDefKeyname" 
+                                                ng-options="timezone.keyname as timezone.caption for timezone in data.timezones"
+                                                ng-change="changeTimeZone()"
+                                                >
                                         </select>
                                     </div>
                                 </td>

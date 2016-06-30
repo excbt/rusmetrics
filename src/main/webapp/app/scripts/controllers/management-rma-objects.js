@@ -1353,10 +1353,19 @@ console.log(e);
 //console.log("addObjectInit");                    
                     $scope.currentObject = {};
                     $scope.currentObject.isLightForm = isLightForm;
+                    if (!mainSvc.checkUndefinedNull($cookies.recentTimezone)){
+                        $scope.currentObject.timezoneDefKeyname = $cookies.recentTimezone;
+                    }
                     checkGeo();
                     $('#showObjOptionModal').modal();
                     $('#showObjOptionModal').css("z-index", "1041");
 //console.log($scope.currentObject);                    
+                };
+                
+                $scope.changeTimeZone = function(){                    
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject.timezoneDefKeyname)){
+                        $cookies.recentTimezone = $scope.currentObject.timezoneDefKeyname;
+                    }
                 };
                 
 //                work with object devices
