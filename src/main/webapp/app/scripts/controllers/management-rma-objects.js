@@ -896,7 +896,7 @@ console.log(e);
                 $scope.zpointSettings = {};
                 $scope.addZpoint = function(object){
                     $scope.selectedItem(object);                    
-                    $scope.zpointSettings = {};
+                    $scope.zpointSettings = {};                    
                     $scope.getDevices(object, false);
                     getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
                 };
@@ -1316,6 +1316,9 @@ console.log(e);
                             });
                             obj.devices = tmpArr;//response.data;
                             $scope.selectedItem(obj);
+                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length == 1){
+                                $scope.zpointSettings._activeDeviceObjectId = obj.devices[0].id;
+                            }
 //console.log(obj);                            
                             if (showFlag == true){
                                 $('#contObjectDevicesModal').modal();
