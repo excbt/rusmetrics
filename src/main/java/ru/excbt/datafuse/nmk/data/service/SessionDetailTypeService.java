@@ -28,7 +28,7 @@ public class SessionDetailTypeService {
 		List<SessionDetailTypeContServiceType> preResult = sessionDetailTypeContServiceTypeRepository
 				.selectSessionDetailTypeContServiceType(contServiceType);
 
-		List<SessionDetailTypeInfo> result = preResult.stream().map(i -> new SessionDetailTypeInfo(i))
+		List<SessionDetailTypeInfo> result = preResult.stream().map(i -> new SessionDetailTypeInfo(i)).distinct()
 				.collect(Collectors.toList());
 		return result;
 	}
@@ -43,7 +43,7 @@ public class SessionDetailTypeService {
 		List<SessionDetailTypeContServiceType> preResult = sessionDetailTypeContServiceTypeRepository
 				.selectSessionDetailTypeContServiceType(contServiceTypes);
 
-		List<SessionDetailTypeInfo> result = preResult.stream().map(i -> new SessionDetailTypeInfo(i))
+		List<SessionDetailTypeInfo> result = preResult.stream().map(i -> new SessionDetailTypeInfo(i)).distinct()
 				.collect(Collectors.toList());
 		return result;
 	}
