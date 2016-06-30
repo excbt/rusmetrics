@@ -36,10 +36,9 @@
                                 <p ng-if="setting.subscrPref.prefDescription"
                                            ng-attr-id="{{'prefHelpButton' + setting.id}}"
                                                 type="button" 
-                                                class="btn btn-xs"
+                                                class="btn glyphicon glyphicon-question-sign nmc-button-help-setting noPadding"
                                            title="Помощь"
-                                                >
-                                            <span>?</span>
+                                                >                                            
                                         </p>
                             </div>
 
@@ -74,10 +73,9 @@
                                         <p ng-if="setting.subscrPref.prefDescription"
                                            ng-attr-id="{{'prefHelpButton' + setting.id}}"
                                                 type="button" 
-                                                class="btn btn-xs"
+                                                class="btn glyphicon glyphicon-question-sign nmc-button-help-setting noPadding"
                                            title="Помощь"
-                                                >
-                                            <span>?</span>
+                                                >                                            
                                         </p>
                                     </div>
 
@@ -159,24 +157,22 @@
                                         {{setting.subscrPref.isActiveCaption}}
                                         <p ng-if="setting.subscrPref.prefDescription"
                                            ng-attr-id="{{'prefHelpButton' + setting.id}}"
-                                                type="button" 
-                                                class="btn btn-xs"
+                                           type="button" 
+                                           class="btn glyphicon glyphicon-question-sign nmc-button-help-setting noPadding"
                                            title="Помощь"
                                                 >
-                                            <span>?</span>
                                         </p>
-                                    </div>
-                                    <div>
-<!--                                        <small>Координаты вводятся в градусах в виде десятичной дроби</small>-->
-                                        
                                     </div>
                                 </div>
                             </span>                                
                             <span ng-switch-default>   
                                  <div class="row marginBottom5 marginTop5"
-                                 ng-class="{'nmc-disabled': !setting.isActive}">
+                                 ng-class="{'nmc-disabled': !setting.isActive, 'nmc-width0':setting.subscrPrefKeyname == 'SUBSCR_LNG_MAP_PREF'}"                                      
+                                      >                                     
                                     <div class="col-xs-7 col-md-7 noPadding marginTop3">
-                                        <span class="pull-right">{{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
+                                        <span class="pull-right">
+                                            <span ng-if="setting.subscrPrefKeyname == 'SUBSCR_LAT_MAP_PREF'">Координаты центра:&nbsp;</span>
+                                            {{setting.subscrPref.caption || setting.subscrPref.prefName}}</span>
                                     </div>
                                     <div class="col-xs-2 col-md-2 " >
                                         <div class="form-group noMarginBottom" 

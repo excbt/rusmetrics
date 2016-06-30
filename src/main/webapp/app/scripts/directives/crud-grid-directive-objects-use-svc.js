@@ -1681,6 +1681,8 @@ angular.module('portalNMC')
                     //open window with common set
                     var waterSettings = [];
                     var elecSettings = [];
+                    $scope.selectAllWaterColumnFlag = false;
+                    $scope.selectAllElectricityColumnFlag = false;
                     $scope.objectsOnPage.forEach(function(el){
                         if(el.selected === true){
                             var tmpPrefs = readIndicatorColumnPrefForObject(el, "hw");
@@ -1696,7 +1698,7 @@ angular.module('portalNMC')
                     }else if (waterSettings.length > 1){
                         waterSettings = MultiIntersecArrays(0, waterSettings);                                            
                     }
-                    if (waterSettings.length != 0)
+                    if (waterSettings.length != 0){
                         waterSettings.forEach(function(ws){
                             $scope.data.waterColumns.some(function(wc){
                                 if (wc.fieldName == ws){
@@ -1705,6 +1707,12 @@ angular.module('portalNMC')
                                 }
                             })
                         })                        
+                    }else{
+                        $scope.selectAllWaterColumnFlag = true;
+                        $scope.data.waterColumns.forEach(function(wc){
+                            wc.isVisible = true;                                
+                        })
+                    }
                     if (elecSettings.length == 1){
                         elecSettings = elecSettings[0];
                     }else if (elecSettings.length > 1){ 
@@ -1719,6 +1727,11 @@ angular.module('portalNMC')
                                 }
                             })
                         })
+                    }else{
+                        $scope.selectAllElectricityColumnFlag = true;
+                        $scope.data.electricityColumns.forEach(function(ec){
+                            ec.isVisible = true;                                
+                        })
                     }
                   
                     //set common prefs
@@ -1728,13 +1741,13 @@ angular.module('portalNMC')
                 function checkSelectedColumns(){
                     var result = true;
                     var hwcols = getSelectedColumns($scope.data.waterColumns);
-                    if (hwcols.length == 0){
-                        notificationFactory.errorInfo("Ошибка", "Выберете хотя бы одну колонку для водных показаний");
-                        result = false;
-                    }
+//                    if (hwcols.length == 0){
+//                        notificationFactory.errorInfo("Ошибка", "Выберете хотя бы одну колонку для водных показаний");
+//                        result = false;
+//                    }
                     var elcols = getSelectedColumns($scope.data.electricityColumns);
-                    if (elcols.length == 0){
-                        notificationFactory.errorInfo("Ошибка", "Выберете хотя бы одну колонку для электрических показаний");
+                    if (elcols.length == 0 && hwcols.length == 0){
+                        notificationFactory.errorInfo("Ошибка", "Выберете хотя бы одну колонку.");
                         result = false;
                     }
                     return result;

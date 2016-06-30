@@ -1247,6 +1247,11 @@ tr.nmc-inactive-price > td{
     background: url(../images/question-white-16x16.png) top no-repeat;
 }
 
+.nmc-button-help-setting{
+    color: #337ab7;
+    margin-top: -3px;
+}
+
 /* Ок */
 .nmc-ok-button {
     height: 24px;
@@ -2267,6 +2272,10 @@ tr.nmc-bg-distinguish > td{
 /* Стиль оформления записи пакета услуг*/
 .nmc-service-package-caption{
     cursor: help;
+}
+
+.nmc-width0{
+    width: 0;
 }
 
 /*------------------------------------------*/
