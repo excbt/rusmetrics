@@ -468,10 +468,10 @@ angular.module('portalNMC')
     ////////////////////////////////////////////////////////////////////////////////////////
     function checkTaskSettings(){
         var result = true;       
-        if (mainSvc.checkUndefinedNull($scope.data.currentContZpoint) || mainSvc.checkUndefinedNull($scope.data.currentContZpoint.contZPointId)){
-            result = false;
-            notificationFactory.errorInfo("Ошибка", "Не выбрана точка учета.");
-        };
+//        if (mainSvc.checkUndefinedNull($scope.data.currentContZpoint) || mainSvc.checkUndefinedNull($scope.data.currentContZpoint.contZPointId)){
+//            result = false;
+//            notificationFactory.errorInfo("Ошибка", "Не выбрана точка учета.");
+//        };
         if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.id)){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно задан прибор.");
@@ -517,7 +517,7 @@ angular.module('portalNMC')
             return;
         }
         var task = {};
-        task.contZPointId = $scope.data.currentContZpoint.contZPointId;
+//        task.contZPointId = $scope.data.currentContZpoint.contZPointId;
         task.deviceObjectId = $scope.data.currentObject.id;
         task.periodBeginDate = $scope.ctrlSettings.dataLoadDaterange.startDate;
         task.periodEndDate = $scope.ctrlSettings.dataLoadDaterange.endDate;
