@@ -46,7 +46,7 @@ public class RawModemService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public RawModemModel saveRawModemModel(RawModemModel entity) {
 		return rawModemModelRepository.save(entity);
@@ -56,7 +56,7 @@ public class RawModemService implements SecuredRoles {
 	 * 
 	 * @param rawModemModelId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public void deleteRawModemModel(Long rawModemModelId) {
 		RawModemModel deleteCadidate = rawModemModelRepository.findOne(rawModemModelId);

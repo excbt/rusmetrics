@@ -206,6 +206,10 @@ public class SubscrDataSourceController extends SubscrApiController {
 	public ResponseEntity<?> putRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId,
 			@RequestBody RawModemModel requestEntity) {
 
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
+
 		ApiAction action = new ApiActionEntityAdapter<RawModemModel>(requestEntity) {
 
 			@Override
@@ -227,6 +231,10 @@ public class SubscrDataSourceController extends SubscrApiController {
 	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.POST)
 	public ResponseEntity<?> postRawModemModel(
 			@RequestBody RawModemModel requestEntity, HttpServletRequest request) {
+
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
 
 		if (requestEntity.getRawModemType() == null) {
 			return responseBadRequest();
@@ -257,6 +265,10 @@ public class SubscrDataSourceController extends SubscrApiController {
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.DELETE,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
+
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
 
 		ApiAction action = new ApiActionAdapter() {
 
