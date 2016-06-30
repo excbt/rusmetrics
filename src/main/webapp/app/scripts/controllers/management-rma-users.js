@@ -240,6 +240,10 @@ angular.module('portalNMC')
         return result;
     };
     
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
+    };
+    
     //set mask for login input
     $(document).ready(function(){
         $('#inputUserName').inputmask(

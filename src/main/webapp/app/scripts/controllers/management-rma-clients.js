@@ -448,6 +448,11 @@ angular.module('portalNMC')
         };
     };
     
+    //checkers
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
+    };
+    
 //***************************************************    
     
 }]);
