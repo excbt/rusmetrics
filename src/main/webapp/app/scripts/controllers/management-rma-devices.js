@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', '$interval', 'logSvc', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc, $interval, logSvc){
+.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', '$interval', 'logSvc', '$cookies', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc, $interval, logSvc, $cookies){
 //console.log('Run devices management controller.');
     $rootScope.ctxId = "management_rma_devices_page";
     //settings
@@ -180,6 +180,12 @@ angular.module('portalNMC')
         objectSvc.putDeviceSchedulerSettings(objId, device.id, scheduler).then(successCallback, errorCallback);
     };
     
+    $scope.changeDeviceModel = function(){
+        if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
+            $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
+        }
+    };
+    
                 //get device models
     $scope.getDeviceModels = function(){
         objectSvc.getDeviceModels().then(
@@ -239,6 +245,9 @@ angular.module('portalNMC')
         $scope.data.currentObject.id = null;
         $scope.data.currentObject.isManual = true;
         $scope.data.currentObject.deviceLoginInfo = {};
+        if (!mainSvc.checkUndefinedNull($cookies.recentDeviceModelId)){
+            $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
+        }
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
     };

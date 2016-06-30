@@ -372,7 +372,7 @@
                                             <td colspan="2" 
                                                 class="nmc-text-align-left col-sm-8">
                                                 <div class="form-group noMarginBottom pull-right" 
-                                                     ng-class="{'has-error': !data.currentObject.rawModemDialTel}">
+                                                     ng-class="{'has-error': data.currentObject.rawModemDialEnable == true && !data.currentObject.rawModemDialTel}">
                                                     <label>Номер</label>
 <!--
                                                     <input class="form-control nmc-text-input-form nmc-input-data-with-label" 

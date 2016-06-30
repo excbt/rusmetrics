@@ -273,7 +273,9 @@
                                                             id="inputDeviceModel" 
                                                             ng-model="data.currentObject.deviceModelId" 
                                                             ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels" 
-                                                            ng-disabled="isDeviceDisabled(data.currentObject);">
+                                                            ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                            ng-change="changeDeviceModel()"
+                                                            >
                                                     </select>
                                                 </div>
                                             </td>
