@@ -107,9 +107,9 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 			return responseOK(new ArrayList<>());
 		}
 
-		if (!canAccessContZPoint(contZPointIds)) {
-			return responseForbidden();
-		}
+		//		if (!canAccessContZPoint(contZPointIds)) {
+		//			return responseForbidden();
+		//		}
 
 		List<ContZPointSessionDetailType> resultList = contZPoints.stream().map(i -> {
 			final List<SessionDetailTypeInfo> sessionDetailTypes = sessionDetailTypeService
@@ -137,9 +137,9 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 			return responseOK(new ArrayList<>());
 		}
 
-		if (!canAccessContZPoint(contZPointIds)) {
-			return responseForbidden();
-		}
+		//		if (!canAccessContZPoint(contZPointIds)) {
+		//			return responseForbidden();
+		//		}
 
 		List<String> contServiceTypes = contZPoints.stream().map(i -> i.getContServiceTypeKeyname()).distinct()
 				.collect(Collectors.toList());
