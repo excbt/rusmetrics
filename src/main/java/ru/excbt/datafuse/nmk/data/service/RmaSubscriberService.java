@@ -83,6 +83,8 @@ public class RmaSubscriberService extends SubscriberService {
 
 		subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
 
+		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
+
 		// Can Create Child LDAP ou set
 		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
 			Subscriber s = selectSubscriber(subscriber.getId());
@@ -93,8 +95,6 @@ public class RmaSubscriberService extends SubscriberService {
 			}
 		}
 		// End of can Create Child LDAP		
-
-		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
 
 		// Can Create Child LDAP action
 		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
