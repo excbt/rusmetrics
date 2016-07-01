@@ -233,22 +233,28 @@ public class SubscrContObjectController extends SubscrApiController {
 
 	/**
 	 * 
+	 * @param organizationId
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/cmOrganizations", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getCmOrganizations() {
+	public ResponseEntity<?> getCmOrganizations(
+			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> organizations = organizationService.selectCmOrganizations(getSubscriberParam());
+		organizationService.checkAndEnhanceOrganizations(organizations, organizationId);
 		return responseOK(organizations);
 	}
 
 	/**
 	 * 
+	 * @param organizationId
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/organizations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOrganizations() {
+	public ResponseEntity<?> getOrganizations(
+			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
+		organizationService.checkAndEnhanceOrganizations(organizations, organizationId);
 		return responseOK(organizations);
 	}
 

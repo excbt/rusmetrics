@@ -123,4 +123,26 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 		return organizationRepository.save(softDelete(entity));
 	}
 
+	/**
+	 * 
+	 * @param organizations
+	 * @param checkOrganizationId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public void checkAndEnhanceOrganizations(final List<Organization> organizations,
+			final Long checkOrganizationId) {
+
+		if (organizations != null && checkOrganizationId != null) {
+			boolean orgExists = organizations.stream().anyMatch(i -> checkOrganizationId.equals(i.getId()));
+			if (!orgExists) {
+				Organization org = findOrganization(checkOrganizationId);
+				if (org != null) {
+					organizations.add(0, org);
+				}
+			}
+		}
+
+		//return organizations;
+	}
+
 }

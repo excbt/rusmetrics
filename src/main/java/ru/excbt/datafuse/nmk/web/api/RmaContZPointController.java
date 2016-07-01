@@ -148,10 +148,14 @@ public class RmaContZPointController extends SubscrContZPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/rsoOrganizations", method = RequestMethod.GET)
-	public ResponseEntity<?> getRsoOrganizations() {
+	public ResponseEntity<?> getRsoOrganizations(
+			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
 		List<Organization> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
 				: ObjectFilters.devModeFilter(rsOrganizations);
+
+		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
+
 		return responseOK(resultList);
 	}
 
