@@ -98,6 +98,7 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Column(name = "is_common", insertable = false, updatable = false)
 	private Boolean isCommon;
 
+	@JsonIgnore
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
 

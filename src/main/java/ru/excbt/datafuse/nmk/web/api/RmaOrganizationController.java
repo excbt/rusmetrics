@@ -65,21 +65,21 @@ public class RmaOrganizationController extends SubscrApiController {
 	public ResponseEntity<?> OrganizationPut(@PathVariable("organizationId") Long organizationId,
 			@RequestBody Organization requestEntity) {
 
-		Organization organization = organizationService.selectOrganization(organizationId);
-		if (organization == null) {
+		Organization checkOrganization = organizationService.selectOrganization(organizationId);
+		if (checkOrganization == null || organizationId == null || !organizationId.equals(checkOrganization.getId())) {
 			return responseBadRequest();
 		}
 
-		if (Boolean.TRUE.equals(organization.getIsCommon())) {
+		if (Boolean.TRUE.equals(checkOrganization.getIsCommon())) {
 			return responseForbidden();
 		}
 
-		if (organization.getRmaSubscriberId() == null
-				|| !organization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
+		if (checkOrganization.getRmaSubscriberId() == null
+				|| !checkOrganization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
 			return responseForbidden();
 		}
 
-		organization.setRmaSubscriberId(getSubscriberParam().getRmaSubscriberId());
+		requestEntity.setRmaSubscriberId(getSubscriberParam().getRmaSubscriberId());
 
 		ApiAction action = new ApiActionEntityAdapter<Organization>(requestEntity) {
 
