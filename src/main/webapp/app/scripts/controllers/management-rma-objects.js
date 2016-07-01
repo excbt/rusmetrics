@@ -584,6 +584,28 @@ console.log(e);
 			        $scope.currentObject = curObject;                    
 			    };
                 
+                function testCmOrganizationAtList(){
+                    //find cmOrganization
+                    var cmOrgId = $scope.currentObject.contManagementId;                    
+                    var cmOrgFindFlag = false;                    
+                    $scope.data.cmOrganizations.some(function(org){
+                        if (org.id == cmOrgId){
+                            cmOrgFindFlag = true;
+                            return true;
+                        }
+                    });
+                    //if cm not found
+                    if (cmOrgFindFlag == false){
+                        objectSvc.getCmOrganizationsWithId(cmOrgId).then(function(resp){
+                            $scope.data.cmOrganizations = resp.data;
+                            mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
+                        }, function(e){console.log(e)});
+                    };
+//console.log(cmOrgId);                    
+//console.log(cmOrgFindFlag);                    
+//console.log($scope.data.cmOrganizations);                     
+                }
+                
                 $scope.selectedObject = function(objId, isLightForm){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
@@ -593,6 +615,7 @@ console.log(e);
                             ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                         };
+                        testCmOrganizationAtList();
                         if (!mainSvc.checkUndefinedNull(isLightForm)){
                             $scope.currentObject.isLightForm = isLightForm;
                         };
@@ -778,7 +801,7 @@ console.log(e);
                             "<div class=\"btn-group\">" +
                             "<i title=\"Действия над точкой учета\" type=\"button\" class=\"btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" style=\"font-size: .9em;\"></i>" +
                             "<ul class=\"dropdown-menu\">" +                                                                    
-                                    "<li><a ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
+                                    "<li><a ng-click=\"getZpointSettingsEx(" + object.id + "," + zpoint.id + ")\"" +
                                             "data-target=\"#showZpointOptionModal\"" +
                                             "data-toggle=\"modal\"" +
                                             "data-placement=\"bottom\"" +
@@ -945,6 +968,34 @@ console.log(e);
 //console.log($scope.zpointSettings);                    
                     $scope.getDevices($scope.currentObject, false);
                     getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+                };
+                
+                function testRsoOrganizationAtList(){
+                    //find cmOrganization
+                    var rsoOrgId = $scope.zpointSettings.contManagementId;                    
+                    var rsoOrgFindFlag = false;                    
+                    $scope.data.rsoOrganizations.some(function(org){
+                        if (org.id == rsoOrgId){
+                            rsoOrgFindFlag = true;
+                            return true;
+                        }
+                    });
+                    //if cm not found
+                    if (rsoOrgFindFlag == false){
+                        objectSvc.getRsoOrganizationsWithId(rsoOrgId).then(function(resp){
+                            $scope.data.rsoOrganizations = resp.data;
+                            mainSvc.sortOrganizationsByName($scope.data.rsoOrganizations);
+                        }, function(e){console.log(e)});
+                    };
+//console.log(rsoOrgId);                    
+//console.log(rsoOrgFindFlag);                    
+//console.log($scope.data.rsoOrganizations);                     
+                }
+                
+                
+                $scope.getZpointSettingsEx = function(objId, zpointId){
+                    $scope.getZpointSettings(objId, zpointId);
+                    testRsoOrganizationAtList();
                 };
                 
                 $scope.getZpointSettingsExpl = function(objId, zpointId){

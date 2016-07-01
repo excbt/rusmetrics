@@ -100,8 +100,23 @@ angular.module('portalNMC')
             var url = urlRsoOrganizations;
             return $http.get(url);
         };
+                 
         var getCmOrganizations = function(){
             var url = urlCmOrganizations;
+            return $http.get(url);
+        };
+                 
+        var getRsoOrganizationsWithId = function(orgId){
+            if (checkUndefinedNull(orgId))
+                return getRsoOrganizations();
+            var url = urlRsoOrganizations + "?organizationId=" + orgId;
+            return $http.get(url);
+        };
+                 
+        var getCmOrganizationsWithId = function(orgId){
+            if (checkUndefinedNull(orgId))
+                return getCmOrganizations();
+            var url = urlCmOrganizations + "?organizationId=" + orgId;
             return $http.get(url);
         };
                  
@@ -565,6 +580,7 @@ angular.module('portalNMC')
             getCityConsumingData,
             getCitiesConsumingData,
             getCmOrganizations,
+            getCmOrganizationsWithId,
             getCurrentObject,
             getDatasourcesUrl,
             getDeviceModels,
@@ -590,6 +606,7 @@ angular.module('portalNMC')
             getRmaPromise,
             getRefRangeByObjectAndZpoint,
             getRsoOrganizations,
+            getRsoOrganizationsWithId,
             getServiceTypes,
             getSubscrUrl,
             getTimezones,

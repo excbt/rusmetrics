@@ -1780,54 +1780,6 @@
      is-systemuser = "isSystemuser()"
      delete-item-click = "deleteHandler(data.currentDeleteItem)">
 </div>
-
-<!--        Object tree view template-->
-<!--
-<script type="text/ng-template" id="object_tree_items_renderer.html">
-    <div ui-tree-handle ng-click="selectNode(item)"
-         ng-mouseover = "item.isHover = true"
-         ng-mouseleave = "item.isHover = false"
-         ng-class="{'nmc-bg-distinguish': item.isSelected}"
-         class="nmc-ui-tree-handle">
-        <div class="btn-group "
-             ng-show="objectCtrlSettings.isObjectMoving != true">
-          <i type="button" 
-                  class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
-                  data-toggle="dropdown" 
-                  aria-haspopup="true" 
-                  aria-expanded="false"
-                  ng-disabled=false
-             >
-          </i>
-          <ul class="dropdown-menu noMarginI">
-            <li ng-hide="addNodeDisabled(item)"><a href="" ng-click="createNodeInit(item)" 
-                   data-target="#treeLevelModal" 
-                   data-toggle="modal"
-                   
-                   >Добавить узел</a></li>                            
-            <li role="presentation" class="divider"></li>
-            <li><a href="" ng-click="removeNodeInit(item)">Удалить 
-                <span ng-if="item.type != 'root'">узел</span>
-                <span ng-if="item.type == 'root'">иерархию</span></a></li>
-          </ul>
-        </div>
-        <i class="btn btn-xs glyphicon"
-             ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
-             data-nodrag ng-click="toggle(this)">                                  
-        </i>
-        <span ng-if = "item.type == 'root'">
-              <strong>\</strong>
-        </span>
-        <span class="nmc-valign-middle">
-            {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
-        </span>
-    </div>
-    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
-      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">
-      </li>
-    </ol>
-</script>
--->
     
 <script type="text/ng-template" id="object_tree_items_renderer.html">
     <div ui-tree-handle ng-click="selectNode(item)"

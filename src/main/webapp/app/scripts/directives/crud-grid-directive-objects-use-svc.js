@@ -417,6 +417,37 @@ angular.module('portalNMC')
 //console.log($scope.currentObject);                    
                 };
                 
+                function testCmOrganizationAtList(){
+                    //find cmOrganization
+                    var cmOrgId = $scope.currentObject.contManagementId;                    
+                    var cmOrgFindFlag = false;                    
+                    $scope.data.cmOrganizations.some(function(org){
+                        if (org.id == cmOrgId){
+                            cmOrgFindFlag = true;
+                            return true;
+                        }
+                    });
+                    //if cm not found
+                    if (cmOrgFindFlag == false){
+                        objectSvc.getCmOrganizationsWithId(cmOrgId).then(function(resp){
+                            $scope.data.cmOrganizations = resp.data;
+                            mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
+                        }, function(e){console.log(e)});
+                    };
+//console.log(cmOrgId);                    
+//console.log(cmOrgFindFlag);                    
+//console.log($scope.data.cmOrganizations);                     
+                }
+                
+                $scope.selectedObjectEx = function(objId){
+                    $scope.selectedObject(objId);
+                    if (!angular.isArray($scope.data.cmOrganizations)){
+                        return;
+                    }
+//                    return;
+                    testCmOrganizationAtList();                   
+                }
+                
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedObject(objId);
                     
@@ -922,21 +953,7 @@ angular.module('portalNMC')
                     $scope.zpointSettings = zps;
                     // Готовим редактор эталонного периода
                     $scope.prepareRefRange();
-                    //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
-//                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+object.id+"/settingMode";
-//                    crudGridDataFactory(table).query(function (data) {
-//                        for(var i = 0; i<data.length;i++){
-//                                                    
-//                            if(data[i].settingMode == "winter"){
-//                                zps.winter = data[i];
-//                            }else if(data[i].settingMode == "summer"){
-//                                zps.summer=data[i];
-//                            }
-//                        };                 
-//                        $scope.zpointSettings = zps;
-//                        // Готовим редактор эталонного периода
-//                        $scope.prepareRefRange();
-//                    });
+
                 };
                 $scope.getZpointSettingsExpl = function(objId, zpointId){
                     $scope.getZpointSettings(objId, zpointId);
