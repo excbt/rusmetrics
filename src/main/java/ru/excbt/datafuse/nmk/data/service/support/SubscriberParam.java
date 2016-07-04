@@ -110,6 +110,9 @@ public final class SubscriberParam {
 	 * @return
 	 */
 	public long getRmaSubscriberId() {
+		if (isRma) {
+			return subscriberId;
+		}
 		return rmaSubscriberId;
 	}
 
