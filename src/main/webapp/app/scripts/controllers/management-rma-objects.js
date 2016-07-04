@@ -103,9 +103,11 @@ angular.module('portalNMC')
                             $cookies.contObject = null;          
                         };
                         $rootScope.$broadcast('objectSvc:loaded');
-//                        if (!mainSvc.checkUndefinedNull(objId)){
-//                            moveToObject(objId);
-//                        };
+//console.log($scope.data.moveToObjectId);                        
+                        if (!mainSvc.checkUndefinedNull($scope.data.moveToObjectId)){
+                            moveToObject($scope.data.moveToObjectId);
+                            $scope.data.moveToObjectId = null;
+                        };
                     } else {
                         $scope.searchObjects($scope.filter);
                     };
@@ -116,6 +118,9 @@ angular.module('portalNMC')
 //console.log("getObjectsData");
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
+                    if (!mainSvc.checkUndefinedNull(objId)){
+                        $scope.data.moveToObjectId =  objId;
+                    };
                     objectSvc.getRmaPromise().then(performObjectsData);
                 };
                 
@@ -339,8 +344,10 @@ angular.module('portalNMC')
                         return "moveToObject: object id is undefined or null.";
                     };
                     var curObj = objectSvc.findObjectById(Number(objId), $scope.objects);
+//console.log(curObj);                    
                     if (curObj != null){
-                        var curObjIndex = $scope.objects.indexOf(curObj);                        
+                        var curObjIndex = $scope.objects.indexOf(curObj);
+//console.log(curObjIndex);                        
                         if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage){
                             //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
                             var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, curObjIndex + 1);
@@ -350,7 +357,8 @@ angular.module('portalNMC')
                         };
                         if (!mainSvc.checkUndefinedNull(objId)){
                             $timeout(function(){
-                                var curObjElem = document.getElementById("obj" + objId);                     
+                                var curObjElem = document.getElementById("obj" + objId);
+//console.log(curObjElem);                                
                                 if (!mainSvc.checkUndefinedNull(curObjElem)){        
                                     curObjElem.scrollIntoView();
                                 }
@@ -375,7 +383,7 @@ angular.module('portalNMC')
                 
                 var successCallbackUpdateObject = function(e){ 
                     $rootScope.$broadcast('objectSvc:requestReloadData');
-console.log(e);
+//console.log(e);
 //console.log($scope.currentObject);                    
                     $scope.currentObject._activeContManagement = e._activeContManagement;
                                         //update zpoints info
@@ -457,7 +465,10 @@ console.log(e);
                             $scope.data.selectedNodeForMove = angular.copy($scope.data.selectedNode);
                             $scope.data.treeForMove = angular.copy($scope.data.currentTree);
                             $scope.data.treeForMove.childObjectList.shift();
-                            $scope.data.treeForMove.movingObjects = [e.id];                       
+                            $scope.data.treeForMove.movingObjects = [e.id];
+                            if (!mainSvc.checkUndefinedNull(e.id)){
+                                $scope.data.moveToObjectId =  e.id;
+                            };
                             $scope.moveToNode();
                         }else{
                             $scope.loadTree($scope.data.currentTree, e.id);                    
@@ -1961,13 +1972,16 @@ console.log(e);
                     $scope.loading = true;
                     if (item.type == 'root'){
                         objectSvc.loadSubscrFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
-                    }else{
+                    }else{              
                         objectSvc.loadSubscrObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performObjectsData);
                     };                    
                 };
                 
-                $scope.loadTree = function(tree, objId){
-                    $scope.loading = true;
+                $scope.loadTree = function(tree, objId/*for moving*/){
+                    $scope.loading = true;             
+                     if (!mainSvc.checkUndefinedNull(objId)){
+                        $scope.data.moveToObjectId =  objId;
+                    };
                     objectSvc.loadSubscrTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
@@ -1978,7 +1992,11 @@ console.log(e);
                             $scope.objectsOnPage = [];
                             $scope.loading = false; 
                             $rootScope.$broadcast('objectSvc:loaded');
-                            $scope.messages.noObjects = "";
+                            $scope.messages.noObjects = "";                      
+                            if (!mainSvc.checkUndefinedNull($scope.data.moveToObjectId)){
+                                moveToObject($scope.data.moveToObjectId);
+                                $scope.data.moveToObjectId = null;
+                            };
                         }, errorCallback);
                 };
                 
@@ -2008,9 +2026,9 @@ console.log(e);
                 $scope.moveToNode = function(){                 
                     objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
                         $scope.loading = true;
-                        if ($scope.data.selectedNode.type == 'root'){
+                        if ($scope.data.selectedNode.type == 'root'){                           
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
-                        }else{
+                        }else{              
                             objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
                         };
                     }, errorCallback);
