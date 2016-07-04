@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -74,12 +75,15 @@ public class RmaOrganizationController extends SubscrApiController {
 			return responseForbidden();
 		}
 
+		SubscriberParam subscriberParam = getSubscriberParam();
+
+		requestEntity.setRmaSubscriberId(
+				subscriberParam.isRma() ? subscriberParam.getSubscriberId() : subscriberParam.getRmaSubscriberId());
+
 		if (checkOrganization.getRmaSubscriberId() == null
-				|| !checkOrganization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
+				|| !checkOrganization.getRmaSubscriberId().equals(requestEntity.getRmaSubscriberId())) {
 			return responseForbidden();
 		}
-
-		requestEntity.setRmaSubscriberId(getSubscriberParam().getRmaSubscriberId());
 
 		ApiAction action = new ApiActionEntityAdapter<Organization>(requestEntity) {
 
@@ -109,7 +113,10 @@ public class RmaOrganizationController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		requestEntity.setRmaSubscriberId(getSubscriberParam().getRmaSubscriberId());
+		SubscriberParam subscriberParam = getSubscriberParam();
+
+		requestEntity.setRmaSubscriberId(
+				subscriberParam.isRma() ? subscriberParam.getSubscriberId() : subscriberParam.getRmaSubscriberId());
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<Organization, Long>(requestEntity, request) {
 

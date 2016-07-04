@@ -107,7 +107,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization saveOrganization(Organization entity) {
 		return organizationRepository.save(entity);
 	}
@@ -118,7 +118,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization deleteOrganization(Organization entity) {
 		return organizationRepository.save(softDelete(entity));
 	}
