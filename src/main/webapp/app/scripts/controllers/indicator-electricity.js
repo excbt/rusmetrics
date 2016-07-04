@@ -10,6 +10,20 @@ angular.module('portalNMC')
         return mainSvc.isSystemuser();
     };
     
+    function setScoreStylesCons(){
+//console.log("Set score styles.");        
+        //ровняем таблицу, если появляются полосы прокрутки
+        var tableHeader = document.getElementById("indicatorConsTableHeader");
+        var tableDiv = document.getElementById("divIndicatorConsTable");
+        if (!mainSvc.checkUndefinedNull(tableDiv)){
+            if (tableDiv.offsetWidth > tableDiv.clientWidth){
+                tableDiv.style.width = tableHeader.offsetWidth + 17 + 'px';
+            }else{
+                tableDiv.style.width = tableHeader.offsetWidth + 'px';                    
+            };
+        };
+    };
+    
      //define init controller
     var initCtrl = function(){
         var pathParams = $location.search();       
@@ -75,7 +89,7 @@ angular.module('portalNMC')
         };
         //get date range settings
         $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");        
-    };
+    };    
     initCtrl();
     
     $(document).ready(function() {
@@ -89,6 +103,10 @@ angular.module('portalNMC')
     
     $scope.initCons = function(){
         $('.wrap > .container-fluid >.row').css("min-width", $scope.curMinWidth);
+//        $timeout(function(){
+//console.log("timeout");            
+//            setScoreStylesCons();
+//        });
     };
     
     $scope.initProfile = function(){
@@ -98,4 +116,10 @@ angular.module('portalNMC')
     $scope.initTech = function(){
         $('.wrap > .container-fluid >.row').css("min-width", $scope.oldMinWidth);
     };
+
+    $("#consumptionTab").on('shown.bs.tab', function(){
+//console.log("setScoreStylesCons at shown.bs.tab");            
+            setScoreStylesCons();        
+//        console.log("consumptionTAB showN");
+    });
 });

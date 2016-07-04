@@ -221,6 +221,7 @@ angular.module('portalNMC')
     };
     
     var getIndicators = function(table, paramString){
+//console.log("get Indicators.");        
         var url = table+paramString;
         $http.get(url).then(
             function (response) {                
@@ -309,7 +310,7 @@ angular.module('portalNMC')
             
             for (var propInd in usingProps){
                 var el = angular.copy(respData[usingProps[propInd].name]);
-                if (mainSvc.checkUndefinedNull(el)){ console.log(usingProps[propInd].name + " is undefined or null."); continue;};
+                if (mainSvc.checkUndefinedNull(el)){ /*console.log(usingProps[propInd].name + " is undefined or null.");*/ continue;};
                 for(var i in $scope.columns){
                     if ((el[$scope.columns[i].fieldName]!=null) && ($scope.columns[i].type !== "string")){
                         el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
@@ -493,7 +494,7 @@ angular.module('portalNMC')
 //        $scope.setScoreStyles();
 //    };
     
-    $(document).ready(function() {        
+    $(document).ready(function() {      
         $('#inputElConsDate').datepicker({
           dateFormat: "dd.mm.yy",
           firstDay: $scope.dateOptsParamsetRu.locale.firstDay,

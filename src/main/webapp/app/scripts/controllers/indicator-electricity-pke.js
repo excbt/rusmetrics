@@ -62,8 +62,11 @@ angular.module('portalNMC')
         startDate :  moment().subtract(6, 'days').startOf('day'),
         endDate : moment().endOf('day')
     };
-    intervalSettings.minDate = moment().subtract(29, 'days').startOf('day');    
+//    intervalSettings.minDate = moment().subtract(29, 'days').startOf('day');    
     $scope.dateRangeOptsPkeRu = mainSvc.getDateRangeOptions("indicator-ru", intervalSettings);
+    $scope.dateRangeOptsPkeRu.startDate = moment().subtract(6, 'days').startOf('day');
+    $scope.dateRangeOptsPkeRu.endDate = moment().endOf('day');
+    $scope.dateRangeOptsPkeRu.dateLimit = {"months": 1}; //set date range limit with 1 month
 //console.log($scope.dateRangeOptsPkeRu);    
     
     ///api/subscr/66948436/serviceElProfile/30min/159919982
@@ -72,7 +75,7 @@ angular.module('portalNMC')
     var timeDetailType = "abs";
     var viewMode = "serviceElPke";//deviceObjects/pke/%d/warn
     var dataUrl = apiSubscUrl + "deviceObjects/pke/byContZPoint/" + $scope.contZPoint + "/warn";
-    var pkeTypesUrl = apiSubscUrl+"deviceObjects/pke/types";
+    var pkeTypesUrl = apiSubscUrl + "deviceObjects/pke/types";
     
     
     var errorCallback = function(e){

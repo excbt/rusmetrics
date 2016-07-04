@@ -1,6 +1,6 @@
 angular.module('portalNMC')
 .controller('ElectricitySpecCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope){
-console.log("Run ElectricitySpecCtrl.");
+//console.log("Run ElectricitySpecCtrl.");
     $scope.electroKind = "Spec";
     ///api/subscr/66948436/serviceElProfile/30min/159919982
     //{beginDate=[2015-12-01], endDate=[2015-12-31]}
