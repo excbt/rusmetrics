@@ -56,6 +56,8 @@ public class ReportConstants {
 		public static final String ELECTRIC_CONSUMPTION_ABONENT_FILE_COMPILED = "jasper_reports/nmk_electric_consumption_abonent_report.jasper";
 		public static final String HW_LAST_EVENT_FILE_COMPILED = "jasper_reports/nmk_hw_last_event_report.prpt";
 		public static final String CW_CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_cw_consumption_report.prpt";
+		public static final String HW_CALC_CONSUMPTION_BY_AVG_FILE_COMPILED = "jasper_reports/nmk_hw_calc_consumption_by_avg_report.jasper";
+		public static final String HEAT_AVG_FORECAST_FILE_COMPILED = "jasper_reports/nmk_heat_avg_forecast_report.prpt";
 
 		private Files() {
 
