@@ -1160,7 +1160,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             if (!mainSvc.checkUndefinedNull(previewWin))
                 previewWin.document.write(e.status + ", " + e.statusText);
             alert("При формировании страницы для предпросмотра отчета произошла ошибка. Обратитесь к администратору системы.");
-            previewWin.close();
+            if (!mainSvc.checkUndefinedNull(previewWin))
+                previewWin.close();
             console.log(e);
         })
         .catch(errorCallback);
