@@ -16,12 +16,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipOutputStream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
@@ -214,8 +214,12 @@ public class ReportService {
 		InputStream is = getReportParamsetTemplateBody(reportParamset.getReportTemplateId());
 
 		OutputStream outputStreamWrapper = null;
+		ZipArchiveOutputStream zipStream = null;
 		if (isZippedStream) {
-			outputStreamWrapper = new ZipOutputStream(outputStream, UTF8_CHARSET);
+			zipStream = new ZipArchiveOutputStream(outputStream);
+			zipStream.setEncoding("Cp866");
+			outputStreamWrapper = zipStream;
+			//new ZipOutputStream(outputStream, UTF8_CHARSET);
 		} else {
 			outputStreamWrapper = outputStream;
 		}
