@@ -442,7 +442,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
-            paramset.currentReportPeriod = $scope.currentReportPeriod;
+            paramset.currentReportPeriod = angular.copy(paramset.reportPeriod);
             var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, paramset.reportPeriod.sign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
