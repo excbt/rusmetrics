@@ -377,6 +377,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета        
         
         $scope.currentSign = object.reportPeriod.sign;
+//console.log($scope.currentSign);        
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
             $scope.psStartDateFormatted = (object.paramsetStartDate!=null) ? moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
@@ -442,7 +443,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
             paramset.currentReportPeriod = $scope.currentReportPeriod;
-            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
+            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, paramset.reportPeriod.sign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
             type.checkedParamsetsCount += 1;

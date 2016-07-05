@@ -2,7 +2,9 @@
      class="modal fade nmc-modal-window" 
      role="dialog"
 	 aria-labelledby="editParamsetLabel" 
-     tabindex="-1">
+     tabindex="-1"
+     data-backdrop="static"
+     >
     
     <div class="col-xs-2 col-md-2">
     </div> 
@@ -214,8 +216,7 @@
                                                 </select>
                                             </div>
                                             <div ng-show="currentReportPeriod.isSettlementDay == true" 
-                                                 class="col-sm-6 noPadding"
-                                                 ng-class="{'has-error': currentObject.settlementDay == null || currentObject.settlementDay == '' || currentObject.settlementDay == 0}"
+                                                 class="col-sm-6 noPadding"                                                 
                                                  >
                                                 <label for="inputReportSettlementDay">Расчетный день:</label>
                                                 <input

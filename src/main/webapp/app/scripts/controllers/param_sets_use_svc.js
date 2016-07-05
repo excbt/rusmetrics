@@ -984,6 +984,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
+        $scope.currentObject.currentReportPeriod = $scope.currentReportPeriod;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "create");
         $scope.messageForUser = checkRes.message;
         return checkRes.flag;
