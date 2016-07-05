@@ -987,7 +987,7 @@ console.log($scope.psEndDateFormatted);
 //        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
         
             //start date
-            //if the paramset use a date interval
+            //if the paramset use a date interval        
         if ($scope.currentSign == null){
 //            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted==null)
 //            {

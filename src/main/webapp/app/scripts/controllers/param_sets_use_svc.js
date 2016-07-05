@@ -155,7 +155,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);        
         $scope.getTemplates();       
     };
-    29863766
+//    29863766
     $scope.checkAndSaveParamset = function(paramsets, object){       
         if (!object.name || object.name == ''){
             notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");

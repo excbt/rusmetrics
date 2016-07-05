@@ -206,6 +206,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.setCurrentReportType(parentItem);       
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
+        if (mainSvc.checkUndefinedNull($scope.currentObject.settlementYear)){
+            $scope.currentObject.settlementYear = (new Date()).getFullYear();
+        };
+        if (mainSvc.checkUndefinedNull($scope.currentObject.settlementMonth)){
+            $scope.currentObject.settlementMonth = (new Date()).getMonth();
+        };
+//        if (mainSvc.checkUndefinedNull($scope.currentObject.settlementDay)){
+//            $scope.currentObject.settlementDay = (new Date()).getDate();
+//console.log($scope.currentObject.settlementDay);            
+//        };
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
         var activeStartDate = new Date(curObject.activeStartDate);
 //console.log(curObject);         
@@ -431,6 +441,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
+            paramset.currentReportPeriod = $scope.currentReportPeriod;
             var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
@@ -798,6 +809,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
+        $scope.currentObject.currentReportPeriod = $scope.currentReportPeriod;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
         $scope.messageForUser = checkRes.message;
 //console.log(checkRes);        

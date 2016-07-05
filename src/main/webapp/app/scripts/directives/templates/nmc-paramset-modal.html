@@ -214,7 +214,9 @@
                                                 </select>
                                             </div>
                                             <div ng-show="currentReportPeriod.isSettlementDay == true" 
-                                                 class="col-sm-6 noPadding">
+                                                 class="col-sm-6 noPadding"
+                                                 ng-class="{'has-error': currentObject.settlementDay == null || currentObject.settlementDay == '' || currentObject.settlementDay == 0}"
+                                                 >
                                                 <label for="inputReportSettlementDay">Расчетный день:</label>
                                                 <input
                                                        id="inputReportSettlementDay"

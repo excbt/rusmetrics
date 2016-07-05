@@ -34,6 +34,12 @@ angular.module('portalNMC')
                 }
             }, false);
             
+//            $scope.$watch('currentObject.settlementDay', function(nv, ov){
+//                console.log(nv);
+//                console.log(ov);
+//                console.log($scope.currentObject.settlementDay);
+//            })
+            
             var setPropForSettlementMonth = function(){         
                 $('#inputReportSettlementMonth').datepicker({
                   dateFormat: "MM, yy",

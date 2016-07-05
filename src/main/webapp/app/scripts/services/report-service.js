@@ -218,12 +218,17 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         var result;
         if (!(paramset.hasOwnProperty('reportPeriodKey')) || !(paramset.hasOwnProperty('reportTemplate'))){
             return false;
-        };  
+        };        
+        
         //interval validate flag
             //default value    
         var intervalValidate_flag = true; 
             //if the paramset use interval
-        if (currentSign == null){
+        var isUsingSettlementMonth = false;
+        if (!mainSvc.checkUndefinedNull(paramset.currentReportPeriod) && !mainSvc.checkUndefinedNull(paramset.currentReportPeriod.isSettlementMonth) && (paramset.currentReportPeriod.isSettlementMonth == true || paramset.currentReportPeriod.isSettlementDay == true)){
+            isUsingSettlementMonth = true;
+        };
+        if (currentSign == null && !isUsingSettlementMonth){
                 //check interval
             var startDateMillisec = mainSvc.strDateToUTC(paramset.psStartDateFormatted, dateFormat);
             var startDate = new Date(startDateMillisec);
@@ -254,8 +259,17 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
             result= false;
         };
             //start date
-            //if the paramset use a date interval       
-        if (currentSign == null){
+            //if the paramset use a date interval
+        var isUsingSettlementMonth = false;
+        if (!mainSvc.checkUndefinedNull(reportParamset.currentReportPeriod) && !mainSvc.checkUndefinedNull(reportParamset.currentReportPeriod.isSettlementMonth) && (reportParamset.currentReportPeriod.isSettlementMonth == true || reportParamset.currentReportPeriod.isSettlementDay == true)){
+            isUsingSettlementMonth = true;
+        }
+        if (isUsingSettlementMonth == true && (reportParamset.settlementDay == null || reportParamset.settlementDay == '' || reportParamset.settlementDay == 0)){
+            if (result){messageForUser += "Основные свойства: " + "\n";};
+            messageForUser += "\u2022" + " Некорректно задан расчетный день" + "\n";
+            result = false;
+        }
+        if (currentSign == null && !isUsingSettlementMonth){
             var startDateMillisec = mainSvc.strDateToUTC(reportParamset.psStartDateFormatted, dateFormat);
             var startDate = new Date(startDateMillisec);
             var endDateMillisec = mainSvc.strDateToUTC(reportParamset.psEndDateFormatted, dateFormat);
@@ -287,7 +301,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
                 messageForUser += "\u2022" + " Некорректно заданы границы периода" + "\n";
                 result = false;
             };
-        }
+        }        
 
                     //Count of objects
         if (reportType.reportMetaParamCommon.oneContObjectRequired 
@@ -351,6 +365,8 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         if (!result){          
             reportParamset.showParamsBeforeRunReport = true;
         };
+console.log(result);        
+console.log(messageForUser);                
         return {"flag": result,
                 "message": messageForUser};
     };
