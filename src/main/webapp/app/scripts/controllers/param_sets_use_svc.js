@@ -818,9 +818,6 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         };
         if (!mainSvc.checkUndefinedNull($scope.currentReportPeriod) && 
             $scope.currentReportPeriod.isSettlementMonth == true){
-            if (mainSvc.checkUndefinedNull($scope.currentObject.settlementDay)){
-                $scope.currentObject.settlementDay = 1;
-            };
             if (mainSvc.checkUndefinedNull($scope.currentObject.settlementMonth)){
                 $scope.currentObject.settlementMonth = (new Date()).getMonth() + 1;
             };
