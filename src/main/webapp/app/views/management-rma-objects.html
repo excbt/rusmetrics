@@ -1067,7 +1067,9 @@
                                         <select class="form-control nmc-input-data nmc-select-form" 
                                                 id="inputMode" 
                                                 ng-model="currentObject.currentSettingMode" 
-                                                ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                                ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check"
+                                                ng-change="changeSettingMode()"
+                                                >
                                         </select>
                                     </div>
                                 </td>

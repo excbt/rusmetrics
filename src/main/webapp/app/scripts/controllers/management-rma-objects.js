@@ -1420,7 +1420,10 @@ angular.module('portalNMC')
                     }
                     if (!mainSvc.checkUndefinedNull($cookies.recentContManagementId)){
                         $scope.currentObject.contManagementId = Number($cookies.recentContManagementId);
-                    } 
+                    }
+                    if (!mainSvc.checkUndefinedNull($cookies.recentSettingMode)){
+                        $scope.currentObject.currentSettingMode = $cookies.recentSettingMode;
+                    }
                     checkGeo();
                     $('#showObjOptionModal').modal();
                     $('#showObjOptionModal').css("z-index", "1041");
@@ -1435,6 +1438,11 @@ angular.module('portalNMC')
                 $scope.changeContManagement = function(){                    
                     if (!mainSvc.checkUndefinedNull($scope.currentObject.contManagementId)){
                         $cookies.recentContManagementId = $scope.currentObject.contManagementId;
+                    }
+                };
+                $scope.changeSettingMode = function(){                    
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject.currentSettingMode)){
+                        $cookies.recentSettingMode = $scope.currentObject.currentSettingMode;
                     }
                 };
                 
