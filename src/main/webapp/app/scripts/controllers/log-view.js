@@ -115,7 +115,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     $scope.selectedObjects_list = {};//object for object caption params
     $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
     
-    $scope.toggleChildSessionsView = function(session){
+    $scope.toggleChildSessionsView = function(session){        
         session.isChildView = !session.isChildView;
     };
     
@@ -410,6 +410,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         //save session table height
         $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
         $cookies.heightLogFooterPart = $("#log-footer-part > .rui-resizable-content").height();
+        $rootScope.$broadcast('logSvc:cancelInterval');
     });
     
     $(document).ready(function(){      
@@ -511,16 +512,46 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             return "Session array is empty";
         }
         $scope.data.totalSessions = data.sessions.length;
-        $scope.ctrlSettings.pagination.current = 1;
+        if (mainSvc.checkUndefinedNull($scope.ctrlSettings.pagination.current)){
+            $scope.ctrlSettings.pagination.current = 1;
+        }
+//        $scope.ctrlSettings.pagination.current = 1;
         //save current session before update table, that don't lost it
         var tmpCurSession = null;        
         if (!mainSvc.checkUndefinedNull($scope.data.currentSession))
             tmpCurSession = angular.copy($scope.data.currentSession);
-        $scope.data.sessionsOnView = data.sessions.slice(0, $scope.ctrlSettings.itemPerPage);
+//        $scope.data.sessionsOnView = data.sessions.slice(0, $scope.ctrlSettings.itemPerPage);
+        var tmpSessions = null;
+        if (mainSvc.checkUndefinedNull($scope.data.sessionsOnView) || $scope.data.sessionsOnView.length > 0)
+            tmpSessions = angular.copy($scope.data.sessionsOnView);
+        $scope.data.sessionsOnView = data.sessions.slice(($scope.ctrlSettings.pagination.current - 1) * $scope.ctrlSettings.itemPerPage, ($scope.ctrlSettings.pagination.current) * $scope.ctrlSettings.itemPerPage);
+console.log(tmpSessions);        
+        if (!mainSvc.checkUndefinedNull(tmpSessions) && tmpSessions.length > 0){
+            tmpSessions.forEach(function(tmpSes){
+                for (var i = 0; i < $scope.data.sessionsOnView.length; i++){
+                    if (tmpSes.id == $scope.data.sessionsOnView[i].id){
+                        $scope.data.sessionsOnView[i].isChildView = tmpSes.isChildView;
+                    }
+                }
+            })
+        }
         if (!mainSvc.checkUndefinedNull(tmpCurSession)){
             $scope.data.sessionsOnView.some(function(elem){
                 if (elem.id == tmpCurSession.id){
                     $scope.loadLogData(elem);
+                    return true;
+                }else{
+                    if (mainSvc.checkUndefinedNull(elem.childs) || elem.childs.length == 0)
+                        return false;
+                    var isCurSessionFound = false;
+                    elem.childs.some(function(child){
+                        if (child.id == tmpCurSession.id){
+                            $scope.loadLogData(child);
+                            isCurSessionFound = true;
+                            return true;
+                        }
+                    });
+                    return isCurSessionFound;
                 }
             })
         }
@@ -571,8 +602,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     function initCtrl(){
 //console.log("Init ctrl");        
-        getSessionsData();
-//        loadSessionsData();
+//        getSessionsData();
+        loadSessionsData();
         //set session and tables height
         $timeout(function(){
             $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));    

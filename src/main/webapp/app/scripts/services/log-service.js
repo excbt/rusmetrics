@@ -23,7 +23,7 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
             color: "RED"
         }
     ];
-    var REFRESH_PERIOD = 30000;
+    var REFRESH_PERIOD = 60000;
     var SYSTEM_DATE_FORMAT = "YYYY-MM-DD";
     var sessionsUrl = "../api/rma/logSessions";
     var sessions = null;
@@ -34,6 +34,8 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     };
     params.fromDate = sessionsLogDaterange.startDate.format(SYSTEM_DATE_FORMAT);
     params.toDate = sessionsLogDaterange.endDate.format(SYSTEM_DATE_FORMAT);
+    
+    var interval = null;
     
     function getSessionsLogDaterange(){
         return sessionsLogDaterange;
@@ -67,6 +69,7 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     }
     
     function loadSessions(){
+//console.log("Start loadSessions");        
         $http({
             method: "GET",
             url: sessionsUrl,
@@ -143,14 +146,28 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     
 //    $rootScope.$broadcast('logSvc:requestSessionsLoading', {params: params});
     $rootScope.$on('logSvc:requestSessionsLoading', function(even, args){
-//console.log("logSvc:requestSessionsLoading");        
+//console.log("logSvc:requestSessionsLoading");   
+        if (interval != null){
+            $interval.cancel(interval);
+            interval = null;
+        };
         params = args.params;
         setSessionsLogDaterange({startDate: params.fromDate, endDate: params.toDate});
         loadSessions();
+//console.log("Interval start");
+        interval = $interval(loadSessions, REFRESH_PERIOD);
+    });
+    
+    $rootScope.$on('logSvc:cancelInterval', function(){
+//console.log("Interval cancel");        
+        if (interval != null){
+            $interval.cancel(interval);
+            interval = null;
+        };
     });
 
     function initSvc(){
-        $interval(loadSessions, REFRESH_PERIOD);
+//        $interval(loadSessions, REFRESH_PERIOD);
     }
     
     initSvc();

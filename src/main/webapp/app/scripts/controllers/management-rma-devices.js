@@ -76,7 +76,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");
     $scope.ctrlSettings.daterangeOpts.startDate = moment().startOf('day');
     $scope.ctrlSettings.daterangeOpts.endDate = moment().endOf('day');
-    $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
+//    $scope.ctrlSettings.daterangeOpts.dateLimit = {"months": 1}; //set date range limit with 1 month
     $scope.ctrlSettings.dataLoadDaterange = {
         startDate: moment().startOf('day'),                        
         endDate: moment().endOf('day')

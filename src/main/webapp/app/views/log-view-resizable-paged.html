@@ -284,7 +284,17 @@
                                 <span ng-switch-when="dataSource" class="paddingLeft20">                                                
                                 </span>
                             </span>
-                            <span ng-bind="child[scolumn.name]"></span>
+                            <span ng-switch on="scolumn.type">
+                                <div ng-switch-when="color"
+                                      style="width: 12px; height: 12px"
+                                      ng-style="{'background-color': child[scolumn.name]}"
+                                      >
+                                </div>                                
+                                <span ng-switch-default>
+                                    <span ng-bind="child[scolumn.name]"></span>                                   
+                                </span>
+                            </span>
+<!--                            <span ng-bind="child[scolumn.name]"></span>-->
 
                         </td>
 
