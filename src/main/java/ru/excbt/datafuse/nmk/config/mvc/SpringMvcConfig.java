@@ -24,8 +24,9 @@ import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" }, excludeFilters = { @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*") })
-@Import({ PropertyConfig.class})
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" },
+		excludeFilters = { @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*") })
+@Import({ PropertyConfig.class })
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
@@ -51,6 +52,9 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 		registry.addResourceHandler("/app/jasper/preview/**")
 				.addResourceLocations("/jasper/preview/");
+
+		registry.addResourceHandler("/app/static/**").addResourceLocations(
+				"/static.wro/");
 
 	}
 
