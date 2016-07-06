@@ -818,6 +818,15 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         };
         if (!mainSvc.checkUndefinedNull($scope.currentReportPeriod) && 
             $scope.currentReportPeriod.isSettlementMonth == true){
+            if (mainSvc.checkUndefinedNull($scope.currentObject.settlementDay)){
+                $scope.currentObject.settlementDay = 1;
+            };
+            if (mainSvc.checkUndefinedNull($scope.currentObject.settlementMonth)){
+                $scope.currentObject.settlementMonth = (new Date()).getMonth() + 1;
+            };
+            if (mainSvc.checkUndefinedNull($scope.currentObject.settlementYear)){
+                $scope.currentObject.settlementYear = (new Date()).getFullYear();
+            };
             setPropForSettlementMonth();
         }
     }, false);
@@ -1130,6 +1139,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     };
         
     $("#createParamsetModal").on("shown.bs.modal", function(){
+        if (Number($scope.currentObject.settlementDay) > 3 && Number($scope.currentObject.settlementDay) <=9){
+            $scope.currentObject.settlementDay = "0" + $scope.currentObject.settlementDay;
+            $scope.$apply();
+        }
         $("#inputSettlementDay").inputmask("d", {placeholder: ""});
     });
     

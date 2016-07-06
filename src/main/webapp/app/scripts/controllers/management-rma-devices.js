@@ -248,6 +248,10 @@ angular.module('portalNMC')
         if (!mainSvc.checkUndefinedNull($cookies.recentDeviceModelId)){
             $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
         }
+        if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)){
+            $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);
+            $scope.deviceDatasourceChange();
+        }
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
     };
@@ -277,6 +281,10 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentObject.curDatasource = curDataSource;
+        
+        if (!mainSvc.checkUndefinedNull($scope.data.currentObject.subscrDataSourceId)){
+            $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
+        }
     };
     
     var successCallback = function(response){

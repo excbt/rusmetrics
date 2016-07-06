@@ -5,6 +5,10 @@ angular.module('portalNMC')
         templateUrl: "scripts/directives/templates/nmc-paramset-modal.html",
         controller: function($scope, mainSvc){
             $('#editParamsetModal').on('shown.bs.modal', function(){
+                if (Number($scope.currentObject.settlementDay) > 3 && Number($scope.currentObject.settlementDay) <=9){
+                    $scope.currentObject.settlementDay = "0" + $scope.currentObject.settlementDay;
+                    $scope.$apply();
+                }
                 $("#inputReportSettlementDay").inputmask("d", {placeholder: ""});
                 setPropForSettlementMonth();
                 setPropForStartDate();
