@@ -391,8 +391,9 @@ public class ReportService {
 				&& reportParamset.getReportPeriodKey().isSettlementDay()
 				&& reportParamset.getSettlementDay() != null)
 				|| (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH &&
-						reportParamset.getSettlementDay() != null
-						&& reportParamset.getReportPeriodKey().isSettlementDay()
+		//reportParamset.getSettlementDay() != null
+		//&& 
+						reportParamset.getReportPeriodKey().isSettlementDay()
 						&& reportParamset.getSettlementMonth() != null
 						&& reportParamset.getSettlementYear() != null)) {
 
@@ -408,10 +409,11 @@ public class ReportService {
 
 			// If Settlement day & LAST MONTH
 
-			int settlementDay = reportParamset.getSettlementDay();
-
 			final int lastDayOfCurrMonth = modReportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
 					.getDayOfMonth();
+
+			int settlementDay = reportParamset.getSettlementDay() != null ? reportParamset.getSettlementDay()
+					: lastDayOfCurrMonth;
 
 			int currentDayOfMonth = modReportDate.withMillisOfDay(0).getDayOfMonth();
 
@@ -427,8 +429,8 @@ public class ReportService {
 							.minusDays(1).getDayOfMonth();
 					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
 						dtEnd = JodaTimeUtils
-								.endOfDay(modReportDate.minusMonths(1).withDayOfMonth(settlementDay).minusDays(1));
-						dtStart = JodaTimeUtils.startOfDay(modReportDate.minusMonths(2).withDayOfMonth(settlementDay));
+								.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
+						dtStart = JodaTimeUtils.startOfDay(modReportDate.minusMonths(1).withDayOfMonth(settlementDay));
 					}
 
 				} catch (Exception e) {

@@ -393,11 +393,13 @@ public class ReportMakerParam {
 							&& reportParamset.getSettlementYear().intValue() >= 2000
 							&& reportParamset.getSettlementYear().intValue() <= 2100));
 
-			try {
-				LocalDateTime checkDate = LocalDateTime.now().withDate(reportParamset.getSettlementYear(),
-						reportParamset.getSettlementMonth(), reportParamset.getSettlementDay());
-			} catch (IllegalArgumentException e) {
-				result = false;
+			if (result) {
+				try {
+					LocalDateTime checkDate = LocalDateTime.now().withDate(reportParamset.getSettlementYear(),
+							reportParamset.getSettlementMonth(), reportParamset.getSettlementDay());
+				} catch (IllegalArgumentException e) {
+					result = false;
+				}
 			}
 
 		}
