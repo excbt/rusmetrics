@@ -58,6 +58,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     //report context launch setting
     $scope.ctrlSettings.reportCountList = 5;//border report count: if the reports is more than this border that view two-level menu, else - one-level
+
+    $scope.createReportWithParamsInProgress = false;
     
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
@@ -147,6 +149,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
 
     var errorCallback = function (e) {
+    	
+    	$scope.createReportWithParamsInProgress = false;
+    	
         console.log(e);
         var errorCode = "-1";
         if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
@@ -644,7 +649,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
 //        return $scope.currentObject.common || !$scope.currentObject._active;
-        return false;
+        return $scope.createReportWithParamsInProgress == true;
     };
     
     $scope.showAddObjectButton = function(){
@@ -1121,6 +1126,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             if (mainSvc.checkUndefinedNull(objectIds) || objectIds.length == 0){                
                 clearContObjectIds = true;
         };
+        
+        $scope.createReportWithParamsInProgress = true;
+        
         $http({
             url: url, 
             method: "PUT",
@@ -1129,6 +1137,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             responseType: responseType
         })
         .then(function(response) {
+        	
+        	
+        	$scope.createReportWithParamsInProgress = false;
+        	
            //обрабатываем полученный результат запроса
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);//вытаскиваем непосредственно название файла.

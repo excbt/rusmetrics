@@ -85,6 +85,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     //report types
     $scope.reportTypes = [];
+    
+    $scope.createReportInProgress = false;
+    
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
@@ -153,6 +156,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         };
         var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+        $scope.createReportInProgress = false;
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
@@ -630,7 +634,7 @@ console.log(type);
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
 //        return $scope.currentObject.common || !$scope.currentObject._active;
-        return false;
+        return $scope.createReportInProgress;
     };
     
     $scope.showAddObjectButton = function(){
@@ -988,9 +992,17 @@ console.log(type);
 //        };
         //????
         //run report
+    	
+    	if ($scope.createReportInProgress) {
+    		return;
+    	}
+    	
         var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/download";
         $http.get(url, {responseType: 'arraybuffer'})
-            .then(function(response) {        
+            .then(function(response) {      
+            	
+            	$scope.createReportInProgress = false;
+            	
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });          
@@ -1049,6 +1061,11 @@ console.log(type);
                                             , previewFlag //флаг - формировать отчет или сделать предпросмотр
                                             , previewWin //ссылка на превью окно
                                             ){
+    	
+    	if ($scope.createReportInProgress) {
+    		return;
+    	}
+    	
         var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
         //формируем массив ИД объектов, для которых формируется отчет.          
         var objectIds = $scope.selectedObjects.map(function(element){          
@@ -1088,6 +1105,9 @@ console.log(type);
             if (mainSvc.checkUndefinedNull(objectIds) || objectIds.length == 0){                
                 clearContObjectIds = true;
         };
+        
+        $scope.createReportInProgress = true;
+        
         $http({
             url: url, 
             method: "PUT",
@@ -1097,6 +1117,9 @@ console.log(type);
         })
         .then(function(response) {
            //обрабатываем полученный результат запроса
+        	
+        	$scope.createReportInProgress = false;
+        	
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);//вытаскиваем непосредственно название файла.
             var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт        
