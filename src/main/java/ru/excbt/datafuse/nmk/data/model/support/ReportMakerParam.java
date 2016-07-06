@@ -385,15 +385,18 @@ public class ReportMakerParam {
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
 			result = result
 					&& (//(reportParamset.getSettlementMonth() == null && reportParamset.getSettlementYear() == null) ||
-					(reportParamset.getSettlementDay() != null && reportParamset.getSettlementMonth() != null && reportParamset.getSettlementYear() != null
-							&& reportParamset.getSettlementDay().intValue() >= 1
-							&& reportParamset.getSettlementDay().intValue() <= 31
+					(reportParamset.getSettlementMonth() != null && reportParamset.getSettlementYear() != null
 							&& reportParamset.getSettlementMonth().intValue() >= 1
 							&& reportParamset.getSettlementMonth().intValue() <= 12
 							&& reportParamset.getSettlementYear().intValue() >= 2000
-							&& reportParamset.getSettlementYear().intValue() <= 2100));
+							&& reportParamset.getSettlementYear().intValue() <= 2100))
+					&&
+					(reportParamset.getSettlementDay() == null ||
+							(reportParamset.getSettlementDay() != null
+									&& reportParamset.getSettlementDay().intValue() >= 1
+									&& reportParamset.getSettlementDay().intValue() <= 31));
 
-			if (result) {
+			if (result && reportParamset.getSettlementDay() != null) {
 				try {
 					LocalDateTime checkDate = LocalDateTime.now().withDate(reportParamset.getSettlementYear(),
 							reportParamset.getSettlementMonth(), reportParamset.getSettlementDay());
