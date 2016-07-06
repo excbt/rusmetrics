@@ -752,7 +752,13 @@ angular.module('portalNMC')
     $scope.checkAutoLoadingDisabled = function(){
         if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource))
             return false;
-        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType == 'SERVER' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable != true;
+        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType == 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable != true;
+    };
+    
+    $scope.checkNodataIdleTimeEnabled = function(){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource))
+            return false;
+        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType == 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable == true;
     };
     
     $(document).ready(function(){

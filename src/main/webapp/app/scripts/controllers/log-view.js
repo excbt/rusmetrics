@@ -525,7 +525,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         if (mainSvc.checkUndefinedNull($scope.data.sessionsOnView) || $scope.data.sessionsOnView.length > 0)
             tmpSessions = angular.copy($scope.data.sessionsOnView);
         $scope.data.sessionsOnView = data.sessions.slice(($scope.ctrlSettings.pagination.current - 1) * $scope.ctrlSettings.itemPerPage, ($scope.ctrlSettings.pagination.current) * $scope.ctrlSettings.itemPerPage);
-console.log(tmpSessions);        
+//console.log(tmpSessions);        
         if (!mainSvc.checkUndefinedNull(tmpSessions) && tmpSessions.length > 0){
             tmpSessions.forEach(function(tmpSes){
                 for (var i = 0; i < $scope.data.sessionsOnView.length; i++){
