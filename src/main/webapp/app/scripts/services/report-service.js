@@ -367,9 +367,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         if (!result){          
             reportParamset.showParamsBeforeRunReport = true;
         };
-console.log(reportParamset);        
-console.log(result);        
-console.log(messageForUser);                
+//console.log(reportParamset);        
+//console.log(result);        
+//console.log(messageForUser);                
         return {"flag": result,
                 "message": messageForUser};
     };
