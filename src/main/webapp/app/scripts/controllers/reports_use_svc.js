@@ -206,6 +206,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.setCurrentReportType(parentItem);       
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
+        if (mainSvc.checkUndefinedNull($scope.currentObject.settlementYear)){
+            $scope.currentObject.settlementYear = (new Date()).getFullYear();
+        };
+        if (mainSvc.checkUndefinedNull($scope.currentObject.settlementMonth)){
+            $scope.currentObject.settlementMonth = (new Date()).getMonth();
+        };
+//        if (mainSvc.checkUndefinedNull($scope.currentObject.settlementDay)){
+//            $scope.currentObject.settlementDay = (new Date()).getDate();
+//console.log($scope.currentObject.settlementDay);            
+//        };
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
         var activeStartDate = new Date(curObject.activeStartDate);
 //console.log(curObject);         
@@ -367,6 +377,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета        
         
         $scope.currentSign = object.reportPeriod.sign;
+//console.log($scope.currentSign);        
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
             $scope.psStartDateFormatted = (object.paramsetStartDate!=null) ? moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
@@ -431,7 +442,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
-            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
+            paramset.currentReportPeriod = angular.copy(paramset.reportPeriod);
+            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, paramset.reportPeriod.sign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
             type.checkedParamsetsCount += 1;
@@ -798,6 +810,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
+        $scope.currentObject.currentReportPeriod = $scope.currentReportPeriod;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
         $scope.messageForUser = checkRes.message;
 //console.log(checkRes);        
@@ -1147,7 +1160,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             if (!mainSvc.checkUndefinedNull(previewWin))
                 previewWin.document.write(e.status + ", " + e.statusText);
             alert("При формировании страницы для предпросмотра отчета произошла ошибка. Обратитесь к администратору системы.");
-            previewWin.close();
+            if (!mainSvc.checkUndefinedNull(previewWin))
+                previewWin.close();
             console.log(e);
         })
         .catch(errorCallback);
