@@ -315,7 +315,7 @@
 <!--**************************************************-->
 <!--Show Zpoint options-->
 <div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showZpointOptionLabel" tabindex="-1">
+	aria-labelledby="showZpointOptionLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -492,7 +492,9 @@
 		class="modal fade nmc-modal-window"
 		role="dialog"
 		tabindex="-1"
-		aria-labelledby="showZpointOptionLabel">
+		aria-labelledby="showZpointOptionLabel"
+      data-backdrop="static"
+     >
 
 	<div class="modal-dialog modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
@@ -625,6 +627,7 @@
                                         </div>
                                         <div class="col-xs-6 noPadding">
                                             до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_max"> ат
+                                            </span>
                                         </div>
                                     </div> 
                                     <div class="row-fluid">
@@ -971,7 +974,7 @@
 
 <!--Show Object options-->
 <div id="showObjOptionModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showObjOptionLabel" tabindex="-1">
+	aria-labelledby="showObjOptionLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1132,7 +1135,7 @@
 
 <!-- window: confirm action-->
 <div id="confirmActionModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="confirmActionLabel" tabindex="-1">
+	aria-labelledby="confirmActionLabel" tabindex="-1" data-backdrop="static">
 
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 
@@ -1177,7 +1180,7 @@
     
 <!--Meta data editor-->
 <div id="metaDataEditorModal1" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="metaDataEditorLabel" tabindex="-1">
+	aria-labelledby="metaDataEditorLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1275,7 +1278,7 @@
     
 <!-- window: delete object-->
 <div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="deleteObjectLabel" tabindex="-1">
+	aria-labelledby="deleteObjectLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1323,7 +1326,7 @@
 
 <!-- window: delete zpoint-->
 <div id="deleteZpointModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="deleteZpointLabel" tabindex="-1">
+	aria-labelledby="deleteZpointLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1371,7 +1374,7 @@
 <!-- ***********************************************************   -->
 <!--List of contObject devices-->
 <div id="contObjectDevicesModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="contObjectDevicesLabel" tabindex="-1">
+	aria-labelledby="contObjectDevicesLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1436,7 +1439,7 @@
     
 <!--Show device options-->
 <div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showDeviceLabel" tabindex="-1">
+	aria-labelledby="showDeviceLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1531,7 +1534,7 @@
 
 <!-- window: delete device-->
 <div id="deleteDeviceModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="deleteDeviceLabel" tabindex="-1">
+	aria-labelledby="deleteDeviceLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1579,7 +1582,7 @@
 
 <!-- window: set subscribers for objects-->
 <div id="setClientModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="setClientLabel" tabindex="-1">
+	aria-labelledby="setClientLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1627,7 +1630,7 @@
     
     <!--Meta data editor-->
 <div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="metaDataEditorLabel" tabindex="-1">
+	aria-labelledby="metaDataEditorLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
         <ng-form name = "metadataForm">
 		<div class="modal-header nmc-modal-header">
