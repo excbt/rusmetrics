@@ -1,10 +1,14 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.stereotype.Controller;
@@ -41,6 +45,9 @@ public class SystemInfoController extends SubscrApiController {
 
 	@Autowired
 	private CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService;
+
+	@Autowired
+	private SessionRegistry sessionRegistry;
 
 	/**
 	 * 
@@ -168,6 +175,30 @@ public class SystemInfoController extends SubscrApiController {
 	public ResponseEntity<?> getServerName() {
 		String serverName = systemParamService.getParamValueAsString("SERVER_NAME");
 		return ResponseEntity.ok(serverName);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/invalidateAllSessions", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getInvalidateSessions() {
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
+
+		List<SessionInformation> activeSessions = new ArrayList<SessionInformation>();
+		for (Object principal : sessionRegistry.getAllPrincipals()) {
+			for (SessionInformation session : sessionRegistry.getAllSessions(principal, false)) {
+				activeSessions.add(session);
+			}
+		}
+
+		activeSessions.forEach(i -> {
+			i.expireNow();
+		});
+
+		return responseOK(ApiResult.ok("Invalidated sessions: " + activeSessions.size()));
 	}
 
 }

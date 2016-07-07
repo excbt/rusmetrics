@@ -34,6 +34,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.saml.SAMLAuthenticationProvider;
 import org.springframework.security.saml.SAMLBootstrap;
 import org.springframework.security.saml.SAMLDiscovery;
@@ -497,6 +499,12 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		// выключаем защиту от CSRF атак
 		http.csrf().disable();
 
+		http
+				.sessionManagement()
+				.maximumSessions(5)
+				.sessionRegistry(getSessionRegistry())
+				.expiredUrl("/login");
+
 		http.addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class).addFilterAfter(samlFilter(),
 				BasicAuthenticationFilter.class);
 
@@ -550,5 +558,14 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	public boolean isForceLocalLogin() {
 		return forceLocalLogin;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Bean(name = "sessionRegistry")
+	public SessionRegistry getSessionRegistry() {
+		return new SessionRegistryImpl();
 	}
 }
