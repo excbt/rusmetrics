@@ -536,7 +536,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login")
 				// указываем action с формы логина
 				.loginProcessingUrl("/j_spring_security_check")
-
+				.defaultSuccessUrl("/app", true)
 				// указываем URL при неудачном логине
 				.failureUrl("/login?error")
 				// Указываем параметры логина и пароля с формы логина
