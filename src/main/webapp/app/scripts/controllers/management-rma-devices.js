@@ -561,6 +561,8 @@ angular.module('portalNMC')
     
     function checkSessionsForComplete(sessions){
         $scope.ctrlSettings.dataIsLoaded = false;
+        if (mainSvc.checkUndefinedNull(sessions) || sessions.length == 0)
+            return false;
         var compledSessionsCount = 0;
         sessions.forEach(function(session){
             if (SESSION_TERMINATE_STATUSES.indexOf(session.currentStatus) != -1)
@@ -624,6 +626,7 @@ angular.module('portalNMC')
     }
     
     $scope.initManualLoading = function(device){
+        $scope.ctrlSettings.dataIsLoaded = false;
         $scope.data.sessionsOnView = [];
         $scope.data.currentSession = {};
         $scope.data.currentSessionTask = {};
