@@ -446,7 +446,8 @@ angular.module('portalNMC')
         $scope.getData();
     };
     
-    $scope.$watch('indicatorDates', function (newDates, oldDates) {      
+    $scope.$watch('indicatorDates', function (newDates, oldDates) {
+//console.log("watch indicatorDates");        
         if ($location.path() !== "/objects/indicator-electricity"){
             return;
         };
