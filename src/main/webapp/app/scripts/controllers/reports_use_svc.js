@@ -1,6 +1,6 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc){
+app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc','$q', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q){
     
     $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
@@ -60,6 +60,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.ctrlSettings.reportCountList = 5;//border report count: if the reports is more than this border that view two-level menu, else - one-level
 
     $scope.createReportWithParamsInProgress = false;
+    
     
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
@@ -369,7 +370,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //console.log(parentObject);        
 //console.log(object);
 //console.log(mode);        
-        $scope.showMessageForUserModalExFlag = false;
+        $scope.createReportWithParamsInProgress = false;
+    	$scope.showMessageForUserModalExFlag = false;
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedReport(parentObject, object);
 //console.log($scope.currentReportType);        
@@ -1129,15 +1131,25 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         
         $scope.createReportWithParamsInProgress = true;
         
-        $http({
-            url: url, 
-            method: "PUT",
-            params: { contObjectIds: objectIds, clearContObjectIds: clearContObjectIds},
-            data: tmpParamset,
-            responseType: responseType
-        })
+        var cancel = $q.defer();
+        
+        var request = {
+                url: url, 
+                method: "PUT",
+                params: { contObjectIds: objectIds, clearContObjectIds: clearContObjectIds},
+                data: tmpParamset,
+                responseType: responseType,
+                timeout: cancel.promise,
+                cancel: cancel,
+                isReportRequest : true
+            }; 
+        
+        $http(request)
         .then(function(response) {
         	
+        	if ($scope.createReportWithParamsInProgress == false) {
+        		return;
+        	}
         	
         	$scope.createReportWithParamsInProgress = false;
         	
@@ -1168,13 +1180,15 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             };
             $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
         }, function(e){
-            var previewWin = window.open(url, 'PreviewWin');
-            if (!mainSvc.checkUndefinedNull(previewWin))
-                previewWin.document.write(e.status + ", " + e.statusText);
-            alert("При формировании страницы для предпросмотра отчета произошла ошибка. Обратитесь к администратору системы.");
-            if (!mainSvc.checkUndefinedNull(previewWin))
-                previewWin.close();
-            console.log(e);
+        	if (previewFlag) {
+        		var previewWin = window.open(url, 'PreviewWin');
+        		if (!mainSvc.checkUndefinedNull(previewWin))
+        			previewWin.document.write(e.status + ", " + e.statusText);
+        		alert("При формировании страницы для предпросмотра отчета произошла ошибка. Обратитесь к администратору системы.");
+        		if (!mainSvc.checkUndefinedNull(previewWin))
+        			previewWin.close();
+        		console.log(e);
+            };
         })
         .catch(errorCallback);
     };
@@ -1270,4 +1284,17 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.previewReport(paramset.reportTemplate.reportType, paramset, true)
     };
     // ************************************************************* контекстные отчеты ****************
+    
+    
+    $scope.createReportWithParamsRequestCancel = function () {
+    	$http.pendingRequests.forEach(function(request) {
+            if (request.cancel && (request.isReportRequest == true)) {
+                request.cancel.resolve();
+                
+                console.log("Cancelling Request " + request.method + " on URL:" + request.url);
+                
+            }
+        });
+    };
+    
 }]);

@@ -15,6 +15,12 @@ angular.module('portalNMC')
                 setPropForEndDate();
                 setPropForSingleDate();
             });
+
+            $('#editParamsetModal').on('hidden.bs.modal', function(){
+            	$scope.createReportWithParamsRequestCancel();
+            	$scope.createReportWithParamsInProgress = false;
+            	
+            });
             
             $scope.$watch('currentObject.reportPeriodKey', function (newKey) {
                 //отслеживаем изменение периода у варианта отчета
