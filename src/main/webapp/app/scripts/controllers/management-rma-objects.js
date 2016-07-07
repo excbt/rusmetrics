@@ -928,9 +928,16 @@ angular.module('portalNMC')
         
                 //Свойства точки учета
                 $scope.zpointSettings = {};
-                $scope.addZpoint = function(object){
+                $scope.addZpoint = function(object){                    
                     $scope.selectedItem(object);                    
-                    $scope.zpointSettings = {};                    
+                    $scope.zpointSettings = {};     
+                    if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)){
+                        $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
+                        $scope.changeServiceType($scope.zpointSettings);
+                    };
+                    if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)){
+                        $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
+                    };
                     $scope.getDevices(object, false);
                     getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
                 };
@@ -1159,6 +1166,9 @@ angular.module('portalNMC')
                 };
                 
                 $scope.changeServiceType = function(zpSettings){
+                    if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)){
+                        $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
+                    };
                     if ($scope.emptyString(zpSettings.customServiceName)){
                         switch (zpSettings.contServiceTypeKeyname){
                             case "heat": 
@@ -1173,6 +1183,12 @@ angular.module('portalNMC')
                                 });
                                  
                         };
+                    };
+                };
+                
+                $scope.changeRso = function(zpSettings){
+                    if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)){
+                        $cookies.recentRsoId = zpSettings.rsoId;
                     };
                 };
                 
@@ -1378,7 +1394,7 @@ angular.module('portalNMC')
                             });
                             obj.devices = tmpArr;//response.data;
                             $scope.selectedItem(obj);
-                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length == 1){
+                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0){
                                 $scope.zpointSettings._activeDeviceObjectId = obj.devices[0].id;
                             }
 //console.log(obj);                            

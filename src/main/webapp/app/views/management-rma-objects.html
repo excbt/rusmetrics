@@ -398,7 +398,9 @@
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(zpointSettings.rsoId)}">
                                                 <select class="form-control nmc-input-data nmc-select-form" 
                                                         ng-model="zpointSettings.rsoId" 
-                                                        ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations">
+                                                        ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations"
+                                                        ng-change="changeRso(zpointSettings)"
+                                                        >
                                                 </select>
                                             </div>
                                         </td>
