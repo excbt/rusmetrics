@@ -525,6 +525,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/app/**").authenticated()
 				.antMatchers("/api/benchmark/**").permitAll()
 				.antMatchers("/api/appStatus/**").permitAll()
+				.antMatchers("/api/securityCheck/**").permitAll()
 				.antMatchers("/api/**").access(RolesAccess.API_SUBSR_ACCESS) //.authenticated()
 				.antMatchers("/api/rma/**").access(RolesAccess.API_RMA_ACCESS)
 				.antMatchers("/resources/**").permitAll()

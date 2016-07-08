@@ -424,3 +424,22 @@ console.log(element.focus());
     }
   };
 });
+
+
+app.run(["$rootScope", "$location", "$q" ,"securityCheck", function($rootScope, $location, $q, securityCheck) {
+
+    $rootScope.$on("$routeChangeStart", function(evt, to, from) {
+
+    	console.log("$routeChangeStart");
+    	var checkPromise = securityCheck.isAuthenficated();
+    	$q.all([checkPromise]).then(function (result) {
+    		//console.log("isAuthenficated result: " + JSON.stringify(result) + "   " + result);
+    		if (result == false) {
+        		var url = "../login";  
+        		window.location.replace(url);
+    		}
+    	});
+
+    });
+
+}]);

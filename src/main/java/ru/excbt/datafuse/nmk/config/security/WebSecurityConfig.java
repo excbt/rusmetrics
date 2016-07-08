@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(value = { SamlSecurityConfig.class })
+@Import(value = { LocalSecurityConfig.class })
 public class WebSecurityConfig {
 
 }
