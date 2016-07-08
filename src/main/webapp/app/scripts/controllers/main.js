@@ -1,4 +1,6 @@
-//'use strict';
+/*jslint white:true, node: true */
+/*global angular, window */
+'use strict';
 
 /**
  * @ngdoc function
@@ -10,13 +12,13 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', 'mainSvc', 'notificationFactory', '$http', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc, mainSvc, notificationFactory, $http) {
-console.log("MainCtrl");      
+app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$window', '$location', 'monitorSvc', 'mainSvc', 'notificationFactory', '$http', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc, mainSvc, notificationFactory, $http) {
+//console.log("MainCtrl");      
       //main ctrl settings
-    $scope.mainCtrlSettings = {};  
+    $scope.mainCtrlSettings = {};
       //show on/off menu title
-    $scope.mainCtrlSettings.showFullMenuFlag = true;  
-    $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag(); 
+    $scope.mainCtrlSettings.showFullMenuFlag = true;
+    $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag();
     $scope.mainCtrlSettings.ctxId = "nmc_main";
       
     $scope.data = {};
@@ -24,10 +26,10 @@ console.log("MainCtrl");
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
       
-    $scope.setMenuVisibles = function(privateOfficeMenuVisible, indicatorsParamVisible){
+    $scope.setMenuVisibles = function (privateOfficeMenuVisible, indicatorsParamVisible) {
         $scope.showPrivateOfficeMenu = privateOfficeMenuVisible;
         $rootScope.showIndicatorsParam = indicatorsParamVisible;
-    };  
+    };
       
     $rootScope.timeDetailType = "1h";//$scope.timeDetailType;
 
@@ -41,53 +43,63 @@ console.log("MainCtrl");
     $scope.menuMassive = {};
 
       //Menu initialization
-    function initMenu(){
+    function initMenu() {
         //get current location
-        var loca = $location.path();
-console.log(loca);          
+        var loca = $location.path(),
+            menuFlag = false,
+            mkeys = null;
+//console.log(loca);          
         //set menu flag with current location
-        $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list") != -1 ? true : false);
-        $scope.menuMassive.report_menu_item= (loca === "/reports" ? true : false);
-        $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/") != -1 ? true : false);
-        $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") != -1 ? true : false);
-        $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/") != -1 ? true : false);
-        $scope.menuMassive.log_menu_item = (loca.indexOf("/log") != -1 ? true : false);
-        var menuFlag = false;
+        $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list") !== -1 ? true : false);
+        $scope.menuMassive.report_menu_item = (loca === "/reports" ? true : false);
+        $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/") !== -1 ? true : false);
+        $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") !== -1 ? true : false);
+        $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/") !== -1 ? true : false);
+        $scope.menuMassive.log_menu_item = (loca.indexOf("/log") !== -1 ? true : false);
+        
         //check menu flags
-        for (var k in $scope.menuMassive){
-          if ($scope.menuMassive[k]===false){
-              continue;
-          };
+        mkeys = Object.keys($scope.menuMassive);
+        mkeys.some(function(mkey){
+          if ($scope.menuMassive[mkey] === false){
+              return false;
+          }
           menuFlag = true;
-          break;
-        };
+          return true;
+        });
+//        for (var k in $scope.menuMassive){
+//          if ($scope.menuMassive[k]===false){
+//              continue;
+//          };
+//          menuFlag = true;
+//          break;
+//        };
         //if check menu flag is false
         if (!menuFlag){
           $scope.setDefaultMenuState();//set default menu
-        };         
-        if ($location.path()!=""){
+        }         
+        if ($location.path() !== ""){
           return;
-        };
+        }
         //look menu flags and set location with current flag value
         if ($scope.menuMassive.object_menu_item){
           window.location.assign("#/");
-        };
+        }
         if ($scope.menuMassive.report_menu_item){
           window.location.assign("#/reports/");
-        };
+        }
         if ($scope.menuMassive.notice_menu_item){
          window.location.assign("#/notices/monitor/");
-        };
+        }
         if ($scope.menuMassive.setting_menu_item){
           window.location.assign("#/settings/tariffs/");
-        };
+        }
         if ($scope.menuMassive.admin_menu_item){
           window.location.assign("#/management/objects/");
-        };
+        }
         if ($scope.menuMassive.log_menu_item){
           window.location.assign("#/log/");
-        };
-    };
+        }
+    }
       
 //      set selected menu item
     $scope.clickMenu = function(menu){
