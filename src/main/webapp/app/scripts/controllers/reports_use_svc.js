@@ -1,6 +1,6 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc','$q', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q){
+app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFactoryWithCanceler', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', '$q', function($scope, $rootScope, $http, crudGridDataFactoryWithCanceler, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q){
     
     $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
@@ -25,6 +25,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.ctrlSettings.currentReportPreviewEnabledFlag = false;
     
     $scope.contServiceTypes = reportSvc.getContServiceTypes();
+    
+    //request canceler
+    var requestCanceler = reportSvc.getRequestCanceler();
     
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -59,8 +62,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     //report context launch setting
     $scope.ctrlSettings.reportCountList = 5;//border report count: if the reports is more than this border that view two-level menu, else - one-level
 
-    $scope.createReportWithParamsInProgress = false;
-    
+    $scope.createReportWithParamsInProgress = false;    
     
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
@@ -89,7 +91,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //    $scope.reportTypes = [];
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
-        crudGridDataFactory(table).query(function(data){
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
             $scope.reportTypes = data;
 //console.log(data);
             var newObjects = [];
@@ -134,7 +136,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //    $scope.reportPeriods = [];
 //    $scope.getReportPeriods = function(){
 //        var table = "../api/reportSettings/reportPeriod";
-//        crudGridDataFactory(table).query(function(data){
+//        crudGridDataFactoryWithCanceler(table).query(function(data){
 //            $scope.reportPeriods = data;
 //        });
 //    };
@@ -167,7 +169,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
     
     $scope.getParamsets = function(table, type){
-        crudGridDataFactory(table).query(function (data) {
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {
             type.paramsetsCount = data.length;
             type.checkedParamsetsCount = 0;
             var tmp = angular.copy(data);
@@ -266,7 +268,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
         //get custom directory data
     $scope.getDirectory = function(url, obj){
-        $http.get(url)
+        var httpOptions = {
+            timeout: requestCanceler.promise
+        };
+        $http.get(url, httpOptions)
             .success(function(data){
                 obj.specialTypeDirectoryValues = data;  
 //console.log(obj);    
@@ -306,7 +311,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 result.specialTypeDirectoryKey = element.paramSpecialType.specialTypeDirectoryKey;
                 result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
                 result.specialTypeDirectoryValue = element.paramSpecialType.specialTypeDirectoryValue;
-                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
+                $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);                
             };
             //Ищем значение этого параметра в массиве параметров варианта отчета
             if (reportParamset.paramSpecialList.length == 0){
@@ -316,9 +321,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 result.oneDateValue = null;
                 result.startDateValue = null;
                 result.endDateValue = null;
-                result.oneDateValueFormatted=null;
-                result.startDateValueFormatted=null;
-                result.endDateValueFormatted=null;
+                result.oneDateValueFormatted = null;
+                result.startDateValueFormatted = null;
+                result.endDateValueFormatted = null;
                 result.directoryValue = null;
                 return result;
             }
@@ -409,7 +414,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.getAvailableObjects = function(paramsetId){      
         var table=$scope.paramsetsUrl + "/" + paramsetId + "/contObject/available";        
-        crudGridDataFactory(table).query(function(data){
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
 //console.log(data);            
             $scope.availableObjects = angular.copy(data);             
 //console.log($scope.availableObjects);                        
@@ -418,7 +423,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //    $scope.getAvailableObjects();
     $scope.getSelectedObjects = function(mode, isContext){
         var table = $scope.paramsetsUrl + "/" + $scope.currentObject.id + "/contObject";
-        crudGridDataFactory(table).query(function(data){
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
             $scope.selectedObjects = data;
             if (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)){
                 $scope.selectedObjects = [objectSvc.getCurrentObject()];
@@ -445,7 +450,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){
         var table = $scope.paramsetsUrl + "/" + paramset.id + "/contObject";
-        crudGridDataFactory(table).query(function(data){
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
             (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
@@ -463,15 +468,15 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
     
     $scope.getGroupObjects = function(group){
-        var url = $scope.groupUrl+"/"+group.id+"/contObject";
-        crudGridDataFactory(url).query(function(data){           
+        var url = $scope.groupUrl + "/" + group.id + "/contObject";
+        crudGridDataFactoryWithCanceler(url, requestCanceler).query(function(data){           
             group.objects = data;     
         });
         
     };    
     
     $scope.getAvailableObjectGroups = function(){         
-        crudGridDataFactory($scope.groupUrl).query(function(data){           
+        crudGridDataFactoryWithCanceler($scope.groupUrl, requestCanceler).query(function(data){           
             var tempGroupArr = data;
             tempGroupArr.forEach(function(group){
                 $scope.getGroupObjects(group);
@@ -619,8 +624,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         //templates
     $scope.templatesForCurrentParaset = [];
     $scope.getTemplates = function(){        
-       var table = "../api/reportTemplate"+$scope.currentReportType.suffix; 
-        crudGridDataFactory(table).query(function(data){
+       var table = "../api/reportTemplate" + $scope.currentReportType.suffix; 
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
             $scope.templatesForCurrentParaset = data;
             //if create new paraset
             if ($scope.createParamset_flag){

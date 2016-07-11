@@ -1,7 +1,7 @@
 'use strict';
 app = angular.module('portalNMC');
-app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactory', 'mainSvc',
-function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
+app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactoryWithCanceler', 'mainSvc', '$q',
+function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler, mainSvc, $q){
     //url к данным
     var reportTypesUrl = "../api/reportSettings/reportType";
     var reportPeriodsUrl = "../api/reportSettings/reportPeriod";
@@ -86,6 +86,18 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         }
     ]
     
+    //request canceling params
+    var requestCanceler = null;
+    var httpOptions = null;
+
+    function isCancelParamsIncorrect(){
+        return mainSvc.checkUndefinedNull(requestCanceler) || mainSvc.checkUndefinedNull(httpOptions);
+    }
+    function getRequestCanceler () {
+        return requestCanceler;
+    }
+    ////////////////////////////// 
+    
     var getResourceCategories = function(){
         return resourceCategories;
     };
@@ -115,7 +127,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     };
     var loadReportTypes = function(){
         setReportTypesIsLoaded(false);
-        crudGridDataFactory(reportTypesUrl).query(function(data){
+        if (requestCanceler == null)
+            return null;
+        crudGridDataFactoryWithCanceler(reportTypesUrl, requestCanceler).query(function(data){
             reportTypes = data;
             reportCategories.forEach(function(cat){cat.reportTypes = []});//reset category reportType array
 //console.log(data);
@@ -161,8 +175,10 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         return reportPeriods;
     };
     var loadReportPeriods = function(){
-        setReportPeriodsIsLoaded(false)
-        crudGridDataFactory(reportPeriodsUrl).query(function(data){
+        setReportPeriodsIsLoaded(false);
+        if (requestCanceler == null)
+            return null;
+        crudGridDataFactoryWithCanceler(reportPeriodsUrl, requestCanceler).query(function(data){
             reportPeriods = data;
             setReportPeriodsIsLoaded(true);
             $rootScope.$broadcast('reportSvc:reportPeriodsIsLoaded');
@@ -171,7 +187,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     
         //Загрузка вариантов отчетов
     var getParamsets = function(table, type){
-        crudGridDataFactory(table).query(function (data) {       
+        if (requestCanceler == null)
+            return null;
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {       
             type.paramsets = data;
             type.paramsetsCount = data.length;
         });
@@ -190,7 +208,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     // ** Загрузка вариантов отчетов для контекстного меню объектов
     var loadReportsContextLaunch = function(){
         var url = reportsContextLaunchUrl;
-        return $http.get(url);
+        if (isCancelParamsIncorrect() == true)
+            return null;
+        return $http.get(url, httpOptions);
     };
         
     //Периодическое обновление отчетов
@@ -375,7 +395,14 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     };
     
     //init service
-    var initService = function(){      
+    var initService = function(){  
+        
+        requestCanceler = $q.defer();
+        httpOptions = {
+            timeout: requestCanceler.promise
+        };
+//console.log(angular.copy(requestCanceler));        
+        
         loadReportPeriods();
         loadReportTypes();
     };
@@ -386,12 +413,13 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         checkPSRequiredFieldsOnSave,
         getContServiceTypes,
         getDefaultResourceCategory,
-        getParamsetsForTypes,
+        getParamsetsForTypes,        
         getReportCategories,
         getReportPeriods,
         getReportPeriodsIsLoaded,
         getReportTypes,
         getReportTypesIsLoaded,
+        getRequestCanceler,
         getResourceCategories,
         loadReportsContextLaunch
     }

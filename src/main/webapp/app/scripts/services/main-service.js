@@ -1,7 +1,7 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc){
+.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q){
     var EMPTY_OBJECT = {};
     
     var MAP_PREF = "SUBSCR_MAP_PREF";
@@ -22,6 +22,18 @@ angular.module('portalNMC')
     var prefUrl = mainSvcSettings.subscrUrl + '/subscrPrefValue';
     
     var contextIds = [];
+    
+    //main service request canceler 
+    var requestCanceler = null;
+    var httpOptions = null;
+    
+    function isCancelParamsIncorrect(){
+        return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
+    }
+    function getRequestCanceler () {
+        return requestCanceler;
+    }
+    ////////////////////////////
     
     var getContextIds = function(){
         return contextIds;
@@ -170,7 +182,7 @@ angular.module('portalNMC')
     
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
-    $http.get(userInfoUrl)
+    $http.get(userInfoUrl, httpOptions)
             .success(function(data, satus, headers, config){
                 $rootScope.userInfo = angular.copy(data);
 //console.log($rootScope.userInfo);
@@ -203,7 +215,7 @@ angular.module('portalNMC')
     // **********************************************************
     function loadMapSetting(setting, target, broadcastMsg){
         var url = prefUrl +  "?subscrPrefKeyname=" + setting;
-        $http.get(url).then(function(resp){            
+        $http.get(url, httpOptions).then(function(resp){            
             mainSvcSettings.mapSettings[target] = resp.data.value;           
             if (!checkUndefinedNull(broadcastMsg)){
                 $rootScope.$broadcast(broadcastMsg);
@@ -222,10 +234,10 @@ angular.module('portalNMC')
     function loadMapZoom(){       
         loadMapSetting(ZOOM_MAP_PREF, "mapZoom", 'mainSvc:setMapSettingsInServices')
     }
-
+    //load main map setting. If it is active == true, then load other map prefs
     function loadMapSettings(){
         var url = prefUrl + "?subscrPrefKeyname=" + MAP_PREF;
-        $http.get(url).then(function(resp){
+        $http.get(url, httpOptions).then(function(resp){
             var mapPref = resp.data;
             if (mapPref.isActive == true){            
                 $rootScope.$broadcast('mainSvc:loadMapCenterLat');                
@@ -314,7 +326,7 @@ angular.module('portalNMC')
     var getUserServicesPermissions = function(){
         mainSvcSettings.loadingServicePermissionFlag = true;
         var targetUrl = mainSvcSettings.servicePermissionUrl;    
-        mainSvcSettings.loadedServicePermission = $http.get(targetUrl)
+        mainSvcSettings.loadedServicePermission = $http.get(targetUrl, httpOptions)
         .then(function(response){
             var tmp = response.data;
             contextIds = tmp;
@@ -661,6 +673,11 @@ angular.module('portalNMC')
     // *********************************************************************************************
     
     function initSvc(){
+        requestCanceler = $q.defer();
+        httpOptions = {
+            timeout: requestCanceler.promise
+        }
+        
         loadMapSettings();
     }    
     initSvc();
@@ -685,6 +702,7 @@ angular.module('portalNMC')
         getMonitorMapSettings,
         getObjectMapSettings,
         getDateRangeOptions,
+        getRequestCanceler,
         getServerErrorByResultCode,
         getUserServicesPermissions,
         isAdmin,

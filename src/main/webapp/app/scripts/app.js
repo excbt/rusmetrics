@@ -30,7 +30,7 @@ var app = angular
 
 //routing config
 app.config(function ($routeProvider) {
-console.log("Run routeProviderConfig");    
+//console.log("Run routeProviderConfig");    
     $routeProvider
       .when('/', {
         templateUrl: 'views/objects_edit.html',
@@ -277,8 +277,14 @@ app.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
   uiMaskConfigProvider.maskDefinitions({'a':/[a-z]/, 'A': /[A-Z]/, '*': /[a-zA-Z0-9]/, '9':/\d/, 'M': /[A-F0-9]/});
 }]);
 
+//app.run(['objectSvc', 'mainSvc', function(objectSvc, mainSvc){
+//console.log("Run main, object and monitor services.");  
+//    var mainSvcInit = mainSvc.getUserServicesPermissions();    
+//    var objectSvcInit = objectSvc.promise;
+//}]);
+
 app.run(['objectSvc', 'monitorSvc', 'mainSvc', 'reportSvc', function(objectSvc, monitorSvc, mainSvc, reportSvc){
-console.log("Run main, object and monitor services.");  
+//console.log("Run main, object and monitor services.");  
     var mainSvcInit = mainSvc.getUserServicesPermissions();
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
     var objectSvcInit = objectSvc.promise;

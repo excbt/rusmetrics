@@ -2,7 +2,7 @@
 var app = angular.module('portalNMC');
 
 app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', 'reportSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, reportSvc){
-    
+//console.log("ParamSetsCtrl");    
     $rootScope.ctxId = "param_sets_page";
     //ctrl settings
     $scope.ctrlSettings = {};

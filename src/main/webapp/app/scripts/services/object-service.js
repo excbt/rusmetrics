@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope',
-             function($http, $cookies, $interval, $rootScope){
+.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
+             function($http, $cookies, $interval, $rootScope, $q){
 //console.log("Object Service. Run."); 
                  
         var svcObjects = [
@@ -44,7 +44,18 @@ angular.module('portalNMC')
         var currentObject = null; //the current selected object at interface
 
         var objectSvcSettings = {};
-                 
+        
+        //request canceling params
+        var requestCanceler = null;
+        var httpOptions = null;
+        
+        function isCancelParamsIncorrect(){
+            return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
+        }
+        function getRequestCanceler () {
+            return requestCanceler;
+        }
+        //////////////////////////////         
         var getCurrentObject = function(){
             return currentObject;
         };
@@ -98,72 +109,98 @@ angular.module('portalNMC')
         
         var getRsoOrganizations = function(){
             var url = urlRsoOrganizations;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var getCmOrganizations = function(){
             var url = urlCmOrganizations;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var getRsoOrganizationsWithId = function(orgId){
             if (checkUndefinedNull(orgId))
                 return getRsoOrganizations();
             var url = urlRsoOrganizations + "?organizationId=" + orgId;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var getCmOrganizationsWithId = function(orgId){
             if (checkUndefinedNull(orgId))
                 return getCmOrganizations();
             var url = urlCmOrganizations + "?organizationId=" + orgId;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var getServiceTypes = function(){
             var url = urlServiceTypes;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         //universal function
         var getData = function(url){
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
         var getRefRangeByObjectAndZpoint = function(object, zpoint){
             var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var zPointsByObject = [];
         var getZpointsDataByObject = function(obj, mode){ 
             obj.zpoints = [];
             var table = crudTableName + "/" + obj.id + "/contZPoints" + mode;//Ex";
-            return $http.get(table);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(table, httpOptions);
         };         
         
         var getDevicesByObject = function(obj){
             var url = crudTableName + "/" + obj.id + urlDeviceObjects;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
         var getAllDevices = function(){
             var url = urlRmaContObjects + urlDeviceObjects;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
         var getDeviceModels = function(){
             var url = urlDeviceModels;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var getRmaObjectSubscribers = function(objId){
             var url = urlRmaContObjects + "/" + objId + "/subscribers";
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var getDeviceSchedulerSettings = function(objId, devId){
 //            /contObjects/%d/deviceObjects/%d/loadingSettings
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
-            return $http.get(url);            
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);            
         };
                  
         var putDeviceSchedulerSettings = function(objId, devId, scheduler){
@@ -173,16 +210,22 @@ angular.module('portalNMC')
                  
         var getDeviceDatasources = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource";
-            return $http.get(url);            
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);            
         };
                  
         var getDeviceMetaDataVzlet = function(obj, device){                     
             var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
         var getRmaDeviceMetaDataVzlet = function(objId, device){                     
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
         var putDeviceMetaDataVzlet = function(device){                     
             var url = crudTableName + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
@@ -192,8 +235,13 @@ angular.module('portalNMC')
         
                  //get device measures
         var getRmaMetadataMeasureUnit = function(url, measU, dmm){
+//console.log(url);            
+//console.log(measU);
+//console.log(dmm);            
             var url = url + "?measureUnit=" + dmm.all[measU].keyname;
-            $http.get(url)
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            $http.get(url, httpOptions)
             .then(function(resp){
                 dmm[dmm.all[measU].keyname] = resp.data;
             }, 
@@ -202,14 +250,19 @@ angular.module('portalNMC')
             });
         };         
         
-        var getRmaDeviceMetadataMeasures = function(){                     
+        var getRmaDeviceMetadataMeasures = function(){            
             var url = urlDeviceMetadataMeasures;
-            $http.get(url)
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            $http.get(url, httpOptions)
                 .then(function(resp){                
-                deviceMetadataMeasures.all = resp.data;
-                for (var measU in deviceMetadataMeasures.all){
-                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, measU, deviceMetadataMeasures);
-                };
+                deviceMetadataMeasures.all = resp.data;                              
+//                for (var measU in deviceMetadataMeasures.all){
+//                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, measU, deviceMetadataMeasures);
+//                };
+                deviceMetadataMeasures.all.forEach(function(elem, ind){
+                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, ind, deviceMetadataMeasures);
+                });
 //console.log(deviceMetadataMeasures);                
                 $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
             },
@@ -220,7 +273,9 @@ angular.module('portalNMC')
                  
         var getRmaDeviceMetadata = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         //get time zones
@@ -229,7 +284,10 @@ angular.module('portalNMC')
         };
                  
         var getDeviceMetaDataVzletSystemList = function(){                     
-            return $http.get(urlDeviceMetaDataVzletSystemList);
+//            return $http.get(urlDeviceMetaDataVzletSystemList);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(urlDeviceMetaDataVzletSystemList, httpOptions);
         };
         var vzletSystemList = [];
         var getVzletSystemListFromServer = function(){
@@ -254,35 +312,48 @@ angular.module('portalNMC')
             if (!checkUndefinedNull(contGroupId)){
                 url += "?contGroupId=" + contGroupId;
             };
-           return $http.get(url);//.then(function(res){console.log(res)});
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
-        var getRmaObjectsData = function () {            
-           return $http.get(getRmaObjectsUrl());
+        var getRmaObjectsData = function () {
+            if (isCancelParamsIncorrect() == true)
+                return null;            
+            return $http.get(getRmaObjectsUrl(), httpOptions);
         };
 
                 //get object
         var getObject = function (objId) {
-           if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};          
-           return $http.get(crudTableName + "/" +objId);
+            if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(crudTableName + "/" +objId, httpOptions);
         };
         var getRmaObject = function (objId) {
-           if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"}; 
-           return $http.get(getRmaObjectsUrl() + "/" + objId);
+            if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};
+            if (isCancelParamsIncorrect() == true)
+                return null;            
+            return $http.get(getRmaObjectsUrl() + "/" + objId, httpOptions);
         }; 
                  //Get data for the setting period for the city by objectId
         var getObjectConsumingData = function(settings, objId){
             var url = urlCitiesData + "/" + objId + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };                 
                 //get data for the setting period for one city
         var getCityConsumingData = function(cityFias, settings){
-            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;           
-            return $http.get(url);
+            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;   if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };         
                  //get data for the setting period for all cities
         var getCitiesConsumingData = function(settings){
             var url = urlCitiesData + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;          
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
                  
         var checkUndefinedNull = function(numvalue){
@@ -456,25 +527,38 @@ angular.module('portalNMC')
 //********************************************************************************************************
         var getZpointMetaSrcProp = function(objId, zpId){
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };                 
         var getZpointMetaDestProp = function(objId, zpId){
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };        
         var getZpointMetadata = function(objId, zpId){
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
-            return $http.get(url);
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions);
         };
         var getZpointMetaMeasureUnits = function(objId, zpId){
+//console.log("getZpointMetaMeasureUnits");            
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
-            return $http.get(url).then(
+            if (isCancelParamsIncorrect() == true)
+                return null;
+            return $http.get(url, httpOptions)
+            .then(
                 function(resp){
                     zpointMetadataMeasures = {};
                     zpointMetadataMeasures.all = resp.data;
-                    for (var measU in zpointMetadataMeasures.all){
-                        getRmaMetadataMeasureUnit(url, measU, zpointMetadataMeasures);
-                    };
+//                    for (var measU in zpointMetadataMeasures.all){
+//                        getRmaMetadataMeasureUnit(url, measU, zpointMetadataMeasures);
+//                    };
+                    zpointMetadataMeasures.all.forEach(function(elem, ind){
+                        getRmaMetadataMeasureUnit(url, ind, zpointMetadataMeasures);
+                    });
                     $rootScope.$broadcast('objectSvc:zpointMetadataMeasuresLoaded');
                 }, 
                 function(e){
@@ -564,6 +648,12 @@ angular.module('portalNMC')
         
         //service initialization
         var initSvc = function(){
+            
+            requestCanceler = $q.defer();
+            httpOptions = {
+                timeout: requestCanceler.promise
+            }
+            
             getVzletSystemListFromServer();
             getRmaDeviceMetadataMeasures();
             loadTreeTemplates(rmaTreeTemplatesUrl);
@@ -589,6 +679,7 @@ angular.module('portalNMC')
             getObjectConsumingData,
             getObjectSettings,
             getDevicesByObject,
+            getRequestCanceler,
             getRmaDeviceMetadata,
             getDeviceDatasources,
             getDeviceMetadataMeasures,

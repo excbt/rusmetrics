@@ -13,7 +13,7 @@
  */
 var app = angular.module('portalNMC');
 app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'mainSvc', 'notificationFactory', '$http', 'objectSvc', 'reportSvc', function ($scope, $rootScope, $cookies, $location, mainSvc, notificationFactory, $http, objectSvc, reportSvc) {
-console.log("MainCtrl");      
+//console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};
       //show on/off menu title
