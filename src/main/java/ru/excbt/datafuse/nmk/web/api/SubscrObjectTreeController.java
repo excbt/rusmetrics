@@ -231,8 +231,10 @@ public class SubscrObjectTreeController extends SubscrApiController {
 				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 		checkNotNull(contObjectIds);
 
+		//		List<ContObject> result = subscrContObjectService
+		//				.selectRmaSubscriberContObjectsExcludingIds(getRmaSubscriberId(), contObjectIds);
 		List<ContObject> result = subscrContObjectService
-				.selectRmaSubscriberContObjectsExcludingIds(getRmaSubscriberId(), contObjectIds);
+				.selectSubscriberContObjectsExcludingIds(getSubscriberId(), contObjectIds);
 
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
