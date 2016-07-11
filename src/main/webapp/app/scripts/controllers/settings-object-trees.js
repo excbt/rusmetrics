@@ -480,6 +480,7 @@ console.log(e);
                     //toggle one object
                 $scope.toggleObject = function(object){
 //                    object.selected = !object.selected;
+                    $scope.objectCtrlSettings.allSelected = false;
                     var anySelectedFlag = false;
                     $scope.objectsOnPage.some(function(elem){
                         if (elem.selected == true){
@@ -668,7 +669,8 @@ console.log(e);
                     return mainSvc.findNodeInTree(node, tree);
                 };
                 
-                $scope.selectNode = function(item){                    
+                $scope.selectNode = function(item){
+                    $scope.objectCtrlSettings.allSelected = false;
                     var treeForSearch = $scope.data.currentTree;
                     var selectedNode = $scope.data.selectedNode;
                     if ($scope.objectCtrlSettings.isObjectMoving == true){
@@ -710,6 +712,7 @@ console.log(e);
                 $scope.loadTree = function(tree, objId){
 //                    $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
+                    $scope.objectCtrlSettings.allSelected = false;
                     objectSvc.loadTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id;
 //console.log(resp.data);                        
@@ -734,6 +737,7 @@ console.log(e);
                 };
                 
                 var loadTrees = function(){
+                    $scope.data.currentTree = {};
                     objectSvc.loadTrees().then(function(resp){
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);

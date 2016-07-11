@@ -94,7 +94,8 @@
                                    >
                                     Создать иерархию по шаблону
                                 </a>
-                                <ul class="dropdown-menu nmc-dropdown-menu">
+                                <ul ng-if="data.treeTemplates.length > 0"
+                                    class="dropdown-menu nmc-dropdown-menu">
                                     <li class="menu-item" 
                                         ng-repeat="treeTemplate in data.treeTemplates" 
                                         >                                            
@@ -170,7 +171,7 @@
                                                 style="padding: 0 0 3px;">
 
                                                 <div class="btn-group">
-                                                    <button ng-disabled="!(objectCtrlSettings.anySelected == true)" 
+                                                    <button ng-disabled="!(objectCtrlSettings.anySelected == true) ||  (objectCtrlSettings.isTreeView == false || data.trees.length == 0)" 
                                                             title="Действия над объектами" 
                                                             type="button" 
                                                             class="btn btn-default btn-xs dropdown-toggle" 
@@ -182,19 +183,26 @@
                                                     </button>
                                                   <ul class="dropdown-menu">
 <!--                                                    <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>-->
-                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'"><a href="" 
+                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root' && data.trees.length > 0">
+                                                        <a href="" 
                                                            data-target="#viewTreeModal" 
                                                            data-toggle="modal" 
-                                                           ng-click="moveToNodeInit()">{{messages.moveToNode}}</a>
+                                                           ng-click="moveToNodeInit()">{{messages.moveToNode}}
+                                                        </a>
                                                     </li>
-                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root'">
+                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root' && data.trees.length > 0">
                                                         <a href="" 
                                                            ng-click="releaseFromNode()">{{messages.releaseFromNode}}
                                                         </a>
                                                     </li>
                                                   </ul>
                                                 </div>
-                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
+                                                <input title="Выбрать / отменить все" 
+                                                       type="checkbox" 
+                                                       ng-model="objectCtrlSettings.allSelected" 
+                                                       ng-click="toggleObjects(objectCtrlSettings.allSelected)" 
+                                                       class="marginRight2" 
+                                                       style="vertical-align: middle;"/>
                                             </th>
                                             <th class="nmc-td-for-button"></th>
                                             <th>Название объекта
@@ -223,7 +231,10 @@
                                     <thead>
                                         <tr class="nmc-child-table-header">
                                             <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 5px;">
-                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                                <input title="Выбрать / отменить все" 
+                                                       type="checkbox" 
+                                                       ng-model="objectCtrlSettings.allSelected" 
+                                                       ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
                                                 <div class="btn-group" style="vertical-align: initial;">
 
                                                   <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
@@ -254,17 +265,25 @@
 
                                     <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control">            
                                         <div class="btn-group">
-                                          <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                                          <i title="Действия над объектом" 
+                                             type="button" 
+                                             class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" 
+                                             aria-haspopup="true" 
+                                             aria-expanded="false" 
+                                             ng-click="" 
+                                             style="font-size: .9em;"
+                                             ng-disabled="objectCtrlSettings.isTreeView !== true || data.trees.length == 0"
+                                             >
                                             </i>
                                           <ul class="dropdown-menu">
-                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'">
+                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root' && data.trees.length > 0">
                                                 <a href="" 
                                                    data-target="#viewTreeModal" 
                                                    data-toggle="modal" 
                                                    ng-click="moveToNodeInit(object)">{{messages.moveToNode}}
                                                 </a>
                                             </li>
-                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root'">
+                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root' && data.trees.length > 0">
                                                 <a href=""                                             
                                                    ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
                                             </li>
