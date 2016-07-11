@@ -168,6 +168,15 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
+    function errorReportCreationCallback (e) {       
+        if ($scope.createReportInProgress === true) {
+            $scope.createReportInProgress = false;
+            $("#creationReportModal").modal("hide");
+            return;
+        }        
+        errorCallback(e);
+    }
+    
     $scope.getParamsets = function(table, type){
         crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {
             type.paramsetsCount = data.length;
@@ -1050,8 +1059,30 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         }else{
             url += "/download";
         };
-        $http.get(url, {responseType: 'arraybuffer'})
-            .then(function(response) {        
+        
+        //prepare request canceler
+        $scope.createReportInProgress = true;
+        var cancel = $q.defer();        
+        var request = {
+                url: url, 
+                method: "GET",                
+                responseType: 'arraybuffer',
+                timeout: cancel.promise,
+                cancel: cancel,
+                isReportRequest : true
+            }; 
+        
+        $("#creationReportModal").modal();
+        
+//        $http.get(url, {responseType: 'arraybuffer'})
+        $http(request)
+            .then(function(response) {
+                if ($scope.createReportInProgress == false) {
+                    return;
+                }
+                $scope.createReportInProgress = false;
+                $("#creationReportModal").modal("hide");
+            
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });          
@@ -1069,7 +1100,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 };              
                 saveAs(file, fileName);
                 $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
-            }, errorCallback)
+            }, errorReportCreationCallback)
             .catch(errorCallback);    
     };
     
@@ -1149,14 +1180,16 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 isReportRequest : true
             }; 
         
+        $("#creationReportModal").modal();
+        
         $http(request)
-        .then(function(response) {
-        	
+        .then(function(response) {        	
         	if ($scope.createReportWithParamsInProgress == false) {
         		return;
         	}
         	
         	$scope.createReportWithParamsInProgress = false;
+            $("#creationReportModal").modal("hide");
         	
            //обрабатываем полученный результат запроса
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла

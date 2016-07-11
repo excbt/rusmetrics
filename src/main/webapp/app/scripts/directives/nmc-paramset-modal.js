@@ -140,6 +140,17 @@ angular.module('portalNMC')
                     }
               });
             }
+            
+            //**********************************************************
+            //Creation report window
+            //**********************************************************
+                        
+            $('#creationReportWindow').on('hidden.bs.modal', function(){
+            	$scope.createReportWithParamsRequestCancel();
+//                $scope.createReportCancel();
+            	$scope.createReportWithParamsInProgress = false;
+            	
+            });
         }
     }
 });
