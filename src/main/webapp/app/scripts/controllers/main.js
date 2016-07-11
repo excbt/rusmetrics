@@ -1,5 +1,5 @@
 /*jslint white:true, node: true */
-/*global angular, window */
+/*global angular, window, $, document */
 'use strict';
 
 /**
@@ -12,8 +12,8 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$window', '$location', 'monitorSvc', 'mainSvc', 'notificationFactory', '$http', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc, mainSvc, notificationFactory, $http) {
-//console.log("MainCtrl");      
+app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'mainSvc', 'notificationFactory', '$http', 'objectSvc', 'reportSvc', function ($scope, $rootScope, $cookies, $location, mainSvc, notificationFactory, $http, objectSvc, reportSvc) {
+console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};
       //show on/off menu title
@@ -103,18 +103,26 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$window', '$loc
       
 //      set selected menu item
     $scope.clickMenu = function(menu){
-          for (var k in $scope.menuMassive){ 
-              $scope.menuMassive[k] = false;
-          };        
+        var mkeys = Object.keys($scope.menuMassive);
+        mkeys.forEach(function(key){
+            $scope.menuMassive[key] = false;
+        });
+//          for (var k in $scope.menuMassive){ 
+//              $scope.menuMassive[k] = false;
+//          };        
          $scope.menuMassive[menu] = true;  
     };
 
       //set default menu state
     $scope.setDefaultMenuState = function(){
-console.log("setDefaultMenuState");        
-      for (var k in $scope.menuMassive){
-              $scope.menuMassive[k] = false;
-          };        
+//console.log("setDefaultMenuState"); 
+        var mkeys = Object.keys($scope.menuMassive);
+        mkeys.forEach(function(key){
+            $scope.menuMassive[key] = false;
+        });
+//      for (var k in $scope.menuMassive){
+//              $scope.menuMassive[k] = false;
+//          };        
          $scope.menuMassive.object_menu_item = true;
 //console.log(window.location.href);        
 //console.log(window.location);        
@@ -124,9 +132,23 @@ console.log("setDefaultMenuState");
       console.log("beforeunload");
       $scope.setDefaultMenuState();
     });
+    
+    function allRequestCancel () {
+    	$http.pendingRequests.forEach(function(request) {
+            if (request.cancel) {
+                request.cancel.resolve();                
+                console.log("Cancelling Request " + request.method + " on URL:" + request.url);                
+            }
+        });
+    }
       
     $scope.logOut = function(){
         $cookies = {};
+//        allRequestCancel();
+        //cancel all request        
+        objectSvc.getRequestCanceler().resolve();
+        mainSvc.getRequestCanceler().resolve();        
+        reportSvc.getRequestCanceler().resolve();
 //        $cookies.fromDate = undefined;
 //        $cookies.toDate = undefined;
         $scope.setDefaultMenuState();
@@ -139,16 +161,17 @@ console.log("setDefaultMenuState");
 //    });
     //control visibles
     var setVisibles = function(ctxId){
-        var ctxFlag = false;
-        var tmp = mainSvc.getContextIds();
+        var /*ctxFlag = false,*/
+            tmp;
+        tmp = mainSvc.getContextIds();
         tmp.forEach(function(element){         
-            if(element.permissionTagId.localeCompare(ctxId) == 0){
-                ctxFlag = true;
-            };
+//            if(element.permissionTagId.localeCompare(ctxId) === 0){
+//                ctxFlag = true;
+//            }
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-            if (angular.isUndefined(elDOM) || (elDOM == null)){
+            if (angular.isUndefined(elDOM) || (elDOM === null)){
                 return;
-            };              
+            }              
             $('#'+element.permissionTagId).removeClass('nmc-hide');
         });
 //        if (ctxFlag == false){
@@ -178,10 +201,10 @@ console.log("setDefaultMenuState");
     };
       
       
-    var errorCallback = function (e) {
+    function errorCallback (e) {
         console.log(e);
         notificationFactory.errorInfo("Не удалось сменить пароль!", "Проверьте правильность текущего пароля.");
-    };
+    }
       
 // *****************************************************************************
 //          work with user password
@@ -193,45 +216,45 @@ console.log("setDefaultMenuState");
     $scope.checkPasswordFields = function(userInfo){
         if (mainSvc.checkUndefinedNull(userInfo)){
             return false;
-        };
+        }
         var result = true;
         if ($scope.emptyString(userInfo.oldPassword)){            
             result = false;
-        };
+        }
         if ($scope.emptyString(userInfo.newPassword)){                       
             result = false;
-        };
-        if (userInfo.newPassword != userInfo.newPasswordConfirm){                        
+        }
+        if (userInfo.newPassword !== userInfo.newPasswordConfirm){                        
             result = false;
-        };
+        }
         return result;
     };
 
-    var checkPassword = function(userInfo){
+    function checkPassword (userInfo) {
         if (mainSvc.checkUndefinedNull(userInfo)){
             return false;
-        };
+        }
         var result = true;
         if ($scope.emptyString(userInfo.oldPassword)){
             notificationFactory.errorInfo("Ошибка", "Поле \"Текущий пароль\" должно быть заполнено!");
             result = false;
-        };
+        }
         if ($scope.emptyString(userInfo.newPassword)){
             notificationFactory.errorInfo("Ошибка", "Пароль не должен быть пустым!");
             result = false;
-        };
-        if (userInfo.newPassword != userInfo.newPasswordConfirm){
+        }
+        if (userInfo.newPassword !== userInfo.newPasswordConfirm){
             notificationFactory.errorInfo("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
             result = false;
-        };
+        }
         return result;
-    };
+    }
       
       //change user password
     $scope.changeUserPassword = function(userInfo){
-        if (checkPassword(userInfo) == false){return "Password is incorrect!"};
-        var url = "../api/systemInfo/passwordChange";
-        var params = {
+        if (checkPassword(userInfo) === false){return "Password is incorrect!";}
+        var url = "../api/systemInfo/passwordChange",
+        params = {
             oldPassword : userInfo.oldPassword,
             newPassword : userInfo.newPassword
         };
@@ -244,6 +267,12 @@ console.log("setDefaultMenuState");
             $('#changePasswordModal').modal('hide');
         }, errorCallback);
     };
+    
+//    function initCtrl () {
+//console.log(reportSvc.getRequestCanceler());        
+//    }
+    
+//    initCtrl();
       
   }]);
 
