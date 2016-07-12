@@ -1,0 +1,35 @@
+<div id="creationReportModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog"
+     aria-labelledby="creationReportLabel" 
+     tabindex="-1" 
+     data-backdrop="static"
+     style="z-index: 1041"
+     >
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="creationReportLabel" class="nmc-h3">
+				Идет формирование отчета: <span ng-bind="currentObject.name"></span>
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">	
+            <div 
+                 class="marginLeft15 text-center">
+                <i class="fa fa-spinner fa-pulse fa-5x"></i>                 
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
