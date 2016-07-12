@@ -108,6 +108,19 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 	@Column(name = "q_rn_4")
 	private BigDecimal q_Rn4;
 
+	// 5
+	@Column(name = "p_ap_5")
+	private BigDecimal p_Ap5;
+
+	@Column(name = "p_an_5")
+	private BigDecimal p_An5;
+
+	@Column(name = "q_rp_5")
+	private BigDecimal q_Rp5;
+
+	@Column(name = "q_rn_5")
+	private BigDecimal q_Rn5;
+
 	// All
 	@Column(name = "p_ap")
 	private BigDecimal p_Ap;
@@ -329,6 +342,38 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 
 	public void setQ_Rn(BigDecimal q_Rn) {
 		this.q_Rn = q_Rn;
+	}
+
+	public BigDecimal getP_Ap5() {
+		return p_Ap5;
+	}
+
+	public void setP_Ap5(BigDecimal p_Ap5) {
+		this.p_Ap5 = p_Ap5;
+	}
+
+	public BigDecimal getP_An5() {
+		return p_An5;
+	}
+
+	public void setP_An5(BigDecimal p_An5) {
+		this.p_An5 = p_An5;
+	}
+
+	public BigDecimal getQ_Rp5() {
+		return q_Rp5;
+	}
+
+	public void setQ_Rp5(BigDecimal q_Rp5) {
+		this.q_Rp5 = q_Rp5;
+	}
+
+	public BigDecimal getQ_Rn5() {
+		return q_Rn5;
+	}
+
+	public void setQ_Rn5(BigDecimal q_Rn5) {
+		this.q_Rn5 = q_Rn5;
 	}
 
 }
