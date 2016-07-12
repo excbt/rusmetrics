@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
@@ -37,7 +38,7 @@ public class ContEventController extends WebApiController {
 	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventTypes() {
 		List<ContEventType> vList = contEventTypeService.selectBaseContEventTypes();
-		return ResponseEntity.ok(vList);
+		return responseOK(ObjectFilters.disabledFilter(vList));
 	}
 
 }
