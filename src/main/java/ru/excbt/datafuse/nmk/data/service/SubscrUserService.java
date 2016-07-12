@@ -227,6 +227,18 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
 		}
 		subscrUserRepository.save(softDelete(subscrUser));
+
+		// Delete from Ldap
+		LdapAction action = (u) -> {
+			ldapService.deleteUser(u);
+		};
+
+		try {
+			processLdapAction(subscrUser, action);
+		} catch (Exception e) {
+			logger.error("Error during processLdapAction for user {}: {}", subscrUser.getUserName(), e);
+		}
+
 	}
 
 	/**
@@ -297,7 +309,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findByUsername(String userName) {
-		return subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> result = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		return ObjectFilters.deletedFilter(result);
 	}
 
 	/**
