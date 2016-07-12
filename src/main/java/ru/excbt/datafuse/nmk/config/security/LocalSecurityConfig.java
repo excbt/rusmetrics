@@ -22,6 +22,9 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserAuthenticationProvider userAuthenticationProvider;
 
 	@Autowired
+	private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
+	@Autowired
 	public void registerGlobalAuthentication(AuthenticationManagerBuilder auth)
 			throws Exception {
 		auth.authenticationProvider(userAuthenticationProvider);
@@ -66,6 +69,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Указываем параметры логина и пароля с формы логина
 				.usernameParameter("j_username")
 				.passwordParameter("j_password")
+				.successHandler(authenticationSuccessHandler)
 				// даем доступ к форме логина всем
 				.permitAll();
 
@@ -88,6 +92,15 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean(name = "sessionRegistry")
 	public SessionRegistry getSessionRegistry() {
 		return new SessionRegistryImpl();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Bean
+	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+		return new CustomAuthenticationSuccessHandler();
 	}
 
 }

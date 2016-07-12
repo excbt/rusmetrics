@@ -117,6 +117,9 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserAuthenticationProvider userAuthenticationProvider;
 
+	@Autowired
+	private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
 	// XML parser pool needed for OpenSAML parsing
 	@Bean(initMethod = "initialize")
 	public StaticBasicParserPool parserPool() {
@@ -542,6 +545,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				.failureUrl("/login?error")
 				// Указываем параметры логина и пароля с формы логина
 				.usernameParameter("j_username").passwordParameter("j_password")
+				.successHandler(authenticationSuccessHandler)
 				// даем доступ к форме логина всем
 				.permitAll();
 
@@ -569,4 +573,14 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	public SessionRegistry getSessionRegistry() {
 		return new SessionRegistryImpl();
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Bean
+	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+		return new CustomAuthenticationSuccessHandler();
+	}
+
 }
