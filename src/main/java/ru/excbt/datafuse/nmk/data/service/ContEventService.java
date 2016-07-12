@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -212,6 +213,10 @@ public class ContEventService {
 	 * @return
 	 */
 	public List<ContEvent> selectContEventsByIds(Collection<Long> contEventsIds) {
+		if (contEventsIds == null || contEventsIds.isEmpty()) {
+			return new ArrayList<>();
+		}
+
 		return contEventRepository.selectContEventsByIds(contEventsIds);
 	}
 
