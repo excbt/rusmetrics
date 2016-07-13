@@ -3,9 +3,7 @@
  */
 'use strict';
 angular.module('portalNMC')
-.service('securityCheck', ['$http',
-                       function ($http) {
-	 
+.service('securityCheck', ['$http', function ($http) {	 
     return {
         isAuthenficated: function () {
         	
@@ -14,10 +12,7 @@ angular.module('portalNMC')
                     method: "GET",
                     timeout: 5000
                 }; 
-
-            
-            var promise = 
-        	  $http(request)
+            var promise = $http(request)
         	  .then(function(response) {
         	      return response.data.success;
         	  }, function errorCallback(response) {
@@ -28,9 +23,7 @@ angular.module('portalNMC')
         	  .catch(function(e) {
         		  return false;
         	  });
-            
             return promise;
-        	
         }
     };
 }]);
