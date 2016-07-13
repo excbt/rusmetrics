@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', function($rootScope, $http, $interval, $cookies, $location, objectSvc){
+    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', '$q', function($rootScope, $http, $interval, $cookies, $location, objectSvc, $q){
 //console.log("Monitor service. Run Monitor service.");
         var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";        
                 //url to data
@@ -24,6 +24,18 @@ angular.module('portalNMC')
         monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
         monitorSvcSettings.toDate = moment().endOf('day').format('YYYY-MM-DD');
         
+        ////////////////////////////request canceler 
+        var requestCanceler = null;
+        var httpOptions = null;
+        
+        function isCancelParamsIncorrect () {
+            return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
+        }
+        
+        function getRequestCanceler () {
+            return requestCanceler;
+        }
+        //////////////////////////////////////////////////////////////////////////////
         function errorCallbackConsole(e){
             console.log(e);
         }
@@ -93,7 +105,9 @@ angular.module('portalNMC')
             if (!checkUndefinedNull(monitorSvcSettings.contGroupId)){
                 targetUrl += "&contGroupId=" + monitorSvcSettings.contGroupId;
             };
-            $http.get(targetUrl)
+            if (isCancelParamsIncorrect() === true)
+                return null;
+            $http.get(targetUrl, httpOptions)
                 .success(function(data){
 //console.log(data);                
                     citiesMonitorSvc = data;                
@@ -131,7 +145,9 @@ angular.module('portalNMC')
        var getMonitorEventsByObject = function(obj){ 
 //console.log(obj);           
             var url = objectUrl + "/" + obj.contObject.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
-            $http.get(url)
+           if (isCancelParamsIncorrect() === true)
+                return null;
+            $http.get(url, httpOptions)
                 .success(function(data){
     //console.log("success");
 //console.log(data);                
@@ -248,6 +264,7 @@ angular.module('portalNMC')
         });
         
         $rootScope.$on('$destroy',function(){
+            alert("MonitorSvc destroy");
             stopRefreshing();
         });
         
@@ -255,28 +272,43 @@ angular.module('portalNMC')
 //  Work with trees
 //******************************************************************
         var loadSubscrTrees = function(){
-            return $http.get(subscrTreesUrl);
+            if (isCancelParamsIncorrect() === true)
+                return null;
+            return $http.get(subscrTreesUrl, httpOptions);
         };
         
         var loadSubscrTree = function(treeId){
-            return $http.get(subscrTreesUrl + '/' + treeId);
+            if (isCancelParamsIncorrect() === true)
+                return null;
+            return $http.get(subscrTreesUrl + '/' + treeId, httpOptions);
         };
         
-        var loadSubscrFreeObjectsByTree = function(treeId){            
-            return $http.get(subscrTreesUrl + '/' + treeId + '/contObjects/free');
+        var loadSubscrFreeObjectsByTree = function(treeId){
+            if (isCancelParamsIncorrect() === true)
+                return null;
+            return $http.get(subscrTreesUrl + '/' + treeId + '/contObjects/free', httpOptions);
         };
                  
-        var loadSubscrObjectsByTreeNode = function(treeId, nodeId){            
-            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/cityStatusCollapse');
+        var loadSubscrObjectsByTreeNode = function(treeId, nodeId){
+            if (isCancelParamsIncorrect() === true)
+                return null;
+            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/cityStatusCollapse', httpOptions);
         };
                  
         var loadDefaultMonitorTreeSetting = function(){
-            return $http.get(defaultTreeUrl);
+            if (isCancelParamsIncorrect() === true)
+                return null;
+            return $http.get(defaultTreeUrl, httpOptions);
         };
 //******************************************************************
 //******************************************************************
         
         var initSvc = function(){
+            
+            requestCanceler = $q.defer();
+            httpOptions = {
+                timeout: requestCanceler.promise
+            };
             //run getObjects
             getMonitorData();
 //            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
@@ -290,6 +322,7 @@ angular.module('portalNMC')
             getLoadingStatus,
             getMonitorEventsByObject, 
             getMonitorSettings,
+            getRequestCanceler,
              
 //            loadSubscrTree,
 //            loadSubscrTrees,

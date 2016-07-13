@@ -12,7 +12,7 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'mainSvc', 'notificationFactory', '$http', 'objectSvc', 'reportSvc', function ($scope, $rootScope, $cookies, $location, mainSvc, notificationFactory, $http, objectSvc, reportSvc) {
+app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'mainSvc', 'notificationFactory', '$http', 'objectSvc', 'reportSvc', 'monitorSvc', 'logSvc', function ($scope, $rootScope, $cookies, $location, mainSvc, notificationFactory, $http, objectSvc, reportSvc, monitorSvc, logSvc) {
 //console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};
@@ -149,6 +149,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         objectSvc.getRequestCanceler().resolve();
         mainSvc.getRequestCanceler().resolve();        
         reportSvc.getRequestCanceler().resolve();
+        monitorSvc.getRequestCanceler().resolve();
+        logSvc.getRequestCanceler().resolve();
 //        $cookies.fromDate = undefined;
 //        $cookies.toDate = undefined;
         $scope.setDefaultMenuState();

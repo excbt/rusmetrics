@@ -168,8 +168,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
-    function errorReportCreationCallback (e) {       
-        if ($scope.createReportInProgress === true) {
+    function errorReportCreationCallback (e) {
+//console.log(e);        
+        if ($scope.createReportInProgress === true && e.status === 0) {
             $scope.createReportInProgress = false;
             $("#creationReportModal").modal("hide");
             return;

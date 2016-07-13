@@ -39,6 +39,12 @@ angular.module('portalNMC')
     $scope.monitorSettings.isCtrlEnd = false;
       
     $scope.monitorSettings.ctxId = "monitor_page";
+    //***************************** request canceler  
+    var requestCanceler = monitorSvc.getRequestCanceler();
+    var httpOptions = {
+        timeout: requestCanceler.promise
+    };  
+    //////////////////////////////////////////////////
       
     $scope.monitorSettings.dateRangeSettings = mainSvc.getDateRangeOptions("monitor-ru");
     $scope.monitorSettings.monitorDates = {
@@ -60,7 +66,7 @@ angular.module('portalNMC')
     $scope.monitorState = {};
     $scope.getMonitorState = function(){
         var url = monitorUrl + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
-        $http.get(url)
+        $http.get(url, httpOptions)
             .success(function(data){
                 $scope.monitorState = data;
                 var monitorTab = document.getElementById('monitorTab');
@@ -102,7 +108,7 @@ angular.module('portalNMC')
       
         var url = objectUrl + "/" + obj.contObject.id + "/eventTypes/statusCollapse" + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
 //console.log(url);          
-        $http.get(url)
+        $http.get(url, httpOptions)
             .success(function(data){
 //console.log(data);            
             //if data is not array - exit

@@ -1,6 +1,6 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($rootScope, $http, $interval, mainSvc){
+app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', '$q', function($rootScope, $http, $interval, mainSvc, $q){
     //запрос данных журнала
     var SESSION_STATUSES = [
         {
@@ -36,6 +36,19 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     params.toDate = sessionsLogDaterange.endDate.format(SYSTEM_DATE_FORMAT);
     
     var interval = null;
+    
+    ////////////////////////////request canceler 
+    var requestCanceler = null;
+    var httpOptions = null;
+
+    function isCancelParamsIncorrect () {
+        return mainSvc.checkUndefinedNull(requestCanceler) || mainSvc.checkUndefinedNull(httpOptions);
+    }
+
+    function getRequestCanceler () {
+        return requestCanceler;
+    }
+    //////////////////////////////////////////////////////////////////////////////
     
     function getSessionsLogDaterange(){
         return sessionsLogDaterange;
@@ -167,12 +180,15 @@ app.service('logSvc', ['$rootScope', '$http', '$interval', 'mainSvc', function($
     });
 
     function initSvc(){
+        requestCanceler = $q.defer();
+        params.timeout = requestCanceler.promise;
 //        $interval(loadSessions, REFRESH_PERIOD);
     }
     
     initSvc();
     
     return {
+        getRequestCanceler,
         getSessions,
         getSessionsLogDaterange,
         serverDataParser,
