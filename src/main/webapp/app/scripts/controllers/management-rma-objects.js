@@ -263,12 +263,17 @@ angular.module('portalNMC')
                     
                     notificationFactory.success();
                     $('#showZpointOptionModal').modal('hide');
+                    //get current object index at objects and objectsOnPage arrays              
+                    var objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);                    
+                    var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
+                    //update object info about zpoint count
+                    if (objectIndex > -1 && e.config.method === "POST")
+                        $scope.objects[objectIndex].contObjectStats.contZpointCount++;
                     if (mainSvc.checkUndefinedNull($scope.currentObject.zpoints) || !angular.isArray($scope.currentObject.zpoints)){
                         //$scope.zpointSettings = {};
                         return;
                     };
                     var curIndex = -1;
-//console.log($scope.currentObject); 
                     $scope.currentObject.zpoints.some(function(elem, index){
                         if (elem.id === $scope.zpointSettings.id){
                             curIndex = index;
@@ -295,12 +300,12 @@ angular.module('portalNMC')
                                 makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
                             };
                     }else{
-                        var objectIndex = -1;
-                        objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
-                        var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
-                        if (objectIndex>-1){
+//                        var objectIndex = -1;
+//                        objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
+//                        var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
+                        if (objectIndex > -1){
                             //update zpoint data in arrays
-                            $scope.objects[objectIndex].zpoints.push(mappedZpoint);                           
+                            $scope.objects[objectIndex].zpoints.push(mappedZpoint);
                             if ($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true){
                                 makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
                             };                             
@@ -451,6 +456,11 @@ angular.module('portalNMC')
                     $('#deleteZpointModal').modal('hide');
                     deleteObjectFromArray($scope.currentZpoint.id, $scope.currentObject.zpoints);
                     makeZpointTable($scope.currentObject);
+                    //update object info about zpoint count
+                    var objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);                    
+                    if (objectIndex > -1)
+                        $scope.objects[objectIndex].contObjectStats.contZpointCount--;
+                    
                     successCallback(e, null);
                 };
 
