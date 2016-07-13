@@ -193,7 +193,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 }
             //settings for activate tab "Main options", when edit window opened.
                 $scope.set_of_objects_flag = false;
-                $scope.showAvailableObjects_flag = false;
+                $scope.showAvailableObjects_flag = false;             
                 $scope.getSelectedObjectsByParamset(type, el);
             });
             type.paramsets = tmp;            
@@ -308,7 +308,13 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     };
     
     var prepareParamSpecialList = function(reportType, reportParamset){
-//console.log(reportType);        
+        if (mainSvc.checkUndefinedNull(reportType) || mainSvc.checkUndefinedNull(reportParamset)){        
+            console.log("Paramset:");        
+            console.log(reportParamset);
+            console.log("Report type:");
+            console.log(reportType);
+            return null;
+        }
         var resultParamSpecialList = reportType.reportMetaParamSpecialList.map(function(element){
             var result = {};
             result.paramSpecialCaption = element.paramSpecialCaption;
@@ -458,7 +464,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         });
     };
     
-    $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){
+    $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){       
         var table = $scope.paramsetsUrl + "/" + paramset.id + "/contObject";
         crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
             (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
@@ -468,7 +474,8 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, paramset.reportPeriod.sign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
-            type.checkedParamsetsCount += 1;
+            if (!mainSvc.checkUndefinedNull(type))
+                type.checkedParamsetsCount += 1;
         });
     };
     
@@ -1264,14 +1271,25 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         reportSvc.loadReportsContextLaunch().then(successGetContextReports, errorCallback);
     };
     //Если вариантов отчетов больше $scope.ctrlSettings.reportCountList, то распределить варианты отчетов по категориям
-    var successGetContextReports = function(resp){
+    var successGetContextReports = function(resp){                
         var reports = angular.copy(resp.data);
+        //connect reportType info
+        reports.forEach(function(rep){
+//            rep.reportTemplate.reportTypeKeyname;
+            $scope.reportObjects.some(function(rt){                          
+                if (rt.reportType === rep.reportTemplate.reportTypeKeyname){
+                    rep.reportType = angular.copy(rt);
+                    return true;
+                }
+            });
+            
+        });
         if (reports.length > $scope.ctrlSettings.reportCountList){
             $scope.data.reportEntities = angular.copy($scope.categories);
             $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
             reports.forEach(function(rep){
                 for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){
-                    if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){
+                    if (rep.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){
                         $scope.data.reportEntities[categoryCounter].reports.push(rep);
                         break;
                     };
@@ -1280,6 +1298,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         }else{
             $scope.data.reportEntities = reports;
         };
+//console.log(reports);        
             // perform reports as common reports
         var tmp = reports;
         tmp.forEach(function(el){
@@ -1293,7 +1312,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         //settings for activate tab "Main options", when edit window opened.
             $scope.set_of_objects_flag = false;
             $scope.showAvailableObjects_flag = false;
-            $scope.getSelectedObjectsByParamset(el.reportTemplate.reportType, el, true);
+            $scope.getSelectedObjectsByParamset(el.reportType, el, true);
         });
 //console.log($scope.data.reportEntities);        
     };
@@ -1302,10 +1321,14 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
             return "Entity is category";//exit function
         };
+        if (mainSvc.checkUndefinedNull(paramset.reportType)){
+            notificationFactory.errorInfo("Внимание!", "Не удалось установить тип отчета. Проверьте настройки отчета.");
+            return "Report type is not available.";
+        }
         //run report
         $scope.ctrlSettings.openModes.create.isContext = true;//set context flag
-        paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);                
-        $scope.editParamSet(paramset.reportTemplate.reportType, paramset, $scope.ctrlSettings.openModes.create, true)
+        paramset.reportType.reportMetaParamSpecialList_flag = (paramset.reportType.reportMetaParamSpecialList.length > 0 ? true : false);                
+        $scope.editParamSet(paramset.reportType, paramset, $scope.ctrlSettings.openModes.create, true)
     };    
     
     $scope.previewContextReport = function(paramset){
@@ -1313,14 +1336,18 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
             return "Entity is category";//exit function
         };
-        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT' || paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT_M_V'){
+        if (mainSvc.checkUndefinedNull(paramset.reportType)){
+            notificationFactory.errorInfo("Внимание!", "Не удалось установить тип отчета. Проверьте настройки отчета.");
+            return "Report type is not available.";
+        }
+        if (paramset.reportType.keyname == 'COMMERCE_REPORT' || paramset.reportType.keyname == 'COMMERCE_REPORT_M_V'){
             notificationFactory.errorInfo("Внимание!", "Предварительный просмотр для коммерческих отчетов невозможен.");
             return "Preview for the commercial reports is not available.";
         };
         //run preview report        
-        paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);
+        paramset.reportType.reportMetaParamSpecialList_flag = (paramset.reportType.reportMetaParamSpecialList.length > 0 ? true : false);
         $scope.selectedObjects = [objectSvc.getCurrentObject()];
-        $scope.previewReport(paramset.reportTemplate.reportType, paramset, true)
+        $scope.previewReport(paramset.reportType, paramset, true)
     };
     // ************************************************************* контекстные отчеты ****************
     

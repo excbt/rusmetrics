@@ -265,12 +265,18 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     };
     
     var checkPSRequiredFieldsOnSave = function(reportType, reportParamset, currentSign, mode){
+        var messageForUser;
+        if (mainSvc.checkUndefinedNull(reportType)){
+            console.log("Report type = " + reportType);
+            messageForUser = "Не удалось проверить тип отчета.\n";
+            return false;
+        }
 //console.log(reportParamset);        
         if (!reportType.hasOwnProperty('reportMetaParamCommon')){
             return true;
         };
-        var result= true;
-        var messageForUser = "Не все параметры варианта отчета заданы:\n";
+        var result = true;
+        messageForUser = "Не все параметры варианта отчета заданы:\n";
         //Check common params before save
             //file ext
         if (mainSvc.checkUndefinedEmptyNullValue(reportParamset.outputFileType)){
@@ -362,21 +368,23 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         };
         //check special properties
         var specListFlag = true;
-        reportParamset.currentParamSpecialList.forEach(function(element, index, array){
-            if (element.paramSpecialRequired && !(element.textValue 
-                                                 || element.numericValue 
-                                                 || element.oneDateValue 
-                                                 || element.startDateValue
-                                                 || element.endDateValue
-                                                 || element.directoryValue)
-               )
-            {
-                if (specListFlag){messageForUser += "Дополнительные свойства: " + "\n";};
-                messageForUser += "\u2022"+" Не задан параметр \"" + element.paramSpecialCaption + "\" \n";
-                result = false;
-                specListFlag = false;
-            }
-        });
+        if (!mainSvc.checkUndefinedNull(reportParamset.currentParamSpecialList)){
+            reportParamset.currentParamSpecialList.forEach(function(element, index, array){
+                if (element.paramSpecialRequired && !(element.textValue 
+                                                     || element.numericValue 
+                                                     || element.oneDateValue 
+                                                     || element.startDateValue
+                                                     || element.endDateValue
+                                                     || element.directoryValue)
+                   )
+                {
+                    if (specListFlag){messageForUser += "Дополнительные свойства: " + "\n";};
+                    messageForUser += "\u2022"+" Не задан параметр \"" + element.paramSpecialCaption + "\" \n";
+                    result = false;
+                    specListFlag = false;
+                }
+            });
+        };
         if(messageForUser != "Не все параметры варианта отчета заданы:\n"){
             if (mode.toUpperCase().localeCompare("CREATE") == 0){
                 messageForUser += "\n Этот вариант отчета нельзя запустить без уточнения или использовать в рассылке, не задав обязательных параметров. Продолжить?";
