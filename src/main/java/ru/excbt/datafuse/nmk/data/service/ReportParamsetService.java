@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -29,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
 import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
@@ -666,6 +669,28 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		result.forEach((s) -> s.getParamSpecialList().size());
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportParamsets
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ReportParamsetVO> wrapReportParamsetVO(final List<ReportParamset> reportParamsets) {
+		List<ReportParamsetVO> result = reportParamsets.stream().map(i -> new ReportParamsetVO(i))
+				.collect(Collectors.toList());
+
+		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
+
+		final Map<String, Integer> reportTypesMap = reportTypes.stream()
+				.collect(Collectors.toMap(ReportType::getKeyname, item -> item.getReportTypeOrder()));
+
+		result.forEach(i -> {
+			i.setReportTypeOrder(reportTypesMap.get(i.getReportParamset().getReportTemplate().getReportTypeKeyname()));
+		});
+
 		return result;
 	}
 

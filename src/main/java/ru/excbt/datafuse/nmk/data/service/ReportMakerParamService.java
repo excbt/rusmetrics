@@ -161,9 +161,12 @@ public class ReportMakerParamService {
 
 		SubscriberParam subscriberParam = currentSubscriberService.getSubscriberParam();
 
+		String reportTypeKeyname = reportParamset.getReportTemplate().getReportTypeKeyname();
+		ReportType reportType = reportTypeService.selectReportType(reportTypeKeyname);
+
 		if (paramContObjectIdList.isEmpty()) {
 
-			if (!Boolean.TRUE.equals(reportParamset.getReportTemplate().getReportType().getReportMetaParamCommon()
+			if (!Boolean.TRUE.equals(reportType.getReportMetaParamCommon()
 					.getNoContObjectsRequired())) {
 
 				//				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset.getSubscriber().getId()
@@ -175,7 +178,7 @@ public class ReportMakerParamService {
 
 		}
 
-		return new ReportMakerParam(subscriberParam, reportParamset,
+		return new ReportMakerParam(subscriberParam, reportType, reportParamset,
 				paramContObjectIdList, subscrContObjectIds, previewMode);
 
 	}
@@ -199,7 +202,8 @@ public class ReportMakerParamService {
 
 		logger.debug("Checking params of reportType:{} ", reportTypeKey);
 
-		ReportType reportType = reportMakerParam.getReportParamset().getReportTemplate().getReportType();
+		String reportTypeKeyname = reportMakerParam.getReportParamset().getReportTemplate().getReportTypeKeyname();
+		ReportType reportType = reportTypeService.findByKeyname(reportTypeKeyname);
 
 		if (reportType == null) {
 			reportType = reportTypeService.findByKeyname(reportTypeKey);

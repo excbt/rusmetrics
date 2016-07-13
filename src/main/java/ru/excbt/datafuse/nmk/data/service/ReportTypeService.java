@@ -64,6 +64,15 @@ public class ReportTypeService {
 
 	/**
 	 * 
+	 * @param keyname
+	 * @return
+	 */
+	public ReportType selectReportType(String keyname) {
+		return reportTypeRepository.findOne(keyname);
+	}
+
+	/**
+	 * 
 	 * @param key
 	 * @return
 	 */

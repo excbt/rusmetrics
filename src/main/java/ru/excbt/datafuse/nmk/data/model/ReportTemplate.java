@@ -18,7 +18,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 /**
  * Шаблон отчета
@@ -47,9 +46,9 @@ public class ReportTemplate extends JsonAbstractAuditableModel {
 	@Column(name = "report_type")
 	private String reportTypeKeyname;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "report_type", insertable = false, updatable = false)
-	private ReportType reportType;
+	//	@ManyToOne(fetch = FetchType.EAGER)
+	//	@JoinColumn(name = "report_type", insertable = false, updatable = false)
+	//	private ReportType reportType;
 
 	@Column(name = "report_template_name")
 	private String name;
@@ -170,13 +169,13 @@ public class ReportTemplate extends JsonAbstractAuditableModel {
 		return this.subscriber == null;
 	}
 
-	public ReportType getReportType() {
-		return reportType;
-	}
-
-	public void setReportType(ReportType reportType) {
-		this.reportType = reportType;
-	}
+	//	public ReportType getReportType() {
+	//		return reportType;
+	//	}
+	//
+	//	public void setReportType(ReportType reportType) {
+	//		this.reportType = reportType;
+	//	}
 
 	public Boolean getIntegratorIncluded() {
 		return integratorIncluded;

@@ -86,9 +86,9 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	 * @param reportType
 	 * @return
 	 */
-	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt LEFT JOIN rt.reportType rtype "
+	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt "
 			+ " WHERE rp.subscriber.id = :subscriberId AND rp._active = true AND rp.isContextLaunch = true "
-			+ " ORDER BY rtype.reportTypeOrder, rp.name NULLS LAST, rp.name")
+			+ " ORDER BY rp.name NULLS LAST, rp.name")
 	public List<ReportParamset> selectReportParamsetContextLaunch(@Param("subscriberId") Long subscriberId);
 
 	/**
@@ -96,9 +96,9 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	 * @param reportType
 	 * @return
 	 */
-	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt LEFT JOIN rt.reportType rtype "
+	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt "
 			+ " WHERE rp.subscriber.id = :rmaSubscriberId AND rp._active = true AND rp.isContextLaunchChild = true "
-			+ " ORDER BY rtype.reportTypeOrder, rp.name NULLS LAST, rp.name")
+			+ " ORDER BY rp.name NULLS LAST, rp.name")
 	public List<ReportParamset> selectRmaReportParamsetContextLaunchChild(
 			@Param("rmaSubscriberId") Long rmaSubscriberId);
 

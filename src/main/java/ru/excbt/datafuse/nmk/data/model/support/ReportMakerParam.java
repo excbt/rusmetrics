@@ -40,6 +40,7 @@ public class ReportMakerParam {
 	private final Long[] paramContObjectIds;
 	private final Long[] subscrContObjectIds;
 	private final ReportParamset reportParamset;
+	private final ReportType reportType;
 	private final boolean previewMode;
 
 	/**
@@ -47,14 +48,17 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset, Long[] paramContObjectIds,
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportType reportType, ReportParamset reportParamset,
+			Long[] paramContObjectIds,
 			Long[] subscrContObjectIds, boolean previewMode) {
 		checkNotNull(subscriberParam);
+		checkNotNull(reportType);
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(paramContObjectIds);
 		//checkArgument(paramContObjectIds.length > 0);
 		this.subscriberParam = subscriberParam;
+		this.reportType = reportType;
 		this.reportParamset = reportParamset;
 		this.paramContObjectIds = Arrays.copyOf(paramContObjectIds, paramContObjectIds.length);
 		this.subscrContObjectIds = subscrContObjectIds != null
@@ -67,9 +71,9 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param paramContObjectIdList
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportParamset reportParamset,
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportType reportType, ReportParamset reportParamset,
 			List<Long> paramContObjectIdList, List<Long> subscrContObjectIdList, boolean previewMode) {
-		this(subscriberParam, reportParamset, checkNotNull(paramContObjectIdList).toArray(new Long[0]),
+		this(subscriberParam, reportType, reportParamset, checkNotNull(paramContObjectIdList).toArray(new Long[0]),
 				subscrContObjectIdList != null ? subscrContObjectIdList.toArray(new Long[0]) : null, previewMode);
 	}
 
@@ -156,8 +160,8 @@ public class ReportMakerParam {
 		}
 
 		return Boolean.TRUE.equals(reportParamset.getOutputFileZipped())
-				|| (getReportContObjectIdList().size() > 1 && Boolean.TRUE.equals(reportParamset.getReportTemplate()
-						.getReportType().getReportMetaParamCommon().getManyContObjectsZipOnly()));
+				|| (getReportContObjectIdList().size() > 1
+						&& Boolean.TRUE.equals(reportType.getReportMetaParamCommon().getManyContObjectsZipOnly()));
 	}
 
 	/**
@@ -209,7 +213,7 @@ public class ReportMakerParam {
 		checkNotNull(reportParamset.getReportTemplate());
 
 		result = Boolean.TRUE
-				.equals(getParamserReportTemplate().getReportType().getReportMetaParamCommon().getIsSpecialIdParam());
+				.equals(reportType.getReportMetaParamCommon().getIsSpecialIdParam());
 
 		return result;
 	}
@@ -256,8 +260,8 @@ public class ReportMakerParam {
 	private Object getReportSpecialParamValue(String keyname) {
 		logger.debug("getReportSpecialParamValue with keyname:{}", keyname);
 		checkNotNull(keyname);
-		Optional<ReportMetaParamSpecial> optMetaParam = getParamserReportTemplate().getReportType()
-				.getReportMetaParamSpecialList().stream().filter((i) -> i.getParamSpecialKeyname().equals(keyname))
+		Optional<ReportMetaParamSpecial> optMetaParam = reportType.getReportMetaParamSpecialList().stream()
+				.filter((i) -> i.getParamSpecialKeyname().equals(keyname))
 				.findFirst();
 
 		if (!optMetaParam.isPresent()) {
@@ -364,7 +368,7 @@ public class ReportMakerParam {
 
 		boolean result = true;
 
-		ReportType reportType = reportParamset.getReportTemplate().getReportType();
+		//ReportType reportType = reportParamset.getReportTemplate().getReportType();
 
 		ReportMetaParamCommon paramCommon = reportType.getReportMetaParamCommon();
 
@@ -437,7 +441,7 @@ public class ReportMakerParam {
 
 		boolean result = true;
 
-		ReportType reportType = reportParamset.getReportTemplate().getReportType();
+		//ReportType reportType = reportParamset.getReportTemplate().getReportType();
 
 		checkNotNull(reportType.getReportMetaParamSpecialList());
 

@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
@@ -546,8 +547,14 @@ public class ReportParamsetController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamsetContextLaunch() {
-		List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getSubscriberParam());
-		return responseOK(ObjectFilters.deletedFilter(xList));
+		List<ReportParamset> xList = reportParamsetService
+				.selectReportParamsetContextLaunch(getSubscriberParam());
+
+		List<ReportParamsetVO> result = reportParamsetService.wrapReportParamsetVO(xList);
+
+		result.sort(ReportParamsetVO.COMPARATOR);
+
+		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
