@@ -5,6 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,9 +31,11 @@ import ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
+import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -65,6 +69,9 @@ public class ReportParamsetController extends SubscrApiController {
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
+
+	@Autowired
+	private ReportTypeService reportTypeService;
 
 	/**
 	 * 
@@ -550,7 +557,15 @@ public class ReportParamsetController extends SubscrApiController {
 		List<ReportParamset> xList = reportParamsetService
 				.selectReportParamsetContextLaunch(getSubscriberParam());
 
-		List<ReportParamsetVO> result = reportParamsetService.wrapReportParamsetVO(xList);
+		List<ReportType> reportTypes = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
+		reportTypes = filterObjectAccess(reportTypes);
+
+		final Set<String> reportTypeKeynames = reportTypes.stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
+				.map(i -> i.getKeyname()).collect(Collectors.toSet());
+
+		List<ReportParamsetVO> result = reportParamsetService.wrapReportParamsetVO(
+				xList.stream().filter(i -> reportTypeKeynames.contains(i.getReportTemplate().getReportTypeKeyname()))
+						.collect(Collectors.toList()));
 
 		result.sort(ReportParamsetVO.COMPARATOR);
 
