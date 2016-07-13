@@ -358,7 +358,7 @@ app.service('indicatorSvc', function(){
                     {"name":"q_R", "caption":"R"}]; /* reactive*/
         var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
                         {"name":"n", "caption":"-"}];/*negative*/
-        var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
+        var tariffPlans = [1, 2, 3, 4, 5];//use 5 tariff plans
         var columns = [{
                     header : "Дата",
                     headerClass : "col-xs-2 col-md-2 nmc-text-align-center",

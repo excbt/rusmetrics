@@ -96,16 +96,17 @@ angular.module('portalNMC')
 //console.log(columns);    
     // ******************************* end Create columns **************************
     $scope.tableDef.columns = indicatorSvc.getElectricityColumns();//columns;
-    $scope.columns = $scope.tableDef.columns;
-    $scope.ctrlSettings.activeEnergyColCount = 10;
-    $scope.ctrlSettings.reactiveEnergyColCount = 10;
+    $scope.columns = $scope.tableDef.columns;    
+    var colLen = Math.floor($scope.columns.length / 2);
+    $scope.ctrlSettings.activeEnergyColCount = colLen;
+    $scope.ctrlSettings.reactiveEnergyColCount = colLen;
     
     function setColumnPref(columnPrefs){        
         //if columnPrefs not set, that mean - view all columns
         if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length == 0){
             //indicator columns
-            $scope.ctrlSettings.activeEnergyColCount = 10;
-            $scope.ctrlSettings.reactiveEnergyColCount = 10;
+            $scope.ctrlSettings.activeEnergyColCount = colLen;
+            $scope.ctrlSettings.reactiveEnergyColCount = colLen;
             for (var i = 1; i < $scope.columns.length; i++){                
                 $scope.columns[i].isvisible = 'isvisible';
             }
