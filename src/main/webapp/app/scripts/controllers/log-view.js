@@ -411,9 +411,33 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
         $cookies.heightLogFooterPart = $("#log-footer-part > .rui-resizable-content").height();
         $rootScope.$broadcast('logSvc:cancelInterval');
-    });
+    });    
     
-    $(document).ready(function(){      
+    $(document).ready(function(){
+        
+//        $("#log-upper-part").resizable({
+//            handles: "s",
+//            resize: function (event, ui){
+//                console.log("#log-upper-part > .rui-resizable-handle click = " + $("#log-upper-part > .rui-resizable-content").height());
+//            }
+//        });
+//        
+//        $("#log-footer-part").resizable({
+//            handles: "s"
+//        });
+
+        $("#log-upper-part > .rui-resizable-handle").on('click', function(){
+//console.log("#log-upper-part > .rui-resizable-handle click = " + $("#log-upper-part > .rui-resizable-content").height());
+            document.cookie = "heightLogUpperPart=" + $("#log-upper-part > .rui-resizable-content").height();
+//            $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
+        });
+
+        $("#log-footer-part > .rui-resizable-handle").on('click', function(){
+//console.log("#log-footer-part > .rui-resizable-handle click = " + $("#log-footer-part > .rui-resizable-content").height());            
+            document.cookie = "heightLogFooterPart=" + $("#log-footer-part > .rui-resizable-content").height();
+//            $cookies.heightLogFooterPart = $("#log-footer-part > .rui-resizable-content").height();       
+        });
+        
         $('#object-toggle-view').bootstrapToggle();
         $('#object-toggle-view').change(function(){
             $scope.ctrlSettings.showObjectsFlag = Boolean($(this).prop('checked'));

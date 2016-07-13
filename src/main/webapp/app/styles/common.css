@@ -335,6 +335,13 @@ body{
     background-color: #eee;
 }
 
+/* Разметка "Журналы" - "Журнал загрузки данных"*/
+.nmc-log-footer-part-not-used{
+    max-height: 600px;
+    min-height: 100px;
+    overflow-y: auto;
+}
+
 
 /***********************
  * Элементы навигации 
@@ -2385,11 +2392,16 @@ input[type="checkbox"] {
 /*  Классы для настройки resizable компоненты*/
 /*******************************************************************/
 .ui-resizable-s{
-/*    height: 14px;*/
-    background-color: #BEBEBE;
+    height: 14px;
+    background-image: url(../images/resizable.png);
+    background-repeat: no-repeat;
+    background-position: center -26px;
+    background-color: #DDD;
+/*
     border-radius: 4px;
     width: 10%;
     margin: 0 0 5px 45%;
+*/
 
 }
 
