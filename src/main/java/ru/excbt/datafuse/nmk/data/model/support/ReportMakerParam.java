@@ -20,8 +20,8 @@ import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
+import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
@@ -40,7 +40,7 @@ public class ReportMakerParam {
 	private final Long[] paramContObjectIds;
 	private final Long[] subscrContObjectIds;
 	private final ReportParamset reportParamset;
-	private final ReportType reportType;
+	private final ReportTypeWithParamsVO reportType;
 	private final boolean previewMode;
 
 	/**
@@ -48,9 +48,9 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportType reportType, ReportParamset reportParamset,
-			Long[] paramContObjectIds,
-			Long[] subscrContObjectIds, boolean previewMode) {
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportTypeWithParamsVO reportType,
+			ReportParamset reportParamset,
+			Long[] paramContObjectIds, Long[] subscrContObjectIds, boolean previewMode) {
 		checkNotNull(subscriberParam);
 		checkNotNull(reportType);
 		checkNotNull(reportParamset);
@@ -71,8 +71,9 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param paramContObjectIdList
 	 */
-	public ReportMakerParam(SubscriberParam subscriberParam, ReportType reportType, ReportParamset reportParamset,
-			List<Long> paramContObjectIdList, List<Long> subscrContObjectIdList, boolean previewMode) {
+	public ReportMakerParam(SubscriberParam subscriberParam, ReportTypeWithParamsVO reportType,
+			ReportParamset reportParamset, List<Long> paramContObjectIdList, List<Long> subscrContObjectIdList,
+			boolean previewMode) {
 		this(subscriberParam, reportType, reportParamset, checkNotNull(paramContObjectIdList).toArray(new Long[0]),
 				subscrContObjectIdList != null ? subscrContObjectIdList.toArray(new Long[0]) : null, previewMode);
 	}
@@ -502,6 +503,10 @@ public class ReportMakerParam {
 
 	public SubscriberParam getSubscriberParam() {
 		return subscriberParam;
+	}
+
+	public ReportTypeWithParamsVO getReportType() {
+		return reportType;
 	}
 
 }

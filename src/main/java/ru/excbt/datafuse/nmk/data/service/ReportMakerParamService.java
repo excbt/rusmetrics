@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -164,9 +165,11 @@ public class ReportMakerParamService {
 		String reportTypeKeyname = reportParamset.getReportTemplate().getReportTypeKeyname();
 		ReportType reportType = reportTypeService.selectReportType(reportTypeKeyname);
 
+		ReportTypeWithParamsVO reportTypeWithParamsVO = reportTypeService.makeReportTypeParam(reportType);
+
 		if (paramContObjectIdList.isEmpty()) {
 
-			if (!Boolean.TRUE.equals(reportType.getReportMetaParamCommon()
+			if (!Boolean.TRUE.equals(reportTypeWithParamsVO.getReportMetaParamCommon()
 					.getNoContObjectsRequired())) {
 
 				//				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset.getSubscriber().getId()
@@ -178,7 +181,7 @@ public class ReportMakerParamService {
 
 		}
 
-		return new ReportMakerParam(subscriberParam, reportType, reportParamset,
+		return new ReportMakerParam(subscriberParam, reportTypeWithParamsVO, reportParamset,
 				paramContObjectIdList, subscrContObjectIds, previewMode);
 
 	}
@@ -211,7 +214,7 @@ public class ReportMakerParamService {
 
 		Map<Long, ReportMetaParamSpecial> metaParamMap = new HashMap<>();
 
-		for (ReportMetaParamSpecial metaParam : reportType.getReportMetaParamSpecialList()) {
+		for (ReportMetaParamSpecial metaParam : reportMakerParam.getReportType().getReportMetaParamSpecialList()) {
 			metaParamMap.put(metaParam.getId(), metaParam);
 		}
 

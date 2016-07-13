@@ -5,16 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 /**
@@ -38,10 +36,10 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel implements Di
 	@Column(name = "report_type")
 	private String reportTypeKeyname;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "report_type", insertable = false, updatable = false)
-	@JsonIgnore
-	private ReportType reportType;
+	//	@OneToOne(fetch = FetchType.LAZY)
+	//	@JoinColumn(name = "report_type", insertable = false, updatable = false)
+	//	@JsonIgnore
+	//	private ReportType reportType;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "param_special_type")
@@ -71,9 +69,16 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel implements Di
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
-	public ReportType getReportType() {
-		return reportType;
-	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "param_category", insertable = false, updatable = false)
+	private ReportMetaParamCategory reportMetaParamCategory;
+
+	@Column(name = "param_category", insertable = false, updatable = false)
+	private String reportMetaParamCategoryKeyname;
+
+	//	public ReportType getReportType() {
+	//		return reportType;
+	//	}
 
 	public ReportMetaParamSpecialType getParamSpecialType() {
 		return paramSpecialType;

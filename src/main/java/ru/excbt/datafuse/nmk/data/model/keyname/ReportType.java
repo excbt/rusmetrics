@@ -5,17 +5,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
-import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTypeContServiceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
@@ -56,11 +50,11 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Version
 	private int version;
 
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "reportType")
-	private ReportMetaParamCommon reportMetaParamCommon;
+	//	@OneToOne(fetch = FetchType.EAGER, mappedBy = "reportType")
+	//	private ReportMetaParamCommon reportMetaParamCommon;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
-	private List<ReportMetaParamSpecial> reportMetaParamSpecialList = new ArrayList<ReportMetaParamSpecial>();
+	//	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
+	//	private List<ReportMetaParamSpecial> reportMetaParamSpecialList = new ArrayList<ReportMetaParamSpecial>();
 
 	@Column(name = "report_type_order")
 	private Integer reportTypeOrder;
@@ -117,13 +111,13 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 		return version;
 	}
 
-	public ReportMetaParamCommon getReportMetaParamCommon() {
-		return reportMetaParamCommon;
-	}
+	//	public ReportMetaParamCommon getReportMetaParamCommon() {
+	//		return reportMetaParamCommon;
+	//	}
 
-	public List<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
-		return ObjectFilters.disabledFilter(reportMetaParamSpecialList);
-	}
+	//	public List<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
+	//		return ObjectFilters.disabledFilter(reportMetaParamSpecialList);
+	//	}
 
 	public Integer getReportTypeOrder() {
 		return reportTypeOrder;

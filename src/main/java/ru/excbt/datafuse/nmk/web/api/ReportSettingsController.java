@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
@@ -49,6 +50,22 @@ public class ReportSettingsController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportType() {
+
+		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
+
+		resultReports = filterObjectAccess(resultReports);
+
+		List<ReportTypeWithParamsVO> result = reportTypeService.makeReportTypeParams(resultReports);
+
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/reportTypesParams", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTypeParams() {
 
 		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
 

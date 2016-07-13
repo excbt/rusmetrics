@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.vo;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -7,7 +8,12 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
-public class ReportParamsetVO implements DeletedMarker {
+public class ReportParamsetVO implements DeletedMarker, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2935994871992068761L;
 
 	public static final Comparator<ReportParamsetVO> COMPARATOR = new ReportParamsetVOComparator();
 

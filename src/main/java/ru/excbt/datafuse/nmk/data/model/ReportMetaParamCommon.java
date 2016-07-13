@@ -4,18 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 /**
  * Общие параметры для типа отчета
@@ -35,12 +29,13 @@ public class ReportMetaParamCommon implements Serializable {
 	 */
 	private static final long serialVersionUID = -569411608287416733L;
 
-	@Id
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "report_type", insertable = false, updatable = false)
-	@JsonIgnore
-	private ReportType reportType;
+	//	@Id
+	//	@OneToOne(fetch = FetchType.LAZY)
+	//	@JoinColumn(name = "report_type", insertable = false, updatable = false)
+	//	@JsonIgnore
+	//	private ReportType reportType;
 
+	@Id
 	@Column(name = "report_type")
 	private String reportTypeKeyname;
 
@@ -127,13 +122,13 @@ public class ReportMetaParamCommon implements Serializable {
 		this.version = version;
 	}
 
-	public ReportType getReportType() {
-		return reportType;
-	}
-
-	public void setReportType(ReportType reportType) {
-		this.reportType = reportType;
-	}
+	//	public ReportType getReportType() {
+	//		return reportType;
+	//	}
+	//
+	//	public void setReportType(ReportType reportType) {
+	//		this.reportType = reportType;
+	//	}
 
 	public Boolean getNoContObjectsRequired() {
 		return noContObjectsRequired;
@@ -170,7 +165,6 @@ public class ReportMetaParamCommon implements Serializable {
 		result = prime * result + ((noContObjectsRequired == null) ? 0 : noContObjectsRequired.hashCode());
 		result = prime * result + ((oneContObjectRequired == null) ? 0 : oneContObjectRequired.hashCode());
 		result = prime * result + ((oneDateRequired == null) ? 0 : oneDateRequired.hashCode());
-		result = prime * result + ((reportType == null) ? 0 : reportType.hashCode());
 		result = prime * result + ((reportTypeKeyname == null) ? 0 : reportTypeKeyname.hashCode());
 		result = prime * result + ((startDateRequired == null) ? 0 : startDateRequired.hashCode());
 		result = prime * result + version;
@@ -220,11 +214,6 @@ public class ReportMetaParamCommon implements Serializable {
 			if (other.oneDateRequired != null)
 				return false;
 		} else if (!oneDateRequired.equals(other.oneDateRequired))
-			return false;
-		if (reportType == null) {
-			if (other.reportType != null)
-				return false;
-		} else if (!reportType.equals(other.reportType))
 			return false;
 		if (reportTypeKeyname == null) {
 			if (other.reportTypeKeyname != null)

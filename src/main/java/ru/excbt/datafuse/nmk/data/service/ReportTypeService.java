@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTypeContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
+import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamCommonRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamSpecialRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTypeContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
@@ -45,6 +49,9 @@ public class ReportTypeService {
 
 	@Autowired
 	private ReportTypeRepository reportTypeRepository;
+
+	@Autowired
+	private ReportMetaParamCommonRepository reportMetaParamCommonRepository;
 
 	@Autowired
 	private ReportMetaParamSpecialRepository reportMetaParamSpecialRepository;
@@ -128,6 +135,41 @@ public class ReportTypeService {
 		List<ReportTypeContServiceType> serviceTypes = reportTypeContServiceTypeRepository
 				.selectContServiceTypes(reportType.getKeyname());
 		reportType.getContServiceTypes().addAll(serviceTypes);
+	}
+
+	/**
+	 * 
+	 * @param reportTypes
+	 * @return
+	 */
+	public List<ReportTypeWithParamsVO> makeReportTypeParams(List<ReportType> reportTypes) {
+		List<ReportTypeWithParamsVO> resultReportTypes = new ArrayList<>();
+
+		for (ReportType rt : reportTypes) {
+			ReportTypeWithParamsVO item = makeReportTypeParam(rt);
+			resultReportTypes.add(item);
+		}
+
+		return resultReportTypes;
+	}
+
+	/**
+	 * 
+	 * @param reportType
+	 * @return
+	 */
+	public ReportTypeWithParamsVO makeReportTypeParam(ReportType reportType) {
+		List<ReportMetaParamCommon> paramCommons = reportMetaParamCommonRepository
+				.selectByReportTypeKeyname(reportType.getKeyname());
+
+		ReportMetaParamCommon paramCommon = paramCommons.size() == 1 ? paramCommons.get(0) : null;
+
+		List<ReportMetaParamSpecial> paramSpecial = reportMetaParamSpecialRepository
+				.findByReportTypeKeyname(reportType.getKeyname());
+
+		ReportTypeWithParamsVO item = new ReportTypeWithParamsVO(reportType, paramCommon, paramSpecial);
+		return item;
+
 	}
 
 }
