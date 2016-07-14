@@ -272,6 +272,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             tmp.forEach(function(el){
                 getGroupObjects(el);
             });
+            mainSvc.sortItemsBy(tmp, "contGroupName");
             $scope.groups = tmp;
 //console.log($scope.groups);
         }, function(e){

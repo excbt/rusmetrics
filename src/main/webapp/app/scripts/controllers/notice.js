@@ -752,6 +752,7 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
             tmp.forEach(function(el){
                 getGroupObjects(el);
             });
+            mainSvc.sortItemsBy(tmp, "contGroupName");
             $scope.groups = tmp;
 //console.log($scope.groups);
         }, function(e){

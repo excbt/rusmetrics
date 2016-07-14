@@ -498,6 +498,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             tempGroupArr.forEach(function(group){
                 $scope.getGroupObjects(group);
             });
+            mainSvc.sortItemsBy(tempGroupArr, "contGroupName");
             $scope.availableObjectGroups = tempGroupArr;          
         });        
     };

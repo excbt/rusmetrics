@@ -80,7 +80,10 @@ angular.module('portalNMC')
     $scope.getData = function (url, type) {      
         crudGridDataFactory(url).query(function (data) {
             switch (type){
-                case "groups": $scope.groups = data; break;
+                case "groups":                
+                    mainSvc.sortItemsBy(data, "contGroupName");
+                    $scope.groups = angular.copy(data);
+                    break;
                 case "availableObjects":                    
                     $scope.availableObjects = angular.copy(data); 
                     objectSvc.sortObjectsByFullName($scope.availableObjects);
