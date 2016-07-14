@@ -594,6 +594,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             tempGroupArr.forEach(function(group){
                 $scope.getGroupObjects(group);
             });
+            mainSvc.sortItemsBy(tempGroupArr, "contGroupName");
             $scope.availableObjectGroups = tempGroupArr;          
         });        
     };
