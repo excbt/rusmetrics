@@ -66,15 +66,18 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel implements Di
 	@Column(name = "param_special_default_value2")
 	private String paramSpecialDefaultValue2;
 
-	@Column(name = "is_disabled")
+	@Column(name = "is_disabled", insertable = false, updatable = false)
 	private Boolean isDisabled;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "param_category", insertable = false, updatable = false)
 	private ReportMetaParamCategory reportMetaParamCategory;
 
 	@Column(name = "param_category", insertable = false, updatable = false)
 	private String reportMetaParamCategoryKeyname;
+
+	@Column(name = "param_order", insertable = false, updatable = false)
+	private Integer reportMetaParamOrder;
 
 	//	public ReportType getReportType() {
 	//		return reportType;
@@ -119,6 +122,22 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel implements Di
 
 	public String getReportTypeKeyname() {
 		return reportTypeKeyname;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public ReportMetaParamCategory getReportMetaParamCategory() {
+		return reportMetaParamCategory;
+	}
+
+	public String getReportMetaParamCategoryKeyname() {
+		return reportMetaParamCategoryKeyname;
+	}
+
+	public Integer getReportMetaParamOrder() {
+		return reportMetaParamOrder;
 	}
 
 }

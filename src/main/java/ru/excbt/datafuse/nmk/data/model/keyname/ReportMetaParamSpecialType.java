@@ -5,14 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+
 @Entity
-@Table(name="report_meta_param_special_type")
+@Table(name = "report_meta_param_special_type")
 @JsonInclude(Include.NON_NULL)
 public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 
@@ -21,41 +21,42 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 	 */
 	private static final long serialVersionUID = 1513108600723081299L;
 
-	@Column(name="caption")
+	@Column(name = "caption")
 	private String caption;
-	
-	@Column(name="special_type_name")
+
+	@Column(name = "special_type_name")
 	private String specialTypeName;
-	
-	@Column(name="special_type_description")
+
 	@JsonIgnore
+	@Column(name = "special_type_description")
 	private String specialTypeDescription;
 
-	@Column(name="special_type_comment")
 	@JsonIgnore
-	private String specialTypeComment;	
+	@Column(name = "special_type_comment")
+	private String specialTypeComment;
 
-	@Column(name="special_type_directory")
-	private String specialTypeDirectory;	
+	@Column(name = "special_type_directory")
+	private String specialTypeDirectory;
 
-	@Column(name="special_type_directory_url")
-	private String specialTypeDirectoryUrl;	
-	
-	@Column(name="special_type_directory_key")
-	private String specialTypeDirectoryKey;	
-	
-	@Column(name="special_type_directory_caption")
-	private String specialTypeDirectoryCaption;	
+	@Column(name = "special_type_directory_url")
+	private String specialTypeDirectoryUrl;
 
-	@Column(name="special_type_directory_value")
-	private String specialTypeDirectoryValue;	
-	
-	@Column(name="special_type_field1")
+	@Column(name = "special_type_directory_key")
+	private String specialTypeDirectoryKey;
+
+	@Column(name = "special_type_directory_caption")
+	private String specialTypeDirectoryCaption;
+
+	@Column(name = "special_type_directory_value")
+	private String specialTypeDirectoryValue;
+
+	@Column(name = "special_type_field1")
 	private String specialTypeField1;
 
-	@Column(name="special_type_field2")
+	@Column(name = "special_type_field2")
 	private String specialTypeField2;
-	
+
+	@JsonIgnore
 	@Version
 	private int version;
 
@@ -154,6 +155,5 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 	public void setSpecialTypeDirectoryValue(String specialTypeDirectoryValue) {
 		this.specialTypeDirectoryValue = specialTypeDirectoryValue;
 	}
-
 
 }

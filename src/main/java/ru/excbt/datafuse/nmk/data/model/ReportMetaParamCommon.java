@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -63,6 +64,7 @@ public class ReportMetaParamCommon implements Serializable {
 	@Column(name = "is_special_id_param")
 	private Boolean isSpecialIdParam;
 
+	@JsonIgnore
 	@Version
 	private int version;
 
