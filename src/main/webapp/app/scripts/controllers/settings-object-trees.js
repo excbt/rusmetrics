@@ -848,6 +848,7 @@ console.log(e);
                             createdTree.childObjectList[0].templateItemId = createdTree.templateItemId;
                         };
                         $scope.data.trees.push(createdTree);
+                        mainSvc.sortItemsBy($scope.data.trees, "objectName");
                         $scope.loadTree(createdTree);
                         $('#showTreeOptionModal').modal('hide');
                     }, errorProtoCallback);                    
