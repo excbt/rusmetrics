@@ -316,10 +316,14 @@ angular.module('portalNMC')
                 return null;
             return $http.get(url, httpOptions);
         };
-        var getRmaObjectsData = function () {
+        var getRmaObjectsData = function (contGroupId) {
+            var url = getRmaObjectsUrl();
+            if (!checkUndefinedNull(contGroupId)){
+                url += "?contGroupId=" + contGroupId;
+            };
             if (isCancelParamsIncorrect() == true)
                 return null;            
-            return $http.get(getRmaObjectsUrl(), httpOptions);
+            return $http.get(url, httpOptions);
         };
 
                 //get object
@@ -474,7 +478,7 @@ angular.module('portalNMC')
        var rmaPromise = null;//getRmaObjectsData();
        var loadData = function(contGroupId){
          promise = getObjectsData(contGroupId);
-         rmaPromise = getRmaObjectsData();
+         rmaPromise = getRmaObjectsData(contGroupId);
        };
                  
        $rootScope.$on('objectSvc:requestReloadData', function(event, args){

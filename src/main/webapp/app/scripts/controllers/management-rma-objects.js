@@ -19,6 +19,7 @@ angular.module('portalNMC')
                 $scope.messages.markAllOff = "Отменить все";
                 $scope.messages.moveToNode = "Привязать к узлу";
                 $scope.messages.releaseFromNode = "Отвязать от узла";
+                $scope.messages.groupMenuHeader = "Полный список объектов";
                 
                 $scope.messages.noObjects = "Объектов нет.";
                 
@@ -66,11 +67,14 @@ angular.module('portalNMC')
                 });
                 
                 $scope.data = {};
+                $scope.data.currentGroupId = null; //current group id: use for group object filter
                 
                 $scope.object = {};
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
                 $scope.currentSug = null;
+                
+                $scope.groupUrl = "../api/subscr/contGroup";
                 
                 function findObjectById(objId){
                     var obj = null;                 
@@ -116,12 +120,25 @@ angular.module('portalNMC')
                 
                 var getObjectsData = function(objId){
 //console.log("getObjectsData");
-                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $rootScope.$broadcast('objectSvc:requestReloadData', {"contGroupId": $scope.data.currentGroupId});
                     $scope.loading = true;
                     if (!mainSvc.checkUndefinedNull(objId)){
                         $scope.data.moveToObjectId =  objId;
                     };
                     objectSvc.getRmaPromise().then(performObjectsData);
+                };
+                
+//      USING GROUP DATA                                     
+                $scope.objectsDataFilteredByGroup = function(group){
+                    if (mainSvc.checkUndefinedNull(group)){
+                        $scope.messages.groupMenuHeader = "Полный список объектов"
+                        $scope.data.currentGroupId = null;
+                    }else{
+                        $scope.messages.groupMenuHeader = group.contGroupName;
+                        $scope.data.currentGroupId = group.id;
+                        $scope.data.currentGroup = group;
+                    };
+                    getObjectsData();
                 };
                 
                 
@@ -463,12 +480,26 @@ angular.module('portalNMC')
                     
                     successCallback(e, null);
                 };
+                
+                function successCreateObjectAtGroupCallback () {
+                    getObjectsData();
+                }
 
 
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
                     if ($scope.objectCtrlSettings.isTreeView == false || mainSvc.checkUndefinedNull($scope.data.currentTree)){
                         getObjectsData(e.id);
+                        //if current group is defined
+                        if (!mainSvc.checkUndefinedNull($scope.data.currentGroupId) && !mainSvc.checkUndefinedNull($scope.data.currentGroup)){
+                            var targetUrl = $scope.groupUrl;//+"/"+$scope.currentGroup.id;
+                            var objectIds = $scope.objects.map(function(el){
+                                return el.id;
+                            });
+                            objectIds.push(e.id);
+                            
+                            crudGridDataFactory(targetUrl).update({contObjectIds: objectIds}, $scope.data.currentGroup, successCreateObjectAtGroupCallback, errorCallback);
+                        }
                     }else{
                     //if tree is on
                         if (!mainSvc.checkUndefinedNull($scope.data.selectedNode) && (mainSvc.checkUndefinedNull($scope.data.selectedNode.type) || $scope.data.selectedNode.type != 'root')){
@@ -2034,28 +2065,64 @@ angular.module('portalNMC')
                         }, errorCallback);
                 };
                 
-                var loadTrees = function(){
+//                var loadTrees = function(){
+//                    objectSvc.loadSubscrTrees().then(function(resp){
+//                        mainSvc.sortItemsBy(resp.data, "objectName");
+//                        $scope.data.trees = angular.copy(resp.data);
+//                        if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree) ){ 
+//                            $scope.viewFullObjectList();
+//                            return "View full object list!";
+//                        }; 
+//                        $scope.loadTree($scope.data.defaultTree);                        
+//                    }, errorCallback);
+//                };
+                
+                var loadTrees = function(treeSetting){
+                    $scope.treeLoading = true;
                     objectSvc.loadSubscrTrees().then(function(resp){
+                        $scope.treeLoading = false;
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
+                        if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
+                            $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));                   
+                        };
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree) ){ 
                             $scope.viewFullObjectList();
                             return "View full object list!";
-                        }; 
+                        };                        
                         $scope.loadTree($scope.data.defaultTree);                        
+                        
                     }, errorCallback);
                 };
                 
                 $scope.toggleTreeView = function(){
                     $scope.objectCtrlSettings.isTreeView = !$scope.objectCtrlSettings.isTreeView;
+                    $scope.data.currentGroupId = null;//reset current group
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData();
                     }else{
                     //if tree is on
-                        loadTrees();                    
+//                        loadTrees();
+                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);
                     };
                 };
+                
+                var successLoadTreeSetting = function(resp){
+                    $scope.objectCtrlSettings.isTreeView = resp.data.isActive;
+                    loadTrees(resp.data);
+                };
+                
+//                $scope.toggleTreeView = function(){
+//                    $scope.objectCtrlSettings.isTreeView = !$scope.objectCtrlSettings.isTreeView;
+//                    //if tree is off
+//                    if ($scope.objectCtrlSettings.isTreeView == false){
+//                        getObjectsData();
+//                    }else{
+//                    //if tree is on
+//                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                     
+//                    };
+//                };
                 
                 $scope.moveToNode = function(){                 
                     objectSvc.putObjectsToTreeNode($scope.data.currentTree.id, $scope.data.selectedNodeForMove.id, $scope.data.treeForMove.movingObjects).then(function(resp){
@@ -2098,7 +2165,8 @@ angular.module('portalNMC')
                         getObjectsData();
                     }else{
                     //if tree is on
-                        loadTrees();                    
+//                        loadTrees(); 
+                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);
                     };
                 };
                 initCtrl();
