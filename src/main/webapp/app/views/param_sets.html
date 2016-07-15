@@ -14,8 +14,7 @@
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
-        
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>        
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
@@ -792,16 +791,25 @@
     -->
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr ng-repeat="paramSpecial in currentParamSpecialList">
-                                            <td class="col-sm-3">
+                                            <td class="col-sm-3"
+                                                ng-class="{'col-sm-9': paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL', 'col-sm-3': paramSpecial.paramSpecialTypeKeyname != 'SPECIAL_BOOL'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL' ? 2 : 1}}"
+                                                >
                                                 <label for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.paramSpecialCaption}}
+                                                    <span ng-if="isSystemuser()">
+                                                        {{paramSpecial.reportMetaParamFullOrder}}
+                                                    </span>
                                                 </label>
                                             </td>
     <!--
                                             <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
                                             </td>
     -->
-                                            <td class="col-sm-9 nmc-text-align-left">
+                                            <td class="col-sm-9 nmc-text-align-left"
+                                                ng-class="{'col-sm-3': paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL', 'col-sm-9': paramSpecial.paramSpecialTypeKeyname != 'SPECIAL_BOOL'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL' ? 1 : 2}}"
+                                                >
                                                 <div ng-switch on="paramSpecial.paramSpecialTypeKeyname">
                                                     <span ng-switch-when="SPECIAL_STRING">
                                                         <input class="form-control nmc-text-input-form" 

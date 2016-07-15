@@ -475,6 +475,33 @@ angular.module('portalNMC')
         });
     };
     
+    var sortNumericItemsBy = function(itemArray, sortField){
+        if (!angular.isArray(itemArray)){
+            return "Input value is no array.";
+        };
+        if (checkUndefinedNull(sortField)){
+            return "Field for sort is undefined or null.";
+        };
+        itemArray.sort(function(firstItem, secondItem){
+            if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
+                return 0;
+            };
+            if (checkUndefinedNull(firstItem[sortField])){
+                return -1;
+            };
+            if (checkUndefinedNull(secondItem[sortField])){
+                return 1;
+            };
+            if (firstItem[sortField] > secondItem[sortField]){
+                return 1;
+            };
+            if (firstItem[sortField] < secondItem[sortField]){
+                return -1;
+            };
+            return 0;
+        });
+    };
+    
     // Sort organizations by organizationName
     var sortOrganizationsByName = function(orgArr){
         if (!angular.isArray(orgArr)){
@@ -714,6 +741,7 @@ angular.module('portalNMC')
         setMonitorMapSettings,
         setObjectMapSettings,
         sortItemsBy,
+        sortNumericItemsBy,
         sortOrganizationsByName,
         sortTreeNodesBy,
         strDateToUTC

@@ -2,7 +2,9 @@
 var app = angular.module('portalNMC');
 
 app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', 'reportSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, reportSvc){
-//console.log("ParamSetsCtrl");    
+//console.log("ParamSetsCtrl");
+    var CATEGORY_COEF = 1000;
+    
     $rootScope.ctxId = "param_sets_page";
     //ctrl settings
     $scope.ctrlSettings = {};
@@ -362,11 +364,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             });
     };
     
-    
-    $scope.addParamSet = function(object){
-        $scope.setCurrentReportType(object);
-        //подготавливаем массив специальных параметров, который будет заполнять пользователь
-//console.log($scope.currentReportType.reportMetaParamSpecialList);        
+    function prepareCurrentParamSpecialListForAddParamSet_OLD_VERSION () {
         $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
             var result = {};
             result.paramSpecialCaption = element.paramSpecialCaption;
@@ -393,6 +391,54 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             result.endDateValueFormatted = null;            
             return result;
         });
+    }
+    
+    function prepareCurrentParamSpecialListForAddParamSet(){
+        var result = null;
+        result = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
+            var result = {};
+            result.paramSpecialCaption = element.paramSpecialCaption;
+            result.reportMetaParamSpecialId = element.id;
+            result.paramSpecialRequired = element.paramSpecialRequired;
+            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
+            result.reportMetaParamCategory = element.reportMetaParamCategory;
+            result.reportMetaParamCategoryOrder = element.reportMetaParamCategory.categoryOrder;
+            result.reportMetaParamCategoryKeyname = element.reportMetaParamCategoryKeyname;
+            result.reportMetaParamOrder = element.reportMetaParamOrder;
+            result.reportMetaParamFullOrder = element.reportMetaParamCategory.categoryOrder * CATEGORY_COEF + (mainSvc.checkUndefinedNull(element.reportMetaParamOrder) ? 0 : element.reportMetaParamOrder);            
+                    
+            if (isParamSpecialTypeDirectory(element))
+            {
+                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
+                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
+                result.specialTypeDirectoryValue = element.paramSpecialType.specialTypeDirectoryValue;
+                $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);
+            };
+            result.textValue = null;
+            result.boolValue = null;
+            result.numericValue = null;
+            result.oneDateValue = null;
+            
+            result.startDateValue = null;
+            result.endDateValue = null;
+            result.oneDateValueFormatted = null;
+            result.startDateValueFormatted = null;
+            result.endDateValueFormatted = null;            
+            return result;
+        });
+        
+        //sort by special params by full order        
+        mainSvc.sortNumericItemsBy(result, "reportMetaParamFullOrder");
+        
+        $scope.currentParamSpecialList = result;
+    }
+    
+    $scope.addParamSet = function(object){
+        $scope.setCurrentReportType(object);
+        //подготавливаем массив специальных параметров, который будет заполнять пользователь
+//console.log($scope.currentReportType.reportMetaParamSpecialList);        
+        prepareCurrentParamSpecialListForAddParamSet();
 //        $scope.paramsetStartDateFormat = (new Date());        
 //        $scope.paramsetEndDateFormat= (new Date()); 
         $scope.psStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);//(new Date());        
@@ -450,6 +496,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 result.reportMetaParamSpecialId = element.id;
                 result.paramSpecialRequired = element.paramSpecialRequired;
                 result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
+                
+                result.reportMetaParamCategory = element.reportMetaParamCategory;
+                result.reportMetaParamCategoryOrder = element.reportMetaParamCategory.categoryOrder;
+                result.reportMetaParamCategoryKeyname = element.reportMetaParamCategoryKeyname;
+                result.reportMetaParamOrder = element.reportMetaParamOrder;
+                result.reportMetaParamFullOrder = element.reportMetaParamCategory.categoryOrder * CATEGORY_COEF + (mainSvc.checkUndefinedNull(element.reportMetaParamOrder) ? 0 : element.reportMetaParamOrder);
+                
                 if (isParamSpecialTypeDirectory(element))
                 {
                     result.specialTypeDirectoryUrl = element.paramSpecialType.specialTypeDirectoryUrl;
@@ -509,7 +562,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 }              
                 return result;
 
-            });       
+            });
+        mainSvc.sortNumericItemsBy(result, "reportMetaParamFullOrder");
         return result;
     };
     
