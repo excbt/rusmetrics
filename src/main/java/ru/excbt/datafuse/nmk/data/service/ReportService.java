@@ -232,7 +232,9 @@ public class ReportService {
 					outputStreamWrapper.flush();
 					outputStreamWrapper.close();
 				} catch (IOException e) {
-					logger.error("Error during close ZIP output stream: {}", e);
+					logger.error("Error during close ZIP output stream. ReportMakerParam: {}",
+							reportMakerParam.toString());
+					logger.error("Exception: {}", e);
 					reportParamset = null;
 				}
 			}

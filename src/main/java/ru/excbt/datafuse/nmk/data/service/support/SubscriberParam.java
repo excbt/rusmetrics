@@ -140,4 +140,23 @@ public final class SubscriberParam {
 		return this.rmaSubscriberId != 0;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder2 = new StringBuilder();
+		builder2.append("SubscriberParam [subscriberId=");
+		builder2.append(subscriberId);
+		builder2.append(", subscrUserId=");
+		builder2.append(subscrUserId);
+		builder2.append(", isRma=");
+		builder2.append(isRma);
+		builder2.append(", rmaSubscriberId=");
+		builder2.append(rmaSubscriberId);
+		builder2.append(", parentSubscriberId=");
+		builder2.append(parentSubscriberId);
+		builder2.append(", subscrTypeKey=");
+		builder2.append(subscrTypeKey);
+		builder2.append("]");
+		return builder2.toString();
+	}
+
 }
