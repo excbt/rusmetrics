@@ -39,7 +39,7 @@ public class JpaConfigLocal {
 	 * @return
 	 * @throws NamingException
 	 */
-	@Bean(name = "dataSource", destroyMethod = "close")
+	@Bean(name = "dataSource", destroyMethod = "")
 	public DataSource dataSource() {
 
 		PGPoolingDataSource source = new PGPoolingDataSource();
@@ -55,13 +55,13 @@ public class JpaConfigLocal {
 	 * @return
 	 * @throws NamingException
 	 */
-//	@Bean
-//	public DefaultPersistenceUnitManager persistentUnitManager() {
-//		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
-//		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-local.xml");
-//		pu.setDefaultDataSource(dataSource());
-//		return pu;
-//	}
+	//	@Bean
+	//	public DefaultPersistenceUnitManager persistentUnitManager() {
+	//		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
+	//		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-local.xml");
+	//		pu.setDefaultDataSource(dataSource());
+	//		return pu;
+	//	}
 
 	/**
 	 * 
@@ -70,9 +70,9 @@ public class JpaConfigLocal {
 	 */
 	@Bean(name = "entityManagerFactory")
 	public EntityManagerFactory entityManagerFactory() {
-		
+
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		
+
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 		emf.setJpaVendorAdapter(vendorAdapter);
 		emf.setPersistenceUnitName("nmk-p");
@@ -84,7 +84,6 @@ public class JpaConfigLocal {
 		return emf.getObject();
 	}
 
-	
 	/**
 	 * 
 	 * @param entityManagerFactory
