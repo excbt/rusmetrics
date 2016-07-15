@@ -978,6 +978,8 @@ tr.nmc-inactive-price > td{
     border-left-width: 0px;
     float: none !important;
     border-radius: 0;
+    background-color: #fff !important;
+    cursor: default !important;
 }
 /* Настройки календаря у jQuery Datepicker*/
 .ui-datepicker-calendar {

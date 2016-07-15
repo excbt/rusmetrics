@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ElectricityPkeCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $filter, notificationFactory, $window, $timeout){
+.controller('ElectricityPkeCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $filter, notificationFactory, $window, $timeout, objectSvc){
 //console.log("Run ElectricityPkeCtrl.");
     $scope.electroKind = "Pke";
     
@@ -41,11 +41,17 @@ angular.module('portalNMC')
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "warnValue"
-        },        
+        },
+        {
+            header : "Ед. изм.",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-left",
+            fieldName: "pkeMeasureUnit"
+        },
         {
             header : "Тип",
-            headerClass : "col-xs-5 col-md-5 nmc-text-align-center",
-            dataClass : "col-xs-5 col-md-5 nmc-text-align-right",
+            headerClass : "col-xs-4 col-md-4 nmc-text-align-center",
+            dataClass : "col-xs-4 col-md-4 nmc-text-align-right",
             fieldName: "pkeTypeCaption"
         }
     ];
@@ -124,9 +130,18 @@ angular.module('portalNMC')
                 $scope.pkeTypes.some(function(type){
                     if (elem.deviceObjectPkeTypeKeyname == type.keyname){
                         elem.pkeTypeCaption = type.caption;
+                        $scope.measureUnits.all.some(function(mu){
+                            if (mu.keyname === type.pkeMeasureUnit){
+                                elem.pkeMeasureUnit = mu.caption;
+                                return true;
+                            }
+                        });
+                        
                         return true;
                     };
                 });
+                
+                
             });
             $scope.ctrlSettings.loading = false;
             $timeout(function(){
@@ -267,6 +282,7 @@ angular.module('portalNMC')
     //controller initialization
     $scope.initCtrl = function(){
         $scope.pkeTypesInWindow = angular.copy($scope.pkeTypes);
+        $scope.measureUnits = objectSvc.getDeviceMetadataMeasures();
     };
     $scope.initCtrl();
 });
