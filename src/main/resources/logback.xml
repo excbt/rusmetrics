@@ -11,7 +11,7 @@
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<File>${catalina.base:-.}/logs/nmk.${bySecond}.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>nmk.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>${catalina.base:-.}/logs/nmk.%d{yyyy-MM-dd}.log</FileNamePattern>
 		</rollingPolicy>
  
 		<encoder>
