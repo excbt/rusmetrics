@@ -175,6 +175,7 @@ angular.module('portalNMC')
                 };
                                           
                 $scope.objectsDataFilteredByGroup = function(group){
+                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                     if (mainSvc.checkUndefinedNull(group)){
                         $scope.messages.groupMenuHeader = "Полный список объектов"
                         $scope.data.currentGroupId = null;
@@ -187,6 +188,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.viewFullObjectList = function(){
+                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                     $scope.objectCtrlSettings.isFullObjectView = true;
                     $scope.messages.treeMenuHeader = 'Полный список объектов'
                     getObjectsData();                    
