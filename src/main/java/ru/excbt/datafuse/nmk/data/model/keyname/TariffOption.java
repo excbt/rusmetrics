@@ -8,27 +8,25 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
 @Table(name = "tariff_option")
-public class TariffOption extends AbstractKeynameEntity  {
+public class TariffOption extends AbstractKeynameEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6014135039180327715L;
 
- 
-	@Column (name = "tariff_option_name")
+	@Column(name = "tariff_option_name")
 	private String tariffOptionName;
 
-	@Column (name = "tariff_option_description")
+	@Column(name = "tariff_option_description")
 	private String tariffOptionDescription;
-	
-	@Column (name = "tariff_option_comment")
+
+	@Column(name = "tariff_option_comment")
 	private String tariffOptionComment;
 
 	@Column(name = "tariff_option_order")
-	private int tariffOptionOrder;
-	
-	
+	private Integer tariffOptionOrder;
+
 	public String getTariffOptionName() {
 		return tariffOptionName;
 	}
@@ -53,12 +51,12 @@ public class TariffOption extends AbstractKeynameEntity  {
 		this.tariffOptionComment = tariffOptionComment;
 	}
 
-	public int getTariffOptionOrder() {
+	public Integer getTariffOptionOrder() {
 		return tariffOptionOrder;
 	}
 
-	public void setTariffOptionOrder(int tariffOptionOrder) {
+	public void setTariffOptionOrder(Integer tariffOptionOrder) {
 		this.tariffOptionOrder = tariffOptionOrder;
 	}
-	
+
 }

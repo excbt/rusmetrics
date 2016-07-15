@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.data.repository.keyname;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
@@ -14,4 +17,6 @@ import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
  */
 public interface TariffOptionRepository extends CrudRepository<TariffOption, String> {
 
+	@Query("SELECT to FROM TariffOption to ORDER BY to.tariffOptionOrder")
+	public List<TariffOption> selectAll();
 }

@@ -71,7 +71,7 @@ public class TariffPlanController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/option", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> tariffOptionGet() {
-		return ResponseEntity.ok(tariffOptionRepository.findAll());
+		return ResponseEntity.ok(tariffOptionRepository.selectAll());
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class TariffPlanController extends SubscrApiController {
 	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll() {
 		List<?> resultList = tariffPlanService.selectTariffPlanList(getCurrentSubscriberId());
-		return ResponseEntity.ok(resultList);
+		return responseOK(resultList);
 	}
 
 	/**
@@ -138,14 +138,10 @@ public class TariffPlanController extends SubscrApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (tariffPlan.getTariffOptionKey() == null) {
-			return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid TariffOptionKey"));
-		}
-
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
-				return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid rsoOrganizationId"));
+				return responseBadRequest(ApiResult.validationError("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -153,7 +149,7 @@ public class TariffPlanController extends SubscrApiController {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid tariffTypeId"));
+				return responseBadRequest(ApiResult.validationError("Invalid tariffTypeId"));
 			}
 
 			tariffPlan.setTariffType(tt);
@@ -164,7 +160,7 @@ public class TariffPlanController extends SubscrApiController {
 			for (long contObjectId : contObjectIds) {
 				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
-					return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid ContObjectId"));
+					return responseBadRequest(ApiResult.validationError("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
@@ -201,14 +197,14 @@ public class TariffPlanController extends SubscrApiController {
 		checkNotNull(rsoOrganizationId > 0);
 		checkNotNull(tariffTypeId > 0);
 
-		if (tariffPlan.getTariffOptionKey() == null) {
-			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
-		}
+		//		if (tariffPlan.getTariffOptionKey() == null) {
+		//			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
+		//		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
-				return ResponseEntity.badRequest().body("Invalid rsoOrganizationId");
+				return responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -216,7 +212,7 @@ public class TariffPlanController extends SubscrApiController {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return ResponseEntity.badRequest().body("Invalid tariffTypeId");
+				return responseBadRequest(ApiResult.badRequest("Invalid tariffTypeId"));
 			}
 			tariffPlan.setTariffType(tt);
 		}
@@ -226,14 +222,14 @@ public class TariffPlanController extends SubscrApiController {
 			for (long contObjectId : contObjectIds) {
 				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
-					return ResponseEntity.badRequest().body("Invalid ContObjectId");
+					return responseBadRequest(ApiResult.badRequest("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
 			}
 		}
 
-		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
+		tariffPlan.setSubscriberId(getSubscriberId());
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<TariffPlan, Long>(tariffPlan, request) {
 

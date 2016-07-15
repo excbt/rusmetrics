@@ -19,10 +19,8 @@ import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant;
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
-import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffPlanRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
@@ -98,20 +96,17 @@ public class TariffPlanService implements SecuredRoles {
 					String.format("Default Tariff Plan for rsoOrganizationId:{} already exists", rsoOrganizationId));
 		}
 
-		TariffOption toption = tariffOptionRepository.findOne(TariffPlanConstant.DEFAULT);
-		checkNotNull(toption);
-
 		Organization rso = organizationRepository.findOne(rsoOrganizationId);
 		checkNotNull(rso);
 
-		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
+		//Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 
 		Iterable<TariffType> tarifTypes = tariffTypeRepository.findAll();
 		for (TariffType ttype : tarifTypes) {
 			TariffPlan tplan = new TariffPlan();
-			tplan.setSubscriber(subscriber);
+			tplan.setSubscriberId(subscriberId);
 			tplan.setRso(rso);
-			tplan.setTariffOption(toption);
+			tplan.setTariffOptionKeyname(TariffPlanConstant.DEFAULT);
 			tplan.setTariffType(ttype);
 			tplan.setTariffPlanName(ttype.getTariffTypeName());
 			tplan.setTariffPlanValue(BigDecimal.ZERO);
@@ -142,7 +137,6 @@ public class TariffPlanService implements SecuredRoles {
 	public TariffPlan updateOne(long subscriberId, TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
-		checkNotNull(tariffPlan.getTariffOptionKey(), "tariffOptionKey is NULL");
 
 		if (!canModifyTariffPlanId(subscriberId, tariffPlan.getId())) {
 			throw new PersistenceException(
@@ -160,7 +154,7 @@ public class TariffPlanService implements SecuredRoles {
 
 		AuditableTools.copyAuditableProps(currentRec, tariffPlan);
 
-		tariffPlan.setSubscriber(currentRec.getSubscriber());
+		tariffPlan.setSubscriberId(currentRec.getSubscriberId());
 
 		return tariffPlanRepository.save(tariffPlan);
 	}
@@ -177,8 +171,7 @@ public class TariffPlanService implements SecuredRoles {
 
 		checkNotNull(tariffPlan);
 		checkArgument(tariffPlan.isNew());
-		checkNotNull(tariffPlan.getSubscriber(), "subscriber is NULL");
-		checkNotNull(tariffPlan.getTariffOptionKey(), "tariffOptionKey is NULL");
+		checkNotNull(tariffPlan.getSubscriberId(), "subscriberId is NULL");
 		checkNotNull(tariffPlan.getTariffType(), "tariffType is NULL");
 		checkNotNull(tariffPlan.getStartDate(), "startDate is NULL");
 		checkNotNull(tariffPlan.getRso(), "rso is NULL");

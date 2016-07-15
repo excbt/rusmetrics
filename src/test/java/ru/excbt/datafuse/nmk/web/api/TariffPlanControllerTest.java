@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant.TariffOptionKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
@@ -28,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class TariffPlanControllerTest extends AnyControllerTest {
@@ -120,7 +120,6 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	@Test
 	public void testCreate() throws Exception {
 		TariffPlan tariffPlan = new TariffPlan();
-		tariffPlan.setTariffOptionKey(TariffOptionKey.PREFERENTIAL);
 		tariffPlan.setTariffPlanValue(BigDecimal.valueOf(1.1));
 		tariffPlan.setTariffPlanComment("Created by REST");
 		tariffPlan.setStartDate(LocalDate.now().toDate());
@@ -160,6 +159,20 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	@Test
 	public void testAvailableContObjects() throws Exception {
 		_testGetJson("/api/subscr/tariff/1/contObject/available");
+	}
+
+	@Override
+	public long getSubscriberId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscrUserId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
 	}
 
 }

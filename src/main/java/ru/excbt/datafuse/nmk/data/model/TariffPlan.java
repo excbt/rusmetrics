@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,9 +19,7 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant.TariffOptionKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
 
 /**
  * Тарифный план
@@ -46,16 +42,17 @@ public class TariffPlan extends AbstractAuditableModel {
 	@JoinColumn(name = "rso_organization_id")
 	private Organization rso;
 
-	@ManyToOne
-	@JoinColumn(name = "subscriber_id")
-	private Subscriber subscriber;
+	//	@JsonIgnore
+	//	@ManyToOne
+	//	@JoinColumn(name = "subscriber_id")
+	//	private Subscriber subscriber;
 
-	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	@Column(name = "subscriber_id")
 	private Long subscriberId;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tariff_plan_cont_object", joinColumns = @JoinColumn(name = "tariff_plan_id") ,
-			inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
+	@JoinTable(name = "tariff_plan_cont_object", joinColumns = @JoinColumn(name = "tariff_plan_id"),
+			inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
 	@JsonIgnore
 	private List<ContObject> contObjects = new ArrayList<>();
 
@@ -72,13 +69,13 @@ public class TariffPlan extends AbstractAuditableModel {
 	@JoinColumn(name = "tariff_type_id")
 	private TariffType tariffType;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "tariff_option", insertable = false, updatable = false)
-	private TariffOption tariffOption;
+	//	@JsonIgnore
+	//	@ManyToOne(fetch = FetchType.LAZY)
+	//	@JoinColumn(name = "tariff_option", insertable = false, updatable = false)
+	//	private TariffOption tariffOption;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "tariff_option")
-	private TariffOptionKey tariffOptionKey;
+	private String tariffOptionKeyname;
 
 	@Column(name = "tariff_plan_value")
 	private BigDecimal tariffPlanValue;
@@ -105,13 +102,13 @@ public class TariffPlan extends AbstractAuditableModel {
 		this.rso = rso;
 	}
 
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
+	//	public Subscriber getSubscriber() {
+	//		return subscriber;
+	//	}
+	//
+	//	public void setSubscriber(Subscriber subscriber) {
+	//		this.subscriber = subscriber;
+	//	}
 
 	// public ContObject getContObject() {
 	// return contObject;
@@ -145,13 +142,13 @@ public class TariffPlan extends AbstractAuditableModel {
 		this.tariffPlanComment = tariffPlanComment;
 	}
 
-	public TariffOption getTariffOption() {
-		return tariffOption;
-	}
-
-	public void setTariffOption(TariffOption tariffOption) {
-		this.tariffOption = tariffOption;
-	}
+	//	public TariffOption getTariffOption() {
+	//		return tariffOption;
+	//	}
+	//
+	//	public void setTariffOption(TariffOption tariffOption) {
+	//		this.tariffOption = tariffOption;
+	//	}
 
 	public BigDecimal getTariffPlanValue() {
 		return tariffPlanValue;
@@ -193,14 +190,6 @@ public class TariffPlan extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public TariffOptionKey getTariffOptionKey() {
-		return tariffOptionKey;
-	}
-
-	public void setTariffOptionKey(TariffOptionKey tariffOptionKey) {
-		this.tariffOptionKey = tariffOptionKey;
-	}
-
 	public List<ContObject> getContObjects() {
 		return contObjects;
 	}
@@ -223,6 +212,14 @@ public class TariffPlan extends AbstractAuditableModel {
 
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
+	}
+
+	public String getTariffOptionKeyname() {
+		return tariffOptionKeyname;
+	}
+
+	public void setTariffOptionKeyname(String tariffOptionKeyname) {
+		this.tariffOptionKeyname = tariffOptionKeyname;
 	}
 
 }
