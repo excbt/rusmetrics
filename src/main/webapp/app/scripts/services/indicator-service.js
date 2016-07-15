@@ -376,7 +376,7 @@ app.service('indicatorSvc', function(){
                 for (var kind = 0; kind < elecKind.length; kind++){
                     var column = {};
                     column.header = "" + elecType[type].caption + elecKind[kind].caption + " (T" + tariffPlans[tariff] + ")";
-                    column.headerClass = "nmc-view-digital-data";
+                    column.headerClass = "nmc-view-digital-data nmc-text-align-center";
                     column.dataClass = "nmc-view-digital-data";
                     column.fieldName = "" + elecType[type].name + elecKind[kind].name + "" + tariffPlans[tariff] + "";
                     column.elKind = elecKind[kind].name;
@@ -389,7 +389,7 @@ app.service('indicatorSvc', function(){
             for (var kind = 0; kind < elecKind.length; kind++){
                     var column = {};
                     column.header = "\u03A3" + elecType[type].caption + elecKind[kind].caption;
-                    column.headerClass = "nmc-view-digital-data";
+                    column.headerClass = "nmc-view-digital-data nmc-text-align-center";
                     column.dataClass = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
                     column.fieldName = "" + elecType[type].name + elecKind[kind].name;
                     column.isSummary = true;
