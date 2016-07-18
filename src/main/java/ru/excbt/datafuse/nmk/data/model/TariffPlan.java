@@ -88,8 +88,11 @@ public class TariffPlan extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	@Column(name = "is_default")
+	@Column(name = "is_default", insertable = false, updatable = false)
 	private boolean _default;
+
+	@Column(name = "is_default")
+	private Boolean isDefault;
 
 	@Version
 	private int version;
@@ -198,11 +201,11 @@ public class TariffPlan extends AbstractAuditableModel {
 		this.contObjects = contObjects;
 	}
 
-	public boolean is_default() {
+	private boolean is_default() {
 		return _default;
 	}
 
-	public void set_default(boolean _default) {
+	private void set_default(boolean _default) {
 		this._default = _default;
 	}
 
@@ -220,6 +223,14 @@ public class TariffPlan extends AbstractAuditableModel {
 
 	public void setTariffOptionKeyname(String tariffOptionKeyname) {
 		this.tariffOptionKeyname = tariffOptionKeyname;
+	}
+
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 }

@@ -171,7 +171,7 @@ public class TariffPlanController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(tariffPlanService.updateOne(getCurrentSubscriberId(), entity));
+				setResultEntity(tariffPlanService.updateOne(getSubscriberParam(), entity));
 
 			}
 		};
@@ -240,7 +240,7 @@ public class TariffPlanController extends SubscrApiController {
 
 			@Override
 			public TariffPlan processAndReturnResult() {
-				return tariffPlanService.createOne(entity);
+				return tariffPlanService.createOne(getSubscriberParam(), entity);
 			}
 
 		};

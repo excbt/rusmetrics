@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -25,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffPlanRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -134,11 +136,11 @@ public class TariffPlanService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public TariffPlan updateOne(long subscriberId, TariffPlan tariffPlan) {
+	public TariffPlan updateOne(SubscriberParam subscriberParam, TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
 
-		if (!canModifyTariffPlanId(subscriberId, tariffPlan.getId())) {
+		if (!canModifyTariffPlanId(subscriberParam.getSubscriberId(), tariffPlan.getId())) {
 			throw new PersistenceException(
 					String.format("TariffPlan(id=%d) can not be modified by currentSubscriberId", tariffPlan.getId()));
 		}
@@ -156,6 +158,10 @@ public class TariffPlanService implements SecuredRoles {
 
 		tariffPlan.setSubscriberId(currentRec.getSubscriberId());
 
+		if (Boolean.TRUE.equals(tariffPlan.getIsDefault())) {
+			setOtherInactive(subscriberParam, null);
+		}
+
 		return tariffPlanRepository.save(tariffPlan);
 	}
 
@@ -167,7 +173,7 @@ public class TariffPlanService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public TariffPlan createOne(TariffPlan tariffPlan) {
+	public TariffPlan createOne(SubscriberParam subscriberParam, TariffPlan tariffPlan) {
 
 		checkNotNull(tariffPlan);
 		checkArgument(tariffPlan.isNew());
@@ -175,6 +181,10 @@ public class TariffPlanService implements SecuredRoles {
 		checkNotNull(tariffPlan.getTariffType(), "tariffType is NULL");
 		checkNotNull(tariffPlan.getStartDate(), "startDate is NULL");
 		checkNotNull(tariffPlan.getRso(), "rso is NULL");
+
+		if (Boolean.TRUE.equals(tariffPlan.getIsDefault())) {
+			setOtherInactive(subscriberParam, null);
+		}
 
 		return tariffPlanRepository.save(tariffPlan);
 	}
@@ -255,6 +265,17 @@ public class TariffPlanService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public TariffPlan findOne(long tariffPlanId) {
 		return tariffPlanRepository.findOne(tariffPlanId);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	private void setOtherInactive(SubscriberParam subscriberParam, Long tariffPlaiId) {
+		List<TariffPlan> allTariffs = tariffPlanRepository.selectTariffPlanList(subscriberParam.getSubscriberId());
+		List<TariffPlan> modTariffs = allTariffs.stream()
+				.filter(i -> tariffPlaiId == null || !tariffPlaiId.equals(i.getId())).collect(Collectors.toList());
+		modTariffs.forEach(i -> {
+			i.setIsDefault(false);
+		});
+		tariffPlanRepository.save(modTariffs);
 	}
 
 }

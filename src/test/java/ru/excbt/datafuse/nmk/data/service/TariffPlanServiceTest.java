@@ -25,16 +25,24 @@ public class TariffPlanServiceTest extends JpaSupportTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	@Ignore
-	public void testInitDefaultTarifPlan() {
+	public void testInitDefaultTarifPlan() throws Exception {
 		// tariffPlanService.deleteDefaultTariffPlan(TEST_RSO_ID );
 		tariffPlanService.initDefaultTariffPlan(currentSubscriberService.getSubscriberId(), TEST_RSO_ID);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	// @Ignore
-	public void testUpdateTarifPlan() {
+	public void testUpdateTarifPlan() throws Exception {
 
 		List<TariffPlan> tpList = tariffPlanService.selectTariffPlanList(currentSubscriberService.getSubscriberId());
 
@@ -53,20 +61,24 @@ public class TariffPlanServiceTest extends JpaSupportTest {
 
 		tp.getContObjects().add(contObjects.get(0));
 
-		TariffPlan result = tariffPlanService.updateOne(currentSubscriberService.getSubscriberId(), tp);
+		TariffPlan result = tariffPlanService.updateOne(getSubscriberParam(), tp);
 		assertNotNull(result);
 		// tariffPlanService.deleteDefaultTariffPlan(TEST_RSO_ID );
 		// tariffPlanService.initDefaultTariffPlan(TEST_RSO_ID);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void testUpdateTarifPlanIllgal() {
+	public void testUpdateTarifPlanIllgal() throws Exception {
 
 		List<TariffPlan> tpList = tariffPlanService.selectTariffPlanList(currentSubscriberService.getSubscriberId());
 		assertTrue(tpList.size() > 0);
 		TariffPlan tp = tpList.get(0);
 		tp.setEndDate(DateTime.now().minusYears(10).toDate());
-		tariffPlanService.updateOne(currentSubscriberService.getSubscriberId(), tp);
+		tariffPlanService.updateOne(getSubscriberParam(), tp);
 	}
 
 }
