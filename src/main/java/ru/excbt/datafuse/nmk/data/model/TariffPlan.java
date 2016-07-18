@@ -42,6 +42,9 @@ public class TariffPlan extends AbstractAuditableModel {
 	@JoinColumn(name = "rso_organization_id")
 	private Organization rso;
 
+	@Column(name = "rso_organization_id", updatable = false, insertable = false)
+	private Long rsoOrganizationId;
+
 	//	@JsonIgnore
 	//	@ManyToOne
 	//	@JoinColumn(name = "subscriber_id")
@@ -68,6 +71,9 @@ public class TariffPlan extends AbstractAuditableModel {
 	@ManyToOne
 	@JoinColumn(name = "tariff_type_id")
 	private TariffType tariffType;
+
+	@Column(name = "tariff_type_id", insertable = false, updatable = false)
+	private Long tariffTypeId;
 
 	//	@JsonIgnore
 	//	@ManyToOne(fetch = FetchType.LAZY)
@@ -231,6 +237,22 @@ public class TariffPlan extends AbstractAuditableModel {
 
 	public void setIsDefault(Boolean isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public Long getRsoOrganizationId() {
+		return rsoOrganizationId;
+	}
+
+	public void setRsoOrganizationId(Long rsoOrganizationId) {
+		this.rsoOrganizationId = rsoOrganizationId;
+	}
+
+	public Long getTariffTypeId() {
+		return tariffTypeId;
+	}
+
+	public void setTariffTypeId(Long tariffTypeId) {
+		this.tariffTypeId = tariffTypeId;
 	}
 
 }

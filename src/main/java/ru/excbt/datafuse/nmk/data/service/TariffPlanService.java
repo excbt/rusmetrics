@@ -159,7 +159,8 @@ public class TariffPlanService implements SecuredRoles {
 		tariffPlan.setSubscriberId(currentRec.getSubscriberId());
 
 		if (Boolean.TRUE.equals(tariffPlan.getIsDefault())) {
-			setOtherInactive(subscriberParam, null);
+			setOtherInactive(subscriberParam, tariffPlan.getId(), tariffPlan.getRso().getId(),
+					tariffPlan.getTariffType().getId());
 		}
 
 		return tariffPlanRepository.save(tariffPlan);
@@ -183,7 +184,7 @@ public class TariffPlanService implements SecuredRoles {
 		checkNotNull(tariffPlan.getRso(), "rso is NULL");
 
 		if (Boolean.TRUE.equals(tariffPlan.getIsDefault())) {
-			setOtherInactive(subscriberParam, null);
+			setOtherInactive(subscriberParam, null, tariffPlan.getRso().getId(), tariffPlan.getTariffType().getId());
 		}
 
 		return tariffPlanRepository.save(tariffPlan);
@@ -268,10 +269,14 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT)
-	private void setOtherInactive(SubscriberParam subscriberParam, Long tariffPlaiId) {
+	private void setOtherInactive(SubscriberParam subscriberParam, Long tariffPlanId, Long rsoOrganizationId,
+			Long tariffTypeId) {
 		List<TariffPlan> allTariffs = tariffPlanRepository.selectTariffPlanList(subscriberParam.getSubscriberId());
 		List<TariffPlan> modTariffs = allTariffs.stream()
-				.filter(i -> tariffPlaiId == null || !tariffPlaiId.equals(i.getId())).collect(Collectors.toList());
+				.filter(i -> (tariffPlanId == null || !tariffPlanId.equals(i.getId()))
+						&& i.getRsoOrganizationId().equals(rsoOrganizationId)
+						&& i.getTariffTypeId().equals(tariffTypeId))
+				.collect(Collectors.toList());
 		modTariffs.forEach(i -> {
 			i.setIsDefault(false);
 		});
