@@ -489,6 +489,63 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         return result;
     };
     
+    function addCategoryRows (srcArray) {
+        var categoryArr = [];
+        srcArray.forEach(function(elem){
+            var isHaveCurCategory = false;
+            categoryArr.forEach(function(category){
+                if (category.keyname === elem.reportMetaParamCategory.keyname){
+                    isHaveCurCategory = true;
+                    return true;
+                }
+            });
+            if (isHaveCurCategory === false){
+                categoryArr.push(angular.copy(elem.reportMetaParamCategory));            
+            };
+        });
+        
+        var categoriesForDelete = [];
+        categoryArr.forEach(function(cat, catInd){
+            srcArray.some(function(sp){
+                if (sp.reportMetaParamCategory.keyname === cat.keyname &&  sp.paramSpecialTypeKeyname === "SPECIAL_CATEGORY_SWITCH"){
+                    categoriesForDelete.push(cat.keyname);
+                    return true;
+                }                    
+            });
+        });
+                        
+//console.log(categoryArr);
+//console.log(categoriesForDelete);
+        categoriesForDelete.forEach(function(cfd){
+            categoryArr.some(function(cat, ind){
+                if (cat.keyname === cfd){
+                    categoryArr.splice(ind, 1);
+                    return true;
+                }
+            });
+        });
+        //add category to special param list
+        categoryArr.forEach(function(cat){
+            var result = angular.copy(cat);
+            result.paramSpecialCaption = cat.caption;
+            result.paramSpecialTypeKeyname = "SPECIAL_CATEGORY_CAPTION";
+            result.reportMetaParamFullOrder = cat.categoryOrder * CATEGORY_COEF - 1;
+            result.paramSpecialRequired = false;
+            result.reportMetaParamCategory = angular.copy(cat);
+            srcArray.push(result);
+        });
+//console.log(srcArray);        
+        
+    }
+    
+    function removeCategoryRowsBeforeSave (spl /* SpecialParamList*/) {
+        spl.forEach(function(sp, ind){
+            if (sp.paramSpecialTypeKeyname === "SPECIAL_CATEGORY_CAPTION"){
+                spl.splice(ind, 1);
+            }
+        });        
+    }
+    
     var prepareParamSpecialList = function(paramsetObj, paramsetType){       
             var result = paramsetType.reportMetaParamSpecialList.map(function(element){
                 var result = {};
@@ -563,7 +620,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 return result;
 
             });
+        addCategoryRows(result);
         mainSvc.sortNumericItemsBy(result, "reportMetaParamFullOrder");
+console.log(result);        
         return result;
     };
     
@@ -887,6 +946,19 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         return $scope.isROfield() || $scope.currentObject.common || !$scope.currentObject._active;
     };
     
+    $scope.isSpecialParamDisabled = function (curSp, spl) {        
+        var isSPD = false;
+        spl.some(function (sp) {
+            if (curSp.reportMetaParamCategory.keyname === sp.reportMetaParamCategory.keyname && 
+                sp.paramSpecialTypeKeyname === "SPECIAL_CATEGORY_SWITCH" && 
+                sp.boolValue !== true){                
+                isSPD = true;
+                return true;
+            }
+        });
+        return $scope.isDisabled() || isSPD;
+    }
+    
     $scope.showAddObjectButton = function(){      
         return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
     };
@@ -1035,7 +1107,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length > 1))
         {
             $scope.currentObject.outputFileZipped = true;
-            result= true;
+            result = true;
         };
         return result;
     };
@@ -1044,6 +1116,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.currentObject.psStartDateFormatted = $scope.psStartDateFormatted;
         $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
+        //remove special category rows from specialParamList
+        removeCategoryRowsBeforeSave($scope.currentParamSpecialList);
+        
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
         $scope.currentObject.currentReportPeriod = $scope.currentReportPeriod;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "create");

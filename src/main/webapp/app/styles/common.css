@@ -1862,6 +1862,11 @@ tr.nmc-inactive-price > td{
 /**********************
  * Вспомогательные
  *********************/
+
+.nmc-dotted-border-top{
+    border-top: 1px dotted black !important;
+}
+
 /* Вертикальное выравнивание содержимого*/
 .nmc-valign-middle{
     vertical-align: middle;

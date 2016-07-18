@@ -791,24 +791,41 @@
     -->
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr ng-repeat="paramSpecial in currentParamSpecialList">
-                                            <td class="col-sm-3"
-                                                ng-class="{'col-sm-9': paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL', 'col-sm-3': paramSpecial.paramSpecialTypeKeyname != 'SPECIAL_BOOL'}"
-                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL' ? 2 : 1}}"
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
+                                                ng-class="{'col-sm-9': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-3': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 2 : 1}}"
                                                 >
                                                 <label for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.paramSpecialCaption}}
-                                                    <span ng-if="isSystemuser()">
-                                                        {{paramSpecial.reportMetaParamFullOrder}}
-                                                    </span>
+<!--
+                                                    <small ng-if="isSystemuser()">
+                                                        order = {{paramSpecial.reportMetaParamFullOrder}}
+                                                    </small>
+-->
                                                 </label>
                                             </td>
+                                            
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'"
+                                                class="col-sm-9 nmc-text-align-center nmc-dotted-border-top"
+                                                colspan="2"                                                
+                                                >
+                                                <label for="inputType" class="nmc-form-label">
+                                                    {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
+<!--
+                                                    <small ng-if="isSystemuser()">
+                                                        order = {{paramSpecial.reportMetaParamFullOrder}}
+                                                    </small>
+-->
+                                                </label>
+                                            </td>
+                                            
     <!--
                                             <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
                                             </td>
     -->
-                                            <td class="col-sm-9 nmc-text-align-left"
-                                                ng-class="{'col-sm-3': paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL', 'col-sm-9': paramSpecial.paramSpecialTypeKeyname != 'SPECIAL_BOOL'}"
-                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname == 'SPECIAL_BOOL' ? 1 : 2}}"
+                                            <td class="nmc-text-align-left"
+                                                ng-class="{'col-sm-3': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-9': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-dotted-border-top': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 1 : 2}}"
                                                 >
                                                 <div ng-switch on="paramSpecial.paramSpecialTypeKeyname">
                                                     <span ng-switch-when="SPECIAL_STRING">
@@ -817,7 +834,7 @@
                                                                type=text  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.textValue" 
-                                                               ng-disabled="isDisabled()" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_NUMERIC">
@@ -826,7 +843,7 @@
                                                                type=text  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.numericValue" 
-                                                               ng-disabled="isDisabled()" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATE">
@@ -835,7 +852,7 @@
                                                                type=date  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.oneDateValueFormatted" 
-                                                               ng-disabled="isDisabled()"
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME">
@@ -844,7 +861,7 @@
                                                                type="date"  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.oneDateValueFormatted" 
-                                                               ng-disabled="isDisabled()" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME_PERIOD">
@@ -864,7 +881,7 @@
                                                                            type="date"  
                                                                            placeholder="" 
                                                                            ng-model="paramSpecial.startDateValueFormatted" 
-                                                                           ng-disabled="isDisabled()" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                                 </div>    
                                                                 <div class="col-sm-1 paddingTop5">
@@ -876,7 +893,7 @@
                                                                            type="date"  
                                                                            placeholder="" 
                                                                            ng-model="paramSpecial.endDateValueFormatted" 
-                                                                           ng-disabled="isDisabled()" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                                 </div>
                                                             </span>    
@@ -899,7 +916,7 @@
                                                                            type=date  
                                                                            placeholder="" 
                                                                            ng-model="paramSpecial.startDateValueFormatted" 
-                                                                           ng-disabled="isDisabled()" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                                 </div>    
                                                                 <div class="col-sm-1 paddingTop5">
@@ -911,7 +928,7 @@
                                                                            type=date  
                                                                            placeholder="" 
                                                                            ng-model="paramSpecial.endDateValueFormatted" 
-                                                                           ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" ng-required="paramSpecial.paramSpecialRequired">
                                                                 </div>
                                                             </span>    
                                                         </div> 
@@ -921,8 +938,19 @@
                                                                class="nmc-checkbox-form" 
                                                                id="inputSpecParam" 
                                                                ng-model="paramSpecial.boolValue"
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_CATEGORY_SWITCH">
+                                                        <input type="checkbox" 
+                                                               class="nmc-checkbox-form" 
+                                                               id="inputSpecParam" 
+                                                               ng-model="paramSpecial.boolValue"
                                                                ng-disabled="isDisabled()"
                                                                ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_CATEGORY_CAPTION">
+                                                        
                                                     </span>
 <!--
                                                     <span ng-switch-when="SPECIAL_PERIOD_DATE">
@@ -932,7 +960,7 @@
                                                         <select class="form-control nmc-text-input-form" 
                                                                 id="inputSpecParam" 
                                                                 ng-model="paramSpecial.directoryValue" 
-                                                                ng-disabled="isDisabled()" 
+                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                 ng-required="paramSpecial.paramSpecialRequired" 
                                                                 ng-options="specvalue[paramSpecial.specialTypeDirectoryValue] as specvalue[paramSpecial.specialTypeDirectoryCaption] for specvalue in paramSpecial.specialTypeDirectoryValues">
                                                         </select> 
