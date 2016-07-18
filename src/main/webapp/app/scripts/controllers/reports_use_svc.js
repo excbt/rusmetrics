@@ -2,6 +2,8 @@
 var app = angular.module('portalNMC');
 app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFactoryWithCanceler', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', '$q', function($scope, $rootScope, $http, crudGridDataFactoryWithCanceler, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q){
     
+    var CATEGORY_COEF = 1000;
+    
     $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
         //ctrl settings
@@ -321,6 +323,13 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             result.reportMetaParamSpecialId = element.id;
             result.paramSpecialRequired = element.paramSpecialRequired;
             result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
+            
+            result.reportMetaParamCategory = element.reportMetaParamCategory;
+            result.reportMetaParamCategoryOrder = element.reportMetaParamCategory.categoryOrder;
+            result.reportMetaParamCategoryKeyname = element.reportMetaParamCategoryKeyname;
+            result.reportMetaParamOrder = element.reportMetaParamOrder;
+            result.reportMetaParamFullOrder = element.reportMetaParamCategory.categoryOrder * CATEGORY_COEF + (mainSvc.checkUndefinedNull(element.reportMetaParamOrder) ? 0 : element.reportMetaParamOrder);
+            
             if (isParamSpecialTypeDirectory(element))
             {
                 result.specialTypeDirectoryUrl = element.paramSpecialType.specialTypeDirectoryUrl;
@@ -382,6 +391,8 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             return result;
             
         });
+        addCategoryRows(resultParamSpecialList);
+        mainSvc.sortNumericItemsBy(resultParamSpecialList, "reportMetaParamFullOrder");
         return resultParamSpecialList;
     };
     
@@ -839,6 +850,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         $scope.currentObject.psStartDateFormatted = $scope.psStartDateFormatted;
         $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
+        //remove special category params
+        removeCategoryRowsBeforeSave($scope.currentParamSpecialList);
+        
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
         $scope.currentObject.currentReportPeriod = $scope.currentReportPeriod;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
@@ -1422,7 +1436,21 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             }
         });        
     }
-    // ********************************* end of special params
+    
+    $scope.isSpecialParamDisabled = function (curSp, spl) {        
+        var isSPD = false;
+        spl.some(function (sp) {
+            if (curSp.reportMetaParamCategory.keyname === sp.reportMetaParamCategory.keyname && 
+                sp.paramSpecialTypeKeyname === "SPECIAL_CATEGORY_SWITCH" && 
+                sp.boolValue !== true){                
+                isSPD = true;
+                return true;
+            }
+        });
+        return $scope.isDisabled() || isSPD;
+    }
+    
+    // ********************************* end of additional special params
     // *****************************************************************************************
     
 }]);
