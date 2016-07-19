@@ -39,12 +39,13 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_QUALITY_ACT_1_REPORT(24, "hw_quality_act_1", ReportSystem.PENTAHO), //
 	HW_QUALITY_ACT_2_REPORT(25, "hw_quality_act_2", ReportSystem.PENTAHO), //
 	HW_DATA_REPORT(26, "hw_data", ReportSystem.PENTAHO), //
-	EL_QUALITY_REPORT(27, "el_quality", ReportSystem.PENTAHO),
-	ELECTRIC_CONSUMPTION_ABONENT_REPORT(28, "electric_consumption_abonent"), //
-	HW_LAST_EVENT_REPORT(29, "hw_last_event", ReportSystem.PENTAHO),
-	CW_CONSUMPTION_REPORT(30, "cw_consumption", ReportSystem.PENTAHO),
-	HW_CALC_CONSUMPTION_BY_AVG_REPORT(31, "hw_calc_consumption_by_avg"),
-	HEAT_AVG_FORECAST_REPORT(32, "heat_avg_forecast", ReportSystem.PENTAHO);
+	EL_QUALITY_REPORT(27, "el_quality", ReportSystem.PENTAHO), ELECTRIC_CONSUMPTION_ABONENT_REPORT(28, "electric_consumption_abonent"), //
+	HW_LAST_EVENT_REPORT(29, "hw_last_event", ReportSystem.PENTAHO), //
+	CW_CONSUMPTION_REPORT(30, "cw_consumption", ReportSystem.PENTAHO), //
+	HW_CALC_CONSUMPTION_BY_AVG_REPORT(31, "hw_calc_consumption_by_avg"), //
+	HEAT_AVG_FORECAST_REPORT(32, "heat_avg_forecast", ReportSystem.PENTAHO), //
+	COMMERCE_ZPOINT_REPORT(33, "commerce_zpoint"), //
+	HW_DATA_ZPOINT_REPORT(34, "hw_data_zpoint", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;
