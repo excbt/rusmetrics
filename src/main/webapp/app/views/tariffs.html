@@ -36,8 +36,12 @@
         <h2 class="noMargin nmc-h2">Тарифы</h2>
     </div>
     <div class="input-group col-md-4 filter pull-left nmc-search-form">   
-        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-        <input type="text" class="form-control nmc-text-input-form" ng-model="filter">
+        <span class="input-group-addon nmc-search-form-addon">
+            <i class="glyphicon glyphicon-search nmc-search-form-button"></i>
+        </span>
+        <input type="text" 
+               class="form-control nmc-text-input-form" 
+               ng-model="filter">
 <!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
     </div>
     <div class="col-md-5"></div>
@@ -50,7 +54,12 @@
 </div> 
 
 <div class="btn-toolbar marginBottom10">
-    <button ng-disabled="isROfield()" class="btn nmc-main-add-button" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить тариф</button>
+    <button ng-disabled="isROfield()" 
+            class="btn nmc-main-add-button" 
+            ng-click="addTariff()" 
+            data-target="#main_properties" 
+            data-toggle="tab">Добавить тариф
+    </button>
 </div>
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
@@ -62,7 +71,10 @@
             <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                 <div>
                     {{column.header || column.name}}
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                    <i class="glyphicon" 
+                       ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" 
+                       ng-show="orderBy.field == '{{column.name}}'">
+                    </i>
                 </div>
             </th>
             <th class="col-md-1">
@@ -80,7 +92,10 @@
             <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                 <div>
                     {{column.header || column.name}}
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                    <i class="glyphicon" 
+                       ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" 
+                       ng-show="orderBy.field == '{{column.name}}'">
+                    </i>
                 </div>
             </th>
             <th class="col-md-1">
@@ -91,32 +106,43 @@
             <td class="nmc-td-for-buttons">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <i title="Редактировать тариф" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
+                        <i title="Редактировать тариф" 
+                           class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                           ng-click="editTariff(object)" 
+                           data-target="#main_properties" 
+                           data-toggle="tab">
+                        </i>
                     </div>
                 </div>
             </td>
             <td ng-class="columns[0].class">
-                <span ng-class="{'nmc-distinguish': object._default}">{{object.tariffType.tariffTypeName}} </span>
+                <span ng-class="{'nmc-distinguish': object.isDefault}">{{object.tariffType.tariffTypeName}} </span>
             </td>
             <td ng-class="columns[1].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span></span>
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span></span>
             </td>
             <td ng-class="columns[2].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.rso.organizationName}}</span>
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.rso.organizationName}}</span>
             </td>
             <td ng-class="columns[3].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffOption.tariffOptionName}}</span>
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffOptionCaption}}</span>
             </td> 
             <td ng-class="columns[4].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanValue}}</span>
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanValue}}</span>
             </td>
             <td ng-class="columns[5].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanDescription}}</span>
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanDescription}}</span>
             </td>
             <td>
                 <div class="btn-toolbar">
                     <div class="btn-group">                   
-                        <i ng-disabled="isROfield()" title="Удалить тариф" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                        <i ng-disabled="isROfield()" 
+                           title="Удалить тариф" 
+                           class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                           ng-click="selectedItem(object)" 
+                           data-target="#deleteObjectModal" 
+                           data-toggle="modal">
+                        </i>
                     </div>
                 </div>
             </td>
@@ -130,8 +156,14 @@
 	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 
 		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="deleteObjectLabel" class="nmc-h3">
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+			<h3 id="deleteObjectLabel" 
+                class="nmc-h3">
 				Удаление 
 			</h3>
 		</div>
@@ -151,46 +183,56 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input type="submit" 
+                                   class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(currentObject);"
 								value="Удалить" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
-							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" 
+                                    data-dismiss="modal"
+                                    ng-click="exit('#deleteObject');">
 								Отменить
 							</button>
 						</div>
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
 <!-- Edit tariff-->
-<div id="editTariffModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="editTariffLabel" tabindex="-1" data-backdrop="static">
+<div id="editTariffModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog"
+     aria-labelledby="editTariffLabel" 
+     tabindex="-1" 
+     data-backdrop="static">
     
     <div class="col-md-2"></div> 
-    <div class="modal-sm col-md-2 col-sm-2" ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}"></div>
-    <div class="modal-dialog modal-content modal-sm col-md-2 col-sm-2 noPadding nmc-modal-dialog nmc-hide" ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
+    <div class="modal-sm col-md-2 col-sm-2" 
+         ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}">
+    </div>
+    <div class="modal-dialog modal-content modal-sm col-md-2 col-sm-2 noPadding nmc-modal-dialog nmc-hide" 
+         ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
             <div class="modal-header nmc-modal-header">
                 <h3 class="nmc-h3">{{headers.addObjects}}</h3>
             </div>
             <div class="modal-body nmc-modal-body">
                 <div class="container-fluid">
                     <div class="row-fluid">
-                        <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" style="">
-
-                                    <table id="table_objects_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                        <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" 
+                             >
+                                    <table id="table_objects_in_window" 
+                                           class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="object in availableEntities">
-                                            <td><input ng-disabled="isROfield()" type="checkbox" ng-model="object.selected" class="nmc-checkbox-form"/>{{object.fullName || object.contGroupName}}
+                                            <td>
+                                                <input ng-disabled="isROfield()" 
+                                                       type="checkbox" 
+                                                       ng-model="object.selected" 
+                                                       class="nmc-checkbox-form"/>
+                                                {{object.fullName || object.contGroupName}}
                                             </td>
                                         </tr>
                                     </table>
@@ -202,22 +244,25 @@
             <div class="modal-footer nmc-modal-footer">
                 <div class="container-fluid">
                     <div class="row">
-
                         <div class="col-md-4 noPadding">
-                            <input ng-disabled="isROfield()" class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
-    margin-top: 3px;">Выбрать все</p>
+                            <input ng-disabled="isROfield()" 
+                                   class="pull-left nmc-checkbox-form" 
+                                   ng-model="ctrlSettings.selectedAll" 
+                                   type="checkbox" 
+                                   ng-click="selectAllAvailableEntities()"/>
+                            <p class="noMarginBottom marginTop3">Выбрать все</p>
                         </div>
                         <div class="col-xs-offset-1 col-md-3 noPadding">
-                            <input ng-disabled="isROfield()" type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
-
-                                ng-click="addSelectedEntities()"
-                                value="Добавить" />
+                            <input ng-disabled="isROfield()" 
+                                   type="submit" 
+                                   class="btn btn-block btn-xs nmc-add-button-in-modal"
+                                   ng-click="addSelectedEntities()"
+                                   value="Добавить" />
                         </div>
 
-                        <div class=" pull-right col-xs-offset-1 col-md-3 noPadding">
-                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right"
-                                ng-click="showAvailableObjects_flag=false">
-                                
+                        <div class="pull-right col-xs-offset-1 col-md-3 noPadding">
+                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right" 
+                                    ng-click="showAvailableObjects_flag=false">
                             </button>
                         </div>
 
@@ -230,7 +275,12 @@
 	<div class="modal-dialog  modal-content col-md-7 col-xs-7 noPadding nmc-modal-dialog">
 <!--        ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">-->
 		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
 			<h3 id="editTariffLabel" class="nmc-h3">
 				Тариф 
 			</h3>
@@ -252,7 +302,7 @@
             
                     <div class="container-fluid noPadding">
                         <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
-                            <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                            <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" >
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr>
                                         <td><label for="inputName" class="nmc-form-label">Наименование</label>
@@ -277,7 +327,7 @@
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffType.id==null)}">
-                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputType" style="" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
+                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputType"  ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
                                                 </select>
                                             </div>    
                                         </td>
@@ -287,7 +337,7 @@
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.rso.id==null)}">
-                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputRSO" style="" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationName for obj in rsos">
+                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputRSO"  ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationName for obj in rsos">
                                                 </select>
                                             </div>    
                                         </td>
@@ -297,7 +347,7 @@
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">
                                             <div class="form-group noMarginBottom">
-                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputOption" style="" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
+                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputOption"  ng-model="currentObject.tariffOptionKeyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
                                                 </select>
                                             </div>
                                         </td>
@@ -308,7 +358,8 @@
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">  
 
-                                            <span class="form-group" ng-class="{'has-error':!checkDateIntervalWithRightNull(psStartDateFormatted, psEndDateFormatted)}">
+                                            <span class="form-group" 
+                                                  ng-class="{'has-error':!checkDateIntervalWithRightNull(psStartDateFormatted, psEndDateFormatted)}">
                                             <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                         <div class="col-sm-5 noPadding">
                                                             <div class="form-group noMarginBottom">
@@ -332,8 +383,14 @@
                                         <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Стоимость</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
-                                            <div class="col-sm-3 noMargin noPadding form-group" ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
-                                                <input ng-disabled="isROfield()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
+                                            <div class="col-sm-3 noMargin noPadding form-group" 
+                                                 ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
+                                                <input ng-disabled="isROfield()" 
+                                                       class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputValue" 
+                                                       placeholder=""  
+                                                       ng-model="currentObject.tariffPlanValue">
                                             </div>
                                             <div class="col-sm-9 paddingTop10">
                                                 руб <sub>(копейки указываются через точку)</sub> 
@@ -341,7 +398,11 @@
                                         </td>
                                     </tr> 
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input ng-disabled="isROfield()" type=checkbox ng-model="currentObject._default" class="nmc-checkbox-form">По умолчанию
+                                        <td colspan="2" class="col-sm-3">
+                                            <input ng-disabled="isROfield()" 
+                                                   type=checkbox 
+                                                   ng-model="currentObject.isDefault" 
+                                                   class="nmc-checkbox-form">По умолчанию
                                         </td>
                                     </tr> 
                                 </table>

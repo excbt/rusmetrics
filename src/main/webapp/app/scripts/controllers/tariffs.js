@@ -14,7 +14,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         {"name":"tariffTypeName", "header" : "Вид услуги", "class":"col-md-1"}
         ,{"name":"tariffPlanName", "header" : "Наименование", "class":"col-md-2"}
         ,{"name":"rso_organization", "header" : "РСО", "class":"col-md-2"}
-        ,{"name":"tariff_option", "header" : "Опция", "class":"col-md-3"}
+        ,{"name":"tariffOptionCaption", "header" : "Опция", "class":"col-md-3"}
         ,{"name":"tariffPlanValue", "header" : "Значение", "class":"col-md-1"}
         ,{"name":"tariffPlanDescription", "header" : "Описание", "class":"col-md-3"}
     ];
@@ -122,6 +122,16 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         var table = $scope.crudTableName+"/default";
         crudGridDataFactory(table).query(function (data) {
             $scope.objects = data;
+            if ($scope.tariffOptions.length > 0){
+                $scope.objects.forEach(function(tariff){
+                    $scope.tariffOptions.some(function(option){
+                        if (tariff.tariffOptionKeyname === option.keyname){
+                            tariff.tariffOptionCaption = option.tariffOptionName;
+                            return true;
+                        }
+                    });
+                });
+            }
             if (cb) cb();
         });
     };
@@ -144,11 +154,11 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.getTariffOptions = function () {
         var table = $scope.crudTableName+"/option";
         crudGridDataFactory(table).query(function (data) {
-            $scope.tariffOptions = data;     
+            $scope.tariffOptions = data;
+            $scope.getTariffs();
         });
     };
-    
-    $scope.getTariffs();
+        
     $scope.getRSOs();
     $scope.getTariffTypes();
     $scope.getTariffOptions();
