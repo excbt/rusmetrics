@@ -850,10 +850,11 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         $scope.currentObject.psStartDateFormatted = $scope.psStartDateFormatted;
         $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
-        //remove special category params
-        removeCategoryRowsBeforeSave($scope.currentParamSpecialList);
+        //remove special category params        
+        var preparedCurSpecialParamList = angular.copy($scope.currentParamSpecialList);
+        removeCategoryRowsBeforeSave(preparedCurSpecialParamList);
         
-        $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
+        $scope.currentObject.currentParamSpecialList = preparedCurSpecialParamList;
         $scope.currentObject.currentReportPeriod = $scope.currentReportPeriod;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
         $scope.messageForUser = checkRes.message;
@@ -1371,6 +1372,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     	$http.pendingRequests.forEach(function(request) {
             if (request.cancel && (request.isReportRequest == true)) {
                 request.cancel.resolve();
+                
+//                addCategoryRows($scope.currentParamSpecialList);
+//                mainSvc.sortNumericItemsBy($scope.currentParamSpecialList, "reportMetaParamFullOrder");
                 
                 console.log("Cancelling Request " + request.method + " on URL:" + request.url);
                 
