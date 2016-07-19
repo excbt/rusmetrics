@@ -22,7 +22,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
-@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository", entityManagerFactoryRef = "entityManagerFactoryRaw", transactionManagerRef = "transactionManagerRaw")
+@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository",
+		entityManagerFactoryRef = "entityManagerFactoryRaw", transactionManagerRef = "transactionManagerRaw")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.raw.data" })
 public class JpaRawConfigLocal {
 
@@ -34,7 +35,7 @@ public class JpaRawConfigLocal {
 	 * @return
 	 * @throws NamingException
 	 */
-	@Bean(name = "dataSourceRaw", destroyMethod = "close")
+	@Bean(name = "dataSourceRaw", destroyMethod = "")
 	public DataSource dataSourceRaw() {
 
 		PGPoolingDataSource source = new PGPoolingDataSource();

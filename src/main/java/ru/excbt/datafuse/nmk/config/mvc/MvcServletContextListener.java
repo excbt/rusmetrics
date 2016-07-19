@@ -17,7 +17,7 @@ public class MvcServletContextListener implements ServletContextListener {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(MvcServletContextListener.class);
-	
+
 	/**
 	 * 
 	 */
@@ -31,17 +31,30 @@ public class MvcServletContextListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		logger.info("Stopping NMK Web Application");		
+		logger.info("Stopping NMK Web Application");
+
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
 		while (drivers.hasMoreElements()) {
 			Driver driver = drivers.nextElement();
-			try {
-				logger.info("deregistering jdbc driver: {}", driver);
-				DriverManager.deregisterDriver(driver);
-			} catch (SQLException e) {
-				logger.error("Error deregistering driver : {}", driver);
+
+			if (driver.getClass().getClassLoader() == cl) {
+
+				try {
+					logger.info("Deregistering JDBC driver {}", driver);
+					DriverManager.deregisterDriver(driver);
+
+				} catch (SQLException ex) {
+					logger.error("Error deregistering JDBC driver {}", driver, ex);
+				}
+
+			} else {
+				logger.trace("Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader",
+						driver);
 			}
 		}
+
 	}
 
 }

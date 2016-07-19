@@ -501,12 +501,42 @@ public class ReportMakerParam {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public SubscriberParam getSubscriberParam() {
 		return subscriberParam;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ReportTypeWithParamsVO getReportType() {
 		return reportType;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ReportMakerParam [subscriberParam=");
+		builder.append(subscriberParam);
+		builder.append(", reportParamsetId=");
+		builder.append(reportParamset.getId());
+		builder.append(", reportTemplateId=");
+		builder.append(reportParamset.getReportTemplate().getId());
+		builder.append(", paramContObjectIds=");
+		builder.append(Arrays.toString(paramContObjectIds));
+		builder.append(", subscrContObjectIds=");
+		builder.append(Arrays.toString(subscrContObjectIds));
+		builder.append(", previewMode=");
+		builder.append(previewMode);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }
