@@ -376,6 +376,14 @@
                                                 ng-class="{'col-sm-9': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-3': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL'}"
                                                 ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 2 : 1}}"
                                                 >
+                                                <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'">
+                                                    <input type="checkbox" 
+                                                           class="nmc-checkbox-form" 
+                                                           id="inputSpecParam" 
+                                                           ng-model="paramSpecial.boolValue" 
+                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                           ng-required="paramSpecial.paramSpecialRequired"/>
+                                                </span>
                                                 <label for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.paramSpecialCaption}}
                                                 </label>
@@ -385,6 +393,14 @@
                                                 class="col-sm-9 nmc-text-align-center nmc-dotted-border-top"
                                                 colspan="2"                                                
                                                 >
+                                                <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH'">
+                                                    <input type="checkbox" 
+                                                               class="nmc-checkbox-form" 
+                                                               id="inputSpecParam" 
+                                                               ng-model="paramSpecial.boolValue"
+                                                               ng-disabled="isDisabled()"
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                </span>
                                                 <label for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
                                                 </label>
@@ -490,20 +506,10 @@
                                                         </div> 
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_BOOL">
-                                                        <input type="checkbox" 
-                                                               class="nmc-checkbox-form" 
-                                                               id="inputSpecParam" 
-                                                               ng-model="paramSpecial.boolValue" 
-                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
-                                                               ng-required="paramSpecial.paramSpecialRequired"/>
+                                                        
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_CATEGORY_SWITCH">
-                                                        <input type="checkbox" 
-                                                               class="nmc-checkbox-form" 
-                                                               id="inputSpecParam" 
-                                                               ng-model="paramSpecial.boolValue"
-                                                               ng-disabled="isDisabled()"
-                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                        
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_CATEGORY_CAPTION">
                                                         
