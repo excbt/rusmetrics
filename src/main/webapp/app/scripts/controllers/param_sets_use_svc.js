@@ -428,7 +428,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             return result;
         });
         
-        //sort by special params by full order        
+        addCategoryRows(result);
+        //sort by special params by full order                        
         mainSvc.sortNumericItemsBy(result, "reportMetaParamFullOrder");
         
         $scope.currentParamSpecialList = result;
