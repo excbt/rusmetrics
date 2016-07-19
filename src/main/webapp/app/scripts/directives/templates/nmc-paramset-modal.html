@@ -401,7 +401,8 @@
                                                                ng-disabled="isDisabled()"
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                 </span>
-                                                <label for="inputType" class="nmc-form-label">
+                                                <label ng-if="(paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '') || (paramSpecial.reportMetaParamCategory.caption && paramSpecial.reportMetaParamCategory.caption !== '')"
+                                                       for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
                                                 </label>
                                             </td>

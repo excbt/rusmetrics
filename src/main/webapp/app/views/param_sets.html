@@ -813,17 +813,17 @@
                                                 </label>
                                             </td>
                                             
-                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'"
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || (paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION' && paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '')"
                                                 class="col-sm-9 nmc-text-align-center nmc-dotted-border-top"
                                                 colspan="2"                                                
                                                 >
                                                 <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH'">
                                                     <input type="checkbox" 
-                                                                   class="nmc-checkbox-form" 
-                                                                   id="inputSpecParam" 
-                                                                   ng-model="paramSpecial.boolValue"
-                                                                   ng-disabled="isDisabled()"
-                                                                   ng-required="paramSpecial.paramSpecialRequired">
+                                                           class="nmc-checkbox-form" 
+                                                           id="inputSpecParam" 
+                                                           ng-model="paramSpecial.boolValue"
+                                                           ng-disabled="isDisabled()"
+                                                           ng-required="paramSpecial.paramSpecialRequired">
                                                 </span>                                                
                                                 <label for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
