@@ -204,6 +204,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $scope.availableObjects = [];
         $scope.selectedObjects = [];
         $scope.currentObject = {};
+        $scope.currentObject.isDefault = false;
         $scope.startDateFormat = null;
         $scope.endDateFormat = null;
         $scope.psStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);//(new Date());        
