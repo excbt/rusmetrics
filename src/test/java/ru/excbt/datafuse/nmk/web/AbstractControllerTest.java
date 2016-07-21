@@ -478,14 +478,45 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void _testPutJson(String url, RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected ResultActions _testPutJson(String url, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 			resultActions.andExpect(status().isOk());
 		};
 
-		_testPutJson(url, null, requestExtraInitializer, tester);
+		return _testPutJson(url, null, requestExtraInitializer, tester);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param sendObject
+	 * @param requestExtraInitializer
+	 * @return
+	 * @throws Exception
+	 */
+	protected ResultActions _testPutJson(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer)
+			throws Exception {
+
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().isOk());
+		};
+
+		return _testPutJson(url, sendObject, requestExtraInitializer, tester);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param sendObject
+	 * @return
+	 * @throws Exception
+	 */
+	protected ResultActions _testPutJson(String url, Object sendObject)
+			throws Exception {
+		return _testPutJson(url, sendObject, null);
 	}
 
 	/**
@@ -496,7 +527,7 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void _testPutJson(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer,
+	protected ResultActions _testPutJson(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing UPDATE on URL: {}", url);
@@ -529,6 +560,7 @@ public class AbstractControllerTest {
 			resultActionsTester.testResultActions(resultActions);
 		}
 
+		return resultActions;
 	}
 
 	/**
@@ -537,8 +569,13 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void _testPutJson(String url) throws Exception {
-		_testUpdateJson(url, null, null);
+	protected ResultActions _testPutJson(String url) throws Exception {
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().isOk());
+		};
+		return _testPutJson(url, null, null, tester);
+		//_testUpdateJson(url, null, null);
 	}
 
 	/**
@@ -547,13 +584,19 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void _testPostJson(String urlStr, RequestExtraInitializer requestExtraInitializer,
+	protected ResultActions _testPostJson(String urlStr, Object sendObject,
+			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing UPDATE on URL: {}", urlStr);
 
 		MockHttpServletRequestBuilder request = post(urlStr).with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON);
+
+		if (sendObject != null) {
+			String jsonBody = objectToJson(sendObject);
+			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
+		}
 
 		if (requestExtraInitializer != null) {
 			requestExtraInitializer.doInit(request);
@@ -565,6 +608,23 @@ public class AbstractControllerTest {
 			resultActionsTester.testResultActions(resultActions);
 		}
 
+		return resultActions;
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @param resultActionsTester
+	 * @return
+	 * @throws Exception
+	 */
+	protected ResultActions _testPostJson(String urlStr, RequestExtraInitializer requestExtraInitializer,
+			ResultActionsTester resultActionsTester) throws Exception {
+
+		return _testPostJson(urlStr, null, requestExtraInitializer, resultActionsTester);
+
 	}
 
 	/**
@@ -573,14 +633,33 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void _testPostJson(String urlStr, RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected ResultActions _testPostJson(String urlStr, RequestExtraInitializer requestExtraInitializer)
+			throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		_testPostJson(urlStr, requestExtraInitializer, tester);
+		return _testPostJson(urlStr, null, requestExtraInitializer, tester);
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @return
+	 * @throws Exception
+	 */
+	protected ResultActions _testPostJson(String urlStr, Object sendObject)
+			throws Exception {
+
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().is2xxSuccessful());
+		};
+
+		return _testPostJson(urlStr, sendObject, null, tester);
 
 	}
 
@@ -736,6 +815,29 @@ public class AbstractControllerTest {
 			fail();
 		}
 
+		return jsonBody;
+	}
+
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	protected String objectToJsonStr(Object obj) {
+		String jsonBody = null;
+		try {
+			if (obj instanceof String) {
+				jsonBody = (String) obj;
+
+			} else {
+				jsonBody = OBJECT_MAPPER.writeValueAsString(obj);
+			}
+
+		} catch (JsonProcessingException e) {
+			logger.error("Can't create json: {}", e);
+			e.printStackTrace();
+			fail();
+		}
 		return jsonBody;
 	}
 

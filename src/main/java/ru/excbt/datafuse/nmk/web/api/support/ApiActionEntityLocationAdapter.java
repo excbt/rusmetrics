@@ -46,7 +46,7 @@ public abstract class ApiActionEntityLocationAdapter<T, K> extends ApiActionEnti
 		checkNotNull(request, "request is NULL");
 
 		URI location = null;
-		if (getResult() != null) {
+		if (getResult() != null && getLocationId() != null) {
 			location = URI.create(request.getRequestURI() + '/' + getLocationId());
 		} else {
 			location = URI.create(request.getRequestURI());
