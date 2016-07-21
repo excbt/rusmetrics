@@ -1,3 +1,7 @@
+/*jslint node: true, white: true*/
+/*global angular*/
+'use strict';
+
 //reports controller
 var app = angular.module('portalNMC');
 app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFactoryWithCanceler', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', '$q', function($scope, $rootScope, $http, crudGridDataFactoryWithCanceler, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q){
@@ -79,6 +83,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
      //get paramsets   
     
     $scope.$on('reportSvc:reportTypesIsLoaded', function(){
+//console.log("reportSvc:reportTypesIsLoaded");        
         //report types
         $scope.reportObjects = reportSvc.getReportTypes();
         $scope.getActive();
@@ -180,7 +185,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         errorCallback(e);
     }
     
-    $scope.getParamsets = function(table, type){
+    $scope.getParamsets = function(table, type){       
         crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {
             type.paramsetsCount = data.length;
             type.checkedParamsetsCount = 0;
@@ -198,6 +203,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 $scope.showAvailableObjects_flag = false;             
                 $scope.getSelectedObjectsByParamset(type, el);
             });
+            mainSvc.sortItemsBy(tmp, "name");
             type.paramsets = tmp;            
         });
     };
@@ -206,7 +212,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
  //get templates   
     $scope.getActive = function(){
         if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
-        for (var i=0; i<$scope.reportObjects.length; i++){
+        for (var i = 0; i < $scope.reportObjects.length; i++){
             $scope.getParamsets($scope.paramsetsUrl + $scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
@@ -217,8 +223,13 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         $scope.getActive();
     };
 
-    $scope.toggleReportShowGroupDetails = function(curObject){//switch option: current goup details     
-         curObject.showGroupDetails = !curObject.showGroupDetails;
+    $scope.toggleReportShowGroupDetails = function(curObject, serviceType){//switch option: current goup details 
+console.log(curObject);        
+console.log(serviceType);        
+        if (mainSvc.checkUndefinedNull(curObject.showGroupDetails)){
+            curObject.showGroupDetails = {};
+        }
+         curObject.showGroupDetails[serviceType.keyname] = !curObject.showGroupDetails[serviceType.keyname];
 //console.log(curObject.paramsets);        
     };
     
@@ -1275,7 +1286,12 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         $scope.currentServiceType = angular.copy(servType);        
     };
     
+    $scope.setCurrentCategory = function(category){
+        $scope.currentCategory = category;        
+    };
+    
     $scope.setCurrentServiceType($scope.contServiceTypes[0]);
+    $scope.setCurrentCategory($scope.categories[0]);
     
     // *************************************************************************************
     // Отчеты для контекстного меню объект
@@ -1455,6 +1471,5 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     }
     
     // ********************************* end of additional special params
-    // *****************************************************************************************
-    
+    // *****************************************************************************************    
 }]);

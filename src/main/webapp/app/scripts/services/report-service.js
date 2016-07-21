@@ -71,19 +71,20 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     
     var contServiceTypes = [
         {
-            keyname: "heat",
-            caption: "Теплоснабжение",
+            keyname: "all",
+            caption: "Все ресурсы",
             class: "active"
-        },{
-            keyname: "hw",
-            caption: "ГВС"
-        },{
-            keyname: "cw",
-            caption: "ХВС"
-        },{
-            keyname: "el",
-            caption: "Электроснабжение"
         }
+//        ,{
+//            keyname: "hw",
+//            caption: "ГВС"
+//        },{
+//            keyname: "cw",
+//            caption: "ХВС"
+//        },{
+//            keyname: "el",
+//            caption: "Электроснабжение"
+//        }
     ]
     
     //request canceling params
@@ -148,6 +149,10 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 newObject.reportCategory = data[i].reportCategory;
                 newObject.resourceCategory = data[i].resourceCategory;
                 newObject.contServiceTypes = data[i].contServiceTypes;
+                //perform contService types
+                createContServiceTypesGroup(newObject.contServiceTypes);
+                addReportTypeContServiceTypes(newObject.contServiceTypes);
+                
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
@@ -155,19 +160,53 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                 
                 for (var categoryCounter = 0; categoryCounter < reportCategories.length; categoryCounter++){                                          
                     if (newObject.reportCategory.localeCompare(reportCategories[categoryCounter].name) == 0){                        
-                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
+//                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
                         reportCategories[categoryCounter].reportTypes.push(newObject);                                             
                         continue;
                     };
                 };
                 newObjects.push(newObject);
             };        
-            reportTypes = newObjects;         
+            reportTypes = newObjects;
+console.log(reportTypes);            
+console.log(contServiceTypes);            
             $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');
             setReportTypesIsLoaded(true);           
         });
     };
 //    loadReportTypes();
+    
+    function addReportTypeContServiceTypes (reportTypeContServiceTypes) {
+        reportTypeContServiceTypes.forEach(function(rtcst){
+            var isPresent = false;
+            contServiceTypes.some(function(cst){
+                if (cst.keyname === rtcst.keyname){
+                   isPresent = true;
+                    return true;
+                };                
+            });
+            if (isPresent === false){
+console.log(rtcst);                
+                contServiceTypes.push(angular.copy(rtcst));
+            }
+        });        
+    }
+    
+    function createContServiceTypesGroup (reportTypeContServiceTypes) {
+        if (!angular.isArray(reportTypeContServiceTypes) || reportTypeContServiceTypes.length === 0){
+            return;
+        };
+//        mainSvc.sortItemsBy(reportTypeContServiceTypes, "keyname");
+        var tmpKeynames = reportTypeContServiceTypes.map(function(elem){
+            return elem.keyname;
+        });
+        var groupKeyname = tmpKeynames.join(',');
+        var tmpCaptions = reportTypeContServiceTypes.map(function(elem){
+            return elem.caption;
+        });
+        var groupCaption = tmpCaptions.join(', ');
+        reportTypeContServiceTypes.push({keyname: groupKeyname, caption: groupCaption, isGroup: true});
+    }
     
     //report periods ( ** загрузка периодов отчетов)
     var reportPeriods = [];
@@ -452,15 +491,21 @@ app.filter('serviceTypesFilter', function(){
     return function(items, props){
 //console.log(items);
 //console.log(props);
+        if (props.keyname === "all"){
+            return items;
+        };
         var filteredItems = [];      
         items.forEach(function(item){
-            if (angular.isUndefined(item.contServiceTypes) || item.contServiceTypes.length <= 0){
-                filteredItems.push(item);
-                return;
-            };
+//            if (angular.isUndefined(item.contServiceTypes) || item.contServiceTypes.length <= 0){
+//                filteredItems.push(item);
+//                return;
+//            };
             if (angular.isArray(item.contServiceTypes)){
                 item.contServiceTypes.some(function(elem){
-                    if (elem.keyname == props.keyname){
+                    if (angular.isUndefined(elem) || angular.isUndefined(props) || elem.isGroup !== true){
+                        return false;
+                    }
+                    if (elem.keyname === props.keyname){
                         filteredItems.push(item);
                         return true;
                     }

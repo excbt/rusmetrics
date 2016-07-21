@@ -379,6 +379,30 @@ app.filter('notEmptyCategories', ['$filter', function($filter){
         var out = [];
         if (angular.isArray(items)){
             items.forEach(function(item){
+                var checkReportTypes = false;
+                item.reportTypes.some(function(rt){
+                    if (rt.paramsetsCount && rt.paramsetsCount == rt.checkedParamsetsCount){
+                        checkReportTypes = true;
+                        return true;
+                    }
+                });               
+                if (checkReportTypes === true){
+                    out.push(item);
+                }
+            })
+        }else{
+            out = items;
+        }
+        return out;
+    }
+}]);
+
+app.filter('notEmptyCategoriesByContServiceType', ['$filter', function($filter){
+    return function(items, props){
+//console.log(items);        
+        var out = [];
+        if (angular.isArray(items)){
+            items.forEach(function(item){
                 var filteredReportTypes = $filter('serviceTypesFilter')(item.reportTypes, props);
                 if (filteredReportTypes.length == 0){
                     return;
@@ -391,6 +415,37 @@ app.filter('notEmptyCategories', ['$filter', function($filter){
                     }
                 });               
                 if (checkReportTypes == true){
+                    out.push(item);
+                }
+            })
+        }else{
+            out = items;
+        }
+        return out;
+    }
+}]);
+
+app.filter('notEmptyContServiceTypesByCategory', ['$filter', function($filter){
+    return function(items, props){
+//console.log(items);        
+        var out = [];
+        if (angular.isArray(items)){
+            items.forEach(function(item){
+//console.log(props);                
+//console.log(props.reportTypes);   
+//console.log(item);                
+                var filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+                if (filteredReportTypes.length === 0){
+                    return;
+                }
+                var checkReportTypes = false;
+                filteredReportTypes.some(function(rt){
+                    if (rt.paramsetsCount && rt.paramsetsCount === rt.checkedParamsetsCount){
+                        checkReportTypes = true;
+                        return true;
+                    }
+                });               
+                if (checkReportTypes === true){
                     out.push(item);
                 }
             })
