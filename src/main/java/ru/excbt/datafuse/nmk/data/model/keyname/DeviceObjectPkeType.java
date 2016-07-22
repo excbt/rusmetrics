@@ -35,7 +35,7 @@ public class DeviceObjectPkeType extends AbstractKeynameEntity implements Deleta
 	private String pkeTypeCode;
 
 	@Column(name = "measure_unit")
-	private String pkeMeasureUnit;
+	private String measureUnit;
 
 	@Version
 	private int version;
@@ -93,12 +93,12 @@ public class DeviceObjectPkeType extends AbstractKeynameEntity implements Deleta
 		this.deleted = deleted;
 	}
 
-	public String getPkeMeasureUnit() {
-		return pkeMeasureUnit;
+	public String getMeasureUnit() {
+		return measureUnit;
 	}
 
-	public void setPkeMeasureUnit(String pkeMeasureUnit) {
-		this.pkeMeasureUnit = pkeMeasureUnit;
+	public void setMeasureUnit(String measureUnit) {
+		this.measureUnit = measureUnit;
 	}
 
 }
