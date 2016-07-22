@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
 import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiController;
 
 /**
  * Контроллер для работы с данными по электричеству для абонента
