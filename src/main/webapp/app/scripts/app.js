@@ -150,10 +150,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/tariffs.html',
         controller: 'TariffsCtrl'
       })
-      .when('/settings/reports', {
-        templateUrl: 'views/report_settings.html',
-        controller: 'ReportSettingsCtrl'
-      })
+//      .when('/settings/reports', {
+//        templateUrl: 'views/report_settings.html',
+//        controller: 'ReportSettingsCtrl'
+//      })
       .when('/settings/paramsets', {
         templateUrl: 'views/param_sets.html',
         controller: 'ParamSetsCtrl'

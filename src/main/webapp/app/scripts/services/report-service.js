@@ -228,7 +228,8 @@ console.log(rtcst);
     var getParamsets = function(table, type){
         if (requestCanceler == null)
             return null;
-        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {       
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {
+            mainSvc.sortItemsBy(data, "name");
             type.paramsets = data;
             type.paramsetsCount = data.length;
         });
