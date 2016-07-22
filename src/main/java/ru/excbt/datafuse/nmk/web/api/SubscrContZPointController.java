@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
+import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -41,6 +42,9 @@ public class SubscrContZPointController extends SubscrApiController {
 
 	@Autowired
 	protected ContZPointService contZPointService;
+
+	@Autowired
+	protected ContServiceDataHWaterService contServiceDataHWaterService;
 
 	/**
 	 * 
@@ -174,6 +178,25 @@ public class SubscrContZPointController extends SubscrApiController {
 		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
 
 		return responseOK(contServiceTypes);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/timeDetailLastDate", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointsTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId) {
+
+		List<Long> contZPointIds = contZPointService.selectContZPointIds(contObjectId);
+
+		if (contZPointIds == null || contZPointIds.size() == 0) {
+			return responseOK();
+		}
+
+		Object result = contServiceDataHWaterService.selectTimeDetailLastDateMap(contZPointIds);
+		return responseOK(result);
 	}
 
 }

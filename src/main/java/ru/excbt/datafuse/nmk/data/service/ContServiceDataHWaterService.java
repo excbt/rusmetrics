@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +40,11 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
@@ -584,6 +588,63 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		contServiceDataHWaterRepository.delete(deleteCandidate);
 
 		return deleteCandidate;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param fromDateTime
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<TimeDetailLastDate> selectTimeDetailLastDate(long contZPointId) {
+		checkArgument(contZPointId > 0);
+
+		List<TimeDetailLastDate> resultList = new ArrayList<>();
+
+		List<Object[]> qryResultList = contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZPointId);
+
+		for (Object[] row : qryResultList) {
+
+			logger.info("Data Type: {}", row[1].getClass());
+
+			String timeDetail = (String) row[0];
+			Timestamp lastDate = (Timestamp) row[1];
+
+			TimeDetailLastDate item = new TimeDetailLastDate(timeDetail, lastDate);
+			resultList.add(item);
+		}
+
+		return resultList;
+
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMap(List<Long> contZPointIds) {
+		checkArgument(contZPointIds != null && contZPointIds.size() > 0);
+
+		HashMap<Long, List<TimeDetailLastDate>> resultMap = new HashMap<>();
+
+		List<Object[]> qryResultList = contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZPointIds);
+
+		for (Object[] row : qryResultList) {
+
+			Long id = DBRowUtils.asLong(row[0]);
+			String timeDetail = DBRowUtils.asString(row[1]);
+			Timestamp lastDate = DBRowUtils.asTimestamp(row[2]);
+
+			List<TimeDetailLastDate> list = resultMap.get(id);
+			if (list == null) {
+				list = new ArrayList<>();
+				resultMap.put(id, list);
+			}
+
+			TimeDetailLastDate item = new TimeDetailLastDate(timeDetail, lastDate);
+			list.add(item);
+		}
+
+		return resultMap;
+
 	}
 
 }

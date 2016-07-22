@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * Класс для работы полями БД
@@ -60,6 +61,30 @@ public class DBRowUtils {
 		}
 		if (arg instanceof Double) {
 			return new BigDecimal((Double) arg);
+		}
+		throw new IllegalArgumentException();
+	}
+
+	/**
+	 * 
+	 * @param arg
+	 * @return
+	 */
+	public static String asString(Object arg) {
+		if (arg instanceof String) {
+			return (String) arg;
+		}
+		throw new IllegalArgumentException();
+	}
+
+	/**
+	 * 
+	 * @param arg
+	 * @return
+	 */
+	public static Timestamp asTimestamp(Object arg) {
+		if (arg instanceof Timestamp) {
+			return (Timestamp) arg;
 		}
 		throw new IllegalArgumentException();
 	}

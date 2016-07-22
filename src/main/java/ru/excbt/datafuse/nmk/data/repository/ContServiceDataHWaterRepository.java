@@ -84,6 +84,24 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 	/**
 	 * 
 	 * @param contZPointId
+	 * @return
+	 */
+	@Query("SELECT d.timeDetailType, max(d.dataDate) FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPointId = :contZPointId " + " GROUP BY d.timeDetailType")
+	public List<Object[]> selectTimeDetailLastDataByZPoint(@Param("contZPointId") long contZPointId);
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Query("SELECT d.contZPointId, d.timeDetailType, max(d.dataDate) FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPointId in (:contZPointIds) " + " GROUP BY d.contZPointId, d.timeDetailType")
+	public List<Object[]> selectTimeDetailLastDataByZPoint(@Param("contZPointIds") List<Long> contZPointIds);
+
+	/**
+	 * 
+	 * @param contZPointId
 	 * @param pageable
 	 * @return
 	 */

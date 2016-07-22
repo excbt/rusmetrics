@@ -1,6 +1,9 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -20,6 +23,8 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletableObje
 
 	private Boolean dataExists;
 
+	private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
+
 	/**
 	 * 
 	 * @param srcObject
@@ -33,6 +38,7 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletableObje
 	 * 
 	 * @param srcObject
 	 */
+	@Deprecated
 	public ContZPointEx(ContZPoint srcObject, Boolean dataExists) {
 		super(srcObject);
 		this.dataExists = dataExists;
@@ -43,19 +49,45 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletableObje
 	 * @param srcObject
 	 * @param lastDataDate
 	 */
+	@Deprecated
 	public ContZPointEx(ContZPoint srcObject, DateTime lastDataDate) {
 		super(srcObject);
 		this.lastDataDate = lastDataDate;
 		this.dataExists = lastDataDate != null;
 	}
 
+	@Deprecated
 	public ContZPointEx(ContZPoint srcObject, Date lastDataDate) {
 		super(srcObject);
 		this.lastDataDate = lastDataDate != null ? new DateTime(lastDataDate) : null;
 		this.dataExists = lastDataDate != null;
 	}
 
+	/**
+	 * 
+	 * @param srcObject
+	 * @param timeDetailLastDates
+	 */
+	public ContZPointEx(ContZPoint srcObject, List<TimeDetailLastDate> timeDetailLastDates) {
+		super(srcObject);
+		this.lastDataDate = null;
+		this.dataExists = timeDetailLastDates.size() > 0;
+		this.timeDetailLastDates.addAll(timeDetailLastDates);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Date getLastDataDate() {
+		if (timeDetailLastDates.size() > 0) {
+			final MaxCheck<Date> maxCheck = new MaxCheck<>();
+
+			timeDetailLastDates.forEach(i -> maxCheck.check(i.getDataDate()));
+
+			return maxCheck.getObject();
+		}
+
 		return lastDataDate != null ? lastDataDate.toDate() : null;
 	}
 
@@ -85,6 +117,10 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletableObje
 	@Override
 	public void setDeleted(int deleted) {
 		throw new UnsupportedOperationException();
+	}
+
+	public List<TimeDetailLastDate> getTimeDetailLastDates() {
+		return Collections.unmodifiableList(timeDetailLastDates);
 	}
 
 }

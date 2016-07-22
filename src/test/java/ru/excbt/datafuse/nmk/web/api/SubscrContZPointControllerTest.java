@@ -35,6 +35,14 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 	}
 
+	@Test
+	public void testGetZPointTimeDetailType() throws Exception {
+		Long coId = getFirstContObjectId();
+		String url = String.format("/api/subscr/contObjects/%d/contZPoints/timeDetailLastDate", coId);
+		_testGetJson(url);
+
+	}
+
 	@Ignore
 	@Test
 	public void testGetElConsZPointEx() throws Exception {
