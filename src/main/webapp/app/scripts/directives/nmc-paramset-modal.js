@@ -9,6 +9,7 @@ angular.module('portalNMC')
                     $scope.currentObject.settlementDay = "0" + $scope.currentObject.settlementDay;
                     $scope.$apply();
                 }
+                $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"} );
                 $("#inputReportSettlementDay").inputmask("d", {placeholder: ""});
                 setPropForSettlementMonth();
                 setPropForStartDate();

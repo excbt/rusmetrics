@@ -1280,6 +1280,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             $scope.$apply();
         }
         $("#inputSettlementDay").inputmask("d", {placeholder: ""});
+        
+        $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"} );
     });
     
     var setPropForSettlementMonth = function(){         

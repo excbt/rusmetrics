@@ -277,11 +277,12 @@
 
                                         </td>
                                     </tr>
+<!--
                                     <tr>
                                         <td class="col-sm-3">
                                             <label for="inputFileTemplate" 
                                                    class="nmc-form-label">
-                                                Шаблон имени файла (<small>без расширения</small>)
+                                                *Шаблон имени файла (<small>без расширения</small>)
                                             </label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
@@ -291,6 +292,24 @@
                                                    placeholder="Шаблон имени файла" 
                                                    ng-model="currentObject.outputFileNameTemplate" 
                                                    ng-disabled="isDisabled()">
+                                        </td>
+                                    </tr>
+-->
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3" style="border-bottom: 0; padding-bottom: 0">
+                                            <label for="inputFileTemplate" 
+                                                   class="nmc-form-label noMargin">
+                                                *Шаблон имени файла (<small>без расширения</small>):</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="col-sm-9 nmc-text-align-left" style="border-top: 0">
+                                            <input class="form-control nmc-text-input-form" 
+                                                   id="inputFileTemplate" 
+                                                   type=text  
+                                                   ng-model="currentObject.outputFileNameTemplate" 
+                                                   ng-disabled="isDisabled()"                                                   
+                                                   >
                                         </td>
                                     </tr>
                                     <tr>
@@ -334,6 +353,7 @@
                                                    ng-model="activeStartDateFormatted"/>
                                         </td>
                                     </tr>
+<!--
                                     <tr>
                                         <td class="col-sm-3">
                                             <label for="inputValue" 
@@ -345,6 +365,7 @@
                                             {{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
                                         </td>
                                     </tr>
+-->
                                     <tr>
                                         <td colspan="2" 
                                             class="col-sm-3">
@@ -353,6 +374,12 @@
                                                    ng-model="currentObject.outputFileZipped" 
                                                    class="nmc-checkbox-form" >
                                             Упаковывать файлы отчета в ZIP архив.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" 
+                                            class="col-sm-3">                                            
+                                            * Допускается использование латинских символов и цифр.
                                         </td>
                                     </tr>
                                 </table>

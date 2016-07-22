@@ -692,7 +692,9 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="col-sm-3" style="border-bottom: 0; padding-bottom: 0">
-                                            <label for="inputFileTemplate" class="nmc-form-label noMargin">Шаблон имени файла (<small>без расширения</small>):</label>
+                                            <label for="inputFileTemplate" 
+                                                   class="nmc-form-label noMargin">
+                                                *Шаблон имени файла (<small>без расширения</small>):</label>
                                         </td>
 <!--
                                         <td class="col-sm-9 nmc-text-align-left">
@@ -715,9 +717,9 @@
                                             <input class="form-control nmc-text-input-form" 
                                                    id="inputFileTemplate" 
                                                    type=text  
-                                                   placeholder="Шаблон имени файла" 
                                                    ng-model="currentObject.outputFileNameTemplate" 
-                                                   ng-disabled="isDisabled()">
+                                                   ng-disabled="isDisabled()"                                                   
+                                                   >
                                         </td>
                                     </tr>
                                     <tr>
@@ -757,6 +759,12 @@
                                                    class="nmc-form-label">Дата отправки в архив:</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3">
+                                            <label class="nmc-form-label noMargin">
+                                                * Допустимо использование только латинских символов и цифр</label>
                                         </td>
                                     </tr>
 <!--
