@@ -4,17 +4,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 
-@Deprecated
-public class ExtraInfo<T> implements Serializable {
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+public class ModelWrapper<T> implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1121524482713584202L;
 
+	@JsonUnwrapped
 	private final T object;
 
-	public ExtraInfo(T srcObject) {
+	public ModelWrapper(T srcObject) {
 		checkNotNull(srcObject);
 		this.object = srcObject;
 	}
@@ -23,6 +25,9 @@ public class ExtraInfo<T> implements Serializable {
 		return object;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -31,6 +36,9 @@ public class ExtraInfo<T> implements Serializable {
 		return result;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -39,7 +47,7 @@ public class ExtraInfo<T> implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ExtraInfo<?> other = (ExtraInfo<?>) obj;
+		ModelWrapper<?> other = (ModelWrapper<?>) obj;
 		if (object == null) {
 			if (other.object != null)
 				return false;

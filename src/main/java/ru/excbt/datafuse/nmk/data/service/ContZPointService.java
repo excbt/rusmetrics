@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
@@ -202,11 +203,38 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		return result;
 	}
 
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContZPointVO> findContObjectZPointsVO(long contObjectId) {
+		List<ContZPoint> zPoints = contZPointRepository.findByContObjectId(contObjectId);
+		List<ContZPointVO> result = new ArrayList<>();
+
+		List<ContZPointVO> resultHWater = makeContZPointVO_Hwater(zPoints);
+		List<ContZPointVO> resultEl = makeContZPointVO_El(zPoints);
+
+		result.addAll(resultHWater);
+		result.addAll(resultEl);
+
+		result.forEach(i -> {
+			i.getObject().getDeviceObjects().forEach(j -> {
+				j.loadLazyProps();
+			});
+
+			if (i.getObject().getTemperatureChart() != null) {
+				i.getObject().getTemperatureChart().getId();
+				i.getObject().getTemperatureChart().getChartComment();
+			}
+
+		});
+
+		return result;
+	}
+
 	/**
 	 * 
 	 * @param zPointList
 	 * @return
 	 */
+	@Deprecated
 	private List<ContZPointEx> processContZPointHwater(List<ContZPoint> zPointList) {
 		List<ContZPointEx> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
@@ -238,11 +266,33 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		return result;
 	}
 
+	private List<ContZPointVO> makeContZPointVO_Hwater(List<ContZPoint> zPointList) {
+		List<ContZPointVO> result = new ArrayList<>();
+		MinCheck<Date> minCheck = new MinCheck<>();
+
+		for (ContZPoint zp : zPointList) {
+
+			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
+				continue;
+			}
+
+			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
+
+			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+
+			minCheck.check(startDay);
+			result.add(new ContZPointVO(zp, zPointLastDate));
+
+		}
+		return result;
+	}
+
 	/**
 	 * 
 	 * @param zPointList
 	 * @return
 	 */
+	@Deprecated
 	private List<ContZPointEx> processContZPointEl(List<ContZPoint> zPointList) {
 		List<ContZPointEx> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
@@ -269,6 +319,32 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 				minCheck.check(startDay);
 				result.add(new ContZPointEx(zp, zPointLastDate));
 			}
+
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param zPointList
+	 * @return
+	 */
+	private List<ContZPointVO> makeContZPointVO_El(List<ContZPoint> zPointList) {
+		List<ContZPointVO> result = new ArrayList<>();
+		MinCheck<Date> minCheck = new MinCheck<>();
+
+		for (ContZPoint zp : zPointList) {
+
+			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
+				continue;
+			}
+
+			Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+
+			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+
+			minCheck.check(startDay);
+			result.add(new ContZPointVO(zp, zPointLastDate));
 
 		}
 		return result;

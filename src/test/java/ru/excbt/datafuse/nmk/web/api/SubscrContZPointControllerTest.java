@@ -36,11 +36,17 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	}
 
 	@Test
-	public void testGetZPointTimeDetailType() throws Exception {
+	public void testGetZPointsTimeDetailLastDateMap() throws Exception {
 		Long coId = getFirstContObjectId();
 		String url = String.format("/api/subscr/contObjects/%d/contZPoints/timeDetailLastDate", coId);
 		_testGetJson(url);
+	}
 
+	@Test
+	public void testGetZPointTimeDetailLastDate() throws Exception {
+		Long coId = getFirstContObjectId();
+		String url = String.format("/api/subscr/contObjects/%d/contZPoints/%d/timeDetailLastDate", coId, 20118714);
+		_testGetJson(url);
 	}
 
 	@Ignore
@@ -52,11 +58,13 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	}
 
 	@Test
-	public void testGetZPointV_01() throws Exception {
-		// http://localhost:8080/nmk-p/api/subscr/contObjects/20118678/contZPointsEx
-		// Failed to load resource: the server responded with a status of 500
-		// (Internal Server Error)
+	public void testGetZPointsV_01() throws Exception {
 		_testGetJson("/api/subscr/contObjects/20118678/contZPointsEx ");
+	}
+
+	@Test
+	public void testGetZPointsVO() throws Exception {
+		_testGetJson("/api/subscr/contObjects/20118678/contZPoints/vo ");
 	}
 
 	@Test

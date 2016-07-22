@@ -8,21 +8,23 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
-@Deprecated
-public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletedMarker {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMarker {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3139573316888700353L;
 
-	private DateTime lastDataDate;
+	@Deprecated
+	private final DateTime lastDataDate;
 
-	private Boolean dataExists;
+	private final Boolean dataExists;
 
 	private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
@@ -30,19 +32,10 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletedMarker
 	 * 
 	 * @param srcObject
 	 */
-	public ContZPointEx(ContZPoint srcObject) {
+	public ContZPointVO(ContZPoint srcObject) {
 		super(srcObject);
 		this.dataExists = false;
-	}
-
-	/**
-	 * 
-	 * @param srcObject
-	 */
-	@Deprecated
-	public ContZPointEx(ContZPoint srcObject, Boolean dataExists) {
-		super(srcObject);
-		this.dataExists = dataExists;
+		this.lastDataDate = null;
 	}
 
 	/**
@@ -50,15 +43,13 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletedMarker
 	 * @param srcObject
 	 * @param lastDataDate
 	 */
-	@Deprecated
-	public ContZPointEx(ContZPoint srcObject, DateTime lastDataDate) {
+	public ContZPointVO(ContZPoint srcObject, DateTime lastDataDate) {
 		super(srcObject);
 		this.lastDataDate = lastDataDate;
 		this.dataExists = lastDataDate != null;
 	}
 
-	@Deprecated
-	public ContZPointEx(ContZPoint srcObject, Date lastDataDate) {
+	public ContZPointVO(ContZPoint srcObject, Date lastDataDate) {
 		super(srcObject);
 		this.lastDataDate = lastDataDate != null ? new DateTime(lastDataDate) : null;
 		this.dataExists = lastDataDate != null;
@@ -69,7 +60,7 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletedMarker
 	 * @param srcObject
 	 * @param timeDetailLastDates
 	 */
-	public ContZPointEx(ContZPoint srcObject, List<TimeDetailLastDate> timeDetailLastDates) {
+	public ContZPointVO(ContZPoint srcObject, List<TimeDetailLastDate> timeDetailLastDates) {
 		super(srcObject);
 		this.lastDataDate = null;
 		this.dataExists = timeDetailLastDates.size() > 0;
@@ -92,21 +83,8 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletedMarker
 		return lastDataDate != null ? lastDataDate.toDate() : null;
 	}
 
-	public void setLastDataDate(Date lastDataDate) {
-		if (lastDataDate != null) {
-			this.lastDataDate = new DateTime(lastDataDate);
-		} else {
-			this.lastDataDate = null;
-		}
-
-	}
-
 	public Boolean getDataExists() {
 		return dataExists;
-	}
-
-	public void setDataExists(Boolean dataExists) {
-		this.dataExists = dataExists;
 	}
 
 	@JsonIgnore
@@ -118,5 +96,4 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletedMarker
 	public List<TimeDetailLastDate> getTimeDetailLastDates() {
 		return Collections.unmodifiableList(timeDetailLastDates);
 	}
-
 }

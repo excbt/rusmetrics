@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointVO;
+import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
@@ -67,6 +72,18 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
+		return responseOK(ObjectFilters.deletedFilter(zpList));
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
+		List<ContZPointVO> zpList = contZPointService.findContObjectZPointsVO(contObjectId);
 		return responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
@@ -189,14 +206,33 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId) {
 
-		List<Long> contZPointIds = contZPointService.selectContZPointIds(contObjectId);
+		List<Long> selectIds = contZPointService.selectContZPointIds(contObjectId);
 
-		if (contZPointIds == null || contZPointIds.size() == 0) {
+		if (selectIds == null || selectIds.size() == 0) {
 			return responseOK();
 		}
 
-		Object result = contServiceDataHWaterService.selectTimeDetailLastDateMap(contZPointIds);
+		HashMap<Long, List<TimeDetailLastDate>> result = contServiceDataHWaterService
+				.selectTimeDetailLastDateMap(selectIds);
 		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/timeDetailLastDate",
+			method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		List<Long> selectIds = Lists.newArrayList(contZPointId);
+
+		HashMap<Long, List<TimeDetailLastDate>> result = contServiceDataHWaterService
+				.selectTimeDetailLastDateMap(selectIds);
+		return responseOK(result.get(contZPointId));
 	}
 
 }
