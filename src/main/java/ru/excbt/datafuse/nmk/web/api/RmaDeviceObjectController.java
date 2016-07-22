@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -296,9 +298,17 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.map(i -> new DeviceObjectVO(i)).collect(Collectors.toList());
 
+		List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
+				.collect(Collectors.toList());
+
+		List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService.selectDeviceObjsetTimeOffset(deviceObjectIds);
+
+		Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
+				.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObjectId, Function.identity()));
+
 		deviceObjectVOs.forEach(i -> {
-			V_DeviceObjectTimeOffset timeOffset = deviceObjectService
-					.selectDeviceObjsetTimeOffset(i.getObject().getId());
+
+			V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getObject().getId());
 			i.setDeviceObjectTimeOffset(timeOffset);
 		});
 

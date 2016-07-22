@@ -410,4 +410,14 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectTimeOffsetRepository.findOne(deviceObjectId);
 	}
 
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<V_DeviceObjectTimeOffset> selectDeviceObjsetTimeOffset(List<Long> deviceObjectIds) {
+		return deviceObjectTimeOffsetRepository.selectDeviceObjectTimeOffsetList(deviceObjectIds);
+	}
+
 }
