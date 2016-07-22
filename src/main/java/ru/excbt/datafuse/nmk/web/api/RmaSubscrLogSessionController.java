@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.LogSessionStep;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.model.support.LogSessionVO;
+import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.service.LogSessionService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;

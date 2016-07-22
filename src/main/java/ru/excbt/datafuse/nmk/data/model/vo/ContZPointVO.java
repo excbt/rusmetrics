@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model.support;
+package ru.excbt.datafuse.nmk.data.model.vo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +13,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
+import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
+import ru.excbt.datafuse.nmk.data.model.support.ModelWrapper;
+import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMarker {

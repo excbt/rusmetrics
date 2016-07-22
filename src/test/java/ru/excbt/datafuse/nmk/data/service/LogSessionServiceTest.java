@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.LogSessionVO;
+import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 
 public class LogSessionServiceTest extends JpaSupportTest {
 

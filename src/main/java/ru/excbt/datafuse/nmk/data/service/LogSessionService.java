@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.LogSessionStep;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.LogSessionVO;
+import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.repository.LogSessionRepository;
 import ru.excbt.datafuse.nmk.data.repository.LogSessionStepRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
