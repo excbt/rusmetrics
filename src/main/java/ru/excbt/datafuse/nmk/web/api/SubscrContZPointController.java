@@ -83,7 +83,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointVO> zpList = contZPointService.findContObjectZPointsVO(contObjectId);
+		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(contObjectId);
 		return responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 

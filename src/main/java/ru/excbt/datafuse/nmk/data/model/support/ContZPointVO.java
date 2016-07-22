@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,6 +28,8 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 	private final Boolean dataExists;
 
 	private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
+
+	private V_DeviceObjectTimeOffset deviceObjectTimeOffset;
 
 	/**
 	 * 
@@ -95,5 +98,13 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 
 	public List<TimeDetailLastDate> getTimeDetailLastDates() {
 		return Collections.unmodifiableList(timeDetailLastDates);
+	}
+
+	public V_DeviceObjectTimeOffset getDeviceObjectTimeOffset() {
+		return deviceObjectTimeOffset;
+	}
+
+	public void setDeviceObjectTimeOffset(V_DeviceObjectTimeOffset deviceObjectTimeOffset) {
+		this.deviceObjectTimeOffset = deviceObjectTimeOffset;
 	}
 }

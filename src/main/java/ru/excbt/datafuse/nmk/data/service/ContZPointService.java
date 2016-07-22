@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
+import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
@@ -34,6 +35,7 @@ import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.data.repository.V_DeviceObjectTimeOffsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -87,6 +89,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private TemperatureChartService temperatureChartService;
+
+	@Autowired
+	private V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
 
 	/**
 	 * Краткая информация по точке учета
@@ -204,7 +209,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointVO> findContObjectZPointsVO(long contObjectId) {
+	public List<ContZPointVO> selectContObjectZPointsVO(long contObjectId) {
 		List<ContZPoint> zPoints = contZPointRepository.findByContObjectId(contObjectId);
 		List<ContZPointVO> result = new ArrayList<>();
 
@@ -224,6 +229,10 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 				i.getObject().getTemperatureChart().getChartComment();
 			}
 
+			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectTimeOffsetRepository
+					.findOne(i.getObject().get_activeDeviceObjectId());
+
+			i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
 		});
 
 		return result;
