@@ -36,7 +36,7 @@ public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 	@Test
 	@Ignore
 	public void testDeviceObjectDataSource() throws Exception {
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(TEST_DEVICE_OBJECT_ID);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(TEST_DEVICE_OBJECT_ID);
 		assertNotNull(deviceObject);
 		SubscrDataSource subscrDataSource = subscrDataSourceService
 				.selectDataSourceByKeyname(currentSubscriberService.getSubscriberId(), "DEVICE_DEFAULT");// DEVICE_DEFAULT

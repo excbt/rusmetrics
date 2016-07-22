@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +26,9 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
+import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
+import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -83,7 +86,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 
 		if (deviceObject == null) {
 			return responseNoContent();
@@ -290,7 +293,16 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObject.shareDeviceLoginInfo();
 		}
 
-		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
+		List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.map(i -> new DeviceObjectVO(i)).collect(Collectors.toList());
+
+		deviceObjectVOs.forEach(i -> {
+			V_DeviceObjectTimeOffset timeOffset = deviceObjectService
+					.selectDeviceObjsetTimeOffset(i.getObject().getId());
+			i.setDeviceObjectTimeOffset(timeOffset);
+		});
+
+		return responseOK(deviceObjectVOs);
 	}
 
 	/**
@@ -313,7 +325,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -357,7 +369,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}

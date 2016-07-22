@@ -35,7 +35,6 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
-import ru.excbt.datafuse.nmk.data.repository.V_DeviceObjectTimeOffsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -89,9 +88,6 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private TemperatureChartService temperatureChartService;
-
-	@Autowired
-	private V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
 
 	/**
 	 * Краткая информация по точке учета
@@ -229,8 +225,8 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 				i.getObject().getTemperatureChart().getChartComment();
 			}
 
-			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectTimeOffsetRepository
-					.findOne(i.getObject().get_activeDeviceObjectId());
+			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
+					.selectDeviceObjsetTimeOffset(i.getObject().get_activeDeviceObjectId());
 
 			i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
 		});
@@ -596,7 +592,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initDeviceObject(ContZPoint contZPoint) {
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(contZPoint.get_activeDeviceObjectId());
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(contZPoint.get_activeDeviceObjectId());
 
 		if (deviceObject == null) {
 			throw new PersistenceException(

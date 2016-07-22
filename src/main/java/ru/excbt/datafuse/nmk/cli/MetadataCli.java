@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -99,7 +101,8 @@ public class MetadataCli extends AbstractDBToolCli {
 
 		boolean result = true;
 
-		List<DeviceObjectMetaVzlet> metaList = deviceObjectService.findDeviceObjectMetaVzlet(deviceObjectId);
+		List<DeviceObjectMetaVzlet> metaList = Lists
+				.newArrayList(deviceObjectService.selectDeviceObjectMetaVzlet(deviceObjectId));
 
 		checkState(metaList.size() > 0);
 
@@ -125,7 +128,7 @@ public class MetadataCli extends AbstractDBToolCli {
 	private boolean readDeviceObjectModel(long deviceObjectId, int propVar) {
 		boolean result = true;
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 
 		DeviceModel model = deviceObject.getDeviceModel();
 

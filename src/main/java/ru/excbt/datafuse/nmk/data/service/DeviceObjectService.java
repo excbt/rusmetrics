@@ -22,11 +22,13 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.V_DeviceObjectTimeOffsetRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -67,6 +69,9 @@ public class DeviceObjectService implements SecuredRoles {
 	@Autowired
 	private DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
+	@Autowired
+	private V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
+
 	/**
 	 * 
 	 * @return
@@ -106,7 +111,7 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteManualDeviceObject(Long deviceObjectId) {
-		DeviceObject deviceObject = findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = selectDeviceObject(deviceObjectId);
 		if (ExSystemKey.MANUAL.isNotEquals(deviceObject.getExSystemKeyname())) {
 			throw new PersistenceException(
 					String.format("Delete DeviceObject(id=%d) with exSystem=%s is not supported ", deviceObjectId,
@@ -187,7 +192,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
+	private List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
 		return deviceObjectMetaVzletRepository.findByDeviceObjectId(deviceObjectId);
 	}
 
@@ -197,7 +202,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public DeviceObject findDeviceObject(long id) {
+	public DeviceObject selectDeviceObject(long id) {
 		DeviceObject result = deviceObjectRepository.findOne(id);
 		if (result != null) {
 			result.loadLazyProps();
@@ -302,7 +307,7 @@ public class DeviceObjectService implements SecuredRoles {
 			}
 		}
 
-		DeviceObject result = findDeviceObject(savedDeviceObject.getId());
+		DeviceObject result = selectDeviceObject(savedDeviceObject.getId());
 
 		return result;
 	}
@@ -393,6 +398,16 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsByIds(Collection<Long> ids) {
 		return deviceObjectRepository.selectDeviceObjectsByIds(ids);
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public V_DeviceObjectTimeOffset selectDeviceObjsetTimeOffset(Long deviceObjectId) {
+		return deviceObjectTimeOffsetRepository.findOne(deviceObjectId);
 	}
 
 }

@@ -108,7 +108,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Ignore
 	public void testDeviceObjectCreateDelete() throws Exception {
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
 		deviceObject.setId(null);
 		deviceObject.setContObject(null);
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
@@ -149,7 +149,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Ignore
 	public void testDeviceObjectAllCreateDelete() throws Exception {
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
 		deviceObject.setId(null);
 		deviceObject.setContObject(null);
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
@@ -203,7 +203,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceObjectsLoadingSettingsPut() throws Exception {
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(3);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(3);
 		DeviceObjectLoadingSettings settings = deviceObjectLoadingSettingsService
 				.getDeviceObjectLoadingSettings(deviceObject);
 		settings.setLoadingAttempts(10);
@@ -220,7 +220,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	public void testDeviceObjectsSubscrDataSourceLoadingSettingsPut() throws Exception {
 		Long deviceObjectId = 65836845L;
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		assertNotNull(deviceObject.getActiveDataSource());
 		SubscrDataSource subscrDataSource = deviceObject.getActiveDataSource().getSubscrDataSource();
 

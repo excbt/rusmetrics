@@ -163,7 +163,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 
 		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
 
@@ -209,7 +209,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
 
 		ApiAction action = new ApiActionEntityAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
@@ -293,7 +293,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 
 		if (deviceObject == null) {
 			return responseNoContent();
@@ -321,7 +321,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -348,7 +348,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -380,7 +380,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -420,7 +420,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest();
 		}
