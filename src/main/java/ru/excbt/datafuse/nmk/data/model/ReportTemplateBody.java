@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "report_template_body")
 @DynamicUpdate
 @EntityListeners({ AuditingEntityListener.class })
-public class ReportTemplateBody implements Serializable, Auditable<AuditUser, Long> {
+public class ReportTemplateBody implements Serializable, Auditable<V_AuditUser, Long> {
 
 	/**
 	 * 
@@ -64,7 +64,7 @@ public class ReportTemplateBody implements Serializable, Auditable<AuditUser, Lo
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", updatable = false)
 	@JsonIgnore
-	private AuditUser createdBy;
+	private V_AuditUser createdBy;
 
 	@Column(name = "created_date", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -74,7 +74,7 @@ public class ReportTemplateBody implements Serializable, Auditable<AuditUser, Lo
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "last_modified_by")
 	@JsonIgnore
-	private AuditUser lastModifiedBy;
+	private V_AuditUser lastModifiedBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "last_modified_date")
@@ -149,12 +149,12 @@ public class ReportTemplateBody implements Serializable, Auditable<AuditUser, Lo
 	}
 
 	@Override
-	public AuditUser getCreatedBy() {
+	public V_AuditUser getCreatedBy() {
 		return createdBy;
 	}
 
 	@Override
-	public void setCreatedBy(AuditUser createdBy) {
+	public void setCreatedBy(V_AuditUser createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -169,12 +169,12 @@ public class ReportTemplateBody implements Serializable, Auditable<AuditUser, Lo
 	}
 
 	@Override
-	public AuditUser getLastModifiedBy() {
+	public V_AuditUser getLastModifiedBy() {
 		return lastModifiedBy;
 	}
 
 	@Override
-	public void setLastModifiedBy(AuditUser lastModifiedBy) {
+	public void setLastModifiedBy(V_AuditUser lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 

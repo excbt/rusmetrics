@@ -3,7 +3,7 @@ package ru.excbt.datafuse.nmk.data.auditor;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 
 /**
  * Заглушка для аудита сущностей
@@ -14,20 +14,20 @@ import ru.excbt.datafuse.nmk.data.model.AuditUser;
  *
  */
 @Component
-public class MockAuditorAware implements AuditorAware<AuditUser> {
+public class MockAuditorAware implements AuditorAware<V_AuditUser> {
 
-	private AuditUser auditUser;
+	private V_AuditUser auditUser;
 
-	public AuditUser getAuditUser() {
+	public V_AuditUser getAuditUser() {
 		return auditUser;
 	}
 
-	public void setAuditUser(AuditUser auditUser) {
+	public void setAuditUser(V_AuditUser auditUser) {
 		this.auditUser = auditUser;
 	}
 
 	@Override
-	public AuditUser getCurrentAuditor() {
+	public V_AuditUser getCurrentAuditor() {
 		return auditUser;
 	}
 

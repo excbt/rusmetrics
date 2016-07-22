@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 
 /**
  * Repository для FullUserInfo
@@ -14,7 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
  * @since 10.04.2015
  *
  */
-public interface FullUserInfoRepository extends JpaRepository<FullUserInfo, Long> {
+public interface V_FullUserInfoRepository extends JpaRepository<V_FullUserInfo, Long> {
 
-	public List<FullUserInfo> findByUserName(String userName);
+	public List<V_FullUserInfo> findByUserName(String userName);
 }

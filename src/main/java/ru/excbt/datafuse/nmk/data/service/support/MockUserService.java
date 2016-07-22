@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.service.AuditUserService;
+import ru.excbt.datafuse.nmk.data.service.V_AuditUserService;
 
 /**
  * Класс "заглушка" для работы с пользователем
@@ -27,7 +27,7 @@ public class MockUserService {
 	private Long mockUserId = null;
 
 	@Autowired
-	private AuditUserService auditUserService;
+	private V_AuditUserService auditUserService;
 
 	/**
 	 * 
@@ -49,11 +49,11 @@ public class MockUserService {
 	 * 
 	 * @return
 	 */
-	public AuditUser getMockAuditUser() {
+	public V_AuditUser getMockAuditUser() {
 		checkState(mockUserId != null, "Mock User Service is Disabled");
 
 		logger.warn("ATTENTION!!! Using MockUser");
-		AuditUser result = auditUserService.findOne(mockUserId);
+		V_AuditUser result = auditUserService.findOne(mockUserId);
 		return result;
 	}
 

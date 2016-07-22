@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 
 /**
  * Repository для AuditUser
@@ -14,8 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.AuditUser;
  * @since 12.03.2015
  *
  */
-public interface AuditUserRepository extends JpaRepository<AuditUser, Long> {
+public interface V_AuditUserRepository extends JpaRepository<V_AuditUser, Long> {
 
-	public List<AuditUser> findByUserName(String userName);
+	public List<V_AuditUser> findByUserName(String userName);
 
 }

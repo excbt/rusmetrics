@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
@@ -94,7 +94,7 @@ public class SystemInfoController extends SubscrApiController {
 	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getFullUserInfo() {
 
-		FullUserInfo result = currentSubscriberService.getFullUserInfo();
+		V_FullUserInfo result = currentSubscriberService.getFullUserInfo();
 		if (result == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -151,7 +151,7 @@ public class SystemInfoController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("request params is not valid"));
 		}
 
-		FullUserInfo fullUserInfo = currentSubscriberService.getFullUserInfo();
+		V_FullUserInfo fullUserInfo = currentSubscriberService.getFullUserInfo();
 		if (fullUserInfo == null) {
 			return responseForbidden();
 		}

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
-import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 
 public class CurrentSubscriberServiceTest extends JpaSupportTest {
 
@@ -28,7 +28,7 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testFullUserInfo() {
-		FullUserInfo result = currentSubscriberService.getFullUserInfo();
+		V_FullUserInfo result = currentSubscriberService.getFullUserInfo();
 		assertNotNull(result);
 
 		logger.info("userId = {}", result.getId());
@@ -51,7 +51,7 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testCurrentAuditUser() {
-		AuditUser au = currentSubscriberService.getCurrentAuditor();
+		V_AuditUser au = currentSubscriberService.getCurrentAuditor();
 		assertNotNull(au);
 	}
 

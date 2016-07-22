@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
-import ru.excbt.datafuse.nmk.data.repository.AuditUserRepository;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
+import ru.excbt.datafuse.nmk.data.repository.V_AuditUserRepository;
 
 /**
  * Сервис для работы с аудитом пользователей
@@ -27,12 +27,12 @@ import ru.excbt.datafuse.nmk.data.repository.AuditUserRepository;
  */
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-public class AuditUserService {
+public class V_AuditUserService {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuditUserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(V_AuditUserService.class);
 
 	@Autowired
-	private AuditUserRepository auditUserRepository;
+	private V_AuditUserRepository auditUserRepository;
 
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
@@ -42,9 +42,9 @@ public class AuditUserService {
 	 * @param userName
 	 * @return
 	 */
-	public AuditUser findByUserName22(String userName) {
+	public V_AuditUser findByUserName22(String userName) {
 
-		List<AuditUser> auditUsers = auditUserRepository.findByUserName(userName);
+		List<V_AuditUser> auditUsers = auditUserRepository.findByUserName(userName);
 
 		if (auditUsers.size() == 1) {
 			return auditUsers.get(0);
@@ -59,9 +59,9 @@ public class AuditUserService {
 	 * @param userName
 	 * @return
 	 */
-	public AuditUser findByUserName(String userName) {
+	public V_AuditUser findByUserName(String userName) {
 
-		Query query = em.createQuery("from AuditUser s where s.userName = :arg1", AuditUser.class);
+		Query query = em.createQuery("from AuditUser s where s.userName = :arg1", V_AuditUser.class);
 		query.setParameter("arg1", userName);
 		List<?> auditUsers = query.getResultList();
 
@@ -73,8 +73,8 @@ public class AuditUserService {
 			throw new PersistenceException(String.format("Audit UserName %s is not FOUND", userName));
 		}
 
-		AuditUser result = (AuditUser) auditUsers.get(0);
-		return new AuditUser(result);
+		V_AuditUser result = (V_AuditUser) auditUsers.get(0);
+		return new V_AuditUser(result);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class AuditUserService {
 	 * @param id
 	 * @return
 	 */
-	public AuditUser findOne22(long id) {
+	public V_AuditUser findOne22(long id) {
 		return auditUserRepository.findOne(id);
 
 	}
@@ -92,10 +92,10 @@ public class AuditUserService {
 	 * @param id
 	 * @return
 	 */
-	public AuditUser findOne(long id) {
+	public V_AuditUser findOne(long id) {
 		Query query = em.createQuery("from AuditUser s where s.id = :arg1");
 		query.setParameter("arg1", id);
-		AuditUser result = (AuditUser) query.getSingleResult();
+		V_AuditUser result = (V_AuditUser) query.getSingleResult();
 		em.detach(result);
 		return result;
 	}

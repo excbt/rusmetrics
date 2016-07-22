@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.springframework.data.domain.Auditable;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 
 /**
  * Инструменты для работы с полями аудита
@@ -23,7 +23,7 @@ public class AuditableTools {
 	 * @param src
 	 * @param dest
 	 */
-	public static void copyAuditableProps(Auditable<AuditUser, ?> src, Auditable<AuditUser, ?> dest) {
+	public static void copyAuditableProps(Auditable<V_AuditUser, ?> src, Auditable<V_AuditUser, ?> dest) {
 
 		checkNotNull(src);
 		checkNotNull(dest);

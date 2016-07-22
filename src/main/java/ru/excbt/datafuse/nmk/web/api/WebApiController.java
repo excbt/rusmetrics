@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -54,7 +54,7 @@ public class WebApiController {
 	 * @param currentEntity
 	 * @param newEntity
 	 */
-	protected void prepareAuditableProps(Auditable<AuditUser, ?> currentEntity, Auditable<AuditUser, ?> newEntity) {
+	protected void prepareAuditableProps(Auditable<V_AuditUser, ?> currentEntity, Auditable<V_AuditUser, ?> newEntity) {
 		AuditableTools.copyAuditableProps(currentEntity, newEntity);
 	}
 

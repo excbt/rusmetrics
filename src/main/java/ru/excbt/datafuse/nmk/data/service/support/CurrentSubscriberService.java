@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
-import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.repository.FullUserInfoRepository;
+import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
@@ -44,7 +44,7 @@ public class CurrentSubscriberService {
 	private MockUserService mockUserService;
 
 	@Autowired
-	private FullUserInfoRepository fullUserInfoRepository;
+	private V_FullUserInfoRepository fullUserInfoRepository;
 
 	@Autowired
 	private CurrentSubscriberUserDetailsService subscriberUserDetailsService;
@@ -192,12 +192,12 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
-	public AuditUser getCurrentAuditor() {
+	public V_AuditUser getCurrentAuditor() {
 		SubscriberUserDetails subscriberUserDetails = subscriberUserDetailsService.getCurrentUserDetails();
 		if (subscriberUserDetails == null) {
 			return mockUserService.getMockAuditUser();
 		}
-		return new AuditUser(subscriberUserDetails);
+		return new V_AuditUser(subscriberUserDetails);
 
 	}
 
@@ -205,14 +205,14 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
-	public FullUserInfo getFullUserInfo() {
-		AuditUser user = getCurrentAuditor();
+	public V_FullUserInfo getFullUserInfo() {
+		V_AuditUser user = getCurrentAuditor();
 		if (user == null) {
 			return null;
 		}
 
-		FullUserInfo result = fullUserInfoRepository.findOne(user.getId());
-		return result == null ? null : new FullUserInfo(result);
+		V_FullUserInfo result = fullUserInfoRepository.findOne(user.getId());
+		return result == null ? null : new V_FullUserInfo(result);
 	}
 
 	/**

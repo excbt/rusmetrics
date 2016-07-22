@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 /**
@@ -16,13 +16,13 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
  *
  */
 @Component
-public class AuditorAwareImpl implements AuditorAware<AuditUser> {
+public class AuditorAwareImpl implements AuditorAware<V_AuditUser> {
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Override
-	public AuditUser getCurrentAuditor() {
+	public V_AuditUser getCurrentAuditor() {
 		return currentSubscriberService.getCurrentAuditor();
 	}
 

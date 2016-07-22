@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  */
 @Entity
 @Table(name = "audit_user")
-public class AuditUser implements Serializable {
+public class V_AuditUser implements Serializable {
 
 	/**
 	 * 
@@ -66,11 +66,11 @@ public class AuditUser implements Serializable {
 		this.version = version;
 	}
 
-	public AuditUser() {
+	public V_AuditUser() {
 
 	}
 
-	public AuditUser(AuditUser srcObject) {
+	public V_AuditUser(V_AuditUser srcObject) {
 		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
 
 		this.userName = srcObject.userName;
@@ -79,7 +79,7 @@ public class AuditUser implements Serializable {
 		this.isSystem = srcObject.isSystem;
 	}
 
-	public AuditUser(SubscriberUserDetails srcObject) {
+	public V_AuditUser(SubscriberUserDetails srcObject) {
 		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
 
 		this.userName = srcObject.getUsername();

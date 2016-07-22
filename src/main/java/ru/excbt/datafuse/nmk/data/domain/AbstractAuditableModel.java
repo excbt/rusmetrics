@@ -5,7 +5,7 @@ import javax.persistence.MappedSuperclass;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 
 /**
  * Базовый класс модель данных с аудитом
@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.AuditUser;
  */
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class })
-public abstract class AbstractAuditableModel extends AbstractAuditableEntity<AuditUser, Long> {
+public abstract class AbstractAuditableModel extends AbstractAuditableEntity<V_AuditUser, Long> {
 
 	/**
 	 * 

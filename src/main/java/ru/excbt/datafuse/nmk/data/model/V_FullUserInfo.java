@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_full_user_info")
-public class FullUserInfo implements Serializable {
+public class V_FullUserInfo implements Serializable {
 
 	/**
 	 * 
@@ -78,11 +78,11 @@ public class FullUserInfo implements Serializable {
 	@Column(name = "subscr_type")
 	private String subscrType;
 
-	public FullUserInfo() {
+	public V_FullUserInfo() {
 
 	}
 
-	public FullUserInfo(FullUserInfo src) {
+	public V_FullUserInfo(V_FullUserInfo src) {
 		if (src != null) {
 			this.id = src.id;
 			this.userName = src.userName;

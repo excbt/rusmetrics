@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import ru.excbt.datafuse.nmk.data.service.AuditUserService;
+import ru.excbt.datafuse.nmk.data.service.V_AuditUserService;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
@@ -19,7 +19,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			.getLogger(LoginInterceptor.class);
 
 	@Autowired
-	private AuditUserService auditUserService;
+	private V_AuditUserService auditUserService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request,

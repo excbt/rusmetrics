@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
-import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
@@ -74,7 +74,7 @@ public class AbstractControllerTest {
 	 * @param subscriberId
 	 */
 	protected void setupAuditor(long userId, long subscriberId) {
-		this.auditorAware.setAuditUser(entityManager.getReference(AuditUser.class, userId));
+		this.auditorAware.setAuditUser(entityManager.getReference(V_AuditUser.class, userId));
 
 		this.mockUserService.setMockUserId(userId);
 		this.mockSubscriberService.setMockSubscriberId(subscriberId);
