@@ -55,6 +55,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     
     $scope.categories = reportSvc.getReportCategories();
     
+    $scope.contServiceTypes = reportSvc.getContServiceTypes();
+    
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
     };
@@ -144,8 +146,14 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.reportPeriods = reportSvc.getReportPeriods();        
     });
 
-    $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
-        curObject.showGroupDetails = !curObject.showGroupDetails;
+    $scope.toggleShowGroupDetails = function(curObject, serviceType){//switch option: current goup details
+//console.log(curObject); 
+//console.log(serviceType);        
+        if (mainSvc.checkUndefinedNull(curObject.showGroupDetails)){
+            curObject.showGroupDetails = {};
+        }
+        curObject.showGroupDetails[serviceType.keyname] = !curObject.showGroupDetails[serviceType.keyname];
+//        curObject.showGroupDetails = !curObject.showGroupDetails;
     };
 
     $scope.selectedItem = function(parentItem, item){
@@ -623,7 +631,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             });
         addCategoryRows(result);
         mainSvc.sortNumericItemsBy(result, "reportMetaParamFullOrder");
-console.log(result);        
+//console.log(result);        
         return result;
     };
     
@@ -1309,6 +1317,26 @@ console.log(result);
         });
         
         $('#inputSettlementMonth').datepicker('setDate', new Date($scope.currentObject.settlementYear, $scope.currentObject.settlementMonth - 1, 1));
-    }; 
+    };
+    
+    // ***************************************************************
+    // Work with cont service types
+    
+    $scope.setCurrentServiceType = function(servType){
+        $scope.currentServiceType = angular.copy(servType);        
+    };
+    
+    $scope.setCurrentCategory = function(category){
+        $scope.currentCategory = category;        
+    };
+    
+    $scope.setCurrentServiceType($scope.contServiceTypes[0]);
+    $scope.setCurrentCategory($scope.categories[0]);
+    // ****************************************************************
+    
+    $scope.preview = function(reportType){       
+        var url = reportType.previewUrl;
+        window.open(url);
+    };
 
 }]);

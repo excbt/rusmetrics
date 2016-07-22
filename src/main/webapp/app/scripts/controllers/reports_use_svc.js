@@ -224,8 +224,8 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     };
 
     $scope.toggleReportShowGroupDetails = function(curObject, serviceType){//switch option: current goup details 
-console.log(curObject);        
-console.log(serviceType);        
+//console.log(curObject);        
+//console.log(serviceType);        
         if (mainSvc.checkUndefinedNull(curObject.showGroupDetails)){
             curObject.showGroupDetails = {};
         }

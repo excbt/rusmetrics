@@ -67,6 +67,7 @@
                     </div>
                     <div class="col-xs-11 col-md-11 noPadding">
                         <label class="noMarginBottom marginTop5">{{serviceType.caption}} 
+                            <small>(типов отчетов: <span ng-bind="serviceType | reportTypesCountInCategoryByServiceType: currentCategory"></span>)</small>
 <!--                            <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>-->
                         </label>
                     </div>

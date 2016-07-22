@@ -55,27 +55,49 @@
             <li role="presentation" class="nmc-toggle-archive"><a class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#arhive_paramsets" role="tab" data-toggle="tab" ng-click="getArchive();">Архив</a></li>
         </ul>
 -->
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
+            <li ng-repeat="category in categories track by $index" 
+                role="presentation" 
+                ng-class="category.class">
+                <a 
+                   class="nmc-toggle-button" 
+                   href="" 
+                   aria-controls="rep_paramsets" 
+                   data-target="#rep_paramsets" 
+                   role="tab" 
+                   data-toggle="tab"
+                   ng-click="setCurrentCategory(category)"
+                   > 
+                    {{category.caption}} 
+                </a>
+            </li>
+        </ul> 
         <div class="tab-content">
 <!--            Активные варианты-->
             <div role="tabpanel" class="tab-pane fade in active nmc-main-tab-panel nmc-report-settings-main-div" id="active_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
                   <!-- Навигационная полоса по категориям отчетов-->
-                <div class="container-fluid" ng-repeat="category in categories">
+                <div class="container-fluid" ng-repeat="serviceType in contServiceTypes track by $index">
                     <div class="row padding5" style="padding:0;">
                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
-                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            <i title="Скрыть / Показать" 
+                               class="btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                               ng-class="{'glyphicon-chevron-down': serviceType.reportTypesViewFlag, 'glyphicon-chevron-right': !serviceType.reportTypesViewFlag}" 
+                               ng-click="serviceType.reportTypesViewFlag = !serviceType.reportTypesViewFlag">
                             </i>
                         </div>
                         <div class="col-xs-11 col-md-11 noPadding">
-                            <label class="noMarginBottom marginTop5">{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                            <label class="noMarginBottom marginTop5">{{serviceType.caption}}
+                                <small>(типов отчетов: <span ng-bind="serviceType | reportTypesCountInCategoryByServiceType: currentCategory"></span>)</small>
+<!--                                <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>-->
                             </label>
                         </div>
                     </div>
-                    <div ng-show="category.reportTypesViewFlag" class="marginLeft15">
+                    <div ng-show="serviceType.reportTypesViewFlag" class="marginLeft15">
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in currentCategory.reportTypes | serviceTypesFilter: serviceType track by $index">
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 <!--ng-class="{'nmc-tr-odd':($index%2===0)}"-->
@@ -87,13 +109,13 @@
 
                                             <i title="Скрыть / Показать" 
                                                class="btn btn-xs glyphicon noMarginI nmc-button-in-table" 
-                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
-                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"
+                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails[serviceType.keyname], 'glyphicon-chevron-right': !object.showGroupDetails[serviceType.keyname]}" 
+                                               ng-click="toggleShowGroupDetails(object, serviceType);"
                                                style="padding-left:0">
                                             </i>
 
                                         </div>
-                                        <div class="col-xs-5 col-md-5 noPadding">
+                                        <div class="col-xs-11 col-md-11 noPadding">
                                             <label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                             <a ng-disabled="isROfield()" 
                                                      title="Добавить" 
@@ -103,13 +125,15 @@
                                                      data-toggle="tab"
                                                
                                                >Добавить
-                                            </a>
+                                            </a>                                            
                                         </div>
+<!--
                                         <div class="col-xs-2 col-md-2">
                                         </div>
                                         <div class="col-xs-4 col-md-4">
                                             
                                         </div>
+-->
                                     </td>
 
                                 </tr>
@@ -118,7 +142,7 @@
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataParamsetsTabl" 
                                        class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table noMarginBottom" 
-                                       ng-show="object.showGroupDetails">
+                                       ng-show="object.showGroupDetails[serviceType.keyname]">
                                     <thead>
                                         <tr class="nmc-child-table-header">
                                             <th class="nmc-td-for-buttons"></th>
@@ -130,6 +154,8 @@
                                             <th class="nmc-td-for-button"></th>
                                             <th>
                                                 Действует с
+                                            </th>
+                                            <th class="nmc-td-for-button">
                                             </th>
                                         </tr>
                                     </thead>
@@ -145,6 +171,7 @@
                                                 data-target="#main_properties" 
                                                 data-toggle="tab">
                                              </i>                                                           
+<!--
                                             <i ng-disabled="isROfield()" 
                                                title="В архив" 
                                                class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" 
@@ -152,6 +179,21 @@
                                                data-target="#moveToArchiveModal" 
                                                data-toggle="modal">
                                              </i>
+-->
+<!--
+                                             <a ng-disabled="isROfield()" 
+                                                     title="Показать пример" 
+                                                     class="nmc-link-report-add" 
+                                                     ng-click="preview(object)"                                                
+                                                >
+-->
+                                                 <i class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table" 
+                                                    title="Предварительный просмотр"
+                                                    ng-click="preview(object)"
+                                                    >
+                                                 </i>
+<!--                                            </a>-->
+                                             
                                          </td>
                                          <td class="nmc-text-align-center">
                                              <span ng-show="oldObject.allRequiredParamsPassed">
@@ -187,6 +229,15 @@
                                                  {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                              </span>
                                          </td>
+                                         <td>
+                                             <i ng-disabled="isROfield()" 
+                                               title="В архив" 
+                                               class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                                               ng-click="selectedItem(object, oldObject)" 
+                                               data-target="#moveToArchiveModal" 
+                                               data-toggle="modal">
+                                             </i>
+                                         </td>
                                      </tr>
                                     </table>         
                                 </tr>
@@ -215,7 +266,10 @@
                                  <div class="container-fluid" ng-repeat="category in categories">
                     <div class="row padding5" style="padding:0;">
                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table">
-                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            <i title="Скрыть / Показать" 
+                               class="btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                               ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" 
+                               ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
                             </i>
                         </div>
                         <div class="col-xs-11 col-md-11 noPadding">
@@ -228,7 +282,7 @@
                 <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in category.reportTypes">
                         <td style="padding:0px;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
                                 <tr>
@@ -236,7 +290,7 @@
                                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table">
                                             <i class="btn btn-xs glyphicon noMarginI nmc-button-in-table" 
                                                ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
-                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"
+                                               ng-click="toggleShowGroupDetails(object, serviceType);"
                                                style="padding-left:0px;">
                                             </i>
 

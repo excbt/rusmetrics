@@ -2,6 +2,12 @@
 app = angular.module('portalNMC');
 app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactoryWithCanceler', 'mainSvc', '$q',
 function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler, mainSvc, $q){
+    
+    var ALL_RESOURCES = {
+            keyname: "all",
+            caption: "Все ресурсы",
+            class: "active"
+    };
     //url к данным
     var reportTypesUrl = "../api/reportSettings/reportType";
     var reportPeriodsUrl = "../api/reportSettings/reportPeriod";
@@ -70,11 +76,11 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     ];
     
     var contServiceTypes = [
-        {
-            keyname: "all",
-            caption: "Все ресурсы",
-            class: "active"
-        }
+//        {
+//            keyname: "all",
+//            caption: "Все ресурсы",
+//            class: "active"
+//        }
 //        ,{
 //            keyname: "hw",
 //            caption: "ГВС"
@@ -149,9 +155,10 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 newObject.reportCategory = data[i].reportCategory;
                 newObject.resourceCategory = data[i].resourceCategory;
                 newObject.contServiceTypes = data[i].contServiceTypes;
+                newObject.previewUrl = data[i].previewUrl;
                 //perform contService types
                 createContServiceTypesGroup(newObject.contServiceTypes);
-                addReportTypeContServiceTypes(newObject.contServiceTypes);
+                addReportTypeContServiceTypes(newObject.contServiceTypes);                
                 
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
@@ -168,8 +175,10 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 newObjects.push(newObject);
             };        
             reportTypes = newObjects;
-console.log(reportTypes);            
-console.log(contServiceTypes);            
+            mainSvc.sortItemsBy(contServiceTypes, "caption");
+            contServiceTypes.unshift(ALL_RESOURCES);
+//console.log(reportTypes);            
+//console.log(contServiceTypes);                        
             $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');
             setReportTypesIsLoaded(true);           
         });
@@ -186,7 +195,6 @@ console.log(contServiceTypes);
                 };                
             });
             if (isPresent === false){
-console.log(rtcst);                
                 contServiceTypes.push(angular.copy(rtcst));
             }
         });        
@@ -197,6 +205,7 @@ console.log(rtcst);
             return;
         };
 //        mainSvc.sortItemsBy(reportTypeContServiceTypes, "keyname");
+        mainSvc.sortNumericItemsBy(reportTypeContServiceTypes, "serviceOrder");
         var tmpKeynames = reportTypeContServiceTypes.map(function(elem){
             return elem.keyname;
         });
@@ -517,3 +526,10 @@ app.filter('serviceTypesFilter', function(){
         return filteredItems;
     }
 });
+
+app.filter('reportTypesCountInCategoryByServiceType', ['$filter', function($filter){
+    return function(item, props){
+        var filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+        return filteredReportTypes.length || 0;
+    }
+}]);
