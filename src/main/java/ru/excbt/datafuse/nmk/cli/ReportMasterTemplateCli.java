@@ -228,6 +228,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.HW_DATA_ZPOINT_REPORT,
 				ReportConstants.Files.HW_DATA_ZPOINT_FILE_COMPILED, isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.CONSOLIDATED_ZPOINT_REPORT,
+				ReportConstants.Files.CONSOLIDATED_ZPOINT_FILE_COMPILED, isCompiled);
+
 	}
 
 	/**
@@ -267,6 +270,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.HEAT_AVG_FORECAST_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.COMMERCE_ZPOINT_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_DATA_ZPOINT_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONSOLIDATED_ZPOINT_REPORT);
 
 	}
 

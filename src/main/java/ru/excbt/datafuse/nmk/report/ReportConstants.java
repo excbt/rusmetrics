@@ -43,7 +43,7 @@ public class ReportConstants {
 		public static final String CONSUMPTION_V1_1_FILE_COMPILED = "jasper_reports/nmk_consumption_report_v1.1.jasper";
 		public static final String CONSUMPTION_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_etalon_report.jasper";
 		public static final String RMA_ABONENT_SERVICE_FILE_COMPILED = "jasper_reports/nmk_abonent_service_rep.jasper";
-		public static final String ELECTRIC_READINGS_FILE_COMPILED = "jasper_reports/nmk_electric_readings_report.prpt";
+		public static final String ELECTRIC_READINGS_FILE_COMPILED = "jasper_reports/nmk_electric_readings_report.jasper";
 		public static final String HW_QUALITY_FILE_COMPILED = "jasper_reports/nmk_hw_quality_report.prpt";
 		public static final String COMM_M_V_FILE_COMPILED = "jasper_reports/nmk_com_report_m_v.jasper";
 		public static final String ELECTRIC_CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_electric_consumption_report.prpt";
@@ -60,6 +60,7 @@ public class ReportConstants {
 		public static final String HEAT_AVG_FORECAST_FILE_COMPILED = "jasper_reports/nmk_heat_avg_forecast_report.prpt";
 		public static final String COMM_ZPOINT_FILE_COMPILED = "jasper_reports/nmk_com_zpoint_report.jasper";
 		public static final String HW_DATA_ZPOINT_FILE_COMPILED = "jasper_reports/nmk_hw_data_zpoint_report.prpt";
+		public static final String CONSOLIDATED_ZPOINT_FILE_COMPILED = "jasper_reports/nmk_consolidated_zpoint_report.jasper";
 
 		private Files() {
 

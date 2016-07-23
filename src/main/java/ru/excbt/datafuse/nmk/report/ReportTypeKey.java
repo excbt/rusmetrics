@@ -31,7 +31,8 @@ public enum ReportTypeKey implements KeynameObject {
 	PARTNER_SERVICE_REPORT(15, "partner_service"), //
 	ABONENT_SERVICE_REPORT(1, "abonent_service"), //
 	RMA_ABONENT_SERVICE_REPORT(16, "rma_abonent_service"), //
-	ELECTRIC_READINGS_REPORT(18, "electric_readings", ReportSystem.PENTAHO), //
+	// ELECTRIC_READINGS_REPORT(18, "electric_readings", ReportSystem.PENTAHO), //
+	ELECTRIC_READINGS_REPORT(18, "electric_readings"), //
 	HW_QUALITY_REPORT(19, "hw_quality", ReportSystem.PENTAHO), //
 	ELECTRIC_CONSUMPTION_REPORT(21, "electric_consumption", ReportSystem.PENTAHO), //
 	HW_QUALITY_SHEET_REPORT(22, "hw_quality_sheet", ReportSystem.PENTAHO), //
@@ -45,7 +46,8 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_CALC_CONSUMPTION_BY_AVG_REPORT(31, "hw_calc_consumption_by_avg"), //
 	HEAT_AVG_FORECAST_REPORT(32, "heat_avg_forecast", ReportSystem.PENTAHO), //
 	COMMERCE_ZPOINT_REPORT(33, "commerce_zpoint"), //
-	HW_DATA_ZPOINT_REPORT(34, "hw_data_zpoint", ReportSystem.PENTAHO); //
+	HW_DATA_ZPOINT_REPORT(34, "hw_data_zpoint", ReportSystem.PENTAHO), //
+	CONSOLIDATED_ZPOINT_REPORT(35, "consolidated_zpoint"); //
 
 	private final String urlName;
 	private final String defaultFileName;
