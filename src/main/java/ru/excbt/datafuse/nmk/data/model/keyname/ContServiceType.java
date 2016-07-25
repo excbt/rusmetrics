@@ -38,7 +38,6 @@ public class ContServiceType extends AbstractKeynameEntity {
 	@Version
 	private int version;
 
-	@JsonIgnore
 	@Column(name = "service_order")
 	private Integer serviceOrder;
 
