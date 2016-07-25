@@ -41,6 +41,9 @@ public class ContServiceType extends AbstractKeynameEntity {
 	@Column(name = "service_order")
 	private Integer serviceOrder;
 
+	@Column(name = "caption_short")
+	private String captionShort;
+
 	public String getName() {
 		return name;
 	}
@@ -87,6 +90,14 @@ public class ContServiceType extends AbstractKeynameEntity {
 
 	public void setServiceOrder(Integer serviceOrder) {
 		this.serviceOrder = serviceOrder;
+	}
+
+	public String getCaptionShort() {
+		return captionShort;
+	}
+
+	public void setCaptionShort(String captionShort) {
+		this.captionShort = captionShort;
 	}
 
 }
