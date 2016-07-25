@@ -99,7 +99,8 @@ public class SubscrContObjectController extends SubscrApiController {
 		List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true)
 				: selectSubscrContObjects(contGroupId);
 
-		return responseOK(contObjectService.wrapContObjectsStats(resultList));
+		//return responseOK(contObjectService.wrapContObjectsStats(resultList));
+		return responseOK(contObjectService.wrapContObjectsMonitorVO(resultList));
 	}
 
 	/**

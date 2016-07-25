@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 
+@Deprecated
 public class ContObjectWrapper {
 
 	public class ContObjectStats {
@@ -59,6 +60,7 @@ public class ContObjectWrapper {
 	 * @param contObject
 	 * @return
 	 */
+	@Deprecated
 	public static ContObjectWrapper wrapContObject(ContObject contObject) {
 		checkNotNull(contObject);
 		return new ContObjectWrapper(contObject);
@@ -69,6 +71,7 @@ public class ContObjectWrapper {
 	 * @param contObjects
 	 * @return
 	 */
+	@Deprecated
 	public static List<ContObjectWrapper> wrapContObjects(List<ContObject> contObjects) {
 		checkNotNull(contObjects);
 		return wrapContObjects(contObjects, true);
@@ -80,6 +83,7 @@ public class ContObjectWrapper {
 	 * @param deletedFilter
 	 * @return
 	 */
+	@Deprecated
 	public static List<ContObjectWrapper> wrapContObjects(List<ContObject> contObjects, boolean deletedFilter) {
 		checkNotNull(contObjects);
 

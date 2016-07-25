@@ -86,6 +86,24 @@ public class ContEventMonitorV2Service {
 
 	/**
 	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	public List<ContEventMonitorV2> selectByContObjectIds(List<Long> contObjectIds) {
+		checkNotNull(contObjectIds);
+
+		if (contObjectIds.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		List<ContEventMonitorV2> result = contEventMonitorV2Repository
+				.selectByContObjectIds(contObjectIds);
+
+		return result;
+	}
+
+	/**
+	 * 
 	 * @param contObjectId
 	 * @return
 	 */

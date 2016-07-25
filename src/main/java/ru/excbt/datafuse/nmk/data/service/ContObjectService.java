@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
@@ -34,6 +35,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.data.model.vo.ContObjectMonitorVO;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -498,8 +500,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @param contObjectWrappers
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public void calculateContObjectWrappersStats(List<ContObjectWrapper> contObjectWrappers) {
+	private void calculateContObjectWrappersStats(List<ContObjectWrapper> contObjectWrappers) {
 		checkNotNull(contObjectWrappers);
 
 		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getContObject().getId())
@@ -538,9 +541,36 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param contObjects
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectMonitorVO> wrapContObjectsMonitorVO(List<ContObject> contObjects) {
+		checkNotNull(contObjects);
+
+		List<ContObjectMonitorVO> contObjectWrappers = contObjects.stream()
+				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new ContObjectMonitorVO(i))
+				.collect(Collectors.toList());
+
+		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getObject().getId())
+				.collect(Collectors.toSet());
+
+		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+
+		contObjectWrappers.forEach(i -> {
+			Integer res = contObjectStats.get(i.getObject().getId());
+			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+		});
+
+		return contObjectWrappers;
+	}
+
+	/**
+	 * 
 	 * @param contObject
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObjectWrapper wrapContObjectsStats(ContObject contObject) {
 		List<ContObjectWrapper> preResult = wrapContObjectsStats(Arrays.asList(contObject));
