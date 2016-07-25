@@ -1606,6 +1606,17 @@ tr.nmc-inactive-price > td{
 .nmc-btn-dup:hover, .nmc-btn-on:hover{
     color: lightgreen;
 }
+
+/* Кнопка "Добавить" - используется в интерфейсе Настройка - Варианты отчетов*/
+.nmc-button-add-orange, .nmc-button-add-orange:hover, .nmc-button-add-orange:focus{
+    width: 16px;
+    height: 16px;
+    background: url(../images/white-add-property-16.png) top no-repeat;
+}
+
+.nmc-button-preview-orange:hover, .nmc-button-preview-orange:focus{
+    color: #fff !important;
+}
  
 /**************************************************************************************
  *  Разметка модального окна

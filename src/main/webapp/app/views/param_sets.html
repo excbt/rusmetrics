@@ -117,6 +117,7 @@
                                         </div>
                                         <div class="col-xs-11 col-md-11 noPadding">
                                             <label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+<!--
                                             <a ng-disabled="isROfield()" 
                                                      title="Добавить" 
                                                      class="nmc-link-report-add" 
@@ -126,6 +127,7 @@
                                                
                                                >Добавить
                                             </a>                                            
+-->
                                         </div>
 <!--
                                         <div class="col-xs-2 col-md-2">
@@ -145,13 +147,29 @@
                                        ng-show="object.showGroupDetails[serviceType.keyname]">
                                     <thead>
                                         <tr class="nmc-child-table-header">
-                                            <th class="nmc-td-for-buttons"></th>
+                                            <th class="nmc-td-for-buttons"
+                                                style="background: linear-gradient(to top, #FF6802,#FF811B); color: #fff"                                                
+                                                >
+                                                <i ng-disabled="isROfield()" 
+                                                     title="Добавить" 
+                                                     class="btn btn-xs nmc-button-add-orange" 
+                                                     ng-click="addParamSet(object)" 
+                                                     data-target="#main_properties" 
+                                                     data-toggle="tab"                                               
+                                                   >
+                                                </i>
+                                                <i class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-preview-orange" 
+                                                    title="Предварительный просмотр"
+                                                    ng-click="preview(object)"
+                                                    >
+                                                </i>
+                                            </th>
                                             <th></th>
                                             <th ng-repeat="paramsetColumn in paramsetColumns" 
                                                 ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
-                                            <th class="nmc-td-for-button"></th>
+                                            <th class="nmc-td-for-button">ZIP</th>
                                             <th>
                                                 Действует с
                                             </th>
@@ -164,7 +182,7 @@
                                          ng-click="" 
                                          ng-dblclick="getIndicators(oldObject)">
 
-                                         <td class="nmc-td-for-buttons">
+                                         <td class="nmc-td-for-buttons nmc-text-align-center">
                                              <i title="Редактировать" 
                                                 class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
                                                 ng-click="editParamSet(object,oldObject);" 
@@ -187,17 +205,13 @@
                                                      ng-click="preview(object)"                                                
                                                 >
 -->
-                                                 <i class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table" 
-                                                    title="Предварительный просмотр"
-                                                    ng-click="preview(object)"
-                                                    >
-                                                 </i>
+                                                 
 <!--                                            </a>-->
                                              
                                          </td>
                                          <td class="nmc-text-align-center">
                                              <span ng-show="oldObject.allRequiredParamsPassed">
-                                                 <i title="Корректно заполненн" 
+                                                 <i title="Корректно заполнен" 
                                                     class="glyphicon glyphicon-thumbs-up">
                                                  </i>
                                              </span>
@@ -305,6 +319,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
+<!--
                                 <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table noMarginBottom" ng-show="object.showGroupDetails">
                                     <thead>
                                         <tr class="nmc-child-table-header">
@@ -345,6 +360,7 @@
 
                                      </tr>
                                     </table>         
+-->
                                 </tr>
                             </table>  
 
@@ -694,7 +710,7 @@
                                         <td colspan="2" class="col-sm-3" style="border-bottom: 0; padding-bottom: 0">
                                             <label for="inputFileTemplate" 
                                                    class="nmc-form-label noMargin">
-                                                *Шаблон имени файла (<small>без расширения</small>):</label>
+                                                Шаблон имени файла (<small>без расширения, допустимы только латинские символы и цифры</small>):</label>
                                         </td>
 <!--
                                         <td class="col-sm-9 nmc-text-align-left">
@@ -761,12 +777,14 @@
                                         <td class="col-sm-9 nmc-text-align-left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
                                         </td>
                                     </tr>                                    
+<!--
                                     <tr>
                                         <td colspan="2" class="col-sm-3">
                                             <label class="nmc-form-label noMargin">
                                                 * Допустимо использование только латинских символов и цифр</label>
                                         </td>
                                     </tr>
+-->
 <!--
                                     <tr>
                                         <td colspan="2" class="col-sm-3"><input ng-model="currentObject.showParamsBeforeRunReport" ng-disabled="!checkRequiredFieldsOnSave()" type=checkbox class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
