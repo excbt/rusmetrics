@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,12 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
@@ -87,6 +90,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private LocalPlaceService localPlaceService;
+
+	@Autowired
+	private ContEventMonitorV2Service contEventMonitorV2Service;
 
 	/**
 	 * 
@@ -520,6 +526,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * 
 	 * @param contObjects
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectWrapper> wrapContObjectsStats(List<ContObject> contObjects) {
 		checkNotNull(contObjects);
@@ -552,14 +559,35 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new ContObjectMonitorVO(i))
 				.collect(Collectors.toList());
 
-		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getObject().getId())
-				.collect(Collectors.toSet());
+		List<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getObject().getId()).distinct()
+				.collect(Collectors.toList());
 
 		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
 
+		List<ContEventMonitorV2> contEventMonitors = contEventMonitorV2Service.selectByContObjectIds(contObjectIds);
+
+		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
+
+		contObjectIds.forEach(i -> {
+			contEventMonitorMapList.put(i, new ArrayList<>());
+		});
+
+		contEventMonitors.forEach(i -> {
+			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
+			checkNotNull(l);
+			l.add(i);
+		});
+
 		contObjectWrappers.forEach(i -> {
+
 			Integer res = contObjectStats.get(i.getObject().getId());
 			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getObject().getId());
+			if (!m.isEmpty()) {
+				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
+				checkNotNull(color);
+				i.getContObjectStats().setContEventLevelColor(color.getKeyname());
+			}
 		});
 
 		return contObjectWrappers;

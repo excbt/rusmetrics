@@ -99,8 +99,17 @@ public class SubscrContObjectController extends SubscrApiController {
 		List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true)
 				: selectSubscrContObjects(contGroupId);
 
+		ApiAction action = new ApiActionEntityAdapter<Object>() {
+			@Override
+			public Object processAndReturnResult() {
+				return contObjectService.wrapContObjectsMonitorVO(resultList);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionOkBody(action);
+
 		//return responseOK(contObjectService.wrapContObjectsStats(resultList));
-		return responseOK(contObjectService.wrapContObjectsMonitorVO(resultList));
+		//return responseOK(contObjectService.wrapContObjectsMonitorVO(resultList));
 	}
 
 	/**
