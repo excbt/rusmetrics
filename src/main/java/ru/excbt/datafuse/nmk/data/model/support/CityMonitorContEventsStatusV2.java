@@ -7,13 +7,12 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 
-@Deprecated
 @JsonPropertyOrder({ "cityFiasUUID", "cityName", "cityGeoPosX", "cityGeoPosY",
 		"monitorEventCount", "cityContEventLevelColor" })
-public class CityMonitorContEventsStatus extends
-		CityContObjects<MonitorContEventNotificationStatus> implements
+public class CityMonitorContEventsStatusV2 extends
+		CityContObjects<MonitorContEventNotificationStatusV2> implements
 		Serializable {
 
 	/**
@@ -21,7 +20,7 @@ public class CityMonitorContEventsStatus extends
 	 */
 	private static final long serialVersionUID = 1510890454161328379L;
 
-	public static final CityContObjectsFactory<CityMonitorContEventsStatus> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
+	public static final CityContObjectsFactory<CityMonitorContEventsStatusV2> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
 
 	/**
 	 * 
@@ -29,11 +28,11 @@ public class CityMonitorContEventsStatus extends
 	 *
 	 */
 	static class CityContObjectsServiceTypeInfoFactory implements
-			CityContObjectsFactory<CityMonitorContEventsStatus> {
+			CityContObjectsFactory<CityMonitorContEventsStatusV2> {
 
 		@Override
-		public CityMonitorContEventsStatus newInstance(UUID uuid) {
-			return new CityMonitorContEventsStatus(uuid);
+		public CityMonitorContEventsStatusV2 newInstance(UUID uuid) {
+			return new CityMonitorContEventsStatusV2(uuid);
 		}
 
 	}
@@ -44,11 +43,11 @@ public class CityMonitorContEventsStatus extends
 	 * 
 	 * @param cityFiasUUID
 	 */
-	public CityMonitorContEventsStatus(UUID cityFiasUUID) {
+	public CityMonitorContEventsStatusV2(UUID cityFiasUUID) {
 		super(cityFiasUUID);
 	}
 
-	public List<MonitorContEventNotificationStatus> getContEventNotificationStatuses() {
+	public List<MonitorContEventNotificationStatusV2> getContEventNotificationStatuses() {
 		return cityObjects;
 	}
 
@@ -64,9 +63,9 @@ public class CityMonitorContEventsStatus extends
 	 * 
 	 * @return
 	 */
-	public ContEventLevelColorKey getCityContEventLevelColor() {
+	public ContEventLevelColorKeyV2 getCityContEventLevelColor() {
 
-		Optional<MonitorContEventNotificationStatus> item = cityObjects
+		Optional<MonitorContEventNotificationStatusV2> item = cityObjects
 				.stream()
 				.filter((i) -> i.getContEventLevelColorKey() != null)
 				.sorted((x, y) -> Integer.compare(x.getContEventLevelColorKey()

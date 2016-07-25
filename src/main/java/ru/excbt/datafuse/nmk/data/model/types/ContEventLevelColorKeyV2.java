@@ -11,15 +11,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
  * @since 29.06.2015
  *
  */
-@Deprecated
-public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
-	GREEN(100), YELLOW(80), ORANGE(50), RED(0);
+public enum ContEventLevelColorKeyV2 implements KeynameObject, StatusColorObject {
+	GREEN(100), YELLOW(50), RED(0);
 
 	private final String keyname;
 
 	private final int colorRank;
 
-	private ContEventLevelColorKey(int colorRank) {
+	private ContEventLevelColorKeyV2(int colorRank) {
 		this.keyname = this.name().toUpperCase();
 		this.colorRank = colorRank;
 	}
@@ -34,12 +33,12 @@ public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
 	 * @param keyname
 	 * @return
 	 */
-	public static ContEventLevelColorKey findByKeyname(String keyname) {
+	public static ContEventLevelColorKeyV2 findByKeyname(String keyname) {
 		if (keyname == null) {
 			return null;
 		}
-		ContEventLevelColorKey result = null;
-		for (ContEventLevelColorKey v : ContEventLevelColorKey.values()) {
+		ContEventLevelColorKeyV2 result = null;
+		for (ContEventLevelColorKeyV2 v : ContEventLevelColorKeyV2.values()) {
 			if (v.keyname.equals(keyname)) {
 				result = v;
 				break;
@@ -53,7 +52,7 @@ public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
 	 * @param keynameObject
 	 * @return
 	 */
-	public static ContEventLevelColorKey findByKeyname(KeynameObject keynameObject) {
+	public static ContEventLevelColorKeyV2 findByKeyname(KeynameObject keynameObject) {
 		if (keynameObject == null) {
 			return null;
 		}

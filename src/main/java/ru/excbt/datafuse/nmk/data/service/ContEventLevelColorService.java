@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorReposito
  * @since 01.07.2015
  *
  */
-
+@Deprecated
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventLevelColorService {

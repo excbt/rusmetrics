@@ -6,10 +6,9 @@ import java.io.Serializable;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 
-@Deprecated
-public class MonitorContEventNotificationStatus implements Serializable,
+public class MonitorContEventNotificationStatusV2 implements Serializable,
 		StatusColorObject, ContObjectHolder {
 
 	/**
@@ -19,7 +18,7 @@ public class MonitorContEventNotificationStatus implements Serializable,
 
 	private final ContObject contObject;
 
-	private ContEventLevelColorKey contEventLevelColorKey;
+	private ContEventLevelColorKeyV2 contEventLevelColorKey;
 
 	private long eventsCount;
 
@@ -27,7 +26,7 @@ public class MonitorContEventNotificationStatus implements Serializable,
 
 	private long newEventsCount;
 
-	public MonitorContEventNotificationStatus(ContObject contObject) {
+	public MonitorContEventNotificationStatusV2(ContObject contObject) {
 		this.contObject = ContObjectShort.newInstance(contObject);
 	}
 
@@ -36,20 +35,20 @@ public class MonitorContEventNotificationStatus implements Serializable,
 		return contObject;
 	}
 
-	public static MonitorContEventNotificationStatus newInstance(
+	public static MonitorContEventNotificationStatusV2 newInstance(
 			ContObject contObject) {
 		checkNotNull(contObject);
-		MonitorContEventNotificationStatus result = new MonitorContEventNotificationStatus(
+		MonitorContEventNotificationStatusV2 result = new MonitorContEventNotificationStatusV2(
 				contObject);
 		return result;
 	}
 
-	public ContEventLevelColorKey getContEventLevelColorKey() {
+	public ContEventLevelColorKeyV2 getContEventLevelColorKey() {
 		return contEventLevelColorKey;
 	}
 
 	public void setContEventLevelColorKey(
-			ContEventLevelColorKey contEventLevelColorKey) {
+			ContEventLevelColorKeyV2 contEventLevelColorKey) {
 		this.contEventLevelColorKey = contEventLevelColorKey;
 	}
 

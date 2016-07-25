@@ -59,6 +59,7 @@ import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
  * @since 25.06.2015
  *
  */
+@Deprecated
 @Service
 public class SubscrContEventNotificationService extends AbstractService {
 

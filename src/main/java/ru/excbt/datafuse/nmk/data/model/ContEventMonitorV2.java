@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 
 /**
  * Монитор событий
@@ -26,11 +26,10 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
  * @since 29.06.2015
  *
  */
-@Deprecated
 @Entity
-@Table(name = "cont_event_monitor")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_monitor_v2")
 @JsonInclude(Include.NON_NULL)
-public class ContEventMonitor extends AbstractPersistableEntity<Long> {
+public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> {
 
 	/**
 	 * 
@@ -60,7 +59,7 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cont_event_level_color", insertable = false, updatable = false)
 	@JsonIgnore
-	private ContEventLevelColor contEventLevelColor;
+	private ContEventLevelColorV2 contEventLevelColor;
 
 	@Column(name = "cont_event_level_color")
 	private String contEventLevelColorKeyname;
@@ -122,11 +121,11 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 		ContEventLevel = contEventLevel;
 	}
 
-	public ContEventLevelColor getContEventLevelColor() {
+	public ContEventLevelColorV2 getContEventLevelColor() {
 		return contEventLevelColor;
 	}
 
-	public void setContEventLevelColor(ContEventLevelColor contEventLevelColor) {
+	public void setContEventLevelColor(ContEventLevelColorV2 contEventLevelColor) {
 		this.contEventLevelColor = contEventLevelColor;
 	}
 

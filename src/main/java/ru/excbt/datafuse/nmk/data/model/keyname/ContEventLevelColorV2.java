@@ -2,8 +2,6 @@ package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,15 +10,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 
-@Deprecated
 @Entity
-@Table(name = "cont_event_level_color")
+@Table(schema = DBMetadata.DB_SCHEME, name = "cont_event_level_color_v2")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContEventLevelColor extends AbstractKeynameEntity implements
+public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
 		StatusColorObject {
 
 	/**
@@ -29,8 +26,7 @@ public class ContEventLevelColor extends AbstractKeynameEntity implements
 	private static final long serialVersionUID = -406404451942425879L;
 
 	@Column(name = "keyname", insertable = false, updatable = false)
-	@Enumerated(EnumType.STRING)
-	private ContEventLevelColorKey colorKey;
+	private String colorKey;
 
 	@Column(name = "caption")
 	private String caption;
@@ -123,11 +119,11 @@ public class ContEventLevelColor extends AbstractKeynameEntity implements
 		this.levelTo = levelTo;
 	}
 
-	public ContEventLevelColorKey getColorKey() {
+	public String getColorKey() {
 		return colorKey;
 	}
 
-	public void setColorKey(ContEventLevelColorKey colorKey) {
+	public void setColorKey(String colorKey) {
 		this.colorKey = colorKey;
 	}
 

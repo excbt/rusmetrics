@@ -457,6 +457,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	@RequestMapping(value = "/notifications/monitorColor", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsMonitorColor(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
