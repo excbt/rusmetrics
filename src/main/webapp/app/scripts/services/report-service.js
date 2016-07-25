@@ -6,6 +6,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     var ALL_RESOURCES = {
             keyname: "all",
             caption: "Все ресурсы",
+            captionShort: "Все ресурсы",
             class: "active"
     };
     //url к данным
@@ -175,7 +176,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 newObjects.push(newObject);
             };        
             reportTypes = newObjects;
-            mainSvc.sortItemsBy(contServiceTypes, "caption");
+            mainSvc.sortItemsBy(contServiceTypes, "captionShort");
             contServiceTypes.unshift(ALL_RESOURCES);
 //console.log(reportTypes);            
 //console.log(contServiceTypes);                        
@@ -211,10 +212,10 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         });
         var groupKeyname = tmpKeynames.join(',');
         var tmpCaptions = reportTypeContServiceTypes.map(function(elem){
-            return elem.caption;
+            return elem.captionShort;
         });
         var groupCaption = tmpCaptions.join(', ');
-        reportTypeContServiceTypes.push({keyname: groupKeyname, caption: groupCaption, isGroup: true});
+        reportTypeContServiceTypes.push({keyname: groupKeyname, captionShort: groupCaption, isGroup: true});
     }
     
     //report periods ( ** загрузка периодов отчетов)

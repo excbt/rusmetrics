@@ -1253,6 +1253,13 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             };
             $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
         }, function(e){
+            if ($scope.createReportWithParamsInProgress == false) {
+        		return;
+        	}
+        	
+        	$scope.createReportWithParamsInProgress = false;
+            $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
+            
         	if (previewFlag) {
         		var previewWin = window.open(url, 'PreviewWin');
         		if (!mainSvc.checkUndefinedNull(previewWin))

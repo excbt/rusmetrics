@@ -608,7 +608,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
                     result.endDateValue = paramsetObj.paramSpecialList[elementIndex].endDateValue || null;
-                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(object.paramSpecialList[elementIndex].oneDateValue);
+                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].oneDateValue);
                     result.startDateValueFormatted = (angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
                     result.endDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
                     result.directoryValue = (paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
