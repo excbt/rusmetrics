@@ -30,12 +30,21 @@ public class SubscrTimeDetailTypeController extends SubscrApiController {
 
 	/**
 	 * 
-	 * @param xId
 	 * @return
 	 */
 	@RequestMapping(value = "/timeDetailType/1h24h", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTimeDetailType() {
-		List<TimeDetailType> xList = timeDetailTypeService.find1h24h();
+		List<TimeDetailType> xList = timeDetailTypeService.select1h24h();
+		return responseOK(ObjectFilters.deletedFilter(xList));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/timeDetailType/24h24hAbs", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getTimeDetailType1h24h() {
+		List<TimeDetailType> xList = timeDetailTypeService.select24h24hAbs();
 		return responseOK(ObjectFilters.deletedFilter(xList));
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType;
+import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimeDetailTypeRepository;
 
 /**
@@ -25,12 +26,21 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.TimeDetailTypeRepository;
 public class TimeDetailTypeService {
 
 	public final static List<String> TIME_DETAIL_1H_24h;
+	public final static List<String> TIME_DETAIL_24H_24HAbs;
 
 	static {
-		List<String> t = new ArrayList<>();
-		t.add("1h");
-		t.add("24h");
-		TIME_DETAIL_1H_24h = Collections.unmodifiableList(t);
+		{
+			List<String> t = new ArrayList<>();
+			t.add(TimeDetailKey.TYPE_1H.getKeyname());
+			t.add(TimeDetailKey.TYPE_24H.getKeyname());
+			TIME_DETAIL_1H_24h = Collections.unmodifiableList(t);
+		}
+		{
+			List<String> t = new ArrayList<>();
+			t.add(TimeDetailKey.TYPE_24H.getKeyname());
+			t.add(TimeDetailKey.TYPE_24H.getAbsPair());
+			TIME_DETAIL_24H_24HAbs = Collections.unmodifiableList(t);
+		}
 	}
 
 	@Autowired
@@ -50,7 +60,18 @@ public class TimeDetailTypeService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<TimeDetailType> find1h24h() {
+	public List<TimeDetailType> select24h24hAbs() {
+		List<TimeDetailType> resultList = timeDetailTypeRepository.findAll();
+		return resultList.stream().filter(i -> TIME_DETAIL_24H_24HAbs.contains(i.getKeyname()))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<TimeDetailType> select1h24h() {
 		List<TimeDetailType> resultList = timeDetailTypeRepository.findAll();
 		return resultList.stream().filter(i -> TIME_DETAIL_1H_24h.contains(i.getKeyname()))
 				.collect(Collectors.toList());
