@@ -460,6 +460,11 @@ angular.module('portalNMC')
             }); 
         };
                  
+        function sortZpointsInObject (object) {
+            var zps = object.zpoints;
+            zpointOrder = "" + zpoint.contServiceType.serviceOrder + zpoint.customServiceName; 
+        }
+                 
         function findObjectById(objId, objectArr){
             var obj = null;
             if (!angular.isArray(objectArr)){

@@ -551,7 +551,8 @@ angular.module('portalNMC')
                                 tmp = response.data.map(function(el){
                                     var result = {};
                                     result = el.object;
-                                    result.lastDataDate = el.lastDataDate;
+                                    result.lastDataDate = el.lastDataDate;                                    
+                                    result.zpointOrder = "" + result.contServiceType.serviceOrder + result.customServiceName;
 //console.log(el.lastDataDate);                                    
                                     return result;
                                 });
@@ -565,6 +566,7 @@ angular.module('portalNMC')
                                 var zpoint = {};
 //console.log(zPointsByObject[i]);                                
                                 zpoint.id = zPointsByObject[i].id;
+                                zpoint.zpointOrder = zPointsByObject[i].zpointOrder;
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
                                 zpoint.zpointTypeCaption = zPointsByObject[i].contServiceType.caption;
                                 zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
@@ -600,6 +602,7 @@ angular.module('portalNMC')
                                 getRefRangeByObjectAndZpoint(curObject, zpoint);
                                 zpoints[i] = zpoint;                  
                             }
+                            mainSvc.sortItemsBy(zpoints, "zpointOrder");
                             curObject.zpoints = zpoints;
                             makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail" + curObject.id);
