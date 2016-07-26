@@ -5,8 +5,6 @@ angular.module('portalNMC')
     .controller('SettingsObjectViewCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc',
             function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc) {
                 
-//console.log("Objects directive.");
-                
                     //messages for user
                 $scope.messages = {};
                 $scope.messages.setSelectedInWinterMode = "Перевести выделенные объекты на зимний режим";
@@ -315,6 +313,16 @@ angular.module('portalNMC')
                         if (el.selected === true){
                             el.currentSettingMode = $scope.settedMode;
                             el.imgsrc='images/object-mode-' + el.currentSettingMode + '.png';
+                            if (el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[1].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+
+                            }else if(el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[0].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                            };
                         };
                         el.selected = false
                     });
@@ -322,10 +330,57 @@ angular.module('portalNMC')
                         if (el.selected === true){
                             el.currentSettingMode = $scope.settedMode;
                             el.imgsrc = 'images/object-mode-' + el.currentSettingMode + '.png';
+                            if (el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[1].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+
+                            }else if(el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[0].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                            };
                         };
                         el.selected = false
                     });
                 };
+                
+                function successCallbackOnSetModeOne (resp) {
+                    var objectId = resp.data[0];
+                    notificationFactory.success();                                        
+                    $scope.objects.forEach(function(el){
+                        if (el.id === objectId){                            
+                            el.currentSettingMode = $scope.settedMode;
+                            el.imgsrc='images/object-mode-' + el.currentSettingMode + '.png';
+                            if (el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[1].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+
+                            }else if(el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[0].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                            };
+                        };                        
+                    });
+                    $scope.objectsOnPage.forEach(function(el){
+                        if (el.id === objectId){
+                            el.currentSettingMode = $scope.settedMode;
+                            el.imgsrc = 'images/object-mode-' + el.currentSettingMode + '.png';
+                            if (el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[1].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+
+                            }else if(el.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname){
+                                el.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                                el.nextSettingMode = $scope.cont_zpoint_setting_mode_check[0].keyname;
+                                el.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                            };
+                        };                        
+                    });
+                }
                 
                 var successCallbackUpdateObject = function(e){     
                     $rootScope.$broadcast('objectSvc:requestReloadData');
@@ -346,6 +401,16 @@ angular.module('portalNMC')
                             };
                         });
                         if(elIndex != -1){
+                            if ($scope.currentObject.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname){
+                                $scope.currentObject.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                                $scope.currentObject.nextSettingMode = $scope.cont_zpoint_setting_mode_check[1].keyname;
+                                $scope.currentObject.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+
+                            }else if($scope.currentObject.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname){
+                                $scope.currentObject.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                                $scope.currentObject.nextSettingMode = $scope.cont_zpoint_setting_mode_check[0].keyname;
+                                $scope.currentObject.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                            };
                             $scope.objects[elIndex] = $scope.currentObject;
                             $scope.objects[elIndex].imgsrc = 'images/object-mode-' + $scope.currentObject.currentSettingMode + '.png';
                             $scope.objectsOnPage[elIndex] = $scope.currentObject;
@@ -1241,6 +1306,23 @@ angular.module('portalNMC')
                     $scope.objectsOnPage.forEach(function(el){
                         el.selected = flag;
                     });
+                };
+                
+                $scope.setModeForObject = function(object){                    
+                    var mode = object.nextSettingMode;
+                    $scope.settedMode = mode;
+                    //get the object ids array
+                    var contObjectIds = [object.id];                    
+                    
+                    //send data to server
+                    var url = objectSvc.getObjectsUrl() + "/settingModeType";
+                    $http({
+                        url: url, 
+                        method: "PUT",
+                        params: { contObjectIds:contObjectIds, currentSettingMode: mode },
+                        data: null
+                    })
+                    .then(successCallbackOnSetModeOne, errorCallback);
                 };
                 
                 $scope.setModeForObjects = function(mode){

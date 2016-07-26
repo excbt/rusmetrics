@@ -306,10 +306,9 @@
                                         <li class="menu-item" role="presentation">
                                             <a href=""
                                                class=""
-                                               ng-click="selectedObjectEx(object.id)" 
-                                               data-target="#showObjOptionModal" 
-                                               data-toggle="modal">
-                                                Перевести объект в режим ""                                        
+                                               ng-click="setModeForObject(object)"
+                                               >
+                                                Перевести объект в "<span ng-bind="object.nextSettingModeTitle"></span>"                                        
                                             </a>
                                         </li>
 
