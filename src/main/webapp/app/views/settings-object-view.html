@@ -1147,38 +1147,31 @@
 		<div class="modal-body nmc-modal-body">
 			<form name="confirmActionForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
-					</label> 
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите</label> 
 					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
-					<label
-						class="text-warning nmc-form-label"> ? </label>
+					<label class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid">
+            <div class="container-fluid">
 
-					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="confirmAction();"
-								value="Ок" />
-						</div>
+                <div class="row">
+                    <div class="col-xs-offset-6 col-md-3">
+                        <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                            ng-click="confirmAction();"
+                            value="Ок" />
+                    </div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#confirmActionModal');">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
+                    <div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+                        <button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+                            ng-click="exit('#confirmActionModal');">
+                            Отменить
+                        </button>
+                    </div>
+                </div>
+            </div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
     
