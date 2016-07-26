@@ -233,9 +233,9 @@ angular.module('portalNMC')
 //                $scope.bList = angular.fromJson($attrs.blist); //|| true; //Признак того, что объекты выводятся только для просмотра        
                 //zpoint column names
                 $scope.oldColumns = [
-                    {"name":"zpointName", "header" : "Наименование", "class":"col-xs-3 col-md-3"},
-                    {"name":"zpointModel", "header" : "Модель", "class":"col-xs-2 col-md-2"},
-                    {"name":"zpointNumber", "header" : "Номер", "class":"col-xs-2 col-md-2"},
+                    {"name":"zpointName", "header" : "Наименование точки учета", "class":"col-xs-3 col-md-3"},
+                    {"name":"zpointModel", "header" : "Модель прибора учета", "class":"col-xs-2 col-md-2"},
+                    {"name":"zpointNumber", "header" : "Серийный номер прибора учета", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2 col-md-2"}
                 ];//angular.fromJson($attrs.zpointcolumns);
@@ -639,7 +639,7 @@ angular.module('portalNMC')
 
                     trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
                     trHTML += "<thead><tr class=\"nmc-child-table-header\">";
-                    trHTML += "<th class=\"nmc-td-for-buttons-3\"></th>";
+                    trHTML += "<th class=\"nmc-td-for-button\"></th>";
                     $scope.oldColumns.forEach(function(column){
                         trHTML += "<th class=\"" + column.class + "\">";
                         trHTML += "" + (column.header || column.name) + "";
@@ -649,33 +649,71 @@ angular.module('portalNMC')
                     
                     object.zpoints.forEach(function(zpoint){
                         trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-dblclick=\"getIndicators(" + object.id + "," + zpoint.id + ")\">";
-                        trHTML += "<td class=\"nmc-td-for-buttons-3\">"+
-                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\"" +
-                                    "ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
-                                    "data-target=\"#showZpointOptionModal\"" +
-                                    "data-toggle=\"modal\"" +
-                                    "data-placement=\"bottom\"" +
-                                    "title=\"Свойства точки учёта\">" +
-                                "</i>"+
-                                "<i class=\"btn btn-xs nmc-button-in-table\"" +
-                                    "ng-click=\"getZpointSettingsExpl(" + object.id + "," + zpoint.id + ")\"" +
-                                    "data-target=\"#showZpointExplParameters\"" +
-                                    "data-toggle=\"modal\""+
-                                    "data-placement=\"bottom\""+
-                                    "title=\"Эксплуатационные параметры точки учёта\">"+
-                                        "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
-                                "</i>";
-                        
+                        trHTML += "<td class=\"nmc-td-for-button\">"+
+                            
+                            "<div class=\"btn-group\">" +
+                            "<i title=\"Действия над точкой учета\" type=\"button\" class=\"btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" style=\"font-size: .9em;\"></i>" +
+                            "<ul class=\"dropdown-menu\">" +                                                                    
+                                    "<li><a ng-click=\"getZpointSettingsEx(" + object.id + "," + zpoint.id + ")\"" +
+                                            "data-target=\"#showZpointOptionModal\"" +
+                                            "data-toggle=\"modal\"" +
+                                            "data-placement=\"bottom\"" +
+                                            "title=\"Свойства точки учёта\">" +
+                                            "Свойства" +
+                                    "</a></li>" +                                    
+                                    "<li><a ng-click=\"getZpointSettingsExpl(" + object.id + "," + zpoint.id + ")\"" +
+                                        "data-target=\"#showZpointExplParameters\""+
+                                        "data-toggle=\"modal\"" +
+                                        "data-placement=\"bottom\"" +
+                                        "title=\"Эксплуатационные параметры точки учёта\">" +
+                                        "Эксплуатационные параметры" +
+                                    "</a></li>" +                                    
+                                    "<li><a ng-click=\"openDeviceProperties(" + object.id + "," + zpoint.id + ")\"" +
+                                        "title=\"Свойства прибора учета\">" +
+                                        "Свойства прибора учета" +
+                                    "</a></li>" +
+                                    "<li><a ng-click=\"openZpointMetadata(" + object.id + "," + zpoint.id + ")\"" +
+                                        "title=\"Метаданные прибора\">" +
+                                        "Метаданные прибора" +
+                                    "</a></li>" +
+                                    "<li><a ng-click=\"openSchedule(" + object.id + "," + zpoint.id + ")\"" +
+                                        "title=\"Расписание опроса\">" +
+                                        "Расписание опроса" +
+                                    "</a></li>" +
+                                    "<li><a ng-click=\"openDataSource(" + object.id + "," + zpoint.id + ")\"" +
+                                        "title=\"Источник данных\">" +
+                                        "Источник данных" +
+                                    "</a></li>";                            
+                            
+//                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\"" +
+//                                    "ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
+//                                    "data-target=\"#showZpointOptionModal\"" +
+//                                    "data-toggle=\"modal\"" +
+//                                    "data-placement=\"bottom\"" +
+//                                    "title=\"Свойства точки учёта\">" +
+//                                "</i>"+
+//                                "<i class=\"btn btn-xs nmc-button-in-table\"" +
+//                                    "ng-click=\"getZpointSettingsExpl(" + object.id + "," + zpoint.id + ")\"" +
+//                                    "data-target=\"#showZpointExplParameters\"" +
+//                                    "data-toggle=\"modal\""+
+//                                    "data-placement=\"bottom\""+
+//                                    "title=\"Эксплуатационные параметры точки учёта\">"+
+//                                        "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
+//                                "</i>";
+                        trHTML += "<li>";
                         if (zpoint.zpointType == 'el'){
                             trHTML += "<a href='#/objects/indicator-electricity/";
                         }else{
-                                trHTML+="<a href='#/objects/indicators/";
+                            trHTML+="<a href='#/objects/indicators/";
                         };
                         trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "' target=\"_blank\"><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
                                     "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
                                     "title=\"Показания точки учёта\">" + 
                                 "</i></a>";
+                        trHTML += "</li>";
+                        trHTML += "</ul>";
+                        trHTML += "</div>";
                         trHTML += "</td>";
                         $scope.oldColumns.forEach(function(column){
                             switch (column.name){
