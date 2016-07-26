@@ -308,7 +308,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		deviceObjectVOs.forEach(i -> {
 
-			V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getObject().getId());
+			V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
 			i.setDeviceObjectTimeOffset(timeOffset);
 		});
 

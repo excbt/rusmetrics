@@ -216,17 +216,17 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		result.addAll(resultEl);
 
 		result.forEach(i -> {
-			i.getObject().getDeviceObjects().forEach(j -> {
+			i.getModel().getDeviceObjects().forEach(j -> {
 				j.loadLazyProps();
 			});
 
-			if (i.getObject().getTemperatureChart() != null) {
-				i.getObject().getTemperatureChart().getId();
-				i.getObject().getTemperatureChart().getChartComment();
+			if (i.getModel().getTemperatureChart() != null) {
+				i.getModel().getTemperatureChart().getId();
+				i.getModel().getTemperatureChart().getChartComment();
 			}
 
 			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
-					.selectDeviceObjsetTimeOffset(i.getObject().get_activeDeviceObjectId());
+					.selectDeviceObjsetTimeOffset(i.getModel().get_activeDeviceObjectId());
 
 			i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
 		});

@@ -559,7 +559,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new ContObjectMonitorVO(i))
 				.collect(Collectors.toList());
 
-		List<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getObject().getId()).distinct()
+		List<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getModel().getId()).distinct()
 				.collect(Collectors.toList());
 
 		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
@@ -580,9 +580,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		contObjectWrappers.forEach(i -> {
 
-			Integer res = contObjectStats.get(i.getObject().getId());
+			Integer res = contObjectStats.get(i.getModel().getId());
 			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getObject().getId());
+			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getModel().getId());
 			if (!m.isEmpty()) {
 				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
 				checkNotNull(color);

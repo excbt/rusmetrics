@@ -14,15 +14,15 @@ public class ModelWrapper<T> implements Serializable {
 	private static final long serialVersionUID = 1121524482713584202L;
 
 	@JsonUnwrapped
-	private final T object;
+	private final T model;
 
-	public ModelWrapper(T srcObject) {
-		checkNotNull(srcObject);
-		this.object = srcObject;
+	public ModelWrapper(T model) {
+		checkNotNull(model);
+		this.model = model;
 	}
 
-	public T getObject() {
-		return object;
+	public T getModel() {
+		return model;
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class ModelWrapper<T> implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((object == null) ? 0 : object.hashCode());
+		result = prime * result + ((model == null) ? 0 : model.hashCode());
 		return result;
 	}
 
@@ -48,10 +48,10 @@ public class ModelWrapper<T> implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ModelWrapper<?> other = (ModelWrapper<?>) obj;
-		if (object == null) {
-			if (other.object != null)
+		if (model == null) {
+			if (other.model != null)
 				return false;
-		} else if (!object.equals(other.object))
+		} else if (!model.equals(other.model))
 			return false;
 		return true;
 	}

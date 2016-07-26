@@ -96,7 +96,7 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 	@JsonIgnore
 	@Override
 	public int getDeleted() {
-		return getObject() == null ? 0 : getObject().getDeleted();
+		return getModel() == null ? 0 : getModel().getDeleted();
 	}
 
 	public List<TimeDetailLastDate> getTimeDetailLastDates() {
