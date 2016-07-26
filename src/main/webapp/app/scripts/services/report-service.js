@@ -4,9 +4,15 @@ app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudG
 function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler, mainSvc, $q){
     
     var ALL_RESOURCES = {
-            keyname: "all",
+            keyname: "ALL",
             caption: "Все ресурсы",
             captionShort: "Все ресурсы",
+            class: "active"
+    };
+    var WITHOUT_RESOURCES = {
+            keyname: "WITHOUT",
+            caption: "Без привязки к типу ресурса",
+            captionShort: "Без привязки к типу ресурса",
             class: "active"
     };
     //url к данным
@@ -177,7 +183,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
             };        
             reportTypes = newObjects;
             mainSvc.sortItemsBy(contServiceTypes, "captionShort");
-            contServiceTypes.unshift(ALL_RESOURCES);
+            contServiceTypes.push(WITHOUT_RESOURCES);
 //console.log(reportTypes);            
 //console.log(contServiceTypes);                        
             $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');
@@ -502,7 +508,7 @@ app.filter('serviceTypesFilter', function(){
     return function(items, props){
 //console.log(items);
 //console.log(props);
-        if (props.keyname === "all"){
+        if (props.keyname === "ALL"){
             return items;
         };
         var filteredItems = [];      
@@ -512,6 +518,9 @@ app.filter('serviceTypesFilter', function(){
 //                return;
 //            };
             if (angular.isArray(item.contServiceTypes)){
+                if ((angular.isUndefined(item.contServiceTypes) || item.contServiceTypes.length === 0) && props.keyname === "WITHOUT"){                    
+                    filteredItems.push(item);
+                }
                 item.contServiceTypes.some(function(elem){
                     if (angular.isUndefined(elem) || angular.isUndefined(props) || elem.isGroup !== true){
                         return false;

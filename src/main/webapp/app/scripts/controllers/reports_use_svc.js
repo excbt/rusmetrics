@@ -1268,6 +1268,8 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         		if (!mainSvc.checkUndefinedNull(previewWin))
         			previewWin.close();
         		console.log(e);
+            }else{
+                errorCallback(e);
             };
         })
         .catch(errorCallback);
