@@ -77,7 +77,7 @@
             <div role="tabpanel" class="tab-pane fade in active nmc-main-tab-panel nmc-report-settings-main-div" id="active_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
                   <!-- Навигационная полоса по категориям отчетов-->
-                <div class="container-fluid" ng-repeat="serviceType in contServiceTypes track by $index">
+                <div class="container-fluid" ng-repeat="serviceType in contServiceTypes | notEmptyContServiceTypesByReportTypes: currentCategory track by $index">
                     <div class="row padding5" style="padding:0;">
                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
                             <i title="Скрыть / Показать" 
@@ -147,22 +147,24 @@
                                        ng-show="object.showGroupDetails[serviceType.keyname]">
                                     <thead>
                                         <tr class="nmc-child-table-header">
-                                            <th class="nmc-td-for-buttons"
-                                                style="background: linear-gradient(to top, #FF6802,#FF811B); color: #fff"                                                
+                                            <th class="nmc-td-for-buttons-paramset"
+                                                style="background: linear-gradient(to top, #FF6802,#FF811B); color: #fff; padding: 1px 2px 2px; text-align: center;"                                                
                                                 >
-                                                <i ng-disabled="isROfield()" 
-                                                     title="Добавить" 
-                                                     class="btn btn-xs nmc-button-add-orange" 
-                                                     ng-click="addParamSet(object)" 
-                                                     data-target="#main_properties" 
-                                                     data-toggle="tab"                                               
-                                                   >
-                                                </i>
-                                                <i class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-preview-orange" 
-                                                    title="Предварительный просмотр"
-                                                    ng-click="preview(object)"
-                                                    >
-                                                </i>
+                                                <div class="btn-group">
+                                                    <i ng-disabled="isROfield()" 
+                                                         title="Добавить вариант отчета" 
+                                                         class="btn nmc-button-add-orange" 
+                                                         ng-click="addParamSet(object)" 
+                                                         data-target="#main_properties" 
+                                                         data-toggle="tab"                                               
+                                                       >
+                                                    </i>
+                                                    <i class="btn nmc-button-preview-orange" 
+                                                        title="Показать форму отчета"
+                                                        ng-click="preview(object)"
+                                                        >
+                                                    </i>
+                                                </div>
                                             </th>
                                             <th></th>
                                             <th ng-repeat="paramsetColumn in paramsetColumns" 

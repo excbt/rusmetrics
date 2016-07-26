@@ -534,3 +534,21 @@ app.filter('reportTypesCountInCategoryByServiceType', ['$filter', function($filt
         return filteredReportTypes.length || 0;
     }
 }]);
+
+app.filter('notEmptyContServiceTypesByReportTypes', ['$filter', function($filter){
+    return function(items, props){       
+        var out = [];
+        if (angular.isArray(items)){
+            items.forEach(function(item){                
+                var filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+                if (filteredReportTypes.length === 0){
+                    return;
+                }
+                out.push(item);                
+            })
+        }else{
+            out = items;
+        }
+        return out;
+    }
+}]);
