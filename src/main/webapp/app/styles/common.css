@@ -648,8 +648,11 @@ tr.nmc-tr-striped:nth-of-type(odd)>td{
 }
 
 .nmc-td-for-buttons-paramset{
-    min-width: 65px;
+    min-width: 72px;
     width: 4%;
+    background: linear-gradient(to top, #FF6802,#FF811B); 
+    color: #fff; 
+    text-align: center;
 }
 
 .nmc-td-for-buttons-in-object-page{
@@ -1614,18 +1617,20 @@ tr.nmc-inactive-price > td{
 
 /* Кнопка "Добавить" - используется в интерфейсе Настройка - Варианты отчетов*/
 .nmc-button-add-orange, .nmc-button-add-orange:hover, .nmc-button-add-orange:focus{
-    width: 28px;
-    height: 28px;
-    background: url(../images/add-28.png) top no-repeat;
+    width: 18px;
+    height: 18px;
+    background: url(../images/add-18b.png) top no-repeat;
+    margin-right: 2px;
 }
 
 
 
 .nmc-button-preview-orange, .nmc-button-preview-orange:hover, .nmc-button-preview-orange:focus{
 /*    color: #fff !important;*/
-    width: 28px;
-    height: 28px;
-    background: url(../images/preview-28.png) top no-repeat;
+    width: 18px;
+    height: 18px;
+    background: url(../images/preview-18.png) top no-repeat;
+    margin-left: 2px !important;
 }
  
 /**************************************************************************************
