@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -98,6 +99,10 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	@Column(name = "cont_event_deviation", insertable = false, updatable = false)
 	private String contEventDeviationKeyname;
+
+	@Column(name = "mon_version")
+	@NotNull
+	private Short monVersion = 1;
 
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -233,6 +238,14 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setContEventId(Long contEventId) {
 		this.contEventId = contEventId;
+	}
+
+	public Short getMonVersion() {
+		return monVersion;
+	}
+
+	public void setMonVersion(Short monVersion) {
+		this.monVersion = monVersion;
 	}
 
 }
