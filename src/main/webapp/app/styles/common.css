@@ -1560,7 +1560,7 @@ tr.nmc-inactive-price > td{
     color:red;
 */
     padding: 5px 10px 5px 10px;
-    background: linear-gradient(to top, #FF6802,#FF811B);
+    background: #337ab7;/*linear-gradient(to top, #FF6802,#FF811B);*/
 }
     /* Активный переключатель - наведен указатель на него*/
 .nmc-toggle > li.active > a:hover{
