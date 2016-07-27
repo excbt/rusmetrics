@@ -870,18 +870,26 @@
                        id="extra_properties">
                        <div class="container-fluid noPadding">
                             <div class="row well noPadding noMargin nmc-modal-panel-with-objects-tp">
-                                <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-md-12 noPadding marginBottom10 nmc-modal-panel-with-table" style="">
     <!--
                         <div class="container-fluid noPadding">
                             <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table">
     -->
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr ng-repeat="paramSpecial in currentParamSpecialList">
+<!--
                                             <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
                                                 ng-class="{'col-sm-9': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-3': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL'}"
                                                 ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 2 : 1}}"
                                                 >
-                                                <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'">
+-->
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
+                                                ng-class="{'col-sm-12': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-6': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-disabled': isSpecialParamDisabled(paramSpecial, currentParamSpecialList), 'paddingLeft20I': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 3 : 1}}"
+                                                >
+                                                <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'"
+                                                      class="nmc-sp-sbool marginLeft15"
+                                                      >
                                                     <input type="checkbox" 
                                                            class="nmc-checkbox-form" 
                                                            id="inputSpecParam" 
@@ -889,7 +897,10 @@
                                                            ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                 </span>
-                                                <label for="inputType" class="nmc-form-label">
+<!--                                                <label for="inputType" class="nmc-form-label">-->
+                                                <label for="inputType" class="nmc-form-label"
+                                                       ng-class="{'marginLeft15': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-sp-sbool': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'}"
+                                                       >    
                                                     {{paramSpecial.paramSpecialCaption}}
 <!--
                                                     <small ng-if="isSystemuser()">
@@ -899,9 +910,16 @@
                                                 </label>
                                             </td>
                                             
+<!--
                                             <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || (paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION' && paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '')"
                                                 class="col-sm-9 nmc-text-align-left nmc-dotted-border-top"
                                                 colspan="2"                                                
+                                                >
+-->
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'"
+                                                class="col-sm-12 nmc-text-align-left"
+                                                ng-class="{'nmc-dotted-border-top': $index !== 0}"
+                                                colspan="3"                                                
                                                 >
                                                 <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH'">
                                                     <input type="checkbox" 
@@ -911,7 +929,9 @@
                                                            ng-disabled="isDisabled()"
                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                 </span>                                                
-                                                <label for="inputType" class="nmc-form-label">
+<!--                                                <label for="inputType" class="nmc-form-label">-->
+                                                <label ng-if="(paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '') || (paramSpecial.reportMetaParamCategory.caption && paramSpecial.reportMetaParamCategory.caption !== '')"
+                                                       for="inputType" class="nmc-form-label">                                                                                                    
                                                     {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
 <!--
                                                     <small ng-if="isSystemuser()">
@@ -925,10 +945,16 @@
                                             <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
                                             </td>
     -->
+<!--
                                             <td class="nmc-text-align-left"
                                                 ng-class="{'col-sm-3': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-9': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-dotted-border-top': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'}"
                                                 ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 1 : 2}}"
                                                 >
+-->
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
+                                                class="nmc-text-align-left"
+                                                ng-class="{'col-sm-6': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-sm-6': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-dotted-border-top': (paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION') && $index !== 0}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 1 : 2}}">
                                                 <div ng-switch on="paramSpecial.paramSpecialTypeKeyname">
                                                     <span ng-switch-when="SPECIAL_STRING">
                                                         <input class="form-control nmc-text-input-form" 

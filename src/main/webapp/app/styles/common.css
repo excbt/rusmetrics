@@ -1890,7 +1890,7 @@ tr.nmc-inactive-price > td{
  *********************/
 
 .nmc-dotted-border-top{
-    border-top: 1px dotted black !important;
+    border-top: 1px solid black !important;
 }
 
 /* Вертикальное выравнивание содержимого*/
@@ -2021,6 +2021,10 @@ tr.nmc-bg-distinguish > td{
 
 /* Отображение строк с макс. кол-вом смс в настройках*/
 .nmc-sms-prop-row{
+    display: table-cell;
+}
+    /* Специальные параметры вариантов отчетов*/
+.nmc-sp-sbool{
     display: table-cell;
 }
 
@@ -2208,6 +2212,10 @@ tr.nmc-bg-distinguish > td{
 
 .paddingLeft20 {
     padding-left: 20px;
+}
+
+.paddingLeft20I {
+    padding-left: 20px !important;
 }
 
 .onlyPaddingLeft15 {

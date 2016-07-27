@@ -128,8 +128,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 };
                 
                 newObjects.push(newObject);
-            };        
-            $scope.reportObjects = newObjects;        
+            }; 
+            $scope.reportObjects = newObjects;   
+//console.log($scope.reportObjects);            
             $scope.getActive();
         });
     };

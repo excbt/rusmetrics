@@ -144,6 +144,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         if (requestCanceler == null)
             return null;
         crudGridDataFactoryWithCanceler(reportTypesUrl, requestCanceler).query(function(data){
+            mainSvc.sortItemsBy(data, "caption");
             reportTypes = data;
             reportCategories.forEach(function(cat){cat.reportTypes = []});//reset category reportType array
 //console.log(data);
