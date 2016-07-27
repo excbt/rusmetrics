@@ -171,7 +171,7 @@ public class ContEventMonitorV2Service {
 			return null;
 		}
 
-		Optional<ContEventMonitorV2> sorted = contEventMonitor.stream()
+		Optional<ContEventMonitorV2> sorted = contEventMonitor.stream().filter(i -> i.getContEventLevel() != null)
 				.sorted(CMP_BY_COLOR_RANK).findFirst();
 
 		if (!sorted.isPresent()) {

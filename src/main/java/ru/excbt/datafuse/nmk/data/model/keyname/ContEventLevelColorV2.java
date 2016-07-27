@@ -14,7 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 
 @Entity
-@Table(schema = DBMetadata.DB_SCHEME, name = "cont_event_level_color_v2")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_level_color_v2")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContEventLevelColorV2 extends AbstractKeynameEntity implements

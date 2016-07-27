@@ -568,12 +568,17 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
 
-		contObjectIds.forEach(i -> {
-			contEventMonitorMapList.put(i, new ArrayList<>());
-		});
+		//		contObjectIds.forEach(i -> {
+		//			contEventMonitorMapList.put(i, new ArrayList<>());
+		//		});
 
 		contEventMonitors.forEach(i -> {
+			//contEventMonitorMapList.get(i.getContObjectId());
 			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
+			if (l == null) {
+				l = new ArrayList<>();
+				contEventMonitorMapList.put(i.getContObjectId(), l);
+			}
 			checkNotNull(l);
 			l.add(i);
 		});
@@ -583,7 +588,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			Integer res = contObjectStats.get(i.getModel().getId());
 			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
 			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getModel().getId());
-			if (!m.isEmpty()) {
+			if (m != null && !m.isEmpty()) {
 				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
 				checkNotNull(color);
 				i.getContObjectStats().setContEventLevelColor(color.getKeyname());
