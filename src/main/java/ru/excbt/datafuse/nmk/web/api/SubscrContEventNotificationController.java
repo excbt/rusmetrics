@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
@@ -37,6 +38,7 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV2Service;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
@@ -68,6 +70,9 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
+
+	@Autowired
+	private ContEventMonitorV2Service contEventMonitorV2Service;
 
 	@Autowired
 	private ContEventLevelColorService contEventLevelColorService;
@@ -451,6 +456,30 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		List<ContEventMonitor> resultList = contEventMonitorService.selectByContObject(contObjectId);
 
 		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEventsV2", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationsContObjectMonitorV2Events(
+			@PathVariable(value = "contObjectId") Long contObjectId) {
+
+		checkNotNull(contObjectId);
+
+		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContObject(contObjectId);
+
+		if (resultList.isEmpty()) {
+			return responseOK();
+		}
+
+		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(filteredResultList);
 	}
 
 	/**
