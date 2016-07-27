@@ -1,3 +1,6 @@
+/*jslint white: true, node: true */
+/*global angular, $ */
+'use strict';
 angular.module('portalNMC')
 .directive("nmcViewMessageForUser", function(){
     return {
@@ -10,7 +13,7 @@ angular.module('portalNMC')
             btnOkCaption: "@",
             showOkButton: "@",
             btnCancelCaption: "@",
-            showCancelButton: "@",
+            showCancelButton: "@"
         },
         controller: function($scope){
             $('#messageForUserModal').on('shown.bs.modal', function(){
@@ -22,5 +25,5 @@ angular.module('portalNMC')
 //                console.log($scope.showCancelButton);
             });
         }
-    }
+    };
 });

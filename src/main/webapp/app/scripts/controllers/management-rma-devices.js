@@ -160,7 +160,7 @@ angular.module('portalNMC')
             function(resp){
                 $scope.data.currentScheduler = resp.data;
                 $scope.selectedItem(device);
-                $('#sheduleEditorModal').modal();
+                $('#scheduleEditorModal').modal();
             },
             errorProtoCallback
         );
@@ -292,7 +292,7 @@ angular.module('portalNMC')
         $scope.getDevices();
         $('#showDeviceModal').modal('hide');
         $('#deleteObjectModal').modal('hide');
-        $('#sheduleEditorModal').modal('hide');
+        $('#scheduleEditorModal').modal('hide');
         $scope.data.currentObject = {};
         $scope.data.currentScheduler = {};
     };
@@ -314,7 +314,7 @@ angular.module('portalNMC')
         errorProtoCallback(e);
         // reset saving device flag
         $scope.data.currentObject.isSaving = false;
-        //reset saving csheduler flag
+        //reset saving scheduler flag
         $scope.data.currentScheduler.isSaving = false;
         //session data load flag
         $scope.ctrlSettings.sessionsLoading = false;

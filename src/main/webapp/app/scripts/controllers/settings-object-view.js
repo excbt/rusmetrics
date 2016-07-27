@@ -589,13 +589,13 @@ angular.module('portalNMC')
                                     zpoint.singlePipe = !zpoint.doublePipe;
                                 };
 //console.log(zpoint);
-                                if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)){                                
+                                if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)){                       zpoint.deviceObject = zPointsByObject[i].deviceObjects[0];         
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
                                     }else{
                                         zpoint.zpointModel = "Не задано";
                                     };
-                                    zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;
+                                    zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;                                    
                                 };
                                 zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;   
                                 // Получаем эталонный интервал для точки учета
@@ -706,11 +706,14 @@ angular.module('portalNMC')
                         }else{
                             trHTML+="<a href='#/objects/indicators/";
                         };
-                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "' target=\"_blank\"><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
+                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "' target=\"_blank\" ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\">" + 
+//                            "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
-                                    "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
-                                    "title=\"Показания точки учёта\">" + 
-                                "</i></a>";
+//                                    "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
+//                                    "title=\"Показания точки учёта\">" + 
+//                                "</i>"+
+                            "Показания точки учета" + 
+                            "</a>";
                         trHTML += "</li>";
                         trHTML += "</ul>";
                         trHTML += "</div>";
@@ -1912,7 +1915,37 @@ angular.module('portalNMC')
                 $scope.data.selectedElectricityColumns = [];
 // ***********************************************************************************************
 //                      end Indicator columns editor
-// ***********************************************************************************************                
+// ***********************************************************************************************
+                
+// ********************************************************************************************************
+//                  Device scheduler
+// ********************************************************************************************************
+                $scope.openSchedule = function (objId, zpointId) {
+                    $scope.selectedZpoint(objId, zpointId);
+//console.log($scope.currentZpoint);                    
+                    var curDevice = $scope.currentZpoint.deviceObject;
+                    $scope.getDeviceSchedulerSettings(objId, curDevice);
+                }
+                
+                $scope.selectedDevice = function (device) {
+                    $scope.data.currentDevice = angular.copy(device);
+                }
+                
+                    //get device scheduler
+                $scope.getDeviceSchedulerSettings = function(objId, device){
+                    objectSvc.getDeviceSchedulerSettings(objId, device.id).then(
+                        function(resp){
+                            $scope.data.currentScheduler = resp.data;
+console.log($scope.data.currentScheduler);                            
+                            $scope.selectedDevice(device);
+                            $('#scheduleEditorModal').modal();
+                        },
+                        errorCallback
+                    );
+                };
+// ********************************************************************************************************
+//                  end Device scheduler
+// ********************************************************************************************************                
                 var initCtrl = function(){
                                         //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
