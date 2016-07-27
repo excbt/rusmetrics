@@ -417,11 +417,27 @@
                                                            ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                            ng-required="paramSpecial.paramSpecialRequired"/>
                                                 </span>
-                                                <label for="inputType" class="nmc-form-label"
+                                                <label ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_DATE_PERIOD' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_DATETIME_PERIOD'"
+                                                       for="inputType" class="nmc-form-label"
                                                        ng-class="{'marginLeft15': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-sp-sbool': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'}"
                                                        >
                                                     {{paramSpecial.paramSpecialCaption}}
                                                 </label>
+                                                <div ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_DATE_PERIOD' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_DATETIME_PERIOD'"
+                                                     class="form-group">
+                                                    <div class="col-sm-6 noPadding paddingTop5 paddingRight5 nmc-text-align-right">
+                                                        <label class="nmc-form-label">{{paramSpecial.paramSpecialCaption}}: c</label>
+                                                    </div>
+                                                    <div class="col-sm-6 noPadding">
+                                                        <input class="form-control nmc-text-input-form" 
+                                                               id="inputSpecParam" 
+                                                               type=date  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.startDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </div>   
+                                                </div>
                                             </td>
                                             
                                             <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'"
@@ -440,7 +456,7 @@
                                                 <label ng-if="(paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '') || (paramSpecial.reportMetaParamCategory.caption && paramSpecial.reportMetaParamCategory.caption !== '')"
                                                        for="inputType" class="nmc-form-label">
                                                     {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
-                                                </label>
+                                                </label>                                                
                                             </td>
                                             <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
                                                 class="nmc-text-align-left"
@@ -486,6 +502,7 @@
                                                     <span ng-switch-when="SPECIAL_DATETIME_PERIOD">
                                                         <div ng-disabled="isDisabled()">
                                                             <span class="form-group">
+<!--
                                                             <div class="col-sm-1 paddingTop5">
                                                                 <label class="nmc-form-label">c</label>
                                                                 </div>
@@ -498,10 +515,11 @@
                                                                        ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                        ng-required="paramSpecial.paramSpecialRequired"/>
                                                             </div>    
-                                                            <div class="col-sm-1 paddingTop5">
+-->
+                                                            <div class="col-sm-2 paddingTop5">
                                                                 <label class="nmc-form-label">по</label>
                                                                 </div>
-                                                            <div class="col-sm-5">
+                                                            <div class="col-sm-6 noPadding">
                                                                 <input class="form-control nmc-text-input-form" 
                                                                        id="inputSpecParam" 
                                                                        type=date 
@@ -516,6 +534,7 @@
                                                     <span ng-switch-when="SPECIAL_DATE_PERIOD">
                                                         <div ng-disabled="isDisabled()">
                                                             <span class="form-group">
+<!--
                                                             <div class="col-sm-1 paddingTop5">
                                                                 <label class="nmc-form-label">c</label>
                                                                 </div>
@@ -528,10 +547,11 @@
                                                                        ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                        ng-required="paramSpecial.paramSpecialRequired"/>
                                                             </div>    
-                                                            <div class="col-sm-1 paddingTop5">
+-->
+                                                            <div class="col-sm-2 paddingTop5">
                                                                 <label class="nmc-form-label">по</label>
                                                                 </div>
-                                                            <div class="col-sm-5">
+                                                            <div class="col-sm-6 noPadding">
                                                                 <input class="form-control nmc-text-input-form" 
                                                                        id="inputSpecParam" 
                                                                        type=date 

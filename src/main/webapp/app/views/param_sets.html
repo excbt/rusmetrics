@@ -898,7 +898,8 @@
                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                 </span>
 <!--                                                <label for="inputType" class="nmc-form-label">-->
-                                                <label for="inputType" class="nmc-form-label"
+                                                <label ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_DATE_PERIOD' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_DATETIME_PERIOD'"
+                                                       for="inputType" class="nmc-form-label"
                                                        ng-class="{'marginLeft15': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-sp-sbool': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'}"
                                                        >    
                                                     {{paramSpecial.paramSpecialCaption}}
@@ -908,6 +909,21 @@
                                                     </small>
 -->
                                                 </label>
+                                                <div ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_DATE_PERIOD' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_DATETIME_PERIOD'"
+                                                     class="form-group">
+                                                    <div class="col-sm-6 noPadding paddingTop5 paddingRight5 nmc-text-align-right">
+                                                        <label class="nmc-form-label">{{paramSpecial.paramSpecialCaption}}: c</label>
+                                                    </div>
+                                                    <div class="col-sm-6 noPadding">
+                                                        <input class="form-control nmc-text-input-form" 
+                                                               id="inputSpecParam" 
+                                                               type=date  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.startDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </div>   
+                                                </div>
                                             </td>
                                             
 <!--
@@ -1000,6 +1016,7 @@
 -->
                                                         <div ng-disabled="isDisabled()">
                                                             <span class="form-group" >
+<!--
                                                                 <div class="col-sm-1 paddingTop5">
                                                                     <label class="nmc-form-label">c</label>
                                                                 </div>
@@ -1012,10 +1029,11 @@
                                                                            ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                                 </div>    
-                                                                <div class="col-sm-1 paddingTop5">
+-->
+                                                                <div class="col-sm-2 paddingTop5">
                                                                     <label class="nmc-form-label">по</label>
                                                                 </div>
-                                                                <div class="col-sm-5">
+                                                                <div class="col-sm-6 noPadding">
                                                                     <input class="form-control nmc-text-input-form" 
                                                                            id="inputSpecParam" 
                                                                            type="date"  
@@ -1035,6 +1053,7 @@
 -->
                                                         <div ng-disabled="isDisabled()">
                                                             <span class="form-group" >
+<!--
                                                                 <div class="col-sm-1 paddingTop5">
                                                                     <label class="nmc-form-label">c</label>
                                                                 </div>
@@ -1047,10 +1066,11 @@
                                                                            ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                            ng-required="paramSpecial.paramSpecialRequired">
                                                                 </div>    
-                                                                <div class="col-sm-1 paddingTop5">
+-->
+                                                                <div class="col-sm-2 paddingTop5">
                                                                     <label class="nmc-form-label">по</label>
                                                                 </div>
-                                                                <div class="col-sm-5">
+                                                                <div class="col-sm-6 noPadding">
                                                                     <input class="form-control nmc-text-input-form" 
                                                                            id="inputSpecParam" 
                                                                            type=date  
