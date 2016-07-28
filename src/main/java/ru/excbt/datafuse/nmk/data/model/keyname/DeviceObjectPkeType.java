@@ -33,8 +33,8 @@ public class DeviceObjectPkeType extends AbstractKeynameEntity implements Deleta
 
 	@Column(name = "pke_type_code")
 	private String pkeTypeCode;
-	
-	@Column(name = "pke_measure_unit")
+
+	@Column(name = "measure_unit")
 	private String pkeMeasureUnit;
 
 	@Version
