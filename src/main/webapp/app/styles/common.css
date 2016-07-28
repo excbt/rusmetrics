@@ -635,7 +635,9 @@ body{
     text-decoration: none;
     background: none !important;
     background-color: #FFFFFF !important;
-    border: 1px solid;
+    border-left: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
 }
 
 .nmc-mode-sidebar-nav {

@@ -1910,7 +1910,7 @@ angular.module('portalNMC')
                     });
                     
                     $('#columnSettingsModal').modal('hide');
-                };
+                };                                
                 
                 $scope.data.selectedWaterColumns = [];
                 $scope.data.selectedElectricityColumns = [];
@@ -1994,6 +1994,35 @@ console.log($scope.data.currentScheduler);
                     mode.isActive = true;
                     $scope.data.selectedIndicatorMode = mode;
                 }
+                
+                $scope.initIndicatorPreferences = function () {
+                    $scope.data.indicatorHwKind = "24h";
+                    $scope.data.indicatorHwPerPage = 25;
+                    $scope.data.indicatorElMode = "";
+                    $scope.data.indicatorElKind = "24h";
+                }
+                
+                $scope.saveIndicatorPreferences = function(){
+console.log($scope.data.waterColumns);                    
+console.log($scope.data.electricityColumns);                     
+console.log($scope.data.indicatorHwKind);
+console.log($scope.data.indicatorHwPerPage);                                         
+console.log($scope.data.indicatorElMode);
+console.log($scope.data.indicatorElKind);                    
+//                    //check columns
+//                    var check = checkSelectedColumns();
+//                    if (check == false)
+//                        return "Columns are not tested.";
+//                    //selected objects
+//                    $scope.objectsOnPage.forEach(function(el){
+//                        if(el.selected === true){
+//                            setIndicatorColumnPrefForObject(el, "hw", $scope.data.waterColumns);
+//                            setIndicatorColumnPrefForObject(el, "el", $scope.data.electricityColumns);
+//                        };
+//                    });
+//                    
+//                    $('#columnSettingsModal').modal('hide');
+                };
                 
 // ********************************************************************************************************
 //                  end Settings view of indicator

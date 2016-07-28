@@ -178,28 +178,7 @@
                                         </th>
                                         <th class="nmc-td-for-buttons"></th>
                                         <th>Название объекта
-                                            <div ng-show="!isCabinet()"
-                                                 class="btn-group pull-right" style="vertical-align: initial;">
-
-                                              <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">
-        <!--                                        <span class="caret"></span>-->
-                                              </p>
-                                              <ul class="dropdown-menu">
-<!--
-                                                <li>
-                                                    <a href="" 
-                                                       ng-click="objectCtrlSettings.extendedInterfaceFlag = !objectCtrlSettings.extendedInterfaceFlag">
-                                                        Включить/выключить расширенный интерфейс</a>
-                                                </li>
--->
-<!--
-                                                <li>
-                                                    <a href="" ng-click="toggleTreeView()">
-                                                        Включить/выключить отображение иерархии объектов</a>
-                                                </li>
--->
-                                              </ul>
-                                            </div>
+                                            
                                         </th>
                                     </tr>
                                 </thead>
@@ -306,7 +285,7 @@
                                         <li class="menu-item" role="presentation">
                                             <a href=""
                                                class=""
-                                               ng-click=""
+                                               ng-click="initIndicatorPreferences()"
                                                data-target="#columnSettingsModal"
                                                data-toggle="modal"
                                                >
@@ -1240,7 +1219,6 @@
                                                ng-model="mode.caption"
                                                ng-dblclick="mode.editMode = !mode.editMode"
                                                />
-<!--                                        {{mode.caption}}-->
                                     </span>
                                     <span ng-if="mode.editMode !== true"
                                           class="pull-right">
@@ -1248,21 +1226,14 @@
                                            ng-click="deleteIndicatorMode(mode)">
                                         </i>
                                     </span>
+                                    <span ng-if="mode.editMode !== true"
+                                          class="pull-right">
+                                        <i title="Установить режим по умолчанию"
+                                           class="btn btn-xs glyphicon glyphicon-ok" 
+                                           ng-click="">
+                                        </i>
+                                    </span>
                                 </a>
-<!--
-                                <a id="" 
-                                   class="list-group-item nmc-mode-menu-item active"                                    
-                                   data-toggle="offcanvas" 
-                                   >
-                                    <span>Режим1</span>
-                                </a>
-                                <a id="" 
-                                   class="list-group-item nmc-mode-menu-item"                                    
-                                   data-toggle="offcanvas" 
-                                   >
-                                    <span>Режим2</span>
-                                </a>
--->
                             </div>
                         </nav>
                     </div>
@@ -1314,7 +1285,7 @@
                                                 Выбрать все
                                             </label>
                                         </div>
-                                        <div class="col-md-12 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+                                        <div class="col-xs-6 col-md-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
         <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
                                             <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                                 <tr ng-repeat="waterColumn in data.waterColumns | columnFilter: 'istunable'">
@@ -1329,7 +1300,31 @@
                                                 </tr>
 
                                             </table>
-                                        </div>    
+                                        </div>
+                                        <div class="col-xs-6 col-md-6">
+                                            <div>
+                                                <label>Вид показаний</label>
+                                                <select class="form-control nmc-input-data nmc-select-form"
+                                                        ng-model="data.indicatorHwKind"
+                                                        > 
+                                                    <option value="24h">Суточные</option>
+                                                    <option value="1h">Часовые</option>
+                                                    <option value="1h_abs">Интеграторы</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label>Записей на странице</label>
+                                                <select class="form-control nmc-input-digital-data nmc-select-form"
+                                                        ng-model="data.indicatorHwPerPage"
+                                                        > 
+                                                    <option value=15>15</option>
+                                                    <option value=25>25</option>
+                                                    <option value=50>50</option>
+                                                    <option value=75>75</option>
+                                                    <option value=100>100</option>                                                    
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>  
                                 </div> 
                           </div>
@@ -1347,7 +1342,7 @@
                                                 Выбрать все
                                             </label>
                                         </div>
-                                        <div class="col-md-12 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+                                        <div class="col-xs-6 col-md-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
         <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
                                             <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">    
                                                 <tr ng-repeat="electricityColumn in data.electricityColumns | columnFilter: 'istunable'">
@@ -1361,6 +1356,27 @@
                                                     </td>
                                                 </tr>                                        
                                             </table>
+                                        </div>
+                                        <div class="col-xs-6 col-md-6">
+                                            <div>
+                                                <label>Режим показаний</label>
+                                                <select class="form-control nmc-select-form"
+                                                        ng-model="data.indicatorElMode"
+                                                        > 
+                                                    <option value="">Потребление</option>
+                                                    <option value="_abs">Интеграторы</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label>Вид показаний</label>
+                                                <select class="form-control nmc-select-form"
+                                                        ng-model="data.indicatorElKind"
+                                                        > 
+                                                    <option value="1mon">Ежемесячные</option>
+                                                    <option value="24h">Суточные</option>
+                                                    <option value="1h">Часовые</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                               </div>
@@ -1383,7 +1399,7 @@
 						</div>
                         <div class="col-xs-offset-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="setIndicatorColumnsPref()"
+								ng-click="saveIndicatorPreferences()"
 								value="Сохранить"/>
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
