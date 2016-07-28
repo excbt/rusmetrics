@@ -12,13 +12,14 @@ import org.hibernate.annotations.TypeDefs;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.hibernate.types.StringJsonUserType;
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_vcookie")
 @TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = StringJsonUserType.class) })
-public class SubscrVCookie extends AbstractAuditableModel implements DeletableObjectId {
+//@JsonIgnoreProperties(value = { PropertyFilter.DEV_COMMENT_PROPERTY_IGNORE, "deleted", "id" }, ignoreUnknown = true)
+public class SubscrVCookie extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 

@@ -232,6 +232,14 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		_testGetJson(url);
 	}
 
+	@Test
+	public void testNotificationsContObjectMonitorV2() throws Exception {
+		long contObjectId = 75224930;
+		String url = String.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEventsV2", contObjectId);
+
+		_testGetJson(url);
+	}
+
 	/**
 	 * 
 	 * @throws Exception

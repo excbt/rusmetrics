@@ -105,6 +105,9 @@ public class SubscrVCookieService {
 
 		List<SubscrVCookie> existingVC = existingVCList.stream()
 				.filter(i -> entity.getVcMode().equals(i.getVcMode()) && entity.getVcKey().equals(i.getVcKey()))
+				.filter(i -> entity.getSubscriberId().equals(i.getSubscriberId())
+						&& (entity.getSubscrUserId() == null && i.getSubscrUserId() == null
+								|| entity.getSubscrUserId().equals(i.getSubscrUserId())))
 				.collect(Collectors.toList());
 
 		if (existingVC.size() == 1) {
@@ -121,13 +124,40 @@ public class SubscrVCookieService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrVCookie> saveVCookieSubscr(List<SubscrVCookie> entities) {
+	public List<SubscrVCookie> saveSubscrVCookie(List<SubscrVCookie> entities) {
 
 		Long subscriberId = entities.isEmpty() ? null : entities.get(0).getSubscriberId();
 
 		List<SubscrVCookie> checkList = subscrVCookieRepository.selectSubscrVCookie(subscriberId);
 
 		for (SubscrVCookie vc : entities) {
+			checkArgument(vc.getSubscriberId() != null);
+			checkArgument(vc.getSubscrUserId() == null);
+			_saveVCookieSubscrUser(vc, checkList);
+
+		}
+		return Lists.newArrayList(subscrVCookieRepository.save(entities));
+	}
+
+	/**
+	 * 
+	 * @param entities
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrVCookie> saveSubscrVCookieUser(List<SubscrVCookie> entities) {
+
+		Long subscriberId = entities.isEmpty() ? null : entities.get(0).getSubscriberId();
+		Long subscrUserId = entities.isEmpty() ? null : entities.get(0).getSubscrUserId();
+
+		checkNotNull(subscriberId);
+		checkNotNull(subscrUserId);
+
+		List<SubscrVCookie> checkList = subscrVCookieRepository.selectSubscrVCookie(subscriberId, subscrUserId);
+
+		for (SubscrVCookie vc : entities) {
+			checkArgument(vc.getSubscriberId() != null);
+			checkArgument(vc.getSubscrUserId() != null);
 			_saveVCookieSubscrUser(vc, checkList);
 		}
 		return Lists.newArrayList(subscrVCookieRepository.save(entities));
