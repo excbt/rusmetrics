@@ -595,6 +595,54 @@ body{
 .nmc-li-select-all > label{
     cursor: pointer;
 }
+
+    /* Пункт меню настройки режимов показаний*/
+.nmc-mode-menu-item{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+/*    margin-right: -30%;*/
+    margin-bottom: 3px;/*2%;*/
+/*    font-size: 16px;*/
+    border-radius: 4px 0px 0px 4px;
+	background-color: #DCDCDC; /*background color of menu item*/
+    
+/*        background-color: #DCDCDC ; background color of menu item*/
+                      /* my1: #D3D4D6*/
+    /*background: linear-gradient(to top, #BFC0C2, #DDDEE0);*/
+    /*background: linear-gradient(to top, #DCDCDC, #EBEBEB);*/   /*#E6E6E6 --  #EBEBEB  --  #F0F0F0*/
+    background: linear-gradient(to top, #C8C8C8, #EBEBEB);   /*#E6E6E6 --  #EBEBEB  --  #F0F0F0*/
+                                      /*  bottom  top  */
+
+/*ORG: #DCDCDC, #ECEDEF*/
+}
+
+    /* Пункт главного меню */
+        /*в фокусе*/    /* на который наведен курсор*/
+.nmc-main-menu-item:focus, .nmc-main-menu-item:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+/*    margin-right: -30%;*/
+    margin-bottom: 3px;/*2%;*/
+    background-color: #DCDCDC;
+}
+
+    /*Активный пункт главного меню*/
+.nmc-mode-menu-item-active{
+    font-weight: bold;
+    color: #555 !important;
+    text-decoration: none;
+    background: none !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid;
+}
+
+.nmc-mode-sidebar-nav {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 /***********
  * Таблицы
  ***********/

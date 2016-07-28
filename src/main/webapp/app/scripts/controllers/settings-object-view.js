@@ -1,4 +1,5 @@
-
+/*jslint node: true, white: true*/
+/*global angular, $*/
 'use strict';
 
 angular.module('portalNMC')    
@@ -52,9 +53,9 @@ angular.module('portalNMC')
                     var tmp = mainSvc.getContextIds();
                     tmp.forEach(function(element){
                         var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-                        if (angular.isUndefined(elDOM) || (elDOM == null)){
+                        if (angular.isUndefined(elDOM) || (elDOM === null)){
                             return;
-                        };                        
+                        }                        
                         $('#' + element.permissionTagId).removeClass('nmc-hide');
                     });
                 };
@@ -80,7 +81,7 @@ angular.module('portalNMC')
                         }
                     });        
                     return obj;
-                };
+                }
                 
                 var getCmOrganizations = function(){
                     objectSvc.getCmOrganizations()
@@ -109,10 +110,10 @@ angular.module('portalNMC')
                             element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
                             element.nextSettingMode = $scope.cont_zpoint_setting_mode_check[0].keyname;
                             element.nextSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
-                        };
-                        if (angular.isDefined(element._activeContManagement) && (element._activeContManagement != null)){
+                        }
+                        if (angular.isDefined(element._activeContManagement) && (element._activeContManagement !== null)){
                             element.contManagementId = element._activeContManagement.organizationId;
-                        };
+                        }
                     });
                     $scope.objects = response.data;
                     //sort by name
@@ -126,7 +127,7 @@ angular.module('portalNMC')
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
                     if (angular.isDefined($cookies.contObject) && $cookies.contObject !== "null"){
                         var curObj = objectSvc.findObjectById(Number($cookies.contObject), $scope.objects);
-                        if (curObj != null){
+                        if (curObj !== null){
                             var curObjIndex = $scope.objects.indexOf(curObj);                        
                             if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage){
                                 //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
@@ -1945,6 +1946,57 @@ console.log($scope.data.currentScheduler);
                 };
 // ********************************************************************************************************
 //                  end Device scheduler
+// ********************************************************************************************************
+                
+// ********************************************************************************************************
+//                  The settings the view of a indicator
+// ********************************************************************************************************
+                $scope.data.indicatorModes = [
+                    {
+                        id: 0,
+                        caption: "Режим 1",
+                        class: "nmc-mode-menu-item-active",
+                        isActive: true
+                    },{
+                        id: 1,
+                        caption: "Режим 2"
+                    }
+                ];
+                
+                $scope.data.selectedIndicatorMode = $scope.data.indicatorModes[0];
+                
+                $scope.addIndicatorMode = function () {
+                    var newMode = {
+                        id: $scope.data.indicatorModes.length,
+                        caption: "Режим " + ($scope.data.indicatorModes.length + 1)
+                    }
+                    $scope.data.indicatorModes.push(newMode);
+                }
+                
+                $scope.deleteIndicatorMode = function (mode) {
+                    var delInd = -1;
+                    $scope.data.indicatorModes.some(function(imode, index){
+                        if (imode.id === mode.id){
+                            delInd = index;
+                            return true;
+                        }
+                    });
+                    
+                    if (delInd !== -1){
+                        $scope.data.indicatorModes.splice(delInd, 1);
+                    }
+                }
+                
+                $scope.modeClick = function (mode) {
+                    $scope.data.selectedIndicatorMode.isActive = false;
+                    $scope.data.selectedIndicatorMode.class = "";
+                    mode.class = "nmc-mode-menu-item-active";
+                    mode.isActive = true;
+                    $scope.data.selectedIndicatorMode = mode;
+                }
+                
+// ********************************************************************************************************
+//                  end Settings view of indicator
 // ********************************************************************************************************                
                 var initCtrl = function(){
                                         //if tree is off

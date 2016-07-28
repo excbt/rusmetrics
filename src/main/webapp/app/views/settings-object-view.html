@@ -57,7 +57,7 @@
             </div>
         </div>
     </div>    
-    <div class="" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">            
+    <div ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">            
         <div class="container-fluid" ng-hide="loading">            
             <div class="row nmc-main-workspace-header">
                 <div class="col-xs-2 col-md-2 noPadding" ng-controller="ObjectGroupsCtrl">
@@ -301,6 +301,16 @@
                                                data-target="#showObjOptionModal" 
                                                data-toggle="modal">
                                                 Свойства объекта                                        
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" role="presentation">
+                                            <a href=""
+                                               class=""
+                                               ng-click=""
+                                               data-target="#columnSettingsModal"
+                                               data-toggle="modal"
+                                               >
+                                               Настройка интефейса просмотра показаний                                        
                                             </a>
                                         </li>
                                         <li class="menu-item" role="presentation">
@@ -1208,106 +1218,156 @@
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div role="tabpanel" 
-                 class="nmc-tab-panel">
-              <!-- Навигационная полоса для варианта отчета-->
-              <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" 
-                    class="active" 
-                    id="water_column_properties_tab">
-                    <a class="nmc-tab-button" 
-                       href="" 
-                       aria-controls="water_column_properties" 
-                       data-target="#water_column_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
-                       ng-click="">Колонки для водных показаний
-                    </a>
-                  </li>
-                <li role="presentation" 
-                    id="electricity_column_properties_tab"                                         
-                    > 
-                    <a class="nmc-tab-button"
-                       href="" 
-                       aria-controls="electricity_column_properties" 
-                       data-target="#electricity_column_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
-                       >Колонки для электрических показаний
-                    </a>
-                  </li>  
-              </ul>
-
-              <!-- реализация вкладок -->
-              <div class="tab-content">
-            <!--      Основные свойства-->
-                <div role="tabpanel" 
-                     class="tab-pane fade in active" 
-                     id="water_column_properties">
-                    
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="marginLeft20">
-                                    <input type="checkbox" 
-                                           class="nmc-checkbox-form" 
-                                           ng-model="selectAllWaterColumnFlag"
-                                           ng-click="selectAllWaterColumns()"/>
-                                    <label>
-                                        Выбрать все
-                                    </label>
-                                </div>
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
-<!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
-                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
-                                        <tr ng-repeat="waterColumn in data.waterColumns | columnFilter: 'istunable'">
-                                            <td>
-                                                <input type="checkbox" 
-                                                       class="nmc-checkbox-form" 
-                                                       ng-model="waterColumn.isVisible"/>
-                                                <label>
-                                                    <span ng-bind="waterColumn.header"></span>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                        
-                                    </table>
-                                </div>    
-                            </div>  
-                        </div> 
-                  </div>
-                  <div role="tabpanel" 
-                     class="tab-pane fade" 
-                     id="electricity_column_properties">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="marginLeft20">
-                                    <input type="checkbox" 
-                                           class="nmc-checkbox-form" 
-                                           ng-model="selectAllElectricityColumnFlag"
-                                           ng-click="selectAllElectricityColumns()"/>
-                                    <label>
-                                        Выбрать все
-                                    </label>
-                                </div>
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
-<!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
-                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">    
-                                        <tr ng-repeat="electricityColumn in data.electricityColumns | columnFilter: 'istunable'">
-                                            <td>
-                                                <input type="checkbox" 
-                                                       class="nmc-checkbox-form" 
-                                                       ng-model="electricityColumn.isVisible"/>
-                                                <label>
-                                                    <span ng-bind="electricityColumn.header"></span>
-                                                </label>
-                                            </td>
-                                        </tr>                                        
-                                    </table>
-                                </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-3 noPadding sidebar-offcanvas paddingRight10 nmc-mode-menu" ng-cloak>
+                        <nav class="sidebar-nav nmc-mode-sidebar-nav"
+                             role="navigation" 
+                             >
+                            
+                            <div id="sidebar-entries" class="list-group">
+                                <a ng-repeat="mode in data.indicatorModes track by $index" 
+                                   class="list-group-item nmc-mode-menu-item"                                   
+                                   data-toggle="offcanvas"
+                                   ng-class="mode.class"
+                                   ng-click="modeClick(mode)"
+                                   >
+                                    <span ng-if="mode.editMode !== true"
+                                          ng-dblclick="mode.editMode = !mode.editMode"
+                                          >{{mode.caption}}</span>
+                                    <span ng-if="mode.editMode === true">
+                                        <input class="form-control nmc-text-input-form"
+                                               ng-model="mode.caption"
+                                               ng-dblclick="mode.editMode = !mode.editMode"
+                                               />
+<!--                                        {{mode.caption}}-->
+                                    </span>
+                                    <span ng-if="mode.editMode !== true"
+                                          class="pull-right">
+                                        <i class="btn btn-xs glyphicon glyphicon-trash" 
+                                           ng-click="deleteIndicatorMode(mode)">
+                                        </i>
+                                    </span>
+                                </a>
+<!--
+                                <a id="" 
+                                   class="list-group-item nmc-mode-menu-item active"                                    
+                                   data-toggle="offcanvas" 
+                                   >
+                                    <span>Режим1</span>
+                                </a>
+                                <a id="" 
+                                   class="list-group-item nmc-mode-menu-item"                                    
+                                   data-toggle="offcanvas" 
+                                   >
+                                    <span>Режим2</span>
+                                </a>
+-->
                             </div>
-                      </div>
-                  </div>
-                  
+                        </nav>
+                    </div>
+                    <div role="tabpanel" 
+                         class="col-sm-9 noPadding nmc-tab-panel">
+                      <!-- Навигационная полоса для варианта отчета-->
+                      <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" 
+                            class="active" 
+                            id="water_column_properties_tab">
+                            <a class="nmc-tab-button" 
+                               href="" 
+                               aria-controls="water_column_properties" 
+                               data-target="#water_column_properties" 
+                               role="tab" 
+                               data-toggle="tab" 
+                               ng-click="">Водные показания
+                            </a>
+                          </li>
+                        <li role="presentation" 
+                            id="electricity_column_properties_tab"                                         
+                            > 
+                            <a class="nmc-tab-button"
+                               href="" 
+                               aria-controls="electricity_column_properties" 
+                               data-target="#electricity_column_properties" 
+                               role="tab" 
+                               data-toggle="tab" 
+                               >Электрические показания
+                            </a>
+                          </li>  
+                      </ul>
+
+                      <!-- реализация вкладок -->
+                      <div class="tab-content">
+                    <!--      Основные свойства-->
+                        <div role="tabpanel" 
+                             class="tab-pane fade in active" 
+                             id="water_column_properties">
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div>
+                                            <input type="checkbox" 
+                                                   class="nmc-checkbox-form" 
+                                                   ng-model="selectAllWaterColumnFlag"
+                                                   ng-click="selectAllWaterColumns()"/>
+                                            <label>
+                                                Выбрать все
+                                            </label>
+                                        </div>
+                                        <div class="col-md-12 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+        <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
+                                            <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
+                                                <tr ng-repeat="waterColumn in data.waterColumns | columnFilter: 'istunable'">
+                                                    <td>
+                                                        <input type="checkbox" 
+                                                               class="nmc-checkbox-form" 
+                                                               ng-model="waterColumn.isVisible"/>
+                                                        <label>
+                                                            <span ng-bind="waterColumn.header"></span>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </div>    
+                                    </div>  
+                                </div> 
+                          </div>
+                          <div role="tabpanel" 
+                             class="tab-pane fade" 
+                             id="electricity_column_properties">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div>
+                                            <input type="checkbox" 
+                                                   class="nmc-checkbox-form" 
+                                                   ng-model="selectAllElectricityColumnFlag"
+                                                   ng-click="selectAllElectricityColumns()"/>
+                                            <label>
+                                                Выбрать все
+                                            </label>
+                                        </div>
+                                        <div class="col-md-12 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+        <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
+                                            <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">    
+                                                <tr ng-repeat="electricityColumn in data.electricityColumns | columnFilter: 'istunable'">
+                                                    <td>
+                                                        <input type="checkbox" 
+                                                               class="nmc-checkbox-form" 
+                                                               ng-model="electricityColumn.isVisible"/>
+                                                        <label>
+                                                            <span ng-bind="electricityColumn.header"></span>
+                                                        </label>
+                                                    </td>
+                                                </tr>                                        
+                                            </table>
+                                        </div>
+                                    </div>
+                              </div>
+                          </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -1316,7 +1376,12 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="addIndicatorMode()"
+								value="Добавить режим"/>
+						</div>
+                        <div class="col-xs-offset-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="setIndicatorColumnsPref()"
 								value="Сохранить"/>
