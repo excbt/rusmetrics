@@ -4,7 +4,7 @@
 
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFactoryWithCanceler', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', '$q', function($scope, $rootScope, $http, crudGridDataFactoryWithCanceler, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q){
+app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFactoryWithCanceler', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', '$q', '$filter', function($scope, $rootScope, $http, crudGridDataFactoryWithCanceler, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q, $filter){
     
     var CATEGORY_COEF = 1000;
     
@@ -85,7 +85,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     $scope.$on('reportSvc:reportTypesIsLoaded', function(){
 //console.log("reportSvc:reportTypesIsLoaded");        
         //report types
-        $scope.reportObjects = reportSvc.getReportTypes();
+        $scope.reportObjects = reportSvc.getReportTypes();        
         $scope.getActive();
     });
     
@@ -96,44 +96,44 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     
     //report types
 //    $scope.reportTypes = [];
-    $scope.getReportTypes = function(){
-        var table = "../api/reportSettings/reportType";
-        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
-            $scope.reportTypes = data;
-//console.log(data);
-            var newObjects = [];
-            var newObject = {};
-            for (var i = 0; i<data.length; i++){
-                if (!data[i]._enabled){
-                    continue;
-                };
-                if ((!$scope.isSystemuser() && data[i].isDevMode)){
-                    continue;
-                };
-                newObject = {};
-                newObject.reportType = data[i].keyname;        
-                newObject.reportTypeName = data[i].caption;
-                newObject.suffix = data[i].suffix;
-                newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
-                newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
-                newObject.reportCategory = data[i].reportCategory;
-                    //flag: the toggle visible flag for the special params page.
-                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                
-                for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
-                    if (newObject.reportCategory.localeCompare($scope.categories[categoryCounter].name) == 0){    
-                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
-                        $scope.categories[categoryCounter].reportTypes.push(newObject);                     
-                        continue;
-                    };
-                };
-                
-                newObjects.push(newObject);
-            }; 
-            $scope.reportObjects = newObjects;   
-//console.log($scope.reportObjects);            
-            $scope.getActive();
-        });
-    };
+//    $scope.getReportTypes = function(){
+//        var table = "../api/reportSettings/reportType";
+//        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
+//            $scope.reportTypes = data;
+////console.log(data);
+//            var newObjects = [];
+//            var newObject = {};
+//            for (var i = 0; i<data.length; i++){
+//                if (!data[i]._enabled){
+//                    continue;
+//                };
+//                if ((!$scope.isSystemuser() && data[i].isDevMode)){
+//                    continue;
+//                };
+//                newObject = {};
+//                newObject.reportType = data[i].keyname;        
+//                newObject.reportTypeName = data[i].caption;
+//                newObject.suffix = data[i].suffix;
+//                newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
+//                newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
+//                newObject.reportCategory = data[i].reportCategory;
+//                    //flag: the toggle visible flag for the special params page.
+//                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                
+//                for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
+//                    if (newObject.reportCategory.localeCompare($scope.categories[categoryCounter].name) == 0){    
+//                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
+//                        $scope.categories[categoryCounter].reportTypes.push(newObject);                     
+//                        continue;
+//                    };
+//                };
+//                
+//                newObjects.push(newObject);
+//            }; 
+//            $scope.reportObjects = newObjects;   
+////console.log($scope.reportObjects);            
+//            $scope.getActive();
+//        });
+//    };
 //    $scope.getReportTypes();
 
     
@@ -1301,7 +1301,12 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     };
     
     $scope.setCurrentServiceType($scope.contServiceTypes[0]);
-    $scope.setCurrentCategory($scope.categories[0]);
+    
+    var filtredCategories = $filter('notEmptyCategories')($scope.categories);   
+    if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
+        filtredCategories[0].class = "active";
+    }
+    $scope.setCurrentCategory(filtredCategories[0]);
     
     // *************************************************************************************
     // Отчеты для контекстного меню объект

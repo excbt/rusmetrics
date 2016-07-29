@@ -56,7 +56,7 @@
         </ul>
 -->
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
-            <li ng-repeat="category in categories track by $index" 
+            <li ng-repeat="category in categories | withReportTypes track by $index" 
                 role="presentation" 
                 ng-class="category.class">
                 <a 

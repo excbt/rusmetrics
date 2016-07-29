@@ -433,8 +433,11 @@ app.filter('notEmptyContServiceTypesByCategory', ['$filter', function($filter){
             items.forEach(function(item){
 //console.log(props);                
 //console.log(props.reportTypes);   
-//console.log(item);                
-                var filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+//console.log(item);           
+                var filteredReportTypes = [];
+                if (angular.isDefined(props)){
+                    filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+                }
                 if (filteredReportTypes.length === 0){
                     return;
                 }

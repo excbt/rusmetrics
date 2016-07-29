@@ -573,9 +573,29 @@ app.filter('notEmptyContServiceTypesByReportTypes', ['$filter', function($filter
     return function(items, props){       
         var out = [];
         if (angular.isArray(items)){
-            items.forEach(function(item){                
-                var filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+            items.forEach(function(item){
+                var filteredReportTypes = [];
+                if (angular.isDefined(props)){
+                    filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
+                }
                 if (filteredReportTypes.length === 0){
+                    return;
+                }
+                out.push(item);                
+            })
+        }else{
+            out = items;
+        }
+        return out;
+    }
+}]);
+
+app.filter('withReportTypes', [function(){
+    return function(items){       
+        var out = [];
+        if (angular.isArray(items)){
+            items.forEach(function(item){                                
+                if (item.reportTypes.length === 0){
                     return;
                 }
                 out.push(item);                
