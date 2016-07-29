@@ -42,12 +42,42 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     };
     //Получение отчетов
         //категории отчетов
-    var reportCategories = [
+    var reportCategories = [        
+        {
+            name: "METROLOGICAL",
+            caption: "Метрология",
+            prefix: "М",
+            class: "active",
+            reportTypes: []
+        },
+        {
+            name: "QUALITY_MONITOR",
+            caption: "Мониторинг качества",
+            prefix: "К",
+            reportTypes: []
+        },
+        {
+            name: "FAULT_DIAGNOSIS",
+            caption: "Диагностика неисправностей",
+            prefix: "Д",
+            reportTypes: []
+        },
+        {
+            name: "ANALYTICS",
+            caption: "Аналитика",
+            prefix: "C",
+            reportTypes: []
+        },
+        {
+            name: "SERVICE",
+            caption: "Служебные",
+            prefix: "C",
+            reportTypes: []
+        },
         {
             name: "OPERATE",
             caption: "Оперативные",
-            prefix: "Э",
-            class: "active",
+            prefix: "Э",            
             reportTypes: []
         },
         {
@@ -56,12 +86,6 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
             prefix: "А",
             
             reportTypes: []            
-        },
-        {
-            name: "SERVICE",
-            caption: "Служебные",
-            prefix: "C",
-            reportTypes: []
         }
     ];
     
