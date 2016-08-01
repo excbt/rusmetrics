@@ -3,11 +3,16 @@ package ru.excbt.datafuse.nmk.data.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +28,15 @@ import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContZPointMetadataService implements SecuredRoles {
+public class ContZPointMetadataService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointMetadataService.class);
 
@@ -89,6 +96,9 @@ public class ContZPointMetadataService implements SecuredRoles {
 		DeviceObjectDataSource deviceDataSource = deviceDataSourceList.get(0);
 
 		String deviceMetadataType = deviceDataSource.getSubscrDataSource().getDataSourceType().getDeviceMetadataType();
+		if (deviceMetadataType == null) {
+			return new ArrayList<>();
+		}
 
 		Long deviceModelId = key.deviceObject.getDeviceModelId();
 
@@ -181,7 +191,25 @@ public class ContZPointMetadataService implements SecuredRoles {
 
 		List<EntityColumn> result = metadataList.stream().filter(i -> i.getMetaNumber() != null).map(i -> {
 			return new EntityColumn(i.getSrcProp());
-		}).sorted().collect(Collectors.toList());
+		}).distinct().sorted().collect(Collectors.toList());
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param metadataList
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceMetadataInfo> buildSrcPropsDeviceMapping(List<ContZPointMetadata> metadataList) {
+
+		final Map<String, List<String>> deviceMappings = getSrcPropsDeviceMapping(metadataList);
+
+		List<DeviceMetadataInfo> result = metadataList.stream().filter(i -> i.getMetaNumber() != null).map(i -> {
+			List<String> mList = deviceMappings.get(i.getSrcProp());
+			return new DeviceMetadataInfo(i.getSrcProp(), null, mList);
+		}).distinct().sorted().collect(Collectors.toList());
 
 		return result;
 	}
@@ -195,7 +223,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 
 		List<EntityColumn> result = metadataList.stream().filter(i -> i.getMetaNumber() != null).map(i -> {
 			return new EntityColumn(i.getDestProp(), i.getDestDbType());
-		}).sorted().collect(Collectors.toList());
+		}).distinct().sorted().collect(Collectors.toList());
 
 		return result;
 	}
@@ -215,7 +243,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 			}).collect(Collectors.toList());
 		}
 
-		return new ArrayList<EntityColumn>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -327,6 +355,67 @@ public class ContZPointMetadataService implements SecuredRoles {
 		deleteOtherContZPointMetadata(contZPointId, deviceObject.getId());
 
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Map<String, List<String>> getSrcPropsDeviceMapping(List<ContZPointMetadata> metadataList) {
+
+		Map<String, List<String>> result = null;
+
+		List<Pair<String, String>> pairs = metadataList.stream()
+				.filter(i -> i.getDeviceObjectId() != null && i.getDeviceMetadataType() != null)
+				.map(i -> new ImmutablePair<>(i.getDeviceObjectId().toString(), i.getDeviceMetadataType()))
+				.distinct().collect(Collectors.toList());
+
+		if (pairs.size() == 1) {
+			Pair<String, String> p = pairs.get(0);
+			result = selectSrcPropsDeviceMapping(Long.valueOf(p.getLeft()), p.getRight());
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @param deviceMetadataType
+	 * @return
+	 */
+	private Map<String, List<String>> selectSrcPropsDeviceMapping(Long deviceObjectId, String deviceMetadataType) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT src_prop, device_mapping, device_mapping_info ");
+		sb.append(" FROM portal.v_device_object_metadata_info ");
+		sb.append("WHERE device_object_id = :par_device_object_id AND ");
+		sb.append(" device_metadata_type = :par_device_metadata_type ");
+
+		Query qry = em.createNativeQuery(sb.toString());
+		qry.setParameter("par_device_object_id", deviceObjectId);
+		qry.setParameter("par_device_metadata_type", deviceMetadataType);
+
+		List<?> qryResult = qry.getResultList();
+
+		final Map<String, List<String>> resultMap = new HashMap<>();
+		for (Object row : qryResult) {
+			if (row instanceof Object[]) {
+				Object[] rowArray = (Object[]) row;
+				String srcProp = (String) rowArray[0];
+				String deviceMapping = (String) rowArray[1];
+				String deviceMappingInfo = (String) rowArray[2];
+				List<String> mList = resultMap.get(srcProp);
+				if (mList == null) {
+					mList = new ArrayList<>();
+					mList.add(deviceMapping);
+					mList.add(deviceMappingInfo);
+					resultMap.put(srcProp, mList);
+				} else {
+					logger.warn("SrcProp {} already exists in deviceObjectId={}", srcProp, deviceObjectId);
+				}
+			}
+		}
+		return resultMap;
+
 	}
 
 }

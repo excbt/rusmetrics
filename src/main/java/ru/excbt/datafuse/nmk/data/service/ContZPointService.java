@@ -143,9 +143,11 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContZPoint findOne(long contZPointId) {
 		ContZPoint result = contZPointRepository.findOne(contZPointId);
-		result.getDeviceObjects().forEach(j -> {
-			j.loadLazyProps();
-		});
+		if (result != null && result.getDeviceObjects() != null) {
+			result.getDeviceObjects().forEach(j -> {
+				j.loadLazyProps();
+			});
+		}
 		return result;
 	}
 

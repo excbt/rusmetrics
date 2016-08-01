@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
+import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.service.ContZPointMetadataService;
 import ru.excbt.datafuse.nmk.data.service.MeasureUnitService;
@@ -207,7 +208,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
-		List<EntityColumn> result = contZPointMetadataService.buildSrcProps(metadataList);
+		List<DeviceMetadataInfo> result = contZPointMetadataService.buildSrcPropsDeviceMapping(metadataList);
 
 		return responseOK(result);
 	}
