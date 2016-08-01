@@ -574,7 +574,14 @@ body{
     display: inline !important;
     padding: 5px 5px 5px 0px !important;
 }
- 
+
+    /* Список режимов - представлений просмотра показаний объекта*/
+.nmc-view-mode-list-items{
+    overflow-y: auto;
+    max-height: 320px;
+    top: 240%;
+}
+
 /* Блок номеров страниц */
 .nmc-pages {
 }

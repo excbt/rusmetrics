@@ -23,6 +23,8 @@ angular.module('portalNMC')
                 
                 $scope.messages.groupMenuHeader = "Полный список объектов";
                 
+                $scope.messages.modeHeader = "Выберете представление";
+                
                 $scope.messages.setIndicatorInterface = "Настройка интефейса просмотра показаний";
                 
                     //object settings
@@ -480,6 +482,9 @@ angular.module('portalNMC')
 			        var curObject = angular.copy(item);
 			        $scope.currentObject = curObject;
                     objectSvc.setCurrentObject($scope.currentObject);
+                    
+                    //get default indicator pref for this object
+                    getDefaultObjectIndicatorMode(curObject.id);
 			    };
                 
                 $scope.selectedObject = function(objId){
@@ -1810,13 +1815,13 @@ angular.module('portalNMC')
                 }
                 
                 $scope.selectAllWaterColumns = function(){
-                    $scope.data.waterColumns.forEach(function(wc){
+                    $scope.data.selectedIndicatorMode.waterColumns.forEach(function(wc){
                         wc.isVisible = $scope.selectAllWaterColumnFlag;
                     })
                 }
                 
                 $scope.selectAllElectricityColumns = function(){
-                    $scope.data.electricityColumns.forEach(function(ec){
+                    $scope.data.selectedIndicatorMode.electricityColumns.forEach(function(ec){
                         ec.isVisible = $scope.selectAllElectricityColumnFlag;
                     })
                 }
@@ -1988,20 +1993,31 @@ console.log($scope.data.currentScheduler);
                         return result;
                     }
                     result = inputData.map(function(elem){
-console.log(elem);                        
-                        tmpMode = JSON.parse(elem);
+//console.log(elem);                        
+                        var tmpMode = elem,
+                            vcvalue = JSON.parse(elem.vcValue);
+                        ;                        
+                        tmpMode.keyname = tmpMode.vcKey;
+                        tmpMode.caption = vcvalue.caption;
+                        tmpMode.waterColumns = vcvalue.waterColumns;
+                        tmpMode.electricityColumns = vcvalue.electricityColumns;
+                        tmpMode.indicatorHwKind = vcvalue.indicatorHwKind;
+                        tmpMode.indicatorHwPerPage = vcvalue.indicatorHwPerPage;
+                        tmpMode.indicatorElKind = vcvalue.indicatorElKind;
+                        tmpMode.indicatorElMode = vcvalue.indicatorElMode;
                         return tmpMode;
                     });
+//console.log(result);
                     return result;
                 }
                 
-                function getIndicatorModesTest () {
-                    var url = VCOOKIE_URL;                    
-                    $http.get(url).then(function(resp){                        
-console.log(resp.data);                        
-                    }, errorCallback);
-                }
-getIndicatorModesTest();                
+//                function getIndicatorModesTest () {
+//                    var url = VCOOKIE_URL;                    
+//                    $http.get(url).then(function(resp){                        
+//console.log(resp.data);                        
+//                    }, errorCallback);
+//                }
+//getIndicatorModesTest();                
                 
                 function getIndicatorModes () {
                     var url = VCOOKIE_URL;
@@ -2009,7 +2025,13 @@ getIndicatorModesTest();
                         url += "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE;
                     }
                     $http.get(url).then(function(resp){                        
-                        $scope.data.indicatorModes = performIndicatorModes(resp.data);
+                        $scope.data.indicatorModes = performIndicatorModes(resp.data);                        
+                        if (angular.isArray($scope.data.indicatorModes) && $scope.data.indicatorModes.length > 0){
+                            mainSvc.sortItemsBy($scope.data.indicatorModes, "caption");
+                            $scope.data.selectedIndicatorMode = angular.copy($scope.data.indicatorModes[0]);
+                            $scope.messages.modeHeader = $scope.data.selectedIndicatorMode.caption;
+                        }
+console.log($scope.data.indicatorModes);                        
                     }, errorCallback);
                 }
                 
@@ -2026,13 +2048,13 @@ getIndicatorModesTest();
                 }
                                 
                 
-                $scope.data.selectedIndicatorMode = $scope.data.indicatorModes[0];
+//                $scope.data.selectedIndicatorMode = $scope.data.indicatorModes[0];
                 
                 $scope.addIndicatorMode = function () {
                     var newMode = {
                         id: $scope.data.indicatorModes.length,
                         keyname: "INDICATOR_MODE_" + (new Date).getTime(),
-                        caption: "Режим " + ($scope.data.indicatorModes.length + 1),
+                        caption: "Представление " + ($scope.data.indicatorModes.length + 1),
                         waterColumns: angular.copy(waterColumns),
                         indicatorHwKind: "24h",
                         indicatorHwPerPage: 25,
@@ -2046,7 +2068,7 @@ getIndicatorModesTest();
                 $scope.deleteIndicatorMode = function (mode) {
                     var delInd = -1;
                     $scope.data.indicatorModes.some(function(imode, index){
-                        if (imode.id === mode.id){
+                        if (imode.keyname === mode.keyname){
                             delInd = index;
                             return true;
                         }
@@ -2058,18 +2080,27 @@ getIndicatorModesTest();
                 }
                 
                 $scope.modeClick = function (mode) {
-                    $scope.data.selectedIndicatorMode.isActive = false;
-                    $scope.data.selectedIndicatorMode.class = "";
-                    mode.class = "nmc-mode-menu-item-active";
-                    mode.isActive = true;
-                    $scope.data.selectedIndicatorMode = mode;
+//                    $scope.data.selectedIndicatorMode.isActive = false;
+//                    $scope.data.selectedIndicatorMode.class = "";
+//                    mode.class = "nmc-mode-menu-item-active";
+//                    mode.isActive = true;
+                    $scope.data.selectedIndicatorMode = angular.copy(mode);
+                    $scope.messages.modeHeader = $scope.data.selectedIndicatorMode.caption;
                 }
                 
                 $scope.initIndicatorPreferences = function () {
-                    $scope.data.indicatorHwKind = "24h";
-                    $scope.data.indicatorHwPerPage = 25;
-                    $scope.data.indicatorElMode = "";
-                    $scope.data.indicatorElKind = "24h";
+                    $scope.selectAllWaterColumnFlag = false;
+                    $scope.selectAllElectricityColumnFlag = false;
+                    if (angular.isArray($scope.data.indicatorModes) && $scope.data.indicatorModes.length > 0){
+                        mainSvc.sortItemsBy($scope.data.indicatorModes, "caption");
+                        $scope.data.selectedIndicatorMode = angular.copy($scope.data.indicatorModes[0]);
+                        $scope.messages.modeHeader = $scope.data.selectedIndicatorMode.caption;
+                    }
+                    
+//                    $scope.data.indicatorHwKind = "24h";
+//                    $scope.data.indicatorHwPerPage = 25;
+//                    $scope.data.indicatorElMode = "";
+//                    $scope.data.indicatorElKind = "24h";
                 }
                 
                 $scope.saveIndicatorPreferences = function(){
@@ -2117,6 +2148,48 @@ getIndicatorModesTest();
 //                    
 //                    $('#columnSettingsModal').modal('hide');
                 };
+                
+                function getDefaultObjectIndicatorMode (objId) {
+                    //reset indicator modes flags to false
+                    $scope.data.indicatorModes.forEach(function(imode){imode.isCurrentMode = false});
+                    
+                    if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)){
+                        console.log("Request required params is null!");
+                        return false;
+                    }
+                    var url = USER_VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + "OIP_" + objId;
+                    $http.get(url).then(function(resp){
+                        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0){
+                            return false;
+                        } 
+//console.log(resp.data);                        
+                        var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+                        $scope.data.indicatorModes.some(function(imode){
+                            if (imode.keyname === objectIndicatorModeKeyname){
+                                imode.isCurrentMode = true;
+                                return true;
+                            }
+                        });
+                    }, errorCallback);
+                }
+                
+                $scope.setDefaultObjectIndicatorMode = function (objId, mode) {
+                    //reset indicator modes flags to false
+//                    $scope.data.indicatorModes.forEach(function(imode){imode.isCurrentMode = false});
+                    
+                    if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)){
+                        console.log("Request required params is null!");
+                        return false;
+                    }
+                    var url = USER_VCOOKIE_URL + "/list";
+                    var requestBody = {};
+                    requestBody.vcMode = OBJECT_INDICATOR_PREFERENCES_VC_MODE;
+                    requestBody.vcKey = "OIP_" + objId;
+                    requestBody.vcValue = JSON.stringify(mode.keyname);
+                    $http.put(url, [requestBody]).then(function(resp){
+                        notificationFactory.success();
+                    }, errorCallback);
+                }
                 
 // ********************************************************************************************************
 //                  end Settings view of indicator

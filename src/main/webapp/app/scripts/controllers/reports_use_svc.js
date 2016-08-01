@@ -1,5 +1,5 @@
 /*jslint node: true, white: true*/
-/*global angular*/
+/*global angular, moment*/
 'use strict';
 
 //reports controller
