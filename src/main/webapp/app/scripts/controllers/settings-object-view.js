@@ -243,9 +243,10 @@ angular.module('portalNMC')
                     {"name":"zpointName", "header" : "Наименование точки учета", "class":"col-xs-3 col-md-3"},
                     {"name":"zpointModel", "header" : "Модель прибора учета", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointNumber", "header" : "Серийный номер прибора учета", "class":"col-xs-2 col-md-2"},
-                    {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2"},
-                    {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2 col-md-2"}
+                    {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2 col-md-2"},
+                    {"name":"zpointTimeOffsetString", "header" : "Расхождение времени", "class":"col-xs-2 col-md-2"}
                 ];//angular.fromJson($attrs.zpointcolumns);
+//                {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2"},
                 // Эталонный интервал
                 $scope.refRange = {};
                 $scope.urlRefRange = '../api/subscr/contObjects/';
@@ -402,9 +403,20 @@ angular.module('portalNMC')
                                     trHTML += "<img height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
                                     trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>"; 
                                     break;
-                                case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
+                                case "zpointLastDataDate" : 
+                                    trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}} <i ng-if='" + zpoint[column.name] + "' title=\"Показать детали по последним данным\"" +
+                                        "ng-attr-id=\"{{'zldd'+" + zpoint.id + "}}\"" +
+                                        "class=\"btn btn-xs glyphicon glyphicon-eject gly-rotate-180\">" +
+                                        "</i></td>"; 
+                                    break;   
                                 case "zpointRefRange" : trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
-                                default : trHTML += "<td>"+zpoint[column.name] + "</td>"; break;
+                                default : 
+                                    trHTML += "<td>";
+                                    if (!mainSvc.checkUndefinedNull(zpoint[column.name])){
+                                        trHTML += zpoint[column.name];
+                                    }
+                                    trHTML += "</td>"; 
+                                    break;
                             }
                         });
                         trHTML += "</tr>";
@@ -678,6 +690,79 @@ angular.module('portalNMC')
 //console.log($scope.currentObject);                    
                 };
                 
+                function prepareTimeDetailLastDate (tdld) {                   
+                    if (mainSvc.checkUndefinedNull(tdld) || mainSvc.checkEmptyObject(tdld)){
+                        return false;
+                    }
+                    var tdldKeys = Object.keys(tdld);
+                    tdldKeys.forEach(function(key){
+                        var elDom = "#zldd" + key;
+                        var text = "";//JSON.stringify(tdld[key]);
+                        tdld[key].forEach(function(el){
+                            switch (el.timeDetailType) {
+                                case "1h":
+                                    text += "Часовые показания";
+                                    break;
+                                case "24h":
+                                    text += "Суточные показания";
+                                    break;
+                                case "1mon":
+                                    text += "Ежемесячные показания";
+                                    break;    
+                                case "1h_abs":
+                                    text += "Часовые интеграторы";
+                                    break;
+                                case "24h_abs":
+                                    text += "Суточные интеграторы";
+                                    break;
+                                case "abs":
+                                    text += "Интеграторы";
+                                    break;    
+                                default:
+                                    text += el.timeDetailType;
+                                    break;
+                            }
+                            text += ": " + el.dataDateString + "<br>";
+                        });
+                        mainSvc.setToolTip("Последние данные", text, elDom, elDom);
+                    });
+//                    var setToolTip = function(title, text, elDom, targetDom)
+                }
+                
+                function loadZpointLastDataDetails (objId) {
+//                    "../api/subscr/contObjects/%d/contZPoints/timeDetailLastDate"
+                    var url = objectSvc.getObjectsUrl() + "/" + objId + "/contZPoints/timeDetailLastDate";
+                    $http.get(url).then(function(resp){
+                        prepareTimeDetailLastDate(resp.data);
+                    }, function(e){console.log(e);});
+                }
+                
+                function addTimeOffset (val, label) {
+                    var result = "";
+                    if (val > 0){
+                        if (val < 10){
+                            result += "0";
+                        }
+                        result += val + label;
+                    }
+                    return result;
+                }
+                
+                function prepareTimeOffset (rawTimeOffset) {
+                    var result = null;
+                    if (!mainSvc.checkUndefinedNull(rawTimeOffset)){
+//console.log(rawTimeOffset);
+                        result = "";
+                        result += addTimeOffset(rawTimeOffset.years, "г ");
+                        result += addTimeOffset(rawTimeOffset.mons, "М ");
+                        result += addTimeOffset(rawTimeOffset.days, "д ");
+                        result += addTimeOffset(rawTimeOffset.hh, "ч ");
+                        result += addTimeOffset(rawTimeOffset.mm, "м ");
+
+                    }
+                    return result;
+                }
+                
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
                     var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                  
                     //if cur object = null => exit function
@@ -694,9 +779,9 @@ angular.module('portalNMC')
                         curObject.showGroupDetails = !curObject.showGroupDetails;
                     }                                           
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
-                    if (curObject.showGroupDetails === true){
+                    if (curObject.showGroupDetails === true){                                                
                       
-                        var mode = "Ex";
+                        var mode = "/vo";
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
                             if (mode === "Ex"){
@@ -704,7 +789,7 @@ angular.module('portalNMC')
                                     var result = {};
                                     result = el.object;
                                     result.lastDataDate = el.lastDataDate;                                    
-                                    result.zpointOrder = "" + result.contServiceType.serviceOrder + result.customServiceName;
+//                                    result.zpointOrder = "" + result.contServiceType.serviceOrder + result.customServiceName;
 //console.log(el.lastDataDate);                                    
                                     return result;
                                 });
@@ -715,10 +800,11 @@ angular.module('portalNMC')
 //console.log(tmp);                            
                             var zpoints = [];
                             for(var i = 0; i < zPointsByObject.length; i++){
-                                var zpoint = {};
+                                var zpoint = {};                                
 //console.log(zPointsByObject[i]);                                
                                 zpoint.id = zPointsByObject[i].id;
-                                zpoint.zpointOrder = zPointsByObject[i].zpointOrder;
+                                zpoint.zpointOrder = "" + zPointsByObject[i].contServiceType.serviceOrder + zPointsByObject[i].customServiceName;
+//                                zpoint.zpointOrder = zPointsByObject[i].zpointOrder;
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
                                 zpoint.zpointTypeCaption = zPointsByObject[i].contServiceType.caption;
                                 zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
@@ -749,7 +835,13 @@ angular.module('portalNMC')
                                     };
                                     zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;                                    
                                 };
-                                zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;   
+                                zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;
+                                if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObjectTimeOffset)){
+                                    zpoint.zpointTimeOffsetString = prepareTimeOffset(zPointsByObject[i].deviceObjectTimeOffset);
+                                }
+//                                if (!mainSvc.checkUndefinedNull(zpoint.zpointLastDataDate)){
+//                                    loadZpointDetail
+//                                }
                                 // Получаем эталонный интервал для точки учета
                                 getRefRangeByObjectAndZpoint(curObject, zpoint);
                                 zpoints[i] = zpoint;                  
@@ -764,7 +856,10 @@ angular.module('portalNMC')
                             };
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
+                            
+                            loadZpointLastDataDetails(objId);
                         });
+                        
                     }//else if curObject.showGroupDetails = false => hide child zpoint table
                     else{
                         var trObj = document.getElementById("obj" + curObject.id);

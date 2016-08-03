@@ -1,7 +1,7 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q){
+.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
     var EMPTY_OBJECT = {};
     
     var MAP_PREF = "SUBSCR_MAP_PREF";
@@ -699,6 +699,43 @@ angular.module('portalNMC')
     //                     end Work with trees
     // *********************************************************************************************
     
+    var setToolTip = function(title, text, elDom, targetDom, delay){
+        var tDelay = 1;
+        if (!checkUndefinedNull(delay)){
+            tDelay = delay;
+        }
+//console.log(elDom);                
+//console.log(targetDom);    
+//console.log($(elDom));        
+//console.log($(targetDom));        
+        $timeout(function(){
+//console.log($(elDom));            
+            $(elDom).qtip({
+                suppress: false,
+                content:{
+                    text: text,
+                    title: title,
+                    button : true
+                },
+                show:{
+                    event: 'click'
+                },
+                style:{
+                    classes: 'qtip-nmc-indicator-tooltip',
+                    width: 1000
+                },
+                hide: {
+                    event: 'unfocus'
+                },
+                position:{
+                    my: 'top right',
+                    at: 'bottom right',
+                    target: $(targetDom)
+                }
+            });
+        }, tDelay);
+    };
+    
     function initSvc(){
         requestCanceler = $q.defer();
         httpOptions = {
@@ -740,6 +777,7 @@ angular.module('portalNMC')
         isSystemuser,
         setMonitorMapSettings,
         setObjectMapSettings,
+        setToolTip,
         sortItemsBy,
         sortNumericItemsBy,
         sortOrganizationsByName,
