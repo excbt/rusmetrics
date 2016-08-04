@@ -12,14 +12,12 @@ angular.module('portalNMC')
             scope: {
                 currentDevice: "=",
                 currentScheduler: "=",
+                showOkButton: "@",
                 btnOkClick: "&",
-                btnOkCaption: "@"
+                btnOkCaption: "@",
+                readOnly: "@"
             },
             controller: ['$scope', 'mainSvc', function($scope, mainSvc){               
-                
-                $scope.data = {};
-                $scope.data.currentObject = $scope.currentDevice;
-                $scope.data.currentScheduler = $scope.currentScheduler;
                 
                 $scope.checkHHmm = function(hhmmValue){
                     return mainSvc.checkHHmm(hhmmValue);
@@ -36,15 +34,19 @@ angular.module('portalNMC')
                 };
                 
                 $scope.checkAutoLoadingDisabled = function(){
-                    if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource))
+                    if (mainSvc.checkUndefinedNull($scope.currentDevice) || mainSvc.checkUndefinedNull($scope.currentDevice.activeDataSource) || mainSvc.checkUndefinedNull($scope.currentDevice.activeDataSource.subscrDataSource))
                         {return false;}
-                    return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType === 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable !== true;
+                    return $scope.currentDevice.activeDataSource.subscrDataSource.rawConnectionType === 'CLIENT' && $scope.currentDevice.activeDataSource.subscrDataSource.rawModemDialEnable !== true;
                 };
                 
+                $scope.isDisabled = function(){
+                    return $scope.readOnly;
+                }
+                
                 $('#scheduleEditorModal').on('shown.bs.modal', function(){
-                    console.log($scope.currentDevice);
-                    console.log($scope.currentScheduler);
-                    console.log($scope.data);
+//                    console.log($scope.currentDevice);
+//                    console.log($scope.currentScheduler);
+//                    console.log($scope.data);
                 });
                 
             }]

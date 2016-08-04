@@ -4,7 +4,7 @@
 		<div class="modal-header nmc-modal-header-scheduler">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="scheduleEditorLabel" class="nmc-h3 noMargin">
-				Расписание опроса прибора <span ng-if="data.currentObject.number!=null">- №: </span> {{data.currentObject.number}}
+				Расписание опроса прибора <span ng-if="currentDevice.number!=null">- №: </span> {{currentDevice.number}}
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -16,8 +16,8 @@
                                 <td colspan="2">
                                     <input type="checkbox" 
                                            class="nmc-checkbox-form" 
-                                           ng-model="data.currentScheduler.isLoadingAuto"
-                                           ng-disabled="checkAutoLoadingDisabled()"
+                                           ng-model="currentScheduler.isLoadingAuto"
+                                           ng-disabled="isDisabled() || checkAutoLoadingDisabled()"
                                            />
                                     <label class="nmc-form-label">
                                         Автоматический опрос
@@ -29,12 +29,12 @@
                                 <td class="col-xs-6 col-md-6"><label for="intervalShd" class="nmc-form-label">Интервал</label>
                                 </td>
                                 <td class="col-xs-6 col-md-6 nmc-text-align-left">
-                                    <span class="form-group" ng-class="{'has-error': data.currentScheduler.isLoadingAuto && !checkHHmm(data.currentScheduler.loadingInterval)}">
+                                    <span class="form-group" ng-class="{'has-error': currentScheduler.isLoadingAuto && !checkHHmm(currentScheduler.loadingInterval)}">
                                         <input id="intervalShd"
                                                class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                type="text" 
-                                               ng-disabled="!data.currentScheduler.isLoadingAuto"                                                
-                                               ng-model="data.currentScheduler.loadingInterval"/> чч:мм
+                                               ng-disabled="isDisabled() || !currentScheduler.isLoadingAuto"                                                
+                                               ng-model="currentScheduler.loadingInterval"/> чч:мм
 <!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
                                     </span>
                                 </td>
@@ -44,13 +44,13 @@
                                 </td>
                                 <td class="col-xs-6 col-md-6 nmc-text-align-left">
                                     <span class="form-group" 
-                                          ng-class="{'has-error':data.currentScheduler.isLoadingAuto && !checkPositiveNumberValue(data.currentScheduler.loadingAttempts)}">
+                                          ng-class="{'has-error':currentScheduler.isLoadingAuto && !checkPositiveNumberValue(currentScheduler.loadingAttempts)}">
                                         <input id = "inputAttemptsNumberShd" 
                                                class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
                                                type="text" 
-                                               ng-disabled="!data.currentScheduler.isLoadingAuto"
+                                               ng-disabled="isDisabled() || !currentScheduler.isLoadingAuto"
                                                data-inputmask="'alias':'numeric', 'greedy': false"
-                                               ng-model="data.currentScheduler.loadingAttempts"/>
+                                               ng-model="currentScheduler.loadingAttempts"/>
                                     </span>
                                 </td>
                             </tr>
@@ -60,12 +60,12 @@
                                     </label>                                    
                                 </td>
                                 <td class="col-xs-6 col-md-6 nmc-text-align-left">
-                                    <span class="form-group" ng-class="{'has-error':data.currentScheduler.isLoadingAuto && !checkHHmm(data.currentScheduler.loadingRetryInterval)}">
+                                    <span class="form-group" ng-class="{'has-error':currentScheduler.isLoadingAuto && !checkHHmm(currentScheduler.loadingRetryInterval)}">
                                         <input id="inputIntervalBetweenAttemptsShd"
                                                class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                type="text" 
-                                               ng-disabled="!data.currentScheduler.isLoadingAuto"                                                
-                                               ng-model="data.currentScheduler.loadingRetryInterval"/> чч:мм
+                                               ng-disabled="isDisabled() || !currentScheduler.isLoadingAuto"                                                
+                                               ng-model="currentScheduler.loadingRetryInterval"/> чч:мм
 <!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
                                     </span>
                                 </td>
@@ -73,15 +73,15 @@
                             <tr ng-if="checkNodataIdleTimeEnabled()">
                                 <td colspan="2" class="col-xs-12 col-md-12">
                                     <input type="checkbox" class="nmc-checkbox-form" 
-                                           ng-model="data.currentScheduler.nodataRequestEnabled"
-                                           ng-disabled="!data.currentScheduler.isLoadingAuto"/>
+                                           ng-model="currentScheduler.nodataRequestEnabled"
+                                           ng-disabled="isDisabled() || !currentScheduler.isLoadingAuto"/>
                                     <span class="nmc-form-label">
                                         Опрашивать только, если нет данных свыше 
                                     </span>
                                     <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
                                            type="text"
-                                           ng-disabled="!data.currentScheduler.isLoadingAuto"
-                                           ng-model="data.currentScheduler.nodataIdleTime"/>
+                                           ng-disabled="isDisabled() || !currentScheduler.isLoadingAuto"
+                                           ng-model="currentScheduler.nodataIdleTime"/>
                                     <span>часов</span>
                                 </td>                                
                             </tr> 
@@ -95,17 +95,18 @@
 
 					<div class="row">
                         <div class="col-xs-offset-3 col-xs-5 col-md-5">
-                            <input type="submit" 
+                            <input ng-show="showOkButton==='true'"
+                                   type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                   ng-disabled="data.currentScheduler.isSaving == true || data.currentScheduler.isLoadingAuto && !checkScheduler(data.currentScheduler)"
+                                   ng-disabled="currentScheduler.isSaving == true || currentScheduler.isLoadingAuto && !checkScheduler(currentScheduler)"
                                    ng-click = "btnOkClick()"
                                    ng-value = "btnOkCaption || 'Ok'"
 								/>
 <!--
 							<input type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                   ng-disabled="data.currentScheduler.isSaving == true || data.currentScheduler.isLoadingAuto && !checkScheduler(data.currentScheduler)"
-                                   ng-click = "saveScheduler(data.currentObject.contObjectId, data.currentObject, data.currentScheduler)                           
+                                   ng-disabled="currentScheduler.isSaving == true || currentScheduler.isLoadingAuto && !checkScheduler(currentScheduler)"
+                                   ng-click = "saveScheduler(currentDevice.contObjectId, currentDevice, currentScheduler)                           
 								value="Сохранить" />
 -->
 						</div>

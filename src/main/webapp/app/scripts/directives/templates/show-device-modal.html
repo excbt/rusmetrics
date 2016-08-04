@@ -339,7 +339,8 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input ng-show="showOkButton==='true'"
+                                   type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="btnClick()"
                                 ng-disabled="isDeviceDisabled(currentDevice);"
 								value="Сохранить" />
