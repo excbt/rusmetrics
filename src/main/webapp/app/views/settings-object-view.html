@@ -1565,6 +1565,16 @@
      >
 </div>
 
+<div nmc-show-device-modal
+     current-device="data.currentDevice"
+     device-sources="data.dataSourcesForCurDevice"
+     cont-objects="objects"
+     device-models="data.deviceModelsForCurDevice"
+     read-only="true"
+     show-ok-button="false"
+     >
+</div>
+
 <div id="editIndicatorModeModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editIndicatorModeLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
@@ -1612,3 +1622,10 @@
 		</div>
 	</div>
 </div>
+<!--
+data: "@",
+            readOnly: "@",
+            btnClick: "&",
+            btnOkCaption: "@",
+            showOkButton: "@"
+-->

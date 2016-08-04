@@ -79,6 +79,9 @@ angular.module('portalNMC')
                 $scope.objectsOnPage = [];
                 $scope.data = {};
                 $scope.data.currentGroupId = null; //current group id: use for group object filter
+                $scope.data.currentDevice = {};
+                $scope.data.dataSourcesForCurDevice = [];    
+                $scope.data.deviceModelsForCurDevice = [];
                 
                 function findObjectById(objId){
                     var obj = null;                 
@@ -717,6 +720,9 @@ angular.module('portalNMC')
                                     break;
                                 case "24h_abs":
                                     text += "Суточные интеграторы";
+                                    break;
+                                case "1mon_abs":
+                                    text += "Ежемесячные интеграторы";
                                     break;
                                 case "abs":
                                     text += "Интеграторы";
@@ -1585,6 +1591,17 @@ angular.module('portalNMC')
                 
                 $scope.selectedDevice = function (device) {
                     $scope.data.currentDevice = angular.copy(device);
+                    var curDevice = $scope.data.currentDevice;
+                    if (angular.isDefined(curDevice.contObjectInfo) && (curDevice.contObjectInfo != null)){
+                        curDevice.contObjectId = curDevice.contObjectInfo.contObjectId;
+                    };
+                    if (angular.isDefined(curDevice.activeDataSource) && (curDevice.activeDataSource != null)){
+                        curDevice.subscrDataSourceId = Number(curDevice.activeDataSource.subscrDataSource.id);
+                        curDevice.curDatasource = curDevice.activeDataSource.subscrDataSource;
+                        curDevice.subscrDataSourceAddr = curDevice.activeDataSource.subscrDataSourceAddr;
+                        curDevice.dataSourceTable1h = curDevice.activeDataSource.dataSourceTable1h;
+                        curDevice.dataSourceTable24h = curDevice.activeDataSource.dataSourceTable24h;
+                    };
                 }
                 
                 $scope.openDeviceProperties = function (objId, zpointId) {
@@ -1593,8 +1610,15 @@ angular.module('portalNMC')
                     if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
                         return false;
                     }
-                    $scope.selectedDevice($scope.currentZpoint.deviceObject)
-                    $('#deviceProps').modal();
+                    $scope.selectedDevice($scope.currentZpoint.deviceObject);
+//console.log($scope.data.currentDevice);
+                    var tmpDataSource = angular.copy($scope.data.currentDevice.activeDataSource.subscrDataSource);
+//                    tmpDataSource.id = tmpDataSource.subscrDataSourceId;
+                    $scope.data.dataSourcesForCurDevice = [tmpDataSource];
+                    $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
+//console.log($scope.data.dataSourcesForCurDevice);                    
+//console.log($scope.data.deviceModelsForCurDevice);                    
+                    $('#showDeviceModal').modal();
                 }
                 
                 $scope.isDirectDevice = function(objId, zpointId){

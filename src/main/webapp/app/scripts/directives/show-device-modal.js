@@ -2,21 +2,29 @@
 /*global angular */
 'use strict';
 angular.module('portalNMC')
-    .directive('showDeviceModal', function(){
+    .directive('nmcShowDeviceModal', function(){
     return {
         restrict: "AE",
-        replace: true,
+        replace: false,
         scope: {
-            data: "@",
+            currentDevice: "=",
+            deviceSources: "=",
+            deviceModels: "=",
+            contObjects: "=",
+            
             readOnly: "@",
             btnClick: "&",
             btnOkCaption: "@",
             showOkButton: "@"
         },
         templateUrl: 'scripts/directives/templates/show-device-modal.html',
-        controller: ['$scope', function($scope){
+        controller: ['$scope', 'mainSvc', function($scope, mainSvc){
             
             $scope.isDeviceDisabled = function(device){        
+                return $scope.readOnly || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
+            };
+            
+            $scope.isDeviceDataSourceHide = function (device) {
                 return device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
             };
             
@@ -25,36 +33,45 @@ angular.module('portalNMC')
             };
             
             $scope.changeDeviceModel = function(){
-                if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
-                    $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
+console.log("changeDeviceModel");                
+                if (!mainSvc.checkUndefinedNull($scope.currentDevice.deviceModelId)){
+                    $cookies.recentDeviceModelId = $scope.currentDevice.deviceModelId;
                 }
             };
             
             $scope.deviceDatasourceChange = function(){
-                $scope.data.currentObject.dataSourceTable1h = null;
-                $scope.data.currentObject.dataSourceTable24h = null;
-                $scope.data.currentObject.subscrDataSourceAddr = null;
+                $scope.currentDevice.dataSourceTable1h = null;
+                $scope.currentDevice.dataSourceTable24h = null;
+                $scope.currentDevice.subscrDataSourceAddr = null;
                 var curDataSource = null;
-                $scope.data.dataSources.some(function(source){
-                    if (source.id === $scope.data.currentObject.subscrDataSourceId){
+                $scope.deviceSources.some(function(source){
+                    if (source.id === $scope.currentDevice.subscrDataSourceId){
                         curDataSource = source;
                         return true;
                     };
                 });
-                $scope.data.currentObject.curDatasource = curDataSource;
+                $scope.currentDevice.curDatasource = curDataSource;
 
-                if (!mainSvc.checkUndefinedNull($scope.data.currentObject.subscrDataSourceId)){
-                    $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
+                if (!mainSvc.checkUndefinedNull($scope.currentDevice.subscrDataSourceId)){
+                    $cookies.recentDataSourceId = $scope.currentDevice.subscrDataSourceId;
                 }
             };
             
             $scope.isAvailableConPropertiesTab = function(){
-                if (mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource)){
+//console.log($scope.currentDevice);                
+                if (mainSvc.checkUndefinedNull($scope.currentDevice) || mainSvc.checkUndefinedNull($scope.currentDevice.curDatasource)){
                     return false;
                 };
-                return $scope.data.currentObject.curDatasource.dataSourceType.isRaw === true || $scope.data.currentObject.curDatasource.dataSourceType.isDbTablePair === true || 
-                    $scope.data.currentObject.exSystemKeyname === 'VZLET';
+                return $scope.currentDevice.curDatasource.dataSourceType.isRaw === true || $scope.currentDevice.curDatasource.dataSourceType.isDbTablePair === true || 
+                    $scope.currentDevice.exSystemKeyname === 'VZLET';
             };
+            
+            $('#showDeviceModal').on('shown.bs.modal', function(){
+//                console.log($scope.currentDevice);
+//                console.log($scope.deviceSources);
+//                
+//                console.log($scope.deviceModels);
+            });
             
         }]
     }
