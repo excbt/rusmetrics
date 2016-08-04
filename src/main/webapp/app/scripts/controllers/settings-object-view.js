@@ -2351,12 +2351,24 @@ console.log($scope.data.indicatorModes);
                 }
                 
                 $scope.saveIndicatorPreferencesAs = function(mode){
+                    if (mainSvc.checkUndefinedNull(mode)){
+                        console.log("Saving mode is undefined or null!");
+                        return false;
+                    }
                     $scope.data.selectedIndicatorModeSaveAs = angular.copy(mode);
                     $scope.data.selectedIndicatorModeSaveAs.keyname = "INDICATOR_MODE_" + (new Date).getTime();
                     if (mainSvc.checkUndefinedNull($scope.data.selectedIndicatorModeSaveAs)){
                         console.log("$scope.data.selectedIndicatorModeSaveAs is undefined or null!");
                         return false;
                     }
+                    
+                    $scope.data.indicatorModes.some(function(imode){
+                        if (imode.caption === mode.caption){
+                            notificationFactory.errorInfo("Ошибка", "Наименование представления должно быть уникальным. Измените наименование и повторите попытку.");
+                            checkFlag = false;
+                        }
+                    });
+                    
                     $scope.saveIndicatorPreferences($scope.data.selectedIndicatorModeSaveAs);
                 }
                 
@@ -2377,13 +2389,7 @@ console.log($scope.data.indicatorModes);
                         if (!(mode.caption > '')){
                             notificationFactory.errorInfo("Ошибка", "Не задано наименование для представления!");
                             checkFlag = false;
-                        }
-                        $scope.data.indicatorModes.some(function(imode){
-                            if (imode.caption === mode.caption){
-                                notificationFactory.errorInfo("Ошибка", "Наименование представления должно быть уникальным. Измените наименование и повторите попытку.");
-                                checkFlag = false;
-                            }
-                        });
+                        }                        
                         
                         if (checkFlag === false){
                             return false;
@@ -2413,6 +2419,7 @@ console.log($scope.data.indicatorModes);
                             }else{
                                 $scope.data.indicatorModes.push(receivedMode[0]);
                             }
+                            $scope.messages.modeHeader = receivedMode[0].caption;
                         }else{
                             $scope.data.indicatorModes = performIndicatorModes(resp.data);
                         }
