@@ -690,6 +690,24 @@ angular.module('portalNMC')
         var loadDefaultTreeSetting = function(){
             return $http.get(defaultTreeUrl);
         };
+
+// **************************************************************
+//      Device methods
+// **************************************************************
+        function isDirectDevice (device){
+            var result = false;
+            if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
+                if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
+                    if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
+                        result = true;
+                    };
+                };
+            };
+            return result;
+        };
+// **************************************************************
+//     end Device methods
+// **************************************************************                 
         
         //service initialization
         var initSvc = function(){
@@ -755,6 +773,7 @@ angular.module('portalNMC')
             getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
+            isDirectDevice,
             loadDefaultTreeSetting,
             loadFreeObjectsByTree,
             loadObjectsByTreeNode,

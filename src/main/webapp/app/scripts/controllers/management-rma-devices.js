@@ -417,15 +417,7 @@ angular.module('portalNMC')
     };
     
     $scope.isDirectDevice = function(device){
-        var result = false;
-        if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
-            if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
-                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
-                    result = true;
-                };
-            };
-        };
-        return result;
+        return objectSvc.isDirectDevice(device);
     };
     
     //get device meta data and show it

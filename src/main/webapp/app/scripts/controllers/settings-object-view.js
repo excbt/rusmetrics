@@ -10,6 +10,8 @@ angular.module('portalNMC')
                 var USER_VCOOKIE_URL = "../api/subscr/vcookie/user";
                 var OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES";
                 
+                $scope.crudTableName = objectSvc.getObjectsUrl();
+                
                     //messages for user
                 $scope.messages = {};
                 $scope.messages.setSelectedInWinterMode = "Перевести выделенные объекты на зимний режим";
@@ -243,8 +245,9 @@ angular.module('portalNMC')
                     {"name":"zpointName", "header" : "Наименование точки учета", "class":"col-xs-3 col-md-3"},
                     {"name":"zpointModel", "header" : "Модель прибора учета", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointNumber", "header" : "Серийный номер прибора учета", "class":"col-xs-2 col-md-2"},
-                    {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2 col-md-2"},
-                    {"name":"zpointTimeOffsetString", "header" : "Расхождение времени", "class":"col-xs-2 col-md-2"}
+                    {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2 nmc-width-12-per-cent"},
+                    {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-1 col-md-1"},
+                    {"name":"zpointTimeOffsetString", "header" : "Расхождение времени", "class":"col-xs-1 col-md-1 nmc-width-10-per-cent"}
                 ];//angular.fromJson($attrs.zpointcolumns);
 //                {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2"},
                 // Эталонный интервал
@@ -305,7 +308,7 @@ angular.module('portalNMC')
                             "<div class=\"btn-group\">" +
                             "<i title=\"Действия над точкой учета\" type=\"button\" class=\"btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" style=\"font-size: .9em;\"></i>" +
                             "<ul class=\"dropdown-menu\">" +                                                                    
-                                    "<li><a ng-click=\"getZpointSettingsEx(" + object.id + "," + zpoint.id + ")\"" +
+                                    "<li><a ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
                                             "data-target=\"#showZpointOptionModal\"" +
                                             "data-toggle=\"modal\"" +
                                             "data-placement=\"bottom\"" +
@@ -327,7 +330,7 @@ angular.module('portalNMC')
                                         "title=\"Метаданные прибора\">" +
                                         "Метаданные прибора" +
                                     "</a></li>" +
-                                    "<li><a ng-click=\"openSchedule(" + object.id + "," + zpoint.id + ")\"" +
+                                    "<li ng-if='isDirectDevice(" + object.id + "," + zpoint.id + ")'><a ng-click=\"openSchedule(" + object.id + "," + zpoint.id + ")\"" +
                                         "title=\"Расписание опроса\">" +
                                         "Расписание опроса" +
                                     "</a></li>" +
@@ -871,13 +874,12 @@ angular.module('portalNMC')
                     };
                     
                 };
-
                 
                 $scope.dateFormat = function(millisec){
                     var result ="";
                     var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone * 3600.0 * 1000.0);
                     var tmpDate = (new Date(millisec + serverTimeZoneDifferent));            
-                    result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
+                    result = (tmpDate === null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
                     return result;//
                 };
                 
@@ -1176,7 +1178,7 @@ angular.module('portalNMC')
                     var winterSet = {};
                     var summerSet = {};
                                         //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
-                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
+                    var table = objectSvc.getObjectsUrl() + "/" + $scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
                     crudGridDataFactory(table).query(function (data) {
                         for(var i = 0; i<data.length;i++){
                                                     
@@ -1501,8 +1503,9 @@ angular.module('portalNMC')
                     })
                     .then(successCallbackOnSetMode, errorCallback);
                 };
-                
-                //Work with devices
+// ******************************************************************                
+//              Work with devices
+// ******************************************************************                
                     //get the list of the systems for meta data editor
                 $scope.getVzletSystemList = function(){
                     var tmpSystemList = objectSvc.getVzletSystemList();
@@ -1534,9 +1537,7 @@ angular.module('portalNMC')
                             });
                             obj.devices = tmpArr;//response.data; 
                         },
-                        function(error){
-                            notificationFactory.errorInfo(error.statusText,error.description);
-                        }
+                        errorCallback
                     );
                 };
                 
@@ -1581,6 +1582,34 @@ angular.module('portalNMC')
                         }
                     );
                 };
+                
+                $scope.selectedDevice = function (device) {
+                    $scope.data.currentDevice = angular.copy(device);
+                }
+                
+                $scope.openDeviceProperties = function (objId, zpointId) {
+                    $scope.selectedZpoint(objId, zpointId);
+//console.log($scope.currentZpoint);                    
+                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
+                        return false;
+                    }
+                    $scope.selectedDevice($scope.currentZpoint.deviceObject)
+                    $('#deviceProps').modal();
+                }
+                
+                $scope.isDirectDevice = function(objId, zpointId){
+                    $scope.selectedZpoint(objId, zpointId);
+//console.log($scope.currentZpoint);                    
+                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
+                        return false;
+                    }
+                    var curDevice = $scope.currentZpoint.deviceObject;
+                    return objectSvc.isDirectDevice(curDevice);
+                };
+// **************************************************************************
+//                  end Work with devices
+// **************************************************************************                
+                
                 
                 $scope.invokeHelp = function(){
                     alert('This is SPRAVKA!!!111');
@@ -2035,16 +2064,12 @@ angular.module('portalNMC')
                     $scope.getDeviceSchedulerSettings(objId, curDevice);
                 }
                 
-                $scope.selectedDevice = function (device) {
-                    $scope.data.currentDevice = angular.copy(device);
-                }
-                
                     //get device scheduler
                 $scope.getDeviceSchedulerSettings = function(objId, device){
                     objectSvc.getDeviceSchedulerSettings(objId, device.id).then(
                         function(resp){
                             $scope.data.currentScheduler = resp.data;
-console.log($scope.data.currentScheduler);                            
+//console.log($scope.data.currentScheduler);                            
                             $scope.selectedDevice(device);
                             $('#scheduleEditorModal').modal();
                         },
