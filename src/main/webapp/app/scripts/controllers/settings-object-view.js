@@ -693,7 +693,7 @@ angular.module('portalNMC')
                         }
                     });
                     $scope.currentZpoint = curZpoint;
-//console.log($scope.currentObject);                    
+//console.log($scope.currentZpoint);                    
                 };
                 
                 function prepareTimeDetailLastDate (tdld) {                   
@@ -1129,6 +1129,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
+//console.log("setIndicatorsParams");                    
                     $scope.selectedZpoint(objectId, zpointId);
                     $cookies.contZPoint = $scope.currentZpoint.id;
                     $cookies.contObject=$scope.currentObject.id;
@@ -1149,6 +1150,7 @@ angular.module('portalNMC')
                 //Свойства точки учета
                 $scope.zpointSettings = {};
                 $scope.getZpointSettings = function(objId, zpointId){
+//console.log("getZpointSettings");                    
                     $scope.selectedZpoint(objId, zpointId);          
 //console.log($scope.currentZpoint);                    
                     var object = $scope.currentZpoint;
@@ -1605,6 +1607,7 @@ angular.module('portalNMC')
                 }
                 
                 $scope.openDeviceProperties = function (objId, zpointId) {
+//console.log("openDeviceProperties");                    
                     $scope.selectedZpoint(objId, zpointId);
 //console.log($scope.currentZpoint);                    
                     if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
@@ -1622,12 +1625,21 @@ angular.module('portalNMC')
                 }
                 
                 $scope.isDirectDevice = function(objId, zpointId){
-                    $scope.selectedZpoint(objId, zpointId);
+//console.log("isDirectDevice");
+                    $scope.selectedObject(objId);
+                    var curZpoint = null;
+                    $scope.currentObject.zpoints.some(function(element){
+                        if (element.id === zpointId){
+                            curZpoint = angular.copy(element);
+                            return true;
+                        }
+                    });
+                    
 //console.log($scope.currentZpoint);                    
-                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
+                    if (mainSvc.checkUndefinedNull(curZpoint)){
                         return false;
                     }
-                    var curDevice = $scope.currentZpoint.deviceObject;
+                    var curDevice = curZpoint.deviceObject;
                     return objectSvc.isDirectDevice(curDevice);
                 };
 // **************************************************************************
@@ -2082,6 +2094,7 @@ angular.module('portalNMC')
 //                  Device scheduler
 // ********************************************************************************************************
                 $scope.openSchedule = function (objId, zpointId) {
+console.log("openSchedule");                    
                     $scope.selectedZpoint(objId, zpointId);
 //console.log($scope.currentZpoint);                    
                     var curDevice = $scope.currentZpoint.deviceObject;
@@ -2478,7 +2491,51 @@ console.log($scope.data.indicatorModes);
                 
 // ********************************************************************************************************
 //                  end Settings view of indicator
-// ********************************************************************************************************                
+// ********************************************************************************************************
+                
+// *****************************************************************************************
+//                Zpoint metadata
+// ******************************************************************************************                                    
+                $scope.openZpointMetadata = function(coId, zpId){
+//console.log("openZpointMetadata");                    
+                    $scope.selectedZpoint(coId, zpId);
+                    //get srcProp
+                    objectSvc.getZpointMetaSrcProp(coId, zpId).then(
+                        function(resp){
+                            
+                            $scope.currentZpoint.metaData = {};
+                            $scope.currentZpoint.metaData.srcProp = resp.data;
+                            $scope.currentZpoint.metaData.srcProp.push({columnName: ""});
+//console.log(angular.copy($scope.currentZpoint));                            
+                            objectSvc.getZpointMetaDestProp(coId, zpId).then(
+                                function(resp){
+//console.log(angular.copy($scope.currentZpoint));
+//console.log(resp.data);                                    
+                                    $scope.currentZpoint.metaData.destProp = resp.data;                                    
+                                    objectSvc.getZpointMetaMeasureUnits(coId, zpId);
+                                }, errorCallback                                
+                            );
+                        }, errorCallback
+                    );
+                };
+                
+                $scope.$on('objectSvc:zpointMetadataMeasuresLoaded', function(){
+                    $scope.currentZpoint.metaData.measures = objectSvc.getZpointMetadataMeasures();
+//console.log($scope.currentObject);                    
+                    objectSvc.getZpointMetadata($scope.currentObject.id, $scope.currentZpoint.id).then(
+                        function(resp){                            
+                            mainSvc.sortItemsBy(resp.data, "destProp");
+                            $scope.currentZpoint.metaData.metaData = resp.data;
+                            $('#metaDataEditorModal').modal();
+//console.log($scope.currentZpoint);                                            
+                        }, errorCallback
+                    );
+                });
+                
+// *****************************************************************************************
+//                end Zpoint metadata
+// ******************************************************************************************                 
+                
                 var initCtrl = function(){
                                         //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){

@@ -16,7 +16,7 @@ angular.module('portalNMC')
         var urlSubscr = urlApi + '/subscr';
         var urlRma = urlApi + '/rma';
         var urlDatasources = urlRma + '/dataSources';
-        var crudTableName = urlSubscr + '/contObjects';
+        var urlSubscrContObjects = urlSubscr + '/contObjects';
         var urlRmaContObjects = urlRma + '/contObjects';                 
         var urlRefRange = urlSubscr + '/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
@@ -65,7 +65,18 @@ angular.module('portalNMC')
         function getRequestCanceler () {
             return requestCanceler;
         }
-        //////////////////////////////         
+        //////////////////////////////  
+
+                //check user: system? - true/false
+        var isSystemuser = function(){
+            var result = false;
+            var userInfo = $rootScope.userInfo;
+            if (angular.isDefined(userInfo)){
+                result = userInfo._system;
+            };
+            return result;
+        };         
+                 
         var getCurrentObject = function(){
             return currentObject;
         };
@@ -97,7 +108,7 @@ angular.module('portalNMC')
         };
         
         var getObjectsUrl = function(){
-            return crudTableName;
+            return urlSubscrContObjects;
         };
                  
         var getRmaObjectsUrl = function(){
@@ -183,7 +194,7 @@ angular.module('portalNMC')
         var zPointsByObject = [];
         var getZpointsDataByObject = function(obj, mode){ 
             obj.zpoints = [];
-            var table = crudTableName + "/" + obj.id + "/contZPoints" + mode;//Ex";
+            var table = urlSubscrContObjects + "/" + obj.id + "/contZPoints" + mode;//Ex";
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
@@ -191,7 +202,7 @@ angular.module('portalNMC')
         };         
         
         var getDevicesByObject = function(obj){
-            var url = crudTableName + "/" + obj.id + urlDeviceObjects;
+            var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects;
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
@@ -243,7 +254,7 @@ angular.module('portalNMC')
         };
                  
         var getDeviceMetaDataVzlet = function(obj, device){                     
-            var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
+            var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
@@ -257,7 +268,7 @@ angular.module('portalNMC')
             return $http.get(url, httpOptions);
         };
         var putDeviceMetaDataVzlet = function(device){                     
-            var url = crudTableName + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
+            var url = urlSubscrContObjects + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             var result = $http.put(url, device.metaData);        
             return result;
         };
@@ -341,7 +352,7 @@ angular.module('portalNMC')
 
         //get objects
         var getObjectsData = function(contGroupId){                    
-            var url = crudTableName;
+            var url = urlSubscrContObjects;
             if (!checkUndefinedNull(contGroupId)){
                 url += "?contGroupId=" + contGroupId;
             }
@@ -367,7 +378,7 @@ angular.module('portalNMC')
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
-            return $http.get(crudTableName + "/" +objId, httpOptions);
+            return $http.get(urlSubscrContObjects + "/" +objId, httpOptions);
         };
         var getRmaObject = function (objId) {
             if (angular.isUndefined(objId) || (objId === null)) {return "Object id is null or undefined";}
@@ -567,21 +578,33 @@ angular.module('portalNMC')
 //zpoint metadata
 //********************************************************************************************************
         var getZpointMetaSrcProp = function(objId, zpId){
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
+            var url = urlSubscrContObjects;
+            if (isSystemuser()){
+                url = urlRmaContObjects;
+            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
             return $http.get(url, httpOptions);
         };                 
         var getZpointMetaDestProp = function(objId, zpId){
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
+            var url = urlSubscrContObjects;
+            if (isSystemuser()){
+                url = urlRmaContObjects;
+            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
             return $http.get(url, httpOptions);
         };        
         var getZpointMetadata = function(objId, zpId){
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
+            var url = urlSubscrContObjects;
+            if (isSystemuser()){
+                url = urlRmaContObjects;
+            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
@@ -589,7 +612,11 @@ angular.module('portalNMC')
         };
         var getZpointMetaMeasureUnits = function(objId, zpId){
 //console.log("getZpointMetaMeasureUnits");            
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
+            var url = urlSubscrContObjects;
+            if (isSystemuser()){
+                url = urlRmaContObjects;
+            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
