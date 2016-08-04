@@ -82,6 +82,8 @@ angular.module('portalNMC')
                 $scope.data.currentDevice = {};
                 $scope.data.dataSourcesForCurDevice = [];    
                 $scope.data.deviceModelsForCurDevice = [];
+                $scope.data.currentDatasource = {};
+                $scope.data.datasourceTypesForDatasource = {};
                 
                 function findObjectById(objId){
                     var obj = null;                 
@@ -337,7 +339,7 @@ angular.module('portalNMC')
                                         "title=\"Расписание опроса\">" +
                                         "Расписание опроса" +
                                     "</a></li>" +
-                                    "<li><a ng-click=\"openDataSource(" + object.id + "," + zpoint.id + ")\"" +
+                                    "<li><a ng-click=\"openDatasource(" + object.id + "," + zpoint.id + ")\"" +
                                         "title=\"Источник данных\">" +
                                         "Источник данных" +
                                     "</a></li>";                            
@@ -2534,7 +2536,32 @@ console.log($scope.data.indicatorModes);
                 
 // *****************************************************************************************
 //                end Zpoint metadata
-// ******************************************************************************************                 
+// ****************************************************************************************** 
+
+// *****************************************************************************************
+//                Zpoint data source
+// ******************************************************************************************                  
+                $scope.openDatasource = function(coId, zpId){
+//console.log("openZpointMetadata");                    
+                    $scope.selectedZpoint(coId, zpId);
+                    
+//                    current-datasource="data.currentDatasource"
+//     datasource-types="data.datasourceTypesForDatasource"
+                    $scope.data.currentDatasource = angular.copy($scope.currentZpoint.deviceObject.activeDataSource.subscrDataSource);
+                    if (mainSvc.checkUndefinedNull($scope.data.currentDatasource.rawModemIdentity) &&
+                        !mainSvc.checkUndefinedNull($scope.data.currentDatasource.rawModemModelId)){
+                        var modemModel = findModemIdentity($scope.data.currentDatasource.rawModemModelId);
+                        $scope.data.currentDatasource.rawModemIdentity = modemModel.rawModemModelIdentity;
+                        $scope.data.currentDatasource.rawModemDialupAvailable = modemModel.isDialup;
+                    }
+                    var tmpDatasourceTypes = [angular.copy($scope.data.currentDatasource.dataSourceType)];                    
+                    $scope.data.datasourceTypesForDatasource = tmpDatasourceTypes;
+                    $('#showDatasourceModal').modal();
+                    
+                }
+// *****************************************************************************************
+//             end   Zpoint data source
+// ******************************************************************************************                  
                 
                 var initCtrl = function(){
                                         //if tree is off
