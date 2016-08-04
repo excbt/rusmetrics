@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,6 +24,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -33,6 +36,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.ImmutableSet;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -41,10 +46,12 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
@@ -59,11 +66,15 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
  *
  */
 @Service
-public class ContServiceDataHWaterService implements SecuredRoles {
+public class ContServiceDataHWaterService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterService.class);
 
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
+
+	private static final Set<String> HWATER_SERVICE_TYPE_SET = ImmutableSet.of(
+			ContServiceTypeKey.CW.getKeyname(), ContServiceTypeKey.HW.getKeyname(),
+			ContServiceTypeKey.HEAT.getKeyname());
 
 	@Autowired
 	private ContServiceDataHWaterRepository contServiceDataHWaterRepository;
@@ -619,31 +630,39 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 	}
 
+	/**
+	 * 
+	 * @param contZPointIds
+	 * @return
+	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMap(List<Long> contZPointIds) {
-		checkArgument(contZPointIds != null && contZPointIds.size() > 0);
+		checkArgument(contZPointIds != null);
 
-		HashMap<Long, List<TimeDetailLastDate>> resultMap = new HashMap<>();
-
-		List<Object[]> qryResultList = contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZPointIds);
-
-		for (Object[] row : qryResultList) {
-
-			Long id = DBRowUtils.asLong(row[0]);
-			String timeDetail = DBRowUtils.asString(row[1]);
-			Timestamp lastDate = DBRowUtils.asTimestamp(row[2]);
-
-			List<TimeDetailLastDate> list = resultMap.get(id);
-			if (list == null) {
-				list = new ArrayList<>();
-				resultMap.put(id, list);
-			}
-
-			TimeDetailLastDate item = new TimeDetailLastDate(timeDetail, lastDate);
-			list.add(item);
-		}
+		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
+				? ContServiceDataUtils.collectContZPointTimeDetailTypes(contServiceDataHWaterRepository
+						.selectTimeDetailLastDataByZPoint(contZPointIds))
+				: new HashMap<>();
 
 		return resultMap;
+
+	}
+
+	/**
+	 * 
+	 * @param idServiceTypePairs
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMapByPair(
+			List<Pair<String, Long>> idServiceTypePairs) {
+		checkArgument(idServiceTypePairs != null);
+
+		List<Long> contZPointIds = idServiceTypePairs.stream()
+				.filter(i -> HWATER_SERVICE_TYPE_SET.contains(i.getLeft())).map(i -> i.getRight())
+				.collect(Collectors.toList());
+
+		return selectTimeDetailLastDateMap(contZPointIds);
 
 	}
 

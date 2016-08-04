@@ -4,7 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableMap;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -24,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
+import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
@@ -50,6 +53,9 @@ public class SubscrContZPointController extends SubscrApiController {
 
 	@Autowired
 	protected ContServiceDataHWaterService contServiceDataHWaterService;
+
+	@Autowired
+	protected ContServiceDataElService contServiceDataElService;
 
 	/**
 	 * 
@@ -206,15 +212,19 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId) {
 
-		List<Long> selectIds = contZPointService.selectContZPointIds(contObjectId);
+		List<Pair<String, Long>> idPairList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
 
-		if (selectIds == null || selectIds.size() == 0) {
+		if (idPairList == null || idPairList.size() == 0) {
 			return responseOK();
 		}
 
-		HashMap<Long, List<TimeDetailLastDate>> result = contServiceDataHWaterService
-				.selectTimeDetailLastDateMap(selectIds);
-		return responseOK(result);
+		HashMap<Long, List<TimeDetailLastDate>> resultHWater = contServiceDataHWaterService
+				.selectTimeDetailLastDateMapByPair(idPairList);
+
+		HashMap<Long, List<TimeDetailLastDate>> resultEl = contServiceDataElService
+				.selectTimeDetailLastDateMapByPair(idPairList);
+
+		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
 	}
 
 	/**
@@ -228,11 +238,19 @@ public class SubscrContZPointController extends SubscrApiController {
 	public ResponseEntity<?> getContZPointTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
-		List<Long> selectIds = Lists.newArrayList(contZPointId);
+		List<Pair<String, Long>> idPairAllList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
 
-		HashMap<Long, List<TimeDetailLastDate>> result = contServiceDataHWaterService
-				.selectTimeDetailLastDateMap(selectIds);
-		return responseOK(result.get(contZPointId));
+		List<Pair<String, Long>> idPairList = idPairAllList.stream().filter(i -> i.getRight().equals(contZPointId))
+				.collect(Collectors.toList());
+
+		HashMap<Long, List<TimeDetailLastDate>> resultHWater = contServiceDataHWaterService
+				.selectTimeDetailLastDateMapByPair(idPairList);
+
+		HashMap<Long, List<TimeDetailLastDate>> resultEl = contServiceDataElService
+				.selectTimeDetailLastDateMapByPair(idPairList);
+
+		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
+
 	}
 
 }

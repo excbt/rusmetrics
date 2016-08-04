@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,7 @@ import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
@@ -375,6 +379,23 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectContZPointIds(long contObjectId) {
 		return contZPointRepository.selectContZPointIds(contObjectId);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Pair<String, Long>> selectContZPointServiceTypeIds(long contObjectId) {
+
+		List<Object[]> qryResult = contZPointRepository.selectContZPointServiceTypeIds(contObjectId);
+
+		List<Pair<String, Long>> resultPairList = qryResult.stream()
+				.map(i -> new ImmutablePair<>(DBRowUtils.asString(i[0]), DBRowUtils.asLong(i[1])))
+				.collect(Collectors.toList());
+
+		return resultPairList;
 	}
 
 	/**

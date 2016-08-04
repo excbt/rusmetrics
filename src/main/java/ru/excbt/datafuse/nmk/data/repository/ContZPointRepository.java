@@ -33,6 +33,14 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 
 	/**
 	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Query("SELECT zp.contServiceTypeKeyname, zp.id FROM ContZPoint zp WHERE zp.contObject.id = :contObjectId ")
+	public List<Object[]> selectContZPointServiceTypeIds(@Param("contObjectId") long contObjectId);
+
+	/**
+	 * 
 	 * @param contZPointId
 	 * @return
 	 */
