@@ -233,7 +233,7 @@ angular.module('portalNMC')
                  
         var getDeviceSchedulerSettings = function(objId, devId){
 //            /contObjects/%d/deviceObjects/%d/loadingSettings
-            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
+            var url = urlSubscrContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
             if (isCancelParamsIncorrect() === true){
                 return null;
             }
