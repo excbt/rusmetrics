@@ -579,9 +579,9 @@ angular.module('portalNMC')
 //********************************************************************************************************
         var getZpointMetaSrcProp = function(objId, zpId){
             var url = urlSubscrContObjects;
-            if (isSystemuser()){
-                url = urlRmaContObjects;
-            }
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
             if (isCancelParamsIncorrect() === true){
                 return null;
@@ -590,9 +590,9 @@ angular.module('portalNMC')
         };                 
         var getZpointMetaDestProp = function(objId, zpId){
             var url = urlSubscrContObjects;
-            if (isSystemuser()){
-                url = urlRmaContObjects;
-            }
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
             if (isCancelParamsIncorrect() === true){
                 return null;
@@ -601,9 +601,9 @@ angular.module('portalNMC')
         };        
         var getZpointMetadata = function(objId, zpId){
             var url = urlSubscrContObjects;
-            if (isSystemuser()){
-                url = urlRmaContObjects;
-            }
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
             if (isCancelParamsIncorrect() === true){
                 return null;
@@ -613,9 +613,9 @@ angular.module('portalNMC')
         var getZpointMetaMeasureUnits = function(objId, zpId){
 //console.log("getZpointMetaMeasureUnits");            
             var url = urlSubscrContObjects;
-            if (isSystemuser()){
-                url = urlRmaContObjects;
-            }
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
             if (isCancelParamsIncorrect() === true){
                 return null;
