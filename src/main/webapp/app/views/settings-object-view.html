@@ -178,10 +178,38 @@
                                               <ul class="dropdown-menu">
                                                 <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
                                                 <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li>
-                                                <li><a href=""                                                        
-                                                       ng-click="initIndicatorColumnsPref()">{{messages.setIndicatorInterface}}
+                                                <li><a href=""
+                                                       ng-click="initIndicatorPreferences()"
+                                                       data-target="#columnSettingsModal"
+                                                       data-toggle="modal"
+                                                       >{{messages.setIndicatorInterface}}
                                                 </a>
-                                                </li> 
+<!--                                                    ng-click="initIndicatorColumnsPref()"-->
+                                                </li>
+<!--                                                <li><a href="" ng-click="">{{messages.setIndicatorInterfaceForObjects}}</a></li>-->
+                                                <li ng-if="data.indicatorModes && data.indicatorModes.length > 0" 
+                                                    class="menu-item dropdown dropdown-submenu" role="presentation">
+                                                    <a href="" 
+                                                       class="" 
+                                                       data-toggle="dropdown" 
+                                                       aria-haspopup="true" 
+                                                       aria-expanded="false"  
+                                                       >
+                                                        {{messages.setIndicatorInterfaceForObjects}}
+                                                    </a>
+                                                    <ul class="dropdown-menu nmc-dropdown-menu">
+                                                        <li class="menu-item dropdown" 
+                                                            ng-repeat="mode in data.indicatorModes track by $index" 
+                                                            >                                            
+                                                            <a ng-click="setDefaultObjectIndicatorModeForObjects(mode)">
+                                                                <span title="Представление" 
+                                                                      ng-click="">
+                                                                    <span ng-bind="mode.caption"></span>
+                                                                </span>
+                                                            </a>
+                                                        </li>                                        
+                                                    </ul>                                    
+                                                </li>
                                               </ul>
                                             </div>
                                         </th>
@@ -220,9 +248,13 @@
                                               <ul class="dropdown-menu">
                                                 <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
                                                 <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> 
-                                                <li><a href=""                                                        
-                                                       ng-click="initIndicatorColumnsPref()">{{messages.setIndicatorInterface}}
+                                                <li><a href=""
+                                                       ng-click="initIndicatorPreferences()"
+                                                       data-target="#columnSettingsModal"
+                                                       data-toggle="modal"
+                                                       >{{messages.setIndicatorInterface}}
                                                     </a>
+<!--                                                    ng-click="initIndicatorColumnsPref()"-->
                                                 </li>                                                   
                                               </ul>
                                             </div>

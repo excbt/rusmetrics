@@ -20,6 +20,7 @@ angular.module('portalNMC')
                 $scope.messages.setAllInSummerMode = "Перевести все объекты на летний режим";
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
+                $scope.messages.setIndicatorInterfaceForObjects = "Выбрать представление для просмотра показаний";
                 
                 $scope.messages.noObjects = "Объектов нет.";
                 
@@ -27,7 +28,7 @@ angular.module('portalNMC')
                 
                 $scope.messages.modeHeader = "Выберете представление";
                 
-                $scope.messages.setIndicatorInterface = "Настройка интефейса просмотра показаний";
+                $scope.messages.setIndicatorInterface = "Настройка представлений для просмотра показаний";
                 
                     //object settings
                 $scope.objectCtrlSettings = {};
@@ -2152,7 +2153,7 @@ console.log("openSchedule");
                 $scope.data.indicatorModes = [];
                 
                 function performIndicatorModes (inputData) {
-console.log(inputData);                    
+//console.log(inputData);                    
                     var result = [];
                     if (angular.isArray(inputData) && inputData.length > 0){                                    
                         inputData.forEach(function(elem){
@@ -2404,7 +2405,7 @@ console.log($scope.data.indicatorModes);
                             console.log("Response data = " + resp.data);
                             return false;
                         }
-                        console.log(resp.data);
+//    console.log(resp.data);
                         if (resp.data.length === 1){
                             var receivedMode = performIndicatorModes(resp.data);
                             var changeIndex = -1;
@@ -2463,6 +2464,46 @@ console.log($scope.data.indicatorModes);
                                 return true;
                             }
                         });
+                    }, errorCallback);
+                }
+                
+                $scope.setDefaultObjectIndicatorModeForObjects = function (mode) {
+                    //reset indicator modes flags to false
+//                    $scope.data.indicatorModes.forEach(function(imode){imode.isCurrentMode = false});
+                    
+                    if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(mode)){
+                        console.log("Request required params is null!");
+                        return false;
+                    }
+                    
+                                        //get the object ids array
+                    var requestBody = [];
+                    if ($scope.objectCtrlSettings.allSelected === true){
+                        requestBody = $scope.objects.map(function(el){
+                            var elem = {};
+                            elem.vcMode = OBJECT_INDICATOR_PREFERENCES_VC_MODE;
+                            elem.vcKey = "OIP_" + el.id;
+                            elem.vcValue = JSON.stringify(mode.keyname);
+                            return elem;
+                        });
+                    }else{
+                        $scope.objectsOnPage.forEach(function(el){
+                            if(el.selected === true){                                
+                                requestBody.push({
+                                    vcMode: OBJECT_INDICATOR_PREFERENCES_VC_MODE,
+                                    vcKey:  "OIP_" + el.id,
+                                    vcValue: JSON.stringify(mode.keyname)
+                                });
+                            };
+                        });
+                    };
+                    if (requestBody.length === 0){
+                        return false;
+                    }
+                    
+                    var url = USER_VCOOKIE_URL + "/list";
+                    $http.put(url, requestBody).then(function(resp){
+                        notificationFactory.success();
                     }, errorCallback);
                 }
                 
