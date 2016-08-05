@@ -16,20 +16,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.collect.ImmutableMap;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
+import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
+import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointMetadataService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
+import ru.excbt.datafuse.nmk.data.service.MeasureUnitService;
+import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -56,6 +64,15 @@ public class SubscrContZPointController extends SubscrApiController {
 
 	@Autowired
 	protected ContServiceDataElService contServiceDataElService;
+
+	@Autowired
+	protected ContZPointMetadataService contZPointMetadataService;
+
+	@Autowired
+	protected MeasureUnitService measureUnitService;
+
+	@Autowired
+	protected OrganizationService organizationService;
 
 	/**
 	 * 
@@ -251,6 +268,145 @@ public class SubscrContZPointController extends SubscrApiController {
 
 		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
 
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/rsoOrganizations", method = RequestMethod.GET)
+	public ResponseEntity<?> getRsoOrganizations(
+			@RequestParam(value = "organizationId", required = false) Long organizationId) {
+		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
+		List<Organization> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
+				: ObjectFilters.devModeFilter(rsOrganizations);
+
+		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
+
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		if (!canAccessContObject(contObjectId)) {
+			responseForbidden();
+		}
+
+		List<ContZPointMetadata> result = contZPointMetadataService.selectContZPointMetadata(contZPointId);
+
+		if (result == null || result.isEmpty()) {
+			result = contZPointMetadataService.selectNewMetadata(contZPointId, true);
+		}
+
+		return responseOK(result);
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/measureUnits",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointMetadatameasureUnits(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId,
+			@RequestParam(value = "measureUnit", required = false) String measureUnit) {
+
+		List<MeasureUnit> resultList = null;
+		if (measureUnit != null) {
+			resultList = measureUnitService.selectMeasureUnitsSame(measureUnit);
+		} else {
+			resultList = measureUnitService.selectMeasureUnits();
+		}
+
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/srcProp",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointMetadataSrcProp(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		if (!canAccessContObject(contObjectId)) {
+			responseForbidden();
+		}
+
+		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
+
+		List<EntityColumn> result = contZPointMetadataService.buildSrcProps(metadataList);
+
+		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/destProp",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointMetadataDestProp(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
+
+		List<EntityColumn> result = contZPointMetadataService.buildDestProps(metadataList);
+
+		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/destDb",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointMetadataDestDB(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		List<EntityColumn> result = contZPointMetadataService.selectContZPointDestDB(contZPointId);
+
+		return responseOK(result);
 	}
 
 }

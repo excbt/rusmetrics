@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -49,7 +48,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 		_testGetJson(url);
 	}
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void testGetElConsZPointEx() throws Exception {
 		String url = "/api/subscr/contObjects/77921790/contZPointsEx";
