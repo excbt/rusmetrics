@@ -419,6 +419,23 @@ angular.module('portalNMC')
                                         "</i></td>"; 
                                     break;   
                                 case "zpointRefRange" : trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
+                                case "zpointTimeOffsetString": 
+                                    var title = "";
+//console.log(zpoint[column.name]);      
+                                    if (!mainSvc.checkUndefinedNull(zpoint[column.name])){
+                                        if (zpoint[column.name].indexOf('+') === 0){
+                                            title = "Часы прибора спешат";
+                                        }
+                                        if (zpoint[column.name].indexOf('-') === 0){
+                                            title = "Часы прибора отстают";
+                                        }
+                                    }
+                                    trHTML += "<td title='" + title +"'>";
+                                    if (!mainSvc.checkUndefinedNull(zpoint[column.name])){
+                                        trHTML += zpoint[column.name];
+                                    }
+                                    trHTML += "</td>";
+                                    break;
                                 default : 
                                     trHTML += "<td>";
                                     if (!mainSvc.checkUndefinedNull(zpoint[column.name])){
@@ -760,20 +777,32 @@ angular.module('portalNMC')
                     return result;
                 }
                 
-                function prepareTimeOffset (rawTimeOffset) {
+                function prepareTimeOffset1 (rawTimeOffset) {
                     var result = null;
                     if (!mainSvc.checkUndefinedNull(rawTimeOffset)){
 //console.log(rawTimeOffset);
-                        result = "";
+                        if (rawTimeOffset.timeDeltaSign === 1){
+                            result = "+";
+                        }else{
+                            result = "-";
+                        }
+                        
                         result += addTimeOffset(rawTimeOffset.years, "г ");
                         result += addTimeOffset(rawTimeOffset.mons, "М ");
                         result += addTimeOffset(rawTimeOffset.days, "д ");
                         result += addTimeOffset(rawTimeOffset.hh, "ч ");
                         result += addTimeOffset(rawTimeOffset.mm, "м ");
+                        result += addTimeOffset(rawTimeOffset.ss, "с ");
 
                     }
                     return result;
                 }
+                
+                function prepareTimeOffset (rawTimeOffset) {                    
+                    return mainSvc.prepareTimeOffset(rawTimeOffset);
+                }
+                
+                
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
                     var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                  

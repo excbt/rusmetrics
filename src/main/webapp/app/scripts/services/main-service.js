@@ -104,6 +104,38 @@ angular.module('portalNMC')
         return false;
     };
     
+    function addTimeOffset (val, label) {
+        var result = "";
+        if (val > 0){
+            if (val < 10){
+                result += "0";
+            }
+            result += val + label;
+        }
+        return result;
+    }
+
+    function prepareTimeOffset (rawTimeOffset) {
+        var result = null;
+        if (!checkUndefinedNull(rawTimeOffset)){
+//console.log(rawTimeOffset);
+            if (rawTimeOffset.timeDeltaSign === 1){
+                result = "+";
+            }else{
+                result = "-";
+            }
+
+            result += addTimeOffset(rawTimeOffset.years, "г ");
+            result += addTimeOffset(rawTimeOffset.mons, "М ");
+            result += addTimeOffset(rawTimeOffset.days, "д ");
+            result += addTimeOffset(rawTimeOffset.hh, "ч ");
+            result += addTimeOffset(rawTimeOffset.mm, "м ");
+            result += addTimeOffset(rawTimeOffset.ss, "с ");
+
+        }
+        return result;
+    }
+    
     //date range settings
     var dateRangeOptsRu = {
         locale : {
@@ -775,6 +807,7 @@ angular.module('portalNMC')
         isRma,
         isReadonly,
         isSystemuser,
+        prepareTimeOffset,
         setMonitorMapSettings,
         setObjectMapSettings,
         setToolTip,
