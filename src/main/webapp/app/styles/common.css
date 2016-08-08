@@ -717,6 +717,13 @@ tr.nmc-tr-striped:nth-of-type(odd)>td{
     width: 4%;
     border-right: 1px solid #969696;
 }
+
+    /*Стиль колонки с кнопками - для колонок с 2мя кнопками + иконка*/
+.nmc-td-for-buttons-2-ico{
+    min-width: 80px;
+    width: 4%;
+}
+
     /*Стиль колонки с кнопками - для колонок с 3мя кнопками*/
 .nmc-td-for-buttons-3{
     min-width: 95px;

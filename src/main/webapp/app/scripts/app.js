@@ -50,7 +50,7 @@ app.config(function ($routeProvider) {
             }]
         }
       })
-      .when('/objects/map', {
+      .when('/objects/demo-map', {
         templateUrl: 'views/objects_map.html',
         controller: 'ObjectsMapCtrl',
         resolve:{
