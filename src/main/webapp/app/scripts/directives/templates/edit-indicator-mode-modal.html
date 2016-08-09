@@ -1,0 +1,47 @@
+<div id="editIndicatorModeModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="editIndicatorModeLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="editIndicatorModeLabel" class="nmc-h3">
+				Представление
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                         
+                            <tr>
+                                <td class="col-sm-3"><label for="inputIndicatorModeCaption">Наименование</label>
+                                </td>
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': !(data.selectedIndicatorModeSaveAs.caption >'')}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputIndicatorModeCaption" 
+                                               placeholder="" 
+                                               ng-model="data.selectedIndicatorModeSaveAs.caption"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="saveIndicatorPreferences(data.selectedIndicatorModeSaveAs)"
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+	</div>
+</div>
