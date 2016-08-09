@@ -339,12 +339,13 @@ angular.module('portalNMC')
                                     "<li ng-if='isDirectDevice(" + object.id + "," + zpoint.id + ")'><a ng-click=\"openSchedule(" + object.id + "," + zpoint.id + ")\"" +
                                         "title=\"Расписание опроса\">" +
                                         "Расписание опроса" +
-                                    "</a></li>" +
-                                    "<li><a ng-click=\"openDatasource(" + object.id + "," + zpoint.id + ")\"" +
+                                    "</a></li>";
+                            if (!mainSvc.checkUndefinedNull(zpoint.deviceObject.activeDataSource)){
+                                trHTML += "<li><a ng-click=\"openDatasource(" + object.id + "," + zpoint.id + ")\"" +
                                         "title=\"Источник данных\">" +
                                         "Источник данных" +
                                     "</a></li>";                            
-                            
+                            }
 //                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\"" +
 //                                    "ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
 //                                    "data-target=\"#showZpointOptionModal\"" +
@@ -1666,12 +1667,13 @@ angular.module('portalNMC')
                     }
                     $scope.selectedDevice($scope.currentZpoint.deviceObject);
 //console.log($scope.data.currentDevice);
-                    var tmpDataSource = angular.copy($scope.data.currentDevice.activeDataSource.subscrDataSource);
-//                    tmpDataSource.id = tmpDataSource.subscrDataSourceId;
-                    $scope.data.dataSourcesForCurDevice = [tmpDataSource];
-                    $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
-//console.log($scope.data.dataSourcesForCurDevice);                    
-//console.log($scope.data.deviceModelsForCurDevice);                    
+                    if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.activeDataSource)){
+                        var tmpDataSource = angular.copy($scope.data.currentDevice.activeDataSource.subscrDataSource);
+                        $scope.data.dataSourcesForCurDevice = [tmpDataSource];                    
+                    }
+                    if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.deviceModel)){
+                        $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
+                    }
                     $('#showDeviceModal').modal();
                 }
                 
@@ -2295,6 +2297,10 @@ console.log("openSchedule");
                 }
                 
                 $scope.deleteIndicatorMode = function (mode) {                    
+                    if (mainSvc.checkUndefinedNull(mode) || mainSvc.checkUndefinedNull(mode.vcMode) || mainSvc.checkUndefinedNull(mode.vcKey)){
+                        console.log("Indicator mode is incorrect!");
+                        return false;
+                    }
                     var url = VCOOKIE_URL + "/list";
                     var requestBody = {};
                     requestBody.vcMode = mode.vcMode;
@@ -2643,6 +2649,10 @@ console.log("openSchedule");
                     
 //                    current-datasource="data.currentDatasource"
 //     datasource-types="data.datasourceTypesForDatasource"
+                    if (mainSvc.checkUndefinedNull($scope.currentZpoint.deviceObject.activeDataSource)){
+                        console.log("Datasource is incorrect!");
+                        return false;
+                    }
                     $scope.data.currentDatasource = angular.copy($scope.currentZpoint.deviceObject.activeDataSource.subscrDataSource);
                     if (mainSvc.checkUndefinedNull($scope.data.currentDatasource.rawModemIdentity) &&
                         !mainSvc.checkUndefinedNull($scope.data.currentDatasource.rawModemModelId)){
