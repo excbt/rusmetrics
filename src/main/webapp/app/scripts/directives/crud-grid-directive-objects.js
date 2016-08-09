@@ -1272,7 +1272,8 @@ angular.module('portalNMC')
 //                };
                 
                 //function add more objects for table on user screen
-                $scope.addMoreObjects = function(){                 
+                $scope.addMoreObjects = function(){
+//console.log($scope.objectCtrlSettings.objectsOnPage);                    
                     if (($scope.objects.length <= 0)){
                         return;
                     };

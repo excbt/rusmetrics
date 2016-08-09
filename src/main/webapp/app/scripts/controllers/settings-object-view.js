@@ -727,7 +727,10 @@ angular.module('portalNMC')
                     tdldKeys.forEach(function(key){
                         var elDom = "#zldd" + key;
                         var text = "";//JSON.stringify(tdld[key]);
+                        text += "<table class='table table-condensed noMargin'>";
+                        text += "<tboby>";
                         tdld[key].forEach(function(el){
+                            text += "<tr><td>"
                             switch (el.timeDetailType) {
                                 case "1h":
                                     text += "Часовые показания";
@@ -754,9 +757,12 @@ angular.module('portalNMC')
                                     text += el.timeDetailType;
                                     break;
                             }
-                            text += ": " + el.dataDateString + "<br>";
+                            text += "</td>";
+                            text += "<td> " + el.dataDateString + "</td></tr>";
                         });
-                        mainSvc.setToolTip("Последние данные", text, elDom, elDom);
+                        text += "</tboby>";
+                        text += "</table>";                        
+                        mainSvc.setToolTip("Последние данные", text, elDom, elDom, 1, 300);
                     });
 //                    var setToolTip = function(title, text, elDom, targetDom)
                 }
@@ -1431,29 +1437,29 @@ angular.module('portalNMC')
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){
                     if (e.keyCode == 38){                        
-                        var elem = document.getElementById("divWithObjectListTable");
+                        var elem = document.getElementById("divWithSettingsObjectTable");
                         elem.scrollTop = elem.scrollTop - 20;                        
                         return;
                     };
                     if (e.keyCode == 40){
-                        var elem = document.getElementById("divWithObjectListTable");
+                        var elem = document.getElementById("divWithSettingsObjectTable");
                         elem.scrollTop = elem.scrollTop + 20;                        
                         return;
                     };
                     if (e.keyCode == 34){
 //                        $scope.addMoreObjects();
 //                        $scope.$apply();
-                        var elem = document.getElementById("divWithObjectListTable");
+                        var elem = document.getElementById("divWithSettingsObjectTable");
                         elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;
                         return;
                     };
                     if (e.keyCode == 33){
-                        var elem = document.getElementById("divWithObjectListTable");
+                        var elem = document.getElementById("divWithSettingsObjectTable");
                         elem.scrollTop = elem.scrollTop - $scope.objectCtrlSettings.objectsPerScroll*10;
                         return;
                     };
                     if (e.ctrlKey && e.keyCode == 36){
-                        var elem = document.getElementById("divWithObjectListTable");
+                        var elem = document.getElementById("divWithSettingsObjectTable");
                         elem.scrollTop = 0;
                         return;
                     };
@@ -1464,7 +1470,7 @@ angular.module('portalNMC')
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
                         $scope.$apply();
-                        var elem = document.getElementById("divWithObjectListTable");
+                        var elem = document.getElementById("divWithSettingsObjectTable");
                         elem.scrollTop = elem.scrollHeight;
                     };
                 };
@@ -1730,7 +1736,7 @@ angular.module('portalNMC')
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                     });
                     
-                    $("#divWithObjectListTable").scroll(function(){                    
+                    $("#divWithSettingsObjectTable").scroll(function(){                    
                         if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
                             $scope.addMoreObjects();
                             $scope.$apply();
@@ -2417,12 +2423,18 @@ console.log("openSchedule");
                         return false;
                     }
                     
+                    var checkFlag = true;
                     $scope.data.indicatorModes.some(function(imode){
-                        if (imode.caption === mode.caption){
+                        if ((imode.caption === mode.caption) && !mainSvc.checkUndefinedNull(imode.vcKey)){
                             notificationFactory.errorInfo("Ошибка", "Наименование представления должно быть уникальным. Измените наименование и повторите попытку.");
                             checkFlag = false;
+                            return true;
                         }
                     });
+                    
+                    if (checkFlag === false){
+                        return false;
+                    }
                     
                     $scope.saveIndicatorPreferences($scope.data.selectedIndicatorModeSaveAs);
                 }
@@ -2473,6 +2485,19 @@ console.log("openSchedule");
                                 $scope.data.indicatorModes[changeIndex] = receivedMode[0];
                             }else{
                                 $scope.data.indicatorModes.push(receivedMode[0]);
+                            }
+                            //delete search and delete DEFAULT_INDICATOR_MODE
+                            if ($scope.data.indicatorModes.length > 1){
+                                var delIndex = -1;
+                                $scope.data.indicatorModes.some(function(imode, ind){
+                                    if (mainSvc.checkUndefinedNull(imode.vcKey)){
+                                        delIndex = ind;
+                                        return true;
+                                    }
+                                });
+                                if (delIndex !== -1){
+                                    $scope.data.indicatorModes.splice(delIndex, 1);
+                                }
                             }
                             $scope.messages.modeHeader = receivedMode[0].caption;
                         }else{

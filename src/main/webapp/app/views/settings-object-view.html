@@ -229,7 +229,7 @@
             <div class="" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
                 <h3 class="nmc-h3">{{messages.noObjects}}</h3>
             </div>
-            <div id="divWithObjectListTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+            <div id="divWithSettingsObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                 <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                 <thead>
                     <tr class="nmc-hide">
@@ -1241,7 +1241,7 @@
     </ol>
 </script>
 
-<!--Show data source options-->
+<!-- -->
 <div id="columnSettingsModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="columnSettingsLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
@@ -1311,7 +1311,8 @@
                                       <a href="" class=""
                                          ng-click="modeClick(mode)">
                                           {{mode.caption}} 
-                                          <i class="btn btn-xs glyphicon glyphicon-trash pull-right"
+                                          <i ng-if="mode.vcKey"
+                                             class="btn btn-xs glyphicon glyphicon-trash pull-right"
                                              ng-click="deleteIndicatorModeInit(mode)"
                                              ></i>
 <!--                                          <i class="btn btn-xs glyphicon glyphicon-edit"></i>-->

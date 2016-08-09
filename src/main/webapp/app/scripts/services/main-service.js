@@ -731,10 +731,14 @@ angular.module('portalNMC')
     //                     end Work with trees
     // *********************************************************************************************
     
-    var setToolTip = function(title, text, elDom, targetDom, delay){
+    var setToolTip = function(title, text, elDom, targetDom, delay, width){
         var tDelay = 1;
         if (!checkUndefinedNull(delay)){
             tDelay = delay;
+        }
+        var tWidth = 1000;
+        if (!checkUndefinedNull(width)){
+            tWidth = width;
         }
 //console.log(elDom);                
 //console.log(targetDom);    
@@ -754,7 +758,7 @@ angular.module('portalNMC')
                 },
                 style:{
                     classes: 'qtip-nmc-indicator-tooltip',
-                    width: 1000
+                    width: tWidth
                 },
                 hide: {
                     event: 'unfocus'
