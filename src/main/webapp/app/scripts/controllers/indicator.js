@@ -403,6 +403,8 @@ angular.module('portalNMC')
     $scope.pagination = {
         current: 1
     };
+    $scope.indicatorModes = [];
+        
         //The flag for the link to the file with delete data
     $scope.showLinkToFileFlag = false;
         //flag for zpoint, which control manual loading data - true: on manual loading, false: off manual loading
@@ -1016,21 +1018,45 @@ angular.module('portalNMC')
             $scope.$broadcast("indicators:loadedModePrefs");
             return false;
         }
-        var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + indicatorModeKeyname;                
+//        var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + indicatorModeKeyname;                
+        var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE;                
         $http.get(url).then(function(resp){
+            var vcvalue;
             if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data) || resp.data.length === 0){
                 console.log("Indicators: incorrect mode preferences!");
                 $scope.$broadcast("indicators:loadedModePrefs");
                 return false;
             }
             
-            var modePrefs = resp.data[0],
-                vcvalue;
-            vcvalue = JSON.parse(modePrefs.vcValue);
-            $scope.ctrlSettings.loadedWaterColumnsPref = vcvalue.waterColumns;            
+            var tmpRespData = angular.copy(resp.data);
+            $scope.currentIndicatorMode = null;
+            tmpRespData.forEach(function(imode){
+                if (imode.vcValue === null){
+                    return false;
+                }
+                vcvalue = JSON.parse(imode.vcValue);
+                
+                imode.caption = vcvalue.caption;
+                imode.vv = vcvalue;
+                if (imode.vcKey === indicatorModeKeyname){
+                    $scope.currentIndicatorMode = imode;                    
+                }
+                $scope.indicatorModes.push(imode);
+                
+            });
+            if (mainSvc.checkUndefinedNull($scope.currentIndicatorMode)){
+                console.log("Current indicator mode is undefined or null!");
+                return false;
+            }
             
-            $scope.timeDetailType = vcvalue.indicatorHwKind
-            $scope.indicatorsPerPage = vcvalue.indicatorHwPerPage;
+//            var modePrefs = $scope.currentIndicatorMode,
+//                vcvalue;
+//            vcvalue = JSON.parse(modePrefs.vcValue);
+//            $scope.currentIndicatorMode.caption = vcvalue.caption;
+            $scope.ctrlSettings.loadedWaterColumnsPref = $scope.currentIndicatorMode.vv.waterColumns;            
+            
+            $scope.timeDetailType = $scope.currentIndicatorMode.vv.indicatorHwKind
+            $scope.indicatorsPerPage = $scope.currentIndicatorMode.vv.indicatorHwPerPage;
             
             $scope.$broadcast("indicators:loadedModePrefs");
 

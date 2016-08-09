@@ -51,13 +51,13 @@
     <div class="container-fluid">
         <div class="row" ng-show="!ctrlSettings.loading">   
             <div class="col-xs-12 col-md-12 noPadding marginBottom10">
-                <div class="col-xs-4 col-md-4 noPadding">
-                    <div class="col-xs-4 col-md-4 paddingTop5">
+                <div class="col-xs-4 col-md-3 noPadding">
+                    <div class="col-xs-4 col-md-4 noPadding paddingTop5">
                         <label class="nmc-form-label">
                             Задайте период</label>
                     </div>    
     <!--                <div ng-controller="DataRangeSettings" class="col-md-8">-->
-                    <div class="col-xs-8 col-md-8">
+                    <div class="col-xs-8 col-md-8 noPadding paddingRight5">
                             <div class="input-group">
                                 <span class="input-group-addon nmc-date-interval-form-addon">с</span>
                                 <input date-range-picker class="form-control date-picker nmc-date-interval-form"
@@ -70,12 +70,12 @@
                     </div>
 
                 </div>
-                <div class="col-xs-3 col-md-3">
-                        <div class="col-xs-3 col-md-3 paddingTop5">            
+                <div class="col-xs-3 col-md-2 noPadding">
+                        <div class="col-xs-3 col-md-3 noPadding paddingTop5">            
                                 <label class="nmc-form-label">
                                      Показания</label>
                         </div>
-                        <div class="col-xs-8 col-md-8">
+                        <div class="col-xs-8 col-md-8 noPadding">
                             <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="changeTimeDetailType()">
                                 <option selected value="24h">Суточные</option>
                                 <option value="1h">Часовые</option>
@@ -83,10 +83,34 @@
                             </select>
                         </div>
                 </div>
+                <div class="col-xs-3 col-md-3 noPadding">
+                        <div class="col-xs-3 col-md-3 noPadding paddingTop5">            
+                                <label class="nmc-form-label">
+                                     Представление</label>
+                        </div>
+                        <div class="col-xs-8 col-md-8 noPadding">
+                            <div class="input-group">
+                                <select class="form-control nmc-input-data nmc-select-form"
+                                        ng-model="currentIndicatorMode"
+                                        ng-options="imode.caption for imode in indicatorModes"
+                                        ng-change="changeIndicatorMode()"
+                                        >
+                                    
+                                </select>
+                                <div class="input-group-btn">
+                                    <p class="btn btn-xs btn-default nmc-button-refresh"
+                                       ng-click="openIndicatorPrefsEditor()"
+                                       >
+                                        ...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                </div>
                 <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
                     <p title="Обновить показания" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></p>
                 </div>
-                <div class="col-xs-4 col-md-4">    
+                <div class="col-xs-3 col-md-3 noPadding">    
 
                      <div class="col-xs-7 col-md-7 noPadding">
                         <label class="nmc-form-label">Записей на странице:</label>
