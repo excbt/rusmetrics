@@ -475,13 +475,16 @@ angular.module('portalNMC')
     var initIndicatorParams = function(){
 //console.log($location.url());        
 //console.log($location.search());
-        var pathParams = $location.search();
+        var pathParams = $location.search(),
 //console.log($location);        
-        var tmpZpId = null;//indicatorSvc.getZpointId();    
-        var tmpContObjectId = null;//indicatorSvc.getContObjectId();
-        var tmpZpName = null;//indicatorSvc.getZpointName();    
-        var tmpContObjectName = null;//indicatorSvc.getContObjectName();
-        var tmpTimeDetailType = null;
+            tmpZpId = null,//indicatorSvc.getZpointId();    
+            tmpContObjectId = null,//indicatorSvc.getContObjectId();
+            tmpZpName = null,//indicatorSvc.getZpointName();    
+            tmpContObjectName = null,//indicatorSvc.getContObjectName();
+            tmpTimeDetailType = null,
+            tmpDeviceModel = null,
+            tmpDeviceSN = null
+        
 //        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
 //            if (angular.isDefined($cookies.contZPoint)&&($cookies.contZPoint!=="null")){
 //                indicatorSvc.setZpointId($cookies.contZPoint);
@@ -525,8 +528,19 @@ angular.module('portalNMC')
             };
         };
         
-        if (angular.isUndefined(tmpTimeDetailType)||(tmpTimeDetailType===null)){
-            if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType!=="null")){
+        if (angular.isUndefined(tmpDeviceModel) || (tmpDeviceModel === null)){
+            if (angular.isDefined(pathParams.deviceModel)&&(pathParams.deviceModel !== "null")){
+                indicatorSvc.setDeviceModel(pathParams.deviceModel);
+            };
+        };
+        if (angular.isUndefined(tmpDeviceSN) || (tmpDeviceSN === null)){
+            if (angular.isDefined(pathParams.deviceSN)&&(pathParams.deviceSN !== "null")){
+                indicatorSvc.setDeviceSN(pathParams.deviceSN);
+            };
+        };
+        
+        if (angular.isUndefined(tmpTimeDetailType) || (tmpTimeDetailType === null)){
+            if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType !== "null")){
 //                indicatorSvc.setTimeDetailType(pathParams.timeDetailType);
                 $scope.timeDetailType = pathParams.timeDetailType;
             }else{
@@ -544,7 +558,9 @@ angular.module('portalNMC')
         $scope.contZPointName = (indicatorSvc.getZpointName() != "undefined") ? indicatorSvc.getZpointName() : "Без названия";
         $scope.contObject = indicatorSvc.getContObjectId();
         
-        $scope.contObjectName = (indicatorSvc.getContObjectName() != "undefined") ? indicatorSvc.getContObjectName() : "Без названия";     
+        $scope.contObjectName = (indicatorSvc.getContObjectName() != "undefined") ? indicatorSvc.getContObjectName() : "Без названия";
+        $scope.deviceModel =indicatorSvc.getDeviceModel();
+        $scope.deviceSN =indicatorSvc.getDeviceSN();
         
         //clear cookies
 //console.log($cookies);        
@@ -1012,8 +1028,15 @@ angular.module('portalNMC')
         return (tdt == "1h_abs");
     };
         
+    $scope.changeIndicatorMode = function() {
+        $scope.ctrlSettings.loadedWaterColumnsPref = $scope.currentIndicatorMode.vv.waterColumns;            
+        $scope.timeDetailType = $scope.currentIndicatorMode.vv.indicatorHwKind
+        $scope.indicatorsPerPage = $scope.currentIndicatorMode.vv.indicatorHwPerPage;
+        $scope.$broadcast("indicators:loadedModePrefs");
+    }
+        
     function loadModePrefs(indicatorModeKeyname){
-        if (mainSvc.checkUndefinedNull(VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(indicatorModeKeyname)){
+        if (mainSvc.checkUndefinedNull(VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE)){
             console.log("Request required params is null!");
             $scope.$broadcast("indicators:loadedModePrefs");
             return false;
@@ -1029,23 +1052,32 @@ angular.module('portalNMC')
             }
             
             var tmpRespData = angular.copy(resp.data);
-            $scope.currentIndicatorMode = null;
+            // prepared indicator mods
             tmpRespData.forEach(function(imode){
                 if (imode.vcValue === null){
                     return false;
                 }
                 vcvalue = JSON.parse(imode.vcValue);
-                
                 imode.caption = vcvalue.caption;
-                imode.vv = vcvalue;
-                if (imode.vcKey === indicatorModeKeyname){
-                    $scope.currentIndicatorMode = imode;                    
-                }
+                imode.vv = vcvalue;                
                 $scope.indicatorModes.push(imode);
-                
+
             });
+            //find default indicator mode;
+            $scope.currentIndicatorMode = null;
+            if (!mainSvc.checkUndefinedNull(indicatorModeKeyname)){
+                $scope.indicatorModes.some(function(imode){              
+                    if (imode.vcKey === indicatorModeKeyname){
+                        $scope.currentIndicatorMode = imode;                    
+                        return true;
+                    }                    
+
+                });
+            }
+            
             if (mainSvc.checkUndefinedNull($scope.currentIndicatorMode)){
                 console.log("Current indicator mode is undefined or null!");
+                $scope.$broadcast("indicators:loadedModePrefs");
                 return false;
             }
             
@@ -1072,11 +1104,13 @@ angular.module('portalNMC')
         var url = USER_VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + "OIP_" + objId;
         $http.get(url).then(function(resp){
             if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0){
-                $scope.$broadcast("indicators:loadedModePrefs");
-                return false;
+//                $scope.$broadcast("indicators:loadedModePrefs");
+//                return false;
+            }else{
+                var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);    
             } 
 //console.log(resp.data);                        
-            var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+            
             loadModePrefs(objectIndicatorModeKeyname);
         }, errorCallback);
     }

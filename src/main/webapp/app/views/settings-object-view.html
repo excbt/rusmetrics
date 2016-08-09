@@ -4,7 +4,7 @@
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Отчеты</a></li>
-        <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide active">
+        <li id="object_settings_2nd_menu_item" role="presentation" class="active">
             <a id="settingsObjectTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a>
         </li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
@@ -289,7 +289,8 @@
                 <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
                     <td>
                         <table>
-                            <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                            <tr class="nmc-tr-hover"
+                                ng-class="{'nmc-tr-odd':($index%2!==0)}">
                                 <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" 
                                     class="nmc-td-for-buttons-in-object-page">
                                     <input type="checkbox" 

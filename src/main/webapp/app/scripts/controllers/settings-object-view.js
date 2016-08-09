@@ -366,7 +366,9 @@ angular.module('portalNMC')
                         }else{
                             trHTML+="<a href='#/objects/indicators/";
                         }
-                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "' target=\"_blank\" ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\">" + 
+//                        url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
+//                    url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "&deviceModel=" + zpoint.zpointModel + "&deviceSN=" + zpoint.zpointNumber + "' target=\"_blank\" ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\">" + 
 //                            "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
 //                                    "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
@@ -1157,7 +1159,21 @@ angular.module('portalNMC')
 //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
-                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+//                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+                    var url = "#/objects";
+                    if ($scope.currentZpoint.zpointType === 'el'){
+                        url += "/indicator-electricity";
+                    }else{
+                        url += "/indicators";
+                    };                    
+                    url += "/?objectId=" + objectId + "&zpointId=" + zpointId + "&objectName=" + $scope.currentObject.fullName + "&zpointName=" + $scope.currentZpoint.zpointName;
+                    //add info about device
+//console.log($scope.currentZpoint);                    
+                    
+                    url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
+                    url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                    
+                    window.open(url, '_blank');
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
@@ -1167,6 +1183,9 @@ angular.module('portalNMC')
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
+                    $cookies.deviceModel = $scope.currentZpoint.zpointModel;
+                    $cookies.deviceSN = $scope.currentZpoint.zpointNumber;
+
                     if (angular.isUndefined($cookies.timeDetailType)||($cookies.timeDetailType=="undefined")||($cookies.timeDetailType=="null")){
                         $cookies.timeDetailType="24h";
                     };
@@ -2235,7 +2254,7 @@ console.log("openSchedule");
                             $scope.data.selectedIndicatorMode = angular.copy($scope.data.indicatorModes[0]);
                             $scope.messages.modeHeader = $scope.data.selectedIndicatorMode.caption;
                         }
-console.log($scope.data.indicatorModes);                        
+//console.log($scope.data.indicatorModes);                        
                     }, errorCallback);
                 }
                 

@@ -619,7 +619,7 @@ angular.module('portalNMC')
 //                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
                     var trHTML = "";
 
-                    trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
+                    trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-hover nmc-child-object-table\">";
                     trHTML += "<thead><tr class=\"nmc-child-table-header\">";
 //                    trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
                     $scope.oldColumns.forEach(function(column){
@@ -630,7 +630,7 @@ angular.module('portalNMC')
                     trHTML += "</tr></thead>";
                     
                     object.zpoints.forEach(function(zpoint){
-                        trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ");markZpoint(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
+                        trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
 //                        trHTML += "<td class=\"nmc-td-for-buttons-3\">"+
 //                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\"" +
 //                                    "ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
@@ -951,7 +951,22 @@ angular.module('portalNMC')
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
 //                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
-                    window.open("#/objects/indicators/?objectId=" + objectId + "&zpointId=" + zpointId + "&objectName=" + $scope.currentObject.fullName + "&zpointName=" + $scope.currentZpoint.zpointName, '_blank');
+                    
+
+                    var url = "#/objects";
+                    if ($scope.currentZpoint.zpointType === 'el'){
+                        url += "/indicator-electricity";
+                    }else{
+                        url += "/indicators";
+                    };                    
+                    url += "/?objectId=" + objectId + "&zpointId=" + zpointId + "&objectName=" + $scope.currentObject.fullName + "&zpointName=" + $scope.currentZpoint.zpointName;
+                    //add info about device
+//console.log($scope.currentZpoint);                    
+                    
+                    url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
+                    url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                    
+                    window.open(url, '_blank');
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
@@ -960,6 +975,10 @@ angular.module('portalNMC')
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
+                    
+                    $cookies.deviceModel = $scope.currentZpoint.zpointModel;
+                    $cookies.deviceSN = $scope.currentZpoint.zpointNumber;
+                    
                     if (angular.isUndefined($cookies.timeDetailType)||($cookies.timeDetailType=="undefined")||($cookies.timeDetailType=="null")){
                         $cookies.timeDetailType="24h";
                     };

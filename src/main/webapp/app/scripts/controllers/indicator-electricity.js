@@ -31,7 +31,9 @@ angular.module('portalNMC')
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
         var tmpZpName = null;//indicatorSvc.getZpointName();    
         var tmpContObjectName = null;//indicatorSvc.getContObjectName();
-        var tmpTimeDetailType = null;
+        var tmpTimeDetailType = null,
+            tmpDeviceModel = null,
+            tmpDeviceSN = null
 
         if (angular.isUndefined(tmpZpId) || (tmpZpId === null)){
             if (angular.isDefined(pathParams.zpointId) && (pathParams.zpointId !== "null")){
@@ -55,6 +57,17 @@ angular.module('portalNMC')
             };
         };
         
+        if (angular.isUndefined(tmpDeviceModel) || (tmpDeviceModel === null)){
+            if (angular.isDefined(pathParams.deviceModel)&&(pathParams.deviceModel !== "null")){
+                indicatorSvc.setDeviceModel(pathParams.deviceModel);
+            };
+        };
+        if (angular.isUndefined(tmpDeviceSN) || (tmpDeviceSN === null)){
+            if (angular.isDefined(pathParams.deviceSN)&&(pathParams.deviceSN !== "null")){
+                indicatorSvc.setDeviceSN(pathParams.deviceSN);
+            };
+        };
+        
         if (angular.isUndefined(tmpTimeDetailType) || (tmpTimeDetailType === null)){
             if (angular.isDefined(pathParams.timeDetailType) && (pathParams.timeDetailType !== "null")){
                 $scope.timeDetailType = pathParams.timeDetailType;
@@ -71,6 +84,8 @@ angular.module('portalNMC')
         $scope.contZPointName = (indicatorSvc.getZpointName() != "undefined") ? indicatorSvc.getZpointName() : "Без названия";
         $scope.contObject = indicatorSvc.getContObjectId();
         $scope.contObjectName = (indicatorSvc.getContObjectName() != "undefined") ? indicatorSvc.getContObjectName() : "Без названия";
+        $scope.deviceModel =indicatorSvc.getDeviceModel();
+        $scope.deviceSN =indicatorSvc.getDeviceSN();
         
         //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
         if (angular.isDefined(pathParams.fromDate) && (pathParams.fromDate !== "null")){

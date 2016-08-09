@@ -9,7 +9,18 @@
 </div> 
 -->
 <div id="zpoint_indicator_page">
-<div class="col-xs-10 col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>&gt;</h2></div>
+<div class="col-xs-10 col-md-10 noPadding nmc-main-workspace-header">
+    <h3 class="noMargin nmc-page-header">
+        Показания &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>&gt;
+    </h3>
+    <h4 ng-if="deviceModel || deviceSN"
+        class="nmc-h4"
+        >
+        Прибор учета 
+        <span ng-if="deviceModel">: <span ng-bind="deviceModel"></span></span> 
+        <span ng-if="deviceSN">, s\n: <span ng-bind="deviceSN"></span></span>
+    </h4>
+</div>
 <div class="col-xs-2 col-md-2">
     <div class="pull-right">
         <div class="btn-group nmc-line-right" ng-hide="!isManualLoading">
@@ -89,7 +100,7 @@
                                      Представление</label>
                         </div>
                         <div class="col-xs-8 col-md-8 noPadding">
-                            <div class="input-group">
+<!--                            <div class="input-group">-->
                                 <select class="form-control nmc-input-data nmc-select-form"
                                         ng-model="currentIndicatorMode"
                                         ng-options="imode.caption for imode in indicatorModes"
@@ -97,6 +108,7 @@
                                         >
                                     
                                 </select>
+<!--
                                 <div class="input-group-btn">
                                     <p class="btn btn-xs btn-default nmc-button-refresh"
                                        ng-click="openIndicatorPrefsEditor()"
@@ -104,7 +116,8 @@
                                         ...
                                     </p>
                                 </div>
-                            </div>
+-->
+<!--                            </div>-->
                         </div>
                 </div>
                 <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
