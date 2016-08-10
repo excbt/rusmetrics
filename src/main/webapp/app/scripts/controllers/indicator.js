@@ -1032,6 +1032,7 @@ angular.module('portalNMC')
         $scope.ctrlSettings.loadedWaterColumnsPref = $scope.currentIndicatorMode.vv.waterColumns;            
         $scope.timeDetailType = $scope.currentIndicatorMode.vv.indicatorHwKind
         $scope.indicatorsPerPage = $scope.currentIndicatorMode.vv.indicatorHwPerPage;
+//console.log($scope.currentIndicatorMode);        
         $scope.$broadcast("indicators:loadedModePrefs");
     }
         
@@ -1116,6 +1117,32 @@ angular.module('portalNMC')
     }
         
     function setColumnPref(columnPrefs){
+//console.log(columnPrefs);
+        
+                //reset preferences for indicator columns: date and worktime columns are view always
+//        $scope.indicatorColumns = indicatorSvc.getWaterColumns();
+        for (var i = 2; i < $scope.indicatorColumns.length; i++){
+            $scope.indicatorColumns[i].isvisible = 'false';
+        }
+        //reset intotal columns
+//        $scope.intotalColumns = indicatorSvc.getIntotalColumns();
+        for (var i = 2; i < $scope.intotalColumns.length; i++){
+            $scope.intotalColumns[i].isvisible = 'false';
+        }
+        for (var i = 2; i < $scope.indicatorColumns.length; i++){
+            columnPrefs.forEach(function(pref){
+                if (pref.fieldName === $scope.indicatorColumns[i].fieldName && pref.isVisible === true)
+                    $scope.indicatorColumns[i].isvisible = 'isvisible';
+            })
+        }
+        //set prefernces for total columns
+        for (var i = 0; i < $scope.intotalColumns.length; i++){
+            columnPrefs.forEach(function(pref){
+                if (pref.fieldName === $scope.intotalColumns[i].fieldName && pref.isVisible === true)
+                    $scope.intotalColumns[i].isvisible = 'isvisible';
+            })
+        }
+        
         //if columnPrefs not set, that mean - view all columns
         if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length === 0){
             //indicator columns
@@ -1142,6 +1169,7 @@ angular.module('portalNMC')
                     $scope.intotalColumns[i].isvisible = 'isvisible';
             })
         }
+//console.log($scope.indicatorColumns);        
     }
         
 //    function setColumnPref(columnPrefs){
