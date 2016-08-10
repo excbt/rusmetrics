@@ -1,13 +1,18 @@
+/*jslint node: true, white: true*/
+/*global angular, $, moment*/
+'use strict';
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
-    var EMPTY_OBJECT = {};
     
-    var MAP_PREF = "SUBSCR_MAP_PREF";
-    var LNG_MAP_PREF = "SUBSCR_LNG_MAP_PREF";
-    var LAT_MAP_PREF = "SUBSCR_LAT_MAP_PREF";
-    var ZOOM_MAP_PREF = "SUBSCR_ZOOM_MAP_PREF";
+    //Cert special settings
+    var useCert = true;
+    
+    var MAP_PREF = "SUBSCR_MAP_PREF",
+        LNG_MAP_PREF = "SUBSCR_LNG_MAP_PREF",
+        LAT_MAP_PREF = "SUBSCR_LAT_MAP_PREF",
+        ZOOM_MAP_PREF = "SUBSCR_ZOOM_MAP_PREF";
     
 //    $log.debug("Run main service. main service: row: 5");
     //set services settings
@@ -86,7 +91,7 @@ angular.module('portalNMC')
         var result ="";
         var serverTimeZoneDifferent = Math.round(mainSvcSettings.serverTimeZone*3600.0*1000.0);
         var tmpDate = (new Date(millisec + serverTimeZoneDifferent));
-        result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(), tmpDate.getUTCMonth(), tmpDate.getUTCDate(), tmpDate.getUTCHours(), tmpDate.getUTCMinutes()]).format(dateFormat);
+        result = (tmpDate === null) ? "" : moment([tmpDate.getUTCFullYear(), tmpDate.getUTCMonth(), tmpDate.getUTCDate(), tmpDate.getUTCHours(), tmpDate.getUTCMinutes()]).format(dateFormat);
         return result;//
     };
         //get UTC time from the string with date
