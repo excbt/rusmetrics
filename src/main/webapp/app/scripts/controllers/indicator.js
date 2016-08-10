@@ -1126,9 +1126,12 @@ angular.module('portalNMC')
         }
         //reset intotal columns
 //        $scope.intotalColumns = indicatorSvc.getIntotalColumns();
-        for (var i = 2; i < $scope.intotalColumns.length; i++){
-            $scope.intotalColumns[i].isvisible = 'false';
-        }
+        $scope.intotalColumns.forEach(function(icolumn){
+            icolumn.isvisible = 'false';
+        });
+//        for (var i = 2; i < $scope.intotalColumns.length; i++){
+//            $scope.intotalColumns[i].isvisible = 'false';
+//        }
         for (var i = 2; i < $scope.indicatorColumns.length; i++){
             columnPrefs.forEach(function(pref){
                 if (pref.fieldName === $scope.indicatorColumns[i].fieldName && pref.isVisible === true)

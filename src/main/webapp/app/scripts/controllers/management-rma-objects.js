@@ -315,6 +315,7 @@ angular.module('portalNMC')
                             };
                             //remake zpoint table
                             if(($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true)){
+                                mainSvc.sortItemsBy($scope.objectsOnPage[objectIndex].zpoints, 'zpointOrder');
                                 makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
                             };
                     }else{
@@ -325,6 +326,7 @@ angular.module('portalNMC')
                             //update zpoint data in arrays
                             $scope.objects[objectIndex].zpoints.push(mappedZpoint);
                             if ($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true){
+                                mainSvc.sortItemsBy($scope.objectsOnPage[objectIndex].zpoints, 'zpointOrder');
                                 makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
                             };                             
                         };
@@ -432,6 +434,7 @@ angular.module('portalNMC')
                             var zpoint = mapZpointProp(zPointsByObject[i]);
                             zpoints[i] = zpoint;                  
                         }
+                        mainSvc.sortItemsBy(zpoints, 'zpointOrder');
                         e.zpoints = zpoints;
 
                     });
@@ -712,6 +715,7 @@ angular.module('portalNMC')
                     var result = {};
                               
                     result.id = zpoint.id;
+                    result.zpointOrder = "" + zpoint.contServiceType.serviceOrder + zpoint.customServiceName;
                     result.exSystemKeyname = zpoint.exSystemKeyname;
                     result.tsNumber = zpoint.tsNumber;
                     result.exCode = zpoint.exCode;
@@ -778,7 +782,7 @@ angular.module('portalNMC')
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
                     if (curObject.showGroupDetails === true){
                       
-                        var mode = "Ex";
+                        var mode = "/vo";
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
                             var copyTmp = angular.copy(response.data);
@@ -792,7 +796,7 @@ angular.module('portalNMC')
                                     return result;
                                 });
                             }else{
-                                tmp = data;
+                                tmp = response.data;
                             };
                             var zPointsByObject = tmp;                          
                             var zpoints = [];
@@ -800,6 +804,7 @@ angular.module('portalNMC')
                                 var zpoint = mapZpointProp(zPointsByObject[i]);
                                 zpoints[i] = zpoint;                  
                             }
+                            mainSvc.sortItemsBy(zpoints, 'zpointOrder');
                             curObject.zpoints = zpoints;
                             makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail" + curObject.id);
