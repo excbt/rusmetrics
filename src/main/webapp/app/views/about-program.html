@@ -22,16 +22,40 @@
 <div class="well">
     <div class="container-fluid">
         <div class="row">
+            <div class="col-md-12">
+                <span style="font: 24px bold"> Русметрикс </span> - <label>система учета и обработки метрологической информации.</label>
+            </div>
+<!--
             <div class="col-md-1">
                 <label> Наименование: </label>                
             </div>
             <div class="col-md-11">
                 <label> Русметрикс </label>
             </div>
+-->
         </div>
-        <div class="row">
+<!--
+        <div class="row marginBottom5">
             <div class="col-md-12">
-                <label> &copy; ООО "Эксклюзивные бизнес-технологии" 2016 </label>
+                <span> Версия программы: 60810, дата сборки: 10.08.2016</span>
+            </div>
+        </div>
+-->
+        <div>
+            <label> 
+                Информация о модулях программы. 
+            </label>
+        </div>
+        <div class="row bg-info">
+            <div ng-repeat="column in data.columns" 
+                 ng-class="column.headerClass">
+                <label> <span ng-bind="column.header"></span> </label>
+            </div>
+        </div>
+        <div class="row nmc-tr-hover nmc-div-module-info" ng-repeat="module in data.modules track by $index">
+            <div ng-repeat="column in data.columns" 
+                 ng-class="column.dataClass">
+                <label> <span ng-bind="module[column.fieldName]"></span> </label>
             </div>
         </div>
     </div>
@@ -40,6 +64,12 @@
             <hr>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label> &copy; ООО "Эксклюзивные бизнес-технологии" 2016 </label>
+        </div>
+    </div>
+<!--
     <table class="table table-condensed">
         <tbody>
             <tr>
@@ -57,4 +87,5 @@
             </tr>    
         </tbody>
     </table>
+-->
 </div>    

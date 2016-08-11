@@ -664,8 +664,8 @@ td {
     vertical-align: middle !important;
 }
 /* Строка таблицы подсвечивающаяся при наведении*/
-.nmc-tr-hover{
-/*    background-color: #D2D2D2 !important;*/
+.nmc-tr-hover:hover{
+    background-color: #D2D2D2 !important;
 }
 .nmc-tr-hover:hover > td{
     background-color: #D2D2D2 !important;
@@ -683,7 +683,7 @@ tr.nmc-tr-odd > td{
     background-color: #eee;
 }
 
-tr.nmc-tr-striped:nth-of-type(odd)>td{
+tr.nmc-tr-striped:nth-of-type(odd)>td, .nmc-div-module-info:nth-of-type(odd){
     background-color: #eee;
 }
 
@@ -693,11 +693,13 @@ tr.nmc-tr-striped:nth-of-type(odd)>td{
 
 /* Подстветка строк таблицы показаний, которые были загружены в ручную*/
 .nmc-tr-indicator-manual{
-    background-color: lightblue;
+/*    background-color: lightblue;*/
+    color: blue;
 }
 /* Подстветка строк таблицы показаний, у которых нарушен CRC*/
 .nmc-tr-indicator-crc-error{
-    background-color: lightcoral;
+/*    background-color: lightcoral;*/
+    color: red;
 }
 
     /*Стиль колонки с кнопками*/

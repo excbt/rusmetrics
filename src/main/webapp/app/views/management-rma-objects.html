@@ -1783,7 +1783,7 @@
                                                             class="form-control nmc-select-form"
                                                             ng-model="field[column.name]"
                                                             ng-attr-title={{field[column.name]}}
-                                                            ng-options="srcProp.columnName as srcProp.title for srcProp in currentZpoint.metaData.srcProp" 
+                                                            ng-options="srcProp.columnName as srcProp.columnName for srcProp in currentZpoint.metaData.srcProp" 
                                                             ng-disabled="column.disabled || field.isIntegrator == null"
                                                             >
                                                     </select>
