@@ -9,6 +9,7 @@
         <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
             id="modems_edit_2nd_menu_item" role="presentation">
             <a class="nmc-main-tab-button" 
                href="#/management/modems/" 
@@ -29,8 +30,8 @@
         </li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-        <li id="temperature_schedules_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
+        <li id="users_edit_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
+        <li id="temperature_schedules_2nd_menu_item" ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
     </ul>
 
     <div class="tab-content">
@@ -122,7 +123,7 @@
                             </div>   
                     </div>
                     <div class="noPadding"
-                         ng-class="{'col-xs-1 col-md-1': objectCtrlSettings.isTreeView != true, 'col-xs-3 col-md-3': objectCtrlSettings.isTreeView == true}">
+                         ng-class="{'col-xs-2 col-md-2': objectCtrlSettings.isTreeView != true, 'col-xs-3 col-md-3': objectCtrlSettings.isTreeView == true}">
                         <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Создать объект</button>
                     </div>
 <!--
@@ -130,11 +131,11 @@
                         <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Создать объект</button>
                     </div>
 -->
-                    <div class="input-group col-md-4 filter pull-left nmc-search-form">   
+                    <div class="input-group col-xs-4 col-md-4 filter pull-left nmc-search-form">   
                         <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                         <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                     </div>
-                    <div class="col-md-offset-2 col-md-2">
+                    <div class="col-xs-offset-2 col-xs-2 col-md-offset-2 col-md-2">
                             <label class="nmc-form-label">Всего:</label>
                              <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
                             <span id="timeOutput"></span>

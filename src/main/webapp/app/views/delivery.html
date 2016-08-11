@@ -17,15 +17,16 @@
     <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object-view/" aria-controls="object-view" data-target="#object-view" role="tab" data-toggle="tab">Объекты</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/object-view/" aria-controls="object-view" data-target="#object-view" role="tab" data-toggle="tab">Объекты</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
         
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
-        <li role="presentation" ><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation" ng-hide="isTestMode()"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
+        <li role="presentation" ng-show="isSystemViewInfo()"><a class="nmc-main-tab-button" href="#/settings/about-program/" aria-controls="about-program" data-target="#about-program" role="tab" data-toggle="tab">О программе</a></li>
     </ul>
 
     <div class="tab-content">

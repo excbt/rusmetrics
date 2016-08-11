@@ -1256,6 +1256,14 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     $scope.isReadonly = function(){
         return mainSvc.isReadonly();
     };
+    
+    $scope.isTestMode = function () {
+        return mainSvc.isTestMode();
+    }
+    
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
 
     $scope.isROfield = function(){
         return ($scope.isReadonly());

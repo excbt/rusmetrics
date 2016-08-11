@@ -171,6 +171,10 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
         return mainSvc.isSystemuser();
     };
     
+    $scope.isTestMode = function () {
+        return mainSvc.isTestMode();
+    }
+    
     //Controller initialization
     //use to redirect from the Monitor page
     $scope.initCtrl = function(){        

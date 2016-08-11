@@ -198,6 +198,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/settings-object-view.html',
         controller: 'SettingsObjectViewCtrl'
       })
+    .when('/settings/about-program', {
+        templateUrl: 'views/about-program.html',
+        controller: 'AboutProgramCtrl'
+      })
       .when('/management/objects', {
         templateUrl: 'views/management-rma-objects.html',
         controller: 'MngmtObjectsCtrl',

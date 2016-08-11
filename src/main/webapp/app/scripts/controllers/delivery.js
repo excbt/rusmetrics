@@ -407,5 +407,13 @@ app.controller(
             $scope.isROfield = function(){
                 return ($scope.isReadonly());
             };
+            
+            $scope.isTestMode = function () {
+                return mainSvc.isTestMode();
+            }
+            
+            $scope.isSystemViewInfo = function () {
+                return mainSvc.getViewSystemInfo();
+            }
 		}	
 );

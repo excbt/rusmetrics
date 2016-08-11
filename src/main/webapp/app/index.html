@@ -174,9 +174,16 @@
                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span></a>
                                 
                                  <!-- Notices -->
-                                <a id="notice_main_menu_item" class="list-group-item nmc-main-menu-item nmc-hide" ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
-
-                                   href="#/notices/monitor/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item')"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span></a>                            
+                                <a id="notice_main_menu_item" 
+                                   ng-hide="isTestMode()"
+                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
+                                   href="#/notices/monitor/" 
+                                   data-toggle="offcanvas" 
+                                   ng-click="clickMenu('notice_menu_item')">
+                                    <i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i>
+                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span>
+                                </a>                            
                                 
 <!--                                Настройки-->
                                 <a 
@@ -186,6 +193,7 @@
 
                                    href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 <a ng-show="!isCabinet()"
+                                   ng-hide="isTestMode()"
                                    id="log_main_menu_item" 
                                    class="list-group-item nmc-main-menu-item" 
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"                                   
@@ -469,6 +477,7 @@
        <script src="scripts/controllers/log-view.js"></script> 
        <script src="scripts/controllers/log-sms.js"></script>
       <script src="scripts/controllers/settings-object-view.js"></script>
+      <script src="scripts/controllers/about-program.js"></script>
  <!--      <script src="scripts/controllers/test.js"></script> -->
       
 <!--       Directives -->

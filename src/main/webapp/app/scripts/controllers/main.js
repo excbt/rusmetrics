@@ -201,6 +201,10 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     $scope.emptyString = function(str){
         return mainSvc.checkUndefinedEmptyNullValue(str);
     };
+    
+    $scope.isTestMode = function () {
+        return mainSvc.isTestMode();
+    }
       
       
     function errorCallback (e) {

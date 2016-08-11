@@ -303,6 +303,10 @@ angular.module('portalNMC')
         return mainSvc.isSystemuser();
     };
     
+    $scope.isTestMode = function () {
+        return mainSvc.isTestMode();
+    }
+    
     //checkers
     $scope.checkNumericValue = function(num){
         return mainSvc.checkNumericValue(num);

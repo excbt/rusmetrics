@@ -412,7 +412,7 @@ angular.module('portalNMC')
                                             break;   
                                     }                                   
                                     trHTML += "<td>";
-                                    trHTML += "<img height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
+                                    trHTML += "<img class='marginLeft5' height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
                                     trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>"; 
                                     break;
                                 case "zpointLastDataDate" : 

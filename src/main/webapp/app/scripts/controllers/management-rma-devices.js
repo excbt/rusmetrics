@@ -762,6 +762,10 @@ angular.module('portalNMC')
         return mainSvc.isSystemuser();
     };
     
+    $scope.isTestMode = function () {
+        return mainSvc.isTestMode();
+    }
+    
     $scope.isDeviceDisabled = function(device){
 //console.log(device);        
 //        return !device.isManual;

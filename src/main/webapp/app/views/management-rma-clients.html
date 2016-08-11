@@ -10,6 +10,7 @@
         <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
             id="modems_edit_2nd_menu_item" role="presentation">
             <a class="nmc-main-tab-button" 
                href="#/management/modems/" 
@@ -30,8 +31,8 @@
         </li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-        <li id="temperature_schedules_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
+        <li id="users_edit_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
+        <li id="temperature_schedules_2nd_menu_item" ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
 
     </ul>
 

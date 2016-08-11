@@ -6,8 +6,22 @@
 angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
     
-    //Cert special settings
-    var useCert = true;
+    //Test special settings
+    var isUseTest = true,
+        isUseColorHighlightIndicatorData = true,
+        isViewSystemInfo = true;
+    
+    function getUseTest () {
+        return isUseTest;
+    }
+    
+    function getUseColorHighlightIndicatorData () {
+        return isUseColorHighlightIndicatorData;
+    }
+    
+    function getViewSystemInfo () {
+        return isViewSystemInfo;
+    }
     
     var MAP_PREF = "SUBSCR_MAP_PREF",
         LNG_MAP_PREF = "SUBSCR_LNG_MAP_PREF",
@@ -346,16 +360,21 @@ angular.module('portalNMC')
         return result;
     };
     
+            //check test user
+    function isTestUser () {
+        return getProp($rootScope.userInfo, "isTest");
+    }
+    
     var externalAllow = [
         {
-            keyname:"WEB_ALLOW_SETTING_MAIN_MENU_ITEM",
-            permissionTagId:"setting_main_menu_item",
-            priority:100
+            keyname: "WEB_ALLOW_SETTING_MAIN_MENU_ITEM",
+            permissionTagId: "setting_main_menu_item",
+            priority: 100
         },
         {
-            keyname:"WEB_ALLOW_REPORT_MAIN_MENU_ITEM",
-            permissionTagId:"report_main_menu_item",
-            priority:100
+            keyname: "WEB_ALLOW_REPORT_MAIN_MENU_ITEM",
+            permissionTagId: "report_main_menu_item",
+            priority: 100
         }
     ];
     
@@ -383,7 +402,7 @@ angular.module('portalNMC')
     var checkContext = function(ctxId){       
         var result = false;       
         contextIds.some(function(curCtx){           
-            if (curCtx.permissionTagId.localeCompare(ctxId) == 0){               
+            if (curCtx.permissionTagId.localeCompare(ctxId) === 0){               
                 result = true;
                 return true;
             };
@@ -454,6 +473,10 @@ angular.module('portalNMC')
         };
         return false;
     };
+    
+    function isTestMode () {
+        return getUseTest() && isSystemuser();
+    }
     
     ///////////////// end checkers
     
@@ -808,14 +831,18 @@ angular.module('portalNMC')
         getObjectMapSettings,
         getDateRangeOptions,
         getRequestCanceler,
-        getServerErrorByResultCode,
+        getServerErrorByResultCode,        
+        getUseColorHighlightIndicatorData,
         getUserServicesPermissions,
+        getUseTest,
+        getViewSystemInfo,
         isAdmin,
         isCabinet,
         isNumeric,
         isRma,
         isReadonly,
         isSystemuser,
+        isTestMode,
         prepareTimeOffset,
         setMonitorMapSettings,
         setObjectMapSettings,
