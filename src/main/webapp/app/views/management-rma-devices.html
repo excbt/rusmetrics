@@ -165,7 +165,7 @@
                            data-target="#deviceSessionModal"
                            data-toggle="modal"
                            ng-click="initManualLoading(device)">
-                            Ручная загрузка данных
+                            Загрузить данные
                         </a>
                     </li>
                     <li ng-if = "isDirectDevice(device)">
@@ -885,7 +885,7 @@
 		<div class="modal-header nmc-modal-header nmc-bg-alert">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deviceSessionLabel" class="nmc-h3">
-                Ручная загрузка данных с прибора 
+                Загрузка данных с прибора 
                 <span ng-bind="data.currentObject.number"></span>, 
                 {{data.currentObject.deviceModel.caption || data.currentObject.deviceModel.modelName}}
 <!--                <span ng-bind="data.currentObject.contObjectInfo.fullName"></span>" -->
