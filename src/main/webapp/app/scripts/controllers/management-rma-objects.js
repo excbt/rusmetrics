@@ -1962,9 +1962,12 @@ angular.module('portalNMC')
                     //get srcProp
                     objectSvc.getZpointMetaSrcProp(coId, zpId).then(
                         function(resp){
+                            resp.data.forEach(function(src){
+                                src.title = "Хинт для " + src.columnName;
+                            });
                             $scope.currentZpoint.metaData = {};
                             $scope.currentZpoint.metaData.srcProp = resp.data;
-                            $scope.currentZpoint.metaData.srcProp.push({columnName: ""});
+                            $scope.currentZpoint.metaData.srcProp.push({columnName: "", title: "Пустая строка"});
                             objectSvc.getZpointMetaDestProp(coId, zpId).then(
                                 function(resp){
                                     $scope.currentZpoint.metaData.destProp = resp.data;                                    

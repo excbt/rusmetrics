@@ -7,7 +7,7 @@ angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
     
     //Test special settings
-    var isUseTest = true,
+    var isUseTest = false,
         isUseColorHighlightIndicatorData = true,
         isViewSystemInfo = true;
     
