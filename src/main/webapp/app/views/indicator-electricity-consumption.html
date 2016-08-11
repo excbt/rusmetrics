@@ -176,7 +176,9 @@
                     </tr>
                     <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
                         total-items="data.length" 
-                        current-page="pagination.current">
+                        current-page="pagination.current"
+                        ng-class="indicator.dataClass"
+                        >
                         <td ng-repeat="column in tableDef.columns | columnFilter:'isvisible'" 
                             class="nmc-text-align-right" 
                             ng-class="indicator.class || column.dataClass" 

@@ -620,10 +620,11 @@ angular.module('portalNMC')
                 $scope.totalIndicators = data.totalElements;
  
                 $scope.columns = $scope.tableDef.columns;
-                var tmp = data.objects.map(function(el){
-                    var result  = {};
+                indicatorSvc.setColorHighlightsForManualAndCrc(data.objects);
+                var tmp = data.objects.map(function(el, ind){                                        
+//                    var result  = {};
                     for(var i in $scope.columns){
-                        if ($scope.columns[i].fieldName == "dataDate"){
+                        if ($scope.columns[i].fieldName === "dataDate"){
 //console.log("Indicator id = "+el.id);                            
 //console.log("Indicator timestamp in millisec, which get from server = "+el.dataDate);
 //console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/1000.0)+3*3600));                            
@@ -633,21 +634,22 @@ angular.module('portalNMC')
                             el.dataDate = el.dataDateString;//printDateNMC(datad);
                             continue;
                         }
-                        if ((el[$scope.columns[i].fieldName] != null) && ($scope.columns[i].fieldName !== "dataDateString")){
+                        if ((el[$scope.columns[i].fieldName] != null) /*only != */ && 
+                            ($scope.columns[i].fieldName !== "dataDateString")){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
-                        if ((el[$scope.columns[i].fieldName] == null) && ($scope.columns[i].fieldName === "m_delta")){
-                            if((el.m_out!=null)&&(el.m_in!=null)){
+                        if ((el[$scope.columns[i].fieldName] === null) && ($scope.columns[i].fieldName === "m_delta")){
+                            if((el.m_out !== null) && (el.m_in !== null)){
                                 el[$scope.columns[i].fieldName] = (el.m_in - el.m_out).toFixed(3);
                             };
                         };
-                        if ((el[$scope.columns[i].fieldName] == null) && ($scope.columns[i].fieldName === "v_delta")){
-                            if((el.v_out != null) && (el.v_in != null)){
+                        if ((el[$scope.columns[i].fieldName] === null) && ($scope.columns[i].fieldName === "v_delta")){
+                            if((el.v_out !== null) && (el.v_in !== null)){
                                 el[$scope.columns[i].fieldName] = (el.v_in - el.v_out).toFixed(3);
                             };
                         };
-                        if ((el[$scope.columns[i].fieldName] == null) && ($scope.columns[i].fieldName === "p_delta")){
-                            if((el.p_out != null) && (el.p_in != null)){
+                        if ((el[$scope.columns[i].fieldName] === null) && ($scope.columns[i].fieldName === "p_delta")){
+                            if((el.p_out !== null) && (el.p_in !== null)){
                                 el[$scope.columns[i].fieldName] = (el.p_in - el.p_out).toFixed(3);
                             };
                         };

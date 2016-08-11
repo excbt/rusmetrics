@@ -1,5 +1,5 @@
 var app = angular.module('portalNMC');
-app.service('indicatorSvc', function(){
+app.service('indicatorSvc', function(mainSvc){
     var contObjectId = null,
         contZpointId = null,
         contObjectName = null,
@@ -490,6 +490,24 @@ app.service('indicatorSvc', function(){
         return indicatorColumns;
     }
     
+    function setColorHighlightsForManualAndCrc (dataArray) {
+        if (mainSvc.checkUndefinedNull(dataArray)){
+            console.log("Can't set color highlights");
+            return false;
+        }
+        dataArray.forEach(function(el, ind){
+            var coef = ind % 3;
+            switch (coef){
+                case 1:    
+                    el.dataClass = "nmc-tr-indicator-manual";
+                    break;
+                case 2:
+                    el.dataClass = "nmc-tr-indicator-crc-error";
+                    break;
+            }
+        });
+    }
+    
     function initSvc(){
         initElectricityColumns();
     }
@@ -508,6 +526,7 @@ app.service('indicatorSvc', function(){
         getToDate,
         getZpointId,
         getZpointName,
+        setColorHighlightsForManualAndCrc,
         setContObjectId,
         setContObjectName,
         setDeviceModel,

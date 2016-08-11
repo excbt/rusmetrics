@@ -1,3 +1,6 @@
+<!-- *************************************************************************************************** -->
+<!--                        Страница "Показания"                                                        -->
+<!-- *************************************************************************************************** -->
 <!--<div><a href="#/">Портал</a> / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>-->
 <!--
 <div>
@@ -204,7 +207,9 @@
                 </tr>
                 <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
                     total-items="totalIndicators" 
-                    current-page="pagination.current">
+                    current-page="pagination.current"
+                    ng-class="indicator.dataClass"
+                    >
                     <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right" 
                         ng-class="column.headerClass" 

@@ -267,7 +267,7 @@ angular.module('portalNMC')
     function setPrecisionAndGetSum(dataArr){
         dataArr.forEach(function(el){
             for(var i in $scope.columns){
-                if ((el[$scope.columns[i].fieldName] != null)&&($scope.columns[i].type !== "string")){                            
+                if ((el[$scope.columns[i].fieldName] != null) && ($scope.columns[i].type !== "string")){                            
                     el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
                     // get active/reactive, positive/negative sums
                     el["" + $scope.columns[i].elType + $scope.columns[i].elKind + "_sum"] += Number(el[$scope.columns[i].fieldName]);   
@@ -324,17 +324,20 @@ angular.module('portalNMC')
         });
     };
     
+    
     var getIndicators = function(table, paramString){
 //console.log("get Indicators.");        
         var url = table+paramString;
         $http.get(url).then(
             function (response) {                
                 var tmp = angular.copy(response.data); 
-                if (mainSvc.checkUndefinedNull(tmp)){ return "Electricity indicators undefined or null."};            
+                if (mainSvc.checkUndefinedNull(tmp)){ return "Electricity indicators undefined or null.";}            
         //console.log(response.data);
                 $timeout(function(){
                     $scope.setScoreStyles();
                 });
+                    //set color highlight for manual and CRC error data
+                indicatorSvc.setColorHighlightsForManualAndCrc(tmp);
                             //set default active/reactive elec sum = 0
                 initializeElectroSums(tmp);
                     //set precision

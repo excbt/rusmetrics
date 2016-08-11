@@ -691,6 +691,15 @@ tr.nmc-tr-striped:nth-of-type(odd)>td{
     padding: 0 !important;
 }
 
+/* Подстветка строк таблицы показаний, которые были загружены в ручную*/
+.nmc-tr-indicator-manual{
+    background-color: lightblue;
+}
+/* Подстветка строк таблицы показаний, у которых нарушен CRC*/
+.nmc-tr-indicator-crc-error{
+    background-color: lightcoral;
+}
+
     /*Стиль колонки с кнопками*/
 .nmc-td-for-button{
     min-width: 35px;
