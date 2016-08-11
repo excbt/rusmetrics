@@ -620,7 +620,9 @@ angular.module('portalNMC')
                 $scope.totalIndicators = data.totalElements;
  
                 $scope.columns = $scope.tableDef.columns;
-                indicatorSvc.setColorHighlightsForManualAndCrc(data.objects);
+                if (mainSvc.getUseColorHighlightIndicatorData() === true){
+                    indicatorSvc.setColorHighlightsForManualAndCrc(data.objects);
+                }
                 var tmp = data.objects.map(function(el, ind){                                        
 //                    var result  = {};
                     for(var i in $scope.columns){

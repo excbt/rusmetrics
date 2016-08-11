@@ -337,7 +337,9 @@ angular.module('portalNMC')
                     $scope.setScoreStyles();
                 });
                     //set color highlight for manual and CRC error data
-                indicatorSvc.setColorHighlightsForManualAndCrc(tmp);
+                if (mainSvc.getUseColorHighlightIndicatorData() === true){
+                    indicatorSvc.setColorHighlightsForManualAndCrc(tmp);
+                }
                             //set default active/reactive elec sum = 0
                 initializeElectroSums(tmp);
                     //set precision
