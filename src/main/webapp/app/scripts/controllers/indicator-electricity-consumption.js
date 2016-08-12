@@ -1,5 +1,8 @@
+/*jslint node: true, white: true*/
+/*global angular, moment*/
+'use strict';
 angular.module('portalNMC')
-.controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $window, $timeout){
+.controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $window, $timeout, notificationFactory){
 //console.log("Run ConsumptionCtrl.");
     
     var PRECISION_MASK = "0.00000000000000000000";
@@ -19,13 +22,13 @@ angular.module('portalNMC')
     };
     
             // Настройки интервала дат для страницы с показаниями
-    if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
+    if (angular.isDefined($location.search().fromDate) && ($location.search().fromDate != null)){
         $scope.indicatorDates = {
             startDate : $location.search().fromDate,
             endDate :  $location.search().toDate
         };
     }else{
-        if (angular.isDefined($cookies.fromDate)&&($cookies.toDate!=null)){
+        if (angular.isDefined($cookies.fromDate) && ($cookies.toDate != null)){
             $scope.indicatorDates = {
                 startDate : $cookies.fromDate,
                 endDate :  $cookies.toDate
@@ -35,8 +38,8 @@ angular.module('portalNMC')
                 startDate : indicatorSvc.getFromDate(),
                 endDate :  indicatorSvc.getToDate()
             };
-        };
-    };
+        }
+    }
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dataUrl = "";
@@ -58,47 +61,47 @@ angular.module('portalNMC')
         columns : []
     };
     // ******************** create columns ****************************
-    var elecType = [{"name":"p_A", "caption": "A"}, /* active*/
-                    {"name":"q_R", "caption":"R"}]; /* reactive*/
-    var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
-                    {"name":"n", "caption":"-"}];/*negative*/
-    var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
-    var columns = [{
-                header : "Дата",
-                headerClass : "col-md-2 nmc-text-align-center",
-                dataClass : "col-md-2",
-                fieldName: "dataDateString",
-                type: "string",
-                date: true
-            }];
-    //columns for active and reactive parts
-    for (var type = 0; type < elecType.length; type++){
-        //columns for tariff plans
-        for (var tariff = 0; tariff < tariffPlans.length; tariff++){
-            for (var kind = 0; kind < elecKind.length; kind++){
-                var column = {};
-                column.header = "" + elecType[type].caption + elecKind[kind].caption + " (T" + tariffPlans[tariff] + ")";
-                column.headerClass = "nmc-view-digital-data";
-                column.dataClass = "nmc-view-digital-data";
-                column.fieldName = "" + elecType[type].name + elecKind[kind].name + "" + tariffPlans[tariff] + "";
-                column.elKind = elecKind[kind].name;
-                column.elType = elecType[type].name;
-                columns.push(column);
-            };
-        };
-        //columns for sum
-        for (var kind = 0; kind < elecKind.length; kind++){
-                var column = {};
-                column.header = "\u03A3" + elecType[type].caption+elecKind[kind].caption;
-                column.headerClass = "nmc-view-digital-data";
-                column.dataClass = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
-                column.fieldName = "" + elecType[type].name + elecKind[kind].name;
-                column.isSummary = true;
-                column.elKind = elecKind[kind].name;
-                column.elType = elecType[type].name;
-                columns.push(column);
-        };
-    };
+//    var elecType = [{"name":"p_A", "caption": "A"}, /* active*/
+//                    {"name":"q_R", "caption":"R"}]; /* reactive*/
+//    var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
+//                    {"name":"n", "caption":"-"}];/*negative*/
+//    var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
+//    var columns = [{
+//                header : "Дата",
+//                headerClass : "col-md-2 nmc-text-align-center",
+//                dataClass : "col-md-2",
+//                fieldName: "dataDateString",
+//                type: "string",
+//                date: true
+//            }];
+//    //columns for active and reactive parts
+//    for (var type = 0; type < elecType.length; type++){
+//        //columns for tariff plans
+//        for (var tariff = 0; tariff < tariffPlans.length; tariff++){
+//            for (var kind = 0; kind < elecKind.length; kind++){
+//                var column = {};
+//                column.header = "" + elecType[type].caption + elecKind[kind].caption + " (T" + tariffPlans[tariff] + ")";
+//                column.headerClass = "nmc-view-digital-data";
+//                column.dataClass = "nmc-view-digital-data";
+//                column.fieldName = "" + elecType[type].name + elecKind[kind].name + "" + tariffPlans[tariff] + "";
+//                column.elKind = elecKind[kind].name;
+//                column.elType = elecType[type].name;
+//                columns.push(column);
+//            };
+//        };
+//        //columns for sum
+//        for (var kind = 0; kind < elecKind.length; kind++){
+//                var column = {};
+//                column.header = "\u03A3" + elecType[type].caption+elecKind[kind].caption;
+//                column.headerClass = "nmc-view-digital-data";
+//                column.dataClass = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
+//                column.fieldName = "" + elecType[type].name + elecKind[kind].name;
+//                column.isSummary = true;
+//                column.elKind = elecKind[kind].name;
+//                column.elType = elecType[type].name;
+//                columns.push(column);
+//        };
+//    };
 //console.log(columns);    
     // ******************************* end Create columns **************************
     
@@ -108,14 +111,14 @@ angular.module('portalNMC')
         var errorCode = "-1";
         if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
             errorCode = "ERR_CONNECTION";
-        };
+        }
         if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
             errorCode = e.resultCode || e.data.resultCode;
-        };
+        }
         var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
-    };
+    }
     
     function errorLoadingModePrefsCallback (e) {
         $scope.$broadcast("indicators:loadedModePrefs");
@@ -156,7 +159,7 @@ angular.module('portalNMC')
             $scope.$broadcast("indicators:loadedModePrefs");
 
         }, errorLoadingModePrefsCallback);
-    };    
+    }    
         
     function loadIndicatorMode (objId) {        
         if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)){
@@ -178,7 +181,7 @@ angular.module('portalNMC')
     
     function setColumnPref(columnPrefs){        
         //if columnPrefs not set, that mean - view all columns
-        if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length == 0){
+        if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length === 0){
             //indicator columns
             $scope.ctrlSettings.activeEnergyColCount = colLen;
             $scope.ctrlSettings.reactiveEnergyColCount = colLen;

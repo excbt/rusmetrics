@@ -349,6 +349,10 @@ angular.module('portalNMC')
         return !$scope.isAdmin() || $scope.ctrlSettings.isSaving == true;
     };
     
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
+    
     var initCtrl = function(){
         getProgramSettings();
     };    

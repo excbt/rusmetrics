@@ -200,7 +200,19 @@ app.config(function ($routeProvider) {
       })
     .when('/settings/about-program', {
         templateUrl: 'views/about-program.html',
-        controller: 'AboutProgramCtrl'
+        controller: 'AboutProgramCtrl',
+        resolve:{
+            allow: ['mainSvc', '$q', '$location', function(mainSvc, $q, $location){
+                var deferred = $q.defer();
+                if (mainSvc.getViewSystemInfo() === true){
+                    deferred.resolve("System info is allow.");
+                }else{
+                    $location.path("/");
+                    deferred.reject("Access denied!");
+                }
+                return deferred.promise;
+            }]
+        }
       })
       .when('/management/objects', {
         templateUrl: 'views/management-rma-objects.html',

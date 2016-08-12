@@ -1506,7 +1506,11 @@ angular.module('portalNMC')
                     }else{
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
                     };
-                };                                
+                };
+                
+                $scope.isSystemViewInfo = function () {
+                    return mainSvc.getViewSystemInfo();
+                }
                 
                 // Проверка пользователя - системный/ не системный
                 $scope.isSystemuser = function(){

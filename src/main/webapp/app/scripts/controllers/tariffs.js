@@ -482,6 +482,10 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         return mainSvc.isAdmin();
     };
     
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
+    
     $scope.showAddObjectButton = function(){
 //console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
 //console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        

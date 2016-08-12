@@ -268,6 +268,10 @@ angular.module('portalNMC')
         return true;
     };
     
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
+    
     $('#showUserOptionModal').on("shown.bs.modal", function(){
         $('#inputFirstName').focus();
     });

@@ -353,4 +353,8 @@ angular.module('portalNMC')
         return mainSvc.isAdmin();
     };
     
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
+    
 }]);

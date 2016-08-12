@@ -24,7 +24,7 @@ angular.module("portalNMC")
                 headerClass: "col-xs-2 col-md-2 bg-info",
                 dataClass: "col-xs-2 col-md-2"
             }
-        ]
+        ];
         $scope.data.modules = [
             {
                 id: 1,
@@ -50,8 +50,8 @@ angular.module("portalNMC")
                 caption: "Модуль управления",
                 version: "60810-2",
                 date: "10-08-2016"
-            },
-        ]
+            }
+        ];
         
         function loadModules () {
             var url = "";
@@ -64,8 +64,8 @@ angular.module("portalNMC")
         }
         
         $scope.isTestMode = function (){
-            return mainSvc.isTestMode()
-        }
+            return mainSvc.isTestMode();
+        };
         
         function initCtrl () {
         }

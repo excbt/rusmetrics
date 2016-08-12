@@ -853,6 +853,10 @@ console.log(e);
                     return result;
                 };
                 
+                $scope.isSystemViewInfo = function () {
+                    return mainSvc.getViewSystemInfo();
+                }
+                
                 //toggle all objects - selected/unselected
                 $scope.toggleObjects = function(flag){
                     $scope.objectCtrlSettings.anySelected = flag;

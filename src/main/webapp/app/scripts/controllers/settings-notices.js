@@ -188,5 +188,9 @@ angular.module('portalNMC')
     
     $scope.selectItem = function(item){
         $scope.currentNotice = angular.copy(item);
-    };    
+    };
+    
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
 });

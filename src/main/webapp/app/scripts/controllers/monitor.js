@@ -1,7 +1,8 @@
 angular.module('portalNMC')
   .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'objectSvc', 'monitorSvc','mainSvc', '$timeout', function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, objectSvc, monitorSvc, mainSvc, $timeout){
          
-//console.log("Monitor Controller.");    
+//console.log("Monitor Controller.");     
+      
     $rootScope.ctxId = "monitor_page";
     //object url
     var noticesUrl = "#/notices/list/";

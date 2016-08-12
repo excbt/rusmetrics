@@ -182,6 +182,10 @@ angular.module('portalNMC')
         return $scope.userInfo._system;
     };
     
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
+    
     $scope.setOrderBy = function (field) {
         var asc = $scope.orderBy.field === field ? !$scope.orderBy.asc : true;
         $scope.orderBy = { field: field, asc: asc };

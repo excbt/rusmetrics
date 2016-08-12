@@ -263,5 +263,9 @@ app.controller(
             $scope.isROfield = function(){
                 return ($scope.isReadonly());
             };
+            
+            $scope.isSystemViewInfo = function () {
+                return mainSvc.getViewSystemInfo();
+            }
 		}
 );

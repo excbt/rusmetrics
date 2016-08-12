@@ -1,4 +1,4 @@
-/*jslint node: true, white: true*/
+/*jslint node: true, white: true, nomen: true*/
 /*global angular, $, moment*/
 'use strict';
 //Service decides common tasks for all portal
@@ -53,6 +53,18 @@ angular.module('portalNMC')
         return requestCanceler;
     }
     ////////////////////////////
+    
+    function checkUndefinedNull (numvalue){
+        var result = false;
+        if ((angular.isUndefined(numvalue)) || (numvalue == null)){
+            result = true;
+        }
+        return result;
+    }
+    
+    function checkEmptyObject (obj){
+        return Object.keys(obj).length === 0 && obj.constructor === Object;
+    }
     
     var getContextIds = function(){
         return contextIds;
@@ -117,9 +129,9 @@ angular.module('portalNMC')
         
     var checkStrForDate = function(strWithDate){
         //check date for format: DD/MM/YYYY
-        if (/(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(strWithDate)){
+        if (/(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)\d\d/.test(strWithDate)){
             return true;
-        };  
+        }  
         return false;
     };
     
@@ -204,10 +216,10 @@ angular.module('portalNMC')
                 if (!checkUndefinedNull(settings)){
                     if (!checkUndefinedNull(settings.minDate)){
                         result.minDate = settings.minDate;
-                    };
-                };
+                    }
+                }
                 break;
-        };
+        }
         return result;
     };
     
@@ -228,7 +240,7 @@ angular.module('portalNMC')
     var hasMapSettings = function(userInfo){
         var result = false;
         result = !checkUndefinedNull(userInfo.subscriber);
-        result=result&&!checkUndefinedNull(userInfo.subscriber.mapCenterLat)
+        result=result&&!checkUndefinedNull(userInfo.subscriber.mapCenterLat);
     };
     
     //get user info
@@ -271,36 +283,36 @@ angular.module('portalNMC')
             if (!checkUndefinedNull(broadcastMsg)){
                 $rootScope.$broadcast(broadcastMsg);
             }
-        }, errorCallbackConsole)
+        }, errorCallbackConsole);
     }
     
     function loadMapCenterLat(){        
-        loadMapSetting(LAT_MAP_PREF, "mapCenterLat", 'mainSvc:loadMapCenterLng')
+        loadMapSetting(LAT_MAP_PREF, "mapCenterLat", 'mainSvc:loadMapCenterLng');
     }
     
     function loadMapCenterLng(){        
-        loadMapSetting(LNG_MAP_PREF, "mapCenterLng", 'mainSvc:loadMapZoom')
+        loadMapSetting(LNG_MAP_PREF, "mapCenterLng", 'mainSvc:loadMapZoom');
     }
     
     function loadMapZoom(){       
-        loadMapSetting(ZOOM_MAP_PREF, "mapZoom", 'mainSvc:setMapSettingsInServices')
+        loadMapSetting(ZOOM_MAP_PREF, "mapZoom", 'mainSvc:setMapSettingsInServices');
     }
     //load main map setting. If it is active == true, then load other map prefs
     function loadMapSettings(){
         var url = prefUrl + "?subscrPrefKeyname=" + MAP_PREF;
         $http.get(url, httpOptions).then(function(resp){
             var mapPref = resp.data;
-            if (mapPref.isActive == true){            
+            if (mapPref.isActive === true){            
                 $rootScope.$broadcast('mainSvc:loadMapCenterLat');                
             }
-        }, errorCallbackConsole)
+        }, errorCallbackConsole);
     }
     
     function setMapSettingsInServices(){      
         if (!checkEmptyObject(mainSvcSettings.mapSettings)){        
             objectSvc.setObjectSettings(mainSvcSettings.mapSettings);
             monitorSvc.setMonitorSettings(mainSvcSettings.mapSettings);
-        };
+        }
     }
     
     $rootScope.$on('mainSvc:loadMapCenterLat', loadMapCenterLat);
@@ -313,7 +325,7 @@ angular.module('portalNMC')
         var result = false;
         if (angular.isDefined(obj)){
             result = obj[propName];
-        };
+        }
         return result;
     };
         //check user: system? - true/false
@@ -322,7 +334,7 @@ angular.module('portalNMC')
         var userInfo = $rootScope.userInfo;
         if (angular.isDefined(userInfo)){
             result = userInfo._system;
-        };
+        }
         return result;
     };
     
@@ -332,7 +344,7 @@ angular.module('portalNMC')
         var userInfo = $rootScope.userInfo;
         if (angular.isDefined(userInfo)){
             result = userInfo.isRma;
-        };
+        }
         return result;
     };
     
@@ -342,7 +354,7 @@ angular.module('portalNMC')
         var userInfo = $rootScope.userInfo;
         if (angular.isDefined(userInfo)){
             result = userInfo.isAdmin;
-        };
+        }
         return result;
     };
     
@@ -356,7 +368,7 @@ angular.module('portalNMC')
         var userInfo = $rootScope.userInfo;
         if (angular.isDefined(userInfo)){
             result = userInfo.isReadonly;
-        };
+        }
         return result;
     };
     
@@ -405,16 +417,13 @@ angular.module('portalNMC')
             if (curCtx.permissionTagId.localeCompare(ctxId) === 0){               
                 result = true;
                 return true;
-            };
+            }
         });
         return result;
     };
     ////////////////////////////////////////////////////////
     
     //checkers
-    var checkEmptyObject = function(obj){
-        return Object.keys(obj).length === 0 && obj.constructor === Object
-    }
     
     var checkEmptyNullValue = function(numvalue){                    
         var result = false;
@@ -429,13 +438,13 @@ angular.module('portalNMC')
         var result = false;
         if ((angular.isUndefined(numvalue)) || (numvalue == null) || (numvalue === "")){
             result = true;
-        };
+        }
         return result;
     };
 
     function isNumeric(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
-    };
+    }
     
     var checkNumericValue = function(numvalue){ 
         var result = true;
@@ -445,32 +454,25 @@ angular.module('portalNMC')
         if (!isNumeric(numvalue)){
             result = false;
             return result;
-        };
+        }
         return result;
     };
     
     var checkPositiveNumberValue = function(numvalue){        
         var result = true;
-        result = checkNumericValue(numvalue)
+        result = checkNumericValue(numvalue);
         if (!result){          
             //if numvalue is not number -> return false
             return result;
-        };
+        }
         result = parseInt(numvalue) >= 0 ? true : false;
         return result;
     };
     
-    var checkUndefinedNull = function(numvalue){
-        var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue==null)){
-            result = true;
-        }
-        return result;
-    };
     var checkHHmm = function(hhmmValue){
         if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
             return true;
-        };
+        }
         return false;
     };
     
@@ -480,94 +482,95 @@ angular.module('portalNMC')
     
     ///////////////// end checkers
     
-    var findItemBy =  function(itemArray, fieldName, value){
+    function findItemBy (itemArray, fieldName, value){
         var result = null;
         if (!angular.isArray(itemArray)){
             console.log("Input value is no array.");
             return result;
-        };
+        }
         if (checkUndefinedNull(value)){
             console.log("value for search is undefined or null.");
             return result;
-        };
+        }
         if (checkUndefinedNull(fieldName)){
             itemArray.some(function(item){
                 if (item == value){
                     result = item;
                     return true;
-                };
+                }
             });
         }else{
             itemArray.some(function(item){
                 if (item[fieldName] == value){
                     result = item;
                     return true;
-                };
+                }
             });
-        };
+        }
         return result;
-    };
+    }
+    
     // Sort object array by some string field
-    var sortItemsBy = function(itemArray, sortField){
+    function sortItemsBy (itemArray, sortField) {
         if (!angular.isArray(itemArray)){
             return "Input value is no array.";
-        };
+        }
         if (checkUndefinedNull(sortField)){
             return "Field for sort is undefined or null.";
-        };
+        }
         itemArray.sort(function(firstItem, secondItem){
             if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
                 return 0;
-            };
+            }
             if (checkUndefinedNull(firstItem[sortField])){
                 return -1;
-            };
+            }
             if (checkUndefinedNull(secondItem[sortField])){
                 return 1;
-            };
+            }
             if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
                 return 1;
-            };
+            }
             if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
                 return -1;
-            };
+            }
             return 0;
         });
-    };
+    }
     
-    var sortNumericItemsBy = function(itemArray, sortField){
+    function sortNumericItemsBy (itemArray, sortField) {
         if (!angular.isArray(itemArray)){
             return "Input value is no array.";
-        };
+        }
         if (checkUndefinedNull(sortField)){
             return "Field for sort is undefined or null.";
-        };
+        }
         itemArray.sort(function(firstItem, secondItem){
             if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
                 return 0;
-            };
+            }
             if (checkUndefinedNull(firstItem[sortField])){
                 return -1;
-            };
+            }
             if (checkUndefinedNull(secondItem[sortField])){
                 return 1;
-            };
+            }
             if (firstItem[sortField] > secondItem[sortField]){
                 return 1;
-            };
+            }
             if (firstItem[sortField] < secondItem[sortField]){
                 return -1;
-            };
+            }
             return 0;
         });
-    };
+    }
     
     // Sort organizations by organizationName
     var sortOrganizationsByName = function(orgArr){
         if (!angular.isArray(orgArr)){
             return "Param is no array.";
-        };
-        sortItemsBy(orgArr, "organizationName")
+        }
+        sortItemsBy(orgArr, "organizationName");
 //        orgArr.sort(function(a, b){
 //            if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
 //                return 1;
@@ -587,10 +590,10 @@ angular.module('portalNMC')
 //console.log(useImprovedMethodFlag);        
         var leftCoef = Math.random()*10;
         var rightCoef = Math.random()*100;
-        if (!checkUndefinedNull(useImprovedMethodFlag) && useImprovedMethodFlag == true){
+        if (!checkUndefinedNull(useImprovedMethodFlag) && useImprovedMethodFlag === true){
             leftCoef = Math.random()*1000 + 100;
             rightCoef = Math.random()*1000 + 100;
-        };
+        }
         var tmpFirst = Math.round(leftCoef);
         var tmpSecond = Math.round(rightCoef);
         var tmpLabel = tmpFirst+" + "+tmpSecond+" = ";
@@ -674,34 +677,34 @@ angular.module('portalNMC')
         }
     ];
     
-    var getServerErrorByResultCode = function(resultCode){
+    function getServerErrorByResultCode (resultCode){
 //console.log(resultCode);
         var result = DEFAULT_ERROR_MESSAGE;
-        if (checkUndefinedEmptyNullValue(resultCode)){return result};
+        if (checkUndefinedEmptyNullValue(resultCode)){return result;}
         serverErrors.some(function(serror){
             if (serror.resultCode == resultCode) {
                 result = serror; 
                 return true;
-            };
+            }
         });
         return result;
-    };
+    }
     
-    var getServerErrorByResult = function(result){
-//console.log(resultCode);
-        var result = DEFAULT_ERROR_MESSAGE;
-        if (checkUndefinedEmptyNullValue(resultCode)){return result};
-        serverErrors.some(function(serror){
-            if (serror.resultCode == result.resultCode) {
-//                if (result.description.indexOf("Access is denied") >= 0){
-//                    
-//                };
-                result = serror; 
-                return true;
-            };
-        });
-        return result;
-    };
+//    var getServerErrorByResult = function(result){
+////console.log(resultCode);
+//        var result = DEFAULT_ERROR_MESSAGE;
+//        if (checkUndefinedEmptyNullValue(resultCode)){return result};
+//        serverErrors.some(function(serror){
+//            if (serror.resultCode == result.resultCode) {
+////                if (result.description.indexOf("Access is denied") >= 0){
+////                    
+////                };
+//                result = serror; 
+//                return true;
+//            };
+//        });
+//        return result;
+//    };
     
     //****************** end region "Server errors"
     
@@ -732,7 +735,7 @@ angular.module('portalNMC')
         var result = null;
         if (!angular.isArray(tree.childObjectList)){
             return result;
-        };
+        }
         tree.childObjectList.some(function(curNode){
             if (node.id == curNode.id && node.objectName == curNode.objectName){
                 result = curNode;
@@ -740,7 +743,7 @@ angular.module('portalNMC')
             }else{
                 result = findNodeInTree(node, curNode);
                 return result != null;
-            };
+            }
         });
         return result;
     };
@@ -748,7 +751,7 @@ angular.module('portalNMC')
     var sortTreeNodesBy = function(tree, fieldName){
         if (checkUndefinedNull(tree.childObjectList) || !angular.isArray(tree.childObjectList)){
             return;
-        };
+        }
         sortItemsBy(tree.childObjectList, fieldName);
         tree.childObjectList.forEach(function(node){
             sortTreeNodesBy(node, fieldName);
@@ -804,7 +807,7 @@ angular.module('portalNMC')
         requestCanceler = $q.defer();
         httpOptions = {
             timeout: requestCanceler.promise
-        }
+        };
         
         loadMapSettings();
     }    
