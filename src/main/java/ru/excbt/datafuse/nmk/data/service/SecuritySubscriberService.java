@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
@@ -34,7 +35,8 @@ public class SecuritySubscriberService {
 	public List<SubscrUser> findUserByUsername(String userName) {
 
 		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
-		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
+		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0)
+				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
 		result.forEach(i -> {
 			i.getSubscriber();
 		});
