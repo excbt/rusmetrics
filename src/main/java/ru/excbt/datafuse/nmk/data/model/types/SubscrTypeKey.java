@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.types;
 
 public enum SubscrTypeKey implements AbstractKey {
-	RMA, NORMAL, SUBSCR_CHILD(true), CABINET(true);
+	RMA, NORMAL, SUBSCR_CHILD(true), CABINET(true), TEST_CERTIFICATE(false);
 
 	private final boolean isChild;
 

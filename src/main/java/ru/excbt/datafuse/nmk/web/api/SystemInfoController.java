@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
@@ -187,7 +188,7 @@ public class SystemInfoController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		List<SessionInformation> activeSessions = new ArrayList<SessionInformation>();
+		List<SessionInformation> activeSessions = new ArrayList<>();
 		for (Object principal : sessionRegistry.getAllPrincipals()) {
 			for (SessionInformation session : sessionRegistry.getAllSessions(principal, false)) {
 				activeSessions.add(session);
@@ -199,6 +200,15 @@ public class SystemInfoController extends SubscrApiController {
 		});
 
 		return responseOK(ApiResult.ok("Invalidated sessions: " + activeSessions.size()));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getIsCMode() {
+		return responseOK(getSubscriberParam().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
 	}
 
 }
