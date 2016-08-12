@@ -112,4 +112,12 @@ public interface ContServiceDataElConsRepository extends CrudRepository<ContServ
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			Pageable pageable);
 
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Query("SELECT d.contZPointId, d.timeDetailType, max(d.dataDate) FROM ContServiceDataElCons d "
+			+ " WHERE d.contZPointId in (:contZPointIds) " + " GROUP BY d.contZPointId, d.timeDetailType")
+	public List<Object[]> selectTimeDetailLastDataByZPoint(@Param("contZPointIds") List<Long> contZPointIds);
 }

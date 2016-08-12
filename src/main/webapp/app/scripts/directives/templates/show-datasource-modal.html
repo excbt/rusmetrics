@@ -1,0 +1,422 @@
+<div id="showDatasourceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showDatasourceLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showDatasourceLabel" class="nmc-h3">
+				Источник данных
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div role="tabpanel" 
+                 class="nmc-tab-panel">
+              <!-- Навигационная полоса для варианта отчета-->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" 
+                    class="active" 
+                    id="ds_main_properties_tab">
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="ds_main_properties" 
+                       data-target="#ds_main_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       ng-click="">Основные свойства
+                    </a>
+                  </li>
+                <li role="presentation" 
+                    id="ds_con_properties_tab"                                         
+                    > 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="ds_con_properties" 
+                       data-target="#ds_con_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Параметры подключения
+                    </a>
+                  </li>
+                  <li role="presentation" 
+                    id="ex_properties_tab"                                         
+                    > 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="ex_properties" 
+                       data-target="#ex_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Дополнительные параметры
+                    </a>
+                  </li>                  
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Основные свойства-->
+                <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="ds_main_properties">
+                    
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td class="col-xs-3 col-sm-3"><label for="inputDataSourceMode">Тип</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <select class="form-control nmc-select-form" 
+                                                        id="inputDataSourceMode" 
+                                                        ng-model="currentDatasource.dataSourceTypeKey" 
+                                                        ng-options="dtype.keyname as dtype.caption for dtype in dsourceTypes"
+                                                        ng-disabled="isDisabled()"
+                                                        >
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE'">
+                                            <td class="col-sm-3"><label for="inputAddress">Режим</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <select class="form-control nmc-select-form" 
+                                                        id="inputDeviceMode" 
+                                                        ng-model="currentDatasource.rawConnectionType" 
+                                                        ng-options="dmode.keyname as dmode.caption for dmode in DEVICE_MODES"
+                                                        ng-disabled="isDisabled()"
+                                                        >
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <div id="divInputName" class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':(!currentDatasource.dataSourceName||(currentDatasource.dataSourceName==''))}">
+                                                    <input class="form-control nmc-text-input-form" 
+                                                           type="text" 
+                                                           id="inputName"
+                                                           placeholder="Наименование"  
+                                                           ng-model="currentDatasource.dataSourceName"
+                                                           ng-disabled="isDisabled()"
+                                                           >
+                                                </div>    
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputDescription" >Описание</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <textarea class="form-control nmc-textarea-form" 
+                                                          id="inputDescription" 
+                                                          placeholder="Описание" 
+                                                          ng-model="currentDatasource.dataSourceDescription"
+                                                          ng-disabled="isDisabled()"
+                                                          >
+                                                </textarea>
+                                            </td>
+                                        </tr>
+                                        
+                                    </table>
+                                </div>    
+                            </div>  
+                        </div> 
+                  </div>
+                  <div role="tabpanel" 
+                     class="tab-pane fade" 
+                     id="ds_con_properties">
+                    
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey != 'DEVICE' || currentDatasource.rawConnectionType != 'CLIENT'">
+                                            <td class="col-sm-3"><label for="inputThv">IP \ Hostname</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+            <!--                                    <div id="divInputIp" class="form-group noMarginBottom" ng-class="{'has-error':!ctrlSettings.inputIpComplete}">-->
+                                                <div id="divInputIp" 
+                                                     class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':(!currentDatasource.dataSourceIp||(currentDatasource.dataSourceIp==''))}">
+                                                    <input class="form-control nmc-text-input-form" 
+                                                           type="text" 
+                                                           id="inputIP" 
+                                                           placeholder="" 
+                                                           ng-model="currentDatasource.dataSourceIp"
+                                                           ng-disabled="isDisabled()"
+                                                           /> 
+                                                </div>
+                                            </td>                               
+                                        </tr>                           
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey != 'DEVICE' || currentDatasource.rawConnectionType != 'CLIENT'">
+                                            <td class="col-sm-3"><label for="inputSquare">Порт</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(currentDatasource.dataSourcePort)}">
+                                                <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputPort" 
+                                                       placeholder="" 
+                                                       ng-model="currentDatasource.dataSourcePort"
+                                                       ng-disabled="isDisabled()"
+                                                       >
+                                                </div>        
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE' && currentDatasource.rawConnectionType == 'CLIENT'">
+                                            <td class="col-sm-4">
+                                                <label for="inputMode">Модель</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !currentDatasource.rawModemModelId}">
+                                                    <select class="form-control nmc-select-form" 
+                                                        id="inputDeviceMode" 
+                                                        ng-model="currentDatasource.rawModemModelId" 
+                                                        ng-options="smodel.id as smodel.rawModemModelName for smodel in rawModemModels"
+                                                        ng-change="changeModemModel()"
+                                                            ng-disabled="isDisabled()"
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE' && currentDatasource.rawConnectionType == 'CLIENT' && currentDatasource.rawModemIdentity == 'SERIAL_NR'">
+                                            <td class="col-sm-4">
+                                                <label for="inputMode">Серийный номер</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !currentDatasource.rawModemSerial}">
+                                                    <input class="form-control nmc-text-input-form" 
+                                                        id="inputClientNumber" 
+                                                        ng-model="currentDatasource.rawModemSerial"
+                                                           ng-disabled="isDisabled()"
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE' && currentDatasource.rawConnectionType == 'CLIENT' && currentDatasource.rawModemIdentity == 'MAC_ADDR'">
+                                            <td class="col-sm-4">                                                
+                                                <label for="inputClientMac">MAC-адрес</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !currentDatasource.rawModemMacAddr}"> 
+                                                    <input ng-disabled="isDisabled()" 
+                                                           class="form-control nmc-text-input-form" 
+                                                           id="inputClientMac" 
+                                                           ng-model="currentDatasource.rawModemMacAddr" 
+                                                           ui-mask="MM-MM-MM-MM-MM-MM" 
+                                                           ui-mask-placeholder ui-mask-placeholder-char="_"                             
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE' && currentDatasource.rawConnectionType == 'CLIENT' && currentDatasource.rawModemIdentity == 'IMEI'">
+                                            <td class="col-sm-4">                                                
+                                                <label for="inputClientMac">IMEI</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': !currentDatasource.rawModemImei}">
+                                                    <input ng-disabled="isDisabled()" class="form-control nmc-text-input-form" 
+                                                        id="inputClientMac" 
+                                                        ng-model="currentDatasource.rawModemImei" ui-mask="99-999999-999999-9" 
+                                                        ui-mask-placeholder ui-mask-placeholder-char="_"                             
+                                                        />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE' && currentDatasource.rawConnectionType == 'CLIENT' && currentDatasource.rawModemDialupAvailable == true">
+                                            <td class="col-sm-4">
+                                                <input type="checkbox" ng-model="currentDatasource.rawModemDialEnable"/>
+                                                <label for="inputMode">Поддержка дозвона</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left col-sm-8">
+                                                <div class="form-group noMarginBottom pull-right" 
+                                                     ng-class="{'has-error': currentDatasource.rawModemDialEnable == true && !currentDatasource.rawModemDialTel}">
+                                                    <label>Номер</label>
+<!--
+                                                    <input class="form-control nmc-text-input-form nmc-input-data-with-label" 
+                                                        id="inputClientNumber" 
+                                                        ng-model="currentDatasource.rawModemDialTel" 
+                                                        ng-disabled="!currentDatasource.rawModemDialEnable"
+                                                        />
+-->
+                                                    <input type="text"
+                                                           class="form-control nmc-text-input-form nmc-input-data-with-label" 
+                                                           id="inputClientNumber"
+                                                           ng-model="currentDatasource.rawModemDialTel" 
+                                                           ui-mask="(999)999-9999" 
+                                                           ui-mask-placeholder ui-mask-placeholder-char="_"
+                                                           ng-disabled="isDisabled() || !currentDatasource.rawModemDialEnable"
+                                                           />
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                      </div>
+                  </div>
+                  <div role="tabpanel" 
+                     class="tab-pane fade" 
+                     id="ex_properties">
+                    
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey != 'DEVICE'">
+                                            <td class="col-sm-3"><label for="inputAddress">База данных</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form pull-right"  
+                                                       type="text" 
+                                                       id="inputDB" 
+                                                       placeholder="" 
+                                                       ng-model="currentDatasource.dbName"
+                                                       ng-disabled="isDisabled()"
+                                                       >
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey != 'DEVICE'">
+                                            <td class="col-sm-3"><label for="inputCC">Логин</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       ng-model="currentDatasource.dbUser"
+                                                       ng-disabled="isDisabled()"
+                                                       >
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey != 'DEVICE'">
+                                            <td class="col-sm-3"><label for="inputMode">Пароль</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       ng-model="currentDatasource.dbPassword"
+                                                       ng-disabled="isDisabled()"
+                                                       >
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE'">
+                                            <td colspan="2" class="col-sm-9"><label for="inputMode">Время ожидания ответа, сек</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(currentDatasource.rawTimeout)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSTimeout"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="currentDatasource.rawTimeout"
+                                                           ng-disabled="isDisabled()"
+                                                           >
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE'">
+                                            <td colspan="2" class="col-sm-9"><label for="inputMode">Интервал проверки получения ответа, мс</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(currentDatasource.rawSleepTime)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSCheckInterval"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="currentDatasource.rawSleepTime"
+                                                           ng-disabled="isDisabled()"
+                                                           >
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE'">
+                                            <td colspan="2" class="col-sm-9"><label for="inputMode">Количество попыток переотправки пакета</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(currentDatasource.rawResendAttempts)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSRepeatCount"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="currentDatasource.rawResendAttempts"
+                                                           ng-disabled="isDisabled()"
+                                                           >
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE'">
+                                            <td colspan="2" class="col-sm-9">
+                                                <label for="inputMode">Количество переподключений в случае ошибки</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(currentDatasource.rawReconnectAttempts)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSReconnectionCount"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="currentDatasource.rawReconnectAttempts"
+                                                           ng-disabled="isDisabled()"
+                                                           >
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentDatasource.dataSourceTypeKey == 'DEVICE'">
+                                            <td colspan="2" class="col-sm-9">
+                                                <label for="inputMode">Пауза между переподключениями, сек</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-3">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(currentDatasource.rawReconnectTimeout)}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-digital-data pull-right"
+                                                           id="inputDSReconnectionInterval"
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           type="text" 
+                                                           ng-model="currentDatasource.rawReconnectTimeout"
+                                                           ng-disabled="isDisabled()"
+                                                           >
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                      </div>
+                  </div>
+                  
+                </div>
+            </div>
+            
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input ng-show="showOkButton === 'true'"
+                                   type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="btnClick()"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentDatasource')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>

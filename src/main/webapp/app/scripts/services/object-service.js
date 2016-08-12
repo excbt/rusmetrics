@@ -1,6 +1,8 @@
+/*jslint node: true, white: true*/
+/*global angular*/
 'use strict';
 angular.module('portalNMC')
-.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
+    .service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
              function($http, $cookies, $interval, $rootScope, $q){
 //console.log("Object Service. Run."); 
                  
@@ -14,7 +16,7 @@ angular.module('portalNMC')
         var urlSubscr = urlApi + '/subscr';
         var urlRma = urlApi + '/rma';
         var urlDatasources = urlRma + '/dataSources';
-        var crudTableName = urlSubscr + '/contObjects';
+        var urlSubscrContObjects = urlSubscr + '/contObjects';
         var urlRmaContObjects = urlRma + '/contObjects';                 
         var urlRefRange = urlSubscr + '/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
@@ -48,6 +50,14 @@ angular.module('portalNMC')
         //request canceling params
         var requestCanceler = null;
         var httpOptions = null;
+                 
+        var checkUndefinedNull = function(numvalue){
+            var result = false;
+            if ((angular.isUndefined(numvalue)) || (numvalue === null)){
+                result = true;
+            }
+            return result;
+        };
         
         function isCancelParamsIncorrect(){
             return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
@@ -55,7 +65,18 @@ angular.module('portalNMC')
         function getRequestCanceler () {
             return requestCanceler;
         }
-        //////////////////////////////         
+        //////////////////////////////  
+
+                //check user: system? - true/false
+        var isSystemuser = function(){
+            var result = false;
+            var userInfo = $rootScope.userInfo;
+            if (angular.isDefined(userInfo)){
+                result = userInfo._system;
+            };
+            return result;
+        };         
+                 
         var getCurrentObject = function(){
             return currentObject;
         };
@@ -80,13 +101,14 @@ angular.module('portalNMC')
         };
         
         var setObjectSettings = function(objectSettings){
-            for (var key in objectSettings){
+            var key;
+            for (key in objectSettings){
                 objectSvcSettings[key] = objectSettings[key];
-            };
+            }
         };
         
         var getObjectsUrl = function(){
-            return crudTableName;
+            return urlSubscrContObjects;
         };
                  
         var getRmaObjectsUrl = function(){
@@ -109,97 +131,112 @@ angular.module('portalNMC')
         
         var getRsoOrganizations = function(){
             var url = urlRsoOrganizations;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var getCmOrganizations = function(){
             var url = urlCmOrganizations;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var getRsoOrganizationsWithId = function(orgId){
-            if (checkUndefinedNull(orgId))
+            if (checkUndefinedNull(orgId)){
                 return getRsoOrganizations();
+            }
             var url = urlRsoOrganizations + "?organizationId=" + orgId;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var getCmOrganizationsWithId = function(orgId){
-            if (checkUndefinedNull(orgId))
+            if (checkUndefinedNull(orgId)){
                 return getCmOrganizations();
+            }
             var url = urlCmOrganizations + "?organizationId=" + orgId;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var getServiceTypes = function(){
             var url = urlServiceTypes;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         //universal function
         var getData = function(url){
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
         var getRefRangeByObjectAndZpoint = function(object, zpoint){
             var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var zPointsByObject = [];
         var getZpointsDataByObject = function(obj, mode){ 
             obj.zpoints = [];
-            var table = crudTableName + "/" + obj.id + "/contZPoints" + mode;//Ex";
-            if (isCancelParamsIncorrect() == true)
+            var table = urlSubscrContObjects + "/" + obj.id + "/contZPoints" + mode;//Ex";
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(table, httpOptions);
         };         
         
         var getDevicesByObject = function(obj){
-            var url = crudTableName + "/" + obj.id + urlDeviceObjects;
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects;
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
         var getAllDevices = function(){
             var url = urlRmaContObjects + urlDeviceObjects;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
         var getDeviceModels = function(){
             var url = urlDeviceModels;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var getRmaObjectSubscribers = function(objId){
             var url = urlRmaContObjects + "/" + objId + "/subscribers";
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
         var getDeviceSchedulerSettings = function(objId, devId){
 //            /contObjects/%d/deviceObjects/%d/loadingSettings
-            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);            
         };
                  
@@ -210,37 +247,41 @@ angular.module('portalNMC')
                  
         var getDeviceDatasources = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource";
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);            
         };
                  
         var getDeviceMetaDataVzlet = function(obj, device){                     
-            var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
         var getRmaDeviceMetaDataVzlet = function(objId, device){                     
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
         var putDeviceMetaDataVzlet = function(device){                     
-            var url = crudTableName + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
+            var url = urlSubscrContObjects + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             var result = $http.put(url, device.metaData);        
             return result;
         };
         
                  //get device measures
-        var getRmaMetadataMeasureUnit = function(url, measU, dmm){
+        var getRmaMetadataMeasureUnit = function(murl, measU, dmm){
 //console.log(url);            
 //console.log(measU);
 //console.log(dmm);            
-            var url = url + "?measureUnit=" + dmm.all[measU].keyname;
-            if (isCancelParamsIncorrect() == true)
+            var url = murl + "?measureUnit=" + dmm.all[measU].keyname;
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             $http.get(url, httpOptions)
             .then(function(resp){
                 dmm[dmm.all[measU].keyname] = resp.data;
@@ -252,8 +293,9 @@ angular.module('portalNMC')
         
         var getRmaDeviceMetadataMeasures = function(){            
             var url = urlDeviceMetadataMeasures;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             $http.get(url, httpOptions)
                 .then(function(resp){                
                 deviceMetadataMeasures.all = resp.data;                              
@@ -273,8 +315,9 @@ angular.module('portalNMC')
                  
         var getRmaDeviceMetadata = function(objId, devId){
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
                  
@@ -285,8 +328,9 @@ angular.module('portalNMC')
                  
         var getDeviceMetaDataVzletSystemList = function(){                     
 //            return $http.get(urlDeviceMetaDataVzletSystemList);
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(urlDeviceMetaDataVzletSystemList, httpOptions);
         };
         var vzletSystemList = [];
@@ -308,90 +352,89 @@ angular.module('portalNMC')
 
         //get objects
         var getObjectsData = function(contGroupId){                    
-            var url = crudTableName;
+            var url = urlSubscrContObjects;
             if (!checkUndefinedNull(contGroupId)){
                 url += "?contGroupId=" + contGroupId;
-            };
-            if (isCancelParamsIncorrect() == true)
+            }
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
         var getRmaObjectsData = function (contGroupId) {
             var url = getRmaObjectsUrl();
             if (!checkUndefinedNull(contGroupId)){
                 url += "?contGroupId=" + contGroupId;
-            };
-            if (isCancelParamsIncorrect() == true)
+            }
+            if (isCancelParamsIncorrect() === true){
                 return null;            
+            }
             return $http.get(url, httpOptions);
         };
 
                 //get object
         var getObject = function (objId) {
-            if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};
-            if (isCancelParamsIncorrect() == true)
+            if (angular.isUndefined(objId) || (objId === null)) {return "Object id is null or undefined";}
+            if (isCancelParamsIncorrect() === true){
                 return null;
-            return $http.get(crudTableName + "/" +objId, httpOptions);
+            }
+            return $http.get(urlSubscrContObjects + "/" +objId, httpOptions);
         };
         var getRmaObject = function (objId) {
-            if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};
-            if (isCancelParamsIncorrect() == true)
+            if (angular.isUndefined(objId) || (objId === null)) {return "Object id is null or undefined";}
+            if (isCancelParamsIncorrect() === true){
                 return null;            
+            }
             return $http.get(getRmaObjectsUrl() + "/" + objId, httpOptions);
         }; 
                  //Get data for the setting period for the city by objectId
         var getObjectConsumingData = function(settings, objId){
             var url = urlCitiesData + "/" + objId + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };                 
                 //get data for the setting period for one city
         var getCityConsumingData = function(cityFias, settings){
-            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;   if (isCancelParamsIncorrect() == true)
+            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;   if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };         
                  //get data for the setting period for all cities
         var getCitiesConsumingData = function(settings){
             var url = urlCitiesData + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;          
-            if (isCancelParamsIncorrect() == true)
+            if (isCancelParamsIncorrect() === true){
                 return null;
-            return $http.get(url, httpOptions);
-        };
-                 
-        var checkUndefinedNull = function(numvalue){
-            var result = false;
-            if ((angular.isUndefined(numvalue)) || (numvalue == null)){
-                result = true;
             }
-            return result;
-        };
+            return $http.get(url, httpOptions);
+        };                 
         
             // Sort object array by some string field
         var sortItemsBy = function(itemArray, sortField){
             if (!angular.isArray(itemArray)){
                 return "Input value is no array.";
-            };
+            }
             if (checkUndefinedNull(sortField)){
                 return "Field for sort is undefined or null.";
-            };
+            }
             itemArray.sort(function(firstItem, secondItem){
                 if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
                     return 0;
-                };
+                }
                 if (checkUndefinedNull(firstItem[sortField])){
                     return -1;
-                };
+                }
                 if (checkUndefinedNull(secondItem[sortField])){
                     return 1;
-                };
+                }
                 if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
                     return 1;
-                };
+                }
                 if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
                     return -1;
-                };
+                }
                 return 0;
             });
         };
@@ -414,12 +457,12 @@ angular.module('portalNMC')
 //                };
 //                return 0;
 //            });
-        };                 
+        }                 
                     // sort the object array by the fullname, where some objects do not have field "fullName"
         function sortObjectsByFullNameEx(array){
-            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
+            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)){
                 return false;
-            };
+            }
             var tmpArr = [];
             var tmpBadArr = [];
             array.forEach(function(elem){
@@ -427,44 +470,49 @@ angular.module('portalNMC')
                     tmpArr.push(elem);
                 }else{
                     tmpBadArr.push(elem);
-                };
+                }
             });
-            if (tmpArr.length == 0) {return "No objects with fullName"};
+            if (tmpArr.length === 0) {return "No objects with fullName";}
             sortObjectsByFullName(tmpArr);
             Array.prototype.push.apply(tmpBadArr, tmpArr);
             return tmpBadArr;
-        };
+        }
                  
         function sortObjectsByConObjectFullName(array){
-            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
+            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)){
                 return false;
-            };           
+            }           
             array.sort(function(a, b){
                 if ((checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)) && 
                     (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName))){         
                     return 0;
-                };
+                }
                 if (checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)){         
                     return -1;
-                };
+                }
                 if (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName)){         
                     return 1;
-                };
+                }
                 if (a.contObject.fullName.toUpperCase() > b.contObject.fullName.toUpperCase()){
                     return 1;
-                };
+                }
                 if (a.contObject.fullName.toUpperCase() < b.contObject.fullName.toUpperCase()){
                     return -1;
-                };
+                }
                 return 0;
             }); 
-        };
+        }
+                 
+//        function sortZpointsInObject (object) {
+//            var zps = object.zpoints;
+//            zpointOrder = "" + zpoint.contServiceType.serviceOrder + zpoint.customServiceName; 
+//        }
                  
         function findObjectById(objId, objectArr){
             var obj = null;
             if (!angular.isArray(objectArr)){
                 return obj;
-            };
+            }
             objectArr.some(function(element){
                 if (element.id === objId){
                     obj = element;
@@ -472,7 +520,7 @@ angular.module('portalNMC')
                 }
             });        
             return obj;
-        };
+        }
 
        var promise = null;//getObjectsData();
        var rmaPromise = null;//getRmaObjectsData();
@@ -500,58 +548,78 @@ angular.module('portalNMC')
             //send to server
                 //create param string
             var params = {};
-            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr != null)){
+            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr !== null)){
                 params.subscrDataSourceAddr = device.subscrDataSourceAddr;
-            };
-            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable != null)){
+            }
+            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable !== null)){
                 params.dataSourceTable = device.dataSourceTable;
-            };
-            if (angular.isDefined(device.dataSourceTable1h) && (device.dataSourceTable1h != null)){
+            }
+            if (angular.isDefined(device.dataSourceTable1h) && (device.dataSourceTable1h !== null)){
                 params.dataSourceTable1h = device.dataSourceTable1h;
-            };
-            if (angular.isDefined(device.dataSourceTable24h) && (device.dataSourceTable24h != null)){
+            }
+            if (angular.isDefined(device.dataSourceTable24h) && (device.dataSourceTable24h !== null)){
                 params.dataSourceTable24h = device.dataSourceTable24h;
-            };
+            }
             var targetUrl = getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects";
-            if (angular.isDefined(device.id) && (device.id != null)){
+            if (angular.isDefined(device.id) && (device.id !== null)){
                 targetUrl = targetUrl + "/" + device.id;
-            };
+            }
                 //add url params
             params.subscrDataSourceId=device.subscrDataSourceId;
             device.editDataSourceInfo = params;
-            if (angular.isDefined(device.id) && (device.id != null)){
+            if (angular.isDefined(device.id) && (device.id !== null)){
                 return $http.put(targetUrl, device);//.then(successCallback,errorCallback);
             }else{
                 return $http.post(targetUrl, device);//.then(successCallback,errorCallback);
-            };
-            return null;
+            }
+//            return null;
         };
 //*******************************************************************************************************         
 //zpoint metadata
 //********************************************************************************************************
         var getZpointMetaSrcProp = function(objId, zpId){
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects;
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };                 
         var getZpointMetaDestProp = function(objId, zpId){
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects;
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };        
         var getZpointMetadata = function(objId, zpId){
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects;
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions);
         };
         var getZpointMetaMeasureUnits = function(objId, zpId){
 //console.log("getZpointMetaMeasureUnits");            
-            var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
-            if (isCancelParamsIncorrect() == true)
+            var url = urlSubscrContObjects;
+//            if (isSystemuser()){
+//                url = urlRmaContObjects;
+//            }
+            url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
+            if (isCancelParamsIncorrect() === true){
                 return null;
+            }
             return $http.get(url, httpOptions)
             .then(
                 function(resp){
@@ -649,6 +717,24 @@ angular.module('portalNMC')
         var loadDefaultTreeSetting = function(){
             return $http.get(defaultTreeUrl);
         };
+
+// **************************************************************
+//      Device methods
+// **************************************************************
+        function isDirectDevice (device){
+            var result = false;
+            if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
+                if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
+                    if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
+                        result = true;
+                    };
+                };
+            };
+            return result;
+        };
+// **************************************************************
+//     end Device methods
+// **************************************************************                 
         
         //service initialization
         var initSvc = function(){
@@ -656,7 +742,7 @@ angular.module('portalNMC')
             requestCanceler = $q.defer();
             httpOptions = {
                 timeout: requestCanceler.promise
-            }
+            };
             
             getVzletSystemListFromServer();
             getRmaDeviceMetadataMeasures();
@@ -714,6 +800,7 @@ angular.module('portalNMC')
             getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
+            isDirectDevice,
             loadDefaultTreeSetting,
             loadFreeObjectsByTree,
             loadObjectsByTreeNode,
@@ -740,6 +827,6 @@ angular.module('portalNMC')
             sortObjectsByFullNameEx,            
             sortObjectsByConObjectFullName,
             updateTree
-        };
+        }
     
 }]);

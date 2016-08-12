@@ -14,7 +14,7 @@
 </head>
 <body class="excbt_login_body">
 <!--[if IE]>
-  <p class="text-center">Вы используете браузер, который не поддерживает работу с порталом Rusmetrics. Установите <a href="https://www.google.com/chrome">Chrome</a> или <a href="https://www.firefox.com">Firefox</a>.  
+  <p class="text-center">Вы используете браузер, который не поддерживает работу с порталом Rusmetrics. Установите <a href="https://www.google.com/chrome" target="_blank">Chrome</a> или <a href="https://www.firefox.com" target="_blank">Firefox</a>.  
 <![endif]-->	
 <!--[if !IE]>-->
 	<div id="wrap">

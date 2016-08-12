@@ -1,12 +1,15 @@
 var app = angular.module('portalNMC');
 app.service('indicatorSvc', function(){
-    var contObjectId = null;
-    var contZpointId = null;
-    var contObjectName = null;
-    var contZpointName = null;
-    var timeDetailType = "24h";
-    var fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-    var toDate = moment().endOf('day').format('YYYY-MM-DD');
+    var contObjectId = null,
+        contZpointId = null,
+        contObjectName = null,
+        contZpointName = null,
+        timeDetailType = "24h",
+        deviceModel = null,
+        deviceSN = null,
+        fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD'),
+        toDate = moment().endOf('day').format('YYYY-MM-DD');
+        
     
     var intotalColumns = [
             {
@@ -425,6 +428,19 @@ app.service('indicatorSvc', function(){
     var getZpointName = function(){
         return contZpointName;
     };
+    var getDeviceModel = function(){
+        return deviceModel;
+    };
+    var getDeviceSN = function(){
+        return deviceSN;
+    };
+    
+    var setDeviceModel = function(dmodel){
+        deviceModel = dmodel;
+    };
+    var setDeviceSN = function(dSN){
+        deviceSN = dSN;
+    };
 
     var setContObjectName = function(contObjName){
         contObjectName = contObjName;
@@ -482,6 +498,8 @@ app.service('indicatorSvc', function(){
     return {
         getContObjectId,
         getContObjectName,
+        getDeviceModel,
+        getDeviceSN,
         getElectricityColumns,        
         getFromDate,
         getIntotalColumns,
@@ -492,6 +510,8 @@ app.service('indicatorSvc', function(){
         getZpointName,
         setContObjectId,
         setContObjectName,
+        setDeviceModel,
+        setDeviceSN,
         setFromDate,
         setTimeDetailType,
         setToDate,

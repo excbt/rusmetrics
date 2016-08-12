@@ -586,12 +586,15 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObjectWrappers.forEach(i -> {
 
 			Integer res = contObjectStats.get(i.getModel().getId());
+
 			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
 			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getModel().getId());
 			if (m != null && !m.isEmpty()) {
 				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
-				checkNotNull(color);
-				i.getContObjectStats().setContEventLevelColor(color.getKeyname());
+				if (color != null) {
+					i.getContObjectStats().setContEventLevelColor(color.getKeyname());
+				}
+
 			}
 		});
 

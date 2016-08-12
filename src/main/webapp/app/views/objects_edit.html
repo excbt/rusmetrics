@@ -10,7 +10,7 @@
 <div id="object_list_view_page_access_denided" ng-class="{'nmc-show':!ctrlSettings.pageAccess, 'nmc-hide':ctrlSettings.pageAccess}">
     Нет доступа
 </div>
-<div id="object_list_view_page" ng-class="{'nmc-show':ctrlSettings.pageAccess, 'nmc-hide':!ctrlSettings.pageAccess}" crud-grid-objects-use-svc table="'../api/subscr/contObjects'"
+<div id="object_list_view_page" ng-class="{'nmc-show':ctrlSettings.pageAccess, 'nmc-hide':!ctrlSettings.pageAccess}" crud-grid-objects table="'../api/subscr/contObjects'"
 	columns='[
 
 	          {"name":"fullName", "header" : "Название", "class":"col-xs-10 col-md-10"}
@@ -34,11 +34,8 @@
         zpointcolumns='[
             
            
-	          {"name":"zpointName", "header" : "Наименование", "class":"col-xs-3 col-md-3"},
-             {"name":"zpointModel", "header" : "Модель", "class":"col-xs-2 col-md-2"},
-            {"name":"zpointNumber", "header" : "Номер", "class":"col-xs-2 col-md-2"},
-            {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2"},
-           {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2 col-md-2"}
+	          {"name":"zpointName", "header" : "Наименование", "class":"col-xs-11 col-md-11"},             
+           {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-1 col-md-1"}
             ]'     
     
 

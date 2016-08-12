@@ -1,7 +1,7 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q){
+.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
     var EMPTY_OBJECT = {};
     
     var MAP_PREF = "SUBSCR_MAP_PREF";
@@ -103,6 +103,38 @@ angular.module('portalNMC')
         };  
         return false;
     };
+    
+    function addTimeOffset (val, label) {
+        var result = "";
+        if (val > 0){
+            if (val < 10){
+                result += "0";
+            }
+            result += val + label;
+        }
+        return result;
+    }
+
+    function prepareTimeOffset (rawTimeOffset) {
+        var result = null;
+        if (!checkUndefinedNull(rawTimeOffset)){
+//console.log(rawTimeOffset);
+            if (rawTimeOffset.timeDeltaSign === 1){
+                result = "+";
+            }else{
+                result = "-";
+            }
+
+            result += addTimeOffset(rawTimeOffset.years, "г ");
+            result += addTimeOffset(rawTimeOffset.mons, "М ");
+            result += addTimeOffset(rawTimeOffset.days, "д ");
+            result += addTimeOffset(rawTimeOffset.hh, "ч ");
+            result += addTimeOffset(rawTimeOffset.mm, "м ");
+            result += addTimeOffset(rawTimeOffset.ss, "с ");
+
+        }
+        return result;
+    }
     
     //date range settings
     var dateRangeOptsRu = {
@@ -699,6 +731,47 @@ angular.module('portalNMC')
     //                     end Work with trees
     // *********************************************************************************************
     
+    var setToolTip = function(title, text, elDom, targetDom, delay, width){
+        var tDelay = 1;
+        if (!checkUndefinedNull(delay)){
+            tDelay = delay;
+        }
+        var tWidth = 1000;
+        if (!checkUndefinedNull(width)){
+            tWidth = width;
+        }
+//console.log(elDom);                
+//console.log(targetDom);    
+//console.log($(elDom));        
+//console.log($(targetDom));        
+        $timeout(function(){
+//console.log($(elDom));            
+            $(elDom).qtip({
+                suppress: false,
+                content:{
+                    text: text,
+                    title: title,
+                    button : true
+                },
+                show:{
+                    event: 'click'
+                },
+                style:{
+                    classes: 'qtip-nmc-indicator-tooltip',
+                    width: tWidth
+                },
+                hide: {
+                    event: 'unfocus'
+                },
+                position:{
+                    my: 'top right',
+                    at: 'bottom right',
+                    target: $(targetDom)
+                }
+            });
+        }, tDelay);
+    };
+    
     function initSvc(){
         requestCanceler = $q.defer();
         httpOptions = {
@@ -738,8 +811,10 @@ angular.module('portalNMC')
         isRma,
         isReadonly,
         isSystemuser,
+        prepareTimeOffset,
         setMonitorMapSettings,
         setObjectMapSettings,
+        setToolTip,
         sortItemsBy,
         sortNumericItemsBy,
         sortOrganizationsByName,

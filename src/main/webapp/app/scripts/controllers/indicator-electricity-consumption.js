@@ -6,6 +6,10 @@ angular.module('portalNMC')
     var WARNING_BG_COLOR = "#FFFFA4"; 
     var ALARM_BG_COLOR = "#FF7171";
     
+    var VCOOKIE_URL = "../api/subscr/vcookie";        
+    var USER_VCOOKIE_URL = "../api/subscr/vcookie/user";
+    var OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES";
+    
     $scope.data = [];
     $scope.totals = [];
     $scope.indicatorsPerPage = $scope.data.length; //default = 25; // this should match however many results your API puts on one page
@@ -44,6 +48,8 @@ angular.module('portalNMC')
     $scope.ctrlSettings.precision = 3; //precision for data view
     
     $scope.ctrlSettings.ctxId = "electricity_consumption_page";
+    
+    $scope.ctrlSettings.loadedElectricityColumnsPref = []; //columns prefs which loading from db
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
@@ -95,13 +101,110 @@ angular.module('portalNMC')
     };
 //console.log(columns);    
     // ******************************* end Create columns **************************
+    
+    function errorCallback (e) {
+        $scope.ctrlSettings.loading = false;
+        console.log(e);
+        var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        };
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);       
+    };
+    
+    function errorLoadingModePrefsCallback (e) {
+        $scope.$broadcast("indicators:loadedModePrefs");
+        errorCallback(e);
+    }
+    
+    
     $scope.tableDef.columns = indicatorSvc.getElectricityColumns();//columns;
     $scope.columns = $scope.tableDef.columns;    
     var colLen = Math.floor($scope.columns.length / 2);
     $scope.ctrlSettings.activeEnergyColCount = colLen;
     $scope.ctrlSettings.reactiveEnergyColCount = colLen;
     
+    
+    function loadModePrefs(indicatorModeKeyname){
+        if (mainSvc.checkUndefinedNull(VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(indicatorModeKeyname)){
+            console.log("Request required params is null!");
+            return false;
+        }
+        var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + indicatorModeKeyname;                
+        $http.get(url).then(function(resp){
+            if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data) || resp.data.length === 0){
+                $scope.$broadcast("indicators:loadedModePrefs");
+                console.log("Indicators: incorrect mode preferences!");
+                return false;
+            }
+            
+            var modePrefs = resp.data[0],
+                vcvalue,
+                electricityColumns;
+            vcvalue = JSON.parse(modePrefs.vcValue);
+            
+            $scope.ctrlSettings.loadedElectricityColumnsPref = vcvalue.electricityColumns;                    
+            
+            $scope.ctrlSettings.viewMode = vcvalue.indicatorElMode;
+            $scope.timeDetailType = vcvalue.indicatorElKind;
+            
+            $scope.$broadcast("indicators:loadedModePrefs");
+
+        }, errorLoadingModePrefsCallback);
+    };    
+        
+    function loadIndicatorMode (objId) {        
+        if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)){
+            console.log("Request required params is null!");
+            $scope.$broadcast("indicators:loadedModePrefs");
+            return false;
+        }
+        var url = USER_VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + "OIP_" + objId;
+        $http.get(url).then(function(resp){
+            if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0){
+                $scope.$broadcast("indicators:loadedModePrefs");
+                return false;
+            } 
+//console.log(resp.data);                        
+            var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+            loadModePrefs(objectIndicatorModeKeyname);
+        }, errorLoadingModePrefsCallback);
+    }
+    
     function setColumnPref(columnPrefs){        
+        //if columnPrefs not set, that mean - view all columns
+        if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length == 0){
+            //indicator columns
+            $scope.ctrlSettings.activeEnergyColCount = colLen;
+            $scope.ctrlSettings.reactiveEnergyColCount = colLen;
+            for (var i = 1; i < $scope.columns.length; i++){                
+                $scope.columns[i].isvisible = 'isvisible';
+            }
+            return;
+        }
+        var colCount = {};
+        colCount["p_A"] = 0;
+        colCount["q_R"] = 0;        
+        //set preferences for indicator columns: date column is view always
+        for (var i = 1; i < $scope.columns.length; i++){
+            columnPrefs.forEach(function(pref){
+                if (pref.fieldName === $scope.columns[i].fieldName && pref.isVisible === true){
+                    $scope.columns[i].isvisible = 'isvisible';
+                    colCount[$scope.columns[i].elType] += 1;
+                }
+            })
+        }
+        $scope.ctrlSettings.activeEnergyColCount = colCount["p_A"];
+        $scope.ctrlSettings.reactiveEnergyColCount = colCount["q_R"];
+    }
+    
+    
+    function setColumnPrefOld(columnPrefs){        
         //if columnPrefs not set, that mean - view all columns
         if (mainSvc.checkUndefinedNull(columnPrefs) || columnPrefs.length == 0){
             //indicator columns
@@ -416,9 +519,7 @@ angular.module('portalNMC')
              $scope.timeDetailType = "24h";
          };
          
-         timeDetailType += $scope.ctrlSettings.viewMode;
-         if (!mainSvc.checkUndefinedNull($scope.contObject))
-            readIndicatorColumnPref($scope.contObject);
+         timeDetailType += $scope.ctrlSettings.viewMode;                
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceElCons/" + timeDetailType + "/" + $scope.contZPoint;// + "/?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
          if ($scope.timeDetailType=="1h"){
              var requestDate = moment($scope.ctrlSettings.dataDate, $scope.ctrlSettings.userFormat).format($scope.ctrlSettings.requestFormat);
@@ -433,7 +534,13 @@ angular.module('portalNMC')
 //console.log(table);
         getIndicators(table, paramString);                  
      };
-    $scope.getData();
+    
+    $scope.$on('indicators:loadedModePrefs', function(){
+//console.log('indicators:loadedModePrefs'); 
+        setColumnPref($scope.ctrlSettings.loadedElectricityColumnsPref);
+        $scope.getData();
+    });
+//    $scope.getData();
     
     $scope.changeViewMode = function(){
         $scope.getData();
@@ -514,4 +621,12 @@ angular.module('portalNMC')
             }
         });        
     });
+    
+    function initCtrl() {
+        if (!mainSvc.checkUndefinedNull($scope.contObject)){
+            loadIndicatorMode($scope.contObject);
+        }
+    }
+    
+    initCtrl();
 });

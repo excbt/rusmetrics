@@ -57,9 +57,16 @@
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
         <tr class="nmc-main-table-header">
-            <th class="col-md-1 nmc-td-for-button">
+            <th class="nmc-td-for-button">
 
             </th>
+            
+            <th ng-repeat="column in ctrlSettings.deviceColumns track by $index"
+                ng-class="column.headerClass || column.dataClass"
+                >
+                <span ng-bind="column.caption"></span>
+            </th>
+<!--
             <th class="col-md-4" ng-click="setOrderBy(column.name)">
                 <div>
                     Объект
@@ -84,7 +91,8 @@
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
             </th>
-            <th class="col-md-1">
+-->
+            <th class="col-xs-1 col-md-1">
             </th>
         </tr>
 </table>
@@ -92,9 +100,17 @@
 <div id="divWithDeviceTable" class="nmc-data-sources-main-div">
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
         <tr class="nmc-main-table-header nmc-hide">
-            <th class="col-md-1 nmc-td-for-button">
+            <th class="nmc-td-for-button">
 
             </th>
+            
+            <th ng-repeat="column in ctrlSettings.deviceColumns track by $index"
+                ng-class="column.headerClass || column.dataClass"
+                >
+                <span ng-bind="column.caption"></span>
+            </th>
+            
+<!--
             <th class="col-md-4" ng-click="setOrderBy(column.name)">
                 <div>
                     Объект
@@ -119,8 +135,9 @@
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
             </th>
+-->
 
-            <th class="col-md-1">
+            <th class="col-xs-1 col-md-1">
             </th>
         </tr>
 
@@ -158,7 +175,14 @@
                   </ul>
                 </div>
             </td>
+            <td ng-repeat="column in ctrlSettings.deviceColumns track by $index"
+                ng-class="column.dataClass || column.headerClass"
+                ng-attr-title="{{device[column.name + 'Title']}}"
+                >
+                <span ng-bind="device[column.name]"></span>
+            </td>
 
+<!--
             <td class="col-md-4">
                     <span>{{device.contObjectInfo.fullName}}<span ng-show="isSystemuser()"> (id = {{device['id']}})</span></span>
             </td>
@@ -186,7 +210,8 @@
                     </span>
                 </div>
             </td>
-            <td class="col-md-1">
+-->
+            <td class="col-xs-1 col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
                         <i title="Удалить прибор" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(device)" data-target="#deleteObjectModal" data-toggle="modal"></i>
@@ -221,7 +246,7 @@
                        data-target="#main_properties" 
                        role="tab" 
                        data-toggle="tab" 
-                       ng-click="">Основные свойства
+                       >Основные свойства
                     </a>
                   </li>
                 <li role="presentation" 
@@ -735,13 +760,13 @@
 	</div>
 </div>
 
-<!--shedule editor-->
-<div id="sheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="sheduleEditorLabel" tabindex="-1" data-backdrop="static">
+<!--schedule editor-->
+<div id="scheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="scheduleEditorLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-dialog-w450">
 		<div class="modal-header nmc-modal-header-scheduler">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="sheduleEditorLabel" class="nmc-h3 noMargin">
+			<h3 id="scheduleEditorLabel" class="nmc-h3 noMargin">
 				Расписание опроса прибора <span ng-if="data.currentObject.number!=null">- №: </span> {{data.currentObject.number}}
 			</h3>
 		</div>

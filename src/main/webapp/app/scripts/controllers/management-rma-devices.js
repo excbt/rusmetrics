@@ -73,6 +73,32 @@ angular.module('portalNMC')
         
     ];
     
+    $scope.ctrlSettings.deviceColumns = [
+        {
+            name: "deviceContObjectCaption",
+            caption: "Объект",
+            headerClass: "col-xs-4 col-md-4",
+        },{
+            name: "deviceModelCaption",
+            caption: "Модель",
+            headerClass: "col-xs-1 col-md-1"
+        },{
+            name: "number",
+            caption: "s/n",
+            headerClass: "col-xs-2 col-md-2"
+        },{
+            name: "deviceDatasourceCaption",
+            caption: "Источник данных",
+            headerClass: "col-xs-3 col-md-3",
+            
+        },{
+            name: "deviceTimeOffsetString",
+            caption: "Расхождение времени",
+            headerClass: "col-xs-2 col-md-2"
+        }
+        
+    ];
+    
     $scope.ctrlSettings.daterangeOpts = mainSvc.getDateRangeOptions("ru");
     $scope.ctrlSettings.daterangeOpts.startDate = moment().startOf('day');
     $scope.ctrlSettings.daterangeOpts.endDate = moment().endOf('day');
@@ -131,10 +157,10 @@ angular.module('portalNMC')
             function(response){
                 var tmp = response.data;
                 tmp.forEach(function(elem){
-                    if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)){
+                    if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo !== null)){
                         elem.contObjectId = elem.contObjectInfo.contObjectId;
                     };
-                    if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)){
+                    if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource !== null)){
                         elem.subscrDataSourceId = Number(elem.activeDataSource.subscrDataSource.id);
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
                         elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
@@ -144,6 +170,32 @@ angular.module('portalNMC')
                     if (!mainSvc.checkUndefinedNull(elem.verificationDate)){
                         elem.verificationDateString = mainSvc.dateFormating(elem.verificationDate, $scope.ctrlSettings.userDateFormat);
                     };
+                    elem.deviceContObjectCaption = elem.contObjectInfo.fullName;
+                    elem.deviceModelCaption = elem.deviceModel.caption || elem.deviceModel.modelName;
+                    if ($scope.isDeviceDisabled(elem) === true){
+                        switch (elem.exSystemKeyname){
+                            case "LERS":
+                                elem.deviceDatasourceCaption = "ЛЭРС";
+                                break;
+                            case "VZLET":
+                                elem.deviceDatasourceCaption = "ВЗЛЕТ";
+                                break;    
+                        }
+                    }else{
+                        if (!mainSvc.checkUndefinedNull(elem.activeDataSource)){
+                            elem.deviceDatasourceCaption = elem.activeDataSource.subscrDataSource['dataSourceName' || 'id'];
+                        };
+                    }
+                    elem.deviceTimeOffsetString = mainSvc.prepareTimeOffset(elem.deviceObjectTimeOffset);
+                    if (!mainSvc.checkUndefinedNull(elem.deviceTimeOffsetString)){
+                        if (elem.deviceTimeOffsetString.indexOf("+") === 0){
+                            elem.deviceTimeOffsetStringTitle = "Часы прибора спешат";
+                        };
+                        if (elem.deviceTimeOffsetString.indexOf("-") === 0){
+                            elem.deviceTimeOffsetStringTitle = "Часы прибора отстают";
+                        }
+                    }
+                    
                 });
                 sortDevicesByConObjectFullName(tmp);
                 $scope.data.devices = tmp;
@@ -160,7 +212,7 @@ angular.module('portalNMC')
             function(resp){
                 $scope.data.currentScheduler = resp.data;
                 $scope.selectedItem(device);
-                $('#sheduleEditorModal').modal();
+                $('#scheduleEditorModal').modal();
             },
             errorProtoCallback
         );
@@ -292,7 +344,7 @@ angular.module('portalNMC')
         $scope.getDevices();
         $('#showDeviceModal').modal('hide');
         $('#deleteObjectModal').modal('hide');
-        $('#sheduleEditorModal').modal('hide');
+        $('#scheduleEditorModal').modal('hide');
         $scope.data.currentObject = {};
         $scope.data.currentScheduler = {};
     };
@@ -314,7 +366,7 @@ angular.module('portalNMC')
         errorProtoCallback(e);
         // reset saving device flag
         $scope.data.currentObject.isSaving = false;
-        //reset saving csheduler flag
+        //reset saving scheduler flag
         $scope.data.currentScheduler.isSaving = false;
         //session data load flag
         $scope.ctrlSettings.sessionsLoading = false;
@@ -417,15 +469,7 @@ angular.module('portalNMC')
     };
     
     $scope.isDirectDevice = function(device){
-        var result = false;
-        if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
-            if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
-                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
-                    result = true;
-                };
-            };
-        };
-        return result;
+        return objectSvc.isDirectDevice(device);
     };
     
     //get device meta data and show it
@@ -721,13 +765,13 @@ angular.module('portalNMC')
     $scope.isDeviceDisabled = function(device){
 //console.log(device);        
 //        return !device.isManual;
-        return device.exSystemKeyname == 'VZLET' || device.exSystemKeyname == 'LERS' || (device.isSaving == true);
+        return device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
     };
     
     $scope.isDeviceProtoLoaded = function(device){
 //console.log(device);        
 //        return !device.isManual;
-        return device.exSystemKeyname == 'VZLET' || device.exSystemKeyname == 'LERS';
+        return device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS';
     };
     
     $scope.checkHHmm = function(hhmmValue){

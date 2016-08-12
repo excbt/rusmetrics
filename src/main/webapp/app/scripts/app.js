@@ -50,7 +50,7 @@ app.config(function ($routeProvider) {
             }]
         }
       })
-      .when('/objects/map', {
+      .when('/objects/demo-map', {
         templateUrl: 'views/objects_map.html',
         controller: 'ObjectsMapCtrl',
         resolve:{
@@ -193,6 +193,10 @@ app.config(function ($routeProvider) {
       .when('/settings/program', {
         templateUrl: 'views/settings-program.html',
         controller: 'SettingsProgramCtrl'
+      })
+      .when('/settings/object-view', {
+        templateUrl: 'views/settings-object-view.html',
+        controller: 'SettingsObjectViewCtrl'
       })
       .when('/management/objects', {
         templateUrl: 'views/management-rma-objects.html',

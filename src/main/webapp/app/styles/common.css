@@ -237,7 +237,7 @@ body{
     /*    -moz-use-text-color #FFFFFF;*/
     border-style: solid none;
     border-width: 1px 0;
-    margin: 10px 0;
+    margin: 5px 0;
 }
 
 /*Футер рабочей области*/
@@ -574,7 +574,13 @@ body{
     display: inline !important;
     padding: 5px 5px 5px 0px !important;
 }
- 
+
+    /* Список режимов - представлений просмотра показаний объекта*/
+.nmc-view-mode-list-items{
+    overflow-y: auto;
+    max-height: 320px;
+}
+
 /* Блок номеров страниц */
 .nmc-pages {
 }
@@ -595,6 +601,56 @@ body{
 .nmc-li-select-all > label{
     cursor: pointer;
 }
+
+    /* Пункт меню настройки режимов показаний*/
+.nmc-mode-menu-item{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+/*    margin-right: -30%;*/
+    margin-bottom: 3px;/*2%;*/
+/*    font-size: 16px;*/
+    border-radius: 4px 0px 0px 4px;
+	background-color: #DCDCDC; /*background color of menu item*/
+    
+/*        background-color: #DCDCDC ; background color of menu item*/
+                      /* my1: #D3D4D6*/
+    /*background: linear-gradient(to top, #BFC0C2, #DDDEE0);*/
+    /*background: linear-gradient(to top, #DCDCDC, #EBEBEB);*/   /*#E6E6E6 --  #EBEBEB  --  #F0F0F0*/
+    background: linear-gradient(to top, #C8C8C8, #EBEBEB);   /*#E6E6E6 --  #EBEBEB  --  #F0F0F0*/
+                                      /*  bottom  top  */
+
+/*ORG: #DCDCDC, #ECEDEF*/
+}
+
+    /* Пункт главного меню */
+        /*в фокусе*/    /* на который наведен курсор*/
+.nmc-main-menu-item:focus, .nmc-main-menu-item:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+/*    margin-right: -30%;*/
+    margin-bottom: 3px;/*2%;*/
+    background-color: #DCDCDC;
+}
+
+    /*Активный пункт главного меню*/
+.nmc-mode-menu-item-active{
+    font-weight: bold;
+    color: #555 !important;
+    text-decoration: none;
+    background: none !important;
+    background-color: #FFFFFF !important;
+    border-left: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.nmc-mode-sidebar-nav {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 /***********
  * Таблицы
  ***********/
@@ -607,11 +663,23 @@ table {
 td {
     vertical-align: middle !important;
 }
+/* Строка таблицы подсвечивающаяся при наведении*/
+.nmc-tr-hover{
+/*    background-color: #D2D2D2 !important;*/
+}
+.nmc-tr-hover:hover > td{
+    background-color: #D2D2D2 !important;
+}
+
 /* Нечетная строка таблицы*/
 .nmc-tr-odd{
 /*    background-color: #DCDCDC;*/
 }
-tr.nmc-tr-odd>td{
+
+.nmc-tr-odd:hover{
+    background-color: #D2D2D2 !important;
+}
+tr.nmc-tr-odd > td{
     background-color: #eee;
 }
 
@@ -661,6 +729,13 @@ tr.nmc-tr-striped:nth-of-type(odd)>td{
     width: 4%;
     border-right: 1px solid #969696;
 }
+
+    /*Стиль колонки с кнопками - для колонок с 2мя кнопками + иконка*/
+.nmc-td-for-buttons-2-ico{
+    min-width: 80px;
+    width: 4%;
+}
+
     /*Стиль колонки с кнопками - для колонок с 3мя кнопками*/
 .nmc-td-for-buttons-3{
     min-width: 95px;
@@ -1953,17 +2028,25 @@ tr.nmc-bg-distinguish > td{
 }
 
     /*Заголовок страниц*/
-.nmc-h2 {
+.nmc-h2, .nmc-page-header {
     /*white-space: nowrap;*/
     color: #555555;
     /*font-size: 200%;*/
-    font: bold 200% arial;
+    font: bold 16px arial;
 }
     /* Заголовок модального окна*/
 .nmc-h3 {
     font-weight: bold;
     font-size: 14px;
     margin-top: 0;
+}
+
+.nmc-h4 {
+    font-weight: bold;
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 0;
+    margin-left: 15px;
 }
 
 /* Панели */
@@ -2026,6 +2109,14 @@ tr.nmc-bg-distinguish > td{
     /* Специальные параметры вариантов отчетов*/
 .nmc-sp-sbool{
     display: table-cell;
+}
+
+.nmc-width-10-per-cent {
+    width: 10%;
+}
+
+.nmc-width-12-per-cent {
+    width: 12%;
 }
 
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
@@ -2454,4 +2545,16 @@ input[type="checkbox"] {
 .rui-resizable-content{
     padding: 0 !important;
     max-height: 600px;
+}
+
+/******************************************************/
+/*                   переопределение boostrap'а         */
+/******************************************************/
+.table-hover > tbody > tr:hover,
+.table-hover > tbody > tr > td.active:hover,
+.table-hover > tbody > tr > th.active:hover,
+.table-hover > tbody > tr.active:hover > td,
+.table-hover > tbody > tr:hover > .active,
+.table-hover > tbody > tr.active:hover > th {
+  background-color: #D2D2D2 !important;
 }

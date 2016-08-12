@@ -1,0 +1,147 @@
+<div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="metaDataEditorLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+        <ng-form name = "metadataForm">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="metaDataEditorLabel" class="nmc-h3">
+				Метаданные прибора
+<!--                : {{currentZpoint.customServiceName || currentZpoint.zpointName}}-->
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 noPadding">                                 
+                        <!--       Потребление / Интеграторы -->
+                        <ul class="nav nav-pills nmc-toggle" role="tablist">
+                            <li role="presentation" 
+                                class="active nmc-toggle-active">
+                                <a class="nmc-toggle-button" 
+                                   href="" 
+                                   aria-controls="meta_cons" 
+                                   data-target="#meta_cons" 
+                                   role="tab" 
+                                   data-toggle="tab"
+                                   ng-click="zpointMetadataIntegratorsFlag = false"
+                                   >Потребление
+                                </a>
+                            </li>
+                            <li role="presentation" 
+                                class="nmc-toggle-archive">
+                                <a class="nmc-toggle-button" 
+                                   href="" 
+                                   aria-controls="meta_abs" 
+                                   data-target="#meta_abs" 
+                                   role="tab" 
+                                   data-toggle="tab"
+                                   ng-click="zpointMetadataIntegratorsFlag = true"
+                                   >Интеграторы
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                <!--            Метаданные потребления-->
+                            <div role="tabpanel" 
+                                 class="tab-pane fade in active nmc-main-tab-panel" 
+                                 id="meta_cons">
+<!--                                Тут должны быть метаданные потребления-->
+                            </div>
+                            <div role="tabpanel" 
+                                 class="tab-pane fade in nmc-main-tab-panel" 
+                                 id="meta_abs">
+<!--                                Тут должны быть метаданные интеграторов-->
+                            </div>
+                        </div>
+<!--                                            ===================-->
+                                
+                              <div class="col-md-12 well noPadding marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel-with-table" 
+                                   style="">
+                                  <div ng-show="!(currentZpoint.metaData.metaData.length > 0)">
+                                      <h3>Нет метаданных</h3>
+                                  </div>
+                                <table ng-hide="!(currentZpoint.metaData.metaData.length > 0)" 
+                                       class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                    <tr class="nmc-child-table-header">
+                                        <th ng-repeat="column in data.metadataSchema" 
+                                            ng-class="column.headClass">
+                                            {{column.header}}
+                                        </th>
+                                    </tr>     
+                                    <tr ng-repeat="field in currentZpoint.metaData.metaData | isIntegrators: zpointMetadataIntegratorsFlag">
+                                        <td ng-repeat="column in data.metadataSchema" 
+                                            ng-class="column.dataClass || column.headClass">
+                                            <span ng-switch on="column.type">
+                                                <span ng-switch-when="input/text" 
+                                                      class="form-group" 
+                                                      ng-class="{'has-error': field[column.name] == ''}">
+                                                    <input ng-attr-name = {{"inputZpMetaField"+field.id+column.name}} 
+                                                           type="text" 
+                                                           class="form-control nmc-text-input-form" 
+                                                           ng-model="field[column.name]" 
+                                                           ng-disabled="isDisabled() || column.disabled || field.isIntegrator == null" 
+                                                           required/>
+                                                </span>
+                                                <span ng-switch-when="select_measure_units" 
+                                                      class="form-group" 
+                                                      ng-class="{'has-error': field[column.name] == ''}">
+                                                    <select class="form-control nmc-select-form"
+                                                            ng-model="field[column.name]" 
+                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in currentZpoint.metaData.measures[field[column.name]]" 
+                                                            ng-disabled="isDisabled() || column.disabled || field.isIntegrator == null">
+                                                    </select>
+                                                </span>
+                                                <span ng-switch-when="select_src_field" 
+                                                      class="form-group" 
+                                                      >
+                                                    <input ng-if="field.isIntegrator == null" 
+                                                           type="text" 
+                                                           class="form-control nmc-text-input-form" 
+                                                           ng-model="field[column.name]"
+                                                           ng-disabled="column.disabled || field.isIntegrator == null"/>
+                                                    <select ng-if="field.isIntegrator != null"
+                                                            class="form-control nmc-select-form"
+                                                            ng-model="field[column.name]" 
+                                                            ng-options="srcProp.columnName as srcProp.columnName for srcProp in currentZpoint.metaData.srcProp" 
+                                                            ng-disabled="isDisabled() || column.disabled || field.isIntegrator == null"
+                                                            >
+                                                    </select>
+                                                </span>
+                                                <span ng-switch-default>
+                                                    {{field[column.name]}}
+                                                </span>
+                                            </span>
+
+                                        </td>
+                                    </tr>     
+                                </table> 
+                              </div>
+<!--                                            ++++++++++++++++-->                                                  
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3 col-md-3">
+							<input ng-show="showOkButton==='true'"
+                                   type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                   ng-click = "btnClick()"
+                                   ng-disabled="isDisabled()"
+                                   value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
+                                    data-dismiss="modal"
+								ng-click="exit('#data.currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+        </ng-form>
+	</div>
+</div>

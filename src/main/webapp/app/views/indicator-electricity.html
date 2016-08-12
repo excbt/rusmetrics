@@ -4,8 +4,15 @@
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
         </div>
         <div class="col-md-12 noPadding nmc-main-workspace-header"> 
-            <h2 class="noMargin nmc-h2">Объект &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()"> (id = {{contZPoint}}) </span>&gt;
-            </h2>
+            <h3 class="noMargin nmc-page-header">
+                Объект &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()"> (id = {{contZPoint}}) </span>&gt;
+            </h3>
+            <h4 class="nmc-h4"
+                ng-if="deviceModel || deviceSN">
+                Прибор учета 
+                <span ng-if="deviceModel">: <span ng-bind="deviceModel"></span></span> 
+                <span ng-if="deviceSN">, s\n: <span ng-bind="deviceSN"></span></span>
+            </h4>
         </div>
         <div class="col-md-12 noPadding nmc-main-workspace-header">
             <hr>

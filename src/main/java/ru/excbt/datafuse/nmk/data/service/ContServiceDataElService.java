@@ -4,8 +4,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,17 +19,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.ImmutableSet;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
@@ -46,6 +55,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	private static final String[] CONS_COLUMNS = new String[] { "p_Ap1", "p_An1", "q_Rp1", "q_Rn1", "p_Ap2", "p_An2",
 			"q_Rp2", "q_Rn2", "p_Ap3", "p_An3", "q_Rp3", "q_Rn3", "p_Ap4", "p_An4", "q_Rp4", "q_Rn4", "p_Ap", "p_An",
 			"q_Rp", "q_Rn" };
+
+	private static final Set<String> EL_SERVICE_TYPE_SET = ImmutableSet.of(ContServiceTypeKey.EL.getKeyname());
 
 	@Autowired
 	private ContServiceDataElConsRepository contServiceDataElConsRepository;
@@ -600,6 +611,29 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		checkNotNull(resultList);
 		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+	}
+
+	/**
+	 * 
+	 * @param idServiceTypePairs
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMapByPair(
+			List<Pair<String, Long>> idServiceTypePairs) {
+		checkArgument(idServiceTypePairs != null);
+
+		List<Long> contZPointIds = idServiceTypePairs.stream()
+				.filter(i -> EL_SERVICE_TYPE_SET.contains(i.getLeft())).map(i -> i.getRight())
+				.collect(Collectors.toList());
+
+		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
+				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+						contServiceDataElConsRepository.selectTimeDetailLastDataByZPoint(contZPointIds))
+				: new HashMap<>();
+
+		return resultMap;
+
 	}
 
 }
