@@ -620,6 +620,10 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	private Map<Long, Integer> selectContObjectZpointCounter(Collection<Long> contObjectIds) {
 
+		if (contObjectIds.isEmpty()) {
+			return new HashMap<>();
+		}
+
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" SELECT cont_object_id, count(*) ");
 		sqlString.append(" FROM cont_zpoint ");

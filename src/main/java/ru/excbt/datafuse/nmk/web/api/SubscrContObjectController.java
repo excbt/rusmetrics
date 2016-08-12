@@ -125,7 +125,10 @@ public class SubscrContObjectController extends SubscrApiController {
 		}
 
 		ContObject result = contObjectService.findContObject(contObjectId);
-		return responseOK(contObjectService.wrapContObjectsStats(result));
+
+		List<?> wrappedList = contObjectService.wrapContObjectsMonitorVO(Arrays.asList(result));
+
+		return responseOK(wrappedList.isEmpty() ? null : wrappedList.get(0));
 	}
 
 	/**
