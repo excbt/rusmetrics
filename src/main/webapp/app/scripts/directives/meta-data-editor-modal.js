@@ -10,7 +10,7 @@ angular.module('portalNMC')
             btnClick: "&"
         },
         templateUrl: 'scripts/directives/templates/meta-data-editor-modal.html',
-        controller: ['$scope', function($scope){
+        controller: ['$scope', 'mainSvc', function($scope, mainSvc){
             
             $scope.zpointMetadataIntegratorsFlag = false;
             
@@ -18,7 +18,7 @@ angular.module('portalNMC')
             $scope.data.metadataSchema = [
                 {
                     header: 'Поле источник',
-                    headClass : 'col-xs-2 col-md-2',
+                    headClass : 'col-xs-3 col-md-3',
                     name: 'srcProp',
                     type: 'select_src_field'
                 },{
@@ -42,7 +42,7 @@ angular.module('portalNMC')
                 }
                 ,{
                     header: 'Поле приемник',
-                    headClass : 'col-xs-2 col-md-2',
+                    headClass : 'col-xs-1 col-md-1',
                     name: 'destProp',
                     type: 'input/text',
                     disabled: true
@@ -58,6 +58,38 @@ angular.module('portalNMC')
             $scope.isDisabled = function () {
                 return $scope.readOnly;
             }
+            
+                            //set tooltips for meta device fields
+            function setMetaToolTips () {
+                $scope.currentZpoint.metaData.metaData.forEach(function(metaField){
+                    var tmpSrc = null,
+                        helpText = "";
+
+                    $scope.currentZpoint.metaData.srcProp.some(function(src){                    
+                        if (metaField.srcProp === src.columnName) {
+                            tmpSrc = src;
+                            return true;
+                        }                            
+                    });
+                    if (mainSvc.checkUndefinedNull(tmpSrc) || mainSvc.checkUndefinedNull(tmpSrc.deviceMapping) || mainSvc.checkUndefinedNull(tmpSrc.deviceMappingInfo)) {
+
+                        return false;
+                    }
+                    metaField.haveToolTip = true;
+                    helpText += "<b>Поле прибора:</b> " + tmpSrc.deviceMapping + "<br>";
+                    helpText += "<b>Описание:</b> <br> " + tmpSrc.deviceMappingInfo;
+                    var targetElem = "#srcHelpBtn" + metaField.metaOrder + "srcProp";
+                    mainSvc.setToolTip("Описание поля источника", helpText, targetElem, targetElem, 10, 500);
+                });
+            }
+
+            $scope.changeMetaToolTips = function () {                    
+                setMetaToolTips();
+            }
+
+            $("#metaDataEditorModal").on('shown.bs.modal', function () {                
+                setMetaToolTips();
+            })
         }]
     }
 })
