@@ -1679,7 +1679,7 @@
     <!--Meta data editor-->
 <div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="metaDataEditorLabel" tabindex="-1" data-backdrop="static">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
+	<div class="modal-dialog modal-content nmc-modal-dialog nmc-modal-some-wide-dialog">
         <ng-form name = "metadataForm">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1702,7 +1702,7 @@
                                    data-target="#meta_cons" 
                                    role="tab" 
                                    data-toggle="tab"
-                                   ng-click="zpointMetadataIntegratorsFlag = false"
+                                   ng-click="zpointMetadataIntegratorsFlag = false; changeMetaToolTips()"
                                    >Потребление
                                 </a>
                             </li>
@@ -1714,7 +1714,7 @@
                                    data-target="#meta_abs" 
                                    role="tab" 
                                    data-toggle="tab"
-                                   ng-click="zpointMetadataIntegratorsFlag = true"
+                                   ng-click="zpointMetadataIntegratorsFlag = true;  changeMetaToolTips()"
                                    >Интеграторы
                                 </a>
                             </li>
@@ -1773,20 +1773,57 @@
                                                 <span ng-switch-when="select_src_field" 
                                                       class="form-group" 
                                                       >
-                                                    <input ng-if="field.isIntegrator == null" 
-                                                           type="text" 
-                                                           class="form-control nmc-text-input-form" 
-                                                           ng-model="field[column.name]"
-                                                           ng-attr-title={{field[column.name]}}
-                                                           ng-disabled="column.disabled || field.isIntegrator == null"/>
-                                                    <select ng-if="field.isIntegrator != null"
-                                                            class="form-control nmc-select-form"
-                                                            ng-model="field[column.name]"
-                                                            ng-attr-title={{field[column.name]}}
-                                                            ng-options="srcProp.columnName as srcProp.columnName for srcProp in currentZpoint.metaData.srcProp" 
-                                                            ng-disabled="column.disabled || field.isIntegrator == null"
-                                                            >
-                                                    </select>
+                                                    <div ng-class="{'input-group': field.haveToolTip === true}"
+                                                         >
+                                                        <input ng-if="field.isIntegrator == null" 
+                                                               type="text" 
+                                                               class="form-control nmc-text-input-form" 
+                                                               ng-model="field[column.name]"
+                                                               ng-attr-title={{field[column.name]}}
+                                                               ng-disabled="column.disabled || field.isIntegrator == null"/>
+<!--
+                                                        <select ng-if="field.isIntegrator != null"
+                                                                class="form-control nmc-select-form"
+                                                                ng-model="field[column.name]"
+                                                                ng-attr-title={{field[column.name]}}
+                                                                ng-options="srcProp.columnName as srcProp.columnName for srcProp in currentZpoint.metaData.srcProp" 
+                                                                ng-disabled="column.disabled || field.isIntegrator == null"
+                                                                >
+                                                        </select>
+-->
+                                                        <select ng-if="field.isIntegrator != null"
+                                                                class="form-control nmc-select-form"
+                                                                ng-model="field[column.name]"
+                                                                ng-attr-title={{field[column.name]}}                                                               
+                                                                ng-disabled="column.disabled || field.isIntegrator == null"
+                                                                ng-change="changeMetaToolTips()"
+                                                                >
+                                                            <option ng-repeat="srcProp in currentZpoint.metaData.srcProp track by $index"
+                                                                    value="{{srcProp.columnName}}"
+                                                                    title="{{srcProp.deviceMapping}}"
+                                                                    ng-selected="field[column.name] === srcProp.columnName"
+                                                                    >             
+                                                                {{srcProp.columnName}}
+                                                            </option>
+                                                        </select>
+                                                        <span ng-show="field.haveToolTip === true"
+                                                              class="input-group-btn">
+<!--
+                                                            <button ng-attr-id={{"srcHelpBtn"+field.metaOrder+column.name}}
+                                                                    class="btn btn-xs btn-default nmc-meta-help-btn" type="button"
+                                                                    ng-click="showMetaSrcHelp(field[column.name], field.metaOrder, column.name, field)"
+                                                                    >?
+                                                            </button>
+-->
+                                                            <p 
+                                                               ng-attr-id="{{'srcHelpBtn'+field.metaOrder+column.name}}" 
+                                                               type="button" 
+                                                               class="btn glyphicon glyphicon-question-sign nmc-button-help-setting noPadding"
+                                                               title="Помощь"
+                                                                >                                            
+                                                            </p>
+                                                        </span>
+                                                    </div>
                                                 </span>
                                                 <span ng-switch-default>
                                                     {{field[column.name]}}

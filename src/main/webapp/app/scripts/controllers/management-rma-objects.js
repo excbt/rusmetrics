@@ -218,7 +218,7 @@ angular.module('portalNMC')
                 $scope.data.metadataSchema = [
                     {
                         header: 'Поле источник',
-                        headClass : 'col-xs-2 col-md-2',
+                        headClass : 'col-xs-3 col-md-3',
                         name: 'srcProp',
                         type: 'select_src_field'
                     },{
@@ -242,7 +242,7 @@ angular.module('portalNMC')
                     }
                     ,{
                         header: 'Поле приемник',
-                        headClass : 'col-xs-2 col-md-2',
+                        headClass : 'col-xs-1 col-md-1',
                         name: 'destProp',
                         type: 'input/text',
                         disabled: true
@@ -2004,6 +2004,31 @@ angular.module('portalNMC')
                 $scope.log = function(logObj){
                     console.log(logObj);
                 };
+                
+                $scope.showMetaSrcHelp = function (srcName, fieldId, colName, field) {              
+console.log(field);                    
+                    if (mainSvc.checkUndefinedNull(srcName) || mainSvc.checkUndefinedNull($scope.currentZpoint.metaData.srcProp)){
+                        return "Input params is incorrect!";
+                    }
+                    var tmpSrc = null,
+                        helpText = "";
+console.log(srcName);
+console.log($scope.currentZpoint.metaData.srcProp);                    
+                    $scope.currentZpoint.metaData.srcProp.some(function(src){
+                        if (srcName === src.columnName) {
+                            tmpSrc = src;
+                            return true;
+                        }
+                    });
+console.log(tmpSrc);                    
+                    if (mainSvc.checkUndefinedNull(tmpSrc)) {
+                        return false;
+                    }
+                    helpText = "Поле прибора: " + tmpSrc.deviceMapping + "<br>";
+                    helpText = "Описание: <br> " + tmpSrc.deviceMappingInfo;
+                    var targetElem = "#srcHelpBtn"+fieldId+colName;
+                    mainSvc.setToolTip("Описание поля источника", helpText, targetElem, targetElem, 10, 500); 
+                };
 // *****************************************************************************************
 //                end Zpoint metadata
 // ******************************************************************************************                
@@ -2167,6 +2192,40 @@ angular.module('portalNMC')
                 $('#showZpointOptionModal').on('shown.bs.modal', function(){
                     $('#inputZpointName').focus();
                 });
+                
+                //set tooltips for meta device fields
+                function setMetaToolTips () {
+                    $scope.currentZpoint.metaData.metaData.forEach(function(metaField){
+                        var tmpSrc = null,
+                            helpText = "";
+                        
+                        $scope.currentZpoint.metaData.srcProp.some(function(src){                    
+                            if (metaField.srcProp === src.columnName) {
+                                tmpSrc = src;
+                                return true;
+                            }                            
+                        });
+                        if (mainSvc.checkUndefinedNull(tmpSrc) || mainSvc.checkUndefinedNull(tmpSrc.deviceMapping) || mainSvc.checkUndefinedNull(tmpSrc.deviceMappingInfo)) {
+                            
+                            return false;
+                        }
+                        metaField.haveToolTip = true;
+                        helpText += "<b>Поле прибора:</b> " + tmpSrc.deviceMapping + "<br>";
+                        helpText += "<b>Описание:</b> <br> " + tmpSrc.deviceMappingInfo;
+                        var targetElem = "#srcHelpBtn" + metaField.metaOrder + "srcProp";
+                        mainSvc.setToolTip("Описание поля источника", helpText, targetElem, targetElem, 10, 500);
+                    });
+                }
+                
+                $scope.changeMetaToolTips = function () {                    
+                    setMetaToolTips();
+                }
+                
+                $("#metaDataEditorModal").on('shown.bs.modal', function () {                
+                    setMetaToolTips();
+                })
+                
+                
                 //controller initialization
                 var initCtrl = function(){
                     getRsoOrganizations();
