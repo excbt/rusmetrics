@@ -102,6 +102,17 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
 
+	@Column(name = "flag_serv")
+	private Boolean flagServ;
+
+	public Boolean getFlagServ() {
+		return flagServ;
+	}
+
+	public void setFlagServ(Boolean flagServ) {
+		this.flagServ = flagServ;
+	}
+
 	public String getExCode() {
 		return exCode;
 	}
