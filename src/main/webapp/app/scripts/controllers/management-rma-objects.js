@@ -2210,8 +2210,8 @@ console.log(tmpSrc);
                             return false;
                         }
                         metaField.haveToolTip = true;
-                        helpText += "<b>Поле прибора:</b> " + tmpSrc.deviceMapping + "<br>";
-                        helpText += "<b>Описание:</b> <br> " + tmpSrc.deviceMappingInfo;
+                        helpText += "<b>Ячейка памяти прибора:</b> " + tmpSrc.deviceMapping + "<br><br>";
+                        helpText += "<b>Назначение:</b> <br> " + tmpSrc.deviceMappingInfo;
                         var targetElem = "#srcHelpBtn" + metaField.metaOrder + "srcProp";
                         mainSvc.setToolTip("Описание поля источника", helpText, targetElem, targetElem, 10, 500);
                     });

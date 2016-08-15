@@ -14,6 +14,33 @@ angular.module('portalNMC')
     //Headers of modal window
     $scope.headers = {}
     
+    $scope.ctrlSettings.organizationTypes = {       
+        rso: {
+            caption: "РСО",
+            fullCaption: "Ресурсоснабжающая организация"
+        },
+        cm: {
+            caption: "УК",
+            fullCaption: "Управляющая компания"
+        },
+        serv: {
+            caption: "СК",
+            fullCaption: "Сервисная компания"
+        }
+        
+    };
+    
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
+    };
+    
+    if ($scope.isSystemuser() === true){
+         $scope.ctrlSettings.organizationTypes.rma = {
+            caption: "РМА",
+            fullCaption: "Региональное метрологическое агенство"
+        }
+    }
+    
     //organization columns
     $scope.ctrlSettings.organizationColumns =[
         {
@@ -23,17 +50,22 @@ angular.module('portalNMC')
             "type": "name"
         },
         {
-            "name": "flagRso",
-            "caption": "РСО",
-            "class": "col-xs-1 col-md-1",
-            "type": "checkbox"
+            "name": "organizationTypeName",
+            "caption": "Тип организации",
+            "class": "col-xs-2 col-md-2"
         },
-        {
-            "name": "flagCm",
-            "caption": "УК",
-            "class": "col-xs-1 col-md-1",
-            "type": "checkbox"
-        },
+//        {
+//            "name": "flagRso",
+//            "caption": "РСО",
+//            "class": "col-xs-1 col-md-1",
+//            "type": "checkbox"
+//        },
+//        {
+//            "name": "flagCm",
+//            "caption": "УК",
+//            "class": "col-xs-1 col-md-1",
+//            "type": "checkbox"
+//        },
         {
             "name": "organizationDescription",
             "caption": "Описание",
@@ -47,7 +79,7 @@ angular.module('portalNMC')
 
     ];
     //data
-    $scope.data={};
+    $scope.data = {};
     $scope.data.organizations = [];
     $scope.data.currentOrganization = {};
     
@@ -56,8 +88,31 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.organizationsUrl;
         $http.get(targetUrl)
         .then(function(response){
-//console.log(response.data);            
-            $scope.data.organizations = response.data;           
+//console.log(response.data);
+            var respData = angular.copy(response.data);
+            respData.forEach(function(org){
+                if (org.flagCm === true) {
+                    org.organizationType = "cm";//$scope.ctrlSettings.organizationTypes.cm;
+                    org.organizationTypeName = $scope.ctrlSettings.organizationTypes.cm.fullCaption;
+                    return true;
+                }
+                if (org.flagRso === true) {
+                    org.organizationType = "rso";//$scope.ctrlSettings.organizationTypes.rso;
+                    org.organizationTypeName = $scope.ctrlSettings.organizationTypes.rso.fullCaption;
+                    return true;
+                }
+                if (org.flagServ === true) {
+                    org.organizationType = "serv";//$scope.ctrlSettings.organizationTypes.serv;
+                    org.organizationTypeName = $scope.ctrlSettings.organizationTypes.serv.fullCaption;
+                    return true;
+                }
+                if (org.flagRma === true) {
+                    org.organizationType = "rma";//$scope.ctrlSettings.organizationTypes.rma;
+                    org.organizationTypeName = $scope.ctrlSettings.organizationTypes.rma.fullCaption;
+                    return true;
+                }
+            });
+            $scope.data.organizations = respData;           
         },
              function(e){
             console.log(e);
@@ -131,7 +186,27 @@ angular.module('portalNMC')
         //check data before sending
         if (checkData(obj) == false){
             return;
-        };        
+        };
+        
+        //prepare flags
+        obj.flagCm = false;
+        obj.flagRso = false;
+        obj.flagServ = false;
+        obj.flagRma = false;
+        switch (obj.organizationType) {
+            case "cm"/*$scope.ctrlSettings.organizationTypes.cm*/:     
+                obj.flagCm = true;
+                break;
+            case "rso" /*$scope.ctrlSettings.organizationTypes.rso*/:     
+                obj.flagRso = true;
+                break;
+            case "serv"/*$scope.ctrlSettings.organizationTypes.serv*/:     
+                obj.flagServ = true;
+                break;    
+            case "rma"/*$scope.ctrlSettings.organizationTypes.rma*/:     
+                obj.flagRma = true;
+                break;
+        }        
         
         var url = $scope.ctrlSettings.organizationsUrl;                    
         if (angular.isDefined(obj.id)&&(obj.id!=null)){
@@ -163,11 +238,7 @@ angular.module('portalNMC')
         var tmpCode = mainSvc.getConfirmCode();
         $scope.confirmLabel = tmpCode.label;
         $scope.sumNums = tmpCode.result;
-    };
-    
-    $scope.isSystemuser = function(){
-        return mainSvc.isSystemuser();
-    };
+    };    
     
     $scope.isTestMode = function () {
         return mainSvc.isTestMode();

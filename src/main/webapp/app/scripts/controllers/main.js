@@ -203,6 +203,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     };
     
     $scope.isTestMode = function () {
+//console.log("mainCtrl isTestMode = " + mainSvc.isTestMode());        
         return mainSvc.isTestMode();
     }
       

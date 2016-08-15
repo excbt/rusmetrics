@@ -7,7 +7,7 @@ angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
     
     //Test special settings
-    var isUseTest = false,
+    var isUseTest = true,
         isUseColorHighlightIndicatorData = true,
         isViewSystemInfo = true;
     
@@ -374,7 +374,11 @@ angular.module('portalNMC')
     
             //check test user
     function isTestUser () {
-        return getProp($rootScope.userInfo, "isTest");
+        var result = true;
+        if (!checkUndefinedNull($rootScope.userInfo)){
+            result = (getProp($rootScope.userInfo, "subscrType") === "TEST_CERTIFICATE");
+        }
+        return result;
     }
     
     var externalAllow = [
@@ -477,7 +481,7 @@ angular.module('portalNMC')
     };
     
     function isTestMode () {
-        return getUseTest() && isSystemuser();
+        return getUseTest() && isTestUser();
     }
     
     ///////////////// end checkers

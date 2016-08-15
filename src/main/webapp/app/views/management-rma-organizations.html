@@ -153,6 +153,21 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="col-sm-3"><label for="inputOrgType">Тип организации</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <select class = "form-control nmc-text-input-form" 
+                                            id = "inputOrgType" 
+                                            ng-model = "data.currentOrganization.organizationType"
+                                            ng-options = "kType as orgType.fullCaption for (kType, orgType) in ctrlSettings.organizationTypes"
+                                            ng-disabled= "!isSystemuser() && (data.currentOrganization.organizationType === ctrlSettings.organizationTypes.rma)"
+                                            >
+                                    </select>
+                                </td>
+                            </tr>
+                            
+<!--
+                            <tr>
                                 <td class="col-sm-3">
                                    <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentOrganization.flagRso">РСО
                                 </td>
@@ -168,6 +183,7 @@
                                    
                                 </td>
                             </tr>
+-->
                         </table>
                     </div>    
                 </div>  

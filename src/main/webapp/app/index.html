@@ -198,7 +198,15 @@
                                    class="list-group-item nmc-main-menu-item" 
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"                                   
 
-                                   href="#/log/session-log/" data-toggle="offcanvas" ng-click="clickMenu('log_menu_item')" ng-cloak><i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Журналы</span></a>
+                                   href="#/log/session-log/" 
+                                   data-toggle="offcanvas" 
+                                   ng-click="clickMenu('log_menu_item')" 
+                                   ng-cloak>
+                                    <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i>
+                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
+                                        Журналы
+                                    </span>
+                                </a>
                                 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->

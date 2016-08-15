@@ -1351,7 +1351,7 @@ tr.nmc-inactive-price > td{
 }
 
 .nmc-button-help-setting{
-    color: #337ab7;
+/*    color: #337ab7;*/
     margin-top: -3px;
 }
 
@@ -1721,7 +1721,9 @@ tr.nmc-inactive-price > td{
 
 /* Кнопка для вызова подсказки по полю источника в метаданных прибора*/
 .nmc-meta-help-btn{
-    height: 26px;
+    height: 16px;
+    width: 16px;
+    background: url(../images/info-icon16x16greywhite.png) top no-repeat;
 }
 
 /**************************************************************************************
