@@ -4,12 +4,12 @@
 angular.module("portalNMC")
     .controller('AboutProgramCtrl', ['mainSvc', '$scope', '$http', function (mainSvc, $scope, $http) {
         
-        var MODULES_URL = "";
+        var MODULES_URL = "../api/appStatus/appModulesVersions";
         
         $scope.data = {};
         $scope.data.columns = [
             {
-                fieldName: "caption",
+                fieldName: "moduleName",
                 header: "Наименование",
                 headerClass: "col-xs-2 col-md-2 bg-info",
                 dataClass: "col-xs-2 col-md-2"
@@ -19,7 +19,7 @@ angular.module("portalNMC")
                 headerClass: "col-xs-2 col-md-2 bg-info",
                 dataClass: "col-xs-2 col-md-2"
             },{
-                fieldName: "date",
+                fieldName: "moduleReleaseDate",
                 header: "Дата выхода",
                 headerClass: "col-xs-2 col-md-2 bg-info",
                 dataClass: "col-xs-2 col-md-2"
@@ -54,7 +54,7 @@ angular.module("portalNMC")
         ];
         
         function loadModules () {
-            var url = "";
+            var url = MODULES_URL;
             $http.get(url).then(function (response) {
                 $scope.data.modules = response.data;
             }, function (e) {
@@ -68,6 +68,7 @@ angular.module("portalNMC")
         };
         
         function initCtrl () {
+            loadModules();
         }
         
         initCtrl();
