@@ -381,7 +381,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 				subscrRoles.addAll(
 						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(subscriber.getCanCreateChild())));
 				if (Boolean.TRUE.equals(subscriber.getIsRma())) {
-					subscrRoles.addAll(subscrRoleService.subscrRmaAdminRoles(subscriber.getCanCreateChild()));
+					subscrRoles.addAll(
+							subscrRoleService.subscrRmaAdminRoles(Boolean.TRUE.equals(subscriber.getCanCreateChild())));
 				}
 			} else {
 				subscrRoles.addAll(subscrRoleService.subscrUserRoles());
