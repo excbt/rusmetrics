@@ -45,7 +45,7 @@ angular.module('portalNMC')
     
     //get users
     var getUsers = function(clientId){
-        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+clientId+$scope.ctrlSettings.userUrlSuffix;
+        var targetUrl = $scope.ctrlSettings.rmaUrl + "/" + clientId + $scope.ctrlSettings.userUrlSuffix;
         $http.get(targetUrl)
         .then(function(response){
             response.data.forEach(function(elem){
@@ -71,6 +71,9 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.clientsUrl;
         $http.get(targetUrl)
         .then(function(response){
+            if (!angular.isArray(response.data) || response.data.length === 0) {
+                return "Subscribers is incorrect!";
+            }
             response.data.forEach(function(el){
                 el.organizationName = el.organization.organizationFullName;
             });
