@@ -160,7 +160,7 @@
                                             id = "inputOrgType" 
                                             ng-model = "data.currentOrganization.organizationType"
                                             ng-options = "kType as orgType.fullCaption for (kType, orgType) in ctrlSettings.organizationTypes"
-                                            ng-disabled= "!isSystemuser() && (data.currentOrganization.organizationType === ctrlSettings.organizationTypes.rma)"
+                                            ng-disabled= "!isSystemuser() && (data.currentOrganization.organizationType === 'rma')"
                                             >
                                     </select>
                                 </td>

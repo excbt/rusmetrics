@@ -429,7 +429,7 @@
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(zpointSettings._activeDeviceObjectId)}">
                                                 <select class="form-control nmc-input-data nmc-select-form" 
                                                         ng-model="zpointSettings._activeDeviceObjectId" 
-                                                        ng-options="device.id as device.number for device in currentObject.devices">
+                                                        ng-options="device.id as (device.number || device.deviceModel.modelName) for device in currentObject.devices">
                                                 </select>
                                             </div>
                                         </td>
