@@ -11,8 +11,8 @@ angular.module("portalNMC")
             {
                 fieldName: "moduleName",
                 header: "Наименование",
-                headerClass: "col-xs-2 col-md-2 bg-info",
-                dataClass: "col-xs-2 col-md-2"
+                headerClass: "col-xs-5 col-md-5 bg-info",
+                dataClass: "col-xs-5 col-md-5"
             },{
                 fieldName: "version",
                 header: "Версия",
@@ -25,33 +25,7 @@ angular.module("portalNMC")
                 dataClass: "col-xs-2 col-md-2"
             }
         ];
-        $scope.data.modules = [
-            {
-                id: 1,
-                name: "module1",
-                caption: "Модуль 1",
-                version: "Версия 1",
-                date: "15-03-2015"
-            },{
-                id: 2,
-                name: "mainModule",
-                caption: "Главный модуль",
-                version: "60810",
-                date: "10-08-2016"
-            },{
-                id: 3,
-                name: "reportModule",
-                caption: "Модуль отчетов",
-                version: "60810-1",
-                date: "10-08-2016"
-            },{
-                id: 4,
-                name: "adminModule",
-                caption: "Модуль управления",
-                version: "60810-2",
-                date: "10-08-2016"
-            }
-        ];
+        $scope.data.modules = [];
         
         function loadModules () {
             var url = MODULES_URL;
