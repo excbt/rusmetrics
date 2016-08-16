@@ -10,7 +10,9 @@ app.service('indicatorSvc', function(mainSvc){
         fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD'),
         toDate = moment().endOf('day').format('YYYY-MM-DD');
         
-    
+// ************************************************************************
+//                 Definde HW columns
+// ************************************************************************    
     var intotalColumns = [
             {
                 header : "Потребление тепла, ГКал",
@@ -352,6 +354,13 @@ app.service('indicatorSvc', function(mainSvc){
                 istunable: "istunable"
             }
     ];
+// ************************************************************************
+//                end Definde HW columns
+// ************************************************************************    
+    
+// ************************************************************************
+//                 Work with El columns
+// ************************************************************************ 
     
     // ******************** create columns ****************************
     var electricityColumns = [];
@@ -407,6 +416,9 @@ app.service('indicatorSvc', function(mainSvc){
     }
 //console.log(columns);    
     // ******************************* end Create columns **************************
+// ************************************************************************
+//               end  work with El columns
+// ************************************************************************    
 
     var getContObjectId = function(){
         return contObjectId;
@@ -491,19 +503,19 @@ app.service('indicatorSvc', function(mainSvc){
     }
     
     function setColorHighlightsForManualAndCrc (dataArray) {
-        if (mainSvc.checkUndefinedNull(dataArray)){
+        if (mainSvc.checkUndefinedNull(dataArray) || !angular.isArray(dataArray)){
             console.log("Can't set color highlights");
             return false;
         }
-        dataArray.forEach(function(el, ind){
-            var coef = ind % 3;
-            switch (coef){
-                case 1:    
+        dataArray.forEach(function(el){        
+            switch (el.data_mstatus){
+                case 3:    
                     el.dataClass = "nmc-tr-indicator-manual";
                     break;
-                case 2:
-                    el.dataClass = "nmc-tr-indicator-crc-error";
-                    break;
+            }
+            
+            if (el.crc32_valid === false) {
+                el.dataClass = "nmc-tr-indicator-crc-error";
             }
         });
     }

@@ -61,10 +61,10 @@ angular.module('portalNMC')
         columns : []
     };
     // ******************** create columns ****************************
-//    var elecType = [{"name":"p_A", "caption": "A"}, /* active*/
-//                    {"name":"q_R", "caption":"R"}]; /* reactive*/
-//    var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
-//                    {"name":"n", "caption":"-"}];/*negative*/
+    var elecType = [{"name":"p_A", "caption": "A"}, /* active*/
+                    {"name":"q_R", "caption":"R"}]; /* reactive*/
+    var elecKind = [{"name":"p", "caption":"+"}, /*positive*/
+                    {"name":"n", "caption":"-"}];/*negative*/
 //    var tariffPlans = [1, 2, 3, 4];//use 4 tariff plans
 //    var columns = [{
 //                header : "Дата",
