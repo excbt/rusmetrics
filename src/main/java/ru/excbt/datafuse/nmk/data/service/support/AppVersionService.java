@@ -32,6 +32,10 @@ public class AppVersionService {
 		private String moduleVersion;
 		private String moduleReleaseDate;
 
+		public String getModuleVersion() {
+			return moduleVersion;
+		}
+
 		public String getModuleKeyname() {
 			return moduleKeyname;
 		}
