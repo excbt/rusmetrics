@@ -14,7 +14,7 @@ angular.module("portalNMC")
                 headerClass: "col-xs-5 col-md-5 bg-info",
                 dataClass: "col-xs-5 col-md-5"
             },{
-                fieldName: "version",
+                fieldName: "moduleVersion",
                 header: "Версия",
                 headerClass: "col-xs-2 col-md-2 bg-info",
                 dataClass: "col-xs-2 col-md-2"
