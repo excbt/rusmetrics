@@ -38,4 +38,25 @@ public class AppStatusController extends WebApiController {
 		return responseOK("OK");
 	}
 
+	/**
+	 * 
+	 * @param httpSession
+	 * @return
+	 */
+	@RequestMapping(value = "/appModulesVersions", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAppVersionProps() {
+
+		//		
+		//		
+		//		Properties props = appVersionService.getAppVersionProps();
+		//
+		//		final Map<String, String> mp = new HashMap<>();
+		//
+		//		props.forEach((k, v) -> {
+		//			mp.put(DBRowUtils.asString(k), DBRowUtils.asString(v));
+		//		});
+
+		return responseOK(appVersionService.getAppModulesInfo());
+	}
+
 }

@@ -16,8 +16,6 @@ import org.hibernate.annotations.SQLInsert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -33,7 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
  */
 @Entity
 @Table(name = "cont_service_data_hwater")
-@JsonInclude(Include.NON_NULL)
+//@JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime" })
 @SQLInsert(sql = "insert into " +
