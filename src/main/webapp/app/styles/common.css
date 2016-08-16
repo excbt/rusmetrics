@@ -1201,6 +1201,16 @@ tr.nmc-inactive-price > td{
 /*    position: absolute;*/
 }
 
+    /* Фильтры на странице водных показаний*/
+/* Контрол выбора представления*/
+.nmc-div-indicator-mode{
+    width: 20%
+}
+/* Контрол выбора количества записей на странице*/
+.nmc-div-indicator-per-page{
+    width: 30%
+}
+
 /* ввод строки */
 .nmc-text-input-form {
     font-size: 12px;

@@ -252,7 +252,7 @@ angular.module('portalNMC')
                     {"name":"zpointModel", "header" : "Модель прибора учета", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointNumber", "header" : "Серийный номер прибора учета", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2 nmc-width-12-per-cent"},
-                    {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-1 col-md-1"},
+                    {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2 col-md-2"},
                     {"name":"zpointTimeOffsetString", "header" : "Расхождение времени", "class":"col-xs-1 col-md-1 nmc-width-10-per-cent"}
                 ];//angular.fromJson($attrs.zpointcolumns);
 //                {"name":"zpointRefRange", "header" : "Эталонный интервал", "class":"col-xs-2 col-md-2"},

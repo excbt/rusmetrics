@@ -683,20 +683,23 @@ angular.module('portalNMC')
             $scope.tableDef.columns.some(function(element){    
                 var indicatorTd = document.getElementById("indicators_th_"+element.fieldName);
                 var indicatorHead = document.getElementById("indicators_head_"+element.fieldName);
+                var indicatorTdh = document.getElementById("indicators_tdh_"+element.fieldName);
 //console.log("indicators_td_"+element.fieldName);                
-//console.log(indicatorHead);                    
+//console.log(indicatorHead.offsetWidth);                    
 //console.log(indicatorTd);                 
-                if ((angular.isDefined(indicatorTd))&&(indicatorTd!=null)&&(angular.isDefined(indicatorHead))&&(indicatorHead!=null)){
+                if ((angular.isDefined(indicatorTd))&&(indicatorTd!=null)&&(angular.isDefined(indicatorHead))&&(indicatorHead!=null)){                   
 //                    if (indicatorTd.offsetWidth>indicatorHead.offsetWidth){
-                        var thWidth = Math.min(indicatorTd.offsetWidth, indicatorTd.clientWidth);
-                        indicatorHead.style.width =thWidth;//indicatorTd.offsetWidth+"px";                   
+                        var thWidth = Math.max(indicatorTd.offsetWidth, indicatorTd.clientWidth);
+                        indicatorHead.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
+                        indicatorTdh.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
 //                    }else{
 //                        indicatorTd.style.width =indicatorHead.offsetWidth+"px";                   
 //                    };
 //console.log(thWidth);                     
 //console.log(indicatorTd.offsetWidth);                     
 //console.log(indicatorTd.clientWidth);                     
-//console.log(indicatorHead.style.width);                    
+//console.log(indicatorHead.style.width);
+//console.log(indicatorHead.offsetWidth);                    
                 };
 //return true;
             });

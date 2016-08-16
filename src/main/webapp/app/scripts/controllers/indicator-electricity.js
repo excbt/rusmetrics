@@ -4,7 +4,7 @@ angular.module('portalNMC')
     $rootScope.ctxId = "indicators_page";
     //params for current page width
     $scope.oldMinWidth = null;//save default width 
-    $scope.curMinWidth = "1572px";//set width for data table
+    $scope.curMinWidth = "1920px";//"1572px";//set width for data table
                     // Проверка пользователя - системный/ не системный
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();

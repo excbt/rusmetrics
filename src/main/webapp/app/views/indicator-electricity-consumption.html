@@ -109,7 +109,19 @@
                        class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" 
                        ng-class="tableDef.tableClass" >
                     <tr ng-class="tableDef.headerClassTR">
-                        <th class=" col-xs-2 col-md-2">
+<!--
+                        <th ng-if="totals.length > 0"
+                            class=" col-xs-2 col-md-2" style="white-space: nowrap; ">                        
+                                Итого по интеграторам:
+                        </th>
+                        <th ng-if="totals.length === 0"
+                            class=" col-xs-2 col-md-2">
+                            
+                        </th>
+-->
+                        <th id="elConsDateColumn"
+                            class=" col-xs-2 col-md-2">
+                            
                         </th>
                         <th ng-if="ctrlSettings.activeEnergyColCount > 0"
                             ng-attr-colspan="{{ctrlSettings.activeEnergyColCount}}" 

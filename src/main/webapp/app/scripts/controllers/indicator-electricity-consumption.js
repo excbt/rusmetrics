@@ -605,6 +605,13 @@ angular.module('portalNMC')
                 tableDiv.style.width = tableHeader.offsetWidth + 'px';                    
             };
         };
+        
+        //Если выводятся интеграторы, то выравниваем самую левую колонку
+//        var tAbsDs = document.getElementById("totalAbsdataDateString");
+//        if (!mainSvc.checkUndefinedNull(tAbsDs)){
+//            document.getElementById("elConsDateColumn").style.width = tAbsDs.offsetWidth + "px";
+//        }
+        
     };
 //    $scope.onTableLoad = function(){
 //console.log("OnTableLoad");        
