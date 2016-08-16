@@ -508,13 +508,13 @@ app.service('indicatorSvc', function(mainSvc){
             return false;
         }
         dataArray.forEach(function(el){        
-            switch (el.data_mstatus){
+            switch (el.dataMstatus){
                 case 3:    
                     el.dataClass = "nmc-tr-indicator-manual";
                     break;
             }
             
-            if (el.crc32_valid === false) {
+            if (el.crc32Valid === false) {
                 el.dataClass = "nmc-tr-indicator-crc-error";
             }
         });
