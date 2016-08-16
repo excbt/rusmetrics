@@ -45,7 +45,10 @@
     <div class="row nmc-main-workspace-header">
         <div class="col-md-2 noPadding marginBottom10">
             <div class="btn-toolbar">
-                <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button> 
+                <button class="btn nmc-main-add-button" 
+                        ng-click="addUser()"
+                        ng-disabled="data.clients.length === 0"
+                        >Добавить пользователя</button> 
 <!--                <input type="text" id="inputTest"/>-->
             </div>
         </div>    
