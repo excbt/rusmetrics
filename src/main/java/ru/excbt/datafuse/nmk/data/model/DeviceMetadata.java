@@ -90,6 +90,12 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	@Column(name = "meta_name")
 	private String metaName;
 
+	@Column(name = "device_mapping")
+	private String deviceMapping;
+
+	@Column(name = "device_mapping_info")
+	private String deviceMappingInfo;
+
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
