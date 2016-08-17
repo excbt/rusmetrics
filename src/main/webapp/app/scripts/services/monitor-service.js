@@ -187,6 +187,51 @@ angular.module('portalNMC')
                 .error(errorCallbackConsole);        
         };
         
+        var getMonitorEventsForObject = function(obj){ 
+            var url = objectUrl + "/" + obj.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
+           if (isCancelParamsIncorrect() === true)
+                return null;
+            $http.get(url, httpOptions)
+                .success(function(data){
+    //console.log("success");
+//console.log(data);                
+                //if data is not array - exit
+                    if (!data.hasOwnProperty('length') || (data.length === 0)){
+//                        if (obj.contObjectStats.contEventLevelColor === "GREEN"){
+//                            obj.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
+//                        };
+                        return;
+                    };
+                    //temp array
+                    var tmpMessage = "";
+    //                var tmpMessageEx = "";
+                    //make the new array of the types wich formatted to display
+                    data.forEach(function(element){
+//console.log(element);                        
+                        var tmpEvent = "";
+                        var contEventTime = new Date(element.contEventTime);
+                        var pstyle = "";
+                        if(element.contEventLevelColorKey === "RED"){
+                            pstyle = "color: red;";
+                        };
+                        tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+                        tmpMessage += tmpEvent;
+                    });
+//console.log(tmpMessage);     
+//                    if (obj.contObjectStats.contEventLevelColor === "GREEN"){
+//                        obj.monitorEvents = "На объекте нет нештатных ситуаций";
+//                    }else 
+                    if ((obj.contObjectStats.contEventLevelColor === "RED") || (obj.contObjectStats.contEventLevelColor === "YELLOW")){
+                        obj.monitorEvents = tmpMessage;
+                        obj.monitorEventsForMap = data;
+                    };
+//console.log(obj);                
+                    $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
+                })
+                .error(errorCallbackConsole);        
+        };
+        
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)
 //**************************************************************************  
         var interval;
@@ -320,7 +365,8 @@ angular.module('portalNMC')
             getAllMonitorObjects,
             getAllMonitorCities,
             getLoadingStatus,
-            getMonitorEventsByObject, 
+            getMonitorEventsByObject,
+            getMonitorEventsForObject,
             getMonitorSettings,
             getRequestCanceler,
              

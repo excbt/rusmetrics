@@ -85,6 +85,10 @@ angular.module('portalNMC')
                     setVisibles();
                 });
                 
+                window.setTimeout(function(){
+                    setVisibles();
+                }, 500);
+                
                 
                 $scope.object = {};
                 $scope.objects = [];
@@ -137,6 +141,9 @@ angular.module('portalNMC')
 
 //                    $scope.objectsWithoutFilter = $scope.objects;
                     tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                    tempArr.forEach(function(element){
+                        monitorSvc.getMonitorEventsForObject(element);
+                    });
                     $scope.objectsOnPage = tempArr;
 //                    makeObjectTable(tempArr, true);
                     $scope.loading = false;  
@@ -1253,6 +1260,15 @@ angular.module('portalNMC')
                     if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){    
 //                        $scope.loading = true;    
                         var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
+                        tempArr.forEach(function(element){
+//                            .contObjectStats.contEventLevelColor.toLowerCase()
+                            if ((element.contObjectStats.contEventLevelColor === "RED") ||(element.contObjectStats.contEventLevelColor === "YELLOW")){
+                                monitorSvc.getMonitorEventsForObject(element);
+                            }else{  
+                                element.monitorEvents = "На объекте нет нештатных ситуаций";
+                                $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
+                            };
+                        });
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
@@ -1287,6 +1303,9 @@ angular.module('portalNMC')
                     };
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
                     var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
+                    tempArr.forEach(function(element){
+                            monitorSvc.getMonitorEventsForObject(element);
+                    });
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     if(endIndex >= ($scope.objects.length)){
@@ -1885,6 +1904,25 @@ angular.module('portalNMC')
                 };
 // ***********************************************************************************************
 //                  end Work with Notices
+// ***********************************************************************************************
+                
+// ***********************************************************************************************                
+//                  Object monitor
+// ***********************************************************************************************
+                $scope.$on('monitorObjects:getObjectEvents', function(event, args){
+                    var obj = args.obj;
+                    var imgObj = "#objState" + obj.id;        
+                    $(imgObj).qtip({
+                        content:{
+                            text: obj.monitorEvents
+                        },
+                        style:{
+                            classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                        }
+                    }); 
+                });
+// ***********************************************************************************************                
+//                  end Object monitor
 // ***********************************************************************************************                
                 
                 var initCtrl = function(){

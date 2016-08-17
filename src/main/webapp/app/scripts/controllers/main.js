@@ -52,7 +52,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         //set menu flag with current location
         $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list") !== -1 ? true : false);
         $scope.menuMassive.report_menu_item = (loca === "/reports" ? true : false);
-        $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/") !== -1 ? true : false);
+        $scope.menuMassive.object_menu_item = (loca.indexOf("/notices/") !== -1 ? true : false);
         $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") !== -1 ? true : false);
         $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/") !== -1 ? true : false);
         $scope.menuMassive.log_menu_item = (loca.indexOf("/log") !== -1 ? true : false);
@@ -87,9 +87,9 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         if ($scope.menuMassive.report_menu_item){
           window.location.assign("#/reports/");
         }
-        if ($scope.menuMassive.notice_menu_item){
-         window.location.assign("#/notices/monitor/");
-        }
+//        if ($scope.menuMassive.notice_menu_item){
+//         window.location.assign("#/notices/monitor/");
+//        }
         if ($scope.menuMassive.setting_menu_item){
           window.location.assign("#/settings/tariffs/");
         }
@@ -184,7 +184,11 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     //listen change of service list
     $rootScope.$on('servicePermissions:loaded', function(){
         setVisibles($scope.mainCtrlSettings.ctxId);
-    });  
+    });
+    
+//    window.setTimeout(function(){
+//        setVisibles($scope.ctrlSettings.ctxId);
+//    }, 500);
       
       //check user
     $scope.isRma = function(){

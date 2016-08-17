@@ -18,8 +18,9 @@ angular.module('portalNMC')
     
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
 //    objectSvc.sortObjectsByFullName($scope.objects);
-//console.log($scope.objects);    
+console.log($scope.objects);    
     $scope.cities = monitorSvc.getAllMonitorCities();
+console.log($scope.cities);    
     
     if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoomDetail)){
         $scope.mapSettings.zoomDetail = Number(monitorSvc.getMonitorSettings().mapZoomDetail);
@@ -330,6 +331,7 @@ angular.module('portalNMC')
     };
     
     $scope.setCitiesOnMap = function(cityArray, markerArray){
+//console.log("4");                
 //console.log(cityArray);          
         if (!angular.isArray(cityArray)||(cityArray.length === 0)||!angular.isArray(markerArray)){
             return;
@@ -375,6 +377,7 @@ console.warn(elem);
     };
     
     $scope.setObjectsOnMap = function(objectArray){
+//console.log("3");                
         var markerArray = [];
 //console.log(objectArray, markerArray);        
         if (!angular.isArray(objectArray)||(objectArray.length === 0)||!angular.isArray(markerArray)){
@@ -387,7 +390,9 @@ console.warn(elem);
         //check objects
         objectArray.forEach(function(elem){
 //console.log(elem);            
-            if(angular.isUndefined(elem.contObject.contObjectGeo)||angular.isUndefined(elem.contObject.contObjectGeo.geoPosX)||(elem.contObject.contObjectGeo ===null)||(elem.contObject.contObjectGeo.geoPosX===null)){
+            if(angular.isUndefined(elem.contObject.contObjectGeo) || 
+               angular.isUndefined(elem.contObject.contObjectGeo.geoPosX) || 
+               (elem.contObject.contObjectGeo  === null) || (elem.contObject.contObjectGeo.geoPosX === null)){
 console.warn("Warning. Object without coordinates.");                
 console.warn(elem);                                
                 return;
@@ -427,10 +432,12 @@ console.warn(elem);
 
     //check zoom and set markers 
     if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
+//console.log("1");        
         //set objects markers
         markers = new Array();
         markers = $scope.setObjectsOnMap($scope.objects);     
     }else{
+//console.log("2");                
         //set cities markers
         markers= new Array();
         $scope.setCitiesOnMap($scope.cities, markers);      
@@ -440,13 +447,13 @@ console.warn(elem);
     angular.extend($scope, {markersOnMap});
     
     //for debugging
-    $scope.$watch('markersOnMap',function(){
+//    $scope.$watch('markersOnMap',function(){
 //console.log($scope.markersOnMap);
-    }, false);
+//    }, false);
     //for debugging
-    $scope.$watch('mapCenter',function(){
+//    $scope.$watch('mapCenter',function(){
 //console.log($scope.mapCenter);        
-    }, false);
+//    }, false);
     
     $scope.$on('monitorObjects:updated',function(){
 //console.log('monitorObjects:updated');        
@@ -564,6 +571,10 @@ console.warn(elem);
 //console.log("setNoticeFilterByObjectAndType");                        
         $scope.setNoticeFilterByObject(objId);
 //        $cookies.typeIds = [typeId];
+    };
+    
+    $scope.isSystemuser = function(){       
+        return mainSvc.isSystemuser();
     };
     
     //listeners

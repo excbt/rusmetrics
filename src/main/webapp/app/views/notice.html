@@ -11,11 +11,30 @@
 <div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
+<!--
     <ul class="nav nav-tabs" role="tablist">
         <li id="monitor_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
-<!--        <li id="notice_2nd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/list/" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>-->
         <li id="notice_2nd_menu_item" role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="notices2" role="tab" data-target="#notices2" data-toggle="tab">Уведомления</a></li>
         <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+    </ul>
+-->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide"><a id="monitorTab" class="nmc-main-tab-button" href="#/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Список объектов</a></li>
+        
+        <li id="notice_2nd_menu_item" role="presentation" class="active"><a class="nmc-main-tab-button" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
+        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+        
+        <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide">
+            <a class="nmc-main-tab-button" 
+               href="#/objects/demo-map/" 
+               aria-controls="objects_map" 
+               role="tab" 
+               data-target="#objects_map" 
+               data-toggle="tab"
+               >
+                Демо-карта
+            </a>
+        </li>
 
     </ul>
 
