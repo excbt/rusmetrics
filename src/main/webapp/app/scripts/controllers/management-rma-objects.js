@@ -754,7 +754,8 @@ angular.module('portalNMC')
                         }else{
                             result.zpointModel = "Не задано";
                         };
-                        result.zpointNumber = zpoint.deviceObjects[0].number;
+                        result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObjects[0].number) ? "" : zpoint.deviceObjects[0].number;
+                        
                     };
                     result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
                     result.zpointLastDataDate  = zpoint.lastDataDate;  
