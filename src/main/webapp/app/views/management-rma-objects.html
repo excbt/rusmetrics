@@ -1157,14 +1157,14 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="!checkObjectPropertiesForm(currentObject) || currentObject.isSaving == true" 
                                    type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="sendObjectToServer(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -1173,11 +1173,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
@@ -1208,13 +1203,13 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
 								ng-click="confirmAction();"
 								value="Ок" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#confirmActionModal');">
 								Отменить
