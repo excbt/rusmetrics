@@ -134,6 +134,18 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 	@Column(name = "q_rn")
 	private BigDecimal q_Rn;
 
+	//	@Column(name = "crc32_value", insertable = false, updatable = false)
+	//	private Integer crc32Value;
+
+	@Column(name = "crc32_valid", insertable = false, updatable = false)
+	private Boolean crc32Valid;
+
+	@Column(name = "data_mstatus")
+	private Short dataMstatus;
+
+	@Column(name = "data_changed", insertable = false, updatable = false)
+	private Boolean dataChanged;
+
 	@Override
 	public Date getDataDate() {
 		return dataDate;
@@ -374,6 +386,22 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 
 	public void setQ_Rn5(BigDecimal q_Rn5) {
 		this.q_Rn5 = q_Rn5;
+	}
+
+	public Boolean getCrc32Valid() {
+		return crc32Valid;
+	}
+
+	public Short getDataMstatus() {
+		return dataMstatus;
+	}
+
+	public Boolean getDataChanged() {
+		return dataChanged;
+	}
+
+	public void setDataChanged(Boolean dataChanged) {
+		this.dataChanged = dataChanged;
 	}
 
 }
