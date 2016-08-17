@@ -1446,7 +1446,7 @@ angular.module('portalNMC')
                             });
                             obj.devices = tmpArr;//response.data;
                             $scope.selectedItem(obj);
-                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0){
+                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)){
                                 $scope.zpointSettings._activeDeviceObjectId = obj.devices[0].id;
                             }
 //console.log(obj);                            
