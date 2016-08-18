@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', 'reportSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, reportSvc){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', 'reportSvc', '$filter' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, reportSvc, $filter){
 //console.log("ParamSetsCtrl");
     var CATEGORY_COEF = 1000;
     
@@ -1336,12 +1336,17 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.currentServiceType = angular.copy(servType);        
     };
     
-    $scope.setCurrentCategory = function(category){
+    $scope.setCurrentCategory = function(category){        
         $scope.currentCategory = category;        
     };
     
     $scope.setCurrentServiceType($scope.contServiceTypes[0]);
-    $scope.setCurrentCategory($scope.categories[0]);
+    
+    var filtredCategories = $filter('withReportTypes')($scope.categories);
+    if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
+        filtredCategories[0].class = "active";
+    }
+    $scope.setCurrentCategory(filtredCategories[0]);
     // ****************************************************************
     
     $scope.preview = function(reportType){       
