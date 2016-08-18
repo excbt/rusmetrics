@@ -611,7 +611,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                     result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].oneDateValue);
                     result.startDateValueFormatted = (angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
                     result.endDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
-                    result.directoryValue = (paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
+                    if (mainSvc.checkUndefinedNull(paramsetObj.paramSpecialList[elementIndex].directoryValue)){
+                        result.directoryValue = null;
+                    } else if (mainSvc.isNumeric(paramsetObj.paramSpecialList[elementIndex].directoryValue)) {
+                        result.directoryValue = Number(paramsetObj.paramSpecialList[elementIndex].directoryValue);
+                    }else{
+                        result.directoryValue = paramsetObj.paramSpecialList[elementIndex].directoryValue;
+                    }
                     result.version = paramsetObj.paramSpecialList[elementIndex].version || null;
                 }else{
                     result.id = null;

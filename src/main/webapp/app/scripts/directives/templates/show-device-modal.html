@@ -225,7 +225,9 @@
                                             <td colspan="3" >
                                                 <input type="checkbox" 
                                                        class="nmc-checkbox-form" 
-                                                       ng-model="currentDevice.isHexPassword"/>
+                                                       ng-model="currentDevice.isHexPassword"
+                                                       ng-disabled="isDeviceDisabled(currentDevice)"
+                                                       />
                                                 <label for="inputHexPassword">
                                                     Признак пароля в шестнадцатеричном виде <small> (для электросчетчиков Меркурий)
                                                     </small>

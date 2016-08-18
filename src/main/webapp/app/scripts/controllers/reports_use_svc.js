@@ -178,9 +178,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     
     function errorReportCreationCallback (e) {
 //console.log(e);        
+        $("#creationReportModal").modal("hide");
         if ($scope.createReportInProgress === true && e.status === 0) {
             $scope.createReportInProgress = false;
-            $("#creationReportModal").modal("hide");
+            
             return;
         }        
         errorCallback(e);
@@ -384,7 +385,14 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 result.oneDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].oneDateValue);
                 result.startDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].startDateValue);
                 result.endDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].endDateValue);
-                result.directoryValue = (reportParamset.paramSpecialList[elementIndex].directoryValue) || null;
+//                result.directoryValue = (reportParamset.paramSpecialList[elementIndex].directoryValue) || null;
+                if (mainSvc.checkUndefinedNull(reportParamset.paramSpecialList[elementIndex].directoryValue)){
+                    result.directoryValue = null;
+                } else if (mainSvc.isNumeric(reportParamset.paramSpecialList[elementIndex].directoryValue)) {
+                    result.directoryValue = Number(reportParamset.paramSpecialList[elementIndex].directoryValue);
+                }else{
+                    result.directoryValue = reportParamset.paramSpecialList[elementIndex].directoryValue;
+                }
                 result.version = reportParamset.paramSpecialList[elementIndex].version || null;
             }else{
                 result.id = null;
@@ -1137,7 +1145,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 saveAs(file, fileName);
                 $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
             }, errorReportCreationCallback)
-            .catch(errorCallback);    
+            .catch(errorReportCreationCallback);    
     };
     
     $scope.previewReport = function(type, paramset, isContext){
@@ -1270,10 +1278,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         			previewWin.close();
         		console.log(e);
             }else{
-                errorCallback(e);
+                errorReportCreationCallback(e);
             };
         })
-        .catch(errorCallback);
+        .catch(errorReportCreationCallback);
     };
 
         //work with tabs
