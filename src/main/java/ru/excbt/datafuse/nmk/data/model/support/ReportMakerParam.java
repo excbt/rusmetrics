@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -452,7 +453,8 @@ public class ReportMakerParam {
 		logger.debug("paramSpecialList.size: {}", reportParamset.getParamSpecialList().size());
 
 		List<ReportParamsetParamSpecial> paramValues = new ArrayList<>();
-		paramValues.addAll(reportParamset.getParamSpecialList());
+		paramValues.addAll(reportParamset.getParamSpecialList().stream()
+				.filter(i -> i.getReportMetaParamSpecialId() != null).collect(Collectors.toList()));
 
 		for (ReportMetaParamSpecial paramDef : specialParamDefs) {
 			logger.debug("Checking paramDef: {}", paramDef.getParamSpecialKeyname());
@@ -461,9 +463,13 @@ public class ReportMakerParam {
 						paramDef.getParamSpecialKeyname(), paramDef.getParamSpecialCaption(),
 						paramDef.getParamSpecialRequired());
 
-				boolean checkRequired = false;
+				if (!Boolean.TRUE.equals(paramDef.getParamSpecialRequired())) {
+					continue;
+				}
 
-				logger.debug("paramValues.size: {}", paramValues.size());
+				logger.warn("Checking value: {}", paramDef.getParamSpecialKeyname());
+
+				boolean checkRequired = false;
 
 				List<ReportParamsetParamSpecial> currCheckValues = new ArrayList<>();
 				currCheckValues.addAll(paramValues);
@@ -488,10 +494,15 @@ public class ReportMakerParam {
 
 						// logger.debug("Remove: {}",
 						// paramValues.remove(paramValue));
-						paramValues.remove(checkValue);
+						//paramValues.remove(checkValue);
 						// break;
 
 					}
+				}
+
+				if (!checkRequired) {
+					logger.debug("Param paramDef.id: {} paramTypeKeyname: {} IS NOT FOUND",
+							paramDef.getId(), paramDef.getParamSpecialKeyname());
 				}
 
 				result = result && checkRequired;
