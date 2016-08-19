@@ -629,7 +629,7 @@
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid">
 					<div class="row">
-                        <div class="col-xs-3 col-md-3">
+                        <div class="col-xs-3">
                             <div class="btn-group">
                               <button title="Добавить объекты" 
                                       type="button" 
@@ -647,14 +647,14 @@
                               </ul>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-xs-3">
 							<button ng-disabled="currentReportType.reportType=='COMMERCE_REPORT' || currentReportType.reportType=='COMMERCE_REPORT_M_V'" 
                                     class="btn btn-default btn-block btn-xs nmc-save-button" 
                                     ng-click="checkAndRunParamset(currentReportType, currentObject, true)">
                                 Предпросмотр
                             </button>    
 						</div>
-                        <div class="col-md-3">
+                        <div class="col-xs-3">
 							<input ng-disabled="isDisabled()" 
                                    type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button" 
@@ -662,7 +662,7 @@
                                    value="Сформировать" 
                                 />
 						</div>
-						<div class=" pull-right col-md-3 noPadding noMargin">
+						<div class=" pull-right col-xs-3 noPadding noMargin">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
                                     data-dismiss="modal" 
                                     ng-click="exit('#currentObject');setDefault();">

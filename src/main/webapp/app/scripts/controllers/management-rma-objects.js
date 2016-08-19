@@ -1357,7 +1357,7 @@ angular.module('portalNMC')
                 
                 $scope.isTestMode = function () {
                     return mainSvc.isTestMode();
-                }
+                };
                 
                 //toggle all objects - selected/unselected
                 $scope.toggleObjects = function(flag){
