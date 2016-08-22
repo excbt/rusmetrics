@@ -467,7 +467,7 @@ public class ReportMakerParam {
 					continue;
 				}
 
-				logger.warn("Checking value: {}", paramDef.getParamSpecialKeyname());
+				logger.debug("Checking value: {}", paramDef.getParamSpecialKeyname());
 
 				boolean checkRequired = false;
 
@@ -501,7 +501,7 @@ public class ReportMakerParam {
 				}
 
 				if (!checkRequired) {
-					logger.debug("Param paramDef.id: {} paramTypeKeyname: {} IS NOT FOUND",
+					logger.warn("Param paramDef.id: {} paramTypeKeyname: {} IS NOT FOUND",
 							paramDef.getId(), paramDef.getParamSpecialKeyname());
 				}
 
