@@ -22,8 +22,8 @@ import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatusV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.ContObjectCounterMap;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.ContObjectCounterMap;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @Service

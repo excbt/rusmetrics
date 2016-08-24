@@ -26,9 +26,9 @@ import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.ContObjectCounterMap;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.CounterInfo;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.ContObjectCounterMap;
+import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @Service

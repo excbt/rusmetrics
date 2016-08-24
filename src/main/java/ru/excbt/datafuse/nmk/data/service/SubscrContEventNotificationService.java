@@ -38,6 +38,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -65,67 +66,6 @@ public class SubscrContEventNotificationService extends AbstractService {
 
 	@Autowired
 	private ContEventService contEventService;
-
-	/**
-	 * 
-	 * @author kovtonyk
-	 *
-	 */
-	public static class CounterInfo {
-		private final Long id;
-		private final Long count;
-
-		private CounterInfo(Long id, Long count) {
-			this.id = id;
-			this.count = count;
-		}
-
-		public static CounterInfo newInstance(Object id, Object count) {
-
-			if (id instanceof Long && count instanceof Long) {
-				return new CounterInfo((Long) id, (Long) count);
-
-			} else if (id instanceof Number && count instanceof Number) {
-
-				long idValue = ((Number) id).longValue();
-				long countValue = ((Number) count).longValue();
-				return new CounterInfo(idValue, countValue);
-
-			}
-
-			throw new IllegalArgumentException("Can't determine type for CounterInfo arguments ");
-
-		}
-
-		public Long getId() {
-			return id;
-		}
-
-		public Long getCount() {
-			return count;
-		}
-
-	}
-
-	/**
-	 * 
-	 * @author kovtonyk
-	 *
-	 */
-	public static class ContObjectCounterMap {
-		private final Map<Long, CounterInfo> notificationMap;
-
-		public ContObjectCounterMap(List<CounterInfo> srcList) {
-			checkNotNull(srcList);
-			this.notificationMap = srcList.stream()
-					.collect(Collectors.toMap(CounterInfo::getId, (info) -> info));
-		}
-
-		public long getCountValue(Long contObjectId) {
-			CounterInfo info = notificationMap.get(contObjectId);
-			return (info == null) || (info.count == null) ? 0 : info.count.longValue();
-		}
-	}
 
 	/**
 	 * 
