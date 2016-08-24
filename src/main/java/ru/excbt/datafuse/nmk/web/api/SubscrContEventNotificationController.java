@@ -43,6 +43,7 @@ import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -69,6 +70,9 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	private SubscrContEventNotificationService subscrContEventNotifiicationService;
 
 	@Autowired
+	private SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
+
+	@Autowired
 	private ContEventMonitorService contEventMonitorService;
 
 	@Autowired
@@ -93,7 +97,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
 				.selectAll(getCurrentSubscriberId(), null, null);
 
-		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
+		return ResponseEntity.ok(new PageInfoList<>(resultPage));
 
 	}
 
@@ -153,7 +157,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
 				.selectNotificationByConditions(searchConditions, pageRequest);
 
-		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
+		return ResponseEntity.ok(new PageInfoList<>(resultPage));
 
 	}
 
@@ -286,6 +290,17 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @return
 	 */
 	//@RequestMapping(value = "/notifications/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+
+	/**
+	 * 
+	 * Makred for DELETE
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @param noGreenColor
+	 * @return
+	 */
+
 	protected ResponseEntity<?> notificationsContObjects(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
@@ -300,7 +315,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
+		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventNotificationStatus(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
@@ -341,7 +356,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 
-		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationService
+		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventNotificationStatusCollapse(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
@@ -374,7 +389,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
 				contGroupId);
 
-		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
+		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
 				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
@@ -389,27 +404,36 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 */
 	//@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET,
 	//		produces = APPLICATION_JSON_UTF8)
-	protected ResponseEntity<?> notificationsContObjectEventTypes(
-			@PathVariable(value = "contObjectId") Long contObjectId,
-			@RequestParam(value = "fromDate", required = true) String fromDateStr,
-			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
-		checkNotNull(contObjectId);
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
-
-		checkNotNull(datePeriodParser);
-
-		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
-		}
-
-		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatus(getCurrentSubscriberId(), contObjectId,
-						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
-
-		return ResponseEntity.ok(resultList);
-	}
+	/**
+	 * <akted for delete
+	 * 
+	 * @param contObjectId
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	//	protected ResponseEntity<?> notificationsContObjectEventTypes(
+	//			@PathVariable(value = "contObjectId") Long contObjectId,
+	//			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+	//			@RequestParam(value = "toDate", required = true) String toDateStr) {
+	//
+	//		checkNotNull(contObjectId);
+	//		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+	//
+	//		checkNotNull(datePeriodParser);
+	//
+	//		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+	//			return ResponseEntity.badRequest().body(String
+	//					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+	//		}
+	//
+	//		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
+	//				.selectMonitorContEventTypeStatus(getCurrentSubscriberId(), contObjectId,
+	//						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+	//
+	//		return ResponseEntity.ok(resultList);
+	//	}
 
 	/**
 	 * 
@@ -434,7 +458,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
+		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventTypeStatusCollapse(getSubscriberParam(), contObjectId,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 

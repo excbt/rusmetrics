@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
@@ -56,6 +57,9 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 	@Autowired
 	protected SubscrContEventNotificationService subscrContEventNotificationService;
+
+	@Autowired
+	protected SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
 
 	/**
 	 * 
@@ -589,7 +593,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
 				childSubscrObjectTreeId);
 
-		List<CityMonitorContEventsStatus> result = subscrContEventNotificationService
+		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
 				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 

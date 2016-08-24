@@ -34,6 +34,9 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	private SubscrContEventNotificationService subscrContEventNotifiicationService;
 
 	@Autowired
+	private SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
+
+	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
@@ -134,30 +137,30 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	public void testSubscrContEventNotifications() {
 		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
 
-		List<?> list = subscrContEventNotifiicationService
+		List<?> list = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventNotificationStatus(currentSubscriberService.getSubscriberId(), dp);
 
 		assertNotNull(list);
 		assertTrue(list.size() > 0);
 	}
 
-	@Test
-	public void selectContEventTypeMonitorStatusTest() throws Exception {
-
-		long contObjectId = 20118695;
-		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01", "2015-06-30");
-
-		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatus(currentSubscriberService.getSubscriberId(), contObjectId,
-						dpp.getLocalDatePeriod());
-
-		assertNotNull(checkList);
-		assertFalse(checkList.isEmpty());
-
-		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i.getContEventType().getKeyname(),
-				i.getTotalCount()));
-
-	}
+	//	@Test
+	//	public void selectContEventTypeMonitorStatusTest() throws Exception {
+	//
+	//		long contObjectId = 20118695;
+	//		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01", "2015-06-30");
+	//
+	//		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
+	//				.selectMonitorContEventTypeStatus(currentSubscriberService.getSubscriberId(), contObjectId,
+	//						dpp.getLocalDatePeriod());
+	//
+	//		assertNotNull(checkList);
+	//		assertFalse(checkList.isEmpty());
+	//
+	//		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i.getContEventType().getKeyname(),
+	//				i.getTotalCount()));
+	//
+	//	}
 
 	@Test
 	public void selectContEventTypeMonitorStatusCollapseTest() throws Exception {
@@ -165,7 +168,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		long contObjectId = 20118695;
 		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01", "2015-06-30");
 
-		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
+		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventTypeStatusCollapse(currentSubscriberService.getSubscriberParam(), contObjectId,
 						dpp.getLocalDatePeriod());
 

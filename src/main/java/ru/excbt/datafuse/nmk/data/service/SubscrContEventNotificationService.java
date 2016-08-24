@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,27 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContEventType;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
-import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatusV2;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -106,7 +90,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @author kovtonyk
 	 *
 	 */
-	private static class CounterInfo {
+	public static class CounterInfo {
 		private final Long id;
 		private final Long count;
 
@@ -115,7 +99,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 			this.count = count;
 		}
 
-		private static CounterInfo newInstance(Object id, Object count) {
+		public static CounterInfo newInstance(Object id, Object count) {
 
 			if (id instanceof Long && count instanceof Long) {
 				return new CounterInfo((Long) id, (Long) count);
@@ -132,7 +116,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 
 		}
 
-		public Long getContObjectId() {
+		public Long getId() {
 			return id;
 		}
 
@@ -147,16 +131,16 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @author kovtonyk
 	 *
 	 */
-	private class ContObjectCounterMap {
+	public static class ContObjectCounterMap {
 		private final Map<Long, CounterInfo> notificationMap;
 
-		private ContObjectCounterMap(List<CounterInfo> srcList) {
+		public ContObjectCounterMap(List<CounterInfo> srcList) {
 			checkNotNull(srcList);
 			this.notificationMap = srcList.stream()
-					.collect(Collectors.toMap(CounterInfo::getContObjectId, (info) -> info));
+					.collect(Collectors.toMap(CounterInfo::getId, (info) -> info));
 		}
 
-		private long getCountValue(Long contObjectId) {
+		public long getCountValue(Long contObjectId) {
 			CounterInfo info = notificationMap.get(contObjectId);
 			return (info == null) || (info.count == null) ? 0 : info.count.longValue();
 		}
@@ -697,267 +681,222 @@ public class SubscrContEventNotificationService extends AbstractService {
 		return typesList.size();
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param datePeriod
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod) {
-
-		checkNotNull(contObjectId);
-		checkNotNull(subscriberId);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCount(
-				subscriberId, contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
-
-		List<CounterInfo> selectList = selectResult.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
-
-		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
-
-		for (CounterInfo ci : selectList) {
-
-			ContEventType contEventType = contEventTypeService.findOne(ci.id);
-			checkNotNull(contEventType);
-
-			MonitorContEventTypeStatus item = MonitorContEventTypeStatus.newInstance(contEventType);
-			item.setTotalCount(ci.count);
-			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
-					.selectByContEventLevel(contEventType.getContEventLevel());
-
-			checkState(levelColors.size() == 1,
-					"Can't calculate eventLevelColor for contEventType with keyname:" + contEventType.getKeyname());
-
-			item.setContEventLevelColorKey(levelColors.get(0).getColorKey());
-			resultList.add(item);
-
-		}
-
-		return resultList;
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param contObjectId
-	 * @param datePeriod
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
-			final SubscriberParam subscriberParam, final Long contObjectId, final LocalDatePeriod datePeriod) {
-
-		checkNotNull(contObjectId);
-		checkNotNull(subscriberParam);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCountCollapse(
-				subscriberParam.getSubscriberId(), contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
-
-		List<CounterInfo> selectList = selectResult.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
-
-		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
-
-		for (CounterInfo ci : selectList) {
-
-			ContEventType contEventType = contEventTypeService.findOne(ci.id);
-			checkNotNull(contEventType);
-
-			MonitorContEventTypeStatus item = MonitorContEventTypeStatus.newInstance(contEventType);
-			item.setTotalCount(ci.count);
-
-			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
-					.selectByContEventLevel(contEventType.getContEventLevel());
-
-			checkState(levelColors.size() == 1,
-					"Can't calculate eventLevelColor for contEventType with keyname:" + contEventType.getKeyname());
-
-			item.setContEventLevelColorKey(levelColors.get(0).getColorKey());
-			resultList.add(item);
-		}
-
-		return resultList;
-	}
+	//	/**
+	//	 * 
+	//	 * @param subscriberId
+	//	 * @param contObjectId
+	//	 * @param datePeriod
+	//	 * @return
+	//	 */
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
+	//			final SubscriberParam subscriberParam, final Long contObjectId, final LocalDatePeriod datePeriod) {
+	//
+	//		checkNotNull(contObjectId);
+	//		checkNotNull(subscriberParam);
+	//		checkNotNull(datePeriod);
+	//		checkState(datePeriod.isValidEq());
+	//
+	//		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCountCollapse(
+	//				subscriberParam.getSubscriberId(), contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
+	//
+	//		List<CounterInfo> selectList = selectResult.stream()
+	//				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
+	//
+	//		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
+	//
+	//		for (CounterInfo ci : selectList) {
+	//
+	//			ContEventType contEventType = contEventTypeService.findOne(ci.id);
+	//			checkNotNull(contEventType);
+	//
+	//			MonitorContEventTypeStatus item = MonitorContEventTypeStatus.newInstance(contEventType);
+	//			item.setTotalCount(ci.count);
+	//
+	//			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
+	//					.selectByContEventLevel(contEventType.getContEventLevel());
+	//
+	//			checkState(levelColors.size() == 1,
+	//					"Can't calculate eventLevelColor for contEventType with keyname:" + contEventType.getKeyname());
+	//
+	//			item.setContEventLevelColorKey(levelColors.get(0).getColorKey());
+	//			resultList.add(item);
+	//		}
+	//
+	//		return resultList;
+	//	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(final Long subscriberId,
-			final LocalDatePeriod datePeriod) {
-		checkNotNull(subscriberId);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
-
-		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
-
-		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod));
-
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, Boolean.TRUE));
-
-		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				selectContObjectEventTypeCountGroupInfoList(subscriberId, contObjectIds, datePeriod));
-
-		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
-				.getContObjectsContEventMonitorMap(contObjectIds);
-
-		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
-		for (ContObject co : contObjects) {
-
-			List<ContEventMonitor> availableMonitors = monitorContObjectsMap.get(co.getId());
-
-			ContEventLevelColorKey monitorColorKey = null;
-
-			if (availableMonitors != null) {
-				ContEventLevelColor monitorColor = contEventMonitorService.sortWorseColor(availableMonitors);
-				monitorColorKey = contEventMonitorService.getColorKey(monitorColor);
-			}
-
-			// ContEventLevelColorKey checkMonitorColorKey =
-			// contEventMonitorService
-			// .getColorKeyByContObject(co.getId());
-			//
-			// checkState(checkMonitorColorKey == monitorColorKey);
-
-			long allCnt = allMap.getCountValue(co.getId());
-
-			long newCnt = 0;
-			long typesCnt = 0;
-
-			ContEventLevelColorKey resultColorKey = monitorColorKey;
-
-			if (allCnt > 0) {
-
-				newCnt = allNewMap.getCountValue(co.getId());
-
-				// typesCnt = selectContEventTypeCountGroup(subscriberId,
-				// co.getId(), datePeriod);
-				typesCnt = contallEventTypesMap.getCountValue(co.getId());
-
-				if (resultColorKey == null) {
-					resultColorKey = ContEventLevelColorKey.YELLOW;
-				}
-			}
-
-			if (resultColorKey == null) {
-				resultColorKey = ContEventLevelColorKey.GREEN;
-			}
-
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
-
-			item.setEventsCount(allCnt);
-			item.setNewEventsCount(newCnt);
-			item.setEventsTypesCount(typesCnt);
-			item.setContEventLevelColorKey(resultColorKey);
-
-			result.add(item);
-		}
-
-		return result;
-	}
+	//	@Deprecated
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(final Long subscriberId,
+	//			final LocalDatePeriod datePeriod) {
+	//		checkNotNull(subscriberId);
+	//		checkNotNull(datePeriod);
+	//		checkState(datePeriod.isValidEq());
+	//
+	//		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
+	//
+	//		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
+	//
+	//		ContObjectCounterMap allMap = new ContObjectCounterMap(
+	//				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod));
+	//
+	//		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
+	//				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, Boolean.TRUE));
+	//
+	//		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
+	//				selectContObjectEventTypeCountGroupInfoList(subscriberId, contObjectIds, datePeriod));
+	//
+	//		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
+	//				.getContObjectsContEventMonitorMap(contObjectIds);
+	//
+	//		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
+	//		for (ContObject co : contObjects) {
+	//
+	//			List<ContEventMonitor> availableMonitors = monitorContObjectsMap.get(co.getId());
+	//
+	//			ContEventLevelColorKey monitorColorKey = null;
+	//
+	//			if (availableMonitors != null) {
+	//				ContEventLevelColor monitorColor = contEventMonitorService.sortWorseColor(availableMonitors);
+	//				monitorColorKey = contEventMonitorService.getColorKey(monitorColor);
+	//			}
+	//
+	//			// ContEventLevelColorKey checkMonitorColorKey =
+	//			// contEventMonitorService
+	//			// .getColorKeyByContObject(co.getId());
+	//			//
+	//			// checkState(checkMonitorColorKey == monitorColorKey);
+	//
+	//			long allCnt = allMap.getCountValue(co.getId());
+	//
+	//			long newCnt = 0;
+	//			long typesCnt = 0;
+	//
+	//			ContEventLevelColorKey resultColorKey = monitorColorKey;
+	//
+	//			if (allCnt > 0) {
+	//
+	//				newCnt = allNewMap.getCountValue(co.getId());
+	//
+	//				// typesCnt = selectContEventTypeCountGroup(subscriberId,
+	//				// co.getId(), datePeriod);
+	//				typesCnt = contallEventTypesMap.getCountValue(co.getId());
+	//
+	//				if (resultColorKey == null) {
+	//					resultColorKey = ContEventLevelColorKey.YELLOW;
+	//				}
+	//			}
+	//
+	//			if (resultColorKey == null) {
+	//				resultColorKey = ContEventLevelColorKey.GREEN;
+	//			}
+	//
+	//			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
+	//
+	//			item.setEventsCount(allCnt);
+	//			item.setNewEventsCount(newCnt);
+	//			item.setEventsTypesCount(typesCnt);
+	//			item.setContEventLevelColorKey(resultColorKey);
+	//
+	//			result.add(item);
+	//		}
+	//
+	//		return result;
+	//	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
-			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
-			Boolean noGreenColor) {
-		checkNotNull(subscriberParam);
-		checkNotNull(contObjects);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
-
-		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
-		}
-
-		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
-
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(selectContEventNotificationInfoList(
-				subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
-
-		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberParam.getSubscriberId(), contObjectIds,
-						datePeriod));
-
-		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
-				.getContObjectsContEventMonitorMap(contObjectIds);
-
-		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
-		for (ContObject co : contObjects) {
-
-			List<ContEventMonitor> availableMonitors = monitorContObjectsMap.get(co.getId());
-
-			ContEventLevelColorKey monitorColorKey = null;
-
-			if (availableMonitors != null) {
-				ContEventLevelColor monitorColor = contEventMonitorService.sortWorseColor(availableMonitors);
-				monitorColorKey = contEventMonitorService.getColorKey(monitorColor);
-			}
-
-			long allCnt = allMap.getCountValue(co.getId());
-
-			long newCnt = 0;
-			long typesCnt = 0;
-
-			ContEventLevelColorKey resultColorKey = monitorColorKey;
-
-			if (allCnt > 0) {
-
-				newCnt = allNewMap.getCountValue(co.getId());
-
-				typesCnt = contallEventTypesMap.getCountValue(co.getId());
-
-				if (resultColorKey == null) {
-					resultColorKey = ContEventLevelColorKey.YELLOW;
-				}
-			}
-
-			if (resultColorKey == null) {
-				resultColorKey = ContEventLevelColorKey.GREEN;
-			}
-
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
-
-			item.setEventsCount(allCnt);
-			item.setNewEventsCount(newCnt);
-			item.setEventsTypesCount(typesCnt);
-			item.setContEventLevelColorKey(resultColorKey);
-
-			monitorStatusList.add(item);
-		}
-
-		List<MonitorContEventNotificationStatus> resultList = null;
-
-		if (Boolean.TRUE.equals(noGreenColor)) {
-			resultList = monitorStatusList.stream()
-					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
-					.collect(Collectors.toList());
-		} else {
-			resultList = monitorStatusList;
-		}
-
-		return resultList;
-	}
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
+	//			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
+	//			Boolean noGreenColor) {
+	//		checkNotNull(subscriberParam);
+	//		checkNotNull(contObjects);
+	//		checkNotNull(datePeriod);
+	//		checkState(datePeriod.isValidEq());
+	//
+	//		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
+	//
+	//		if (contObjectIds.isEmpty()) {
+	//			contObjectIds = NO_DATA_IDS;
+	//		}
+	//
+	//		ContObjectCounterMap allMap = new ContObjectCounterMap(
+	//				selectContEventNotificationInfoList(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
+	//
+	//		ContObjectCounterMap allNewMap = new ContObjectCounterMap(selectContEventNotificationInfoList(
+	//				subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
+	//
+	//		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
+	//				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberParam.getSubscriberId(), contObjectIds,
+	//						datePeriod));
+	//
+	//		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
+	//				.getContObjectsContEventMonitorMap(contObjectIds);
+	//
+	//		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
+	//		for (ContObject co : contObjects) {
+	//
+	//			List<ContEventMonitor> availableMonitors = monitorContObjectsMap.get(co.getId());
+	//
+	//			ContEventLevelColorKey monitorColorKey = null;
+	//
+	//			if (availableMonitors != null) {
+	//				ContEventLevelColor monitorColor = contEventMonitorService.sortWorseColor(availableMonitors);
+	//				monitorColorKey = contEventMonitorService.getColorKey(monitorColor);
+	//			}
+	//
+	//			long allCnt = allMap.getCountValue(co.getId());
+	//
+	//			long newCnt = 0;
+	//			long typesCnt = 0;
+	//
+	//			ContEventLevelColorKey resultColorKey = monitorColorKey;
+	//
+	//			if (allCnt > 0) {
+	//
+	//				newCnt = allNewMap.getCountValue(co.getId());
+	//
+	//				typesCnt = contallEventTypesMap.getCountValue(co.getId());
+	//
+	//				if (resultColorKey == null) {
+	//					resultColorKey = ContEventLevelColorKey.YELLOW;
+	//				}
+	//			}
+	//
+	//			if (resultColorKey == null) {
+	//				resultColorKey = ContEventLevelColorKey.GREEN;
+	//			}
+	//
+	//			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
+	//
+	//			item.setEventsCount(allCnt);
+	//			item.setNewEventsCount(newCnt);
+	//			item.setEventsTypesCount(typesCnt);
+	//			item.setContEventLevelColorKey(resultColorKey);
+	//
+	//			monitorStatusList.add(item);
+	//		}
+	//
+	//		List<MonitorContEventNotificationStatus> resultList = null;
+	//
+	//		if (Boolean.TRUE.equals(noGreenColor)) {
+	//			resultList = monitorStatusList.stream()
+	//					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
+	//					.collect(Collectors.toList());
+	//		} else {
+	//			resultList = monitorStatusList;
+	//		}
+	//
+	//		return resultList;
+	//	}
 
 	/**
 	 * 
@@ -967,82 +906,82 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param noGreenColor
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventNotificationStatusV2> selectMonitorContEventNotificationStatusCollapseV2(
-			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
-			Boolean noGreenColor) {
-		checkNotNull(subscriberParam);
-		checkNotNull(contObjects);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
-
-		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
-		}
-
-		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
-
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(selectContEventNotificationInfoList(
-				subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
-
-		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberParam.getSubscriberId(), contObjectIds,
-						datePeriod));
-
-		Map<Long, List<ContEventMonitorV2>> monitorContObjectsMap = contEventMonitorV2Service
-				.getContObjectsContEventMonitorMap(contObjectIds);
-
-		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();
-		for (ContObject co : contObjects) {
-
-			List<ContEventMonitorV2> availableMonitors = monitorContObjectsMap.get(co.getId());
-
-			ContEventLevelColorKeyV2 monitorColorKey = null;
-
-			if (availableMonitors != null) {
-				ContEventLevelColorV2 monitorColor = contEventMonitorV2Service.sortWorseColor(availableMonitors);
-				monitorColorKey = contEventMonitorV2Service.getColorKey(monitorColor);
-			}
-
-			long allCnt = allMap.getCountValue(co.getId());
-			long newCnt = 0;
-			long typesCnt = 0;
-
-			if (allCnt > 0) {
-				newCnt = allNewMap.getCountValue(co.getId());
-				typesCnt = contallEventTypesMap.getCountValue(co.getId());
-			}
-
-			ContEventLevelColorKeyV2 resultColorKey = monitorColorKey;
-			if (resultColorKey == null) {
-				resultColorKey = ContEventLevelColorKeyV2.GREEN;
-			}
-
-			MonitorContEventNotificationStatusV2 item = MonitorContEventNotificationStatusV2.newInstance(co);
-
-			item.setEventsCount(allCnt);
-			item.setNewEventsCount(newCnt);
-			item.setEventsTypesCount(typesCnt);
-			item.setContEventLevelColorKey(resultColorKey);
-
-			monitorStatusList.add(item);
-		}
-
-		List<MonitorContEventNotificationStatusV2> resultList = null;
-
-		if (Boolean.TRUE.equals(noGreenColor)) {
-			resultList = monitorStatusList.stream()
-					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKeyV2.GREEN)
-					.collect(Collectors.toList());
-		} else {
-			resultList = monitorStatusList;
-		}
-
-		return resultList;
-	}
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<MonitorContEventNotificationStatusV2> selectMonitorContEventNotificationStatusCollapseV2(
+	//			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
+	//			Boolean noGreenColor) {
+	//		checkNotNull(subscriberParam);
+	//		checkNotNull(contObjects);
+	//		checkNotNull(datePeriod);
+	//		checkState(datePeriod.isValidEq());
+	//
+	//		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
+	//
+	//		if (contObjectIds.isEmpty()) {
+	//			contObjectIds = NO_DATA_IDS;
+	//		}
+	//
+	//		ContObjectCounterMap allMap = new ContObjectCounterMap(
+	//				selectContEventNotificationInfoList(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
+	//
+	//		ContObjectCounterMap allNewMap = new ContObjectCounterMap(selectContEventNotificationInfoList(
+	//				subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
+	//
+	//		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
+	//				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberParam.getSubscriberId(), contObjectIds,
+	//						datePeriod));
+	//
+	//		Map<Long, List<ContEventMonitorV2>> monitorContObjectsMap = contEventMonitorV2Service
+	//				.getContObjectsContEventMonitorMap(contObjectIds);
+	//
+	//		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();
+	//		for (ContObject co : contObjects) {
+	//
+	//			List<ContEventMonitorV2> availableMonitors = monitorContObjectsMap.get(co.getId());
+	//
+	//			ContEventLevelColorKeyV2 monitorColorKey = null;
+	//
+	//			if (availableMonitors != null) {
+	//				ContEventLevelColorV2 monitorColor = contEventMonitorV2Service.sortWorseColor(availableMonitors);
+	//				monitorColorKey = contEventMonitorV2Service.getColorKey(monitorColor);
+	//			}
+	//
+	//			long allCnt = allMap.getCountValue(co.getId());
+	//			long newCnt = 0;
+	//			long typesCnt = 0;
+	//
+	//			if (allCnt > 0) {
+	//				newCnt = allNewMap.getCountValue(co.getId());
+	//				typesCnt = contallEventTypesMap.getCountValue(co.getId());
+	//			}
+	//
+	//			ContEventLevelColorKeyV2 resultColorKey = monitorColorKey;
+	//			if (resultColorKey == null) {
+	//				resultColorKey = ContEventLevelColorKeyV2.GREEN;
+	//			}
+	//
+	//			MonitorContEventNotificationStatusV2 item = MonitorContEventNotificationStatusV2.newInstance(co);
+	//
+	//			item.setEventsCount(allCnt);
+	//			item.setNewEventsCount(newCnt);
+	//			item.setEventsTypesCount(typesCnt);
+	//			item.setContEventLevelColorKey(resultColorKey);
+	//
+	//			monitorStatusList.add(item);
+	//		}
+	//
+	//		List<MonitorContEventNotificationStatusV2> resultList = null;
+	//
+	//		if (Boolean.TRUE.equals(noGreenColor)) {
+	//			resultList = monitorStatusList.stream()
+	//					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKeyV2.GREEN)
+	//					.collect(Collectors.toList());
+	//		} else {
+	//			resultList = monitorStatusList;
+	//		}
+	//
+	//		return resultList;
+	//	}
 
 	/**
 	 * 
@@ -1051,7 +990,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param datePeriod
 	 * @return
 	 */
-	private List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		return selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, null);
 	}
@@ -1066,7 +1006,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param isNew
 	 * @return
 	 */
-	private List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -1100,8 +1041,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Deprecated
-	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(final Long subscriberId,
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -1123,7 +1064,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param datePeriod
 	 * @return
 	 */
-	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoListCollapse(final Long subscriberId,
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<CounterInfo> selectContObjectEventTypeCountGroupInfoListCollapse(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -1143,60 +1085,31 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * 
 	 * @return
 	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus_old(
-			final SubscriberParam subscriberParam, final Long contGroupId, final LocalDatePeriod datePeriod,
-			Boolean noGreenColor) {
-
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam,
-				contGroupId);
-
-		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
-				subscriberParam, contObjects, datePeriod, noGreenColor);
-
-		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
-				CityMonitorContEventsStatus.FACTORY_INSTANCE);
-
-		Map<UUID, Long> cityEventCount = contEventMonitorService
-				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
-
-		result.forEach((i) -> {
-			Long cnt = cityEventCount.get(i.getCityFiasUUID());
-			i.setMonitorEventCount(cnt != null ? cnt : 0);
-		});
-
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param contObjects
-	 * @param subscriberParam
-	 * @param datePeriod
-	 * @param noGreenColor
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus(final SubscriberParam subscriberParam,
-			final List<ContObject> contObjects, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
-
-		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
-				subscriberParam, contObjects, datePeriod, noGreenColor);
-
-		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
-				CityMonitorContEventsStatus.FACTORY_INSTANCE);
-
-		Map<UUID, Long> cityEventCount = contEventMonitorService
-				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
-
-		result.forEach((i) -> {
-			Long cnt = cityEventCount.get(i.getCityFiasUUID());
-			i.setMonitorEventCount(cnt != null ? cnt : 0);
-		});
-
-		return result;
-	}
+	//	@Deprecated
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus_old(
+	//			final SubscriberParam subscriberParam, final Long contGroupId, final LocalDatePeriod datePeriod,
+	//			Boolean noGreenColor) {
+	//
+	//		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam,
+	//				contGroupId);
+	//
+	//		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
+	//				subscriberParam, contObjects, datePeriod, noGreenColor);
+	//
+	//		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
+	//				CityMonitorContEventsStatus.FACTORY_INSTANCE);
+	//
+	//		Map<UUID, Long> cityEventCount = contEventMonitorService
+	//				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
+	//
+	//		result.forEach((i) -> {
+	//			Long cnt = cityEventCount.get(i.getCityFiasUUID());
+	//			i.setMonitorEventCount(cnt != null ? cnt : 0);
+	//		});
+	//
+	//		return result;
+	//	}
 
 	/**
 	 * 
@@ -1206,27 +1119,56 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param noGreenColor
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatusV2> selectCityMonitoryContEventsStatusV2(
-			final SubscriberParam subscriberParam,
-			final List<ContObject> contObjects, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus(final SubscriberParam subscriberParam,
+	//			final List<ContObject> contObjects, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
+	//
+	//		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
+	//				subscriberParam, contObjects, datePeriod, noGreenColor);
+	//
+	//		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
+	//				CityMonitorContEventsStatus.FACTORY_INSTANCE);
+	//
+	//		Map<UUID, Long> cityEventCount = contEventMonitorService
+	//				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
+	//
+	//		result.forEach((i) -> {
+	//			Long cnt = cityEventCount.get(i.getCityFiasUUID());
+	//			i.setMonitorEventCount(cnt != null ? cnt : 0);
+	//		});
+	//
+	//		return result;
+	//	}
 
-		List<MonitorContEventNotificationStatusV2> resultObjects = selectMonitorContEventNotificationStatusCollapseV2(
-				subscriberParam, contObjects, datePeriod, noGreenColor);
-
-		List<CityMonitorContEventsStatusV2> result = CityContObjects.makeCityContObjects(resultObjects,
-				CityMonitorContEventsStatusV2.FACTORY_INSTANCE);
-
-		Map<UUID, Long> cityEventCount = contEventMonitorV2Service
-				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
-
-		result.forEach((i) -> {
-			Long cnt = cityEventCount.get(i.getCityFiasUUID());
-			i.setMonitorEventCount(cnt != null ? cnt : 0);
-		});
-
-		return new ArrayList<>();
-	}
+	/**
+	 * 
+	 * @param contObjects
+	 * @param subscriberParam
+	 * @param datePeriod
+	 * @param noGreenColor
+	 * @return
+	 */
+	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	public List<CityMonitorContEventsStatusV2> selectCityMonitoryContEventsStatusV2(
+	//			final SubscriberParam subscriberParam,
+	//			final List<ContObject> contObjects, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
+	//
+	//		List<MonitorContEventNotificationStatusV2> resultObjects = selectMonitorContEventNotificationStatusCollapseV2(
+	//				subscriberParam, contObjects, datePeriod, noGreenColor);
+	//
+	//		List<CityMonitorContEventsStatusV2> result = CityContObjects.makeCityContObjects(resultObjects,
+	//				CityMonitorContEventsStatusV2.FACTORY_INSTANCE);
+	//
+	//		Map<UUID, Long> cityEventCount = contEventMonitorV2Service
+	//				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
+	//
+	//		result.forEach((i) -> {
+	//			Long cnt = cityEventCount.get(i.getCityFiasUUID());
+	//			i.setMonitorEventCount(cnt != null ? cnt : 0);
+	//		});
+	//
+	//		return new ArrayList<>();
+	//	}
 
 	/**
 	 * 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 public class SubscrContEventMonitorController extends SubscrApiController {
 
 	@Autowired
-	private SubscrContEventNotificationService subscrContEventNotifiicationService;
+	private SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
 	/**
 	 * 
@@ -50,7 +50,7 @@ public class SubscrContEventMonitorController extends SubscrApiController {
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
 				contGroupId);
 
-		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationService
+		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
 				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
