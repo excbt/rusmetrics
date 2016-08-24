@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
-import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 
 /**
@@ -41,15 +39,24 @@ public class ContEventMonitorV2Service {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ContEventMonitorV2Service.class);
 
+	/**
+	 * 
+	 */
 	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK = (e1,
 			e2) -> Integer.compare(e1.getContEventLevelColor() == null ? -1
 					: e1.getContEventLevelColor().getColorRank(), e2
 							.getContEventLevelColor() == null ? -1 : e2
 									.getContEventLevelColor().getColorRank());
 
+	/**
+	 * 
+	 */
 	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME = (e1,
 			e2) -> e1.getContEventTime().compareTo(e2.getContEventTime());
 
+	/**
+	 * 		
+	 */
 	@Autowired
 	private ContEventMonitorV2Repository contEventMonitorV2Repository;
 
@@ -107,20 +114,11 @@ public class ContEventMonitorV2Service {
 	 * @param contObjectId
 	 * @return
 	 */
-	public ContEventLevelColorV2 getColorByContObject(Long contObjectId) {
+	public ContEventLevelColorV2 getWorseColorByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
 		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository
 				.findByContObjectId(contObjectId);
 		return sortWorseColor(contEventMonitor);
-	}
-
-	/**
-	 * 
-	 * @param contObjectId
-	 * @return
-	 */
-	public ContEventLevelColorKeyV2 getColorKeyByContObject(Long contObjectId) {
-		return getColorKey(getColorByContObject(contObjectId));
 	}
 
 	/**
@@ -140,16 +138,7 @@ public class ContEventMonitorV2Service {
 	 * @param subscriberId
 	 * @return
 	 */
-	public ContEventLevelColorKeyV2 getColorKeyBySubscriberId(Long subscriberId) {
-		return getColorKey(getColorBySubscriberId(subscriberId));
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	public ContEventLevelColorV2 getColorBySubscriberId(Long subscriberId) {
+	public ContEventLevelColorV2 getWorseColorBySubscriberId(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository
 				.selectBySubscriberId(subscriberId);
@@ -183,21 +172,6 @@ public class ContEventMonitorV2Service {
 
 	/**
 	 * 
-	 * @param keynameObject
-	 * @return
-	 */
-	public ContEventLevelColorKeyV2 getColorKey(KeynameObject keynameObject) {
-		if (keynameObject == null) {
-			return null;
-		}
-		ContEventLevelColorKeyV2 result = ContEventLevelColorKeyV2
-				.findByKeyname(keynameObject);
-		return result;
-
-	}
-
-	/**
-	 * 
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -206,7 +180,7 @@ public class ContEventMonitorV2Service {
 		List<ContEventMonitorV2> monitorList = contEventMonitorV2Repository
 				.selectByContObjectIds(contObjectIds);
 
-		Map<Long, List<ContEventMonitorV2>> resultMap = new HashMap<Long, List<ContEventMonitorV2>>();
+		Map<Long, List<ContEventMonitorV2>> resultMap = new HashMap<>();
 		for (ContEventMonitorV2 m : monitorList) {
 			if (!resultMap.containsKey(m.getContObjectId())) {
 				resultMap.put(m.getContObjectId(), new ArrayList<>());
@@ -214,10 +188,6 @@ public class ContEventMonitorV2Service {
 			resultMap.get(m.getContObjectId()).add(m);
 		}
 
-		// Map<Long, ContEventLevelColorKey> resultMap = monitorList.stream()
-		// .collect(
-		// Collectors.toMap(ContEventMonitor::getContObjectId,
-		// m -> m.getContEventLevelColorKey()));
 		return resultMap;
 	}
 

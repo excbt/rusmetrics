@@ -565,29 +565,6 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	@Deprecated
-	public long selectContEventTypeCount(final Long subscriberId, final Long contObjectId,
-			final LocalDatePeriod datePeriod) {
-
-		checkNotNull(contObjectId);
-		checkNotNull(subscriberId);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Object[]> typesList = subscrContEventNotificationRepository.selectNotificationEventTypeCount(subscriberId,
-				contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
-
-		return typesList.size();
-	}
-
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param datePeriod
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectContEventTypeCountGroup(final Long subscriberId, final Long contObjectId,
 			final LocalDatePeriod datePeriod) {
 
@@ -610,9 +587,9 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
+	public List<CounterInfo> selectContEventNotificationCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
-		return selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, null);
+		return selectContEventNotificationCounterInfo(subscriberId, contObjectIds, datePeriod, null);
 	}
 
 	/**
@@ -626,7 +603,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
+	public List<CounterInfo> selectContEventNotificationCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -661,7 +638,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(final Long subscriberId,
+	public List<CounterInfo> selectContObjectEventTypeGroupCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -684,7 +661,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CounterInfo> selectContObjectEventTypeCountGroupInfoListCollapse(final Long subscriberId,
+	public List<CounterInfo> selectContObjectEventTypeGroupCollapseCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);

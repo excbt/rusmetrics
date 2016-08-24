@@ -5,11 +5,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.Serializable;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
+import ru.excbt.datafuse.nmk.data.model.markers.StatusColorRankObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 
 public class MonitorContEventNotificationStatusV2 implements Serializable,
-		StatusColorObject, ContObjectHolder {
+		StatusColorRankObject, ContObjectHolder {
 
 	/**
 	 * 
@@ -26,15 +26,19 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 
 	private long newEventsCount;
 
-	public MonitorContEventNotificationStatusV2(ContObject contObject) {
+	/**
+	 * 
+	 * @param contObject
+	 */
+	private MonitorContEventNotificationStatusV2(ContObject contObject) {
 		this.contObject = ContObjectShort.newInstance(contObject);
 	}
 
-	@Override
-	public ContObject getContObject() {
-		return contObject;
-	}
-
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
 	public static MonitorContEventNotificationStatusV2 newInstance(
 			ContObject contObject) {
 		checkNotNull(contObject);
@@ -43,43 +47,95 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 		return result;
 	}
 
+	/**
+	 * 
+	 */
+	@Override
+	public ContObject getContObject() {
+		return contObject;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public ContEventLevelColorKeyV2 getContEventLevelColorKey() {
 		return contEventLevelColorKey;
 	}
 
+	/**
+	 * 
+	 * @param contEventLevelColorKey
+	 */
 	public void setContEventLevelColorKey(
 			ContEventLevelColorKeyV2 contEventLevelColorKey) {
 		this.contEventLevelColorKey = contEventLevelColorKey;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String getStatusColor() {
 		return contEventLevelColorKey == null ? null : contEventLevelColorKey
 				.getKeyname();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public long getEventsCount() {
 		return eventsCount;
 	}
 
+	/**
+	 * 
+	 * @param eventsCount
+	 */
 	public void setEventsCount(long eventsCount) {
 		this.eventsCount = eventsCount;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public long getEventsTypesCount() {
 		return eventsTypesCount;
 	}
 
+	/**
+	 * 
+	 * @param eventsTypesCount
+	 */
 	public void setEventsTypesCount(long eventsTypesCount) {
 		this.eventsTypesCount = eventsTypesCount;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public long getNewEventsCount() {
 		return newEventsCount;
 	}
 
+	/**
+	 * 
+	 * @param newEventsCount
+	 */
 	public void setNewEventsCount(long newEventsCount) {
 		this.newEventsCount = newEventsCount;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject#getColorRank()
+	 */
+	@Override
+	public int getColorRank() {
+		return contEventLevelColorKey == null ? Integer.MIN_VALUE : contEventLevelColorKey
+				.getColorRank();
 	}
 
 }

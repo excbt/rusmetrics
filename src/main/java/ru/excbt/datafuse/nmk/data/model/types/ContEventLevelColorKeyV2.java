@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.types;
 
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
-import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
+import ru.excbt.datafuse.nmk.data.model.markers.StatusColorRankObject;
 
 /**
  * Тип данных: цвет уровня событий
@@ -11,7 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
  * @since 29.06.2015
  *
  */
-public enum ContEventLevelColorKeyV2 implements KeynameObject, StatusColorObject {
+public enum ContEventLevelColorKeyV2 implements KeynameObject, StatusColorRankObject {
 	GREEN(100), YELLOW(50), RED(0);
 
 	private final String keyname;
@@ -59,11 +59,19 @@ public enum ContEventLevelColorKeyV2 implements KeynameObject, StatusColorObject
 		return findByKeyname(keynameObject.getKeyname());
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String getStatusColor() {
 		return this.name();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
 	public int getColorRank() {
 		return colorRank;
 	}

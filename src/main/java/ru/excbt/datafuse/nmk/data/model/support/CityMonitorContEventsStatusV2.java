@@ -47,14 +47,26 @@ public class CityMonitorContEventsStatusV2 extends
 		super(cityFiasUUID);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<MonitorContEventNotificationStatusV2> getContEventNotificationStatuses() {
 		return cityObjects;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Long getMonitorEventCount() {
 		return monitorEventCount;
 	}
 
+	/**
+	 * 
+	 * @param monitorEventCount
+	 */
 	public void setMonitorEventCount(Long monitorEventCount) {
 		this.monitorEventCount = monitorEventCount;
 	}

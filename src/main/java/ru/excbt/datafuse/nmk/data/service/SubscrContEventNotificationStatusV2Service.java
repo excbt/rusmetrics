@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatusV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.ContObjectCounterMap;
+import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @Service
@@ -58,7 +58,8 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 		List<CityMonitorContEventsStatusV2> result = CityContObjects.makeCityContObjects(resultObjects,
 				CityMonitorContEventsStatusV2.FACTORY_INSTANCE);
 
-		Map<UUID, Long> cityEventCount = contEventMonitorV2Service
+		// Calculate all city contEventCount
+		final Map<UUID, Long> cityEventCount = contEventMonitorV2Service
 				.selectCityContObjectMonitorEventCount(subscriberParam.getSubscriberId());
 
 		result.forEach((i) -> {
@@ -77,8 +78,8 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	 * @param noGreenColor
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventNotificationStatusV2> selectMonitorContEventNotificationStatusCollapseV2(
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	private List<MonitorContEventNotificationStatusV2> selectMonitorContEventNotificationStatusCollapseV2(
 			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
 		checkNotNull(subscriberParam);
@@ -86,23 +87,28 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
+		if (contObjects.isEmpty()) {
+			LOGGER.warn("contObjects is empty");
+			return new ArrayList<>();
+		}
+
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
+		// Second check. For safe only
 		if (contObjectIds.isEmpty()) {
-			LOGGER.warn("contObjectIds is empty");
 			contObjectIds = NO_DATA_IDS;
 		}
 
-		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContEventNotificationInfoList(
+		CounterInfoMap allNotificationsMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContEventNotificationInfoList(
+		CounterInfoMap allNewNotificationsMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
 
-		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContObjectEventTypeCountGroupInfoListCollapse(
+		CounterInfoMap contallEventTypesMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContObjectEventTypeGroupCollapseCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds,
 						datePeriod));
 
@@ -112,28 +118,20 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
-			List<ContEventMonitorV2> availableMonitors = monitorContObjectsMap.get(co.getId());
+			List<ContEventMonitorV2> contObjectMonitors = monitorContObjectsMap.get(co.getId());
 
-			ContEventLevelColorKeyV2 monitorColorKey = null;
+			ContEventLevelColorKeyV2 worseMonitorColorKey = null;
 
-			if (availableMonitors != null) {
-				ContEventLevelColorV2 monitorColor = contEventMonitorV2Service.sortWorseColor(availableMonitors);
-				monitorColorKey = contEventMonitorV2Service.getColorKey(monitorColor);
+			if (contObjectMonitors != null) {
+				ContEventLevelColorV2 worseMonitorColor = contEventMonitorV2Service.sortWorseColor(contObjectMonitors);
+				worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
 			}
 
-			long allCnt = allMap.getCountValue(co.getId());
-			long newCnt = 0;
-			long typesCnt = 0;
-
-			if (allCnt > 0) {
-				newCnt = allNewMap.getCountValue(co.getId());
-				typesCnt = contallEventTypesMap.getCountValue(co.getId());
-			}
-
-			ContEventLevelColorKeyV2 resultColorKey = monitorColorKey;
-			if (resultColorKey == null) {
-				resultColorKey = ContEventLevelColorKeyV2.GREEN;
-			}
+			final long allCnt = allNotificationsMap.getCountValue(co.getId());
+			final long newCnt = allCnt > 0 ? allNewNotificationsMap.getCountValue(co.getId()) : 0;
+			final long typesCnt = allCnt > 0 ? contallEventTypesMap.getCountValue(co.getId()) : 0;
+			final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
+					: ContEventLevelColorKeyV2.GREEN;
 
 			MonitorContEventNotificationStatusV2 item = MonitorContEventNotificationStatusV2.newInstance(co);
 

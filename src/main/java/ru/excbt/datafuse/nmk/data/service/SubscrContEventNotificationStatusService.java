@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.ContObjectCounterMap;
+import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
@@ -127,16 +127,16 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
-		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContEventNotificationInfoList(subscriberId, contObjectIds,
+		CounterInfoMap allMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContEventNotificationCounterInfo(subscriberId, contObjectIds,
 						datePeriod));
 
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContEventNotificationInfoList(subscriberId, contObjectIds,
+		CounterInfoMap allNewMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContEventNotificationCounterInfo(subscriberId, contObjectIds,
 						datePeriod, Boolean.TRUE));
 
-		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContObjectEventTypeCountGroupInfoList(subscriberId,
+		CounterInfoMap contallEventTypesMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContObjectEventTypeGroupCounterInfo(subscriberId,
 						contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
@@ -216,16 +216,16 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 			contObjectIds = NO_DATA_IDS;
 		}
 
-		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContEventNotificationInfoList(
+		CounterInfoMap allMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
-		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContEventNotificationInfoList(
+		CounterInfoMap allNewMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
 
-		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				subscrContEventNotificationService.selectContObjectEventTypeCountGroupInfoListCollapse(
+		CounterInfoMap contallEventTypesMap = new CounterInfoMap(
+				subscrContEventNotificationService.selectContObjectEventTypeGroupCollapseCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds,
 						datePeriod));
 
