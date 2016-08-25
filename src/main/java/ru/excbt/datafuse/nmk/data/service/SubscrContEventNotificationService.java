@@ -39,6 +39,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -244,6 +245,40 @@ public class SubscrContEventNotificationService extends AbstractService {
 		for (SubscrContEventNotification n : updateCandidates) {
 			updateNotificationOneIsNew(n, revisionIsNew, revisionSubscrUserId);
 		}
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param datePeriod
+	 * @param contObjectList
+	 * @param contEventTypeList
+	 * @param isNew
+	 * @param revisionIsNew
+	 * @param revisionSubscrUserId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void updateRevisionByConditionsFast(SubscriberParam subscriberParam, final LocalDatePeriod datePeriod,
+			final List<Long> contObjectIds, final List<Long> contEventTypeIds, final Boolean revisionIsNew) {
+
+		checkNotNull(subscriberParam);
+
+		if ((contObjectIds == null || contObjectIds.isEmpty())
+				&& (contEventTypeIds == null || contEventTypeIds.isEmpty())) {
+			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
+					subscriberParam.getSubscrUserId());
+		} else // another case 
+		if ((contObjectIds != null && !contObjectIds.isEmpty())
+				&& (contEventTypeIds == null || contEventTypeIds.isEmpty())) {
+			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
+					subscriberParam.getSubscrUserId(), contObjectIds);
+		} else // another case
+		if ((contObjectIds != null && !contObjectIds.isEmpty())
+				&& (contEventTypeIds != null && !contEventTypeIds.isEmpty())) {
+			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
+					subscriberParam.getSubscrUserId(), contObjectIds, contEventTypeIds);
+		}
+
 	}
 
 	/**
@@ -687,8 +722,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 		List<ContEvent> contEvents = contEventService.selectContEventsByIds(contEventIds);
 
 		final Map<Long, ContEvent> contEventsMap = contEvents.stream()
-				.collect(Collectors.toMap(ContEvent::getId,
-						Function.identity()));
+				.collect(Collectors.toMap(ContEvent::getId, Function.identity()));
 
 		notifications.forEach(i -> {
 			i.setContEvent(contEventsMap.get(i.getContEventId()));

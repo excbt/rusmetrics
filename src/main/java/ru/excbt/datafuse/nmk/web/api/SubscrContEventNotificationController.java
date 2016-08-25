@@ -274,9 +274,8 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateRevisionByConditions(getCurrentSubscriberId(), actionDP,
-						contObjectList, contEventTypeIdPairList, isNew, revisionIsNew,
-						currentSubscriberService.getCurrentUserId());
+				subscrContEventNotifiicationService.updateRevisionByConditionsFast(getSubscriberParam(), actionDP,
+						contObjectList, contEventTypeIdPairList, revisionIsNew);
 			}
 		};
 
@@ -382,8 +381,8 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
+			return ResponseEntity.badRequest().body(
+					String.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
 		}
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),

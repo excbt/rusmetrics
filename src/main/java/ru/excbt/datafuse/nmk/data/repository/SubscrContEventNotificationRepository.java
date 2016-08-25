@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -219,5 +220,50 @@ public interface SubscrContEventNotificationRepository
 	) pre2
 	GROUP BY cont_object_id	
 	 */
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrUserId
+	 */
+	@Modifying
+	@Query(value = "UPDATE subscr_cont_event_notification "
+			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_subscr_user_id = :subscrUserId "
+			+ " WHERE subscriber_id = :subscriberId AND is_new = true",
+			nativeQuery = true)
+	public void updateAllSubscriberRevisions(@Param("subscriberId") Long subscriberId,
+			@Param("subscrUserId") Long subscrUserId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param subscrUserId
+	 */
+	@Modifying
+	@Query(value = "UPDATE subscr_cont_event_notification "
+			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_subscr_user_id = :subscrUserId "
+			+ " WHERE subscriber_id = :subscriberId AND is_new = true AND cont_object_id in (:contObjectIds)",
+			nativeQuery = true)
+	public void updateAllSubscriberRevisions(@Param("subscriberId") Long subscriberId,
+			@Param("subscrUserId") Long subscrUserId,
+			@Param("contObjectIds") List<Long> contObjectIds);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param contEventTypeIds
+	 * @param subscrUserId
+	 */
+	@Modifying
+	@Query(value = "UPDATE subscr_cont_event_notification "
+			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_subscr_user_id = :subscrUserId "
+			+ " WHERE subscriber_id = :subscriberId AND is_new = true AND cont_object_id in (:contObjectIds)"
+			+ " AND cont_event_type_id IN (:contEventTypeIds)",
+			nativeQuery = true)
+	public void updateAllSubscriberRevisions(@Param("subscriberId") Long subscriberId,
+			@Param("subscrUserId") Long subscrUserId, @Param("contObjectIds") List<Long> contObjectIds,
+			@Param("contEventTypeIds") List<Long> contEventTypeIds);
 
 }
