@@ -228,9 +228,8 @@ public interface SubscrContEventNotificationRepository
 	 */
 	@Modifying
 	@Query(value = "UPDATE subscr_cont_event_notification "
-			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_subscr_user_id = :subscrUserId "
-			+ " WHERE subscriber_id = :subscriberId AND is_new = true",
-			nativeQuery = true)
+			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_time_tz = now(), revision_subscr_user_id = :subscrUserId "
+			+ " WHERE subscriber_id = :subscriberId AND is_new = true", nativeQuery = true)
 	public void updateAllSubscriberRevisions(@Param("subscriberId") Long subscriberId,
 			@Param("subscrUserId") Long subscrUserId);
 
@@ -242,12 +241,11 @@ public interface SubscrContEventNotificationRepository
 	 */
 	@Modifying
 	@Query(value = "UPDATE subscr_cont_event_notification "
-			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_subscr_user_id = :subscrUserId "
+			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_time_tz = now(), revision_subscr_user_id = :subscrUserId "
 			+ " WHERE subscriber_id = :subscriberId AND is_new = true AND cont_object_id in (:contObjectIds)",
 			nativeQuery = true)
 	public void updateAllSubscriberRevisions(@Param("subscriberId") Long subscriberId,
-			@Param("subscrUserId") Long subscrUserId,
-			@Param("contObjectIds") List<Long> contObjectIds);
+			@Param("subscrUserId") Long subscrUserId, @Param("contObjectIds") List<Long> contObjectIds);
 
 	/**
 	 * 
@@ -258,12 +256,28 @@ public interface SubscrContEventNotificationRepository
 	 */
 	@Modifying
 	@Query(value = "UPDATE subscr_cont_event_notification "
-			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_subscr_user_id = :subscrUserId "
+			+ " SET is_new = false, revision_time = LOCALTIMESTAMP, revision_time_tz = now(), revision_subscr_user_id = :subscrUserId "
 			+ " WHERE subscriber_id = :subscriberId AND is_new = true AND cont_object_id in (:contObjectIds)"
-			+ " AND cont_event_type_id IN (:contEventTypeIds)",
-			nativeQuery = true)
+			+ " AND cont_event_type_id IN (:contEventTypeIds)", nativeQuery = true)
 	public void updateAllSubscriberRevisions(@Param("subscriberId") Long subscriberId,
 			@Param("subscrUserId") Long subscrUserId, @Param("contObjectIds") List<Long> contObjectIds,
 			@Param("contEventTypeIds") List<Long> contEventTypeIds);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrUserId
+	 * @param oldIsNew
+	 * @param isNew
+	 */
+	@Modifying
+	@Query(value = "UPDATE subscr_cont_event_notification "
+			+ " SET is_new = :isNew, revision_time = LOCALTIMESTAMP, revision_time_tz = now(), "
+			+ " revision_subscr_user_id = :subscrUserId "
+			+ " WHERE subscriber_id = :subscriberId AND is_new = :oldIsNew AND id IN (:notificationIds)",
+			nativeQuery = true)
+	public void updateSubscriberRevisions(@Param("subscriberId") Long subscriberId,
+			@Param("subscrUserId") Long subscrUserId, @Param("notificationIds") List<Long> notificationIds,
+			@Param("oldIsNew") Boolean oldIsNew, @Param("isNew") Boolean isNew);
 
 }

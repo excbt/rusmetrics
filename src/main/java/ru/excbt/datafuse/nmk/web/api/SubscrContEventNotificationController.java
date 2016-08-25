@@ -198,8 +198,10 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateNotificationsIsNew(isNew, Arrays.asList(notificationIds),
-						currentSubscriberService.getCurrentUserId());
+				if (notificationIds != null && notificationIds.length > 0) {
+					subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+							Arrays.asList(notificationIds), false, isNew);
+				}
 			}
 		};
 
@@ -223,8 +225,10 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateNotificationsIsNew(isNew, Arrays.asList(notificationIds),
-						currentSubscriberService.getCurrentUserId());
+				if (notificationIds != null && notificationIds.length > 0) {
+					subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+							Arrays.asList(notificationIds), false, isNew);
+				}
 			}
 		};
 

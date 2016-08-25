@@ -111,8 +111,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 		logger.info("Current User Id:{}", currentSubscriberService.getCurrentUserId());
 
-		subscrContEventNotifiicationService.updateNotificationsIsNew(Boolean.FALSE, updateIds,
-				currentSubscriberService.getCurrentUserId());
+		subscrContEventNotifiicationService.updateNotificationRevision(getSubscriberParam(), Boolean.FALSE, updateIds);
 
 		SubscrContEventNotification result = subscrContEventNotifiicationService.findNotification(updateIds.get(0));
 
@@ -120,8 +119,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 		assertTrue(Boolean.FALSE.equals(result.getIsNew()));
 
-		subscrContEventNotifiicationService.updateNotificationsIsNew(Boolean.TRUE, updateIds,
-				currentSubscriberService.getCurrentUserId());
+		subscrContEventNotifiicationService.updateNotificationRevision(getSubscriberParam(), Boolean.TRUE, updateIds);
 
 		logger.info("Update Result. id:{} isNew:{}", result.getId(), result.getIsNew());
 

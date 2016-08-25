@@ -58,7 +58,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	private final static Pageable DEFAULT_NOTIFICATION_PAGE_REQUEST = new PageRequest(0, DEFAULT_PAGE_SIZE,
 			makeDefaultSort());
 
-	public final static String[] AVAILABLE_SORT_FIELDS = { "contEventTime" };
+	public final static String[] AVAILABLE_SORT_FIELDS = { "contEventTime", "id" };
 	public final static List<String> AVAILABLE_SORT_FIELD_LIST = Collections
 			.unmodifiableList(Arrays.asList(AVAILABLE_SORT_FIELDS));
 
@@ -231,19 +231,20 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param pageable
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateRevisionByConditions(Long subscriberId, final LocalDatePeriod datePeriod,
+	public void updateRevisionByConditions(final SubscriberParam subscriberParam, final LocalDatePeriod datePeriod,
 			final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Boolean revisionIsNew, Long revisionSubscrUserId) {
 
-		checkNotNull(subscriberId);
+		checkNotNull(subscriberParam);
 
-		Specifications<SubscrContEventNotification> specs = Specifications.where(specSubscriberId(subscriberId))
+		Specifications<SubscrContEventNotification> specs = Specifications
+				.where(specSubscriberId(subscriberParam.getSubscriberId()))
 				.and(specContEventDate(datePeriod.getDateFrom(), datePeriod.getDateTo())).and(specIsNew(isNew))
 				.and(specContObjectId(contObjectList)).and(specContEventTypeId(contEventTypeList));
 
 		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository.findAll(specs);
 		for (SubscrContEventNotification n : updateCandidates) {
-			updateNotificationOneIsNew(n, revisionIsNew, revisionSubscrUserId);
+			updateNotificationRevision(subscriberParam, n, revisionIsNew);
 		}
 	}
 
@@ -286,7 +287,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @return
 	 */
 	private static Sort makeDefaultSort() {
-		return new Sort(Direction.DESC, "contEventTime");
+		return new Sort(new Order(Direction.DESC, "contEventTime"), new Order(Direction.DESC, "id"));
 	}
 
 	/**
@@ -297,7 +298,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 		if (sortDirection == null) {
 			return makeDefaultSort();
 		}
-		return new Sort(sortDirection, "contEventTime");
+		return new Sort(new Order(sortDirection, "contEventTime"), new Order(sortDirection, "id"));
 	}
 
 	/**
@@ -496,9 +497,10 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param subscrContEventNotificationId
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrContEventNotification updateNotificationIsNew(Boolean isNew, Long subscrContEventNotificationId,
-			Long revisionSubscrUserId) {
+	public SubscrContEventNotification updateNotificationRevision(final SubscriberParam subscriberParam,
+			final Boolean isNew, final Long subscrContEventNotificationId) {
 
 		checkNotNull(isNew);
 
@@ -509,7 +511,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 					subscrContEventNotificationId));
 		}
 
-		return updateNotificationOneIsNew(updateCandidate, isNew, revisionSubscrUserId);
+		return updateNotificationRevision(subscriberParam, updateCandidate, isNew);
 
 	}
 
@@ -520,16 +522,18 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 * @param revisionSubscrUserId
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	private SubscrContEventNotification updateNotificationOneIsNew(
-			SubscrContEventNotification subscrContEventNotification, Boolean isNew, Long revisionSubscrUserId) {
+	private SubscrContEventNotification updateNotificationRevision(SubscriberParam subscriberParam,
+			SubscrContEventNotification subscrContEventNotification, Boolean isNew) {
 
 		checkNotNull(subscrContEventNotification);
 		subscrContEventNotification.setIsNew(isNew);
 		Date revisionDate = new Date();
+
 		subscrContEventNotification.setRevisionTime(revisionDate);
 		subscrContEventNotification.setRevisionTimeTZ(revisionDate);
-		subscrContEventNotification.setRevisionSubscrUserId(revisionSubscrUserId);
+		subscrContEventNotification.setRevisionSubscrUserId(subscriberParam.getSubscrUserId());
 		SubscrContEventNotification result = subscrContEventNotificationRepository.save(subscrContEventNotification);
 		initContEvent(result);
 		return result;
@@ -537,15 +541,37 @@ public class SubscrContEventNotificationService extends AbstractService {
 
 	/**
 	 * 
+	 * @param subscriberParam
 	 * @param notificationIds
+	 * @param isNew
+	 * @param revisionSubscrUserId
+	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateNotificationsIsNew(Boolean isNew, List<Long> notificationIds, Long revisionSubscrUserId) {
+	public List<Long> updateNotificationsRevisions(SubscriberParam subscriberParam, List<Long> notificationIds,
+			Boolean oldIsNew, Boolean isNew) {
+
+		if (notificationIds != null && !notificationIds.isEmpty()) {
+			subscrContEventNotificationRepository.updateSubscriberRevisions(subscriberParam.getSubscriberId(),
+					subscriberParam.getSubscrUserId(), notificationIds, false, isNew);
+
+		}
+
+		return notificationIds;
+	}
+
+	/**
+	 * 
+	 * @param notificationIds
+	 */
+	@Deprecated
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void updateNotificationRevision(SubscriberParam subscriberParam, Boolean isNew, List<Long> notificationIds) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
-		checkNotNull(revisionSubscrUserId);
+		checkNotNull(subscriberParam);
 		for (Long id : notificationIds) {
-			updateNotificationIsNew(isNew, id, revisionSubscrUserId);
+			updateNotificationRevision(subscriberParam, isNew, id);
 		}
 	}
 
