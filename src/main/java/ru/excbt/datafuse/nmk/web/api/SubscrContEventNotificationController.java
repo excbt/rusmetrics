@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
@@ -44,6 +45,7 @@ import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -86,6 +88,9 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 	@Autowired
 	private ContEventService contEventService;
+
+	@Autowired
+	private SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
 	/**
 	 * 
@@ -405,38 +410,32 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	//@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET,
-	//		produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/contObject/cityStatusCollapseV2", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> cityMonitorContEventsStatusCollapseV2(
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor,
+			@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
 
-	/**
-	 * <akted for delete
-	 * 
-	 * @param contObjectId
-	 * @param fromDateStr
-	 * @param toDateStr
-	 * @return
-	 */
-	//	protected ResponseEntity<?> notificationsContObjectEventTypes(
-	//			@PathVariable(value = "contObjectId") Long contObjectId,
-	//			@RequestParam(value = "fromDate", required = true) String fromDateStr,
-	//			@RequestParam(value = "toDate", required = true) String toDateStr) {
-	//
-	//		checkNotNull(contObjectId);
-	//		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
-	//
-	//		checkNotNull(datePeriodParser);
-	//
-	//		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-	//			return ResponseEntity.badRequest().body(String
-	//					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
-	//		}
-	//
-	//		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-	//				.selectMonitorContEventTypeStatus(getCurrentSubscriberId(), contObjectId,
-	//						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
-	//
-	//		return ResponseEntity.ok(resultList);
-	//	}
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(
+					String.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
+		}
+
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
+				contGroupId);
+
+		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
+				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
+
+		return ResponseEntity.ok(result);
+	}
 
 	/**
 	 * 
