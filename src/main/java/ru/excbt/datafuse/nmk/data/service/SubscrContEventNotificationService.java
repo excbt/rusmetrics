@@ -549,11 +549,11 @@ public class SubscrContEventNotificationService extends AbstractService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Long> updateNotificationsRevisions(SubscriberParam subscriberParam, List<Long> notificationIds,
-			Boolean oldIsNew, Boolean isNew) {
+			Boolean isNew) {
 
 		if (notificationIds != null && !notificationIds.isEmpty()) {
 			subscrContEventNotificationRepository.updateSubscriberRevisions(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId(), notificationIds, false, isNew);
+					subscriberParam.getSubscrUserId(), notificationIds, isNew);
 
 		}
 

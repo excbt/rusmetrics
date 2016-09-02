@@ -274,10 +274,9 @@ public interface SubscrContEventNotificationRepository
 	@Query(value = "UPDATE subscr_cont_event_notification "
 			+ " SET is_new = :isNew, revision_time = LOCALTIMESTAMP, revision_time_tz = now(), "
 			+ " revision_subscr_user_id = :subscrUserId "
-			+ " WHERE subscriber_id = :subscriberId AND is_new = :oldIsNew AND id IN (:notificationIds)",
-			nativeQuery = true)
+			+ " WHERE subscriber_id = :subscriberId AND id IN (:notificationIds)", nativeQuery = true)
 	public void updateSubscriberRevisions(@Param("subscriberId") Long subscriberId,
 			@Param("subscrUserId") Long subscrUserId, @Param("notificationIds") List<Long> notificationIds,
-			@Param("oldIsNew") Boolean oldIsNew, @Param("isNew") Boolean isNew);
+			@Param("isNew") Boolean isNew);
 
 }

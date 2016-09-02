@@ -205,7 +205,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			public void process() {
 				if (notificationIds != null && notificationIds.length > 0) {
 					subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
-							Arrays.asList(notificationIds), false, isNew);
+							Arrays.asList(notificationIds), isNew);
 				}
 			}
 		};
@@ -232,7 +232,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			public void process() {
 				if (notificationIds != null && notificationIds.length > 0) {
 					subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
-							Arrays.asList(notificationIds), false, isNew);
+							Arrays.asList(notificationIds), isNew);
 				}
 			}
 		};
