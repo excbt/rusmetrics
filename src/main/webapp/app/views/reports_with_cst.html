@@ -111,7 +111,7 @@
                                                 {{paramsetColumn.header}}
                                             </th>
                                             <th class="nmc-td-for-button">ZIP</th>
-                                            <th>Действует с</th>
+<!--                                            <th>Действует с</th>-->
                                         </tr>
                                     </thead>    
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" 
@@ -141,23 +141,30 @@
                                                  <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                              </span>
                                          </td>
+<!--
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
                                          </td>
+-->
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
                                          </td>
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileType || "не задан"}}</span>
                                          </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileNameTemplate}}</span>
+                                         </td>
                                          <td class="nmc-text-align-center">
                                              <span ng-show="oldObject.outputFileType=='ZIP'||oldObject.outputFileZipped">
                                                  <i title="Архивировать" class="fa fa-cube"></i>
                                              </span>
                                          </td>
+<!--
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeStartDate | date:'dd.MM.yyyy'}}</span>
                                          </td>
+-->
                                      </tr>
                                     </table>         
                                 </tr>

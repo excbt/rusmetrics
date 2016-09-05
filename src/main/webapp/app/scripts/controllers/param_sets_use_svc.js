@@ -17,13 +17,14 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
     $scope.columns = [
-        {"name": "reportType", "header": "Тип отчета", "class": "col-md-11"}
+        {"name": "reportType", "header": "Тип отчета", "class": "col-xs-11 col-md-11"}
     ];
     $scope.paramsetColumns = [
-        {"name": "name", "header": "Наименование", "class": "col-md-3"}
-        ,{"name": "reportTemplateName", "header": "Шаблон", "class": "col-md-3"}
-        ,{"name": "period", "header": "Период", "class": "col-md-2"}
-        ,{"name": "fileType", "header": "Тип файла", "class": "col-md-1"}
+        {"name": "name", "header": "Наименование", "class": "col-xs-5 col-md-5"}
+        /*,{"name": "reportTemplateName", "header": "Шаблон", "class": "col-md-3"}*/
+        ,{"name": "period", "header": "Период", "class": "col-xs-2 col-md-2"}
+        ,{"name": "fileType", "header": "Тип файла", "class": "col-xs-1 col-md-1"}
+        ,{"name": "outputFileNameTemplate", "header": "Шаблон имени файла", "class": "col-xs-3 col-md-3"}
     ];
     $scope.extraProps = {"idColumnName": "id", 
                        "defaultOrderBy" : "name", 

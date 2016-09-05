@@ -53,10 +53,11 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
 //        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
 //    ];
     $scope.paramsetColumns = [
-        {"name":"name", "header":"Наименование", "class":"col-xs-3 col-md-3"}
-        ,{"name":"reportTemplateName", "header":"Шаблон", "class":"col-xs-3 col-md-3"}
+        {"name":"name", "header":"Наименование", "class":"col-xs-5 col-md-5"}
+        /*,{"name":"reportTemplateName", "header":"Шаблон", "class":"col-xs-3 col-md-3"}*/
         ,{"name":"period", "header":"Период", "class":"col-xs-2 col-md-2"}
         ,{"name":"fileType", "header":"Тип файла", "class":"col-xs-1 col-md-1"}
+        ,{"name": "outputFileNameTemplate", "header": "Шаблон имени файла", "class": "col-xs-3 col-md-3"}
     ];
     $scope.groupUrl = "../api/subscr/contGroup";
     $scope.paramsetsUrl = "../api/reportParamset"; 

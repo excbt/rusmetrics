@@ -413,28 +413,32 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         }        
 
                     //Count of objects
+//console.log(reportType.reportMetaParamCommon.oneContObjectRequired);        
         if (reportType.reportMetaParamCommon.oneContObjectRequired 
-            && (reportParamset.selectedObjects.length == 0) 
-            && reportType.reportMetaParamCommon.manyContObjectRequired)
+            && (reportParamset.selectedObjects.length === 0) 
+            && reportType.reportMetaParamCommon.manyContObjectsRequired)
         {
             messageForUser += "\u2022" + " Должен быть выбран хотя бы один объект" + "\n";
             result = false;
         };
         if (reportType.reportMetaParamCommon.oneContObjectRequired 
-            && (reportParamset.selectedObjects.length == 0) 
-            && !reportType.reportMetaParamCommon.manyContObjectRequired)
+            && (reportParamset.selectedObjects.length === 0) 
+            && !reportType.reportMetaParamCommon.manyContObjectsRequired)
         {
             messageForUser += "\u2022" + " Необходимо выбрать один объект" + "\n";
             result = false;
         };
-        if (reportType.reportMetaParamCommon.manyContObjectRequired 
-            && (reportParamset.selectedObjects.length <= 0))
+//console.log(reportType.reportMetaParamCommon.manyContObjectsRequired);        
+//console.log(reportParamset.selectedObjects.length);        
+//console.log(reportType.reportMetaParamCommon.manyContObjectsRequired === true && (reportParamset.selectedObjects.length <= 1));        
+        if (reportType.reportMetaParamCommon.manyContObjectsRequired === true 
+            && (reportParamset.selectedObjects.length <= 1))
         {
             messageForUser += "\u2022" + " Необходимо выбрать несколько объектов" + "\n";
             result = false;
         };
         
-        if (!reportType.reportMetaParamCommon.manyContObjectRequired 
+        if (!reportType.reportMetaParamCommon.manyContObjectsRequired 
             && (reportParamset.selectedObjects.length > 1) 
             &&  reportType.reportMetaParamCommon.oneContObjectRequired)
         {

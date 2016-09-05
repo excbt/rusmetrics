@@ -95,7 +95,7 @@
                             </label>
                         </div>
                     </div>
-                    <div ng-show="serviceType.reportTypesViewFlag" class="marginLeft15">
+                    <div ng-show="serviceType.reportTypesViewFlag" class="marginLeft10">
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
@@ -105,7 +105,7 @@
 <!--ng-class="{'nmc-tr-odd':($index%2===0)}"-->
                                 <tr >
 
-                                    <td style="padding:0;" ng-class="column.class">
+                                    <td style="padding:0 0 0 5px" ng-class="column.class">
 
                                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
 
@@ -172,9 +172,11 @@
                                                 {{paramsetColumn.header}}
                                             </th>
                                             <th class="nmc-td-for-button">ZIP</th>
+<!--
                                             <th>
                                                 Действует с
                                             </th>
+-->
                                             <th class="nmc-td-for-button">
                                             </th>
                                         </tr>
@@ -223,9 +225,11 @@
                                                  <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                              </span>
                                          </td>
+<!--
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
                                          </td>
+-->
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
                                          </td>
@@ -234,17 +238,23 @@
                                                  {{oldObject.outputFileType || "не задан"}}
                                              </span>
                                          </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileNameTemplate}}</span>
+                                         </td>
                                          <td class="nmc-text-align-center">
-                                             <span ng-show="oldObject.outputFileType=='ZIP'||oldObject.outputFileZipped">
+                                             <span ng-show="oldObject.outputFileType=='ZIP' || oldObject.outputFileZipped">
                                                  <i title="Архивировать" class="fa fa-cube">
                                                  </i>
                                              </span>
                                          </td>
+                                                                                  
+<!--
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">
                                                  {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                              </span>
                                          </td>
+-->
                                          <td>
                                              <i ng-disabled="isROfield()" 
                                                title="В архив" 
@@ -754,15 +764,18 @@
                                             </select>
                                         </td>
                                     </tr>                                                                
+<!--
                                     <tr>
                                         <td class="col-sm-3">
                                             <label for="inputStartDate" 
                                                    class="nmc-form-label">Действует с:</label>
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">
+-->
 
 <!--                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()">-->
                                             
+<!--
                                             <input ng-disabled="isDisabled()" 
                                                    id="inputStartDate" 
                                                    class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
@@ -771,6 +784,7 @@
                                         </td>
 
                                     </tr>
+-->
                                     <tr ng-if="currentObject.activeEndDate">
                                         <td class="col-sm-3">
                                             <label for="inputValue" 

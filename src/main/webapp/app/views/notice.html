@@ -643,7 +643,9 @@
             <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
     <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
                 <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">    
-                    <a ng-hide="notice.noticeObjectName==undefined" ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.contZPointId}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}">
+                    <a class="pull-right" 
+                       ng-hide="notice.noticeObjectName==undefined" 
+                       ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.contZPointId}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}">
                         <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
                     </a>
                 </td>

@@ -316,12 +316,11 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
                     oneNotice.noticeObjectName = $scope.objects[i].fullName;  
                     break;
                 };   
-            };
-
+            }
             oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
-            oneNotice.contEventLevelColor = el.contEventLevelColor;
-            oneNotice.imgpath = $scope.imgPathTmpl + el.contEventLevelColor.toLowerCase() + ".png";
-            oneNotice.imgclass = el.contEventLevelColor === "GREEN" ? "" : "nmc-img-critical-indicator";
+            oneNotice.contEventLevelColor = mainSvc.checkUndefinedNull(el.contEventLevelColor) ? "GREEN" : el.contEventLevelColor;
+            oneNotice.imgpath = $scope.imgPathTmpl + oneNotice.contEventLevelColor.toLowerCase() + ".png";
+            oneNotice.imgclass = oneNotice.contEventLevelColor === "GREEN" ? "" : "nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
             
             switch (el.contEvent.contServiceType)
@@ -947,14 +946,20 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
 //*****************************************************************************************    
     //get notice id array
     function getNoticesIds(notices, noticesIds){       
-        if ((!notices.hasOwnProperty('length')) || (notices.length == 0) || (typeof noticesIds == 'undefined')){
+//console.log(notices);        
+//console.log((!notices.hasOwnProperty('length')));
+//console.log((notices.length === 0));
+//console.log((typeof noticesIds == 'undefined'));        
+        if ((!notices.hasOwnProperty('length')) || (notices.length === 0) || (typeof noticesIds == 'undefined')){
             return;
         };
+//console.log("HOP");        
         notices.forEach(function(el){
             if (el.selected){             
                 noticesIds.push(el.id);
             };
-        });       
+        });
+//console.log(noticesIds);        
     };
     
     var errorCallback = function (e) {
@@ -971,28 +976,50 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     //set revision of selected notices
-    $scope.revisionNotices = function(flagIsNew){
-        var noticesIds = [];
-        var url = $scope.crudTableName+"/revision";
-        getNoticesIds($scope.notices, noticesIds);   
-        if ((typeof noticesIds == 'undefined') || (!noticesIds.hasOwnProperty('length')) || (noticesIds.length == 0)){
-            return;
-        };
-
+    
+    function successCallbackOnRevision (response) {
+        $('#confirmActionModal').modal('hide');
+        $scope.allSelected = false;
+        $scope.getResultsPage(1);
+        notificationFactory.success();
+    };
+    
+    function setRevisionNotices(url, noticesIds, flagIsNew) {
         $http({
             url: url, 
             method: "PUT",
-            params: { notificationIds:noticesIds, isNew: flagIsNew },
+            params: { notificationIds: noticesIds, isNew: flagIsNew },
             data: null
         })
-        .then(function(response) {
-            $('#confirmActionModal').modal('hide');
-            $scope.getResultsPage(1);
-            notificationFactory.success();
-        })
+        .then(successCallbackOnRevision)
         .catch(errorCallback/*function(e){
             notificationFactory.errorInfo(e.statusText,e);
         }*/);
+    };
+    
+    $scope.revisionNotices = function(flagIsNew){
+        var noticesIds = [];
+        var url = $scope.crudTableName + "/revision";
+        getNoticesIds($scope.notices, noticesIds);
+//console.log($scope.notices);        
+//console.log(noticesIds);        
+        if ((typeof noticesIds == 'undefined') || (!noticesIds.hasOwnProperty('length')) || (noticesIds.length == 0)){
+            return;
+        };
+//return;
+        setRevisionNotices(url, noticesIds, flagIsNew);
+//        $http({
+//            url: url, 
+//            method: "PUT",
+//            params: { notificationIds: noticesIds, isNew: flagIsNew },
+//            data: null
+//        })
+//        .then(function(response) {
+//            $('#confirmActionModal').modal('hide');
+//            $scope.getResultsPage(1);
+//            notificationFactory.success();
+//        })
+//        .catch(errorCallback);
     };
     //set revision of all notices 
     $scope.revisionAllNotices = function(flagIsNew){
@@ -1014,26 +1041,35 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
                      revisionIsNew: flagIsNew },
             data: null
         })
-        .then(function(response) {
-            $('#confirmActionModal').modal('hide');
-            $scope.getResultsPage(1);
-            notificationFactory.success();
-        })
+        .then(successCallbackOnRevision)
         .catch(errorCallback/*function(e){
             notificationFactory.errorInfo(e.statusText,e);
         }*/);
     };
     
     //mark the notices on the current page as revision
-    $scope.revisionNoticesOnPage = function(){
-//        $scope.notice.forEach(function(el){
-//            el.selected;
+    $scope.revisionNoticesOnPage = function(){        
+//        $scope.notices.forEach(function(el){
+//            el.selected = true;
 //        });
-        $scope.revisionNotices(false);
+//        $scope.revisionNotices(false);
+        var noticesIds = $scope.notices.map(function(notice){
+            return notice.id;
+        });
+        var url = $scope.crudTableName + "/revision";
+        if ((typeof noticesIds == 'undefined') || (!noticesIds.hasOwnProperty('length')) || (noticesIds.length == 0)){
+            return;
+        };
+//console.log(noticesIds);        
+//return;
+        setRevisionNotices(url, noticesIds, false);
     };
     
     //Confirm the selected action
     $scope.confirmAction = function(){
+//console.log($scope.confirmationText);        
+//console.log($scope.messages.markOnPageAsRevision); 
+//console.log($scope.confirmationText === $scope.messages.markOnPageAsRevision);        
         if ($scope.confirmationText === $scope.messages.markOnPageAsRevision){
             $scope.revisionNoticesOnPage();
         };
