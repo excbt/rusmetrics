@@ -6,7 +6,10 @@
 var app = angular.module('portalNMC');
 app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFactoryWithCanceler', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', '$q', '$filter', function($scope, $rootScope, $http, crudGridDataFactoryWithCanceler, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc, $q, $filter){
     
-    var CATEGORY_COEF = 1000;
+    var CATEGORY_COEF = 1000,       /*"Весовой" коэффициент категории для определения последовательности вывода отчетов на экран*/
+        reportTypesCount = 0,       /* количество типов отчетов*/
+        loadedReportTypesCount = 0  /* количество типов отчетов, для которых загружены варианты*/
+        ;
     
     $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
@@ -80,14 +83,45 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         //prepare resource categories
     $scope.resourceCategories = reportSvc.getResourceCategories();
     $scope.currentResourceCategory = reportSvc.getDefaultResourceCategory();
+        
+    $scope.setCurrentServiceType = function(servType){
+//console.log(servType);        
+        $scope.currentServiceType = angular.copy(servType);        
+    };
+    
+    $scope.setCurrentCategory = function(category){
+//console.log(category);        
+        $scope.currentCategory = category;        
+    };
+    
+    function initialInstallCategory () {
+        var filtredCategories = $filter('notEmptyCategories')($scope.categories);
+        if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
+            filtredCategories[0].class = "active";
+        }
+//console.log($scope.categories);
+//console.log(filtredCategories);        
+//console.log("SetCurrentCategory after reportSvc:reportTypesIsLoaded");        
+        $scope.setCurrentCategory(filtredCategories[0]);
+    };
     
      //get paramsets   
-    
     $scope.$on('reportSvc:reportTypesIsLoaded', function(){
-//console.log("reportSvc:reportTypesIsLoaded");        
+//console.log("reportSvc:reportTypesIsLoaded = " + moment().format("DD:MM:YYYY HH:mm:ss:ms"));
+        
+        $scope.setCurrentServiceType($scope.contServiceTypes[0]);        
+        
         //report types
-        $scope.reportObjects = reportSvc.getReportTypes();        
+        $scope.reportObjects = reportSvc.getReportTypes();
+        reportTypesCount = $scope.reportObjects.length;
         $scope.getActive();
+        
+//        var filtredCategories = $filter('notEmptyCategories')($scope.categories);
+//        if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
+//            filtredCategories[0].class = "active";
+//        }
+//console.log("SetCurrentCategory after reportSvc:reportTypesIsLoaded");        
+//        $scope.setCurrentCategory(filtredCategories[0]);
     });
     
     $scope.$on('reportSvc:reportPeriodsIsLoaded', function(){
@@ -188,6 +222,21 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         errorCallback(e);
     }
     
+    $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){       
+        var table = $scope.paramsetsUrl + "/" + paramset.id + "/contObject";
+        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
+            (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
+            objectSvc.sortObjectsByFullName(paramset.selectedObjects);
+            paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
+            paramset.currentReportPeriod = angular.copy(paramset.reportPeriod);
+            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, paramset.reportPeriod.sign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
+            paramset.checkFlag = tmpCheck.flag;
+            paramset.messageForUser = tmpCheck.message;
+            if (!mainSvc.checkUndefinedNull(type))
+                type.checkedParamsetsCount += 1;
+        });
+    };
+    
     $scope.getParamsets = function(table, type){       
         crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {
             type.paramsetsCount = data.length;
@@ -207,23 +256,39 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 $scope.getSelectedObjectsByParamset(type, el);
             });
             mainSvc.sortItemsBy(tmp, "name");
-            type.paramsets = tmp;            
+            type.paramsets = tmp;
+            loadedReportTypesCount++;           
+            if (loadedReportTypesCount === reportTypesCount){
+                $timeout(function (){
+                    initialInstallCategory();
+                }, 100);
+            }
         });
     };
       
 
  //get templates   
     $scope.getActive = function(){
-        if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
+        if (($scope.reportObjects.length === 0) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
         for (var i = 0; i < $scope.reportObjects.length; i++){
             $scope.getParamsets($scope.paramsetsUrl + $scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
-    };
+    }; 
     
     if (reportSvc.getReportTypesIsLoaded()){
             //report types
         $scope.reportObjects = reportSvc.getReportTypes();
+        reportTypesCount = $scope.reportObjects.length;
         $scope.getActive();
+        
+//        var filtredCategories = $filter('notEmptyCategories')($scope.categories);    
+//        if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
+//            filtredCategories[0].class = "active";
+//        }
+//console.log($scope.categories);
+//console.log(filtredCategories);    
+//console.log("SetCurrentCategory first");    
+//        $scope.setCurrentCategory(filtredCategories[0]);
     };
 
     $scope.toggleReportShowGroupDetails = function(curObject, serviceType){//switch option: current goup details 
@@ -493,21 +558,6 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                     var flag = $scope.checkRequiredFieldsOnSave();
                     break; 
             };
-        });
-    };
-    
-    $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){       
-        var table = $scope.paramsetsUrl + "/" + paramset.id + "/contObject";
-        crudGridDataFactoryWithCanceler(table, requestCanceler).query(function(data){
-            (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
-            objectSvc.sortObjectsByFullName(paramset.selectedObjects);
-            paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
-            paramset.currentReportPeriod = angular.copy(paramset.reportPeriod);
-            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, paramset.reportPeriod.sign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
-            paramset.checkFlag = tmpCheck.flag;
-            paramset.messageForUser = tmpCheck.message;
-            if (!mainSvc.checkUndefinedNull(type))
-                type.checkedParamsetsCount += 1;
         });
     };
     
@@ -1301,21 +1351,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
 //    $scope.selectedCategory = function(cat){
 //        $scope.curCategory = angular.copy(cat);
 //    };
-    $scope.setCurrentServiceType = function(servType){
-        $scope.currentServiceType = angular.copy(servType);        
-    };
-    
-    $scope.setCurrentCategory = function(category){
-        $scope.currentCategory = category;        
-    };
+
     
     $scope.setCurrentServiceType($scope.contServiceTypes[0]);
     
-    var filtredCategories = $filter('notEmptyCategories')($scope.categories);   
-    if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
-        filtredCategories[0].class = "active";
-    }
-    $scope.setCurrentCategory(filtredCategories[0]);
     
     // *************************************************************************************
     // Отчеты для контекстного меню объект

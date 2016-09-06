@@ -137,6 +137,15 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     };
     
     $scope.$on('reportSvc:reportTypesIsLoaded', function(){
+                
+        $scope.setCurrentServiceType($scope.contServiceTypes[0]);
+    
+        var filtredCategories = $filter('withReportTypes')($scope.categories);
+        if (angular.isArray(filtredCategories) && filtredCategories.length > 0){
+            filtredCategories[0].class = "active";
+        }
+        $scope.setCurrentCategory(filtredCategories[0]);
+        
         //report types
         $scope.reportTypes = reportSvc.getReportTypes();
         reportSvc.getParamsetsForTypes($scope.reportTypes, $scope.currentMode);
@@ -1340,10 +1349,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     // Work with cont service types
     
     $scope.setCurrentServiceType = function(servType){
+//console.log(servType);        
         $scope.currentServiceType = angular.copy(servType);        
     };
     
-    $scope.setCurrentCategory = function(category){        
+    $scope.setCurrentCategory = function(category){
+//console.log(category);        
         $scope.currentCategory = category;        
     };
     
@@ -1354,6 +1365,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         filtredCategories[0].class = "active";
     }
     $scope.setCurrentCategory(filtredCategories[0]);
+    
     // ****************************************************************
     
     $scope.preview = function(reportType){       

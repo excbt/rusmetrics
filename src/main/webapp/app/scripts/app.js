@@ -393,30 +393,6 @@ app.filter('isIntegrators', function() {
   }
 });
 
-app.filter('notEmptyCategories', ['$filter', function($filter){
-    return function(items, props){
-//console.log(items);        
-        var out = [];
-        if (angular.isArray(items)){
-            items.forEach(function(item){
-                var checkReportTypes = false;
-                item.reportTypes.some(function(rt){
-                    if (rt.paramsetsCount && rt.paramsetsCount == rt.checkedParamsetsCount){
-                        checkReportTypes = true;
-                        return true;
-                    }
-                });               
-                if (checkReportTypes === true){
-                    out.push(item);
-                }
-            })
-        }else{
-            out = items;
-        }
-        return out;
-    }
-}]);
-
 app.filter('notEmptyCategoriesByContServiceType', ['$filter', function($filter){
     return function(items, props){
 //console.log(items);        

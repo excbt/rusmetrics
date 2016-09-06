@@ -211,7 +211,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
             contServiceTypes.push(WITHOUT_RESOURCES);
 //console.log(reportTypes);            
 //console.log(contServiceTypes);                        
-            $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');
+            $rootScope.$broadcast('reportSvc:reportTypesIsLoaded');            
+            
+//console.log("Send reportSvc:reportTypesIsLoaded: " + moment().format("DD:MM:YYYY HH:mm:ss:ms"));            
             setReportTypesIsLoaded(true);           
         });
     };
@@ -603,6 +605,30 @@ app.filter('withReportTypes', [function(){
                     return;
                 }
                 out.push(item);                
+            })
+        }else{
+            out = items;
+        }
+        return out;
+    }
+}]);
+
+app.filter('notEmptyCategories', [function(){
+    return function(items, props){
+//console.log(items);        
+        var out = [];
+        if (angular.isArray(items)){
+            items.forEach(function(item){
+                var checkReportTypes = false;
+                item.reportTypes.some(function(rt){
+                    if (rt.paramsetsCount && rt.paramsetsCount == rt.checkedParamsetsCount){
+                        checkReportTypes = true;
+                        return true;
+                    }
+                });               
+                if (checkReportTypes === true){
+                    out.push(item);
+                }
             })
         }else{
             out = items;
