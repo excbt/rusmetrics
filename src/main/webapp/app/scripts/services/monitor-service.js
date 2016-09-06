@@ -2,11 +2,11 @@
 angular.module('portalNMC')
     .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', '$q', function($rootScope, $http, $interval, $cookies, $location, objectSvc, $q){
 //console.log("Monitor service. Run Monitor service.");
-        var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";        
+        var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";//"SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
         var objectUrl = notificationsUrl + "/contObject";
-        var defaultCityWithObjectsUrl = objectUrl + "/cityStatusCollapse";
+        var defaultCityWithObjectsUrl = objectUrl + "/cityStatusCollapseV2";
         var cityWithObjectsUrl = null; //dinamically param: when tree off - it = defaultCityWithObjectsUrl; when tree on - subscrTreesUrl + treeId + nodeId ...
         var urlSubscr = "../api/subscr";
         var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
@@ -188,7 +188,7 @@ angular.module('portalNMC')
         };
         
         var getMonitorEventsForObject = function(obj){ 
-            var url = objectUrl + "/" + obj.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
+            var url = objectUrl + "/" + obj.id + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
            if (isCancelParamsIncorrect() === true)
                 return null;
             $http.get(url, httpOptions)
@@ -212,7 +212,7 @@ angular.module('portalNMC')
                         var tmpEvent = "";
                         var contEventTime = new Date(element.contEventTime);
                         var pstyle = "";
-                        if(element.contEventLevelColorKey === "RED"){
+                        if(element.contEventLevelColorKeyname === "RED"){
                             pstyle = "color: red;";
                         };
                         tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
@@ -232,16 +232,33 @@ angular.module('portalNMC')
                 .error(errorCallbackConsole);        
         };
         
+        function getMonitorEventsByObjectForMap (obj){ 
+            var url = objectUrl + "/" + obj.contObject.id + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
+           if (isCancelParamsIncorrect() === true)
+                return null;
+            $http.get(url, httpOptions)
+                .success(function(data){               
+                //if data is not array - exit
+                    if (!data.hasOwnProperty('length') || (data.length === 0)){
+                        return;
+                    };
+                    if ((obj.contEventLevelColorKey === "RED") || (obj.contEventLevelColorKey === "YELLOW")){                    
+                        obj.monitorEventsForMap = data;
+                    };
+                })
+                .error(errorCallbackConsole);        
+        };
+        
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)
 //**************************************************************************  
         var interval;
         
         function startRefreshing(){
-            var time = (new Date()).toLocaleString();
+//            var time = (new Date()).toLocaleString();
 //console.log("Обновление данных для монитора. " + time);            
-            monitorSvcSettings.loadingFlag = true;
+//            monitorSvcSettings.loadingFlag = true;
 //console.log(monitorSvcSettings.loadingFlag);            
-            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
+//            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
         };
 
         function stopRefreshing(){
@@ -263,14 +280,21 @@ angular.module('portalNMC')
             //Вызвываем с заданным периодом обновление монитора
         interval = $interval(startRefreshing, Number(monitorSvcSettings.refreshPeriod) * 1000);
         
-        var getMonitorData = function(){            
-            loadDefaultMonitorTreeSetting().then(function(resp){                
+        var getMonitorData = function(){
+//console.log("getMonitorData start111");            
+            loadDefaultMonitorTreeSetting().then(function(resp){
+//console.log(resp.data);                
                 monitorSvcSettings.isTreeView = resp.data.isActive;                
-                if (monitorSvcSettings.isTreeView == true && monitorSvcSettings.isFullObjectView != true){                    
-                    monitorSvcSettings.defaultTreeId = Number(resp.data.value);                    
+//console.log(monitorSvcSettings.isTreeView === true && monitorSvcSettings.isFullObjectView !== true);
+//console.log("monitorSvcSettings.isFullObjectView = " + monitorSvcSettings.isFullObjectView);
+//console.log("monitorSvcSettings.isFullObjectView !== true : " + (monitorSvcSettings.isFullObjectView !== true));
+                if (monitorSvcSettings.isTreeView === true && monitorSvcSettings.isFullObjectView !== true){                    
+                    monitorSvcSettings.defaultTreeId = Number(resp.data.value);
+//console.log(checkUndefinedNull(monitorSvcSettings.curTreeId));                    
                     if (checkUndefinedNull(monitorSvcSettings.curTreeId)){
                         monitorSvcSettings.curTreeId = monitorSvcSettings.defaultTreeId;
                     };                    
+//console.log(checkUndefinedNull(monitorSvcSettings.curTreeNodeId));                    
                     if (checkUndefinedNull(monitorSvcSettings.curTreeNodeId)){
                         citiesMonitorSvc = [];                
                         objectsMonitorSvc = [];
@@ -366,6 +390,7 @@ angular.module('portalNMC')
             getAllMonitorCities,
             getLoadingStatus,
             getMonitorEventsByObject,
+            getMonitorEventsByObjectForMap, 
             getMonitorEventsForObject,
             getMonitorSettings,
             getRequestCanceler,

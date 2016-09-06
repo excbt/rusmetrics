@@ -319,7 +319,7 @@ angular.module('portalNMC')
         
         $scope.ctrlSettings.isSaving = true;
         $http.put($scope.ctrlSettings.settingsUrl, $scope.data.modifySettings)
-        .success(function(data){
+        .success(function(data){            
             $scope.ctrlSettings.isSaving = false;
             notificationFactory.success();
             performSettingsData(data);

@@ -19,10 +19,13 @@ angular.module('portalNMC')
 //scope.crudTableName = scope.$eval($attrs.table);  
 //console.log(scope.crudTableName);
 //        },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location) {
                 
 //console.log("Objects directive.");
+                //default date interval settings for monitor
+                $rootScope.monitorStart = $location.search().fromDate || monitorSvc.getMonitorSettings().fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+                $rootScope.monitorEnd =  $location.search().toDate || monitorSvc.getMonitorSettings().toDate || moment().endOf('day').format('YYYY-MM-DD');
                 
                     //messages for user
                 $scope.messages = {};
@@ -182,17 +185,21 @@ angular.module('portalNMC')
                 $scope.refreshObjectsData = function(){
                     $rootScope.$broadcast('objectSvc:requestReloadData', {"contGroupId": $scope.data.currentGroupId});
                     $scope.loading = true;
+                    $rootScope.$broadcast('monitor:updateObjectsRequest');
                     getObjectsData();
                 };
                                           
                 $scope.objectsDataFilteredByGroup = function(group){
+//console.log("objectsDataFilteredByGroup : " + group);                    
                     $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                     if (mainSvc.checkUndefinedNull(group)){
                         $scope.messages.groupMenuHeader = "Полный список объектов";
                         $scope.data.currentGroupId = null;
+                        monitorSvc.setMonitorSettings({contGroupId: null});
                     }else{
                         $scope.messages.groupMenuHeader = group.contGroupName;
                         $scope.data.currentGroupId = group.id;
+                        monitorSvc.setMonitorSettings({contGroupId: group.id});
                     }
                     
                     $scope.refreshObjectsData();
@@ -202,7 +209,15 @@ angular.module('portalNMC')
                     $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                     $scope.objectCtrlSettings.isFullObjectView = true;
                     $scope.messages.treeMenuHeader = 'Полный список объектов';
-                    getObjectsData();                    
+                    //set monitor settings and load monitor data
+                    $scope.data.currentGroupId = null;
+                    monitorSvc.setMonitorSettings({contGroupId: null});
+                    monitorSvc.setMonitorSettings({curTreeId: null, curTreeNodeId: null, isFullObjectView: true});
+                    monitorSvc.setMonitorSettings({currentTree: null, currentTreeNode: null});
+                    $rootScope.$broadcast('monitor:updateObjectsRequest');
+                    
+                    $scope.refreshObjectsData();
+//                    getObjectsData();                    
                 };
                 
                 function makeObjectTable(objectArray, isNewFlag){
@@ -1650,9 +1665,12 @@ angular.module('portalNMC')
                     item.isSelected = true;                    
                     $scope.data.selectedNode = angular.copy(item); 
                     $scope.loading = true;
-                    if (item.type == 'root'){
+                    if (item.type === 'root'){
                         objectSvc.loadSubscrFreeObjectsByTree($scope.data.currentTree.id).then(successGetObjectsCallback);
                     }else{
+                        monitorSvc.setMonitorSettings({loadingFlag: true, curTreeId: $scope.data.currentTree.id, curTreeNodeId: item.id});
+                        monitorSvc.setMonitorSettings({currentTree: angular.copy($scope.data.currentTree), currentTreeNode: angular.copy(item)});
+                        $rootScope.$broadcast('monitor:updateObjectsRequest');
                         objectSvc.loadSubscrObjectsByTreeNode($scope.data.currentTree.id, item.id).then(successGetObjectsCallback);
                     };                    
                 };
@@ -1663,16 +1681,21 @@ angular.module('portalNMC')
                     $scope.loading = true;
                     $scope.treeLoading = true;
                     objectSvc.loadSubscrTree(tree.id).then(function(resp){
-                            $scope.treeLoading = false;
-                            $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
-                            var respTree = angular.copy(resp.data);
-                            mainSvc.sortTreeNodesBy(respTree, "objectName");
-                            $scope.data.currentTree = respTree;
-                            $scope.objects = [];
-                            $scope.objectsOnPage = [];
-                            $scope.loading = false; 
-                            $rootScope.$broadcast('objectSvc:loaded');
-                            $scope.messages.noObjects = "";
+                        $scope.treeLoading = false;
+                        $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
+                        var respTree = angular.copy(resp.data);
+                        mainSvc.sortTreeNodesBy(respTree, "objectName");
+                        $scope.data.currentTree = respTree;
+                        $scope.objects = [];
+                        $scope.objectsOnPage = [];
+                        $scope.loading = false; 
+                        $rootScope.$broadcast('objectSvc:loaded');
+                        //set monitor settings
+                        monitorSvc.setMonitorSettings({isFullObjectView: false});
+                        monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});
+                        $rootScope.$broadcast('monitor:updateObjectsRequest');
+
+                        $scope.messages.noObjects = "";
                         }, errorCallback);
                 };
                 
@@ -1688,7 +1711,10 @@ angular.module('portalNMC')
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree) ){ 
                             $scope.viewFullObjectList();
                             return "View full object list!";
-                        };                        
+                        };
+                        monitorSvc.setMonitorSettings({currentTree: $scope.data.defaultTree, curTreeId: $scope.data.defaultTree.id});          
+//                        $rootScope.$broadcast('monitor:updateObjectsRequest');
+                                                
                         $scope.loadTree($scope.data.defaultTree);                        
                         
                     }, errorCallback);
@@ -1699,15 +1725,27 @@ angular.module('portalNMC')
                     loadTrees(resp.data);
                 };
                 
-                $scope.toggleTreeView = function(){
-                    $scope.objectCtrlSettings.isTreeView = !$scope.objectCtrlSettings.isTreeView;
+                function checkTreeSettingsAndGetObjectsData() {
+//console.log("checkTreeSettingsAndGetObjectsData");                    
                     //if tree is off
-                    if ($scope.objectCtrlSettings.isTreeView == false){
+                    if ($scope.objectCtrlSettings.isTreeView === false){
+                        //load data
                         getObjectsData();
+                        //monitor map data load start
+//                        monitorSvc.setMonitorSettings({curTreeId: null, curTreeNodeId: null, isFullObjectView: true});
+//                        monitorSvc.setMonitorSettings({currentTree: null, currentTreeNode: null});
+//                        $rootScope.$broadcast('monitor:updateObjectsRequest');
                     }else{
                     //if tree is on
+                        $scope.data.currentGroupId = null;
+                        monitorSvc.setMonitorSettings({contGroupId: null});
                         objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                     
-                    };
+                    }; 
+                };
+                
+                $scope.toggleTreeView = function(){
+                    $scope.objectCtrlSettings.isTreeView = !$scope.objectCtrlSettings.isTreeView;
+                    checkTreeSettingsAndGetObjectsData();
                 };
                 
 // ********************************************************************************************
@@ -1926,13 +1964,15 @@ angular.module('portalNMC')
 // ***********************************************************************************************                
                 
                 var initCtrl = function(){
+//console.log('initCtrl');                    
+                    checkTreeSettingsAndGetObjectsData();
                                         //if tree is off
-                    if ($scope.objectCtrlSettings.isTreeView == false){
-                        getObjectsData();
-                    }else{
-                    //if tree is on                         
-                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                        
-                    };
+//                    if ($scope.objectCtrlSettings.isTreeView == false){
+//                        getObjectsData();
+//                    }else{
+//                    //if tree is on                         
+//                        objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                        
+//                    };
                 }; 
                 
                 initCtrl();
