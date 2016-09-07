@@ -78,8 +78,9 @@
                     <tr ng-repeat="object in currentCategory.reportTypes | serviceTypesFilter: serviceType track by $index"               
                         ng-if="object.paramsetsCount && object.paramsetsCount === object.checkedParamsetsCount">        
                         <td>
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
-                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table">
+                                <tr>
+<!--                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">-->
                                     <td ng-class="column.class" style="padding:0;">
                                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
                                             <i title="Раскрыть/скрыть список вариантов отчетов" 
