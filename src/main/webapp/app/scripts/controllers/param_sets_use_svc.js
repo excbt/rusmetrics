@@ -1129,7 +1129,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         };
         var result = false;
 //console.log($scope.currentReportType);        
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length > 1))
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length > 1 || $scope.selectedObjects.length === 0))
         {
             $scope.currentObject.outputFileZipped = true;
             result = true;

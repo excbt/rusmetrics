@@ -909,7 +909,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         };
         var result = false;
 //console.log($scope.currentReportType);        
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length > 1 || $scope.selectedObjects.length === 0))
         {
             $scope.currentObject.outputFileZipped =  true;
             result= true;

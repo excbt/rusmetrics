@@ -449,7 +449,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         };
         
         if (reportType.reportMetaParamCommon.manyContObjectsZipOnly 
-            && (reportParamset.selectedObjects.length > 1))
+            && (reportParamset.selectedObjects.length > 1 || reportParamset.selectedObjects.length === 0))
         {
             reportParamset.outputFileZipped =  true;
         };
