@@ -205,7 +205,9 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
                 $scope.objectsInWindow[curIndex].selected = true;
                 performObjectsFilter();               
                 //new / revision               
-                $scope.isNew = loca.isNew === "null" ? null : Boolean(loca.isNew); 
+                $scope.isNew = (mainSvc.checkUndefinedNull(loca.isNew) || loca.isNew === "null") ? null : Boolean(loca.isNew);
+//console.log(loca.isNew);
+//console.log(Boolean(loca.isNew));                
 //console.log($scope.isNew);                
                 if ($scope.isNew === true){
                     $scope.visibleText = 'Только новые';
