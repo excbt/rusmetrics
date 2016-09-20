@@ -26,7 +26,9 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<div class="row paddingTop10PC" ng-controller="LoginController">
-				<div class="well col-md-offset-4 col-xs-4 col-md-4">
+				<div class="well col-md-offset-4 col-xs-4 col-md-4"
+					style="opacity: 0.7"
+				>
 					<h1 style="color: #5a646d"><b>Вход в Rusmetrics</b></h1>
 
 					<form role="form" method="post" action="j_spring_security_check" class="form-horizontal">
@@ -105,8 +107,47 @@
 				function($scope, $location) {
 					var url = "" + $location.$$absUrl;
 					$scope.displayLoginError = (url.indexOf("error") >= 0);
-
+										
 				} ]);
+		
+		function setSeasonBackground(){
+			var curDate = new Date(),
+				curMonth = curDate.getMonth(),
+				curSeason = "title_bg";
+			;
+			
+			switch(curMonth){
+			case 0: curSeason = "January"; break;
+			case 1: curSeason = "February"; break;
+			case 2: curSeason = "March"; break;
+			case 3: curSeason = "April"; break;
+			case 4: curSeason = "May"; break;
+			case 5: curSeason = "June"; break;
+			case 6: curSeason = "July"; break;
+			case 7: curSeason = "August"; break;
+			case 8: curSeason = "September"; break;
+			case 9: curSeason = "October"; break;
+			case 10: curSeason = "November"; break;
+			case 11: curSeason = "December"; break;			
+			}
+			
+// 			if (curMonth >= 2 && curMonth <= 4){
+// 				curSeason = "spring";
+// 			}else
+// 			if (curMonth >= 5 && curMonth <= 7){
+// 				curSeason = "summer";
+// 			}else
+// 			if (curMonth >= 8 && curMonth <= 10){
+// 				curSeason = "autumn";
+// 			}else{
+// 				curSeason = "title_bg";
+// 			}
+	
+			document.body.style = "background-image: url(../public/resources/images/" + curSeason + ".png)";		
+		}
+		
+		setSeasonBackground();
+		
 	</script>
 <!--<![endif]-->
 </body>
