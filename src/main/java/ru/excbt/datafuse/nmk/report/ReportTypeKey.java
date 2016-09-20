@@ -47,7 +47,9 @@ public enum ReportTypeKey implements KeynameObject {
 	HEAT_AVG_FORECAST_REPORT(32, "heat_avg_forecast", ReportSystem.PENTAHO), //
 	COMMERCE_ZPOINT_REPORT(33, "commerce_zpoint"), //
 	HW_DATA_ZPOINT_REPORT(34, "hw_data_zpoint", ReportSystem.PENTAHO), //
-	CONSOLIDATED_ZPOINT_REPORT(35, "consolidated_zpoint"); //
+	CONSOLIDATED_ZPOINT_REPORT(35, "consolidated_zpoint"), //
+	HEAT_QUALITY_CHART_REPORT(36, "heat_quality_chart"), //
+	HW_BAD_PERIODS_REPORT(37, "hw_bad_periods", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;

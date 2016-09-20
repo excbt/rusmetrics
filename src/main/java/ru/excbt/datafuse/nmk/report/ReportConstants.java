@@ -61,6 +61,8 @@ public class ReportConstants {
 		public static final String COMM_ZPOINT_FILE_COMPILED = "jasper_reports/nmk_com_zpoint_report.jasper";
 		public static final String HW_DATA_ZPOINT_FILE_COMPILED = "jasper_reports/nmk_hw_data_zpoint_report.prpt";
 		public static final String CONSOLIDATED_ZPOINT_FILE_COMPILED = "jasper_reports/nmk_consolidated_zpoint_report.jasper";
+		public static final String HEAT_QUALITY_CHART_FILE_COMPILED = "jasper_reports/nmk_heat_quality_chart_report.jasper";
+		public static final String HW_BAD_PERIODS_FILE_COMPILED = "jasper_reports/nmk_hw_bad_periods_report.prpt";
 
 		private Files() {
 
