@@ -78,6 +78,10 @@ angular.module('portalNMC')
         return mainSvcSettings.loadedServicePermission;
     };
     
+    function getServerTimeZone () {
+        return mainSvcSettings.serverTimeZone;
+    }
+    
     //object map
     var objectMapSettings = {};
     objectMapSettings.zoom = null;
@@ -826,6 +830,7 @@ angular.module('portalNMC')
         checkStrForDate,
         checkUndefinedEmptyNullValue,
         checkUndefinedNull,
+        getServerTimeZone,
         dateFormating,        
         findItemBy,
         findNodeInTree,

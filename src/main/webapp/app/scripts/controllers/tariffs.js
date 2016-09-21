@@ -7,6 +7,10 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     $scope.ctrlSettings.selectedAll = false;
+    var serverTimeZone = mainSvc.getServerTimeZone(),/*in hours*/
+        serverTimeZoneMs = serverTimeZone*1000*3600;/*in milliseconds*/
+        ;
+    
     
     $scope.crudTableName = "../api/subscr/tariff"; 
     $scope.groupUrl = "../api/subscr/contGroup";
@@ -54,10 +58,19 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
 		$scope.currentObject = curObject;
         $scope.startDateFormat = ($scope.currentObject.startDate == null) ? null : new Date($scope.currentObject.startDate);
         $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate); 
-        
-        $scope.paramsetStartDateFormat = (new Date($scope.currentObject.startDate));            
-            $scope.psStartDateFormatted =(($scope.currentObject.startDate!=null))?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-//console.log($scope.psStartDateFormatted);   
+//console.log($scope.currentObject.startDate);        
+        $scope.paramsetStartDateFormat = (new Date($scope.currentObject.startDate));
+//console.log($scope.paramsetStartDateFormat);        
+//console.log($scope.paramsetStartDateFormat.getTime());        
+//            var tmpPSDate = $scope.paramsetStartDateFormat;
+//            var tmpUTCDateTimestamp = Date.UTC(tmpPSDate.getFullYear(), tmpPSDate.getMonth(), tmpPSDate.getDate());
+//console.log(tmpUTCDateTimestamp);        
+//            $scope.psStartDateFormatted =(($scope.currentObject.startDate !== null)) ? moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+        $scope.psStartDateFormatted =(($scope.currentObject.startDate !== null)) ? moment.utc($scope.currentObject.startDate + serverTimeZoneMs).format($scope.ctrlSettings.dateFormat) : "";
+//console.log(moment(tmpUTCDateTimestamp).format("DD.MM.YYYY HH:mm:ss"));   
+//console.log(moment.utc(tmpUTCDateTimestamp).format("DD.MM.YYYY HH:mm:ss"));        
+//console.log(moment.utc($scope.currentObject.startDate).format("DD.MM.YYYY HH:mm:ss"));
+//console.log(moment.utc($scope.currentObject.startDate + serverTimeZoneMs).format("DD.MM.YYYY HH:mm:ss"));                 
             
 //            $scope.paramsetStartDateFormatted ={
 //                startDate: moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]),
@@ -65,8 +78,12 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
 //            };
 //console.log($scope.paramsetStartDateFormatted.startDate);             
             
-            $scope.paramsetEndDateFormat= (new Date($scope.currentObject.endDate));
-            $scope.psEndDateFormatted =($scope.currentObject.endDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+        $scope.paramsetEndDateFormat = (new Date($scope.currentObject.endDate));
+//            $scope.psEndDateFormatted = ($scope.currentObject.endDate !== null) ? moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+//            var tmpPEDate = $scope.paramsetEndDateFormat;
+//            var tmpEndUTCDateTimestamp = Date.UTC(tmpPEDate.getFullYear(), tmpPEDate.getMonth(), tmpPEDate.getDate());
+//console.log(tmpEndUTCDateTimestamp); 
+        $scope.psEndDateFormatted =(($scope.currentObject.startDate !== null)) ? moment.utc($scope.currentObject.endDate + serverTimeZoneMs).format($scope.ctrlSettings.dateFormat) : "";
 //console.log($scope.psEndDateFormatted);
 
      };
@@ -168,15 +185,21 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
             $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
         }
         
+//console.log($scope.psStartDateFormatted);        
         var stDate = (new Date(moment($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
-        var UTCstdt = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());              
-        $scope.currentObject.startDate = (!isNaN(UTCstdt)) ?new Date(UTCstdt) : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
-
+//        var UTCstdt = Date.UTC(stDate.getUTCFullYear(), stDate.getUTCMonth(), stDate.getUTCDate()); 
+//        var UTCstdt = new Date(stDate.getUTCFullYear(), stDate.getUTCMonth(), stDate.getUTCDate()).getTime();
+        var UTCstdt = stDate.getTime();
+//console.log(stDate);        
+//console.log(UTCstdt - 3*3600*1000);        
+        $scope.currentObject.startDate = (!isNaN(UTCstdt)) ? UTCstdt - serverTimeZoneMs : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+//console.log($scope.currentObject.startDate);
+//return;
         //perform end interval
         var endDate = (new Date(moment($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
-        var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
-
-        $scope.currentObject.endDate = (!isNaN(UTCenddt)) ?new Date(UTCenddt) : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+//        var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
+        var UTCenddt = endDate.getTime();
+        $scope.currentObject.endDate = (!isNaN(UTCenddt)) ? UTCenddt -  serverTimeZoneMs : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
 //        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || 
 //        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;    
         var tmp = $scope.selectedObjects.map(function(elem){
