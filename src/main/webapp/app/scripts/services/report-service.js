@@ -460,11 +460,14 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 if (element.paramSpecialRequired && !(element.textValue 
                                                      || element.numericValue 
                                                      || element.oneDateValue 
+                                                     || element.oneDateValueFormatted
                                                      || element.startDateValue
                                                      || element.endDateValue
                                                      || element.directoryValue)
                    )
                 {
+//console.log(element);
+//console.log(reportParamset.currentParamSpecialList);                    
                     if (specListFlag){messageForUser += "Дополнительные свойства: " + "\n";};
                     messageForUser += "\u2022"+" Не задан параметр \"" + element.paramSpecialCaption + "\" \n";
                     result = false;

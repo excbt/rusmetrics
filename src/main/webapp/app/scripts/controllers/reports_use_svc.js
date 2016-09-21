@@ -418,7 +418,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);                
             };
             //Ищем значение этого параметра в массиве параметров варианта отчета
-            if (reportParamset.paramSpecialList.length == 0){
+            if (reportParamset.paramSpecialList.length === 0){
                 result.textValue = null;
                 result.boolValue = null;
                 result.numericValue = null;
@@ -432,7 +432,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 return result;
             }
             var elementIndex = -1;
-            reportParamset.paramSpecialList.some(function(el,index,array){
+            reportParamset.paramSpecialList.some(function(el, index, array){
                 if (el.reportMetaParamSpecialId === element.id){
                     elementIndex = index;
                     return true;
@@ -492,7 +492,16 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     	$scope.showMessageForUserModalExFlag = false;
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedReport(parentObject, object);
-//console.log($scope.currentReportType);        
+//console.log($scope.currentReportType);
+        
+//        if(angular.isArray($scope.currentParamSpecialList)){
+//            $scope.currentParamSpecialList.forEach(function(element){
+//                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
+//                element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
+//                element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
+//            });
+//        };
+        
         $scope.currentParamSpecialList = prepareParamSpecialList($scope.currentReportType, object);
 
         $scope.currentObject.showParamsBeforeRunReport = !$scope.currentObject.allRequiredParamsPassed;
@@ -1219,13 +1228,21 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                                             , selectedObjects // массив объектов, для которых строится отчет
                                             , previewFlag //флаг - формировать отчет или сделать предпросмотр
                                             , previewWin //ссылка на превью окно
-                                            ){
+                                            ){        
         var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
         //формируем массив ИД объектов, для которых формируется отчет.          
         var objectIds = selectedObjects.map(function(element){          
             var result = element.id;
             return result;
         });      
+                //perform Special paramset props
+        if(angular.isArray($scope.currentParamSpecialList)){
+            $scope.currentParamSpecialList.forEach(function(element){
+                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
+                element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
+                element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
+            });
+        };
          //set the list of the special params - устанавливаем специальные параметры отчета
         tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
         //Если вариант отчета создается за период, задаем начало и конец периода
@@ -1259,7 +1276,7 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             if (mainSvc.checkUndefinedNull(objectIds) || objectIds.length == 0){                
                 clearContObjectIds = true;
         };
-        
+//console.log(tmpParamset);        
         $scope.createReportWithParamsInProgress = true;
         
         var cancel = $q.defer();
