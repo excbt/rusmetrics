@@ -27,7 +27,7 @@
 <!-- 			</div> -->
 			<div class="row paddingTop10PC" ng-controller="LoginController">
 				<div class="well col-md-offset-4 col-xs-4 col-md-4"
-					style="opacity: 0.7"
+					style=""
 				>
 					<h1 style="color: #5a646d"><b>Вход в Rusmetrics</b></h1>
 
@@ -146,7 +146,7 @@
 			document.body.style = "background-image: url(../public/resources/images/" + curSeason + ".png)";		
 		}
 		
-		setSeasonBackground();
+//		setSeasonBackground();
 		
 	</script>
 <!--<![endif]-->
