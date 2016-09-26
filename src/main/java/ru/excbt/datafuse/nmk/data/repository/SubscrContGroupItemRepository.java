@@ -41,7 +41,8 @@ public interface SubscrContGroupItemRepository extends CrudRepository<SubscrCont
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ "WHERE sco.subscriberId = :subscriberId AND sco.contObjectId NOT IN "
 			+ "( SELECT ci.contObject.id FROM SubscrContGroupItem ci LEFT JOIN ci.contGroup cg "
-			+ "WHERE cg.id = :contGroupId ) " + " ORDER BY sco.contObject.name, sco.contObject.id ")
+			+ "WHERE cg.id = :contGroupId ) AND sco.subscrEndDate IS NULL"
+			+ " ORDER BY sco.contObject.name, sco.contObject.id ")
 	public List<ContObject> selectAvailableContGroupObjects(@Param("subscriberId") long subscriberId,
 			@Param("contGroupId") long contGroupId);
 

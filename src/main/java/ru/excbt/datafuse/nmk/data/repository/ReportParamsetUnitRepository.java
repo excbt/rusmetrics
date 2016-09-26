@@ -39,7 +39,8 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ "WHERE sco.subscriberId = :subscriberId AND sco.contObjectId NOT IN "
 			+ "( SELECT u.objectId FROM ReportParamsetUnit u LEFT JOIN u.reportParamset rp "
-			+ "WHERE rp.id = :reportParamsetId ) " + "ORDER BY sco.contObject.name, sco.contObject.id")
+			+ "WHERE rp.id = :reportParamsetId ) AND sco.subscrEndDate IS NULL "
+			+ "ORDER BY sco.contObject.name, sco.contObject.id")
 	public List<ContObject> selectAvailableContObjects(@Param("reportParamsetId") long reportParamsetId,
 			@Param("subscriberId") long subscriberId);
 
