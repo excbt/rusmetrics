@@ -18,6 +18,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -77,6 +80,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"),
 			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version

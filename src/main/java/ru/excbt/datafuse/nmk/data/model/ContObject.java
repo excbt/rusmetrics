@@ -20,6 +20,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,6 +115,7 @@ public class ContObject extends AbstractAuditableModel
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "contObject")
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<ContManagement> contManagements = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER)

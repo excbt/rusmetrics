@@ -19,7 +19,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-dependencies</artifactId>
-		<version>1.3.6.RELEASE</version>
+		<version>1.4.1.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -28,7 +28,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Hopper-SR2</version>
+				<version>Hopper-SR3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
