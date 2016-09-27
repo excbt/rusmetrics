@@ -448,7 +448,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 result.oneDateValue = reportParamset.paramSpecialList[elementIndex].oneDateValue || null;
                 result.startDateValue = reportParamset.paramSpecialList[elementIndex].startDateValue || null;
                 result.endDateValue = reportParamset.paramSpecialList[elementIndex].endDateValue || null;
-                result.oneDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].oneDateValue);
+//                result.oneDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].oneDateValue);
+                result.oneDateValueFormatted = (reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null : moment(reportParamset.paramSpecialList[elementIndex].oneDateValue).format($scope.ctrlSettings.dateFormat);
+                
                 result.startDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].startDateValue);
                 result.endDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].endDateValue);
 //                result.directoryValue = (reportParamset.paramSpecialList[elementIndex].directoryValue) || null;
@@ -1238,9 +1240,11 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 //perform Special paramset props
         if(angular.isArray($scope.currentParamSpecialList)){
             $scope.currentParamSpecialList.forEach(function(element){
-                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
+//                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
                 element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
                 element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
+                
+                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).valueOf();
             });
         };
          //set the list of the special params - устанавливаем специальные параметры отчета

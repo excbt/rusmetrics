@@ -1342,6 +1342,12 @@ tr.nmc-inactive-price > td{
     width: 80px;
     display: inline;
 }
+
+    /*  Контрол для ввода даты в Дополнительных свойствах отчетов */
+.nmc-spec-date {
+    background-color: #fff !important;
+    cursor: pointer !important;
+}
  
 /**********
  * Кнопки

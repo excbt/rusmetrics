@@ -15,6 +15,7 @@ angular.module('portalNMC')
                 setPropForStartDate();
                 setPropForEndDate();
                 setPropForSingleDate();
+                setPropForSpecDate();
             });
 
             $('#editParamsetModal').on('hidden.bs.modal', function(){
@@ -50,6 +51,24 @@ angular.module('portalNMC')
 //                console.log(ov);
 //                console.log($scope.currentObject.settlementDay);
 //            })
+            function setPropForSpecDate() {
+                $('.nmc-spec-date').datepicker({
+                  dateFormat: "dd.mm.yy",
+                  firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                  dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                  monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                    beforeShow: function(){
+                        setTimeout(function(){
+                            $('.ui-datepicker-calendar').css("display", "table");
+                        }, 1);
+                    },
+                    onChangeMonthYear: function(){
+                        setTimeout(function(){
+                            $('.ui-datepicker-calendar').css("display", "table");
+                        }, 1);
+                    }
+                });
+            }
             
             var setPropForSettlementMonth = function(){         
                 $('#inputReportSettlementMonth').datepicker({

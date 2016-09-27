@@ -205,7 +205,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         //perform Special paramset props
         if(angular.isArray($scope.currentParamSpecialList)){
             $scope.currentParamSpecialList.forEach(function(element){
-                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
+//                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
+//                element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
+//                element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
+                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).valueOf();
                 element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
                 element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
             });
@@ -618,7 +621,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
                     result.endDateValue = paramsetObj.paramSpecialList[elementIndex].endDateValue || null;
-                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].oneDateValue);
+//                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].oneDateValue);
+                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : moment(paramsetObj.paramSpecialList[elementIndex].oneDateValue).format($scope.ctrlSettings.dateFormat);
+                    
                     result.startDateValueFormatted = (angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
                     result.endDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
                     if (mainSvc.checkUndefinedNull(paramsetObj.paramSpecialList[elementIndex].directoryValue)){
@@ -1306,6 +1311,23 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $("#inputSettlementDay").inputmask("d", {placeholder: ""});
         
         $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"} );
+        
+        $('.nmc-spec-date').datepicker({
+          dateFormat: "dd.mm.yy",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+            beforeShow: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            },
+            onChangeMonthYear: function(){
+                setTimeout(function(){
+                    $('.ui-datepicker-calendar').css("display", "table");
+                }, 1);
+            }
+        });
     });
     
     var setPropForSettlementMonth = function(){         
