@@ -302,7 +302,7 @@ angular.module('portalNMC')
 //console.log(monitorSvcSettings.loadingFlag);                        
                         $rootScope.$broadcast('monitorObjects:updated');
                     }else{                        
-                        cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapse';
+                        cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapseV2';
                         getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
                     };
                 }else{                                            
@@ -361,7 +361,7 @@ angular.module('portalNMC')
         var loadSubscrObjectsByTreeNode = function(treeId, nodeId){
             if (isCancelParamsIncorrect() === true)
                 return null;
-            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/cityStatusCollapse', httpOptions);
+            return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/cityStatusCollapseV2', httpOptions);
         };
                  
         var loadDefaultMonitorTreeSetting = function(){
