@@ -24,11 +24,13 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
@@ -60,6 +62,9 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 	@Autowired
 	protected SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
+
+	@Autowired
+	protected SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
 	/**
 	 * 
@@ -237,8 +242,8 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 		//		List<ContObject> result = subscrContObjectService
 		//				.selectRmaSubscriberContObjectsExcludingIds(getRmaSubscriberId(), contObjectIds);
-		List<ContObject> result = subscrContObjectService
-				.selectSubscriberContObjectsExcludingIds(getSubscriberId(), contObjectIds);
+		List<ContObject> result = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
+				contObjectIds);
 
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
@@ -595,6 +600,48 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
 				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
+
+		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param objectTreeType
+	 * @param rootSubscrObjectTreeId
+	 * @param childSubscrObjectTreeId
+	 * @return
+	 */
+	@RequestMapping(
+			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/cityStatusCollapseV2",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrObjectTreeMonitorV2(@PathVariable("objectTreeType") String objectTreeType,
+			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
+			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
+
+		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+			return responseBadRequest();
+		}
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+		}
+
+		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+				childSubscrObjectTreeId);
+
+		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
+				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return responseOK(result);
