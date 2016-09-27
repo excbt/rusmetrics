@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -299,13 +300,21 @@ public class ReportService {
 				idParam = reportMakerParam.getIdParam();
 			}
 
+			Supplier<String> keyValueStringer = () -> {
+				StringBuilder keyValue = new StringBuilder();
+				paramSpecialMap.forEach((k, v) -> {
+					keyValue.append("keyname:").append(k).append('=').append(v.toString()).append("(")
+							.append(v.getClass().getName()).append(")").append(";");
+				});
+				return keyValue.toString();
+			};
+
 			logger.debug(
 					"Call nmkGetReport with params (reportType:{}; (is, os); "
 							+ "idParam:{}; startDate:{}; endDate:{}; objectIds:{}; "
-							+ "convertedFileType:{}, isZip: {}, paramSpecialMap...)",
+							+ "convertedFileType:{}, isZip: {}, paramSpecialMap: {})",
 					destReportType, idParam, reportDatePeriod.getDateFrom(), reportDatePeriod.getDateTo(),
-					Arrays.toString(objectIds),
-					convertedFileType, isZip);
+					Arrays.toString(objectIds), convertedFileType, isZip, keyValueStringer.get());
 
 			rep.nmkGetReport(destReportType, inputStream, outputStream, idParam, reportDatePeriod.getDateFrom(),
 					reportDatePeriod.getDateTo(), objectIds, convertedFileType, isZip, paramSpecialMap);
@@ -390,14 +399,12 @@ public class ReportService {
 		}
 		//--------------------------------------------------------------------			
 		else if ((reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH
-				&& reportParamset.getReportPeriodKey().isSettlementDay()
-				&& reportParamset.getSettlementDay() != null)
+				&& reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null)
 				|| (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH &&
-		//reportParamset.getSettlementDay() != null
-		//&& 
+				//reportParamset.getSettlementDay() != null
+				//&& 
 						reportParamset.getReportPeriodKey().isSettlementDay()
-						&& reportParamset.getSettlementMonth() != null
-						&& reportParamset.getSettlementYear() != null)) {
+						&& reportParamset.getSettlementMonth() != null && reportParamset.getSettlementYear() != null)) {
 
 			LocalDateTime modReportDate = reportDate;
 			if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
@@ -430,15 +437,13 @@ public class ReportService {
 					final int lastDayOfPrev2Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
 							.minusDays(1).getDayOfMonth();
 					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
-						dtEnd = JodaTimeUtils
-								.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
+						dtEnd = JodaTimeUtils.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
 						dtStart = JodaTimeUtils.startOfDay(modReportDate.minusMonths(1).withDayOfMonth(settlementDay));
 					}
 
 				} catch (Exception e) {
 					logger.error("Can't calculate LAST_MONTH period. ReportDate = {}, settlementDate: {}",
-							modReportDate,
-							settlementDay);
+							modReportDate, settlementDay);
 				}
 			}
 

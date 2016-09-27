@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -148,6 +149,11 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 		if (boolValue != null) {
 			i++;
 		}
+
+		if (oneDateValue != null) {
+			i++;
+		}
+
 		return i > 0;
 	}
 
@@ -184,13 +190,13 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> valuesMap = new HashMap<>();
-		valuesMap.put("textValue", textValue);
-		valuesMap.put("numericValue", numericValue);
-		valuesMap.put("oneDateValue", oneDateValue);
-		valuesMap.put("startDateValue", startDateValue);
-		valuesMap.put("endDateValue", endDateValue);
-		valuesMap.put("directoryValue", directoryValue);
-		valuesMap.put("boolValue", boolValue);
+		valuesMap.put("textValue", getTextValue());
+		valuesMap.put("numericValue", getNumericValue());
+		valuesMap.put("oneDateValue", getOneDateValue());
+		valuesMap.put("startDateValue", getStartDateValue());
+		valuesMap.put("endDateValue", getEndDateValue());
+		valuesMap.put("directoryValue", getDirectoryValue());
+		valuesMap.put("boolValue", getBoolValue());
 
 		for (Map.Entry<String, Object> v : valuesMap.entrySet()) {
 			if (v.getValue() != null) {
@@ -198,6 +204,18 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param src
+	 * @return
+	 */
+	private Timestamp timestampFromDate(Date src) {
+		if (src != null && src instanceof java.sql.Timestamp) {
+			return (java.sql.Timestamp) src;
+		}
+		return src != null ? new java.sql.Timestamp(src.getTime()) : null;
 	}
 
 	// ************************************************************************
@@ -237,7 +255,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	public Date getOneDateValue() {
-		return oneDateValue;
+		return timestampFromDate(oneDateValue);
 	}
 
 	public void setOneDateValue(Date oneDateValue) {
@@ -245,7 +263,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	public Date getStartDateValue() {
-		return startDateValue;
+		return timestampFromDate(startDateValue);
 	}
 
 	public void setStartDateValue(Date startDateValue) {
@@ -253,7 +271,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	public Date getEndDateValue() {
-		return endDateValue;
+		return timestampFromDate(endDateValue);
 	}
 
 	public void setEndDateValue(Date endDateValue) {
