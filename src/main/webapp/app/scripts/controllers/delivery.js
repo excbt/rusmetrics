@@ -125,9 +125,10 @@ app.controller(
 			// Получение списка вариантов шаблонов
 			$scope.getParamsets = function(initialFlag){
 				// Получаем суффикс выбранного типа отчёта и формируем с ним url
+				var url = "";              
 				for(var zx = 0; zx < $scope.rep_types.length; zx++){
 					if ($scope.rep_types[zx].keyname == $scope.cur_rep_shdl.reportTemplate.reportTypeKeyname){
-						var url = $scope.url_paramsets + $scope.rep_types[zx].suffix;
+						url = $scope.url_paramsets + $scope.rep_types[zx].suffix;
 					}
 				};
 //console.log(url);
