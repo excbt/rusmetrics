@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.service.support.AppVersionService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 
 @Controller
 @RequestMapping("/api/appStatus")
@@ -23,8 +24,13 @@ public class AppStatusController extends WebApiController {
 	 */
 	@RequestMapping(value = "/version", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAppVersion(HttpSession httpSession) {
-		httpSession.invalidate();
-		return responseOK(appVersionService.getAppVersion());
+
+		ApiActionObjectProcess action = () -> {
+			httpSession.invalidate();
+			return appVersionService.getAppVersion();
+		};
+
+		return responseOK(action);
 	}
 
 	/**
@@ -34,8 +40,14 @@ public class AppStatusController extends WebApiController {
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getStatus(HttpSession httpSession) {
-		httpSession.invalidate();
-		return responseOK("OK");
+
+		ApiActionObjectProcess action = () -> {
+			httpSession.invalidate();
+			return "OK";
+
+		};
+
+		return WebApiHelper.processResponceApiActionOkBody(action);
 	}
 
 	/**
@@ -46,17 +58,11 @@ public class AppStatusController extends WebApiController {
 	@RequestMapping(value = "/appModulesVersions", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAppVersionProps() {
 
-		//		
-		//		
-		//		Properties props = appVersionService.getAppVersionProps();
-		//
-		//		final Map<String, String> mp = new HashMap<>();
-		//
-		//		props.forEach((k, v) -> {
-		//			mp.put(DBRowUtils.asString(k), DBRowUtils.asString(v));
-		//		});
+		ApiActionObjectProcess action = () -> {
+			return appVersionService.getAppModulesInfo();
+		};
 
-		return responseOK(appVersionService.getAppModulesInfo());
+		return WebApiHelper.processResponceApiActionOkBody(action);
 	}
 
 }

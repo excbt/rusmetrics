@@ -15,7 +15,10 @@ import org.springframework.transaction.TransactionSystemException;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionCallMetrics;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
@@ -135,7 +138,9 @@ public class WebApiHelper {
 		ApiProcessResult result = null;
 
 		try {
+			final ApiActionCallMetrics callMetrics = ApiActionCallMetrics.newMetrics().start();
 			action.process();
+			final ApiActionCallMetrics callMetricsResult = callMetrics.end();
 		} catch (AccessDeniedException e) {
 			logger.warn("Error during process UserAction:{}. exception:{}", action.getClass(), e);
 			result = new ApiProcessResult(ApiResult.error(e, HttpStatus.FORBIDDEN));
@@ -193,6 +198,25 @@ public class WebApiHelper {
 
 	/**
 	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionOkBody(final ApiActionProcess<?> actionProcess) {
+
+		final ApiActionEntityAdapter<?> action = new ApiActionEntityAdapter<Object>() {
+
+			@Override
+			public Object processAndReturnResult() {
+				return actionProcess.processAndReturnResult();
+			}
+
+		};
+
+		return _processResponceApiActionBody(action, HttpStatus.OK);
+	}
+
+	/**
+	 * 
 	 * @param action
 	 * @param successStatus
 	 * @return
@@ -227,6 +251,25 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionUpdate(ApiAction action) {
+		return _processResponceApiActionBody(action, HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionUpdate(final ApiActionProcess<?> actionProcess) {
+
+		final ApiActionEntityAdapter<?> action = new ApiActionEntityAdapter<Object>() {
+
+			@Override
+			public Object processAndReturnResult() {
+				return actionProcess.processAndReturnResult();
+			}
+
+		};
+
 		return _processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
