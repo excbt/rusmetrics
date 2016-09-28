@@ -7,9 +7,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     
     $rootScope.ctxId = "param_sets_page";
     //ctrl settings
+    var serverTimeZone = mainSvc.getServerTimeZone(),/*in hours*/
+        serverTimeZoneMs = serverTimeZone*1000*3600;/*in milliseconds*/
+        ;
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
-    $scope.ctrlSettings.selectedAll = false;
+    $scope.ctrlSettings.selectedAll = false;    
     
     $scope.ctrlSettings.ctxId = "paramset_page";
     
@@ -208,7 +211,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
 //                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
 //                element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
 //                element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
-                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).valueOf();
+                
+//                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).valueOf();
+                
+                var stDate = (new Date(moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
+                var UTCstdt = stDate.getTime();
+                element.oneDateValue = (!isNaN(UTCstdt)) ? UTCstdt - serverTimeZoneMs : null;
+                
                 element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
                 element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
             });
@@ -621,8 +630,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
                     result.endDateValue = paramsetObj.paramSpecialList[elementIndex].endDateValue || null;
+                    //use when Input type = date at form
 //                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].oneDateValue);
-                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : moment(paramsetObj.paramSpecialList[elementIndex].oneDateValue).format($scope.ctrlSettings.dateFormat);
+                    
+//                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : moment(paramsetObj.paramSpecialList[elementIndex].oneDateValue).format($scope.ctrlSettings.dateFormat);
+                    
+                    result.oneDateValueFormatted =(paramsetObj.paramSpecialList[elementIndex].oneDateValue !== null) ? moment.utc(paramsetObj.paramSpecialList[elementIndex].oneDateValue + serverTimeZoneMs).format($scope.ctrlSettings.dateFormat) : "";
                     
                     result.startDateValueFormatted = (angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
                     result.endDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);

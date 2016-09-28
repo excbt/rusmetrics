@@ -10,6 +10,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
         reportTypesCount = 0,       /* количество типов отчетов*/
         loadedReportTypesCount = 0  /* количество типов отчетов, для которых загружены варианты*/
         ;
+    var serverTimeZone = mainSvc.getServerTimeZone(),/*in hours*/
+        serverTimeZoneMs = serverTimeZone*1000*3600;/*in milliseconds*/
+        ;
     
     $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
@@ -449,7 +452,9 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 result.startDateValue = reportParamset.paramSpecialList[elementIndex].startDateValue || null;
                 result.endDateValue = reportParamset.paramSpecialList[elementIndex].endDateValue || null;
 //                result.oneDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].oneDateValue);
-                result.oneDateValueFormatted = (reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null : moment(reportParamset.paramSpecialList[elementIndex].oneDateValue).format($scope.ctrlSettings.dateFormat);
+//                result.oneDateValueFormatted = (reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null : moment(reportParamset.paramSpecialList[elementIndex].oneDateValue).format($scope.ctrlSettings.dateFormat);
+                
+                result.oneDateValueFormatted =(reportParamset.paramSpecialList[elementIndex].oneDateValue !== null) ? moment.utc(reportParamset.paramSpecialList[elementIndex].oneDateValue + serverTimeZoneMs).format($scope.ctrlSettings.dateFormat) : "";
                 
                 result.startDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].startDateValue);
                 result.endDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].endDateValue);
@@ -1244,7 +1249,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
                 element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
                 element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
                 
-                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).valueOf();
+//                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).valueOf();
+                var stDate = (new Date(moment(element.oneDateValueFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
+                var UTCstdt = stDate.getTime();
+                element.oneDateValue = (!isNaN(UTCstdt)) ? UTCstdt - serverTimeZoneMs : null;
             });
         };
          //set the list of the special params - устанавливаем специальные параметры отчета
