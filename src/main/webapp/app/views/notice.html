@@ -638,15 +638,20 @@
     </div>
     
     <div class="nmc-notice-table-with-fixed-header" ng-show="!ctrlSettings.loading && notices.length > 0">
-        <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
+        <table class="nmc-table-nowrap-data nmc-main-table table-bordered" ng-class="tableDef.tableClass">
             <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
     <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
-                <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">    
-                    <a class="pull-right" 
+                <td class="nmc-td-for-buttons">
+                    <span class="paddingLeft5">
+                        <input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/>
+                    </span>                    
+                    <img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}"/>    
+                    <a class="" 
                        ng-hide="notice.noticeObjectName==undefined" 
-                       ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.contZPointId}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}">
+                       ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.contZPointId}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}" target="_blank">
                         <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
                     </a>
+                    
                 </td>
                 <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
                     <span class="nmc-link-notice-detail" href="" ng-click="showNoticeDetail(notice)">

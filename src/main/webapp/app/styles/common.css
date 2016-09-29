@@ -900,7 +900,7 @@ tr.nmc-main-table-header-indicator > th {
     white-space: nowrap; /* Запрещаем перенос строк */
     overflow: auto; /*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
-    padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
+    padding: 1px 5px; /* Устанавливаем отступ от границ ячейки = 1*/
  }
 
 .nmc-table-nowrap-data1{

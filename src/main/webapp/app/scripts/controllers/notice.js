@@ -44,7 +44,7 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
 //console.log(Math.round($('#div-main-area').width()*8.333/100*3));     
 //    Math.round($('#div-main-area').width()*8.333/100)= 130 = 20*x; => x= 130/20
     //Math.round($('#div-main-area').width()*8.333/100/6.5) //dynamic coef
-    $scope.TEXT_CAPTION_LENGTH = 20*4-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
+    $scope.TEXT_CAPTION_LENGTH = 20*7-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part     
     $scope.objectsUrl= "../api/subscr/contObjects";
     $scope.groupUrl = "../api/subscr/contGroup";
@@ -111,44 +111,53 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
         hideHeader : false,
         headerClassTR : "nmc-main-table-header",
         columns : [ 
+        {
+            fieldName : "noticeObjectName",
+            header : "Объект",
+            headerClass : "col-xs-2 nmc-text-align-center",
+            dataClass : "col-xs-2"
+        } ,
+        {
+            fieldName : "noticeZpoint",
+            header : "Точка учета",
+            headerClass : "col-xs-1 nmc-text-align-center",
+            dataClass : "col-xs-1"
+        },
 
         {
             fieldName : "noticeDate",
             header : "Дата",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1"
-        },{
+            headerClass : "col-xs-1 nmc-text-align-center",
+            dataClass : "col-xs-1"
+        },
+  /*      {
             fieldName : "noticeType",
             header : "Тип",
-            headerClass : "col-md-1 nmc-hide",
-            dataClass : "col-md-1 nmc-hide"
-        }, {
+            headerClass : "col-xs-1 nmc-hide",
+            dataClass : "col-xs-1 nmc-hide"
+        },
+*/        
+        {
             fieldName : "noticeMessage",
             header : "Уведомление",
-            headerClass : "col-md-1 nmc-hide",
-            dataClass : "col-md-1 nmc-hide"
+            headerClass : "col-xs-1 nmc-hide",
+            dataClass : "col-xs-1 nmc-hide"
         },
-        {
+/*        {
             fieldName : "noticeTypeCaption",
             header : "Тип",
-            headerClass : "col-md-3",
-            dataClass : "col-md-3"
-        }, {
+            headerClass : "col-xs-3",
+            dataClass : "col-xs-3"
+        }, 
+*/        
+        {
             fieldName : "noticeCaption",
             header : "Уведомление",
-            headerClass : "col-md-4",
-            dataClass : "col-md-4"
-        },  {
-            fieldName : "noticeObjectName",
-            header : "Объект",
-            headerClass : "col-md-2",
-            dataClass : "col-md-2"
-        } , {
-            fieldName : "noticeZpoint",
-            header : "Точка учета",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1"
-        } ]
+            headerClass : "col-xs-7 nmc-text-align-center",
+            dataClass : "col-xs-7"
+        },
+        
+         ]
     };
     
     $scope.data = {};
