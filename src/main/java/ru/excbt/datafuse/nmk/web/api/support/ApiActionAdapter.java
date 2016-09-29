@@ -1,8 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Базовый класс для работы с action
  * 
@@ -11,14 +8,13 @@ import org.slf4j.LoggerFactory;
  * @since 07.05.2015
  *
  */
-public abstract class ApiActionAdapter implements ApiAction {
-
-	protected static final Logger logger = LoggerFactory.getLogger(ApiActionAdapter.class);
+@FunctionalInterface
+public interface ApiActionAdapter extends ApiAction {
 
 	public static final Object EMPTY_RESULT = new Object();
 
 	@Override
-	public Object getResult() {
+	default Object getResult() {
 		return null;
 	}
 

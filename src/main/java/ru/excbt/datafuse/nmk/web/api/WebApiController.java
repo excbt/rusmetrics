@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
@@ -96,6 +97,14 @@ public class WebApiController {
 	 */
 	protected ResponseEntity<?> responseOK() {
 		return ResponseEntity.ok().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseOK(final ApiActionProcess<?> action) {
+		return WebApiHelper.processResponceApiActionOkBody(action);
 	}
 
 	/**
@@ -215,7 +224,7 @@ public class WebApiController {
 			headers.set(headerKey, headerValue);
 		}
 
-		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 
 	/**

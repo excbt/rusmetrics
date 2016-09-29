@@ -3,10 +3,15 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.Serializable;
+import java.net.URI;
+import java.util.function.Supplier;
+
 import javax.persistence.PersistenceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Persistable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,7 +21,6 @@ import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionCallMetrics;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -76,6 +80,61 @@ public class WebApiHelper {
 			checkNotNull(apiErrorResult.getHttpStatus());
 			return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
 		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * @author A.Kovtonyuk
+	 * @version 1.0
+	 * @since 28.09.2016
+	 * 
+	 * @param <T>
+	 */
+	private static abstract class ApiActionProcessWrapper<T> implements ApiActionAdapter {
+
+		private T resultEntity;
+
+		private ApiActionProcessWrapper() {
+			super();
+		}
+
+		@Override
+		public void process() {
+			resultEntity = processAndReturnResult();
+		}
+
+		@Override
+		public Object getResult() {
+			return resultEntity;
+		}
+
+		public abstract T processAndReturnResult();
+	}
+
+	/**
+	 * 
+	 * 
+	 * @author A.Kovtonyuk
+	 * @version 1.0
+	 * @since 29.09.2016
+	 * 
+	 * @param <T>
+	 * @param <K>
+	 */
+	private static abstract class ApiActionPersistableProcessWrapper<T extends Persistable<K>, K extends Serializable>
+			extends ApiActionProcessWrapper<T> implements ApiActionAdapter, ApiActionLocation {
+
+		private ApiActionPersistableProcessWrapper() {
+			super();
+		}
+
+		protected K getLocationId() {
+			return super.resultEntity.getId();
+		}
+
+		@Override
+		public abstract T processAndReturnResult();
 	}
 
 	/**
@@ -189,6 +248,104 @@ public class WebApiHelper {
 	/**
 	 * 
 	 * @param action
+	 * @param uriLocation
+	 * @return
+	 */
+	//	public static <T extends Persistable<Long>> ResponseEntity<?> processResponceApiActionCreateIdLong(
+	//			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
+	//
+	//		checkNotNull(actionProcess);
+	//
+	//		ApiActionLocationProcessWrapper<T, ?> action = new ApiActionLocationProcessWrapper<T, Long>() {
+	//
+	//			@Override
+	//			public T processAndReturnResult() {
+	//				return actionProcess.processAndReturnResult();
+	//			}
+	//
+	//			@Override
+	//			public URI getLocation() {
+	//				checkNotNull(uriLocationSupplier);
+	//				checkNotNull(uriLocationSupplier.get(), "request is NULL");
+	//
+	//				URI location = null;
+	//				if (getResult() != null && getLocationId() != null) {
+	//					location = URI.create(uriLocationSupplier.get() + '/' + getLocationId());
+	//				} else {
+	//					location = URI.create(uriLocationSupplier.get());
+	//				}
+	//
+	//				return location;
+	//			}
+	//
+	//		};
+	//
+	//		ApiProcessResult processResult = _internalProcess(action);
+	//
+	//		if (processResult.isError()) {
+	//			return processResult.buildErrorResponse();
+	//		}
+	//
+	//		if (action.getResult() == null) {
+	//			return ResponseEntity.created(action.getLocation()).build();
+	//		} else {
+	//			return ResponseEntity.created(action.getLocation()).body(action.getResult());
+	//		}
+	//
+	//	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @param uriLocationSupplier
+	 * @return
+	 */
+	public static <P extends Persistable<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
+			final ApiActionProcess<P> actionProcess, final Supplier<String> uriLocationSupplier) {
+
+		checkNotNull(actionProcess);
+
+		ApiActionPersistableProcessWrapper<P, K> action = new ApiActionPersistableProcessWrapper<P, K>() {
+
+			@Override
+			public P processAndReturnResult() {
+				return actionProcess.processAndReturnResult();
+			}
+
+			@Override
+			public URI getLocation() {
+				checkNotNull(uriLocationSupplier);
+				checkNotNull(uriLocationSupplier.get(), "request is NULL");
+
+				URI location = null;
+				if (getResult() != null && getLocationId() != null) {
+					location = URI.create(uriLocationSupplier.get() + '/' + getLocationId());
+				} else {
+					location = URI.create(uriLocationSupplier.get());
+				}
+
+				return location;
+			}
+
+		};
+
+		ApiProcessResult processResult = _internalProcess(action);
+
+		if (processResult.isError()) {
+			return processResult.buildErrorResponse();
+		}
+
+		if (action.getResult() == null) {
+			return ResponseEntity.created(action.getLocation()).build();
+		} else {
+			return ResponseEntity.created(action.getLocation()).body(action.getResult());
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param action
 	 * @param successStatus
 	 * @return
 	 */
@@ -202,17 +359,7 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionOkBody(final ApiActionProcess<?> actionProcess) {
-
-		final ApiActionEntityAdapter<?> action = new ApiActionEntityAdapter<Object>() {
-
-			@Override
-			public Object processAndReturnResult() {
-				return actionProcess.processAndReturnResult();
-			}
-
-		};
-
-		return _processResponceApiActionBody(action, HttpStatus.OK);
+		return _processResponceApiActionBody(createWrapper(actionProcess), HttpStatus.OK);
 	}
 
 	/**
@@ -233,6 +380,15 @@ public class WebApiHelper {
 	 */
 	public static ResponseEntity<?> processResponceApiActionDelete(ApiAction action) {
 		return _processResponceApiAction(action, HttpStatus.NO_CONTENT);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionDelete(final ApiActionProcess<?> actionProcess) {
+		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.NO_CONTENT);
 	}
 
 	/**
@@ -260,8 +416,16 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionUpdate(final ApiActionProcess<?> actionProcess) {
+		return _processResponceApiActionBody(createWrapper(actionProcess), HttpStatus.OK);
+	}
 
-		final ApiActionEntityAdapter<?> action = new ApiActionEntityAdapter<Object>() {
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	private static ApiActionProcessWrapper<?> createWrapper(final ApiActionProcess<?> actionProcess) {
+		final ApiActionProcessWrapper<?> action = new ApiActionProcessWrapper<Object>() {
 
 			@Override
 			public Object processAndReturnResult() {
@@ -269,8 +433,7 @@ public class WebApiHelper {
 			}
 
 		};
-
-		return _processResponceApiActionBody(action, HttpStatus.OK);
+		return action;
 	}
 
 }
