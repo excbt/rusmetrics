@@ -113,9 +113,7 @@ public class SubscrContGroupController extends SubscrApiController {
 			return contGroupService.createOne(contGroup, contObjectIds);
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(process, () -> {
-			return request.getRequestURI();
-		});
+		return responseCreate(process, () -> request.getRequestURI());
 
 	}
 
