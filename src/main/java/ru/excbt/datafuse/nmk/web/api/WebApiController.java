@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.function.Supplier;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -11,6 +13,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Auditable;
+import org.springframework.data.domain.Persistable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -131,6 +134,25 @@ public class WebApiController {
 	 */
 	protected ResponseEntity<?> responseUpdate(final ApiActionProcess<?> actionProcess) {
 		return WebApiHelper.processResponceApiActionUpdate(actionProcess);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	protected <P extends Persistable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
+			final ApiActionProcess<P> actionProcess, final Supplier<String> uriLocationSupplier) {
+		return WebApiHelper.processResponceApiActionCreate(actionProcess, uriLocationSupplier);
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseDelete(final ApiActionProcess<?> actionProcess) {
+		return WebApiHelper.processResponceApiActionDelete(actionProcess);
 	}
 
 	/**
