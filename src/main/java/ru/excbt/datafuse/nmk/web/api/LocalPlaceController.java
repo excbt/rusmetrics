@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
@@ -41,8 +40,12 @@ public class LocalPlaceController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/localPlaces/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLocalPlace() {
-		List<LocalPlace> resultList = localPlaceService.selectLocalPlaces();
-		return responseOK(resultList);
+
+		ApiActionObjectProcess actionProcess = () -> {
+			return localPlaceService.selectLocalPlaces();
+		};
+
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -95,11 +98,11 @@ public class LocalPlaceController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		ApiActionObjectProcess action = () -> {
+		ApiActionObjectProcess actionProcess = () -> {
 			return localPlaceTemperatureSstService.saveSst(requestEntity);
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return responseUpdate(actionProcess);
 	}
 
 	/**
@@ -123,7 +126,7 @@ public class LocalPlaceController extends SubscrApiController {
 			return localPlaceTemperatureSstService.saveSstList(requestEntity);
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(actionProcess);
+		return responseUpdate(actionProcess);
 	}
 
 }

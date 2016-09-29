@@ -103,8 +103,8 @@ public class WebApiController {
 	 * 
 	 * @return
 	 */
-	protected ResponseEntity<?> responseOK(final ApiActionProcess<?> action) {
-		return WebApiHelper.processResponceApiActionOkBody(action);
+	protected ResponseEntity<?> responseOK(final ApiActionProcess<?> actionProcess) {
+		return WebApiHelper.processResponceApiActionOkBody(actionProcess);
 	}
 
 	/**
@@ -122,6 +122,15 @@ public class WebApiController {
 	 */
 	protected ResponseEntity<?> responseOK(ApiResult apiResult) {
 		return ResponseEntity.status(HttpStatus.OK).body(apiResult);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	protected ResponseEntity<?> responseUpdate(final ApiActionProcess<?> actionProcess) {
+		return WebApiHelper.processResponceApiActionUpdate(actionProcess);
 	}
 
 	/**
