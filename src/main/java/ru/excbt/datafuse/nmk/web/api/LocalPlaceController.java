@@ -19,8 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceTemperatureSstService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -63,19 +62,22 @@ public class LocalPlaceController extends SubscrApiController {
 			return responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
 		}
 
-		List<LocalPlaceTemperatureSst> resultList = localPlaceTemperatureSstService.selectSstByLocalPlace(localPlaceId,
-				parser.getDateValue());
+		ApiActionObjectProcess action = () -> {
+			List<LocalPlaceTemperatureSst> resultList = localPlaceTemperatureSstService
+					.selectSstByLocalPlace(localPlaceId, parser.getDateValue());
 
-		if (resultList.isEmpty()) {
-			try {
-				localPlaceTemperatureSstService.initMonthNoCheck(localPlaceId, parser.getDateValue());
-			} catch (Exception e) {
+			if (resultList.isEmpty()) {
+				try {
+					localPlaceTemperatureSstService.initMonthNoCheck(localPlaceId, parser.getDateValue());
+				} catch (Exception e) {
+				}
+
+				resultList = localPlaceTemperatureSstService.selectSstByLocalPlace(localPlaceId, parser.getDateValue());
 			}
+			return resultList;
+		};
 
-			resultList = localPlaceTemperatureSstService.selectSstByLocalPlace(localPlaceId, parser.getDateValue());
-		}
-
-		return responseOK(resultList);
+		return responseOK(action);
 	}
 
 	/**
@@ -93,12 +95,8 @@ public class LocalPlaceController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<LocalPlaceTemperatureSst>(requestEntity) {
-
-			@Override
-			public LocalPlaceTemperatureSst processAndReturnResult() {
-				return localPlaceTemperatureSstService.saveSst(entity);
-			}
+		ApiActionObjectProcess action = () -> {
+			return localPlaceTemperatureSstService.saveSst(requestEntity);
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
@@ -121,15 +119,11 @@ public class LocalPlaceController extends SubscrApiController {
 			return responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<List<LocalPlaceTemperatureSst>>(requestEntity) {
-
-			@Override
-			public List<LocalPlaceTemperatureSst> processAndReturnResult() {
-				return localPlaceTemperatureSstService.saveSstList(entity);
-			}
+		ApiActionObjectProcess actionProcess = () -> {
+			return localPlaceTemperatureSstService.saveSstList(requestEntity);
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return WebApiHelper.processResponceApiActionUpdate(actionProcess);
 	}
 
 }

@@ -47,7 +47,7 @@ public class AppStatusController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionOkBody(action);
+		return responseOK(action);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class AppStatusController extends WebApiController {
 			return appVersionService.getAppModulesInfo();
 		};
 
-		return WebApiHelper.processResponceApiActionOkBody(action);
+		return responseOK(action);
 	}
 
 }

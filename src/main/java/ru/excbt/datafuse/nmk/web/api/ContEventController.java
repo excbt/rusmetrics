@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 
 /**
  * Контроллер для работы с объектом учета
@@ -37,8 +38,11 @@ public class ContEventController extends WebApiController {
 	 */
 	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventTypes() {
-		List<ContEventType> vList = contEventTypeService.selectBaseContEventTypes();
-		return responseOK(ObjectFilters.disabledFilter(vList));
+		ApiActionObjectProcess action = () -> {
+			List<ContEventType> vList = contEventTypeService.selectBaseContEventTypes();
+			return ObjectFilters.disabledFilter(vList);
+		};
+		return responseOK(action);
 	}
 
 }

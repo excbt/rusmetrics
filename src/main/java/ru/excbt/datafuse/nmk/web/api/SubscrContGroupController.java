@@ -3,8 +3,6 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -19,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -57,9 +52,14 @@ public class SubscrContGroupController extends SubscrApiController {
 	public ResponseEntity<?> getGroupContObjects(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
 
-		return ResponseEntity.ok(resultList);
+		ApiActionObjectProcess action = () -> {
+			return contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
+		};
+
+		//List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
+
+		return responseOK(action);// ResponseEntity.ok(resultList);
 	}
 
 	/**
@@ -71,10 +71,12 @@ public class SubscrContGroupController extends SubscrApiController {
 	public ResponseEntity<?> getAvailableContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService.selectAvailableContGroupObjects(getSubscriberParam(),
-				contGroupId);
 
-		return ResponseEntity.ok(resultList);
+		ApiActionObjectProcess action = () -> {
+			return contGroupService.selectAvailableContGroupObjects(getSubscriberParam(), contGroupId);
+		};
+
+		return responseOK(action);
 	}
 
 	/**
@@ -84,9 +86,12 @@ public class SubscrContGroupController extends SubscrApiController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberGroups() {
 
-		List<SubscrContGroup> resultList = contGroupService.selectSubscriberGroups(getSubscriberParam());
+		ApiActionObjectProcess action = () -> {
+			return contGroupService.selectSubscriberGroups(getSubscriberParam());
+		};
 
-		return ResponseEntity.ok(resultList);
+		return responseOK(action);
+
 	}
 
 	/**
@@ -99,26 +104,19 @@ public class SubscrContGroupController extends SubscrApiController {
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createGroup(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestBody SubscrContGroup contGroup, HttpServletRequest request) {
+			@RequestBody final SubscrContGroup contGroup, final HttpServletRequest request) {
 
 		checkArgument(contGroup.isNew());
-		contGroup.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrContGroup, Long>(contGroup, request) {
-
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
-			}
-
-			@Override
-			public SubscrContGroup processAndReturnResult() {
-				return contGroupService.createOne(entity, contObjectIds);
-			}
-
+		ApiActionProcess<SubscrContGroup> process = () -> {
+			contGroup.setSubscriber(currentSubscriberService.getSubscriber());
+			return contGroupService.createOne(contGroup, contObjectIds);
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return WebApiHelper.processResponceApiActionCreate(process, () -> {
+			return request.getRequestURI();
+		});
+
 	}
 
 	/**
@@ -129,11 +127,8 @@ public class SubscrContGroupController extends SubscrApiController {
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteGroup(@PathVariable(value = "contGroupId") final Long contGroupId) {
 
-		ApiAction action = new ApiActionAdapter() {
-			@Override
-			public void process() {
-				contGroupService.deleteOne(contGroupId);
-			}
+		ApiActionVoidProcess action = () -> {
+			contGroupService.deleteOne(contGroupId);
 		};
 
 		return WebApiHelper.processResponceApiActionDelete(action);
@@ -145,22 +140,18 @@ public class SubscrContGroupController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateGroup(@PathVariable(value = "contGroupId") Long contGroupId,
+	public ResponseEntity<?> updateGroup(@PathVariable(value = "contGroupId") final Long contGroupId,
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestBody SubscrContGroup contGroup) {
+			@RequestBody final SubscrContGroup contGroup) {
 
 		checkNotNull(contGroupId);
 		checkNotNull(contGroup);
 		checkNotNull(contGroup.getId());
 		checkArgument(contGroup.getId().equals(contGroupId));
 
-		contGroup.setSubscriber(currentSubscriberService.getSubscriber());
-
-		ApiAction action = new AbstractEntityApiAction<SubscrContGroup>(contGroup) {
-			@Override
-			public void process() {
-				setResultEntity(contGroupService.updateOne(entity, contObjectIds));
-			}
+		ApiActionObjectProcess action = () -> {
+			contGroup.setSubscriber(currentSubscriberService.getSubscriber());
+			return contGroupService.updateOne(contGroup, contObjectIds);
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);

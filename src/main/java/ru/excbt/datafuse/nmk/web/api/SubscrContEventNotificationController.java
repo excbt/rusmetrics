@@ -48,6 +48,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusServi
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -200,6 +201,13 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		checkNotNull(isNew);
 
+		ApiActionVoidProcess process = () -> {
+			if (notificationIds != null && notificationIds.length > 0) {
+				subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+						Arrays.asList(notificationIds), isNew);
+			}
+		};
+
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
@@ -210,7 +218,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return WebApiHelper.processResponceApiActionUpdate(process);
 
 	}
 
@@ -227,17 +235,21 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		checkNotNull(isNew);
 
-		ApiAction action = new ApiActionAdapter() {
-			@Override
-			public void process() {
-				if (notificationIds != null && notificationIds.length > 0) {
-					subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
-							Arrays.asList(notificationIds), isNew);
-				}
+		ApiActionVoidProcess process = () -> {
+			if (notificationIds != null && notificationIds.length > 0) {
+				subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+						Arrays.asList(notificationIds), isNew);
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		ApiAction action = new ApiActionAdapter() {
+			@Override
+			public void process() {
+
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(process);
 
 	}
 
@@ -280,15 +292,18 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		final LocalDatePeriod actionDP = requestDatePeriod;
 
+		ApiActionVoidProcess process = () -> {
+			subscrContEventNotifiicationService.updateRevisionByConditionsFast(getSubscriberParam(), actionDP,
+					contObjectList, contEventTypeIdPairList, revisionIsNew);
+		};
+
 		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateRevisionByConditionsFast(getSubscriberParam(), actionDP,
-						contObjectList, contEventTypeIdPairList, revisionIsNew);
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return WebApiHelper.processResponceApiActionUpdate(process);
 	}
 
 	/**
