@@ -147,7 +147,7 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionOkBody(action);
+		return WebApiHelper.processResponceApiActionOk(action);
 	}
 
 }

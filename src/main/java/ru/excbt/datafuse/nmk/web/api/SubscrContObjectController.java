@@ -106,7 +106,7 @@ public class SubscrContObjectController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionOkBody(action);
+		return WebApiHelper.processResponceApiActionOk(action);
 
 		//return responseOK(contObjectService.wrapContObjectsStats(resultList));
 		//return responseOK(contObjectService.wrapContObjectsMonitorVO(resultList));

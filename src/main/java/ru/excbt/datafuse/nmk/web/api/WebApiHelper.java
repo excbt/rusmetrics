@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.persistence.PersistenceException;
@@ -144,13 +145,40 @@ public class WebApiHelper {
 	 * @return
 	 */
 	private static ResponseEntity<?> _processResponceApiAction(ApiAction action, HttpStatus successStatus) {
+		return _processResponceApiAction(action, successStatus, null);
+	}
+
+	/**
+	 * 
+	 * @param action
+	 * @param successStatus
+	 * @param extraCheck
+	 * @return
+	 */
+	private static <T> ResponseEntity<?> _processResponceApiAction(ApiAction action, HttpStatus successStatus,
+			Function<T, ResponseEntity<?>> extraCheck) {
 
 		checkNotNull(action);
+		checkArgument(successStatus != HttpStatus.CREATED, "HttpStatus.CREATED is not supported");
 
 		ApiProcessResult processResult = _internalProcess(action);
 
 		if (processResult.isError()) {
 			return processResult.buildErrorResponse();
+		}
+
+		if (extraCheck != null) {
+
+			try {
+				@SuppressWarnings("unchecked")
+				ResponseEntity<?> extraCheckResult = extraCheck.apply((T) action.getResult());
+				if (extraCheckResult != null) {
+					return extraCheckResult;
+				}
+			} catch (Exception e) {
+				logger.error("Extra Check Type error UserAction:{}. exception:{}", action.getClass(), e);
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Extra Check Type error");
+			}
 		}
 
 		if (action.getResult() == null || action.getResult() == ApiActionAdapter.EMPTY_RESULT) {
@@ -166,6 +194,7 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
+	@Deprecated
 	private static ResponseEntity<?> _processResponceApiActionBody(ApiAction action, HttpStatus successStatus) {
 
 		checkNotNull(action);
@@ -300,15 +329,15 @@ public class WebApiHelper {
 	 * @param uriLocationSupplier
 	 * @return
 	 */
-	public static <P extends Persistable<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
-			final ApiActionProcess<P> actionProcess, final Supplier<String> uriLocationSupplier) {
+	public static <T extends Persistable<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
+			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
 
 		checkNotNull(actionProcess);
 
-		ApiActionPersistableProcessWrapper<P, K> action = new ApiActionPersistableProcessWrapper<P, K>() {
+		ApiActionPersistableProcessWrapper<T, K> action = new ApiActionPersistableProcessWrapper<T, K>() {
 
 			@Override
-			public P processAndReturnResult() {
+			public T processAndReturnResult() {
 				return actionProcess.processAndReturnResult();
 			}
 
@@ -349,8 +378,9 @@ public class WebApiHelper {
 	 * @param successStatus
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionOkBody(ApiAction action) {
-		return _processResponceApiActionBody(action, HttpStatus.OK);
+	@Deprecated
+	protected static ResponseEntity<?> processResponceApiActionOkBody(ApiAction action) {
+		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**
@@ -358,8 +388,18 @@ public class WebApiHelper {
 	 * @param actionProcess
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionOkBody(final ApiActionProcess<?> actionProcess) {
-		return _processResponceApiActionBody(createWrapper(actionProcess), HttpStatus.OK);
+	public static <T> ResponseEntity<?> processResponceApiActionOk(final ApiActionProcess<T> actionProcess) {
+		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
+	public static <T> ResponseEntity<?> processResponceApiActionOk(final ApiActionProcess<T> actionProcess,
+			Function<T, ResponseEntity<?>> extraCheck) {
+		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.OK, extraCheck);
 	}
 
 	/**
@@ -387,7 +427,7 @@ public class WebApiHelper {
 	 * @param actionProcess
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionDelete(final ApiActionProcess<?> actionProcess) {
+	public static <T> ResponseEntity<?> processResponceApiActionDelete(final ApiActionProcess<T> actionProcess) {
 		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.NO_CONTENT);
 	}
 
@@ -397,7 +437,7 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionDeleteBody(ApiAction action) {
-		return _processResponceApiActionBody(action, HttpStatus.OK);
+		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**
@@ -407,7 +447,7 @@ public class WebApiHelper {
 	 * @return
 	 */
 	public static ResponseEntity<?> processResponceApiActionUpdate(ApiAction action) {
-		return _processResponceApiActionBody(action, HttpStatus.OK);
+		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**
@@ -415,8 +455,8 @@ public class WebApiHelper {
 	 * @param actionProcess
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionUpdate(final ApiActionProcess<?> actionProcess) {
-		return _processResponceApiActionBody(createWrapper(actionProcess), HttpStatus.OK);
+	public static <T> ResponseEntity<?> processResponceApiActionUpdate(final ApiActionProcess<T> actionProcess) {
+		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.OK);
 	}
 
 	/**
@@ -424,7 +464,7 @@ public class WebApiHelper {
 	 * @param actionProcess
 	 * @return
 	 */
-	private static ApiActionProcessWrapper<?> createWrapper(final ApiActionProcess<?> actionProcess) {
+	private static <T> ApiActionProcessWrapper<?> createWrapper(final ApiActionProcess<T> actionProcess) {
 		final ApiActionProcessWrapper<?> action = new ApiActionProcessWrapper<Object>() {
 
 			@Override

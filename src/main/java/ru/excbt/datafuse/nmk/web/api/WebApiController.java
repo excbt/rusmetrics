@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.joda.time.format.DateTimeFormat;
@@ -106,8 +107,19 @@ public class WebApiController {
 	 * 
 	 * @return
 	 */
-	protected ResponseEntity<?> responseOK(final ApiActionProcess<?> actionProcess) {
-		return WebApiHelper.processResponceApiActionOkBody(actionProcess);
+	protected <T> ResponseEntity<?> responseOK(final ApiActionProcess<T> actionProcess) {
+		return WebApiHelper.processResponceApiActionOk(actionProcess);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @param extraCheck
+	 * @return
+	 */
+	protected <T> ResponseEntity<?> responseOK(final ApiActionProcess<T> actionProcess,
+			Function<T, ResponseEntity<?>> extraCheck) {
+		return WebApiHelper.processResponceApiActionOk(actionProcess, extraCheck);
 	}
 
 	/**
@@ -132,7 +144,7 @@ public class WebApiController {
 	 * @param actionProcess
 	 * @return
 	 */
-	protected ResponseEntity<?> responseUpdate(final ApiActionProcess<?> actionProcess) {
+	protected <T> ResponseEntity<?> responseUpdate(final ApiActionProcess<T> actionProcess) {
 		return WebApiHelper.processResponceApiActionUpdate(actionProcess);
 	}
 
@@ -141,8 +153,8 @@ public class WebApiController {
 	 * @param actionProcess
 	 * @return
 	 */
-	protected <P extends Persistable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
-			final ApiActionProcess<P> actionProcess, final Supplier<String> uriLocationSupplier) {
+	protected <T extends Persistable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
+			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
 		return WebApiHelper.processResponceApiActionCreate(actionProcess, uriLocationSupplier);
 
 	}
@@ -151,7 +163,7 @@ public class WebApiController {
 	 * 
 	 * @return
 	 */
-	protected ResponseEntity<?> responseDelete(final ApiActionProcess<?> actionProcess) {
+	protected <T> ResponseEntity<?> responseDelete(final ApiActionProcess<T> actionProcess) {
 		return WebApiHelper.processResponceApiActionDelete(actionProcess);
 	}
 
