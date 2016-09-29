@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionCallMetrics;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
 /**
  * Утилита для выполнения запросов контроллеров
@@ -177,7 +178,11 @@ public class WebApiHelper {
 				}
 			} catch (Exception e) {
 				logger.error("Extra Check Type error UserAction:{}. exception:{}", action.getClass(), e);
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Extra Check Type error");
+
+				ApiProcessResult errorResponse = new ApiProcessResult(ApiResult.error(ApiResultCode.ERR_INTERNAL,
+						"Extra Check Type error", HttpStatus.INTERNAL_SERVER_ERROR));
+
+				return errorResponse.buildErrorResponse();
 			}
 		}
 

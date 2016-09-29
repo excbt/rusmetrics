@@ -144,8 +144,24 @@ public class ApiResult {
 		return build(ApiResultCode.describeException(e), e.getMessage());
 	}
 
+	/**
+	 * 
+	 * @param e
+	 * @param httpStatus
+	 * @return
+	 */
 	public static ApiResult error(Exception e, HttpStatus httpStatus) {
 		return build(ApiResultCode.describeException(e), e.getMessage(), httpStatus);
+	}
+
+	/**
+	 * 
+	 * @param description
+	 * @param httpStatus
+	 * @return
+	 */
+	public static ApiResult error(ApiResultCode apiResultCode, String description, HttpStatus httpStatus) {
+		return build(apiResultCode, description, httpStatus);
 	}
 
 	/**
