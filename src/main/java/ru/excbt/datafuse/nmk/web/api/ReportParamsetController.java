@@ -26,10 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
-import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
@@ -40,10 +37,11 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -86,10 +84,9 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
-				ReportConstants.IS_ACTIVE, currentSubscriberService.getSubscriberId());
+		return responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
+				ReportConstants.IS_ACTIVE, currentSubscriberService.getSubscriberId()));
 
-		return ResponseEntity.ok(reportParamsetList);
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(reportParamsetService.findReportParamset(reportParamsetId));
+		return responseOK(() -> reportParamsetService.findReportParamset(reportParamsetId));
 	}
 
 	/**
@@ -124,10 +121,8 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
-				ReportConstants.IS_NOT_ACTIVE, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
+		return responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
+				ReportConstants.IS_NOT_ACTIVE, currentSubscriberService.getSubscriberId()));
 	}
 
 	/**
@@ -146,7 +141,7 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(reportParamsetService.findReportParamset(reportParamsetId));
+		return responseOK(() -> reportParamsetService.findReportParamset(reportParamsetId));
 	}
 
 	/**
@@ -215,7 +210,9 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return deleteInternal(reportParamsetId);
+		ApiActionVoidProcess actionProcess = () -> reportParamsetService.deleteReportParamset(reportParamsetId);
+
+		return responseDelete(actionProcess);
 	}
 
 	/**
@@ -234,7 +231,9 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return deleteInternal(reportParamsetId);
+		ApiActionVoidProcess actionProcess = () -> reportParamsetService.deleteReportParamset(reportParamsetId);
+
+		return responseDelete(actionProcess);
 	}
 
 	/**
@@ -296,38 +295,11 @@ public class ReportParamsetController extends SubscrApiController {
 		} catch (JsonProcessingException e) {
 		}
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportParamset, Long>(reportParamset, request) {
+		ApiActionProcess<ReportParamset> actionProcess = () -> reportParamsetService
+				.createReportParamset(reportParamset, contObjectIds);
 
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
-			}
+		return responseCreate(actionProcess, () -> request.getRequestURI());
 
-			@Override
-			public ReportParamset processAndReturnResult() {
-				return reportParamsetService.createReportParamset(reportParamset, contObjectIds);
-			}
-
-		};
-
-		return WebApiHelper.processResponceApiActionCreate(action);
-
-	}
-
-	/**
-	 * 
-	 * @param id
-	 */
-	private ResponseEntity<?> deleteInternal(final Long id) {
-
-		ApiAction action = new ApiActionAdapter() {
-			@Override
-			public void process() {
-				reportParamsetService.deleteReportParamset(id);
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -384,9 +356,7 @@ public class ReportParamsetController extends SubscrApiController {
 	public ResponseEntity<?> getContObjectUnits(@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
-		List<ContObject> resultList = reportParamsetService.selectParamsetContObjects(reportParamsetId);
-
-		return ResponseEntity.ok(resultList);
+		return responseOK(() -> reportParamsetService.selectParamsetContObjects(reportParamsetId));
 	}
 
 	/**
@@ -399,10 +369,9 @@ public class ReportParamsetController extends SubscrApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
-		List<ContObject> resultList = reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
-				currentSubscriberService.getSubscriberId());
 
-		return ResponseEntity.ok(resultList);
+		return responseOK(() -> reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
+				currentSubscriberService.getSubscriberId()));
 	}
 
 	/**
@@ -425,15 +394,10 @@ public class ReportParamsetController extends SubscrApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<ReportParamsetUnit>() {
+		ApiActionObjectProcess actionProcess = () -> reportParamsetService.addUnitToParamset(reportParamsetId,
+				contObjectId);
 
-			@Override
-			public ReportParamsetUnit processAndReturnResult() {
-				return reportParamsetService.addUnitToParamset(reportParamsetId, contObjectId);
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return responseUpdate(actionProcess);
 
 	}
 
@@ -452,28 +416,11 @@ public class ReportParamsetController extends SubscrApiController {
 		checkNotNull(reportParamsetId);
 		checkNotNull(contObjectId);
 
-		ApiAction action = new ApiActionAdapter() {
+		ApiActionVoidProcess actionProcess = () -> reportParamsetService.deleteUnitFromParamset(reportParamsetId,
+				contObjectId);
 
-			@Override
-			public void process() {
-				reportParamsetService.deleteUnitFromParamset(reportParamsetId, contObjectId);
+		return responseDelete(actionProcess);
 
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionDelete(action);
-
-		//		try {
-		//			reportParamsetService.deleteUnitFromParamset(reportParamsetId, contObjectId);
-		//		} catch (AccessDeniedException e) {
-		//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		//		} catch (TransactionSystemException | PersistenceException e) {
-		//			logger.error("Can't delete ReportParamsetUnit. (reportParamsetId={}, contObjectId={}) : {}",
-		//					reportParamsetId, contObjectId, e);
-		//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		//		}
-		//
-		//		return ResponseEntity.ok().build();
 	}
 
 	/**
@@ -494,7 +441,7 @@ public class ReportParamsetController extends SubscrApiController {
 			}
 		};
 
-		ResponseEntity<?> responeResult = WebApiHelper.processResponceApiActionOkBody(action);
+		ResponseEntity<?> responeResult = WebApiHelper.processResponceApiActionOk(action);
 
 		if (action.getResult() == null) {
 			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
@@ -525,27 +472,11 @@ public class ReportParamsetController extends SubscrApiController {
 			}
 		}
 
-		ApiAction action = new ApiActionAdapter() {
+		ApiActionVoidProcess actionProcess = () -> reportParamsetService.updateUnitToParamset(reportParamsetId,
+				contObjectIds);
 
-			@Override
-			public void process() {
-				reportParamsetService.updateUnitToParamset(reportParamsetId, contObjectIds);
-			}
-		};
+		return responseUpdate(actionProcess);
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
-
-		//		try {
-		//			reportParamsetService.updateUnitToParamset(reportParamsetId, contObjectIds);
-		//		} catch (AccessDeniedException e) {
-		//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		//		} catch (TransactionSystemException | PersistenceException e) {
-		//			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
-		//					reportParamsetId, e);
-		//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		//		}
-		//
-		//		return ResponseEntity.accepted().build();
 	}
 
 	/**
@@ -554,22 +485,29 @@ public class ReportParamsetController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamsetContextLaunch() {
-		List<ReportParamset> xList = reportParamsetService
-				.selectReportParamsetContextLaunch(getSubscriberParam());
 
-		List<ReportType> reportTypes = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
-		reportTypes = filterObjectAccess(reportTypes);
+		ApiActionObjectProcess actionProcess = () -> {
 
-		final Set<String> reportTypeKeynames = reportTypes.stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
-				.map(i -> i.getKeyname()).collect(Collectors.toSet());
+			List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getSubscriberParam());
 
-		List<ReportParamsetVO> result = reportParamsetService.wrapReportParamsetVO(
-				xList.stream().filter(i -> reportTypeKeynames.contains(i.getReportTemplate().getReportTypeKeyname()))
-						.collect(Collectors.toList()));
+			List<ReportType> reportTypes = reportTypeService
+					.findAllReportTypes(currentSubscriberService.isSystemUser());
+			reportTypes = filterObjectAccess(reportTypes);
 
-		result.sort(ReportParamsetVO.COMPARATOR);
+			final Set<String> reportTypeKeynames = reportTypes.stream()
+					.filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE).map(i -> i.getKeyname())
+					.collect(Collectors.toSet());
 
-		return responseOK(ObjectFilters.deletedFilter(result));
+			List<ReportParamsetVO> result = reportParamsetService.wrapReportParamsetVO(xList.stream()
+					.filter(i -> reportTypeKeynames.contains(i.getReportTemplate().getReportTypeKeyname()))
+					.collect(Collectors.toList()));
+
+			result.sort(ReportParamsetVO.COMPARATOR);
+
+			return ObjectFilters.deletedFilter(result);
+		};
+
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -581,14 +519,10 @@ public class ReportParamsetController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamDirectoryItems(
 			@PathVariable("paramDirectoryKeyname") String paramDirectoryKeyname) {
-		List<ReportMetaParamDirectoryItem> xList = reportParamsetService
-				.selectReportMetaParamItems(paramDirectoryKeyname);
 
-		if (xList.isEmpty()) {
-			return responseBadRequest();
-		}
-
-		return responseOK(ObjectFilters.deletedFilter(xList));
+		return responseOK(() -> reportParamsetService.selectReportMetaParamItems(paramDirectoryKeyname), (l) -> {
+			return l.isEmpty() ? responseBadRequest() : null;
+		});
 	}
 
 }
