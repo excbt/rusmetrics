@@ -1543,8 +1543,8 @@ angular.module('portalNMC')
                     $http({
                         url: url, 
                         method: "PUT",
-                        params: { contObjectIds:contObjectIds, currentSettingMode: mode },
-                        data: null
+                        params: {currentSettingMode: mode },
+                        data: contObjectIds
                     })
                     .then(successCallbackOnSetModeOne, errorCallback);
                 };
@@ -1568,8 +1568,8 @@ angular.module('portalNMC')
                     $http({
                         url: url, 
                         method: "PUT",
-                        params: { contObjectIds:contObjectIds, currentSettingMode: mode },
-                        data: null
+                        params: {currentSettingMode: mode },
+                        data: contObjectIds
                     })
                     .then(successCallbackOnSetMode, errorCallback);
                 };
