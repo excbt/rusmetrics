@@ -653,9 +653,13 @@
                     </a>
                     
                 </td>
-                <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                    <span class="nmc-link-notice-detail" href="" ng-click="showNoticeDetail(notice)">
-                        <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
+                <td ng-repeat="column in tableDef.columns" 
+                    class="nmc-link-notice-detail"
+                    ng-class="column.dataClass || column.headerClass"
+                    ng-click="showNoticeDetail(notice)"
+                    >
+                    <span class="nmc-link-notice-detail" href="" >
+                        <span ng-if="column.fieldName==='noticeZpointCaption'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
                         <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
                     </span>    
                 </td>
@@ -691,6 +695,24 @@
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
+                                <td><label for="inputComment" class="nmc-form-label">Объект</label>
+                                </td>
+                                <td class="nmc-text-align-left">{{currentObject.noticeObjectName}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputAddress" class="nmc-form-label">Точка учета</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeZpoint}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputAddress" class="nmc-form-label">Дата</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeDate | date:'dd.MM.yyyy HH:mm:ss'}}
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="col-sm-3"><label class="nmc-form-label" for="inputName">Тип</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeType}}
@@ -702,25 +724,7 @@
                                 <td class="nmc-text-align-left">{{currentObject.noticeMessage}}
 
                                 </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputComment" class="nmc-form-label">Объект</label>
-                                </td>
-                                <td class="nmc-text-align-left">{{currentObject.noticeObjectName}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputAddress" class="nmc-form-label">Дата</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeDate | date:'dd.MM.yyyy HH:mm:ss'}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputAddress" class="nmc-form-label">Точка учета</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeZpoint}}
-                                </td>
-                            </tr>
+                            </tr>                                                        
 
                         </table>
                     </div>
