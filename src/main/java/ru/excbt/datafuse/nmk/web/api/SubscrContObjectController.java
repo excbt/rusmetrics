@@ -213,14 +213,18 @@ public class SubscrContObjectController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObjectSettingModeType(
-			@RequestParam(value = "contObjectIds", required = true) final Long[] contObjectIds,
-			@RequestParam(value = "currentSettingMode", required = true) final String currentSettingMode) {
+			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
+			@RequestParam(value = "currentSettingMode", required = true) final String currentSettingMode,
+			final @RequestBody(required = false) List<Long> ids) {
 
-		checkArgument(contObjectIds.length > 0);
 		checkNotNull(currentSettingMode);
 		checkArgument(ContObjectCurrentSettingTypeKey.isSupported(currentSettingMode));
 
-		List<Long> contObjectIdList = Arrays.asList(contObjectIds);
+		List<Long> contObjectIdList = ids != null ? ids : (contObjectIds != null ? Arrays.asList(contObjectIds) : null);
+
+		if (contObjectIdList == null || contObjectIdList.isEmpty()) {
+			return responseBadRequest();
+		}
 
 		Optional<Long> checkAccess = contObjectIdList.stream().filter((i) -> !canAccessContObject(i)).findAny();
 
@@ -233,7 +237,7 @@ public class SubscrContObjectController extends SubscrApiController {
 			@Override
 			public void process() {
 
-				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(contObjectIds,
+				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(ids.toArray(new Long[] {}),
 						currentSettingMode, currentSubscriberService.getSubscriberId());
 
 				setResultEntity(result);
