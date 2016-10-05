@@ -31,13 +31,9 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
@@ -98,19 +94,39 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
+		ApiActionProcess<DeviceObject> actionProcess = () -> {
 
-		if (deviceObject == null) {
-			return responseNoContent();
-		}
+			DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 
-		if (deviceObject.getContObject() == null || !contObjectId.equals(deviceObject.getContObject().getId())) {
-			return responseBadRequest();
-		}
+			deviceObject.shareDeviceLoginInfo();
+			return deviceObject;
+		};
 
-		deviceObject.shareDeviceLoginInfo();
+		Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
+			if (x == null) {
+				return responseNoContent();
+			}
+			if (x.getContObject() == null || !contObjectId.equals(x.getContObject().getId())) {
+				return responseBadRequest();
+			}
+			return null;
+		};
 
-		return ResponseEntity.ok(deviceObject);
+		return responseOK(actionProcess, extraCheck);
+
+		//		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
+		//
+		//		if (deviceObject == null) {
+		//			return responseNoContent();
+		//		}
+		//
+		//		if (deviceObject.getContObject() == null || !contObjectId.equals(deviceObject.getContObject().getId())) {
+		//			return responseBadRequest();
+		//		}
+		//
+		//		deviceObject.shareDeviceLoginInfo();
+		//
+		//		return ResponseEntity.ok(deviceObject);
 	}
 
 	/**
@@ -136,38 +152,47 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		ContObject contObject = contObjectService.findContObject(contObjectId);
-		deviceObject.setContObject(contObject);
-		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
-		deviceObject.setDeviceModel(deviceModel);
+		/////////////////////////////////////////////
+		ApiActionObjectProcess actionProcess = () -> {
 
-		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+			ContObject contObject = contObjectService.findContObject(contObjectId);
+			deviceObject.setContObject(contObject);
+			DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+			deviceObject.setDeviceModel(deviceModel);
 
-		DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-				: new DeviceObjectDataSource();
+			DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
 
-		if (deviceObjectDataSource != null && dsi != null) {
-			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
-			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-			deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
-			deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
-			deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
-			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-			deviceObjectDataSource.setIsActive(true);
-		}
+			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+					: new DeviceObjectDataSource();
 
-		deviceObject.saveDeviceObjectInfo();
-
-		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
-			@Override
-			public void process() {
-				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
-				result.shareDeviceLoginInfo();
-				setResultEntity(result);
+			if (deviceObjectDataSource != null && dsi != null) {
+				SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
+				deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
+				deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
+				deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
+				deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
+				deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
+				deviceObjectDataSource.setIsActive(true);
 			}
-		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+			deviceObject.saveDeviceObjectInfo();
+
+			DeviceObject result = deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
+			result.shareDeviceLoginInfo();
+			return result;
+		};
+		return responseUpdate(actionProcess);
+
+		//		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
+		//			@Override
+		//			public void process() {
+		//				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
+		//				result.shareDeviceLoginInfo();
+		//				setResultEntity(result);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -222,42 +247,71 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		ContObject contObject = contObjectService.findContObject(contObjectId);
-		deviceObject.setContObject(contObject);
-		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
-		deviceObject.setDeviceModel(deviceModel);
+		//		ContObject contObject = contObjectService.findContObject(contObjectId);
+		//		deviceObject.setContObject(contObject);
+		//		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+		//		deviceObject.setDeviceModel(deviceModel);
+		//
+		//		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+		//
+		//		DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+		//				: new DeviceObjectDataSource();
+		//
+		//		if (deviceObjectDataSource != null && dsi != null) {
+		//			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
+		//			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
+		//			deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
+		//			deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
+		//			deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
+		//			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
+		//			deviceObjectDataSource.setIsActive(true);
+		//		}
+		//
+		//		deviceObject.saveDeviceObjectInfo();
 
-		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+		ApiActionProcess<DeviceObject> actionProcess = () -> {
 
-		DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-				: new DeviceObjectDataSource();
+			ContObject contObject = contObjectService.findContObject(contObjectId);
+			deviceObject.setContObject(contObject);
+			DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+			deviceObject.setDeviceModel(deviceModel);
 
-		if (deviceObjectDataSource != null && dsi != null) {
-			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
-			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-			deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
-			deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
-			deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
-			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-			deviceObjectDataSource.setIsActive(true);
-		}
+			DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
 
-		deviceObject.saveDeviceObjectInfo();
+			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+					: new DeviceObjectDataSource();
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
-
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
+			if (deviceObjectDataSource != null && dsi != null) {
+				SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
+				deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
+				deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
+				deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
+				deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
+				deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
+				deviceObjectDataSource.setIsActive(true);
 			}
 
-			@Override
-			public DeviceObject processAndReturnResult() {
-				return deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
-			}
+			deviceObject.saveDeviceObjectInfo();
+
+			return deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return responseCreate(actionProcess, () -> request.getRequestURI());
+
+		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
+		//
+		//			@Override
+		//			protected Long getLocationId() {
+		//				return getResultEntity().getId();
+		//			}
+		//
+		//			@Override
+		//			public DeviceObject processAndReturnResult() {
+		//				return deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -276,20 +330,29 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				if (isPermanent) {
-					deviceObjectService.deleteDeviceObjectPermanent(deviceObjectId);
-				} else {
-					deviceObjectService.deleteDeviceObject(deviceObjectId);
-				}
-
+		ApiActionVoidProcess actionProcess = () -> {
+			if (isPermanent) {
+				deviceObjectService.deleteDeviceObjectPermanent(deviceObjectId);
+			} else {
+				deviceObjectService.deleteDeviceObject(deviceObjectId);
 			}
 		};
+		return responseDelete(actionProcess);
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		//		ApiAction action = new ApiActionAdapter() {
+		//
+		//			@Override
+		//			public void process() {
+		//				if (isPermanent) {
+		//					deviceObjectService.deleteDeviceObjectPermanent(deviceObjectId);
+		//				} else {
+		//					deviceObjectService.deleteDeviceObject(deviceObjectId);
+		//				}
+		//
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -298,31 +361,64 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjects() {
-		List<DeviceObject> deviceObjects = deviceObjectService
-				.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
 
-		for (DeviceObject deviceObject : deviceObjects) {
-			deviceObject.shareDeviceLoginInfo();
-		}
+		ApiActionObjectProcess actionProcess = () -> {
+			List<DeviceObject> deviceObjects = deviceObjectService
+					.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
 
-		List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-				.map(i -> new DeviceObjectVO(i)).collect(Collectors.toList());
+			for (DeviceObject deviceObject : deviceObjects) {
+				deviceObject.shareDeviceLoginInfo();
+			}
 
-		List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
-				.collect(Collectors.toList());
+			List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream()
+					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new DeviceObjectVO(i))
+					.collect(Collectors.toList());
 
-		List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService.selectDeviceObjsetTimeOffset(deviceObjectIds);
+			List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
+					.collect(Collectors.toList());
 
-		Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
-				.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObjectId, Function.identity()));
+			List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService
+					.selectDeviceObjsetTimeOffset(deviceObjectIds);
 
-		deviceObjectVOs.forEach(i -> {
+			Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
+					.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObjectId, Function.identity()));
 
-			V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
-			i.setDeviceObjectTimeOffset(timeOffset);
-		});
+			deviceObjectVOs.forEach(i -> {
 
-		return responseOK(deviceObjectVOs);
+				V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
+				i.setDeviceObjectTimeOffset(timeOffset);
+			});
+
+			return deviceObjectVOs;
+		};
+
+		return responseOK(actionProcess);
+
+		//		List<DeviceObject> deviceObjects = deviceObjectService
+		//				.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
+		//
+		//		for (DeviceObject deviceObject : deviceObjects) {
+		//			deviceObject.shareDeviceLoginInfo();
+		//		}
+		//
+		//		List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+		//				.map(i -> new DeviceObjectVO(i)).collect(Collectors.toList());
+		//
+		//		List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
+		//				.collect(Collectors.toList());
+		//
+		//		List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService.selectDeviceObjsetTimeOffset(deviceObjectIds);
+		//
+		//		Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
+		//				.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObjectId, Function.identity()));
+		//
+		//		deviceObjectVOs.forEach(i -> {
+		//
+		//			V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
+		//			i.setDeviceObjectTimeOffset(timeOffset);
+		//		});
+		//
+		//		return responseOK(deviceObjectVOs);
 	}
 
 	/**
@@ -357,15 +453,18 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		requestEntity.setDeviceObject(deviceObject);
 
-		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
+		ApiActionObjectProcess actionProcess = () -> deviceObjectLoadingSettingsService.saveOne(requestEntity);
+		return responseUpdate(actionProcess);
 
-			@Override
-			public DeviceObjectLoadingSettings processAndReturnResult() {
-				return deviceObjectLoadingSettingsService.saveOne(requestEntity);
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		//		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
+		//
+		//			@Override
+		//			public DeviceObjectLoadingSettings processAndReturnResult() {
+		//				return deviceObjectLoadingSettingsService.saveOne(requestEntity);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -403,15 +502,19 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		requestEntity.setSubscrDataSource(subscrDataSource);
 
-		ApiAction action = new ApiActionEntityAdapter<SubscrDataSourceLoadingSettings>(requestEntity) {
+		ApiActionObjectProcess actionProcess = () -> subscrDataSourceLoadingSettingsService
+				.saveSubscrDataSourceLoadingSettings(requestEntity);
+		return responseUpdate(actionProcess);
 
-			@Override
-			public SubscrDataSourceLoadingSettings processAndReturnResult() {
-				return subscrDataSourceLoadingSettingsService.saveSubscrDataSourceLoadingSettings(entity);
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		//		ApiAction action = new ApiActionEntityAdapter<SubscrDataSourceLoadingSettings>(requestEntity) {
+		//
+		//			@Override
+		//			public SubscrDataSourceLoadingSettings processAndReturnResult() {
+		//				return subscrDataSourceLoadingSettingsService.saveSubscrDataSourceLoadingSettings(entity);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }
