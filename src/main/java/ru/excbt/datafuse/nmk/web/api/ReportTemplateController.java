@@ -3,9 +3,6 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URI;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -25,13 +22,12 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -67,9 +63,12 @@ public class ReportTemplateController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(),
-				reportTypeKey, ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(), reportTypeKey,
+					ReportConstants.IS_ACTIVE);
+		};
+		return responseOK(actionProcess);
+
 	}
 
 	/**
@@ -84,9 +83,12 @@ public class ReportTemplateController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(),
-				reportTypeKey, ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(), reportTypeKey,
+					ReportConstants.IS_NOT_ACTIVE);
+		};
+		return responseOK(actionProcess);
+
 	}
 
 	/**
@@ -105,12 +107,11 @@ public class ReportTemplateController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			return responseBadRequest();
-		}
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportTemplateService.findOne(reportTemplateId);
+		};
+		return responseOK(actionProcess, (x) -> x == null ? responseBadRequest() : null);
 
-		return responseOK(result);
 	}
 
 	/**
@@ -187,16 +188,11 @@ public class ReportTemplateController extends SubscrApiController {
 		checkArgument(reportTemplate.getId().equals(reportTemplateId));
 		checkArgument(reportType.getKeyname().equals(reportTemplate.getReportTypeKeyname()));
 
-		reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
-
-		ApiAction action = new AbstractEntityApiAction<ReportTemplate>(reportTemplate) {
-			@Override
-			public void process() {
-				setResultEntity(reportTemplateService.updateOne(entity));
-			}
+		ApiActionObjectProcess actionProcess = () -> {
+			reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
+			return reportTemplateService.updateOne(reportTemplate);
 		};
-
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return responseUpdate(actionProcess);
 
 	}
 
@@ -211,22 +207,32 @@ public class ReportTemplateController extends SubscrApiController {
 
 		checkNotNull(reportTemplateId);
 
-		ApiAction action = new AbstractEntityApiAction<ReportTemplate>() {
-			@Override
-			public void process() {
-				setResultEntity(reportTemplateService.moveToArchive(reportTemplateId));
-			}
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportTemplateService.moveToArchive(reportTemplateId);
 		};
+		return responseUpdate(actionProcess,
+				(x) -> x == null
+						? ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
+								.body(ApiResult.build(ApiResultCode.ERR_BRM_VALIDATION,
+										"Report Template have active ReportParamset. Moving to archive is impossible"))
+						: null);
 
-		ResponseEntity<?> responeResult = WebApiHelper.processResponceApiActionUpdate(action);
-
-		if (action.getResult() == null) {
-			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
-					.body(ApiResult.build(ApiResultCode.ERR_BRM_VALIDATION,
-							"Report Template have active ReportParamset. Moving to archive is impossible"));
-		}
-
-		return responeResult;
+		//		ApiAction action = new AbstractEntityApiAction<ReportTemplate>() {
+		//			@Override
+		//			public void process() {
+		//				setResultEntity(reportTemplateService.moveToArchive(reportTemplateId));
+		//			}
+		//		};
+		//
+		//		ResponseEntity<?> responeResult = WebApiHelper.processResponceApiActionUpdate(action);
+		//
+		//		if (action.getResult() == null) {
+		//			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
+		//					.body(ApiResult.build(ApiResultCode.ERR_BRM_VALIDATION,
+		//							"Report Template have active ReportParamset. Moving to archive is impossible"));
+		//		}
+		//
+		//		return responeResult;
 	}
 
 	/**
@@ -237,35 +243,42 @@ public class ReportTemplateController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(@PathVariable(value = "srcId") final Long srcId,
-			@RequestBody ReportTemplate reportTemplate, HttpServletRequest request) {
+			@RequestBody final ReportTemplate reportTemplate, HttpServletRequest request) {
 
 		checkNotNull(srcId);
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportTemplate, Long>(reportTemplate, request) {
+		ApiActionProcess<ReportTemplate> actionProcess = () -> reportTemplateService.createByTemplate(srcId,
+				reportTemplate, currentSubscriberService.getSubscriber());
 
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
-			}
+		return responseCreate(actionProcess, () -> {
+			return "/api/reportTemplate" + ReportConstants.getReportTypeURL(reportTemplate.getReportTypeKeyname());
+		});
 
-			@Override
-			public ReportTemplate processAndReturnResult() {
-				return reportTemplateService.createByTemplate(srcId, entity, currentSubscriberService.getSubscriber());
-			}
-
-			@Override
-			public URI getLocation() {
-				checkNotNull(getResultEntity());
-
-				return URI.create("/api/reportTemplate"
-						+ ReportConstants.getReportTypeURL(getResultEntity().getReportTypeKeyname()) + "/"
-						+ getLocationId());
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionCreate(action);
+		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportTemplate, Long>(reportTemplate, request) {
+		//
+		//			@Override
+		//			protected Long getLocationId() {
+		//				return getResultEntity().getId();
+		//			}
+		//
+		//			@Override
+		//			public ReportTemplate processAndReturnResult() {
+		//				return reportTemplateService.createByTemplate(srcId, entity, currentSubscriberService.getSubscriber());
+		//			}
+		//
+		//			@Override
+		//			public URI getLocation() {
+		//				checkNotNull(getResultEntity());
+		//
+		//				return URI.create("/api/reportTemplate"
+		//						+ ReportConstants.getReportTypeURL(getResultEntity().getReportTypeKeyname()) + "/"
+		//						+ getLocationId());
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionCreate(action);
 
 	}
 

@@ -469,6 +469,16 @@ public class WebApiHelper {
 	 * @param actionProcess
 	 * @return
 	 */
+	public static <T> ResponseEntity<?> processResponceApiActionUpdate(final ApiActionProcess<T> actionProcess,
+			Function<T, ResponseEntity<?>> extraCheck) {
+		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.OK, extraCheck);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
+	 * @return
+	 */
 	private static <T> ApiActionProcessWrapper<?> createWrapper(final ApiActionProcess<T> actionProcess) {
 		final ApiActionProcessWrapper<?> action = new ApiActionProcessWrapper<Object>() {
 

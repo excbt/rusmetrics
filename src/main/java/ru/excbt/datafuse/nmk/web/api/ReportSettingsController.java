@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -51,13 +52,15 @@ public class ReportSettingsController extends SubscrApiController {
 	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportType() {
 
-		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
+		ApiActionObjectProcess actionProcess = () -> {
+			List<ReportType> resultReports = reportTypeService
+					.findAllReportTypes(currentSubscriberService.isSystemUser());
+			resultReports = filterObjectAccess(resultReports);
+			List<ReportTypeWithParamsVO> result = reportTypeService.makeReportTypeParams(resultReports);
+			return result;
+		};
 
-		resultReports = filterObjectAccess(resultReports);
-
-		List<ReportTypeWithParamsVO> result = reportTypeService.makeReportTypeParams(resultReports);
-
-		return ResponseEntity.ok(result);
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -67,11 +70,13 @@ public class ReportSettingsController extends SubscrApiController {
 	@RequestMapping(value = "/reportTypesParams", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportTypeParams() {
 
-		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentSubscriberService.isSystemUser());
-
-		resultReports = filterObjectAccess(resultReports);
-
-		return ResponseEntity.ok(resultReports);
+		ApiActionObjectProcess actionProcess = () -> {
+			List<ReportType> resultReports = reportTypeService
+					.findAllReportTypes(currentSubscriberService.isSystemUser());
+			resultReports = filterObjectAccess(resultReports);
+			return resultReports;
+		};
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -80,7 +85,10 @@ public class ReportSettingsController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/reportPeriod", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportPeriods() {
-		return ResponseEntity.ok(reportPeriodService.selectReportPeriods());
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportPeriodService.selectReportPeriods();
+		};
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -89,7 +97,12 @@ public class ReportSettingsController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/reportSheduleType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleTypeJson() {
-		return ResponseEntity.ok(reportActionTypeRepository.findAll());
+
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportActionTypeRepository.findAll();
+		};
+		return responseOK(actionProcess);
+
 	}
 
 	/**
@@ -98,7 +111,10 @@ public class ReportSettingsController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/reportActionType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportActionTypeJson() {
-		return ResponseEntity.ok(reportSheduleTypeRepository.findAll());
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportSheduleTypeRepository.findAll();
+		};
+		return responseOK(actionProcess);
 	}
 
 }

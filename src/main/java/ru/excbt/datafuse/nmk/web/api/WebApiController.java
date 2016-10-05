@@ -151,6 +151,17 @@ public class WebApiController {
 	/**
 	 * 
 	 * @param actionProcess
+	 * @param extraCheck
+	 * @return
+	 */
+	protected <T> ResponseEntity<?> responseUpdate(final ApiActionProcess<T> actionProcess,
+			Function<T, ResponseEntity<?>> extraCheck) {
+		return WebApiHelper.processResponceApiActionUpdate(actionProcess, extraCheck);
+	}
+
+	/**
+	 * 
+	 * @param actionProcess
 	 * @return
 	 */
 	protected <T extends Persistable<K>, K extends Serializable> ResponseEntity<?> responseCreate(

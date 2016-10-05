@@ -24,11 +24,9 @@ import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 
 /**
  * Контроллер для работы с расписанием отчетов
@@ -59,10 +57,16 @@ public class ReportSheduleController extends WebApiController {
 	 */
 	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
-		LocalDateTime nowDate = LocalDateTime.now().withMillisOfDay(0);
-		List<ReportShedule> result = reportSheduleService
-				.selectReportShedule(currentSubscriberService.getSubscriberId(), nowDate);
-		return ResponseEntity.ok(result);
+
+		ApiActionObjectProcess actionProcess = () -> {
+			LocalDateTime nowDate = LocalDateTime.now().withMillisOfDay(0);
+			List<ReportShedule> result = reportSheduleService
+					.selectReportShedule(currentSubscriberService.getSubscriberId(), nowDate);
+			return result;
+		};
+
+		return responseOK(actionProcess);
+
 	}
 
 	/**
@@ -71,9 +75,13 @@ public class ReportSheduleController extends WebApiController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportShedule() {
-		List<ReportShedule> result = reportSheduleService
-				.selectReportShedule(currentSubscriberService.getSubscriberId());
-		return ResponseEntity.ok(result);
+
+		ApiActionObjectProcess actionProcess = () -> {
+			List<ReportShedule> result = reportSheduleService
+					.selectReportShedule(currentSubscriberService.getSubscriberId());
+			return result;
+		};
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -83,8 +91,11 @@ public class ReportSheduleController extends WebApiController {
 	 */
 	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleOne(@PathVariable(value = "reportSheduleId") Long reportSheduleId) {
-		ReportShedule result = reportSheduleService.findOne(reportSheduleId);
-		return ResponseEntity.ok(result);
+
+		ApiActionObjectProcess actionProcess = () -> {
+			return reportSheduleService.findOne(reportSheduleId);
+		};
+		return responseOK(actionProcess);
 	}
 
 	/**
@@ -95,14 +106,9 @@ public class ReportSheduleController extends WebApiController {
 	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportShedule(@PathVariable(value = "reportSheduleId") final Long reportSheduleId) {
 
-		ApiAction action = new ApiActionAdapter() {
-			@Override
-			public void process() {
-				reportSheduleService.deleteOne(reportSheduleId);
-			}
-		};
+		ApiActionVoidProcess actionProcess = () -> reportSheduleService.deleteOne(reportSheduleId);
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return WebApiHelper.processResponceApiActionDelete(actionProcess);
 	}
 
 	/**
@@ -115,7 +121,7 @@ public class ReportSheduleController extends WebApiController {
 	public ResponseEntity<?> createOneShedule(
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,
-			@RequestBody ReportShedule reportShedule, HttpServletRequest request) {
+			@RequestBody final ReportShedule reportShedule, HttpServletRequest request) {
 
 		checkNotNull(reportTemplateId);
 		checkNotNull(reportParamsetId);
@@ -132,26 +138,38 @@ public class ReportSheduleController extends WebApiController {
 			return ResponseEntity.badRequest().body("Invalid reportTemplateId & reportParamsetId");
 		}
 
-		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
-		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
+		ApiActionProcess<ReportShedule> actionProcess = () -> {
+			reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
+			reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
 
-		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
-		reportShedule.setReportParamset(checkParamset);
+			reportShedule.setReportTemplate(checkParamset.getReportTemplate());
+			reportShedule.setReportParamset(checkParamset);
+			return reportSheduleService.createOne(reportShedule);
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportShedule, Long>(reportShedule, request) {
-
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
-			}
-
-			@Override
-			public ReportShedule processAndReturnResult() {
-				return reportSheduleService.createOne(entity);
-			}
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return responseCreate(actionProcess, () -> request.getRequestURI());
+
+		//		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
+		//		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
+		//
+		//		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
+		//		reportShedule.setReportParamset(checkParamset);
+		//
+		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportShedule, Long>(reportShedule, request) {
+		//
+		//			@Override
+		//			protected Long getLocationId() {
+		//				return getResultEntity().getId();
+		//			}
+		//
+		//			@Override
+		//			public ReportShedule processAndReturnResult() {
+		//				return reportSheduleService.createOne(entity);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -171,37 +189,44 @@ public class ReportSheduleController extends WebApiController {
 		checkNotNull(reportShedule);
 		checkArgument(!reportShedule.isNew());
 
-		ReportParamset checkParamset = reportParamsetService.findReportParamset(reportParamsetId);
+		final ReportParamset checkParamset = reportParamsetService.findReportParamset(reportParamsetId);
 
 		if (checkParamset == null) {
 			return ResponseEntity.badRequest().body("ReportParamset is not found");
 		}
-
-		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
-		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
-
-		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
-		reportShedule.setReportParamset(checkParamset);
 
 		ReportShedule checkShedule = reportSheduleService.findOne(reportShedule.getId());
 		if (checkShedule == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (checkShedule.getSubscriberId() != currentSubscriberService.getSubscriberId()) {
-			return ResponseEntity.badRequest().build();
-		}
+		ApiActionObjectProcess actionProcess = () -> {
+			reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
+			reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
 
-		ApiAction action = new AbstractEntityApiAction<ReportShedule>(reportShedule) {
+			reportShedule.setReportTemplate(checkParamset.getReportTemplate());
+			reportShedule.setReportParamset(checkParamset);
 
-			@Override
-			public void process() {
-				setResultEntity(reportSheduleService.updateOne(entity));
-			}
-
+			return reportSheduleService.updateOne(reportShedule);
 		};
+		return responseUpdate(actionProcess);
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		//		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
+		//		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
+		//
+		//		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
+		//		reportShedule.setReportParamset(checkParamset);
+		//
+		//		ApiAction action = new AbstractEntityApiAction<ReportShedule>(reportShedule) {
+		//
+		//			@Override
+		//			public void process() {
+		//				setResultEntity(reportSheduleService.updateOne(entity));
+		//			}
+		//
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
 
 	}
 

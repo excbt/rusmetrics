@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 
 /**
  * Контроллер для работы с точками учета для РМА
@@ -54,14 +52,19 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(contZPoint) {
-			@Override
-			public ContZPoint processAndReturnResult() {
-				return contZPointService.updateOne(entity);
-			}
+		ApiActionObjectProcess actionProcess = () -> {
+			return contZPointService.updateOne(contZPoint);
 		};
+		return responseUpdate(actionProcess);
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		//		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(contZPoint) {
+		//			@Override
+		//			public ContZPoint processAndReturnResult() {
+		//				return contZPointService.updateOne(entity);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -78,21 +81,27 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPoint);
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContZPoint, Long>(contZPoint, request) {
-
-			@Override
-			public ContZPoint processAndReturnResult() {
-				return contZPointService.createOne(contObjectId, entity);
-			}
-
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
-			}
-
+		ApiActionProcess<ContZPoint> actionProcess = () -> {
+			return contZPointService.createOne(contObjectId, contZPoint);
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return responseCreate(actionProcess, () -> request.getRequestURI());
+
+		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContZPoint, Long>(contZPoint, request) {
+		//
+		//			@Override
+		//			public ContZPoint processAndReturnResult() {
+		//				return contZPointService.createOne(contObjectId, entity);
+		//			}
+		//
+		//			@Override
+		//			protected Long getLocationId() {
+		//				return getResultEntity().getId();
+		//			}
+		//
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -114,15 +123,20 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				contZPointService.deleteOne(contZPointId);
-			}
+		ApiActionVoidProcess actionProcess = () -> {
+			contZPointService.deleteOne(contZPointId);
 		};
+		return responseDelete(actionProcess);
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		//		ApiAction action = new ApiActionAdapter() {
+		//
+		//			@Override
+		//			public void process() {
+		//				contZPointService.deleteOne(contZPointId);
+		//			}
+		//		};
+
+		//		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -149,15 +163,20 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<List<ContZPointMetadata>>(requestEntity) {
-
-			@Override
-			public List<ContZPointMetadata> processAndReturnResult() {
-				return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
-			}
+		ApiActionObjectProcess actionProcess = () -> {
+			return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
 		};
+		return responseUpdate(actionProcess);
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		//		ApiAction action = new ApiActionEntityAdapter<List<ContZPointMetadata>>(requestEntity) {
+		//
+		//			@Override
+		//			public List<ContZPointMetadata> processAndReturnResult() {
+		//				return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }

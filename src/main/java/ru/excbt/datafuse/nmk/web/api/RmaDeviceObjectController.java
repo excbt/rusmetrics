@@ -37,6 +37,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
@@ -67,12 +68,21 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
-		for (DeviceObject deviceObject : deviceObjects) {
-			deviceObject.shareDeviceLoginInfo();
-		}
+		ApiActionObjectProcess actionProcess = () -> {
+			List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
+			for (DeviceObject deviceObject : deviceObjects) {
+				deviceObject.shareDeviceLoginInfo();
+			}
+			return ObjectFilters.deletedFilter(deviceObjects);
+		};
+		return responseOK(actionProcess);
 
-		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
+		//		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
+		//		for (DeviceObject deviceObject : deviceObjects) {
+		//			deviceObject.shareDeviceLoginInfo();
+		//		}
+		//
+		//		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 
 	/**
