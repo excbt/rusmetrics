@@ -483,6 +483,7 @@
                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired"/>
                                                     </span>
+<!--
                                                     <span ng-switch-when="SPECIAL_DATE">
                                                         <input class="form-control nmc-text-input-form" 
                                                                id="inputSpecParam" 
@@ -500,6 +501,29 @@
                                                                ng-model="paramSpecial.oneDateValueFormatted" 
                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired"/>
+                                                    </span>
+-->
+                                                    <span ng-switch-when="SPECIAL_DATE">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="text"  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
+                                                               ng-required="paramSpecial.paramSpecialRequired"
+                                                               readonly
+                                                               >
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_DATETIME">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="text"  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired"
+                                                               readonly
+                                                               >
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME_PERIOD">
                                                         <div ng-disabled="isDisabled()">

@@ -44,8 +44,10 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
 //console.log(Math.round($('#div-main-area').width()*8.333/100*3));     
 //    Math.round($('#div-main-area').width()*8.333/100)= 130 = 20*x; => x= 130/20
     //Math.round($('#div-main-area').width()*8.333/100/6.5) //dynamic coef
-    $scope.TEXT_CAPTION_LENGTH = 20*4-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
+    $scope.TEXT_CAPTION_LENGTH = 20*7-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part     
+    $scope.ZPOINT_CAPTION_LENGTH = 15*1-5; //length of type visible part; koef 15 - because view zpoint picture for this column 
+    $scope.OBJECT_CAPTION_LENGTH = 20*2-5; //length of type visible part     
     $scope.objectsUrl= "../api/subscr/contObjects";
     $scope.groupUrl = "../api/subscr/contGroup";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
@@ -111,44 +113,65 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
         hideHeader : false,
         headerClassTR : "nmc-main-table-header",
         columns : [ 
+        {
+            fieldName : "noticeObjectName",
+            header : "Объект",
+            headerClass : "col-xs-2 nmc-text-align-center nmc-hide",
+            dataClass : "col-xs-2 nmc-hide"
+        } ,
+        {
+            fieldName : "noticeObjectNameCaption",
+            header : "Объект",
+            headerClass : "col-xs-2 nmc-text-align-center",
+            dataClass : "col-xs-2"
+        } ,
+        {
+            fieldName : "noticeZpoint",
+            header : "Точка учета",
+            headerClass : "col-xs-1 nmc-hide",
+            dataClass : "col-xs-1 nmc-hide"
+        },
+        {
+            fieldName : "noticeZpointCaption",
+            header : " ",
+            headerClass : "col-xs-1 nmc-td-for-button",
+            dataClass : "col-xs-1 nmc-td-for-button nmc-text-align-center"
+        },
 
         {
             fieldName : "noticeDate",
             header : "Дата",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1"
-        },{
+            headerClass : "col-xs-1 nmc-text-align-center",
+            dataClass : "col-xs-1"
+        },
+  /*      {
             fieldName : "noticeType",
             header : "Тип",
-            headerClass : "col-md-1 nmc-hide",
-            dataClass : "col-md-1 nmc-hide"
-        }, {
+            headerClass : "col-xs-1 nmc-hide",
+            dataClass : "col-xs-1 nmc-hide"
+        },
+*/        
+        {
             fieldName : "noticeMessage",
             header : "Уведомление",
-            headerClass : "col-md-1 nmc-hide",
-            dataClass : "col-md-1 nmc-hide"
+            headerClass : "col-xs-1 nmc-hide",
+            dataClass : "col-xs-1 nmc-hide"
         },
-        {
+/*        {
             fieldName : "noticeTypeCaption",
             header : "Тип",
-            headerClass : "col-md-3",
-            dataClass : "col-md-3"
-        }, {
+            headerClass : "col-xs-3",
+            dataClass : "col-xs-3"
+        }, 
+*/        
+        {
             fieldName : "noticeCaption",
             header : "Уведомление",
-            headerClass : "col-md-4",
-            dataClass : "col-md-4"
-        },  {
-            fieldName : "noticeObjectName",
-            header : "Объект",
-            headerClass : "col-md-2",
-            dataClass : "col-md-2"
-        } , {
-            fieldName : "noticeZpoint",
-            header : "Точка учета",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1"
-        } ]
+            headerClass : "col-xs-7 nmc-text-align-center",
+            dataClass : "col-xs-7"
+        },
+        
+         ]
     };
     
     $scope.data = {};
@@ -299,14 +322,14 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
                     }else{
                          oneNotice.noticeTypeCaption= noticeCaption;
                 };
-            };
+            };            
             if (el.contEvent.message == null){
                 oneNotice.noticeCaption = "";
             }else{
                 if (el.contEvent.message.length > $scope.TEXT_CAPTION_LENGTH){
-                        oneNotice.noticeCaption= el.contEvent.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
+                        oneNotice.noticeCaption = el.contEvent.message.substr(0, $scope.TEXT_CAPTION_LENGTH) + "...";
                     }else{
-                         oneNotice.noticeCaption= el.contEvent.message;
+                         oneNotice.noticeCaption = el.contEvent.message;
                 };
             };
             
@@ -319,6 +342,15 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
                     break;
                 };   
             }
+            
+            if (angular.isString(oneNotice.noticeObjectName)){
+                if (oneNotice.noticeObjectName.length > $scope.OBJECT_CAPTION_LENGTH){
+                        oneNotice.noticeObjectNameCaption = oneNotice.noticeObjectName.substr(0, $scope.OBJECT_CAPTION_LENGTH) + "...";
+                    }else{
+                         oneNotice.noticeObjectNameCaption = oneNotice.noticeObjectName;
+                };
+            };
+            
             oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
             oneNotice.contEventLevelColor = mainSvc.checkUndefinedNull(el.contEventLevelColor) ? "GREEN" : el.contEventLevelColor;
             oneNotice.imgpath = $scope.imgPathTmpl + oneNotice.contEventLevelColor.toLowerCase() + ".png";
@@ -354,6 +386,15 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
             if (oneNotice.zpoint != null){
                 oneNotice.noticeZpoint = oneNotice.zpoint.customServiceName || oneNotice.zpoint.contServiceTypeCaption;
             };
+            oneNotice.noticeZpointCaption = "";//set this field is empty - customer requirement
+            
+//            if (angular.isString(oneNotice.noticeZpoint)){
+//                if (oneNotice.noticeZpoint.length > $scope.ZPOINT_CAPTION_LENGTH){
+//                        oneNotice.noticeZpointCaption = oneNotice.noticeZpoint.substr(0, $scope.ZPOINT_CAPTION_LENGTH) + "...";
+//                    }else{
+//                         oneNotice.noticeZpointCaption = oneNotice.noticeZpoint;
+//                };
+//            };
 //console.log(oneNotice);            
             return oneNotice;
         });

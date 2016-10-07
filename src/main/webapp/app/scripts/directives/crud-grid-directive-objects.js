@@ -719,6 +719,7 @@ angular.module('portalNMC')
                                     break;
                                 case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
                                 case "zpointRefRange" : trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
+                                case "empty" : trHTML += "<td></td>"; break;    
                                 default : trHTML += "<td>"+zpoint[column.name] + "</td>"; break;
                             };
                         });

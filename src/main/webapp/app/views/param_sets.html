@@ -40,11 +40,11 @@
 <div role="tabpanel" class="nmc-tab-panel">
 
   <!-- Навигационная полоса -->
-<!--  <ul class="nav nav-tabs" role="tablist">-->
-<!--    <li id="paramset_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>-->
+  <ul class="nav nav-tabs" role="tablist">
+    <li id="paramset_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
 <!--    <li id="report_template_3rd_menu_item" role="presentation" ><a class="nmc-tab-button" href="#/settings/reports/" aria-controls="report_templates" data-target="#report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>-->
-<!--    <li id="delivery_3rd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   -->
-<!--  </ul>-->
+   <li id="delivery_3rd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>  
+  </ul>
 
   <!-- реализация вкладок -->
   <div class="tab-content">
@@ -1006,23 +1006,47 @@
                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
+<!--
                                                     <span ng-switch-when="SPECIAL_DATE">
-                                                        <input class="form-control nmc-text-input-form" 
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
                                                                id="inputSpecParam" 
-                                                               type=date  
+                                                               type="date"  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.oneDateValueFormatted" 
                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
                                                                ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME">
-                                                        <input class="form-control nmc-text-input-form" 
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
                                                                id="inputSpecParam" 
                                                                type="date"  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.oneDateValueFormatted" 
                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
                                                                ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+-->
+                                                    <span ng-switch-when="SPECIAL_DATE">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="text"  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
+                                                               ng-required="paramSpecial.paramSpecialRequired"
+                                                               readonly
+                                                               >
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_DATETIME">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="text"  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired"
+                                                               readonly
+                                                               >
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME_PERIOD">
 <!--
