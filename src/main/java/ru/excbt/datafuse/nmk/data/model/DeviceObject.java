@@ -234,6 +234,12 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@Column(name = "impulse_mu")
 	private String impulseMu;
 
+	@Column(name = "impulse_counter_addr")
+	private String impulseCounterAddr;
+
+	@Column(name = "impulse_counter_slot_addr")
+	private String impulseCounterSlotAddr;
+
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
@@ -487,6 +493,22 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 	public void setImpulseMu(String impulseMu) {
 		this.impulseMu = impulseMu;
+	}
+
+	public String getImpulseCounterAddr() {
+		return impulseCounterAddr;
+	}
+
+	public void setImpulseCounterAddr(String impulseCounterAddr) {
+		this.impulseCounterAddr = impulseCounterAddr;
+	}
+
+	public String getImpulseCounterSlotAddr() {
+		return impulseCounterSlotAddr;
+	}
+
+	public void setImpulseCounterSlotAddr(String impulseCounterSlotAddr) {
+		this.impulseCounterSlotAddr = impulseCounterSlotAddr;
 	}
 
 }
