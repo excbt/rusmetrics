@@ -3,10 +3,10 @@
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+        <li id="objects_edit_2nd_menu_item" role="presentation"><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
 <!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
-        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
-        <li id="devices_2nd_menu_item" role="presentation" class="active"><a id="devicesTab" class="nmc-main-tab-button" href="" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li id="data_sources_2nd_menu_item" role="presentation"><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a></li>
+        <li id="devices_2nd_menu_item" role="presentation" class="active"><a id="devicesTab" class="nmc-main-tab-button" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li ng-if="isSystemuser()"
             ng-hide="isTestMode()"
             id="modems_edit_2nd_menu_item" role="presentation">
@@ -27,9 +27,9 @@
                data-toggle="tab">Организации
             </a>
         </li>
-        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
+        <li id="clients_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
         <li id="temperature_schedules_2nd_menu_item" ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
     </ul>
 
@@ -288,20 +288,23 @@
                      id="main_properties">                             
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                                        
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
                                             <td class="col-sm-3"><label for="inputDeviceModel">Модель</label>
                                             </td>
                                             <td colspan="2" class="nmc-text-align-left col-sm-9">
-                                                <div class="form-group noMarginBottom" 
+<!--                                                <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.deviceModelId == null && data.currentObject.isManual}">
+-->                                                    
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':!checkModel()}">    
                                                     <select class="form-control nmc-select-form" 
                                                             id="inputDeviceModel" 
                                                             ng-model="data.currentObject.deviceModelId" 
                                                             ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels" 
                                                             ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                            ng-change="changeDeviceModel()"
+                                                            ng-change="deviceModelChange()"
                                                             >
                                                     </select>
                                                 </div>
@@ -339,8 +342,11 @@
                                             <td><label for="inputDescription" >Источник данных</label>
                                             </td>
                                             <td colspan="2" class="nmc-text-align-left">
-                                                <div class="form-group noMarginBottom" 
+<!--                                                <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
+-->
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':!checkDatasource()}">
                                                     <select ng-show = "!isDeviceDisabled(data.currentObject)" 
                                                             class="form-control nmc-select-form"
                                                             ng-class="{'nmc-bg-distinguish': source._isAnotherSubscriber}"
@@ -401,7 +407,95 @@
                       <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                    <table ng-if="data.currentModel.isImpulse === true && data.currentObject.curDatasource.dataSourceType.isRaw === true"
+                                           class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputDevMark" >Марка прибора</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+<!--
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputDevMark"                                            
+                                                       placeholder="" 
+                                                       ng-model="data.currentObject.subscrDataSourceAddr" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+-->
+                                                <select class="form-control nmc-text-input-form nmc-input-data pull-right"
+                                                        id="inputDevMark"
+                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                        >
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputNetDevAddr"                                            
+                                                       placeholder="" 
+                                                      
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputNetAddrImpDev"                                            
+                                                       placeholder="" 
+                                                       
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputTikCost" >Числовое значение импульса прибора</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputTikCost"                                            
+                                                       placeholder="" 
+                                                       
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputDevMeasure" >Единицы измерения</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+<!--
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputDevMeasure"                                            
+                                                       placeholder="" 
+                                                        
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+-->
+                                                <select class="form-control nmc-text-input-form nmc-input-data pull-right"
+                                                        id="inputDevMeasure"
+                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                        >
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table ng-if="data.currentModel.isImpulse !== true"
+                                           class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
                                             <td colspan="2" class="col-sm-6">
                                                 <label for="inputNetAddr" >Сетевой адрес прибора</label>

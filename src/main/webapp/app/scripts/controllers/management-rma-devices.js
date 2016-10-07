@@ -1,7 +1,18 @@
+/*jslint node: true, white: true*/
+/*global angular, moment, $, confirm*/
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', '$interval', 'logSvc', '$cookies', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc, $interval, logSvc, $cookies){
 //console.log('Run devices management controller.');
+    
+    //for testing
+    var impulseDevModel = {
+        modelName: "Импульсный прибор",
+        isImpulse: true,
+        id: 123321
+    };
+    //end testing
+    
     $rootScope.ctxId = "management_rma_devices_page";
     //settings
     var SESSION_TASK_URL = "../api/rma/subscrSessionTask";
@@ -77,7 +88,7 @@ angular.module('portalNMC')
         {
             name: "deviceContObjectCaption",
             caption: "Объект",
-            headerClass: "col-xs-4 col-md-4",
+            headerClass: "col-xs-4 col-md-4"
         },{
             name: "deviceModelCaption",
             caption: "Модель",
@@ -89,7 +100,7 @@ angular.module('portalNMC')
         },{
             name: "deviceDatasourceCaption",
             caption: "Источник данных",
-            headerClass: "col-xs-3 col-md-3",
+            headerClass: "col-xs-3 col-md-3"
             
         },{
             name: "deviceTimeOffsetString",
@@ -138,19 +149,54 @@ angular.module('portalNMC')
     ];
             //get devices
     function sortDevicesByConObjectFullName(array){
-            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
+            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)){
                 return false;
-            };           
+            }           
             array.sort(function(a, b){
                 if (a.contObjectInfo.fullName.toUpperCase() > b.contObjectInfo.fullName.toUpperCase()){
                     return 1;
-                };
+                }
                 if (a.contObjectInfo.fullName.toUpperCase() < b.contObjectInfo.fullName.toUpperCase()){
                     return -1;
-                };
+                }
                 return 0;
             }); 
-        };
+        }
+    
+    var errorProtoCallback = function(e){
+        console.log(e);
+        var errorCode = "-1";
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+            errorCode = "ERR_CONNECTION";
+        }
+        if (!mainSvc.checkUndefinedNull(e) && 
+            (!mainSvc.checkUndefinedNull(e.resultCode) || (!mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode)))) {
+            errorCode = e.resultCode || e.data.resultCode;
+        }
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+    };
+    
+        
+    var successCallback = function(response){
+        notificationFactory.success();
+        $scope.getDevices();
+        $('#showDeviceModal').modal('hide');
+        $('#deleteObjectModal').modal('hide');
+        $('#scheduleEditorModal').modal('hide');
+        $scope.data.currentObject = {};
+        $scope.data.currentScheduler = {};
+    };
+    
+    var errorCallback = function(e){
+        errorProtoCallback(e);
+        // reset saving device flag
+        $scope.data.currentObject.isSaving = false;
+        //reset saving scheduler flag
+        $scope.data.currentScheduler.isSaving = false;
+        //session data load flag
+        $scope.ctrlSettings.sessionsLoading = false;
+    };
     
     $scope.getDevices = function(){
         objectSvc.getAllDevices().then(
@@ -159,17 +205,17 @@ angular.module('portalNMC')
                 tmp.forEach(function(elem){
                     if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo !== null)){
                         elem.contObjectId = elem.contObjectInfo.contObjectId;
-                    };
+                    }
                     if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource !== null)){
                         elem.subscrDataSourceId = Number(elem.activeDataSource.subscrDataSource.id);
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
                         elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
                         elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
                         elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
-                    };
+                    }
                     if (!mainSvc.checkUndefinedNull(elem.verificationDate)){
                         elem.verificationDateString = mainSvc.dateFormating(elem.verificationDate, $scope.ctrlSettings.userDateFormat);
-                    };
+                    }
                     elem.deviceContObjectCaption = elem.contObjectInfo.fullName;
                     elem.deviceModelCaption = elem.deviceModel.caption || elem.deviceModel.modelName;
                     if ($scope.isDeviceDisabled(elem) === true){
@@ -184,13 +230,13 @@ angular.module('portalNMC')
                     }else{
                         if (!mainSvc.checkUndefinedNull(elem.activeDataSource)){
                             elem.deviceDatasourceCaption = elem.activeDataSource.subscrDataSource['dataSourceName' || 'id'];
-                        };
+                        }
                     }
                     elem.deviceTimeOffsetString = mainSvc.prepareTimeOffset(elem.deviceObjectTimeOffset);
                     if (!mainSvc.checkUndefinedNull(elem.deviceTimeOffsetString)){
                         if (elem.deviceTimeOffsetString.indexOf("+") === 0){
                             elem.deviceTimeOffsetStringTitle = "Часы прибора спешат";
-                        };
+                        }
                         if (elem.deviceTimeOffsetString.indexOf("-") === 0){
                             elem.deviceTimeOffsetStringTitle = "Часы прибора отстают";
                         }
@@ -221,21 +267,73 @@ angular.module('portalNMC')
     $scope.saveScheduler = function(objId, device, scheduler){     
         if (mainSvc.checkUndefinedNull(objId)){
             return "ObjId of scheduler is undefined or null.";
-        };
+        }
         if (mainSvc.checkUndefinedNull(device) || mainSvc.checkUndefinedNull(device.id)){
             return "Device of scheduler is empty.";
-        };
+        }
         if (mainSvc.checkUndefinedNull(scheduler)){
             return "Scheduler is empty.";
-        };
+        }
         scheduler.isSaving = true;
         objectSvc.putDeviceSchedulerSettings(objId, device.id, scheduler).then(successCallback, errorCallback);
     };
     
-    $scope.changeDeviceModel = function(){
-        if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
-            $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
+    function findDeviceModelById(modelId) {
+        var resultModel = null;
+        if (mainSvc.checkUndefinedNull($scope.data.deviceModels) || !angular.isArray($scope.data.deviceModels)) {
+            return resultModel;
         }
+        $scope.data.deviceModels.some(function(devModel) {
+            if (devModel.id === modelId) {
+                resultModel = devModel;
+                return true;
+            }
+        });
+        return resultModel;
+    }
+    
+    //checkers for model and datasource
+    $scope.checkDatasource = function() {
+        var result = true;
+        if ($scope.data.currentObject.id === null &&  mainSvc.checkUndefinedNull($scope.data.currentObject.subscrDataSourceId) && $scope.data.currentObject.isManual) {
+            result = false;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
+            return result;
+        }
+        var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);            
+        if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource) && tmpDevModel.isImpulse === true && $scope.data.currentObject.curDatasource.dataSourceType.isRaw !== true) {                
+                result = false;
+        }
+        return result;
+    };
+    
+    $scope.checkModel = function() {
+        var result = true;
+        if ($scope.data.currentObject.id === null && mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId) && $scope.data.currentObject.isManual) {
+            result = false;
+        }
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
+            return result;
+        }
+        var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);            
+        if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource) && tmpDevModel.isImpulse === true && $scope.data.currentObject.curDatasource.dataSourceType.isRaw !== true) {                
+                result = false;
+        }
+        return result;
+    };
+    
+    $scope.deviceModelChange = function(){
+        if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
+            var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);            
+            if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource) && tmpDevModel.isImpulse === true && $scope.data.currentObject.curDatasource.dataSourceType.isRaw !== true) {
+                notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");                
+//                return false;
+            }
+            $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
+            $scope.data.currentModel = tmpDevModel;
+            $scope.data.currentObject.curModel = tmpDevModel;            
+        }        
     };
     
                 //get device models
@@ -246,17 +344,20 @@ angular.module('portalNMC')
                 var ndDeviceModel = null;
                 var ndDeviceModelIndex = -1;
                 response.data.some(function(dm, dmindex){
-                    if (dm.modelName == "NOT_ASSIGNED"){
+                    if (dm.modelName === "NOT_ASSIGNED"){
                         ndDeviceModel = dm;
                         ndDeviceModelIndex = dmindex;
                         return true;
-                    };
+                    }
                 });
-                if (ndDeviceModelIndex != -1){
+                if (ndDeviceModelIndex !== -1){
                     response.data.splice(ndDeviceModelIndex, 1);
                     response.data.splice(0, 0, ndDeviceModel);
-                };
-                $scope.data.deviceModels = response.data;               
+                }                                
+                $scope.data.deviceModels = response.data;
+                
+                //test
+                $scope.data.deviceModels.push(impulseDevModel);
             },
             errorProtoCallback
         );
@@ -299,6 +400,8 @@ angular.module('portalNMC')
         $scope.data.currentObject.deviceLoginInfo = {};
         if (!mainSvc.checkUndefinedNull($cookies.recentDeviceModelId)){
             $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
+            $scope.data.currentModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
+            $scope.data.currentObject.curModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
         }
         if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)){
             $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);
@@ -309,7 +412,12 @@ angular.module('portalNMC')
     };
     
     $scope.editDevice = function(device){
-        $scope.selectedItem(device);        
+        $scope.selectedItem(device);
+        if (!mainSvc.checkUndefinedNull(device.deviceModelId)) {
+            $scope.data.currentModel = findDeviceModelById(device.deviceModelId);
+            $scope.data.currentObject.curModel = findDeviceModelById(device.deviceModelId);
+        }
+        
         objectSvc.getDeviceDatasources(device.contObjectId, device.id).then(
             function(resp){
                 $scope.data.dataSources = angular.copy(resp.data);
@@ -322,54 +430,29 @@ angular.module('portalNMC')
     };
     
     $scope.deviceDatasourceChange = function(){
-        $scope.data.currentObject.dataSourceTable1h = null;
-        $scope.data.currentObject.dataSourceTable24h = null;
-        $scope.data.currentObject.subscrDataSourceAddr = null;
         var curDataSource = null;
         $scope.data.dataSources.some(function(source){
             if (source.id === $scope.data.currentObject.subscrDataSourceId){
                 curDataSource = source;
                 return true;
-            };
-        });
+            }
+        });              
+        if (!mainSvc.checkUndefinedNull($scope.data.currentModel) && $scope.data.currentModel.isImpulse === true && curDataSource.dataSourceType.isRaw !== true) {
+            notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
+//            $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId) || null;
+//            return false;
+        }
+        
+        $scope.data.currentObject.dataSourceTable1h = null;
+        $scope.data.currentObject.dataSourceTable24h = null;
+        $scope.data.currentObject.subscrDataSourceAddr = null;
+
         $scope.data.currentObject.curDatasource = curDataSource;
         
         if (!mainSvc.checkUndefinedNull($scope.data.currentObject.subscrDataSourceId)){
             $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
-        }
-    };
-    
-    var successCallback = function(response){
-        notificationFactory.success();
-        $scope.getDevices();
-        $('#showDeviceModal').modal('hide');
-        $('#deleteObjectModal').modal('hide');
-        $('#scheduleEditorModal').modal('hide');
-        $scope.data.currentObject = {};
-        $scope.data.currentScheduler = {};
-    };
-    
-    var errorProtoCallback = function(e){
-        console.log(e);
-        var errorCode = "-1";
-        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-            errorCode = "ERR_CONNECTION";
-        };
-        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
-            errorCode = e.resultCode || e.data.resultCode;
-        };
-        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
-    };
-    
-    var errorCallback = function(e){
-        errorProtoCallback(e);
-        // reset saving device flag
-        $scope.data.currentObject.isSaving = false;
-        //reset saving scheduler flag
-        $scope.data.currentScheduler.isSaving = false;
-        //session data load flag
-        $scope.ctrlSettings.sessionsLoading = false;
+        }        
+        
     };
     
     $scope.saveDevice = function(device){
@@ -377,28 +460,33 @@ angular.module('portalNMC')
         device.isSaving = true;
         //check device data
         var checkDsourceFlag = true;
-        if (device.contObjectId == null){
+        if (mainSvc.checkUndefinedNull(device.contObjectId)){
             notificationFactory.errorInfo("Ошибка","Не задан объект учета");
             checkDsourceFlag = false;
-        };
-        if (device.id == null && device.subscrDataSourceId == null && device.isManual){
+        }
+        if (device.id === null && mainSvc.checkUndefinedNull(device.subscrDataSourceId) && device.isManual){
             notificationFactory.errorInfo("Ошибка","Не задан источник данных");
             checkDsourceFlag = false;
-        };
-        if (device.id == null && device.deviceModelId == null && device.isManual){
+        }
+        if (device.id === null && mainSvc.checkUndefinedNull(device.deviceModelId) && device.isManual){
             notificationFactory.errorInfo("Ошибка", "Не задана модель прибора");
             checkDsourceFlag = false;
-        };
+        }
+//console.log(device);
+        if (!mainSvc.checkUndefinedNull(device.curModel) && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw !== true) {
+            notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
+            checkDsourceFlag = false;
+        }
         if (checkDsourceFlag === false){
             device.isSaving = false;
             return;
-        };
-        if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString != "")){
+        }
+        if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString !== "")){
             device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.ctrlSettings.userDateFormat);
         }
 //console.log(device);
         var userDecision =  false;
-        if (!mainSvc.checkUndefinedNull(device.id) && $scope.isDirectDevice(device) && (device.beginDeviceModelId != device.deviceModelId))
+        if (!mainSvc.checkUndefinedNull(device.id) && $scope.isDirectDevice(device) && (device.beginDeviceModelId !== device.deviceModelId))
             //прибор не новый, идет прямая загрузка с прибора и модель была изменена
         {
             //выдать предупреждение о том, что модель была изменена и мета данные будут стерты
@@ -406,7 +494,7 @@ angular.module('portalNMC')
             if (!userDecision){
                 device.isSaving = false;
                 return "Save operation is canceled by user.";
-            };
+            }
         }
         //send to server
         objectSvc.sendDeviceToServer(device).then(successCallback, errorCallback);
@@ -458,13 +546,13 @@ angular.module('portalNMC')
         //check device: data source vzlet or not?
     $scope.vzletDevice = function(device){
         var result = false;
-        if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
-            if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
-                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "VZLET"){
+        if(angular.isDefined(device.activeDataSource) && (device.activeDataSource !== null)){
+            if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource !== null)){
+                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey === "VZLET"){
                     result = true;
-                };
-            };
-        };
+                }
+            }
+        }
         return result;
     };
     
@@ -478,7 +566,7 @@ angular.module('portalNMC')
             var errorMsg = "getDeviceMetaDataVzlet: Device undefined or null.";
             console.log(errorMsg);
             return errorMsg;
-        };
+        }
         objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
@@ -500,7 +588,7 @@ angular.module('portalNMC')
             );
         }else{
             $scope.data.vzletSystemList = tmpSystemList;
-        };       
+        }       
     };
     $scope.getVzletSystemList();
                     //date picker
@@ -527,27 +615,27 @@ angular.module('portalNMC')
         if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.id)){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно задан прибор.");
-        };
+        }
         if (mainSvc.checkUndefinedNull($scope.ctrlSettings.dataLoadDaterange.startDate)){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно задано начало периода.");
-        };
+        }
         if (mainSvc.checkUndefinedNull($scope.ctrlSettings.dataLoadDaterange.endDate)){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно задан конец периода.");
-        };
+        }
         if ($scope.ctrlSettings.dataLoadDaterange.endDate < $scope.ctrlSettings.dataLoadDaterange.startDate){
             result = false;
             notificationFactory.errorInfo("Ошибка", "Некорректно заданы границы периода.");
-        };
+        }
         var isSelectedDT = false;
         $scope.data.detailTypes.some(function(dt){
-            if (dt.selected == true){
+            if (dt.selected === true){
                 isSelectedDT = true;
                 return true;
             }
         });
-        if (isSelectedDT == false){
+        if (isSelectedDT === false){
             result = false;
             notificationFactory.warning("Не выбрано ни одного типа загружаемых данных. Загрузка не будет запущена.");
         }
@@ -560,12 +648,69 @@ angular.module('portalNMC')
 //	private Date periodBeginDate;
 //	private Date periodEndDate;
 //	private String[] sessionDetailTypes;
+    function checkSessionsForComplete(sessions){
+        $scope.ctrlSettings.dataIsLoaded = false;
+        if (mainSvc.checkUndefinedNull(sessions) || sessions.length === 0){
+            return false;
+        }
+        var compledSessionsCount = 0;
+        sessions.forEach(function(session){
+            if (SESSION_TERMINATE_STATUSES.indexOf(session.currentStatus) !== -1){
+                compledSessionsCount += 1;
+            }
+        });
+        if (compledSessionsCount === sessions.length) {
+            $scope.ctrlSettings.dataIsLoaded = true;
+        }
+    }
+                        
+    function loadDeviceSessionsData(){        
+        $scope.ctrlSettings.sessionsLoading = true;
+        var url = SESSION_TASK_URL + "/" +$scope.data.currentSessionTask.id + "/logSessions";
+        $http.get(url).then(function(resp){            
+            $scope.ctrlSettings.sessionsLoading = false;            
+            if (mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0){                
+                return "Session array is empty";
+            }
+                //save current session before update table, that don't lost it
+            var tmpCurSession = null;                               
+            if (!mainSvc.checkUndefinedNull($scope.data.currentSession) && !mainSvc.checkEmptyObject($scope.data.currentSession)) {
+                tmpCurSession = angular.copy($scope.data.currentSession);            
+            }
+            $scope.data.sessionsOnView = logSvc.serverDataParser(angular.copy(resp.data));
+            checkSessionsForComplete($scope.data.sessionsOnView);
+            //if currentSession is not set -> currentSession = first session from array           
+            if (mainSvc.checkUndefinedNull(tmpCurSession) || mainSvc.checkEmptyObject(tmpCurSession)){
+                $scope.data.currentSession = $scope.data.sessionsOnView[0];
+                tmpCurSession = angular.copy($scope.data.currentSession);
+            }
+            if (!mainSvc.checkUndefinedNull(tmpCurSession) && !mainSvc.checkEmptyObject(tmpCurSession)){
+                $scope.data.sessionsOnView.some(function(elem){
+                    if (elem.id === tmpCurSession.id){
+                        $scope.loadLogData(elem);
+                    }
+                });
+            }                    
+        }, errorCallback);
+    }
+    
+    function loadSessionTask(){
+        var url = SESSION_TASK_URL + "/" + $scope.data.currentSessionTask.id;
+        $http.get(url).then(function(resp){
+            $scope.data.currentSessionTask = resp.data;
+        }, errorProtoCallback);
+    }
+    
+    function refreshData(){
+        loadSessionTask();
+        loadDeviceSessionsData();
+    }    
     
     $scope.startLoadData = function(){
         $scope.data.sessionsOnView = [];        
         $scope.data.sessionLog = [];
         var check = checkTaskSettings();
-        if (check == false){
+        if (check === false){
             return;
         }
         var task = {};
@@ -576,7 +721,7 @@ angular.module('portalNMC')
         task.sessionDetailTypes = [];
         if (angular.isArray($scope.data.detailTypes) && $scope.data.detailTypes.length > 0){
             $scope.data.detailTypes.forEach(function(dt){
-                if (dt.selected == true){
+                if (dt.selected === true){
                     task.sessionDetailTypes.push(dt.keyname);
                 }
             });       
@@ -585,65 +730,11 @@ angular.module('portalNMC')
         $http.post(url, task).then(function(resp){
             if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)){                
                 return;
-            };
+            }
             $scope.data.currentSessionTask = resp.data;
-            interval = $interval(refreshData, REFRESH_PERIOD)
+            interval = $interval(refreshData, REFRESH_PERIOD);
         }, errorCallback);
     };
-    
-    function loadSessionTask(){
-        var url = SESSION_TASK_URL + "/" + $scope.data.currentSessionTask.id;
-        $http.get(url).then(function(resp){
-            $scope.data.currentSessionTask = resp.data;
-        }, errorProtoCallback)
-    }
-    
-    function refreshData(){
-        loadSessionTask();
-        loadDeviceSessionsData();
-    }
-    
-    function checkSessionsForComplete(sessions){
-        $scope.ctrlSettings.dataIsLoaded = false;
-        if (mainSvc.checkUndefinedNull(sessions) || sessions.length == 0)
-            return false;
-        var compledSessionsCount = 0;
-        sessions.forEach(function(session){
-            if (SESSION_TERMINATE_STATUSES.indexOf(session.currentStatus) != -1)
-                compledSessionsCount++;
-        })
-        if (compledSessionsCount == sessions.length)
-            $scope.ctrlSettings.dataIsLoaded = true;
-    }
-                        
-    function loadDeviceSessionsData(){        
-        $scope.ctrlSettings.sessionsLoading = true;
-        var url = SESSION_TASK_URL + "/" +$scope.data.currentSessionTask.id + "/logSessions";
-        $http.get(url).then(function(resp){            
-            $scope.ctrlSettings.sessionsLoading = false;            
-            if (mainSvc.checkUndefinedNull(resp.data) || resp.data.length == 0){                
-                return "Session array is empty";
-            }
-                //save current session before update table, that don't lost it
-            var tmpCurSession = null;                               
-            if (!mainSvc.checkUndefinedNull($scope.data.currentSession) && !mainSvc.checkEmptyObject($scope.data.currentSession))
-                tmpCurSession = angular.copy($scope.data.currentSession);            
-            $scope.data.sessionsOnView = logSvc.serverDataParser(angular.copy(resp.data));
-            checkSessionsForComplete($scope.data.sessionsOnView);
-            //if currentSession is not set -> currentSession = first session from array           
-            if (mainSvc.checkUndefinedNull(tmpCurSession) || mainSvc.checkEmptyObject(tmpCurSession)){
-                $scope.data.currentSession = $scope.data.sessionsOnView[0];
-                tmpCurSession = angular.copy($scope.data.currentSession);
-            }
-            if (!mainSvc.checkUndefinedNull(tmpCurSession) && !mainSvc.checkEmptyObject(tmpCurSession)){
-                $scope.data.sessionsOnView.some(function(elem){
-                    if (elem.id == tmpCurSession.id){
-                        $scope.loadLogData(elem);
-                    }
-                })
-            }                    
-        }, errorCallback);
-    }
     
     function loadContZPointSessionDetailType(device){
         var url = SESSION_DETAIL_TYPE_URL + "/" + device.id;
@@ -654,7 +745,7 @@ angular.module('portalNMC')
             }
             $scope.data.sessionDetailType = resp.data;
             
-        }, errorProtoCallback)
+        }, errorProtoCallback);
     }
     
     function loadSessionDetailType(device){
@@ -666,7 +757,7 @@ angular.module('portalNMC')
             }            
             $scope.data.detailTypes = angular.copy(resp.data);
             
-        }, errorProtoCallback)
+        }, errorProtoCallback);
     }
     
     $scope.initManualLoading = function(device){
@@ -681,11 +772,11 @@ angular.module('portalNMC')
         $scope.selectedItem(device);
         loadContZPointSessionDetailType(device);
         loadSessionDetailType(device);
-    }
+    };
     
     $scope.changeSessionDetailType = function(){
         $scope.data.detailTypes = angular.copy($scope.data.currentContZpoint.sessionDetailTypes);        
-    }
+    };
     
         // **********************************************************************
     // session log
@@ -699,18 +790,19 @@ angular.module('portalNMC')
         $http.get(url).then(function(resp){
             $scope.data.sessionLog = resp.data;                
             $scope.ctrlSettings.logLoading = false;
-        }, errorCallback)
-    }
+        }, errorCallback);
+    };
     
     $("#deviceSessionModal").on('hidden.bs.modal', function(){
-         if (!mainSvc.checkUndefinedNull(interval))
+         if (!mainSvc.checkUndefinedNull(interval)){
             $interval.cancel(interval);
+         }
     });
     
     $scope.isDisabledStartButton = function(){
         //if $scope.data.currentSessionTask have id, that mean task start and we need block Start button
         return !mainSvc.checkUndefinedNull($scope.data.currentSessionTask) && !mainSvc.checkUndefinedNull($scope.data.currentSessionTask.id);
-    }
+    };
     
     //************************************************
     //
@@ -723,37 +815,38 @@ angular.module('portalNMC')
     
     //keydown listener for ctrl+end
     window.onkeydown = function(e){
-//console.log(e);        
-        if (e.code == "ArrowUp" /*e.keyCode == 38*/){                        
-            var elem = document.getElementById("divWithDeviceTable");
+//console.log(e); 
+        var elem = null;
+        if (e.code === "ArrowUp" /*e.keyCode == 38*/){                        
+            elem = document.getElementById("divWithDeviceTable");
             elem.scrollTop = elem.scrollTop - 20;                        
             return;
-        };
-        if (e.code == "ArrowDown" /*e.keyCode == 40*/){
-            var elem = document.getElementById("divWithDeviceTable");
+        }
+        if (e.code === "ArrowDown" /*e.keyCode == 40*/){
+            elem = document.getElementById("divWithDeviceTable");
             elem.scrollTop = elem.scrollTop + 20;                        
             return;
-        };
-        if (e.code == "PageDown" /*e.keyCode == 34*/){
-            var elem = document.getElementById("divWithDeviceTable");
+        }
+        if (e.code === "PageDown" /*e.keyCode == 34*/){
+            elem = document.getElementById("divWithDeviceTable");
             elem.scrollTop = elem.scrollTop + 34*10;                        
             return;
-        };
-        if (e.code == "PageUp" /*e.keyCode == 33*/){
-            var elem = document.getElementById("divWithDeviceTable");
+        }
+        if (e.code === "PageUp" /*e.keyCode == 33*/){
+            elem = document.getElementById("divWithDeviceTable");
             elem.scrollTop = elem.scrollTop - 34*10;
             return;
-        };
-        if (e.ctrlKey && e.code == "Home" /*e.keyCode == 36*/){
-            var elem = document.getElementById("divWithDeviceTable");
+        }
+        if (e.ctrlKey && e.code === "Home" /*e.keyCode == 36*/){
+            elem = document.getElementById("divWithDeviceTable");
             elem.scrollTop = 0;
             return;
-        };
-        if ((e.ctrlKey && e.code == "End" /*e.keyCode == 35*/)){ 
-            var elem = document.getElementById("divWithDeviceTable");
+        }
+        if ((e.ctrlKey && e.code === "End" /*e.keyCode == 35*/)){ 
+            elem = document.getElementById("divWithDeviceTable");
             elem.scrollTop = elem.scrollHeight;                                            
 
-        };
+        }
     };
     
     
@@ -764,7 +857,7 @@ angular.module('portalNMC')
     
     $scope.isTestMode = function () {
         return mainSvc.isTestMode();
-    }
+    };
     
     $scope.isDeviceDisabled = function(device){
 //console.log(device);        
@@ -789,27 +882,29 @@ angular.module('portalNMC')
     $scope.checkScheduler = function(scheduler){
         return $scope.checkHHmm(scheduler.loadingInterval)
             && $scope.checkHHmm(scheduler.loadingRetryInterval)
-            && $scope.checkPositiveNumberValue(scheduler.loadingAttempts)
+            && $scope.checkPositiveNumberValue(scheduler.loadingAttempts);
     };
     
     $scope.isAvailableConPropertiesTab = function(){
         if (mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource)){
             return false;
-        };
-        return $scope.data.currentObject.curDatasource.dataSourceType.isRaw == true || $scope.data.currentObject.curDatasource.dataSourceType.isDbTablePair == true || 
-            $scope.data.currentObject.exSystemKeyname == 'VZLET';
+        }
+        return $scope.data.currentObject.curDatasource.dataSourceType.isRaw === true || $scope.data.currentObject.curDatasource.dataSourceType.isDbTablePair === true || 
+            $scope.data.currentObject.exSystemKeyname === 'VZLET';
     };
     
     $scope.checkAutoLoadingDisabled = function(){
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource))
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource)){
             return false;
-        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType == 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable != true;
+        }
+        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType === 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable !== true;
     };
     
     $scope.checkNodataIdleTimeEnabled = function(){
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource))
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource) || mainSvc.checkUndefinedNull($scope.data.currentObject.activeDataSource.subscrDataSource)){
             return false;
-        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType == 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable == true;
+        }
+        return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType === 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable === true;
     };
     
     $(document).ready(function(){
@@ -835,17 +930,17 @@ angular.module('portalNMC')
     
     var setMainPropertiesActiveTab = function(){
         var tab = document.getElementById('con_properties_tab');     
-        tab.classList.remove("active");
-        var tab = document.getElementById('time_properties_tab');     
-        tab.classList.remove("active");
-        var tab = document.getElementById("main_properties_tab");        
+        tab.classList.remove("active");        
+        tab = document.getElementById('time_properties_tab') || null;
+        tab.classList.remove("active");        
+        tab = document.getElementById("main_properties_tab") || null;
         tab.classList.add("active"); 
-        
-        var tab = document.getElementById('con_properties');     
+                
+        tab = document.getElementById('con_properties') || null;
         tab.classList.remove("active");
-        var tab = document.getElementById('time_properties');     
+        tab = document.getElementById('time_properties') || null;
         tab.classList.remove("active");
-        var tab = document.getElementById("main_properties");
+        tab = document.getElementById("main_properties") || null;
         tab.classList.add("in");
         tab.classList.add("active");        
     };
@@ -853,23 +948,47 @@ angular.module('portalNMC')
     $("#showDeviceModal").on("shown.bs.modal", function(){
         $("#inputDeviceModel").focus();
     });
+    
     $("#showDeviceModal").on("hidden.bs.modal", function(){
         setMainPropertiesActiveTab();
     });
+    
+//    $scope.$watch("data.currentModel", function(newModel) {
+//console.log("New currentModel:");
+//console.log(newModel);        
+//        
+//    });
+//    
+//    $scope.$watch("data.currentModel", function(newModel) {
+//console.log("New currentModel:");
+//console.log(newModel);        
+//        if (mainSvc.checkUndefinedNull($scope.currentObject) || mainSvc.checkUndefinedNull($scope.currentObject.curDatasource)) {
+//            return false;
+//        }
+//        if (newModel.isImpulse === true && $scope.currentObject.curDatasource.isRaw !== true) {
+//            notificationFactory.errorInfo("Ошибка", "Текущий источник данных не поддерживает работу с импульсными приборами");
+//        }
+//    });
+//    
+//    $scope.$watch("data.currentObject.curDatasource", function(newDS) {
+//        if (mainSvc.checkUndefinedNull($scope.data.currentModel) || mainSvc.checkUndefinedNull(newDS)) {
+//            return false;
+//        }
+//        if ($scope.data.currentModel.isImpulse === true && newDS.isRaw !== true) {
+//            notificationFactory.errorInfo("Ошибка", "Текущий источник данных не поддерживает работу с импульсными приборами");
+//        }
+//    });
     
     /*******************************************/
     /* Test generation*/
     
     var SESSION_ROW_COUNT = 21;
     var LOG_ROW_COUNT = 1;
-    function generate(){
-        generateSessions();
-        generateSessionLog();
-    };
     
     function generateSessions(){
-        var sessions = [];
-        for (var i = 0; i < SESSION_ROW_COUNT; i++){
+        var sessions = [],
+            i;
+        for (i = 0; i < SESSION_ROW_COUNT; i += 1){
             var ses = {};
             //color status
             var statusColor = Math.random();
@@ -890,50 +1009,58 @@ angular.module('portalNMC')
             ses.endDate = moment().subtract(Math.round(statusColor * 10 + 1), 'days').format("DD-MM-YYYY HH:mm");
             //other
             ses.author = statusColor > 0.5 ? "Артамонов А.А" : "Расписание";
-            ses.currentStatus = statusColor < .2 ? "Закрыта" : "Открыта";
-            ses.colorStatus = statusColor < .2 ? "RED" : "GREEN";
+            ses.currentStatus = statusColor < 0.2 ? "Закрыта" : "Открыта";
+            ses.colorStatus = statusColor < 0.2 ? "RED" : "GREEN";
             ses.totalRow = Math.round(statusColor * 10);
             
             if (statusColor <= 0.3){
                 ses.type = "OID";
                 ses.childs = [];
-                for (var j = 0; j <= Math.round(statusColor * 10); j++){
+                var j;
+                for (j = 0; j <= Math.round(statusColor * 10); j += 1){
                     var child = angular.copy(ses);
                     child.type = "OP";
                     child.dataSource = "Прибор " + rndIntNumber + "-" + j;
                     ses.childs.push(child);
-                };
-            };  
+                }
+            }  
             sessions.push(ses);
 //console.log(ses);            
-        };
+        }
         $scope.data.sessionsOnView = sessions; 
-    };
+    }
     
     function generateSessionLog(){
         var WORDS = ["Земля", "портфель", "идет", "лопатать", "потом", "дравина", "успел", "растопша", "трап", "мышь", "лететь"];
-        var logs = []; 
-        for (var i = 0; i < LOG_ROW_COUNT; i++){
+        var logs = [],
+            i; 
+        for (i = 0; i < LOG_ROW_COUNT; i += 1){
             var log = {};
             var rndNum = Math.random();
             log.stepDateStr = moment().format("DD-MM-YYYY HH:mm");
             if (rndNum <= 0.3){
                 log.stepType = "Аларм";
-            }else if (rndNum > .3 && rndNum <= .6){
+            }else if (rndNum > 0.3 && rndNum <= 0.6){
                 log.stepType = "Варнинг";
             }else{
                 log.stepType = "Инфо";
-            };
-            var msg = "";
-            for (var j = 0; j <= 20; j++){
+            }
+            var msg = "",
+                j;
+            for (j = 0; j <= 20; j += 1){
                 msg += WORDS[Math.round(Math.random() * WORDS.length)] + " ";
-            };
+            }
             log.stepMessage = msg;
             logs.push(log);
-        };
+        }
         $scope.data.sessionLog = logs;
         
-    };
+    }
+    
+    function generate(){
+        generateSessions();
+        generateSessionLog();
+    }
     
 //    generate();
     /* end Test generation*/
