@@ -1,5 +1,7 @@
+/*jslint node: true, white: true, es5: true, nomen: true*/
+/*global angular*/
 'use strict';
-app = angular.module('portalNMC');
+var app = angular.module('portalNMC');
 app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactoryWithCanceler', 'mainSvc', '$q',
 function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler, mainSvc, $q){
     
@@ -122,7 +124,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
 //            keyname: "el",
 //            caption: "Электроснабжение"
 //        }
-    ]
+    ];
     
     //request canceling params
     var requestCanceler = null;
@@ -147,10 +149,10 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     var getDefaultResourceCategory = function(){
         var defResCat = null;
         resourceCategories.some(function(resCat){
-            if (resCat.isDefault == true){
+            if (resCat.isDefault === true){
                 defResCat = resCat;
                 return true;
-            };
+            }
         });
         return defResCat;
     };
@@ -163,24 +165,60 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     var getReportTypes = function(){
         return reportTypes;
     };
+    
+    function addReportTypeContServiceTypes (reportTypeContServiceTypes) {
+        reportTypeContServiceTypes.forEach(function(rtcst){
+            var isPresent = false;
+            contServiceTypes.some(function(cst){
+                if (cst.keyname === rtcst.keyname){
+                   isPresent = true;
+                    return true;
+                }                
+            });
+            if (isPresent === false){
+                contServiceTypes.push(angular.copy(rtcst));
+            }
+        });        
+    }
+    
+    function createContServiceTypesGroup (reportTypeContServiceTypes) {
+        if (!angular.isArray(reportTypeContServiceTypes) || reportTypeContServiceTypes.length === 0){
+            return;
+        }
+//        mainSvc.sortItemsBy(reportTypeContServiceTypes, "keyname");
+        mainSvc.sortNumericItemsBy(reportTypeContServiceTypes, "serviceOrder");
+        var tmpKeynames = reportTypeContServiceTypes.map(function(elem){
+            return elem.keyname;
+        });
+        var groupKeyname = tmpKeynames.join(',');
+        var tmpCaptions = reportTypeContServiceTypes.map(function(elem){
+            return elem.captionShort;
+        });
+        var groupCaption = tmpCaptions.join(', ');
+        reportTypeContServiceTypes.push({keyname: groupKeyname, captionShort: groupCaption, isGroup: true});
+    }
+    
     var loadReportTypes = function(){
         setReportTypesIsLoaded(false);
-        if (requestCanceler == null)
+        if (requestCanceler === null) {
             return null;
+        }
         crudGridDataFactoryWithCanceler(reportTypesUrl, requestCanceler).query(function(data){
             mainSvc.sortItemsBy(data, "caption");
             reportTypes = data;
-            reportCategories.forEach(function(cat){cat.reportTypes = []});//reset category reportType array
+            reportCategories.forEach(function(cat){cat.reportTypes = [];});//reset category reportType array
 //console.log(data);
             var newObjects = [];
-            var newObject = {};
-            for (var i = 0; i < data.length; i++){
+            var newObject = {},
+                i,
+                categoryCounter;
+            for (i = 0; i < data.length; i += 1){
                 if (!data[i]._enabled){
                     continue;
-                };
+                }
                 if ((! mainSvc.isSystemuser() && data[i].isDevMode)){
                     continue;
-                };
+                }
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
@@ -197,15 +235,15 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
                 newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                 
-                for (var categoryCounter = 0; categoryCounter < reportCategories.length; categoryCounter++){                                          
-                    if (newObject.reportCategory.localeCompare(reportCategories[categoryCounter].name) == 0){                        
+                for (categoryCounter = 0; categoryCounter < reportCategories.length; categoryCounter += 1){                                          
+                    if (newObject.reportCategory.localeCompare(reportCategories[categoryCounter].name) === 0){                        
 //                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
                         reportCategories[categoryCounter].reportTypes.push(newObject);                                             
                         continue;
-                    };
-                };
+                    }
+                }
                 newObjects.push(newObject);
-            };        
+            }        
             reportTypes = newObjects;
             mainSvc.sortItemsBy(contServiceTypes, "captionShort");
             contServiceTypes.push(WITHOUT_RESOURCES);
@@ -219,38 +257,6 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     };
 //    loadReportTypes();
     
-    function addReportTypeContServiceTypes (reportTypeContServiceTypes) {
-        reportTypeContServiceTypes.forEach(function(rtcst){
-            var isPresent = false;
-            contServiceTypes.some(function(cst){
-                if (cst.keyname === rtcst.keyname){
-                   isPresent = true;
-                    return true;
-                };                
-            });
-            if (isPresent === false){
-                contServiceTypes.push(angular.copy(rtcst));
-            }
-        });        
-    }
-    
-    function createContServiceTypesGroup (reportTypeContServiceTypes) {
-        if (!angular.isArray(reportTypeContServiceTypes) || reportTypeContServiceTypes.length === 0){
-            return;
-        };
-//        mainSvc.sortItemsBy(reportTypeContServiceTypes, "keyname");
-        mainSvc.sortNumericItemsBy(reportTypeContServiceTypes, "serviceOrder");
-        var tmpKeynames = reportTypeContServiceTypes.map(function(elem){
-            return elem.keyname;
-        });
-        var groupKeyname = tmpKeynames.join(',');
-        var tmpCaptions = reportTypeContServiceTypes.map(function(elem){
-            return elem.captionShort;
-        });
-        var groupCaption = tmpCaptions.join(', ');
-        reportTypeContServiceTypes.push({keyname: groupKeyname, captionShort: groupCaption, isGroup: true});
-    }
-    
     //report periods ( ** загрузка периодов отчетов)
     var reportPeriods = [];
     var getReportPeriods = function(){
@@ -258,8 +264,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     };
     var loadReportPeriods = function(){
         setReportPeriodsIsLoaded(false);
-        if (requestCanceler == null)
+        if (requestCanceler === null) {
             return null;
+        }
         crudGridDataFactoryWithCanceler(reportPeriodsUrl, requestCanceler).query(function(data){
             reportPeriods = data;
             setReportPeriodsIsLoaded(true);
@@ -269,8 +276,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     
         //Загрузка вариантов отчетов
     var getParamsets = function(table, type){
-        if (requestCanceler == null)
+        if (requestCanceler === null) {
             return null;
+        }
         crudGridDataFactoryWithCanceler(table, requestCanceler).query(function (data) {
             mainSvc.sortItemsBy(data, "name");
             type.paramsets = data;
@@ -279,20 +287,22 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     };
     
  //get paramsets   
-    var getParamsetsForTypes = function(reportTypes, mode){     
-        if ((reportTypes.length == 0)){return;};
-        for (var i = 0; i < reportTypes.length; i++){
-            if (typeof reportTypes[i].suffix != 'undefined'){             
+    var getParamsetsForTypes = function(reportTypes, mode){  
+        var i;
+        if ((reportTypes.length === 0)){return;}
+        for (i = 0; i < reportTypes.length; i += 1){
+            if (typeof reportTypes[i].suffix !== 'undefined'){             
                 getParamsets(reportsBaseUrl + mode + reportTypes[i].suffix, reportTypes[i]);
-            };
-        };
+            }
+        }
     };
     
     // ** Загрузка вариантов отчетов для контекстного меню объектов
     var loadReportsContextLaunch = function(){
         var url = reportsContextLaunchUrl;
-        if (isCancelParamsIncorrect() == true)
+        if (isCancelParamsIncorrect() === true) {
             return null;
+        }
         return $http.get(url, httpOptions);
     };
         
@@ -303,17 +313,17 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
     var checkDateInterval = function(left, right){     
         if (!mainSvc.checkStrForDate(left)){
             return false;
-        };
+        }
         if (!mainSvc.checkStrForDate(right)){
             return false;
-        };
-        if ((left==null)|| (right==null)||(left=="")||(right=="")){console.log("1");return false;};
+        }
+        if ((left==null)|| (right==null)||(left=="")||(right=="")){console.log("1");return false;}
         var startDate = mainSvc.strDateToUTC(left, dateFormat);
         var sd = (startDate!=null)?(new Date(startDate)) : null;         
         var endDate = mainSvc.strDateToUTC(right, dateFormat);
         var ed = (endDate!=null)?(new Date(endDate)) : null;                
 //        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
-        if ((sd==null)|| (ed==null)){return false;};               
+        if ((sd==null)|| (ed==null)){return false;}               
         return ed>=sd;
     };
         //for the paramset
@@ -321,17 +331,17 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         var result;
         if (!(paramset.hasOwnProperty('reportPeriodKey')) || !(paramset.hasOwnProperty('reportTemplate'))){
             return false;
-        };        
+        }        
         
         //interval validate flag
             //default value    
         var intervalValidate_flag = true; 
             //if the paramset use interval
         var isUsingSettlementMonth = false;
-        if (!mainSvc.checkUndefinedNull(paramset.currentReportPeriod) && !mainSvc.checkUndefinedNull(paramset.currentReportPeriod.isSettlementMonth) && (paramset.currentReportPeriod.isSettlementMonth == true || paramset.currentReportPeriod.isSettlementDay == true)){
+        if (!mainSvc.checkUndefinedNull(paramset.currentReportPeriod) && !mainSvc.checkUndefinedNull(paramset.currentReportPeriod.isSettlementMonth) && (paramset.currentReportPeriod.isSettlementMonth === true || paramset.currentReportPeriod.isSettlementDay === true)){
             isUsingSettlementMonth = true;
-        };
-        if (currentSign == null && !isUsingSettlementMonth){
+        }
+        if (currentSign === null && !isUsingSettlementMonth){
                 //check interval
             var startDateMillisec = mainSvc.strDateToUTC(paramset.psStartDateFormatted, dateFormat);
             var startDate = new Date(startDateMillisec);
@@ -340,9 +350,9 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
             intervalValidate_flag = (!isNaN(startDate.getTime())) 
                 && (!isNaN(endDate.getTime())) 
                 && checkDateInterval(paramset.psStartDateFormatted, paramset.psEndDateFormatted);
-        };        
-        result = !(((paramset.reportPeriodKey == null) 
-                    || (paramset.reportTemplate.id == null)))
+        }        
+        result = !(((paramset.reportPeriodKey === null) 
+                    || (paramset.reportTemplate.id === null)))
             && intervalValidate_flag;
         return result;        
     };
@@ -357,7 +367,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
 //console.log(reportParamset);        
         if (!reportType.hasOwnProperty('reportMetaParamCommon')){
             return true;
-        };
+        }
         var result = true;
         messageForUser = "Не все параметры варианта отчета заданы:\n";
         //Check common params before save
@@ -367,11 +377,11 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
             messageForUser += "Основные свойства: "+"\n";
             messageForUser += "\u2022"+" Не задан тип файла"+"\n";
             result= false;
-        };
+        }
             //start date
             //if the paramset use a date interval
         var isUsingSettlementMonth = false;
-        if (!mainSvc.checkUndefinedNull(reportParamset.currentReportPeriod) && !mainSvc.checkUndefinedNull(reportParamset.currentReportPeriod.isSettlementMonth) && (reportParamset.currentReportPeriod.isSettlementMonth == true || reportParamset.currentReportPeriod.isSettlementDay == true)){
+        if (!mainSvc.checkUndefinedNull(reportParamset.currentReportPeriod) && !mainSvc.checkUndefinedNull(reportParamset.currentReportPeriod.isSettlementMonth) && (reportParamset.currentReportPeriod.isSettlementMonth === true || reportParamset.currentReportPeriod.isSettlementDay === true)){
             isUsingSettlementMonth = true;
         }
 //        if (isUsingSettlementMonth == true && (reportParamset.settlementDay == null || reportParamset.settlementDay == '' || reportParamset.settlementDay == 0)){
@@ -389,29 +399,29 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 && (isNaN(startDate.getTime()) 
                     || (!mainSvc.checkStrForDate(reportParamset.psStartDateFormatted))))    
             {
-                if (result){messageForUser += "Основные свойства: " + "\n";};
+                if (result){messageForUser += "Основные свойства: " + "\n";}
                 messageForUser += "\u2022" + " Некорректно задано начало периода" + "\n";
                 result = false;
-            };
+            }
 
             if (reportType.reportMetaParamCommon.startDateRequired 
                 && (isNaN(endDate.getTime()) 
                     || (!mainSvc.checkStrForDate(reportParamset.psEndDateFormatted))))    
             {
-                if (result){messageForUser += "Основные свойства: " + "\n";};
+                if (result){messageForUser += "Основные свойства: " + "\n";}
                 messageForUser += "\u2022" + " Некорректно задан конец периода" + "\n";
                 result = false;
-            };
+            }
             
             if (reportType.reportMetaParamCommon.startDateRequired 
                 && !isNaN(endDate.getTime()) 
                 && !isNaN(startDate.getTime()) 
                 && (startDateMillisec > endDateMillisec))    
             {
-                if (result){messageForUser += "Основные свойства: " + "\n";};
+                if (result){messageForUser += "Основные свойства: " + "\n";}
                 messageForUser += "\u2022" + " Некорректно заданы границы периода" + "\n";
                 result = false;
-            };
+            }
         }        
 
                     //Count of objects
@@ -422,14 +432,14 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         {
             messageForUser += "\u2022" + " Должен быть выбран хотя бы один объект" + "\n";
             result = false;
-        };
+        }
         if (reportType.reportMetaParamCommon.oneContObjectRequired 
             && (reportParamset.selectedObjects.length === 0) 
             && !reportType.reportMetaParamCommon.manyContObjectsRequired)
         {
             messageForUser += "\u2022" + " Необходимо выбрать один объект" + "\n";
             result = false;
-        };
+        }
 //console.log(reportType.reportMetaParamCommon.manyContObjectsRequired);        
 //console.log(reportParamset.selectedObjects.length);        
 //console.log(reportType.reportMetaParamCommon.manyContObjectsRequired === true && (reportParamset.selectedObjects.length <= 1));        
@@ -438,7 +448,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         {
             messageForUser += "\u2022" + " Необходимо выбрать несколько объектов" + "\n";
             result = false;
-        };
+        }
         
         if (!reportType.reportMetaParamCommon.manyContObjectsRequired 
             && (reportParamset.selectedObjects.length > 1) 
@@ -446,13 +456,13 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         {
             messageForUser += "\u2022" + " Нельзя выбрать более одного объекта" + "\n";
             result = false;
-        };
+        }
         
         if (reportType.reportMetaParamCommon.manyContObjectsZipOnly 
             && (reportParamset.selectedObjects.length > 1 || reportParamset.selectedObjects.length === 0))
         {
             reportParamset.outputFileZipped =  true;
-        };
+        }
         //check special properties
         var specListFlag = true;
         if (!mainSvc.checkUndefinedNull(reportParamset.currentParamSpecialList)){
@@ -468,23 +478,23 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
                 {
 //console.log(element);
 //console.log(reportParamset.currentParamSpecialList);                    
-                    if (specListFlag){messageForUser += "Дополнительные свойства: " + "\n";};
+                    if (specListFlag){messageForUser += "Дополнительные свойства: " + "\n";}
                     messageForUser += "\u2022"+" Не задан параметр \"" + element.paramSpecialCaption + "\" \n";
                     result = false;
                     specListFlag = false;
                 }
             });
-        };
+        }
         if(messageForUser != "Не все параметры варианта отчета заданы:\n"){
-            if (mode.toUpperCase().localeCompare("CREATE") == 0){
+            if (mode.toUpperCase().localeCompare("CREATE") === 0){
                 messageForUser += "\n Этот вариант отчета нельзя запустить без уточнения или использовать в рассылке, не задав обязательных параметров. Продолжить?";
-            };
+            }
             result = false;
-        };
+        }
         result = result && checkPSRequiredFields(reportParamset, currentSign);  
         if (!result){          
             reportParamset.showParamsBeforeRunReport = true;
-        };
+        }
 //console.log(reportParamset);        
 //console.log(result);        
 //console.log(messageForUser);                
@@ -525,17 +535,17 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
 
 app.filter('resourceCategoryFilter', function(){
     return function(items, props){
-        if (props.isAll == true){
+        if (props.isAll === true){
             return items;
-        };
+        }
         var filteredItems = [];      
         items.forEach(function(item){
-            if (item.resourceCategory == props.name){
+            if (item.resourceCategory === props.name){
                 filteredItems.push(item);
-            };
+            }
         });     
         return filteredItems;
-    }
+    };
 });
 
 app.filter('serviceTypesFilter', function(){
@@ -544,7 +554,7 @@ app.filter('serviceTypesFilter', function(){
 //console.log(props);
         if (props.keyname === "ALL"){
             return items;
-        };
+        }
         var filteredItems = [];      
         items.forEach(function(item){
 //            if (angular.isUndefined(item.contServiceTypes) || item.contServiceTypes.length <= 0){
@@ -563,19 +573,19 @@ app.filter('serviceTypesFilter', function(){
                         filteredItems.push(item);
                         return true;
                     }
-                })
-            };
+                });
+            }
         });     
 //console.log(filteredItems);        
         return filteredItems;
-    }
+    };
 });
 
 app.filter('reportTypesCountInCategoryByServiceType', ['$filter', function($filter){
     return function(item, props){
         var filteredReportTypes = $filter('serviceTypesFilter')(props.reportTypes, item);
         return filteredReportTypes.length || 0;
-    }
+    };
 }]);
 
 app.filter('notEmptyContServiceTypesByReportTypes', ['$filter', function($filter){
@@ -591,12 +601,12 @@ app.filter('notEmptyContServiceTypesByReportTypes', ['$filter', function($filter
                     return;
                 }
                 out.push(item);                
-            })
+            });
         }else{
             out = items;
         }
         return out;
-    }
+    };
 }]);
 
 app.filter('withReportTypes', [function(){
@@ -608,12 +618,12 @@ app.filter('withReportTypes', [function(){
                     return;
                 }
                 out.push(item);                
-            })
+            });
         }else{
             out = items;
         }
         return out;
-    }
+    };
 }]);
 
 app.filter('notEmptyCategories', [function(){
@@ -624,7 +634,7 @@ app.filter('notEmptyCategories', [function(){
             items.forEach(function(item){
                 var checkReportTypes = false;
                 item.reportTypes.some(function(rt){
-                    if (rt.paramsetsCount && rt.paramsetsCount == rt.checkedParamsetsCount){
+                    if (rt.paramsetsCount && rt.paramsetsCount === rt.checkedParamsetsCount){
                         checkReportTypes = true;
                         return true;
                     }
@@ -632,10 +642,10 @@ app.filter('notEmptyCategories', [function(){
                 if (checkReportTypes === true){
                     out.push(item);
                 }
-            })
+            });
         }else{
             out = items;
         }
         return out;
-    }
+    };
 }]);
