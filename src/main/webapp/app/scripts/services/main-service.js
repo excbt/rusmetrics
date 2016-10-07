@@ -42,6 +42,14 @@ angular.module('portalNMC')
     
     var contextIds = [];
     
+    function checkUndefinedNull (numvalue){
+        var result = false;
+        if ((angular.isUndefined(numvalue)) || (numvalue == null)){
+            result = true;
+        }
+        return result;
+    }
+    
     //main service request canceler 
     var requestCanceler = null;
     var httpOptions = null;
@@ -53,14 +61,6 @@ angular.module('portalNMC')
         return requestCanceler;
     }
     ////////////////////////////
-    
-    function checkUndefinedNull (numvalue){
-        var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue == null)){
-            result = true;
-        }
-        return result;
-    }
     
     function checkEmptyObject (obj){
         return Object.keys(obj).length === 0 && obj.constructor === Object;

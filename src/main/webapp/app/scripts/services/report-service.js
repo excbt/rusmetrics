@@ -530,7 +530,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler
         getRequestCanceler,
         getResourceCategories,
         loadReportsContextLaunch
-    }
+    };
 }]);
 
 app.filter('resourceCategoryFilter', function(){
