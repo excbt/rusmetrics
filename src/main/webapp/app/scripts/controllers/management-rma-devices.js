@@ -332,7 +332,14 @@ angular.module('portalNMC')
             }
             $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
             $scope.data.currentModel = tmpDevModel;
-            $scope.data.currentObject.curModel = tmpDevModel;            
+            $scope.data.currentObject.curModel = tmpDevModel;
+            
+            //change impulseK and impulseMu
+            if ($scope.data.currentModel.isImpulse === true) {
+                $scope.data.currentObject.impulseK = $scope.data.currentModel.defaultImpulseK;
+                $scope.data.currentObject.impulseMu = $scope.data.currentModel.defaultImpulseMu;
+            }
+            
         }        
     };
     
@@ -357,7 +364,7 @@ angular.module('portalNMC')
                 $scope.data.deviceModels = response.data;
                 
                 //test
-                $scope.data.deviceModels.push(impulseDevModel);
+//                $scope.data.deviceModels.push(impulseDevModel);
             },
             errorProtoCallback
         );
@@ -402,6 +409,10 @@ angular.module('portalNMC')
             $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
             $scope.data.currentModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             $scope.data.currentObject.curModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
+            if ($scope.data.currentModel.isImpulse === true) {
+                $scope.data.currentObject.impulseK = $scope.data.currentModel.defaultImpulseK;
+                $scope.data.currentObject.impulseMu = $scope.data.currentModel.defaultImpulseMu;
+            }
         }
         if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)){
             $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);

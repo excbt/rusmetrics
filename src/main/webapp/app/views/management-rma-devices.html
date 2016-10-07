@@ -406,23 +406,15 @@
                      id="con_properties">
                       <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table ng-if="data.currentModel.isImpulse === true && data.currentObject.curDatasource.dataSourceType.isRaw === true"
                                            class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+<!--
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
                                                 <label for="inputDevMark" >Марка прибора</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-<!--
-                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                       type="text" 
-                                                       id="inputDevMark"                                            
-                                                       placeholder="" 
-                                                       ng-model="data.currentObject.subscrDataSourceAddr" 
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                       />
--->
                                                 <select class="form-control nmc-text-input-form nmc-input-data pull-right"
                                                         id="inputDevMark"
                                                         ng-disabled="isDeviceDisabled(data.currentObject);"
@@ -430,18 +422,22 @@
                                                 </select>
                                             </td>
                                         </tr>
+-->
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
                                                 <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                       type="text" 
-                                                       id="inputNetDevAddr"                                            
-                                                       placeholder="" 
-                                                      
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                       />
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.impulseCounterSlotAddr == null || data.currentObject.impulseCounterSlotAddr == ''}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type="text" 
+                                                           id="inputNetDevAddr"                                            
+                                                           placeholder="" 
+                                                           ng-model="data.currentObject.impulseCounterSlotAddr"
+                                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                           />
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -449,27 +445,33 @@
                                                 <label for="inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                       type="text" 
-                                                       id="inputNetAddrImpDev"                                            
-                                                       placeholder="" 
-                                                       
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                       />
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.impulseCounterAddr==null || data.currentObject.impulseCounterAddr == ''}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type="text" 
+                                                           id="inputNetAddrImpDev"                                            
+                                                           placeholder="" 
+                                                           ng-model="data.currentObject.impulseCounterAddr"
+                                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                           />
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
-                                                <label for="inputTikCost" >Числовое значение импульса прибора</label>
+                                                <label for="inputTikCost" >Число импульсов в единице измерения</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                       type="text" 
-                                                       id="inputTikCost"                                            
-                                                       placeholder="" 
-                                                       
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                       />
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.impulseK == null || data.currentObject.impulseK == 0}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type="text" 
+                                                           id="inputTikCost"                                            
+                                                           placeholder="" 
+                                                           ng-model="data.currentObject.impulseK"
+                                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                           />
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -486,11 +488,16 @@
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
                                                        />
 -->
-                                                <select class="form-control nmc-text-input-form nmc-input-data pull-right"
-                                                        id="inputDevMeasure"
-                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                        >
-                                                </select>
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.impulseMu==null}">
+                                                    <select class="form-control nmc-text-input-form nmc-input-data pull-right"
+                                                            id="inputDevMeasure"
+                                                            ng-model="data.currentObject.impulseMu"
+                                                            ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                            >
+                                                    </select>
+                                                </div>
                                             </td>
                                         </tr>
                                     </table>
