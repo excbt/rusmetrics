@@ -58,7 +58,7 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	private DeviceObject addCustomZPoint(Long contObjectId, ContServiceTypeKey contServiceTypeKey, int tsNumber,
 			Boolean isDoublePipe, Long deviceModelId, String deviceNumber) throws Exception {
 
-		DeviceModel deviceModel = deviceModelService.findOne(deviceModelId);
+		DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceModelId);
 
 		DeviceObject deviceObject = new DeviceObject();
 		deviceObject.setDeviceModel(deviceModel);

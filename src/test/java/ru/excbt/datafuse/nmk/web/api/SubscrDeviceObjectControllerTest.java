@@ -1,10 +1,16 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import java.util.List;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -79,6 +85,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testDeviceObjects725Get() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", 725));
@@ -89,6 +96,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testDeviceObjects725_737Get() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", 725, 737));
@@ -101,7 +109,15 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceModelsGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/deviceObjects/deviceModels"));
+		String response = _testGetJson(apiSubscrUrl("/deviceObjects/deviceModels"));
+
+		List<DeviceModel> deviceModels = fromJSON(new TypeReference<List<DeviceModel>>() {
+		}, response);
+
+		if (!deviceModels.isEmpty()) {
+			_testGetJson(apiSubscrUrl("/deviceObjects/deviceModels/" + deviceModels.get(0).getId()));
+		}
+
 	}
 
 	/**
@@ -123,10 +139,16 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testGetJson(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
 	}
 
+	@Ignore
 	@Test
 	public void testDeviceObjectDataSourceLoadingSettingsGet() throws Exception {
 		//65836845
 		_testGetJson(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource/loadingSettings", 725, 65836845));
+	}
+
+	@Test
+	public void testDeviceDataTypes() throws Exception {
+		_testGetJson(apiSubscrUrl("/deviceObjects/deviceModelTypes"));
 	}
 
 }

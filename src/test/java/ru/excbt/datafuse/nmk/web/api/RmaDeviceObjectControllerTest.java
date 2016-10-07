@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -10,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
+import ru.excbt.datafuse.nmk.data.model.types.DeviceModelType;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
@@ -263,6 +267,44 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		String url = apiRmaUrl(String.format("/contObjects/%d/deviceObjects/%d", 512136083, 512136235));
 
 		String deviceObjectContent = _testGetJson(url);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceModelUpdate() throws Exception {
+
+		String response = _testGetJson(apiRmaUrl("/deviceObjects/deviceModels"));
+
+		List<DeviceModel> deviceModels = fromJSON(new TypeReference<List<DeviceModel>>() {
+		}, response);
+
+		if (!deviceModels.isEmpty()) {
+			DeviceModel deviceModel = deviceModels.get(0);
+			deviceModel.getDeviceModelTypes().add(DeviceModelType.WATER.name());
+
+			_testUpdateJson(apiRmaUrl("/deviceObjects/deviceModels/" + deviceModel.getId()), deviceModel);
+
+		}
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	@Test
+	public void testDeviceModelCreate() throws Exception {
+
+		DeviceModel deviceModel = new DeviceModel();
+		deviceModel.setModelName("TEST AK");
+		deviceModel.getDeviceModelTypes().add(DeviceModelType.WATER.name());
+
+		_testCreateJson(apiRmaUrl("/deviceObjects/deviceModels"), deviceModel);
 
 	}
 

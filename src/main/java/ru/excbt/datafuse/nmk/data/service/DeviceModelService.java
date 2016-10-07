@@ -14,8 +14,12 @@ import com.google.common.collect.Lists;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.DeviceModelType;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
+import ru.excbt.datafuse.nmk.data.repository.DeviceModelTypeGroupRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.DeviceModelTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -27,10 +31,16 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
  *
  */
 @Service
-public class DeviceModelService implements SecuredRoles {
+public class DeviceModelService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private DeviceModelRepository deviceModelRepository;
+
+	@Autowired
+	private DeviceModelTypeRepository deviceModelTypeRepository;
+
+	@Autowired
+	private DeviceModelTypeGroupRepository deviceModelTypeGroupRepository;
 
 	////////////
 	public static final Comparator<DeviceModel> COMPARE_BY_NAME = (a, b) -> {
@@ -112,7 +122,7 @@ public class DeviceModelService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public DeviceModel findOne(Long id) {
+	public DeviceModel findDeviceModel(Long id) {
 		return deviceModelRepository.findOne(id);
 	}
 
@@ -121,9 +131,18 @@ public class DeviceModelService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<DeviceModel> findAll() {
+	public List<DeviceModel> findDeviceModelAll() {
 		List<DeviceModel> preResult = Lists.newArrayList(deviceModelRepository.findAll());
 		return ObjectFilters.deletedFilter(preResult);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceModelType> findDeviceModelTypes() {
+		return deviceModelTypeRepository.selectAll();
 	}
 
 }

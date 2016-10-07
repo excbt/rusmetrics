@@ -1,9 +1,19 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -70,6 +80,22 @@ public class DeviceModel extends AbstractAuditableModel
 
 	@Column(name = "meta_version")
 	private Integer metaVersion = 1;
+
+	@Column(name = "is_impulse")
+	private Boolean isImpulse;
+
+	@Column(name = "default_impulse_k")
+	private Integer defaultImpulseK;
+
+	@Column(name = "default_impulse_mu")
+	private String defaultImpulseMu;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(schema = DBMetadata.SCHEME_PORTAL, name = "device_model_type_group",
+			joinColumns = @JoinColumn(name = "device_model_id"))
+	@Column(name = "device_model_type")
+	@Fetch(value = FetchMode.SUBSELECT)
+	private Set<String> deviceModelTypes = new HashSet<>();
 
 	public String getModelName() {
 		return modelName;
@@ -163,6 +189,38 @@ public class DeviceModel extends AbstractAuditableModel
 
 	public void setMetaVersion(Integer metaVersion) {
 		this.metaVersion = metaVersion;
+	}
+
+	public Boolean getIsImpulse() {
+		return isImpulse;
+	}
+
+	public void setIsImpulse(Boolean isImpulse) {
+		this.isImpulse = isImpulse;
+	}
+
+	public Integer getDefaultImpulseK() {
+		return defaultImpulseK;
+	}
+
+	public void setDefaultImpulseK(Integer defaultImpulseK) {
+		this.defaultImpulseK = defaultImpulseK;
+	}
+
+	public String getDefaultImpulseMu() {
+		return defaultImpulseMu;
+	}
+
+	public void setDefaultImpulseMu(String defaultImpulseMu) {
+		this.defaultImpulseMu = defaultImpulseMu;
+	}
+
+	public Set<String> getDeviceModelTypes() {
+		return deviceModelTypes;
+	}
+
+	public void setDeviceModelTypes(Set<String> deviceModelTypes) {
+		this.deviceModelTypes = deviceModelTypes;
 	}
 
 }

@@ -225,6 +225,15 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@OneToOne(mappedBy = "deviceObject")
 	private DeviceObjectLastInfo deviceObjectLastInfo;
 
+	@Column(name = "is_impulse")
+	private Boolean isImpulse;
+
+	@Column(name = "impulse_k")
+	private Integer impulseK;
+
+	@Column(name = "impulse_mu")
+	private String impulseMu;
+
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
@@ -454,6 +463,30 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@JsonIgnore
 	public void setDeviceObjectLastInfo(DeviceObjectLastInfo deviceObjectLastInfo) {
 		this.deviceObjectLastInfo = deviceObjectLastInfo;
+	}
+
+	public Boolean getIsImpulse() {
+		return isImpulse;
+	}
+
+	public void setIsImpulse(Boolean isImpulse) {
+		this.isImpulse = isImpulse;
+	}
+
+	public Integer getImpulseK() {
+		return impulseK;
+	}
+
+	public void setImpulseK(Integer impulseK) {
+		this.impulseK = impulseK;
+	}
+
+	public String getImpulseMu() {
+		return impulseMu;
+	}
+
+	public void setImpulseMu(String impulseMu) {
+		this.impulseMu = impulseMu;
 	}
 
 }

@@ -157,7 +157,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 			ContObject contObject = contObjectService.findContObject(contObjectId);
 			deviceObject.setContObject(contObject);
-			DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
 			deviceObject.setDeviceModel(deviceModel);
 
 			DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
@@ -273,7 +273,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 			ContObject contObject = contObjectService.findContObject(contObjectId);
 			deviceObject.setContObject(contObject);
-			DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
 			deviceObject.setDeviceModel(deviceModel);
 
 			DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
@@ -430,7 +430,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingSettings",
 			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> putDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> updateDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody DeviceObjectLoadingSettings requestEntity) {
 
@@ -477,8 +477,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	@RequestMapping(
 			value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource/loadingSettings",
 			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> putDeviceObjectDataSourceLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("deviceObjectId") Long deviceObjectId,
+	public ResponseEntity<?> updateDeviceObjectDataSourceLoadingSettings(
+			@PathVariable("contObjectId") Long contObjectId, @PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody SubscrDataSourceLoadingSettings requestEntity) {
 
 		checkNotNull(contObjectId);
@@ -515,6 +515,77 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		//		};
 		//
 		//		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param deviceModelId
+	 * @param requestEntity
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateDeviceModel(@PathVariable("id") Long deviceModelId,
+			@RequestBody DeviceModel requestEntity) {
+
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
+
+		if (deviceModelId == null || !deviceModelId.equals(requestEntity.getId())) {
+			return responseBadRequest();
+		}
+
+		ApiActionObjectProcess actionProcess = () -> {
+			return deviceModelService.save(requestEntity);
+		};
+		return responseUpdate(actionProcess);
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param requestEntity
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.POST,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {
+
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
+
+		ApiActionProcess<DeviceModel> actionProcess = () -> {
+			return deviceModelService.save(requestEntity);
+		};
+
+		return responseCreate(actionProcess, () -> request.getRequestURI());
+	}
+
+	/**
+	 * 
+	 * @param deviceModelId
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteDeviceModel(@PathVariable("id") Long deviceModelId) {
+
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
+
+		ApiActionVoidProcess actionProcess = () -> {
+			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceModelId);
+			deviceModel.setDeleted(1);
+			deviceModelService.save(deviceModel);
+		};
+
+		return responseDelete(actionProcess);
+
 	}
 
 }

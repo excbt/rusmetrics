@@ -39,6 +39,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -270,12 +271,40 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceModels() {
-		List<DeviceModel> deviceModels = deviceModelService.findAll();
-		deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);
-		if (!currentSubscriberService.isSystemUser()) {
-			deviceModels = ObjectFilters.devModeFilter(deviceModels);
-		}
-		return ResponseEntity.ok(deviceModels);
+		ApiActionObjectProcess actionProcess = () -> {
+			List<DeviceModel> deviceModels = deviceModelService.findDeviceModelAll();
+			deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);
+			if (!currentSubscriberService.isSystemUser()) {
+				deviceModels = ObjectFilters.devModeFilter(deviceModels);
+			}
+			return deviceModels;
+		};
+		return responseOK(actionProcess);
+	}
+
+	/**
+	 * 
+	 * @param deviceModelId
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceModel(@PathVariable("id") Long deviceModelId) {
+		ApiActionObjectProcess actionProcess = () -> {
+			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceModelId);
+			return deviceModel;
+		};
+		return responseOK(actionProcess);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModelTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceModelTypes() {
+		return responseOK(() -> deviceModelService.findDeviceModelTypes());
 	}
 
 	/**
