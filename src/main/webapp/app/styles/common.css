@@ -892,15 +892,21 @@ tr.nmc-main-table-header-indicator > th {
     padding: 0 !important;
 }
 
-
 /* Стиль, запрещающий многострочность в ячейке таблицы. Используются на страницах Уведомления и Показания для того,
     чтобы данные внутри ячейки отображались в одну строку.
 */
-.nmc-table-nowrap-data > tbody > tr > td{
+.nmc-notice-table-nowrap-data > tbody > tr > td{
     white-space: nowrap; /* Запрещаем перенос строк */
     overflow: auto; /*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px 5px; /* Устанавливаем отступ от границ ячейки = 1*/
+ }
+
+.nmc-table-nowrap-data > tbody > tr > td{
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: auto; /*Обрезаем все, что не вмещается*/
+    text-overflow: ellipsis;/* Добавляем многоточие*/
+    padding: 1px;/* Устанавливаем отступ от границ ячейки = 1*/
  }
 
 .nmc-table-nowrap-data1{

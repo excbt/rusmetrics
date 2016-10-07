@@ -570,7 +570,7 @@
 <div >
 <!--    Непрокручиваемая шапка-->
     <table ng-show="!ctrlSettings.loading"
-           class="nmc-table-nowrap-data nmc-main-table noMargin" 
+           class="nmc-notice-table-nowrap-data nmc-main-table noMargin" 
            ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
             <th class="nmc-td-for-buttons nmc-notice-th">
@@ -638,7 +638,7 @@
     </div>
     
     <div class="nmc-notice-table-with-fixed-header" ng-show="!ctrlSettings.loading && notices.length > 0">
-        <table class="nmc-table-nowrap-data nmc-main-table table-bordered" ng-class="tableDef.tableClass">
+        <table class="nmc-notice-table-nowrap-data nmc-main-table table-bordered" ng-class="tableDef.tableClass">
             <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
     <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
                 <td class="nmc-td-for-buttons">
