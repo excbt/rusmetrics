@@ -15,10 +15,10 @@ angular.module('portalNMC')
     
     $rootScope.ctxId = "management_rma_devices_page";
     //settings
-    var SESSION_TASK_URL = "../api/rma/subscrSessionTask";
-    var SESSION_DETAIL_TYPE_URL = SESSION_TASK_URL + "/contZPointSessionDetailType/byDeviceObject";
-    var SESSION_DETAIL_TYPE_FOR_DEVICE_URL = SESSION_TASK_URL + "/sessionDetailTypes/byDeviceObject";
-    var REFRESH_PERIOD = 10000;//10 sec
+    var SESSION_TASK_URL = "../api/rma/subscrSessionTask",
+        SESSION_DETAIL_TYPE_URL = SESSION_TASK_URL + "/contZPointSessionDetailType/byDeviceObject",
+        SESSION_DETAIL_TYPE_FOR_DEVICE_URL = SESSION_TASK_URL + "/sessionDetailTypes/byDeviceObject",
+        REFRESH_PERIOD = 10000;//10 sec
     
     var interval = null;//interval for load session data
     
@@ -147,6 +147,101 @@ angular.module('portalNMC')
             disabled: false
         }
     ];
+    
+    $scope.data.deviceModalWindowTabs = [
+        {
+            name: "main_properties_tab",
+            tabpanel: "main_properties"
+        },        
+        {
+            name: "con_properties_tab",
+            tabpanel: "con_properties"
+        },
+        {
+            name: "time_properties_tab",
+            tabpanel: "time_properties"
+        }
+    ];
+    
+    function setActivePropertiesTab(tabName) {
+        $scope.data.deviceModalWindowTabs.forEach(function (tabElem) {
+            var tab, tabPanel;
+            tab = document.getElementById(tabElem.name) || null;
+            tabPanel = document.getElementById(tabElem.tabpanel) || null;
+//console.log(tab);            
+//console.log(tabPanel);            
+//console.log(tabName);
+//console.log(tabElem.name);                            
+//console.log(tabElem.name.localeCompare(tabName));                                        
+//console.log(tabElem.name.localeCompare(tabName) !== 0);                            
+            if (tabElem.name.localeCompare(tabName) !== 0) {                
+
+                tab.classList.remove("active");                
+                tabPanel.classList.remove("active");
+            } else {                
+                tab.classList.add("active");
+                tabPanel.classList.add("in");
+                tabPanel.classList.add("active");
+            }
+        });
+        
+        
+    }
+    
+    var setConPropertiesActiveTab = function(){
+//        var tab = document.getElementById('main_properties_tab');     
+//        tab.classList.remove("active");        
+//        tab = document.getElementById('time_properties_tab') || null;
+//        tab.classList.remove("active");        
+//        tab = document.getElementById("con_properties_tab") || null;
+//        tab.classList.add("active"); 
+//                
+//        tab = document.getElementById('main_properties') || null;
+//        tab.classList.remove("active");
+//        tab = document.getElementById('time_properties') || null;
+//        tab.classList.remove("active");
+//        tab = document.getElementById("con_properties") || null;
+//        tab.classList.add("in");
+//        tab.classList.add("active");
+        
+        
+        setActivePropertiesTab("con_properties_tab");
+        //set focus for first error input
+        if ($('#divInputNetDevAddr').hasClass('has-error')) {
+            $('#inputNetDevAddr').focus();
+            return;
+        }
+        if ($('#divInputNetAddrImpDev').hasClass('has-error')) {
+            $('#inputNetAddrImpDev').focus();
+            return;
+        }
+        if ($('#divInputTikCost').hasClass('has-error')) {
+            $('#inputTikCost').focus();
+            return;
+        }
+        if ($('#divInputDevMeasure').hasClass('has-error')) {
+            $('#inputDevMeasure').focus();
+            return;
+        }
+    };
+    
+    var setMainPropertiesActiveTab = function(){
+        setActivePropertiesTab("main_properties_tab");
+//        var tab = document.getElementById('con_properties_tab');     
+//        tab.classList.remove("active");        
+//        tab = document.getElementById('time_properties_tab') || null;
+//        tab.classList.remove("active");        
+//        tab = document.getElementById("main_properties_tab") || null;
+//        tab.classList.add("active"); 
+//                
+//        tab = document.getElementById('con_properties') || null;
+//        tab.classList.remove("active");
+//        tab = document.getElementById('time_properties') || null;
+//        tab.classList.remove("active");
+//        tab = document.getElementById("main_properties") || null;
+//        tab.classList.add("in");
+//        tab.classList.add("active");        
+    };
             //get devices
     function sortDevicesByConObjectFullName(array){
             if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)){
@@ -334,6 +429,10 @@ angular.module('portalNMC')
             $scope.data.currentModel = tmpDevModel;
             $scope.data.currentObject.curModel = tmpDevModel;
             
+            if (!mainSvc.checkUndefinedNull($scope.data.currentModel.isImpulse)) {
+                $scope.data.currentObject.isImpulse = $scope.data.currentModel.isImpulse;
+            }
+            
             //change impulseK and impulseMu
             if ($scope.data.currentModel.isImpulse === true) {
                 $scope.data.currentObject.impulseK = $scope.data.currentModel.defaultImpulseK;
@@ -409,6 +508,9 @@ angular.module('portalNMC')
             $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
             $scope.data.currentModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             $scope.data.currentObject.curModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
+            if (!mainSvc.checkUndefinedNull($scope.data.currentModel.isImpulse)) {
+                $scope.data.currentObject.isImpulse = $scope.data.currentModel.isImpulse;
+            }
             if ($scope.data.currentModel.isImpulse === true) {
                 $scope.data.currentObject.impulseK = $scope.data.currentModel.defaultImpulseK;
                 $scope.data.currentObject.impulseMu = $scope.data.currentModel.defaultImpulseMu;
@@ -466,8 +568,29 @@ angular.module('portalNMC')
         
     };
     
-    $scope.saveDevice = function(device){
-        //set device saving...
+    function checkDeviceImpulseProperties(device) {
+        var result = true;
+        if (mainSvc.checkUndefinedNull(device.impulseK) || device.impulseK == 0) {
+                notificationFactory.errorInfo("Ошибка", "Не задано число импульсов в единице измерения");
+                result = false;
+        }
+        if (mainSvc.checkUndefinedNull(device.impulseMu) || device.impulseMu === "") {
+            notificationFactory.errorInfo("Ошибка", "Не задана единица измерения");
+            result = false;
+        }
+        if (mainSvc.checkUndefinedNull(device.impulseCounterAddr) || device.impulseCounterAddr === "") {
+            notificationFactory.errorInfo("Ошибка", "Не задан адрес счетчика импульсов");
+            result = false;
+        }
+        if (mainSvc.checkUndefinedNull(device.impulseCounterSlotAddr) || device.impulseCounterSlotAddr === "") {
+            notificationFactory.errorInfo("Ошибка", "Не задан адрес прибора в счетчике импульсов");
+            result = false;
+        }
+        return result; 
+    }
+    
+    function checkDevice(device) {        
+                //set device saving...
         device.isSaving = true;
         //check device data
         var checkDsourceFlag = true;
@@ -488,9 +611,23 @@ angular.module('portalNMC')
             notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
             checkDsourceFlag = false;
         }
+        if (device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
+            var inputCDFlag = checkDsourceFlag;
+            if (checkDeviceImpulseProperties(device) === false) {
+                checkDsourceFlag = false;
+            }
+            //Open Connection params tab if common params is checked, but impulse param check is failed
+            if (inputCDFlag === true && checkDsourceFlag === false) {
+                setConPropertiesActiveTab();
+            }
+            //Open Main properties tab
+            if (inputCDFlag === false) {
+                setMainPropertiesActiveTab();
+            }
+        }
         if (checkDsourceFlag === false){
             device.isSaving = false;
-            return;
+            return false;
         }
         if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString !== "")){
             device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.ctrlSettings.userDateFormat);
@@ -504,8 +641,17 @@ angular.module('portalNMC')
             userDecision = confirm("Модель прибора была изменена. Метаданные прибора будут перезаписаны метаданными текущей модели. Продолжить?");
             if (!userDecision){
                 device.isSaving = false;
-                return "Save operation is canceled by user.";
+//                return "Save operation is canceled by user.";
+                return false;
             }
+        }
+        return true;
+    }
+    
+    $scope.saveDevice = function(device){
+        //check device
+        if (checkDevice(device) === false) {
+            return false;
         }
         //send to server
         objectSvc.sendDeviceToServer(device).then(successCallback, errorCallback);
@@ -938,23 +1084,6 @@ angular.module('portalNMC')
         });
         $('#inputAttemptsNumberShd').inputmask();                
     });
-    
-    var setMainPropertiesActiveTab = function(){
-        var tab = document.getElementById('con_properties_tab');     
-        tab.classList.remove("active");        
-        tab = document.getElementById('time_properties_tab') || null;
-        tab.classList.remove("active");        
-        tab = document.getElementById("main_properties_tab") || null;
-        tab.classList.add("active"); 
-                
-        tab = document.getElementById('con_properties') || null;
-        tab.classList.remove("active");
-        tab = document.getElementById('time_properties') || null;
-        tab.classList.remove("active");
-        tab = document.getElementById("main_properties") || null;
-        tab.classList.add("in");
-        tab.classList.add("active");        
-    };
     
     $("#showDeviceModal").on("shown.bs.modal", function(){
         $("#inputDeviceModel").focus();

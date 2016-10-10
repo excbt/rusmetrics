@@ -18,6 +18,17 @@
                data-toggle="tab">Модемы
             </a>
         </li>
+        <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
+            id="modems_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/device-models/" 
+               aria-controls="device-models" 
+               role="tab" 
+               data-target="#device-models" 
+               data-toggle="tab">Модели приборов
+            </a>
+        </li>
         <li id="organizations_edit_2nd_menu_item" role="presentation" class="" >
             <a class="nmc-main-tab-button" 
                href="#/management/organizations/" 
@@ -428,7 +439,8 @@
                                                 <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-                                                <div class="form-group noMarginBottom" 
+                                                <div id="divInputNetDevAddr"
+                                                     class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.impulseCounterSlotAddr == null || data.currentObject.impulseCounterSlotAddr == ''}">
                                                     <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type="text" 
@@ -445,7 +457,8 @@
                                                 <label for="inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-                                                <div class="form-group noMarginBottom" 
+                                                <div id="divInputNetAddrImpDev"
+                                                     class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.impulseCounterAddr==null || data.currentObject.impulseCounterAddr == ''}">
                                                     <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type="text" 
@@ -462,7 +475,8 @@
                                                 <label for="inputTikCost" >Число импульсов в единице измерения</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
-                                                <div class="form-group noMarginBottom" 
+                                                <div id="divInputTikCost"
+                                                     class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.impulseK == null || data.currentObject.impulseK == 0}">
                                                     <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type="text" 
@@ -488,8 +502,9 @@
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
                                                        />
 -->
-                                                <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':data.currentObject.impulseMu==null}">
+                                                <div id="divInputDevMeasure"
+                                                     class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.impulseMu == null}">
                                                     <select class="form-control nmc-text-input-form nmc-input-data pull-right"
                                                             id="inputDevMeasure"
                                                             ng-model="data.currentObject.impulseMu"
