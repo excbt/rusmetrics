@@ -264,9 +264,12 @@ public class DeviceObjectService implements SecuredRoles {
 
 		}
 
-		// Проверяем источник данных для прямой загрузки 
-		if (deviceObjectDataSource != null && deviceObjectDataSource.getSubscrDataSource() != null
-				&& DataSourceTypeKey.DEVICE
+		DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
+
+		// TODO Metadata form Impulse Devices 
+		// Проверяем источник данных для прямой загрузки, за исключением импульсных приборов
+		if (!Boolean.TRUE.equals(deviceModel.getIsImpulse()) && deviceObjectDataSource != null
+				&& deviceObjectDataSource.getSubscrDataSource() != null && DataSourceTypeKey.DEVICE
 						.equalsKeyname(deviceObjectDataSource.getSubscrDataSource().getDataSourceTypeKey())) {
 
 			if (oldDeviceObject == null
