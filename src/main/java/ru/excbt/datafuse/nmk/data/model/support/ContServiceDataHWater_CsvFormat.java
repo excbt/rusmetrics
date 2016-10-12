@@ -11,13 +11,25 @@ public abstract class ContServiceDataHWater_CsvFormat {
 
 	@JsonIgnore
 	abstract Long getId();
-	
+
 	@JsonProperty("date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	abstract Date getDataDate();
 
 	@JsonIgnore
 	abstract int getVersion();
+
+	@JsonIgnore
+	abstract String getDataDateString();
+
+	@JsonIgnore
+	abstract String getCrc32Valid();
+
+	@JsonIgnore
+	abstract String getDataMstatus();
+
+	@JsonIgnore
+	abstract String getDataChanged();
 
 	@JsonProperty("work_time")
 	abstract BigDecimal getWorkTime();

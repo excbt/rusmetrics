@@ -240,7 +240,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		Page<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageRequest);
 
-		return ResponseEntity.ok(new PageInfoList<ContServiceDataHWater>(result));
+		return ResponseEntity.ok(new PageInfoList<>(result));
 
 	}
 
