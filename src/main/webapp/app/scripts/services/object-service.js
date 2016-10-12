@@ -1,4 +1,4 @@
-/*jslint node: true, white: true*/
+/*jslint node: true, white: true, nomen: true*/
 /*global angular*/
 'use strict';
 angular.module('portalNMC')
@@ -11,30 +11,32 @@ angular.module('portalNMC')
             }
         ];
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";
-        var loading = true;
-        var urlApi = '../api';
-        var urlSubscr = urlApi + '/subscr';
-        var urlRma = urlApi + '/rma';
-        var urlDatasources = urlRma + '/dataSources';
-        var urlSubscrContObjects = urlSubscr + '/contObjects';
-        var urlRmaContObjects = urlRma + '/contObjects';                 
-        var urlRefRange = urlSubscr + '/contObjects/';
-        var urlDeviceObjects = '/deviceObjects';
-        var urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels';
-        var urlDeviceMetaDataVzlet = '/metaVzlet';
-        var urlDeviceMetaDataSuffix = '/metadata';
-        var urlZpointMetaDataSuffix = '/metadata';                 
-        var urlDeviceMetaDataVzletSystemList = urlSubscr + '/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaDataVzlet+'/system';
-        var urlCitiesData = urlSubscr + '/service/hwater/contObjects/serviceTypeInfo';  
-        var urlTimezones = urlApi + '/timezoneDef/all';
-        var urlRsoOrganizations = urlRmaContObjects + '/rsoOrganizations';
-        var urlCmOrganizations = urlRmaContObjects + '/cmOrganizations';
-        var urlServiceTypes = urlRmaContObjects + '/contServiceTypes';//'resource/serviceTypes.json';
+        var loading = true,
+            urlApi = '../api',
+            urlSubscr = urlApi + '/subscr',
+            urlRma = urlApi + '/rma',
+            urlDatasources = urlRma + '/dataSources',
+            urlSubscrContObjects = urlSubscr + '/contObjects',
+            urlRmaContObjects = urlRma + '/contObjects',
+            urlRefRange = urlSubscr + '/contObjects/',
+            urlDeviceObjects = '/deviceObjects',
+            urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels',
+            urlDeviceModelTypes = urlRma+urlDeviceObjects + '/deviceModelTypes',
+            urlImpulseCounterTypes = urlRma+urlDeviceObjects + '/impulseCounterTypes',
+            urlDeviceMetaDataVzlet = '/metaVzlet',
+            urlDeviceMetaDataSuffix = '/metadata',
+            urlZpointMetaDataSuffix = '/metadata',
+            urlDeviceMetaDataVzletSystemList = urlSubscr + '/deviceObjects/metaVzlet/system',//urlDeviceObjects+urlDeviceMetaDataVzlet+'/system';
+            urlCitiesData = urlSubscr + '/service/hwater/contObjects/serviceTypeInfo',
+            urlTimezones = urlApi + '/timezoneDef/all',
+            urlRsoOrganizations = urlRmaContObjects + '/rsoOrganizations',
+            urlCmOrganizations = urlRmaContObjects + '/cmOrganizations',
+            urlServiceTypes = urlRmaContObjects + '/contServiceTypes',//'resource/serviceTypes.json';
 //                 /contObjects/deviceObjects/metadata/measureUnits
-        var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
-        var rmaTreeTemplatesUrl = urlSubscr + '/subscrObjectTreeTemplates';
-        var controlTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
-        var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
+            urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits",
+            rmaTreeTemplatesUrl = urlSubscr + '/subscrObjectTreeTemplates',
+            controlTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1',
+            subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -73,7 +75,7 @@ angular.module('portalNMC')
             var userInfo = $rootScope.userInfo;
             if (angular.isDefined(userInfo)){
                 result = userInfo._system;
-            };
+            }
             return result;
         };         
                  
@@ -215,6 +217,7 @@ angular.module('portalNMC')
             }
             return $http.get(url, httpOptions);
         };
+                 
         var getDeviceModels = function(){
             var url = urlDeviceModels;
             if (isCancelParamsIncorrect() === true){
@@ -222,6 +225,22 @@ angular.module('portalNMC')
             }
             return $http.get(url, httpOptions);
         };
+                 
+//        var getDeviceModelTypes = function(){
+//            var url = urlDeviceModelTypes;
+//            if (isCancelParamsIncorrect() === true){
+//                return null;
+//            }
+//            return $http.get(url, httpOptions);
+//        };
+                 
+        function getImpulseCounterTypes() {
+            var url = urlImpulseCounterTypes;
+            if (isCancelParamsIncorrect() === true){
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        }
                  
         var getRmaObjectSubscribers = function(objId){
             var url = urlRmaContObjects + "/" + objId + "/subscribers";
@@ -727,11 +746,11 @@ angular.module('portalNMC')
                 if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
                     if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
                         result = true;
-                    };
-                };
-            };
+                    }
+                }
+            }
             return result;
-        };
+        }
 // **************************************************************
 //     end Device methods
 // **************************************************************                 
@@ -764,7 +783,9 @@ angular.module('portalNMC')
             getCurrentObject,
             getDatasourcesUrl,
             getDeviceModels,
+            /*getDeviceModelTypes,*/
             getDeviceSchedulerSettings,
+            getImpulseCounterTypes,
             getObject,
             getObjectConsumingData,
             getObjectSettings,

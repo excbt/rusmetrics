@@ -124,6 +124,8 @@ angular.module('portalNMC')
     $scope.data.objects = [];
     $scope.data.devices = [];
     $scope.data.deviceModels = [];
+    $scope.data.deviceModelTypes = [];
+    $scope.data.impulseCounterTypes = [];
     $scope.data.currentObject = {};
     $scope.data.currentScheduler = {};
     $scope.data.currentSession = {};
@@ -345,7 +347,24 @@ angular.module('portalNMC')
             errorProtoCallback
         );
     };
-    $scope.getDevices();
+    
+//    function getDeviceModelTypes() {
+//        objectSvc.getDeviceModelTypes().then(function(response){
+//            $scope.data.deviceModelTypes = response.data;
+//            $scope.getDevices();
+//        }, errorProtoCallback);
+//    }
+    
+    function getImpulseCounterTypes() {
+        objectSvc.getImpulseCounterTypes().then(function(response){
+            $scope.data.impulseCounterTypes = response.data;
+            $scope.getDevices();
+        }, errorProtoCallback);        
+    }
+    
+//    $scope.getDevices();
+//    getDeviceModelTypes();
+    getImpulseCounterTypes();
     
     //get device scheduler
     $scope.getDeviceSchedulerSettings = function(objId, device){
@@ -418,25 +437,37 @@ angular.module('portalNMC')
         return result;
     };
     
+    function checkImpulseCompatibility(model, datasource) {
+        if (!mainSvc.checkUndefinedNull(model) && model.isImpulse === true && datasource.dataSourceType.isRaw !== true) {
+            notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");            
+            return false;
+        }
+        return true;
+    }
+    
+    function setImpulseSettings(targetDevice, isImpulse, impulseK, impulseMu, impulseCounterTypeKeyname) {
+        targetDevice.isImpulse = isImpulse;
+        targetDevice.impulseK = impulseK;
+        targetDevice.impulseMu = impulseMu;
+        targetDevice.impulseCounterType = impulseCounterTypeKeyname || null;
+    }
+    
     $scope.deviceModelChange = function(){
         if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
             var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);            
-            if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource) && tmpDevModel.isImpulse === true && $scope.data.currentObject.curDatasource.dataSourceType.isRaw !== true) {
-                notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");                
-//                return false;
+            if (!mainSvc.checkUndefinedNull($scope.data.currentObject)) {
+                checkImpulseCompatibility(tmpDevModel, $scope.data.currentObject.curDatasource);    
             }
+            
             $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
             $scope.data.currentModel = tmpDevModel;
-            $scope.data.currentObject.curModel = tmpDevModel;
-            
-            if (!mainSvc.checkUndefinedNull($scope.data.currentModel.isImpulse)) {
-                $scope.data.currentObject.isImpulse = $scope.data.currentModel.isImpulse;
-            }
+            $scope.data.currentObject.curModel = tmpDevModel;            
             
             //change impulseK and impulseMu
             if ($scope.data.currentModel.isImpulse === true) {
-                $scope.data.currentObject.impulseK = $scope.data.currentModel.defaultImpulseK;
-                $scope.data.currentObject.impulseMu = $scope.data.currentModel.defaultImpulseMu;
+                setImpulseSettings($scope.data.currentObject, $scope.data.currentModel.isImpulse, $scope.data.currentModel.defaultImpulseK, $scope.data.currentModel.defaultImpulseMu, $scope.data.impulseCounterTypes[0].keyname || null);
+            } else {
+                setImpulseSettings($scope.data.currentObject, false, null, null, null);
             }
             
         }        
@@ -508,12 +539,9 @@ angular.module('portalNMC')
             $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
             $scope.data.currentModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             $scope.data.currentObject.curModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
-            if (!mainSvc.checkUndefinedNull($scope.data.currentModel.isImpulse)) {
-                $scope.data.currentObject.isImpulse = $scope.data.currentModel.isImpulse;
-            }
+            
             if ($scope.data.currentModel.isImpulse === true) {
-                $scope.data.currentObject.impulseK = $scope.data.currentModel.defaultImpulseK;
-                $scope.data.currentObject.impulseMu = $scope.data.currentModel.defaultImpulseMu;
+                setImpulseSettings($scope.data.currentObject, $scope.data.currentModel.isImpulse, $scope.data.currentModel.defaultImpulseK, $scope.data.currentModel.defaultImpulseMu, $scope.data.impulseCounterTypes[0].keyname || null);
             }
         }
         if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)){
@@ -550,11 +578,12 @@ angular.module('portalNMC')
                 return true;
             }
         });              
-        if (!mainSvc.checkUndefinedNull($scope.data.currentModel) && $scope.data.currentModel.isImpulse === true && curDataSource.dataSourceType.isRaw !== true) {
-            notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
-//            $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId) || null;
-//            return false;
-        }
+//        if (!mainSvc.checkUndefinedNull($scope.data.currentModel) && $scope.data.currentModel.isImpulse === true && curDataSource.dataSourceType.isRaw !== true) {
+//            notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
+////            $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId) || null;
+////            return false;
+//        }
+        checkImpulseCompatibility($scope.data.currentModel, curDataSource);
         
         $scope.data.currentObject.dataSourceTable1h = null;
         $scope.data.currentObject.dataSourceTable24h = null;
@@ -570,7 +599,7 @@ angular.module('portalNMC')
     
     function checkDeviceImpulseProperties(device) {
         var result = true;
-        if (mainSvc.checkUndefinedNull(device.impulseK) || device.impulseK == 0) {
+        if (mainSvc.checkUndefinedNull(device.impulseK) || device.impulseK == 0) { /* == - only, === - don't catch '0', "Number(device.impulseK) === 0" - do not test*/
                 notificationFactory.errorInfo("Ошибка", "Не задано число импульсов в единице измерения");
                 result = false;
         }
@@ -607,8 +636,8 @@ angular.module('portalNMC')
             checkDsourceFlag = false;
         }
 //console.log(device);
-        if (!mainSvc.checkUndefinedNull(device.curModel) && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw !== true) {
-            notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
+//        if (!mainSvc.checkUndefinedNull(device.curModel) && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw !== true) {
+        if (checkImpulseCompatibility(device.curModel, device.curDatasource) === false) {            
             checkDsourceFlag = false;
         }
         if (device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
@@ -1085,8 +1114,12 @@ angular.module('portalNMC')
         $('#inputAttemptsNumberShd').inputmask();                
     });
     
+    $scope.setInputTikCostMask = function() {
+        $('#inputTikCost').inputmask(); 
+    };
+    
     $("#showDeviceModal").on("shown.bs.modal", function(){
-        $("#inputDeviceModel").focus();
+        $("#inputDeviceModel").focus();                
     });
     
     $("#showDeviceModal").on("hidden.bs.modal", function(){

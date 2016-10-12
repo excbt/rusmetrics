@@ -18,6 +18,7 @@
                data-toggle="tab">Модемы
             </a>
         </li>
+<!--
         <li ng-if="isSystemuser()"
             ng-hide="isTestMode()"
             id="modems_edit_2nd_menu_item" role="presentation">
@@ -29,6 +30,7 @@
                data-toggle="tab">Модели приборов
             </a>
         </li>
+-->
         <li id="organizations_edit_2nd_menu_item" role="presentation" class="" >
             <a class="nmc-main-tab-button" 
                href="#/management/organizations/" 
@@ -420,20 +422,20 @@
                                 <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table ng-if="data.currentModel.isImpulse === true && data.currentObject.curDatasource.dataSourceType.isRaw === true"
                                            class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-<!--
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
-                                                <label for="inputDevMark" >Марка прибора</label>
+                                                <label for="inputDevMark" >Тип счетчика импульсов</label>
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <select class="form-control nmc-text-input-form nmc-input-data pull-right"
-                                                        id="inputDevMark"
+                                                        id="inputDevModelType"
                                                         ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                        ng-model="data.currentObject.impulseCounterType"
+                                                        ng-options="impulseCounterType.keyname as impulseCounterType.caption for impulseCounterType in data.impulseCounterTypes"
                                                         >
-                                                </select>
+                                                </select>                                                
                                             </td>
                                         </tr>
--->
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
                                                 <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
@@ -472,16 +474,27 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
-                                                <label for="inputTikCost" >Число импульсов в единице измерения</label>
+                                                <label for="inputTikCost" >Число импульсов в <span ng-bind="(data.deviceMetadataMeasures.all | filter: data.currentObject.impulseMu)[0].caption"></span>
+                                                </label>
+<!--
+                                                <select class="form-control nmc-text-input-form nmc-input-digital-data"
+                                                            id="inputDevMeasure"
+                                                            ng-model="data.currentObject.impulseMu"                                                            
+                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                            disabled
+                                                            >
+                                                </select>
+-->                                                
                                             </td>
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <div id="divInputTikCost"
                                                      class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.impulseK == null || data.currentObject.impulseK == 0}">
+                                                    {{setInputTikCostMask()}}
                                                     <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type="text" 
-                                                           id="inputTikCost"                                            
-                                                           placeholder="" 
+                                                           id="inputTikCost"                                                           
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
                                                            ng-model="data.currentObject.impulseK"
                                                            ng-disabled="isDeviceDisabled(data.currentObject);"
                                                            />
@@ -507,9 +520,9 @@
                                                      ng-class="{'has-error':data.currentObject.impulseMu == null}">
                                                     <select class="form-control nmc-text-input-form nmc-input-data pull-right"
                                                             id="inputDevMeasure"
-                                                            ng-model="data.currentObject.impulseMu"
-                                                            ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                            ng-model="data.currentObject.impulseMu"                                                            
                                                             ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                            disabled
                                                             >
                                                     </select>
                                                 </div>
