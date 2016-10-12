@@ -309,6 +309,16 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	/**
 	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/impulseCounterTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceImpulseCounterTypes() {
+		return responseOK(() -> deviceModelService.findImpulseCounterTypes());
+	}
+
+	/**
+	 * 
 	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @return

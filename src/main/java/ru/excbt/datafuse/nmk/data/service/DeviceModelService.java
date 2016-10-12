@@ -15,10 +15,12 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.DeviceModelType;
+import ru.excbt.datafuse.nmk.data.model.keyname.ImpulseCounterType;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
-import ru.excbt.datafuse.nmk.data.repository.DeviceModelTypeGroupRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
+import ru.excbt.datafuse.nmk.data.repository.DeviceModelTypeGroupRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DeviceModelTypeRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ImpulseCounterTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -41,6 +43,9 @@ public class DeviceModelService extends AbstractService implements SecuredRoles 
 
 	@Autowired
 	private DeviceModelTypeGroupRepository deviceModelTypeGroupRepository;
+
+	@Autowired
+	private ImpulseCounterTypeRepository impulseCounterTypeRepository;
 
 	////////////
 	public static final Comparator<DeviceModel> COMPARE_BY_NAME = (a, b) -> {
@@ -143,6 +148,15 @@ public class DeviceModelService extends AbstractService implements SecuredRoles 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceModelType> findDeviceModelTypes() {
 		return deviceModelTypeRepository.selectAll();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ImpulseCounterType> findImpulseCounterTypes() {
+		return impulseCounterTypeRepository.selectAllOrdered();
 	}
 
 }

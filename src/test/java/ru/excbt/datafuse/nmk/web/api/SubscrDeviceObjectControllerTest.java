@@ -147,8 +147,13 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	@Test
-	public void testDeviceDataTypes() throws Exception {
+	public void testDeviceModelTypes() throws Exception {
 		_testGetJson(apiSubscrUrl("/deviceObjects/deviceModelTypes"));
+	}
+
+	@Test
+	public void testDeviceImpulseCounterTypes() throws Exception {
+		_testGetJson(apiSubscrUrl("/deviceObjects/impulseCounterTypes"));
 	}
 
 }
