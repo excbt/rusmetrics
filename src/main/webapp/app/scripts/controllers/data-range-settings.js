@@ -174,7 +174,7 @@ app
 //console.log($rootScope.reportEnd);
     }, false);
     
-        //Страница с показаниями - удаление показаний
+        //Страница с показаниями - удаление показаний - not used
     $scope.deleteIndicatorDates = {
         startDate : moment().subtract(6, 'days').startOf('day'),
         endDate :  moment().endOf('day')
