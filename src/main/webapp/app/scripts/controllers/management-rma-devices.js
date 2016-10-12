@@ -455,7 +455,7 @@ angular.module('portalNMC')
     $scope.deviceModelChange = function(){
         if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)){
             var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);            
-            if (!mainSvc.checkUndefinedNull($scope.data.currentObject)) {
+            if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource)) {
                 checkImpulseCompatibility(tmpDevModel, $scope.data.currentObject.curDatasource);    
             }
             
