@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiControll
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class ContServiceDataImpulseController extends SubscrContServiceDataWebApiController {
+public class SubscrContServiceDataImpulseController extends SubscrContServiceDataWebApiController {
 
 	@Autowired
 	private ContServiceDataImpulseService contServiceDataImpulseService;
