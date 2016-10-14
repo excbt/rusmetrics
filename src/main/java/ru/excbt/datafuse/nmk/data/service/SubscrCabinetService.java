@@ -160,7 +160,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		newSubscriber.setParentSubscriberId(parentSubscriber.getId());
 		newSubscriber.setSubscrType(SubscrTypeKey.CABINET.getKeyname());
 		newSubscriber.setSubscriberName(contObject.getFullName());
-		newSubscriber.setTimezoneDef(parentSubscriber.getTimezoneDef());
+		newSubscriber.setTimezoneDefKeyname(parentSubscriber.getTimezoneDefKeyname());
 		newSubscriber.setIsChild(true);
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);

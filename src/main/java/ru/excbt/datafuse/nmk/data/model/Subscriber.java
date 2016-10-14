@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 /**
@@ -55,11 +53,12 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "organization_id", updatable = false, insertable = false)
 	private Long organizationId;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "timezone_def")
-	private TimezoneDef timezoneDef;
+	//	@ManyToOne(fetch = FetchType.EAGER)
+	//	@JoinColumn(name = "timezone_def")
+	//	private TimezoneDef timezoneDef;
 
-	@Column(name = "timezone_def", insertable = false, updatable = false)
+	//@Column(name = "timezone_def", insertable = false, updatable = false)
+	@Column(name = "timezone_def")
 	private String timezoneDefKeyname;
 
 	@JsonIgnore
@@ -163,13 +162,13 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 		this.subscriberName = subscriberName;
 	}
 
-	public TimezoneDef getTimezoneDef() {
-		return timezoneDef;
-	}
-
-	public void setTimezoneDef(TimezoneDef timezoneDef) {
-		this.timezoneDef = timezoneDef;
-	}
+	//	public TimezoneDef getTimezoneDef() {
+	//		return timezoneDef;
+	//	}
+	//
+	//	public void setTimezoneDef(TimezoneDef timezoneDef) {
+	//		this.timezoneDef = timezoneDef;
+	//	}
 
 	public UUID getSubscriberUUID() {
 		return subscriberUUID;

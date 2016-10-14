@@ -22,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
@@ -78,8 +77,8 @@ public class RmaSubscriberService extends SubscriberService {
 
 		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
-		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
-		subscriber.setTimezoneDef(timezoneDef);
+		//		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
+		//		subscriber.setTimezoneDefKeyname(timezoneDef);
 
 		subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
 
@@ -130,8 +129,8 @@ public class RmaSubscriberService extends SubscriberService {
 
 		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
-		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
-		subscriber.setTimezoneDef(timezoneDef);
+		//		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
+		//		subscriber.setTimezoneDef(timezoneDef);
 
 		Subscriber checkSubscriber = subscriberRepository.findOne(subscriber.getId());
 		if (checkSubscriber == null || checkSubscriber.getDeleted() == 1) {
@@ -237,9 +236,8 @@ public class RmaSubscriberService extends SubscriberService {
 		checkArgument(!subscriber.isNew());
 
 		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(subscriber.getId());
-		List<SubscrUser> adminUsers = ObjectFilters.filterToList(subscrUsers,
-				i -> Boolean.TRUE.equals(i.getIsAdmin()) && !Boolean.TRUE.equals(i.getIsReadonly())
-						&& !Boolean.TRUE.equals(i.getIsBlocked()));
+		List<SubscrUser> adminUsers = ObjectFilters.filterToList(subscrUsers, i -> Boolean.TRUE.equals(i.getIsAdmin())
+				&& !Boolean.TRUE.equals(i.getIsReadonly()) && !Boolean.TRUE.equals(i.getIsBlocked()));
 
 		adminUsers.forEach(i -> {
 			logger.debug("Update roles for {}. isAdmin: {}, isReadonly: {}", i.getUserName(), i.getIsAdmin(),
