@@ -36,7 +36,6 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
-import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.model.vo.ContObjectMonitorVO;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
@@ -146,11 +145,11 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setCwTemp(contObject.getCwTemp());
 		currContObject.setHeatArea(contObject.getHeatArea());
 
-		if (contObject.getTimezoneDefKeyname() != null) {
-			currContObject.setTimezoneDef(timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname()));
-		} else {
-			currContObject.setTimezoneDef(null);
-		}
+		//		if (contObject.getTimezoneDefKeyname() != null) {
+		//			currContObject.setTimezoneDef(timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname()));
+		//		} else {
+		//			currContObject.setTimezoneDef(null);
+		//		}
 
 		// Process ContObjectDaData
 		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(currContObject);
@@ -258,8 +257,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}
 
-		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname());
-		contObject.setTimezoneDef(timezoneDef);
+		//		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname());
+		//		contObject.setTimezoneDef(timezoneDef);
 		contObject.setIsManual(true);
 
 		// Processing ContObjectDaData
