@@ -5,19 +5,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.Serializable;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.vo.ContObjectVOFias;
 
 @Deprecated
-public class MonitorContEventNotificationStatus implements Serializable,
-		StatusColorObject, ContObjectHolder {
+public class MonitorContEventNotificationStatus
+		implements Serializable, StatusColorObject, ContObjectHolder, ContObjectFiasHolder {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5870004714222214147L;
 
-	private final ContObject contObject;
+	private final ContObjectVOFias contObjectVOFias;
 
 	private ContEventLevelColorKey contEventLevelColorKey;
 
@@ -27,20 +29,18 @@ public class MonitorContEventNotificationStatus implements Serializable,
 
 	private long newEventsCount;
 
-	public MonitorContEventNotificationStatus(ContObject contObject) {
-		this.contObject = ContObjectShort.newInstance(contObject);
+	public MonitorContEventNotificationStatus(ContObject contObject, ContObjectFias contObjectFias) {
+		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias);
 	}
 
 	@Override
 	public ContObject getContObject() {
-		return contObject;
+		return contObjectVOFias.getModel();
 	}
 
-	public static MonitorContEventNotificationStatus newInstance(
-			ContObject contObject) {
+	public static MonitorContEventNotificationStatus newInstance(ContObject contObject, ContObjectFias contObjectFias) {
 		checkNotNull(contObject);
-		MonitorContEventNotificationStatus result = new MonitorContEventNotificationStatus(
-				contObject);
+		MonitorContEventNotificationStatus result = new MonitorContEventNotificationStatus(contObject, contObjectFias);
 		return result;
 	}
 
@@ -48,15 +48,13 @@ public class MonitorContEventNotificationStatus implements Serializable,
 		return contEventLevelColorKey;
 	}
 
-	public void setContEventLevelColorKey(
-			ContEventLevelColorKey contEventLevelColorKey) {
+	public void setContEventLevelColorKey(ContEventLevelColorKey contEventLevelColorKey) {
 		this.contEventLevelColorKey = contEventLevelColorKey;
 	}
 
 	@Override
 	public String getStatusColor() {
-		return contEventLevelColorKey == null ? null : contEventLevelColorKey
-				.getKeyname();
+		return contEventLevelColorKey == null ? null : contEventLevelColorKey.getKeyname();
 	}
 
 	public long getEventsCount() {
@@ -81,6 +79,14 @@ public class MonitorContEventNotificationStatus implements Serializable,
 
 	public void setNewEventsCount(long newEventsCount) {
 		this.newEventsCount = newEventsCount;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.ContObjectFiasHolder#getContObjectFias()
+	 */
+	@Override
+	public ContObjectFias getContObjectFias() {
+		return contObjectVOFias.getContObjectFias();
 	}
 
 }

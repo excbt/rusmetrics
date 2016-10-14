@@ -4,9 +4,6 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -37,12 +34,13 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 	 */
 	private static final long serialVersionUID = 4834456607858555535L;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cont_object_id")
-	@JsonIgnore
-	private ContObject contObject;
+	//	@OneToOne(fetch = FetchType.EAGER)
+	//	@JoinColumn(name = "cont_object_id")
+	//	@JsonIgnore
+	//	private ContObject contObject;
 
-	@Column(name = "cont_object_id", insertable = false, updatable = false)
+	//@Column(name = "cont_object_id", insertable = false, updatable = false)
+	@Column(name = "cont_object_id")
 	private Long contObjectId;
 
 	@Column(name = "fias_uuid")
@@ -91,9 +89,9 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 	@Column(name = "deleted")
 	private int deleted;
 
-	public ContObject getContObject() {
-		return contObject;
-	}
+	//	public ContObject getContObject() {
+	//		return contObject;
+	//	}
 
 	public Long getContObjectId() {
 		return contObjectId;
@@ -161,9 +159,9 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 		this.deleted = deleted;
 	}
 
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
+	//	public void setContObject(ContObject contObject) {
+	//		this.contObject = contObject;
+	//	}
 
 	public Boolean getIsGeoRefresh() {
 		return isGeoRefresh;
@@ -199,6 +197,10 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 
 	public void setShortAddress1(String shortAddress1) {
 		this.shortAddress1 = shortAddress1;
+	}
+
+	public void setContObjectId(Long contObjectId) {
+		this.contObjectId = contObjectId;
 	}
 
 }

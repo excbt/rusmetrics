@@ -13,14 +13,12 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "cityFiasUUID", "cityName", "cityGeoPosX", "cityGeoPosY" })
-public abstract class CityContObjects<T extends ContObjectHolder> implements
-		Serializable {
+public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFiasHolder> implements Serializable {
 
 	interface CityContObjectsFactory<T extends CityContObjects<? extends ContObjectHolder>> {
 		public T newInstance(UUID uuid);
 	}
-	
-	
+
 	/**
 	 * 
 	 */
@@ -60,13 +58,10 @@ public abstract class CityContObjects<T extends ContObjectHolder> implements
 	 * @return
 	 */
 	public String getCityName() {
-		Optional<T> item = cityObjects
-				.stream()
-				.filter((i) -> i.getContObject().getContObjectFias() != null
-						&& i.getContObject().getContObjectFias()
-								.getShortAddress2() != null).findFirst();
-		return item.isPresent() ? item.get().getContObject()
-				.getContObjectFias().getShortAddress2() : null;
+		Optional<T> item = cityObjects.stream()
+				.filter((i) -> i.getContObjectFias() != null && i.getContObjectFias().getShortAddress2() != null)
+				.findFirst();
+		return item.isPresent() ? item.get().getContObjectFias().getShortAddress2() : null;
 	}
 
 	/**
@@ -74,13 +69,9 @@ public abstract class CityContObjects<T extends ContObjectHolder> implements
 	 * @return
 	 */
 	public BigDecimal getCityGeoPosX() {
-		Optional<T> item = cityObjects
-				.stream()
-				.filter((i) -> i.getContObject().getContObjectGeo() != null
-						&& i.getContObject().getContObjectGeo()
-								.getCityGeoPosX() != null).findFirst();
-		return item.isPresent() ? item.get().getContObject().getContObjectGeo()
-				.getCityGeoPosX() : null;
+		Optional<T> item = cityObjects.stream().filter((i) -> i.getContObject().getContObjectGeo() != null
+				&& i.getContObject().getContObjectGeo().getCityGeoPosX() != null).findFirst();
+		return item.isPresent() ? item.get().getContObject().getContObjectGeo().getCityGeoPosX() : null;
 	}
 
 	/**
@@ -88,44 +79,31 @@ public abstract class CityContObjects<T extends ContObjectHolder> implements
 	 * @return
 	 */
 	public BigDecimal getCityGeoPosY() {
-		Optional<T> item = cityObjects
-				.stream()
-				.filter((i) -> i.getContObject().getContObjectGeo() != null
-						&& i.getContObject().getContObjectGeo()
-								.getCityGeoPosY() != null).findFirst();
-		return item.isPresent() ? item.get().getContObject().getContObjectGeo()
-				.getCityGeoPosY() : null;
+		Optional<T> item = cityObjects.stream().filter((i) -> i.getContObject().getContObjectGeo() != null
+				&& i.getContObject().getContObjectGeo().getCityGeoPosY() != null).findFirst();
+		return item.isPresent() ? item.get().getContObject().getContObjectGeo().getCityGeoPosY() : null;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public static <T extends ContObjectHolder, U extends CityContObjects<T>> List<U> makeCityContObjects(
-			Collection<? extends T> contObjects,
-			CityContObjectsFactory<U> cityContObjectsFactory) {
+	public static <T extends ContObjectHolder & ContObjectFiasHolder, U extends CityContObjects<T>> List<U> makeCityContObjects(
+			Collection<? extends T> contObjects, CityContObjectsFactory<U> cityContObjectsFactory) {
 
 		final Map<UUID, U> cityObjectsMap = new HashMap<>();
 
-		contObjects
-				.stream()
-				.filter((i) -> i.getContObject().getContObjectFias() != null)
-				.forEach(
-						(i) -> {
-							UUID cityUUID = i.getContObject()
-									.getContObjectFias().getCityFiasUUID();
-							U cityObject = cityObjectsMap.get(cityUUID);
-							if (cityObject == null) {
-								cityObject = cityContObjectsFactory
-										.newInstance(cityUUID);
-								if (cityObjectsMap.putIfAbsent(cityUUID,
-										cityObject) != null) {
-									throw new IllegalStateException(
-											"cityObjectsMap error collapse");
-								}
-							}
-							cityObject.getCityObjects().add(i);
-						});
+		contObjects.stream().filter((i) -> i.getContObjectFias() != null).forEach((i) -> {
+			UUID cityUUID = i.getContObjectFias().getCityFiasUUID();
+			U cityObject = cityObjectsMap.get(cityUUID);
+			if (cityObject == null) {
+				cityObject = cityContObjectsFactory.newInstance(cityUUID);
+				if (cityObjectsMap.putIfAbsent(cityUUID, cityObject) != null) {
+					throw new IllegalStateException("cityObjectsMap error collapse");
+				}
+			}
+			cityObject.getCityObjects().add(i);
+		});
 
 		return new ArrayList<>(cityObjectsMap.values());
 	}

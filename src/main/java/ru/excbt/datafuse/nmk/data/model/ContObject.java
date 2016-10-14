@@ -123,8 +123,8 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "timezone_def")
 	private String timezoneDefKeyname;
 
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
-	private ContObjectFias contObjectFias;
+	//	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
+	//	private ContObjectFias contObjectFias;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectGeoPos contObjectGeo;
@@ -286,17 +286,17 @@ public class ContObject extends AbstractAuditableModel
 		this.settingModeMDate = settingModeMDate;
 	}
 
-	public ContObjectFias getContObjectFias() {
-		return contObjectFias;
-	}
+	//	public ContObjectFias getContObjectFias() {
+	//		return contObjectFias;
+	//	}
 
 	public ContObjectGeoPos getContObjectGeo() {
 		return contObjectGeo;
 	}
 
-	public void setContObjectFias(ContObjectFias contObjectFias) {
-		this.contObjectFias = contObjectFias;
-	}
+	//	public void setContObjectFias(ContObjectFias contObjectFias) {
+	//		this.contObjectFias = contObjectFias;
+	//	}
 
 	public void setContObjectGeo(ContObjectGeoPos contObjectGeo) {
 		this.contObjectGeo = contObjectGeo;

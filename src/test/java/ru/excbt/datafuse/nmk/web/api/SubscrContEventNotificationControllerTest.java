@@ -164,6 +164,17 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		_testGetJson("/api/subscr/contEvent/notifications/contObject/cityStatusCollapse", params);
 	}
 
+	@Test
+	public void testCityMonitorContObjectCityStatusCollapseV2() throws Exception {
+
+		RequestExtraInitializer params = (builder) -> {
+			builder.param("fromDate", "2015-06-01");
+			builder.param("toDate", "2015-06-30");
+		};
+
+		_testGetJson("/api/subscr/contEvent/notifications/contObject/cityStatusCollapseV2", params);
+	}
+
 	/**
 	 * 
 	 * @throws Exception

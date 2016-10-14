@@ -5,18 +5,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.Serializable;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorRankObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.model.vo.ContObjectVOFias;
 
-public class MonitorContEventNotificationStatusV2 implements Serializable,
-		StatusColorRankObject, ContObjectHolder {
+public class MonitorContEventNotificationStatusV2
+		implements Serializable, StatusColorRankObject, ContObjectHolder, ContObjectFiasHolder {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5870004714222214147L;
 
-	private final ContObject contObject;
+	private final ContObjectVOFias contObjectVOFias;
 
 	private ContEventLevelColorKeyV2 contEventLevelColorKey;
 
@@ -30,8 +32,8 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 	 * 
 	 * @param contObject
 	 */
-	private MonitorContEventNotificationStatusV2(ContObject contObject) {
-		this.contObject = ContObjectShort.newInstance(contObject);
+	private MonitorContEventNotificationStatusV2(ContObject contObject, ContObjectFias contObjectFias) {
+		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias);
 	}
 
 	/**
@@ -39,11 +41,11 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 	 * @param contObject
 	 * @return
 	 */
-	public static MonitorContEventNotificationStatusV2 newInstance(
-			ContObject contObject) {
+	public static MonitorContEventNotificationStatusV2 newInstance(ContObject contObject,
+			ContObjectFias contObjectFias) {
 		checkNotNull(contObject);
-		MonitorContEventNotificationStatusV2 result = new MonitorContEventNotificationStatusV2(
-				contObject);
+		MonitorContEventNotificationStatusV2 result = new MonitorContEventNotificationStatusV2(contObject,
+				contObjectFias);
 		return result;
 	}
 
@@ -52,7 +54,7 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 	 */
 	@Override
 	public ContObject getContObject() {
-		return contObject;
+		return contObjectVOFias.getModel();
 	}
 
 	/**
@@ -67,8 +69,7 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 	 * 
 	 * @param contEventLevelColorKey
 	 */
-	public void setContEventLevelColorKey(
-			ContEventLevelColorKeyV2 contEventLevelColorKey) {
+	public void setContEventLevelColorKey(ContEventLevelColorKeyV2 contEventLevelColorKey) {
 		this.contEventLevelColorKey = contEventLevelColorKey;
 	}
 
@@ -77,8 +78,7 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 	 */
 	@Override
 	public String getStatusColor() {
-		return contEventLevelColorKey == null ? null : contEventLevelColorKey
-				.getKeyname();
+		return contEventLevelColorKey == null ? null : contEventLevelColorKey.getKeyname();
 	}
 
 	/**
@@ -134,8 +134,15 @@ public class MonitorContEventNotificationStatusV2 implements Serializable,
 	 */
 	@Override
 	public int getColorRank() {
-		return contEventLevelColorKey == null ? Integer.MIN_VALUE : contEventLevelColorKey
-				.getColorRank();
+		return contEventLevelColorKey == null ? Integer.MIN_VALUE : contEventLevelColorKey.getColorRank();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.ContObjectFiasHolder#getContObjectFias()
+	 */
+	@Override
+	public ContObjectFias getContObjectFias() {
+		return contObjectVOFias.getContObjectFias();
 	}
 
 }

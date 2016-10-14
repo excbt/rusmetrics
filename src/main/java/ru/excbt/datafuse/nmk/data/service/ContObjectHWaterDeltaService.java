@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
@@ -307,8 +308,12 @@ public class ContObjectHWaterDeltaService {
 
 		contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
 
-		List<ContObject> cityContObjects = contObjects.stream().filter(
-				(i) -> i.getContObjectFias() != null && cityFiasUUID.equals(i.getContObjectFias().getCityFiasUUID()))
+		List<Long> contObjectIds = contObjects.stream().map(i -> i.getId()).collect(Collectors.toList());
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+
+		List<ContObject> cityContObjects = contObjects.stream()
+				.filter((i) -> contObjectFiasMap.get(i.getId()) != null
+						&& cityFiasUUID.equals(contObjectFiasMap.get(i.getId()).getCityFiasUUID()))
 				.collect(Collectors.toList());
 
 		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART_ByCity(subscriberId, ldp,
@@ -336,7 +341,7 @@ public class ContObjectHWaterDeltaService {
 
 		List<ContObjectServiceTypeInfo> resultList = new ArrayList<>();
 		contObjects.forEach((contObject) -> {
-			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject);
+			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject, null);
 
 			{
 				ContServiceTypeInfoART hwART = hwContObjectARTs.get(contObject.getId());

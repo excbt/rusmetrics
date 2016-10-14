@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -174,7 +175,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
 
 		// Process ContObjectFias
-		ContObjectFias contObjectFias = currContObject.getContObjectFias();
+
+		List<ContObjectFias> fiasList = contObjectFiasRepository.findByContObjectId(currContObject.getId());
+		ContObjectFias contObjectFias = fiasList.isEmpty() ? null : fiasList.get(0);
 
 		if (contObjectFias == null) {
 			contObjectFias = createConfObjectFias(currContObject);
@@ -217,7 +220,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectFias.setShortAddress2(null);
 		}
 
-		contObjectFiasRepository.save(contObjectFias);
+		saveContObjectFias(currContObject.getId(), contObjectFias);
 
 		currContObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
 		currContObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
@@ -313,7 +316,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		ContObject resultContObject = contObjectRepository.save(contObject);
 		contObjectDaDataService.saveContObjectDaData(contObjectDaData);
-		contObjectFiasRepository.save(contObjectFias);
+
+		saveContObjectFias(resultContObject.getId(), contObjectFias);
 
 		subscrContObjectService.createSubscrContObject(resultContObject, subscriber, subscrBeginDate);
 
@@ -461,11 +465,23 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	private ContObjectFias createConfObjectFias(ContObject contObject) {
 		ContObjectFias contObjectFias = new ContObjectFias();
-		contObjectFias.setContObject(contObject);
+		contObjectFias.setContObjectId(contObject.getId());
 		contObjectFias.setFiasFullAddress(contObject.getFullAddress());
 		contObjectFias.setGeoFullAddress(contObject.getFullAddress());
 		contObjectFias.setIsGeoRefresh(true);
 		return contObjectFias;
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contObjectFias
+	 */
+	private void saveContObjectFias(final Long contObjectId, final ContObjectFias contObjectFias) {
+		checkNotNull(contObjectId);
+		contObjectFias.setContObjectId(contObjectId);
+		contObjectFiasRepository.save(contObjectFias);
+
 	}
 
 	/**
@@ -640,6 +656,28 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		return resultList.stream()
 				.collect(Collectors.toMap(i -> DBRowUtils.asLong(i[0]), i -> DBRowUtils.asInteger(i[1])));
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectFias> selectContObjectsFias(List<Long> contObjectIds) {
+		return contObjectIds == null || contObjectIds.isEmpty() ? new ArrayList<>()
+				: contObjectFiasRepository.selectByContObjectIds(contObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	public Map<Long, ContObjectFias> selectContObjectsFiasMap(List<Long> contObjectIds) {
+		return selectContObjectsFias(contObjectIds).stream()
+				.collect(Collectors.toMap(ContObjectFias::getContObjectId, Function.identity()));
 
 	}
 

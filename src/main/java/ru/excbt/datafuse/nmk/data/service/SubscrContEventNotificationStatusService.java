@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
@@ -27,8 +28,8 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
+import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @Service
@@ -51,6 +52,9 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 
 	@Autowired
 	private ContEventLevelColorRepository contEventLevelColorRepository;
+
+	@Autowired
+	private ContObjectService contObjectService;
 
 	/**
 	 * 
@@ -127,20 +131,19 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
-		CounterInfoMap allMap = new CounterInfoMap(
-				subscrContEventNotificationService.selectContEventNotificationCounterInfo(subscriberId, contObjectIds,
-						datePeriod));
+		CounterInfoMap allMap = new CounterInfoMap(subscrContEventNotificationService
+				.selectContEventNotificationCounterInfo(subscriberId, contObjectIds, datePeriod));
 
-		CounterInfoMap allNewMap = new CounterInfoMap(
-				subscrContEventNotificationService.selectContEventNotificationCounterInfo(subscriberId, contObjectIds,
-						datePeriod, Boolean.TRUE));
+		CounterInfoMap allNewMap = new CounterInfoMap(subscrContEventNotificationService
+				.selectContEventNotificationCounterInfo(subscriberId, contObjectIds, datePeriod, Boolean.TRUE));
 
-		CounterInfoMap contallEventTypesMap = new CounterInfoMap(
-				subscrContEventNotificationService.selectContObjectEventTypeGroupCounterInfo(subscriberId,
-						contObjectIds, datePeriod));
+		CounterInfoMap contallEventTypesMap = new CounterInfoMap(subscrContEventNotificationService
+				.selectContObjectEventTypeGroupCounterInfo(subscriberId, contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
+
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
@@ -184,7 +187,8 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co,
+					contObjectFiasMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);
@@ -216,9 +220,8 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 			contObjectIds = NO_DATA_IDS;
 		}
 
-		CounterInfoMap allMap = new CounterInfoMap(
-				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
-						subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
+		CounterInfoMap allMap = new CounterInfoMap(subscrContEventNotificationService
+				.selectContEventNotificationCounterInfo(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
 		CounterInfoMap allNewMap = new CounterInfoMap(
 				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
@@ -226,11 +229,12 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 
 		CounterInfoMap contallEventTypesMap = new CounterInfoMap(
 				subscrContEventNotificationService.selectContObjectEventTypeGroupCollapseCounterInfo(
-						subscriberParam.getSubscriberId(), contObjectIds,
-						datePeriod));
+						subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
+
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
@@ -266,7 +270,8 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co,
+					contObjectFiasMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);
