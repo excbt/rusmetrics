@@ -2,8 +2,11 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -11,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +31,9 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
@@ -69,6 +75,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private SystemParamService systemParamService;
+
+	@Autowired
+	private OrganizationRepository organizationRepository;
 
 	/**
 	 * 
@@ -357,4 +366,34 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		return suffix + subscriber.getSubscriberName();
 	}
 
+	/**
+	 * 
+	 * @param subscribers
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscriberOrganizationVO> enhanceSubscriber(final List<Subscriber> subscribers) {
+		checkNotNull(subscribers);
+		long[] organizationIds = subscribers.stream().mapToLong(i -> i.getOrganizationId()).toArray();
+
+		final List<Organization> organizations = organizationRepository
+				.selectByIds(Arrays.asList(ArrayUtils.toObject(organizationIds)));
+
+		final Map<Long, Organization> organizationsMap = organizations.stream()
+				.collect(Collectors.toMap(Organization::getId, Function.identity()));
+
+		return subscribers.stream()
+				.map(i -> new SubscriberOrganizationVO(i, organizationsMap.get(i.getOrganizationId())))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public SubscriberOrganizationVO enhanceSubscriber(Subscriber subscriber) {
+		return checkNotNull(enhanceSubscriber(Arrays.asList(subscriber))).get(0);
+	}
 }

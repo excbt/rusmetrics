@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -46,9 +44,9 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "subscriber_comment")
 	private String comment;
 
-	@ManyToOne
-	@JoinColumn(name = "organization_id")
-	private Organization organization;
+	//	@ManyToOne
+	//	@JoinColumn(name = "organization_id")
+	//	private Organization organization;
 
 	@Column(name = "organization_id", updatable = false, insertable = false)
 	private Long organizationId;
@@ -138,13 +136,13 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 		this.comment = comment;
 	}
 
-	public Organization getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
+	//	public Organization getOrganization() {
+	//		return organization;
+	//	}
+	//
+	//	public void setOrganization(Organization organization) {
+	//		this.organization = organization;
+	//	}
 
 	public int getVersion() {
 		return version;

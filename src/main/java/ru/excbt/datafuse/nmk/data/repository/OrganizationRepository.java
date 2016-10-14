@@ -61,8 +61,16 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 	 * @return
 	 */
 	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) AND"
-			+ " o.keyname = :keyname "
-			+ " ORDER BY o.organizationFullName")
+			+ " o.keyname = :keyname " + " ORDER BY o.organizationFullName")
 	public List<Organization> selectByKeyname(@Param("rmaSubscriberId") Long rmaSubscriberId,
 			@Param("keyname") String keyname);
+
+	/**
+	 * 
+	 * @param oranizationIds
+	 * @return
+	 */
+	@Query("SELECT o FROM Organization o WHERE (o.id in :oranizationIds)")
+	public List<Organization> selectByIds(@Param("oranizationIds") List<Long> oranizationIds);
+
 }

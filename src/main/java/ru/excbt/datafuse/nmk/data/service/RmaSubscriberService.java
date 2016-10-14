@@ -75,7 +75,7 @@ public class RmaSubscriberService extends SubscriberService {
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
 		checkArgument(subscriber.getDeleted() == 0);
 
-		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
+		//subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
 		//		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
 		//		subscriber.setTimezoneDefKeyname(timezoneDef);
@@ -127,7 +127,7 @@ public class RmaSubscriberService extends SubscriberService {
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
 
-		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
+		//subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
 		//		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(subscriber.getTimezoneDefKeyname());
 		//		subscriber.setTimezoneDef(timezoneDef);

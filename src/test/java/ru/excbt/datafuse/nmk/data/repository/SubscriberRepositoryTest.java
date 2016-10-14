@@ -25,13 +25,13 @@ public class SubscriberRepositoryTest extends JpaSupportTest {
 		Subscriber sr = subscrOrgRepository.findOne(728L);
 		assertNotNull(sr);
 		logger.debug("subscrRole ID {}", sr.getId());
-		assertNotNull(sr.getOrganization());
-		logger.debug("subscrRole Organizatoin ID {}", sr.getOrganization().getId());
+		assertNotNull(sr.getOrganizationId());
+		logger.debug("subscrRole Organizatoin ID {}", sr.getOrganizationId());
 
 		List<Subscriber> soList = subscrOrgRepository.selectByOrganizationId(Long.valueOf(726));
 		checkArgument(soList.size() > 0);
-		logger.debug("subscrRole List Organizatoin FullName {}",
-				soList.get(0).getOrganization().getOrganizationFullName());
+		//		logger.debug("subscrRole List Organizatoin FullName {}",
+		//				soList.get(0).getOrganization().getOrganizationFullName());
 	}
 
 }

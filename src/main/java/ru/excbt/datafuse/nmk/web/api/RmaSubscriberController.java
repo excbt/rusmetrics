@@ -60,7 +60,8 @@ public class RmaSubscriberController extends SubscriberController {
 
 		List<Subscriber> subscriberList = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
 		List<Subscriber> resultList = ObjectFilters.deletedFilter(subscriberList);
-		return responseOK(resultList);
+
+		return responseOK(subscriberService.enhanceSubscriber(resultList));
 	}
 
 	/**
