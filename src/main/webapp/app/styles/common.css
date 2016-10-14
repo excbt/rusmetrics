@@ -966,7 +966,7 @@ tr.nmc-main-table-header-indicator > th {
     /* прокручиваемая часть таблицы */
 .nmc-indicator-table-without-fixed-header{
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: hidden;
 /*    height:685px;*/
     height: 60vh;
     min-height: 360px;

@@ -105,8 +105,9 @@ angular.module('portalNMC')
             if (!checkUndefinedNull(monitorSvcSettings.contGroupId)){
                 targetUrl += "&contGroupId=" + monitorSvcSettings.contGroupId;
             };
-            if (isCancelParamsIncorrect() === true)
+            if (isCancelParamsIncorrect() === true) {
                 return null;
+            }
             $http.get(targetUrl, httpOptions)
                 .success(function(data){
 //console.log(data);                
@@ -379,7 +380,7 @@ angular.module('portalNMC')
                 timeout: requestCanceler.promise
             };
             //run getObjects
-            getMonitorData();
+//            getMonitorData();
 //            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
         };
         initSvc();

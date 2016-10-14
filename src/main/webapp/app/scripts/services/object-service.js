@@ -365,27 +365,27 @@ angular.module('portalNMC')
             );
         };         
         
-        var getVzletSystemList = function(){
+        var getVzletSystemList = function() {
             return vzletSystemList;
         };
 
         //get objects
-        var getObjectsData = function(contGroupId){                    
+        var getObjectsData = function(contGroupId) {                    
             var url = urlSubscrContObjects;
-            if (!checkUndefinedNull(contGroupId)){
+            if (!checkUndefinedNull(contGroupId)) {
                 url += "?contGroupId=" + contGroupId;
             }
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
         var getRmaObjectsData = function (contGroupId) {
             var url = getRmaObjectsUrl();
-            if (!checkUndefinedNull(contGroupId)){
+            if (!checkUndefinedNull(contGroupId)) {
                 url += "?contGroupId=" + contGroupId;
             }
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;            
             }
             return $http.get(url, httpOptions);

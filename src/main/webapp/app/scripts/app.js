@@ -146,6 +146,16 @@ app.config(function ($routeProvider) {
             }]
         }
       })
+      .when('/objects/impulse-indicators', {
+        templateUrl: 'views/impulse-indicators.html',
+        controller: 'ImpulseIndicatorsCtrl',
+        reloadOnSearch: false,
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
+      })
       .when('/settings/tariffs', {
         templateUrl: 'views/tariffs.html',
         controller: 'TariffsCtrl'
@@ -257,6 +267,10 @@ app.config(function ($routeProvider) {
       .when('/management/modems', {
         templateUrl: 'views/management-rma-modems.html',
         controller: 'MngmtModemsCtrl'
+      })
+      .when('/management/device-models', {
+        templateUrl: 'views/management-rma-device-models.html',
+        controller: 'MngmtDeviceModelsCtrl'
       })
       
       .when('/log/session-log', {
