@@ -38,8 +38,10 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.vo.ContObjectMonitorVO;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectGeoPosRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
@@ -72,6 +74,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private ContObjectFiasRepository contObjectFiasRepository;
+
+	@Autowired
+	private ContObjectGeoPosRepository contObjectGeoPosRepository;
 
 	@Autowired
 	private ContObjectDaDataService contObjectDaDataService;
@@ -678,6 +683,28 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	public Map<Long, ContObjectFias> selectContObjectsFiasMap(List<Long> contObjectIds) {
 		return selectContObjectsFias(contObjectIds).stream()
 				.collect(Collectors.toMap(ContObjectFias::getContObjectId, Function.identity()));
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectGeoPos> selectContObjectsGeoPos(List<Long> contObjectIds) {
+		return contObjectIds == null || contObjectIds.isEmpty() ? new ArrayList<>()
+				: contObjectGeoPosRepository.selectByContObjectIds(contObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	public Map<Long, ContObjectGeoPos> selectContObjectsGeoPosMap(List<Long> contObjectIds) {
+		return selectContObjectsGeoPos(contObjectIds).stream()
+				.collect(Collectors.toMap(ContObjectGeoPos::getContObjectId, Function.identity()));
 
 	}
 

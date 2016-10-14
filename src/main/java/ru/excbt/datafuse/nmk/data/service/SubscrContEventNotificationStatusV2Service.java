@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatusV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
@@ -118,6 +119,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
 		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
@@ -138,7 +140,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 					: ContEventLevelColorKeyV2.GREEN;
 
 			MonitorContEventNotificationStatusV2 item = MonitorContEventNotificationStatusV2.newInstance(co,
-					contObjectFiasMap.get(co.getId()));
+					contObjectFiasMap.get(co.getId()), contObjectGeoPosMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);

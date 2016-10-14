@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.model.v;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 
 /**
  * Данные по координатам для объекта учета

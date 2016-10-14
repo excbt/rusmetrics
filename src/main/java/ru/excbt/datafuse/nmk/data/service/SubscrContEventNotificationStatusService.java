@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
@@ -144,6 +145,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
 		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
@@ -188,7 +190,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 			}
 
 			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co,
-					contObjectFiasMap.get(co.getId()));
+					contObjectFiasMap.get(co.getId()), contObjectGeoPosMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);
@@ -235,6 +237,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
 		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
@@ -271,7 +274,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 			}
 
 			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co,
-					contObjectFiasMap.get(co.getId()));
+					contObjectFiasMap.get(co.getId()), contObjectGeoPosMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);

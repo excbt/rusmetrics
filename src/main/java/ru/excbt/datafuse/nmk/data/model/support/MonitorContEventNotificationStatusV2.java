@@ -8,10 +8,11 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorRankObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.vo.ContObjectVOFias;
 
 public class MonitorContEventNotificationStatusV2
-		implements Serializable, StatusColorRankObject, ContObjectHolder, ContObjectFiasHolder {
+		implements Serializable, StatusColorRankObject, ContObjectHolder, ContObjectFiasHolder, ContObjectGeoPosHolder {
 
 	/**
 	 * 
@@ -32,8 +33,10 @@ public class MonitorContEventNotificationStatusV2
 	 * 
 	 * @param contObject
 	 */
-	private MonitorContEventNotificationStatusV2(ContObject contObject, ContObjectFias contObjectFias) {
-		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias);
+	private MonitorContEventNotificationStatusV2(ContObject contObject, ContObjectFias contObjectFias,
+			ContObjectGeoPos contObjectGeoPos) {
+		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias,
+				contObjectGeoPos);
 	}
 
 	/**
@@ -41,11 +44,11 @@ public class MonitorContEventNotificationStatusV2
 	 * @param contObject
 	 * @return
 	 */
-	public static MonitorContEventNotificationStatusV2 newInstance(ContObject contObject,
-			ContObjectFias contObjectFias) {
+	public static MonitorContEventNotificationStatusV2 newInstance(ContObject contObject, ContObjectFias contObjectFias,
+			ContObjectGeoPos contObjectGeoPos) {
 		checkNotNull(contObject);
 		MonitorContEventNotificationStatusV2 result = new MonitorContEventNotificationStatusV2(contObject,
-				contObjectFias);
+				contObjectFias, contObjectGeoPos);
 		return result;
 	}
 
@@ -143,6 +146,14 @@ public class MonitorContEventNotificationStatusV2
 	@Override
 	public ContObjectFias getContObjectFias() {
 		return contObjectVOFias.getContObjectFias();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.ContObjectGeoPosHolder#getContObjectGeoPos()
+	 */
+	@Override
+	public ContObjectGeoPos getContObjectGeo() {
+		return contObjectVOFias.getContObjectGeo();
 	}
 
 }
