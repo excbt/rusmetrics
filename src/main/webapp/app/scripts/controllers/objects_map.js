@@ -863,15 +863,15 @@ console.warn(elem);
     //create object marker
     $scope.prepareObjectMarker = function(object, marker){ 
 //console.log("prepareObjectMarker");        
-        if ((object.contObject.contObjectGeo.geoPosX === null) || (object.contObject.contObjectGeo.geoPosY===null)){
+        if ((object.contObjectGeo.geoPosX === null) || (object.contObjectGeo.geoPosY===null)){
             return;
         }; 
         
         var markerMessage = createMessageForObjectMarker(object);      
         marker.focus= false;
         marker.object = object;
-        marker.lng=object.contObject.contObjectGeo.geoPosX;
-        marker.lat= object.contObject.contObjectGeo.geoPosY;
+        marker.lng = object.contObjectGeo.geoPosX;
+        marker.lat = object.contObjectGeo.geoPosY;
         marker.getMessageScope = null;
         marker.getMessageScope=function () {
 //console.log("getMessageScope object");
@@ -947,7 +947,7 @@ console.warn(elem);
 //console.log($scope.mapSettings.dateFrom);        
         objectArray.forEach(function(elem){
 //console.log(elem);            
-            if (angular.isUndefined(elem.contObject.contObjectGeo.geoPosX) || angular.isUndefined(elem.contObject.contObjectGeo.geoPosY) ||(elem.contObject.contObjectGeo.geoPosX ===null)||(elem.contObject.contObjectGeo.geoPosY===null)){
+            if (angular.isUndefined(elem.contObjectGeo.geoPosX) || angular.isUndefined(elem.contObjectGeo.geoPosY) ||(elem.contObjectGeo.geoPosX ===null)||(elem.contObjectGeo.geoPosY===null)){
 console.warn("Warning. Object without coordinates.");                
 console.warn(elem);                                
                 return;

@@ -110,8 +110,8 @@ angular.module('portalNMC')
         
         marker = {};        
         marker.focus=false;
-        marker.lng=obj.contObject.contObjectGeo.geoPosX;
-        marker.lat= obj.contObject.contObjectGeo.geoPosY;
+        marker.lng = obj.contObjectGeo.geoPosX;
+        marker.lat = obj.contObjectGeo.geoPosY;
         marker.getMessageScope= function () { 
                 var newScope = $scope.$new(true);
                 angular.extend(newScope, {setNoticeFilterByObject: $scope.setNoticeFilterByObject});
@@ -395,9 +395,9 @@ console.warn(elem);
         //check objects
         objectArray.forEach(function(elem){
 //console.log(elem);            
-            if(angular.isUndefined(elem.contObject.contObjectGeo) || 
-               angular.isUndefined(elem.contObject.contObjectGeo.geoPosX) || 
-               (elem.contObject.contObjectGeo  === null) || (elem.contObject.contObjectGeo.geoPosX === null)){
+            if(angular.isUndefined(elem.contObjectGeo) || 
+               angular.isUndefined(elem.contObjectGeo.geoPosX) || 
+               (elem.contObjectGeo  === null) || (elem.contObjectGeo.geoPosX === null)){
 console.warn("Warning. Object without coordinates.");                
 console.warn(elem);                                
                 return;
