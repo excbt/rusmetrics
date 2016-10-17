@@ -49,7 +49,7 @@ public class HWatersCsvService {
 
 		CsvMapper mapper = new CsvMapper();
 
-		mapper.addMixInAnnotations(ContServiceDataHWater.class, ContServiceDataHWater_CsvFormat.class);
+		mapper.addMixIn(ContServiceDataHWater.class, ContServiceDataHWater_CsvFormat.class);
 
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
 
@@ -72,7 +72,7 @@ public class HWatersCsvService {
 
 		CsvMapper mapper = new CsvMapper();
 
-		mapper.addMixInAnnotations(ContServiceDataHWaterAbs_Csv.class, ContServiceDataHWater_CsvFormat.class);
+		mapper.addMixIn(ContServiceDataHWaterAbs_Csv.class, ContServiceDataHWater_CsvFormat.class);
 
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
 
@@ -94,10 +94,10 @@ public class HWatersCsvService {
 			throws JsonProcessingException, IOException {
 
 		CsvMapper mapper = new CsvMapper();
-		mapper.addMixInAnnotations(ContServiceDataHWater.class, ContServiceDataHWater_CsvFormat.class);
+		mapper.addMixIn(ContServiceDataHWater.class, ContServiceDataHWater_CsvFormat.class);
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
 		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class).withHeader();
-		ObjectReader reader = mapper.reader(ContServiceDataHWater.class).with(schema);
+		ObjectReader reader = mapper.readerFor(ContServiceDataHWater.class).with(schema);
 
 		MappingIterator<ContServiceDataHWater> iterator = null;
 		List<ContServiceDataHWater> parsedData = new ArrayList<>();
