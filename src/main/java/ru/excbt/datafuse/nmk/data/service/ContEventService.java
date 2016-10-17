@@ -6,6 +6,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +22,10 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryRepository;
@@ -60,7 +65,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId) {
-		return selectEventsBySubscriber(subscriberId, DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+		return enhanceContEventType(selectEventsBySubscriber(subscriberId, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
 	/**
@@ -70,7 +75,7 @@ public class ContEventService {
 	 */
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId, Pageable pageable) {
 		Page<ContEvent> result = contEventRepository.selectBySubscriber(subscriberId, pageable);
-		return result;
+		return enhanceContEventType(result);
 	}
 
 	/**
@@ -79,7 +84,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public List<ContEvent> findEventsByContObjectId(long contObjectId) {
-		return findEventsByContObjectId(contObjectId, DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+		return enhanceContEventType(findEventsByContObjectId(contObjectId, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public List<ContEvent> findEventsByContObjectId(long contObjectId, Pageable pageable) {
-		return contEventRepository.findByContObjectId(contObjectId, pageable);
+		return enhanceContEventType(contEventRepository.findByContObjectId(contObjectId, pageable));
 	}
 
 	/**
@@ -115,8 +120,8 @@ public class ContEventService {
 		checkNotNull(endDate);
 		checkArgument(subscriberId > 0);
 		checkNotNull(pageable);
-		return contEventRepository.selectBySubscriberAndDate(subscriberId, startDate.toDate(), endDate.toDate(),
-				pageable);
+		return enhanceContEventType(contEventRepository.selectBySubscriberAndDate(subscriberId, startDate.toDate(),
+				endDate.toDate(), pageable));
 	}
 
 	/**
@@ -129,8 +134,8 @@ public class ContEventService {
 	 */
 	public Page<ContEvent> selectBySubscriberAndDateAndContObjectIds(long subscriberId, DateTime startDate,
 			DateTime endDate, List<Long> contObjectIds) {
-		return selectBySubscriberAndDateAndContObjectIds(subscriberId, startDate, endDate, contObjectIds,
-				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+		return enhanceContEventType(selectBySubscriberAndDateAndContObjectIds(subscriberId, startDate, endDate,
+				contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
 	/**
@@ -153,8 +158,8 @@ public class ContEventService {
 					pageable);
 		}
 
-		return contEventRepository.selectBySubscriberAndDateAndContObjects(subscriberId, startDate.toDate(),
-				endDate.toDate(), contObjectIds, pageable);
+		return enhanceContEventType(contEventRepository.selectBySubscriberAndDateAndContObjects(subscriberId,
+				startDate.toDate(), endDate.toDate(), contObjectIds, pageable));
 	}
 
 	/**
@@ -164,7 +169,8 @@ public class ContEventService {
 	 * @return
 	 */
 	public Page<ContEvent> selectBySubscriberAndContObjectIds(long subscriberId, List<Long> contObjectIds) {
-		return selectBySubscriberAndContObjectIds(subscriberId, contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+		return enhanceContEventType(
+				selectBySubscriberAndContObjectIds(subscriberId, contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
 	/**
@@ -185,7 +191,8 @@ public class ContEventService {
 			contEventRepository.selectBySubscriber(subscriberId, pageable);
 		}
 
-		return contEventRepository.selectBySubscriberAndContObjects(subscriberId, contObjectIds, pageable);
+		return enhanceContEventType(
+				contEventRepository.selectBySubscriberAndContObjects(subscriberId, contObjectIds, pageable));
 
 	}
 
@@ -217,7 +224,47 @@ public class ContEventService {
 			return new ArrayList<>();
 		}
 
-		return contEventRepository.selectContEventsByIds(contEventsIds);
+		return enhanceContEventType(contEventRepository.selectContEventsByIds(contEventsIds));
+	}
+
+	/**
+	 * 
+	 * @param contEvents
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public <T extends ContEventTypeModel> List<T> enhanceContEventType(List<T> contEvents) {
+
+		List<Long> contEventTypeIds = contEvents.stream().map(i -> i.getContEventTypeId()).distinct()
+				.collect(Collectors.toList());
+
+		if (contEventTypeIds.size() == 0) {
+			return contEvents;
+		}
+
+		List<ContEventType> contEventTypeList = contEventTypeRepository.selectContEventTypes(contEventTypeIds);
+
+		final Map<Long, ContEventType> contEventTypes = contEventTypeList.stream()
+				.collect(Collectors.toMap(ContEventType::getId, Function.identity()));
+
+		contEvents.forEach(i -> {
+			i.setContEventType(contEventTypes.get(i.getContEventTypeId()));
+		});
+
+		return contEvents;
+	}
+
+	/**
+	 * 
+	 * @param contEventsPage
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public <T extends ContEventTypeModel> Page<T> enhanceContEventType(Page<T> contEventsPage) {
+
+		enhanceContEventType(contEventsPage.getContent());
+		return contEventsPage;
+
 	}
 
 }

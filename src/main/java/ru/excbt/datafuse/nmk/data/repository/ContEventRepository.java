@@ -27,7 +27,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 
 	@Transactional(readOnly = true)
 	@Query("SELECT ce FROM ContEvent ce "
-			+ "WHERE ce.contObject IN (SELECT sco.contObject FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "
+			+ "WHERE ce.contObjectId IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "
 			+ "ORDER BY ce.eventTime DESC")
 	public List<ContEvent> selectBySubscriber(@Param("subscriberId") long subscriberId);
 
@@ -39,7 +39,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	 */
 	@Transactional(readOnly = true)
 	@Query("SELECT ce FROM ContEvent ce "
-			+ "WHERE ce.contObject IN (SELECT sco.contObject FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "
+			+ "WHERE ce.contObjectId IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "
 			+ "ORDER BY ce.eventTime DESC")
 	public Page<ContEvent> selectBySubscriberPage(@Param("subscriberId") long subscriberId, Pageable pageable);
 
@@ -51,7 +51,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	 */
 	@Transactional(readOnly = true)
 	@Query("SELECT ce FROM ContEvent ce "
-			+ "WHERE ce.contObject IN (SELECT sco.contObject FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "
+			+ "WHERE ce.contObjectId IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "
 			+ "ORDER BY ce.eventTime DESC")
 	public Page<ContEvent> selectBySubscriber(@Param("subscriberId") long subscriberId, Pageable pageable);
 
@@ -63,7 +63,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	 */
 	@Transactional(readOnly = true)
 	@Query("SELECT ce FROM ContEvent ce "
-			+ " WHERE ce.contObject IN ( SELECT sco.contObject FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId  ) "
+			+ " WHERE ce.contObjectId IN ( SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId  ) "
 			+ "AND ce.eventTime >= :eventStartDate AND ce.eventTime <= :eventEndDate " + " ORDER BY ce.eventTime DESC ")
 	public Page<ContEvent> selectBySubscriberAndDate(@Param("subscriberId") long subscriberId,
 			@Param("eventStartDate") Date eventStartDate, @Param("eventEndDate") Date eventEndDate, Pageable pageable);
@@ -75,7 +75,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	@Query("SELECT ce FROM ContEvent ce " + "WHERE ce.contObject IN " + "(SELECT sco.contObject "
+	@Query("SELECT ce FROM ContEvent ce " + "WHERE ce.contObjectId IN " + "(SELECT sco.contObjectId "
 			+ " FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.contObjectId IN (:contObjectIds)) "
 			+ "ORDER BY ce.eventTime DESC")
@@ -89,7 +89,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	@Query("SELECT ce FROM ContEvent ce WHERE ce.contObject IN " + "(SELECT sco.contObject "
+	@Query("SELECT ce FROM ContEvent ce WHERE ce.contObjectId IN " + "(SELECT sco.contObjectId "
 			+ " FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.id IN (:contObjectIds) ) AND "
 			+ " ce.eventTime >= :eventStartDate AND ce.eventTime <= :eventEndDate " + " ORDER BY ce.eventTime DESC")

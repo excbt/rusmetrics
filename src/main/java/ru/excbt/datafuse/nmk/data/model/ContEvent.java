@@ -4,20 +4,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 
 /**
  * События контейнера
@@ -31,21 +29,31 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 @Table(name = "cont_event")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContEvent extends AbstractPersistableEntity<Long> {
+public class ContEvent extends AbstractPersistableEntity<Long> implements ContEventTypeModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5865290731548602858L;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_object_id")
-	@JsonIgnore
-	private ContObject contObject;
+	//	@ManyToOne(fetch = FetchType.LAZY)
+	//	@JoinColumn(name = "cont_object_id")
+	//	@JsonIgnore
+	//	private ContObject contObject;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cont_event_type_id")
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
+	private Long contObjectId;
+
+	@Column(name = "cont_zpoint_id", insertable = false, updatable = false)
+	private Long contZPointId;
+
+	//	@ManyToOne(fetch = FetchType.EAGER)
+	//	@JoinColumn(name = "cont_event_type_id")
+	@Transient
 	private ContEventType contEventType;
+
+	@Column(name = "cont_event_type_id")
+	private Long contEventTypeId;
 
 	@Column(name = "cont_service_type")
 	private String contServiceType;
@@ -64,25 +72,19 @@ public class ContEvent extends AbstractPersistableEntity<Long> {
 	@Column(name = "cont_event_comment")
 	private String comment;
 
-	@Column(name = "cont_object_id", insertable = false, updatable = false)
-	private Long contObjectId;
-
-	@Column(name = "cont_zpoint_id", insertable = false, updatable = false)
-	private Long contZPointId;
-
 	@Version
 	private int version;
 
 	@Column(name = "cont_event_deviation")
 	private String contEventDeviationKeyname;
 
-	public ContObject getContObject() {
-		return contObject;
-	}
-
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
+	//	public ContObject getContObject() {
+	//		return contObject;
+	//	}
+	//
+	//	public void setContObject(ContObject contObject) {
+	//		this.contObject = contObject;
+	//	}
 
 	public ContEventType getContEventType() {
 		return contEventType;
@@ -150,6 +152,14 @@ public class ContEvent extends AbstractPersistableEntity<Long> {
 
 	public String getContEventDeviationKeyname() {
 		return contEventDeviationKeyname;
+	}
+
+	public Long getContEventTypeId() {
+		return contEventTypeId;
+	}
+
+	public void setContEventTypeId(Long contEventTypeId) {
+		this.contEventTypeId = contEventTypeId;
 	}
 
 }

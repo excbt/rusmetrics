@@ -36,29 +36,29 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventMonitorV2Service {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContEventMonitorV2Service.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContEventMonitorV2Service.class);
 
 	/**
 	 * 
 	 */
-	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK = (e1,
-			e2) -> Integer.compare(e1.getContEventLevelColor() == null ? -1
-					: e1.getContEventLevelColor().getColorRank(), e2
-							.getContEventLevelColor() == null ? -1 : e2
-									.getContEventLevelColor().getColorRank());
+	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK = (e1, e2) -> Integer.compare(
+			e1.getContEventLevelColor() == null ? -1 : e1.getContEventLevelColor().getColorRank(),
+			e2.getContEventLevelColor() == null ? -1 : e2.getContEventLevelColor().getColorRank());
 
 	/**
 	 * 
 	 */
-	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME = (e1,
-			e2) -> e1.getContEventTime().compareTo(e2.getContEventTime());
+	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME = (e1, e2) -> e1.getContEventTime()
+			.compareTo(e2.getContEventTime());
 
 	/**
 	 * 		
 	 */
 	@Autowired
 	private ContEventMonitorV2Repository contEventMonitorV2Repository;
+
+	@Autowired
+	private ContEventService contEventService;
 
 	/**
 	 * 
@@ -68,13 +68,12 @@ public class ContEventMonitorV2Service {
 	protected List<ContEventMonitorV2> findByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
 
-		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository
-				.findByContObjectId(contObjectId);
+		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository.findByContObjectId(contObjectId);
 
-		List<ContEventMonitorV2> result = contEventMonitor.stream()
-				.sorted(CMP_BY_EVENT_TIME).collect(Collectors.toList());
+		List<ContEventMonitorV2> result = contEventMonitor.stream().sorted(CMP_BY_EVENT_TIME)
+				.collect(Collectors.toList());
 
-		return result;
+		return contEventService.enhanceContEventType(result);
 	}
 
 	/**
@@ -85,10 +84,9 @@ public class ContEventMonitorV2Service {
 	public List<ContEventMonitorV2> selectByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
 
-		List<ContEventMonitorV2> result = contEventMonitorV2Repository
-				.selectByContObjectId(contObjectId);
+		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectByContObjectId(contObjectId);
 
-		return result;
+		return contEventService.enhanceContEventType(result);
 	}
 
 	/**
@@ -103,10 +101,9 @@ public class ContEventMonitorV2Service {
 			return new ArrayList<>();
 		}
 
-		List<ContEventMonitorV2> result = contEventMonitorV2Repository
-				.selectByContObjectIds(contObjectIds);
+		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectByContObjectIds(contObjectIds);
 
-		return result;
+		return contEventService.enhanceContEventType(result);
 	}
 
 	/**
@@ -116,8 +113,7 @@ public class ContEventMonitorV2Service {
 	 */
 	public ContEventLevelColorV2 getWorseColorByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
-		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository
-				.findByContObjectId(contObjectId);
+		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository.findByContObjectId(contObjectId);
 		return sortWorseColor(contEventMonitor);
 	}
 
@@ -128,9 +124,8 @@ public class ContEventMonitorV2Service {
 	 */
 	public List<ContEventMonitorV2> selectBySubscriberId(Long subscriberId) {
 		checkNotNull(subscriberId);
-		List<ContEventMonitorV2> result = contEventMonitorV2Repository
-				.selectBySubscriberId(subscriberId);
-		return result;
+		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectBySubscriberId(subscriberId);
+		return contEventService.enhanceContEventType(result);
 	}
 
 	/**
@@ -140,8 +135,7 @@ public class ContEventMonitorV2Service {
 	 */
 	public ContEventLevelColorV2 getWorseColorBySubscriberId(Long subscriberId) {
 		checkNotNull(subscriberId);
-		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository
-				.selectBySubscriberId(subscriberId);
+		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository.selectBySubscriberId(subscriberId);
 
 		return sortWorseColor(contEventMonitor);
 	}
@@ -151,8 +145,7 @@ public class ContEventMonitorV2Service {
 	 * @param contEventMonitor
 	 * @return
 	 */
-	public ContEventLevelColorV2 sortWorseColor(
-			List<ContEventMonitorV2> contEventMonitor) {
+	public ContEventLevelColorV2 sortWorseColor(List<ContEventMonitorV2> contEventMonitor) {
 
 		checkNotNull(contEventMonitor);
 
@@ -175,10 +168,9 @@ public class ContEventMonitorV2Service {
 	 * @param contObjectIds
 	 * @return
 	 */
-	public Map<Long, List<ContEventMonitorV2>> getContObjectsContEventMonitorMap(
-			List<Long> contObjectIds) {
-		List<ContEventMonitorV2> monitorList = contEventMonitorV2Repository
-				.selectByContObjectIds(contObjectIds);
+	public Map<Long, List<ContEventMonitorV2>> getContObjectsContEventMonitorMap(List<Long> contObjectIds) {
+		List<ContEventMonitorV2> monitorList = contEventService
+				.enhanceContEventType(contEventMonitorV2Repository.selectByContObjectIds(contObjectIds));
 
 		Map<Long, List<ContEventMonitorV2>> resultMap = new HashMap<>();
 		for (ContEventMonitorV2 m : monitorList) {
@@ -196,8 +188,7 @@ public class ContEventMonitorV2Service {
 	 * @param subscriberId
 	 * @return
 	 */
-	public Map<UUID, Long> selectCityContObjectMonitorEventCount(
-			Long subscriberId) {
+	public Map<UUID, Long> selectCityContObjectMonitorEventCount(Long subscriberId) {
 
 		Map<UUID, Long> resultMap = new HashMap<>();
 

@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 
 /**
  * Монитор событий
@@ -29,7 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_monitor_v2")
 @JsonInclude(Include.NON_NULL)
-public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> {
+public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implements ContEventTypeModel {
 
 	/**
 	 * 
@@ -45,8 +47,9 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> {
 	@Column(name = "cont_event_type_id")
 	private Long contEventTypeId;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cont_event_type_id", insertable = false, updatable = false)
+	//@ManyToOne(fetch = FetchType.EAGER)
+	//@JoinColumn(name = "cont_event_type_id", insertable = false, updatable = false)
+	@Transient
 	private ContEventType contEventType;
 
 	@Column(name = "cont_event_time")
@@ -97,6 +100,7 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> {
 		this.contEventId = contEventId;
 	}
 
+	@Override
 	public Long getContEventTypeId() {
 		return contEventTypeId;
 	}
@@ -153,10 +157,12 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> {
 		this.contEventLevelColorKeyname = contEventLevelColorKeyname;
 	}
 
+	@Override
 	public ContEventType getContEventType() {
 		return contEventType;
 	}
 
+	@Override
 	public void setContEventType(ContEventType contEventType) {
 		this.contEventType = contEventType;
 	}
