@@ -3,13 +3,8 @@
  */
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectIdModelRepository;
 
 /**
  * 
@@ -18,14 +13,14 @@ import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
  * @since dd.10.2016
  * 
  */
-public interface ContObjectGeoPosRepository extends CrudRepository<ContObjectGeoPos, Long> {
+public interface ContObjectGeoPosRepository extends ContObjectIdModelRepository<ContObjectGeoPos> {
 
 	/**
 	 * 
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Query("SELECT p FROM ContObjectGeoPos p WHERE p.contObjectId in (:contObjectIds)")
-	public List<ContObjectGeoPos> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
+	//	@Query("SELECT p FROM #{#entityName} p WHERE p.contObjectId in (:contObjectIds)")
+	//	public List<ContObjectGeoPos> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
 
 }

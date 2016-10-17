@@ -10,9 +10,11 @@ import java.util.List;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.vo.ContObjectVOFias;
 
-public class ContObjectServiceTypeInfo implements ContObjectHolder, ContObjectFiasHolder, Serializable {
+public class ContObjectServiceTypeInfo
+		implements ContObjectHolder, ContObjectFiasHolder, ContObjectGeoPosHolder, Serializable {
 
 	/**
 	 * 
@@ -73,7 +75,14 @@ public class ContObjectServiceTypeInfo implements ContObjectHolder, ContObjectFi
 	 */
 	@Override
 	public ContObjectFias getContObjectFias() {
-		// TODO Auto-generated method stub
-		return null;
+		return contObjectVOFias.getContObjectFias();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.ContObjectGeoPosHolder#getContObjectGeo()
+	 */
+	@Override
+	public ContObjectGeoPos getContObjectGeo() {
+		return contObjectVOFias.getContObjectGeo();
 	}
 }

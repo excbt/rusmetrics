@@ -13,7 +13,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "cityFiasUUID", "cityName", "cityGeoPosX", "cityGeoPosY" })
-public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFiasHolder> implements Serializable {
+public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFiasHolder & ContObjectGeoPosHolder>
+		implements Serializable {
 
 	interface CityContObjectsFactory<T extends CityContObjects<? extends ContObjectHolder>> {
 		public T newInstance(UUID uuid);
@@ -69,9 +70,10 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	 * @return
 	 */
 	public BigDecimal getCityGeoPosX() {
-		Optional<T> item = cityObjects.stream().filter((i) -> i.getContObject().getContObjectGeo() != null
-				&& i.getContObject().getContObjectGeo().getCityGeoPosX() != null).findFirst();
-		return item.isPresent() ? item.get().getContObject().getContObjectGeo().getCityGeoPosX() : null;
+		Optional<T> item = cityObjects.stream()
+				.filter((i) -> i.getContObjectGeo() != null && i.getContObjectGeo().getCityGeoPosX() != null)
+				.findFirst();
+		return item.isPresent() ? item.get().getContObjectGeo().getCityGeoPosX() : null;
 	}
 
 	/**
@@ -79,16 +81,17 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	 * @return
 	 */
 	public BigDecimal getCityGeoPosY() {
-		Optional<T> item = cityObjects.stream().filter((i) -> i.getContObject().getContObjectGeo() != null
-				&& i.getContObject().getContObjectGeo().getCityGeoPosY() != null).findFirst();
-		return item.isPresent() ? item.get().getContObject().getContObjectGeo().getCityGeoPosY() : null;
+		Optional<T> item = cityObjects.stream()
+				.filter((i) -> i.getContObjectGeo() != null && i.getContObjectGeo().getCityGeoPosY() != null)
+				.findFirst();
+		return item.isPresent() ? item.get().getContObjectGeo().getCityGeoPosY() : null;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public static <T extends ContObjectHolder & ContObjectFiasHolder, U extends CityContObjects<T>> List<U> makeCityContObjects(
+	public static <T extends ContObjectHolder & ContObjectFiasHolder & ContObjectGeoPosHolder, U extends CityContObjects<T>> List<U> makeCityContObjects(
 			Collection<? extends T> contObjects, CityContObjectsFactory<U> cityContObjectsFactory) {
 
 		final Map<UUID, U> cityObjectsMap = new HashMap<>();

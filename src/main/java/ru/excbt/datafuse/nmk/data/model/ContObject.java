@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +33,6 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
-import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 
 /**
  * Контейнер учета
@@ -127,8 +125,8 @@ public class ContObject extends AbstractAuditableModel
 	//	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	//	private ContObjectFias contObjectFias;
 
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
-	private ContObjectGeoPos contObjectGeo;
+	//	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
+	//	private ContObjectGeoPos contObjectGeo;
 
 	@Column(name = "ex_system")
 	private String exSystemKeyname;
@@ -291,17 +289,17 @@ public class ContObject extends AbstractAuditableModel
 	//		return contObjectFias;
 	//	}
 
-	public ContObjectGeoPos getContObjectGeo() {
-		return contObjectGeo;
-	}
+	//	public ContObjectGeoPos getContObjectGeo() {
+	//		return contObjectGeo;
+	//	}
 
 	//	public void setContObjectFias(ContObjectFias contObjectFias) {
 	//		this.contObjectFias = contObjectFias;
 	//	}
 
-	public void setContObjectGeo(ContObjectGeoPos contObjectGeo) {
-		this.contObjectGeo = contObjectGeo;
-	}
+	//	public void setContObjectGeo(ContObjectGeoPos contObjectGeo) {
+	//		this.contObjectGeo = contObjectGeo;
+	//	}
 
 	@Override
 	public String getExSystemKeyname() {
