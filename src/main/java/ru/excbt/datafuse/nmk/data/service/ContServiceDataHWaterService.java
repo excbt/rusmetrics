@@ -72,9 +72,8 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
 
-	private static final Set<String> HWATER_SERVICE_TYPE_SET = ImmutableSet.of(
-			ContServiceTypeKey.CW.getKeyname(), ContServiceTypeKey.HW.getKeyname(),
-			ContServiceTypeKey.HEAT.getKeyname());
+	private static final Set<String> HWATER_SERVICE_TYPE_SET = ImmutableSet.of(ContServiceTypeKey.CW.getKeyname(),
+			ContServiceTypeKey.HW.getKeyname(), ContServiceTypeKey.HEAT.getKeyname());
 
 	@Autowired
 	private ContServiceDataHWaterRepository contServiceDataHWaterRepository;
@@ -550,7 +549,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		final DeviceObject dObject = deviceObject;
 		inData.forEach((d) -> {
 			d.setContZPointId(contZPointId);
-			d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
+			//d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
 			d.setDeviceObject(dObject);
 		});
 
@@ -640,8 +639,8 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkArgument(contZPointIds != null);
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
-				? ContServiceDataUtils.collectContZPointTimeDetailTypes(contServiceDataHWaterRepository
-						.selectTimeDetailLastDataByZPoint(contZPointIds))
+				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+						contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZPointIds))
 				: new HashMap<>();
 
 		return resultMap;

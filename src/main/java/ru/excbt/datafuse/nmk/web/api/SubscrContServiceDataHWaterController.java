@@ -31,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +65,7 @@ import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -289,7 +291,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 					ApiResult.validationError("Invalid parameters timeDetailType:%s", timeDetailType));
 		}
 
-		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
+		//LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
 
 		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(period.getDateTimeTo());
 
@@ -497,9 +499,9 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetailType);
 
-		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
-			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
-		}
+		//		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
+		//			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
+		//		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
@@ -526,6 +528,106 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
 			return responseInternalServerError(ApiResult.error(e));
+		}
+
+		if (inData.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null).count() > 0) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					ApiResult.build(ApiResultCode.ERR_VALIDATION, "Null value for timeDetailType is not allowed"));
+		}
+
+		List<String> timeDetailTypes = inData.stream().map(i -> i.getTimeDetailType()).distinct()
+				.collect(Collectors.toList());
+		if (timeDetailTypes.size() > 1 || timeDetailTypes.get(0) == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					ApiResult.build(ApiResultCode.ERR_VALIDATION, "More than 2 type of timeDetailType is not allowed"));
+		}
+
+		inData.forEach(i -> {
+			i.setTimeDetailType(timeDetailType);
+		});
+
+		ApiActionObjectProcess actionProcess = () -> {
+
+			contServiceDataHWaterService.insertManualLoadDataHWater(contZPointId, inData, inFile);
+			FileInfoMD5 resultFileInfo = new FileInfoMD5(inFile);
+
+			return resultFileInfo;
+		};
+		return responseUpdate(actionProcess);
+
+		//		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
+		//
+		//			@Override
+		//			public void process() {
+		//				inData.forEach(i -> {
+		//					i.setTimeDetailType(timeDetailType);
+		//				});
+		//
+		//				contServiceDataHWaterService.insertManualLoadDataHWater(contZPointId, inData, inFile);
+		//				FileInfoMD5 resultFileInfo = new FileInfoMD5(inFile);
+		//				setResultEntity(resultFileInfo);
+		//			}
+		//		};
+		//
+		//		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @param multipartFile
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/csv",
+			method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> uploadManualDataHWaterUniversal(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId, @RequestParam("file") MultipartFile multipartFile) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		checkArgument(contObjectId > 0);
+		checkArgument(contZPointId > 0);
+
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+
+		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
+			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
+		}
+
+		String inFilename = webAppPropsService.getHWatersCsvInputDir() + webAppPropsService.getSubscriberCsvFilename(
+				currentSubscriberService.getSubscriberId(), currentSubscriberService.getCurrentUserId());
+
+		File inFile = new File(inFilename);
+
+		try {
+			@SuppressWarnings("unused")
+			String digestMD5 = FileWriterUtils.writeFile(multipartFile.getInputStream(), inFile);
+		} catch (IOException e) {
+			logger.error("Exception:{}", e);
+			return responseInternalServerError(ApiResult.error(e));
+		}
+
+		List<ContServiceDataHWater> inData;
+		try (FileInputStream fio = new FileInputStream(inFilename)) {
+			inData = hWatersCsvService.parseHWaterDataCsv(fio);
+		} catch (IOException e) {
+			logger.error("Exception: {}", e);
+			return responseInternalServerError(ApiResult.error(e));
+		}
+
+		if (inData.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null).count() > 0) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					ApiResult.build(ApiResultCode.ERR_VALIDATION, "Null value for timeDetailType is not allowed"));
+		}
+
+		List<String> timeDetailTypes = inData.stream().map(i -> i.getTimeDetailType()).distinct()
+				.collect(Collectors.toList());
+		if (timeDetailTypes.size() > 1 || timeDetailTypes.get(0) == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					ApiResult.build(ApiResultCode.ERR_VALIDATION, "More than 2 type of timeDetailType is not allowed"));
 		}
 
 		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
