@@ -436,7 +436,7 @@ app.service('indicatorSvc', function (mainSvc) {
     var impulseIndicatorsColumns = [
             {
                 header : "Дата",
-                headerClass : "col-xs-2",
+                headerClass : "col-xs-2 nmc-text-align-center",
                 dataClass : "col-xs-2",
                 fieldName: "dataDate",
                 "1h": "1h",

@@ -172,7 +172,7 @@ angular.module('portalNMC')
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
         hideHeader : false,
-        headerClassTR : "nmc-main-table-header-indicator",
+        headerClassTR : "nmc-main-table-header",
         columns : $scope.indicatorColumns
     };
 //    if ($scope.timeDetailType == "1h_abs")
@@ -531,8 +531,8 @@ angular.module('portalNMC')
 //            $scope.tableDef.columns.forEach(function(element){
             $scope.tableDef.columns.some(function(element) {    
                 var indicatorTd = document.getElementById("indicators_th_" + element.fieldName);
-                var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
-                var indicatorTdh = document.getElementById("indicators_tdh_" + element.fieldName);
+                var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);                               
+//                var indicatorTdh = document.getElementById("indicators_tdh_" + element.fieldName);
 //console.log("indicators_td_"+element.fieldName);                
 //console.log(indicatorHead.offsetWidth);                    
 //console.log(indicatorTd);                 
@@ -540,7 +540,7 @@ angular.module('portalNMC')
 //                    if (indicatorTd.offsetWidth>indicatorHead.offsetWidth){
                         var thWidth = Math.max(indicatorTd.offsetWidth, indicatorTd.clientWidth);
                         indicatorHead.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
-                        indicatorTdh.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
+                        //indicatorTdh.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
 //                    }else{
 //                        indicatorTd.style.width =indicatorHead.offsetWidth+"px";                   
 //                    };
@@ -553,33 +553,30 @@ angular.module('portalNMC')
 //return true;
             });
             
-            var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
-            var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
-            var totalThHead = document.getElementById("totals_th_head"); 
+//            var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
+//            var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
+//            var totalThHead = document.getElementById("totals_th_head"); 
 //console.log(indicatorThDataDate);            
 //console.log(angular.isDefined(indicatorThDataDate));
 //console.log(indicatorThDataDate.clientWidth);
 //console.log(angular.isDefined(indicatorThWorkTime.clientWidth));
 //console.log(indicatorThWorkTime.clientWidth);            
-            if ((angular.isDefined(indicatorThDataDate)) && (indicatorThDataDate != null) && (angular.isDefined(indicatorThWorkTime)) && (indicatorThWorkTime != null)) {
-                $scope.totals_th_head_style = indicatorThDataDate.offsetWidth + indicatorThWorkTime.offsetWidth + 4;
-                
-            }
+//            if ((angular.isDefined(indicatorThDataDate)) && (indicatorThDataDate != null) && (angular.isDefined(indicatorThWorkTime)) && (indicatorThWorkTime != null)) {
+//                $scope.totals_th_head_style = indicatorThDataDate.offsetWidth + indicatorThWorkTime.offsetWidth + 4;
+//                
+//            }
             
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
 //            $scope.intotalColumns.forEach(function(element){
-            $scope.intotalColumns.some(function(element) {    
-                var indicatorTh = document.getElementById("indicators_th_" + element.fieldName);
-                var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
-                if ((angular.isDefined(indicatorTh)) && (indicatorTh != null)) {
-                    element.ngstyle = indicatorTh.offsetWidth;
-//                    indicatorHead.width = indicatorTh.offsetWidth;
-//console.log(indicatorHead.offsetWidth);                    
-//console.log(indicatorTh.offsetWidth);                     
-//console.log(element);                    
-                }
+//            $scope.intotalColumns.some(function(element) {    
+//                var indicatorTh = document.getElementById("indicators_th_" + element.fieldName);
+//                var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
+//                if ((angular.isDefined(indicatorTh)) && (indicatorTh != null)) {
+//                    element.ngstyle = indicatorTh.offsetWidth;
+//                    indicatorHead.width = indicatorTh.offsetWidth;                 
+//                }
 //return true;
-            });
+//            });
             
             //Если есть боковая полоса прокрутки, то нужно увеличить область таблицы на 15px;
 //            var tableEl = document.getElementsByClassName("container-fluid nmc-indicator-table-without-fixed-header");

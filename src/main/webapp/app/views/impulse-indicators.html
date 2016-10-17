@@ -195,13 +195,14 @@
             <div class="col-xs-2"> 
     <!--        Непрокручиваемая шапка таблицы показаний-->
 <!--            style="margin-bottom: -20px;"-->
-            <table id="indicatorTableHeader" class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" 
+            <table id="indicatorTableHeader" class="nmc-table-nowrap-data1 nmc-main-table noMarginBottom" 
                    ng-class="tableDef.tableClass" >
                 <tr ng-class="tableDef.headerClassTR">
 <!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate', column.headerClass}"-->
+<!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}"-->
                     <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'"  
-                        ng-attr-id="{{'indicators_head_'+column.fieldName}}" 
-                        ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" 
+                        ng-attr-id="{{'indicators_head_'+column.fieldName}}"                         
+                        ng-class = "column.headerClass"
                         ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
                         {{column.header}}
                         <i class="nmc-button-sort glyphicon" 
@@ -213,6 +214,7 @@
                     </th>
                 </tr>
 <!--                style="opacity:0;"-->
+<!--
                 <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
                     class="nmc-transparent">
                     <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
@@ -223,6 +225,7 @@
                         <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
                     </td>
                 </tr>
+-->
             </table>
     <!--        конец Шапки-->
             </div>
@@ -233,7 +236,7 @@
         <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
 <!--            style="margin-top: -79px;"-->
             <div class="col-xs-12 noPadding"> 
-            <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus79" 
+            <table class="nmc-table-nowrap-data nmc-main-table nmc-table-hide-impulse" 
                    ng-class="tableDef.tableClass">
     <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                 <tr class="" ng-class = "tableDef.headerClassTR">

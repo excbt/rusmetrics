@@ -786,6 +786,19 @@ tr.nmc-main-table-header-indicator > th {
     color: #FFFFFF;
     height: 79px;
 }
+
+/*  Таблица со скрытой шапкой импульсных показаний*/
+@media (min-width: 1913px) {
+    .nmc-table-hide-impulse {
+        margin-top: -28px;
+    }
+}
+
+@media (max-width: 1913px) {
+    .nmc-table-hide-impulse {
+        margin-top: -46px;
+    }
+}
     /*Скрываем текст у колнки    */
         /*значение color тут должен быть равно background-color из tr.nmc-main-table-header > th*/
 .nmc-th-invisible {
@@ -2229,6 +2242,10 @@ tr.nmc-bg-distinguish > td{
 
 .marginTopMinus10{
     margin-top: -10px;
+}
+
+.marginTopMinus27 {
+    margin-top: -27px;
 }
 
 .marginTopMinus79{
