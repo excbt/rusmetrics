@@ -163,6 +163,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 				.findAll(Specifications.where(specSubscriberId(subscriberId)).and(specIsNew(isNew)), pageRequest);
 
 		initContEvent(resultPage.getContent());
+		contEventService.enhanceContEventType(resultPage.getContent());
 
 		return resultPage;
 
@@ -216,6 +217,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
 
 		initContEvent(result.getContent());
+		contEventService.enhanceContEventType(result.getContent());
 
 		return result;
 

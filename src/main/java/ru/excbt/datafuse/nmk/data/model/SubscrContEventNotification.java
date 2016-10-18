@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 
 /**
  * Уведомления абонента по событиям
@@ -32,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "subscr_cont_event_notification")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @DynamicUpdate
-public class SubscrContEventNotification extends AbstractAuditableModel {
+public class SubscrContEventNotification extends AbstractAuditableModel implements ContEventTypeModel {
 
 	/**
 	 * 
@@ -47,8 +48,6 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Column(name = "subscriber_id", insertable = false, updatable = false)
 	private Long subscriberId;
 
-	//@OneToOne(fetch = FetchType.EAGER)
-	//@JoinColumn(name = "cont_event_id")
 	@Transient
 	private ContEvent contEvent;
 
@@ -71,6 +70,9 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	@Column(name = "cont_event_type_id", insertable = false, updatable = false)
 	private Long contEventTypeId;
+
+	@Transient
+	private ContEventType contEventType;
 
 	@Column(name = "is_new")
 	private Boolean isNew;
@@ -246,6 +248,14 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setMonVersion(Short monVersion) {
 		this.monVersion = monVersion;
+	}
+
+	public ContEventType getContEventType() {
+		return contEventType;
+	}
+
+	public void setContEventType(ContEventType contEventType) {
+		this.contEventType = contEventType;
 	}
 
 }

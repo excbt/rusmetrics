@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -47,9 +48,11 @@ public class ContEventType extends AbstractPersistableEntity<Long> implements De
 	@Column(name = "cont_event_type_description")
 	private String description;
 
+	@JsonIgnore
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@Column(name = "parent_id")
 	private Long parentId;
 
