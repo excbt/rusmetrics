@@ -543,18 +543,25 @@ angular.module('portalNMC')
 
        var promise = null;//getObjectsData();
        var rmaPromise = null;//getRmaObjectsData();
-       var loadData = function(contGroupId){
-         promise = getObjectsData(contGroupId);
-         rmaPromise = getRmaObjectsData(contGroupId);
+       var loadData = function(contGroupId, onlySubscrList){
+           promise = getObjectsData(contGroupId);
+           if (!checkUndefinedNull(onlySubscrList) && onlySubscrList === true) {
+               return;
+           }
+           rmaPromise = getRmaObjectsData(contGroupId);
        };
                  
        $rootScope.$on('objectSvc:requestReloadData', function(event, args){
 //console.log("Reload objects data.");
-            var contGroupId = null;
+            var contGroupId = null,
+                onlySubscrList = false;
             if (!checkUndefinedNull(args) && !checkUndefinedNull(args.contGroupId)){
                 contGroupId = args.contGroupId;
+            }                           
+            if (!checkUndefinedNull(args) && !checkUndefinedNull(args.onlySubscrList)){
+                onlySubscrList = Boolean(args.onlySubscrList);
             }
-            loadData(contGroupId);
+            loadData(contGroupId, onlySubscrList);
        });
         var getPromise = function(){
             return promise;

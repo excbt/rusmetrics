@@ -184,7 +184,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.refreshObjectsData = function(){
-                    $rootScope.$broadcast('objectSvc:requestReloadData', {"contGroupId": $scope.data.currentGroupId});
+                    $rootScope.$broadcast('objectSvc:requestReloadData', {"contGroupId": $scope.data.currentGroupId, "onlySubscrList": true});
                     $scope.loading = true;
                     $rootScope.$broadcast('monitor:updateObjectsRequest');
                     getObjectsData();
