@@ -150,13 +150,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setOwnerContacts(contObject.getOwnerContacts());
 		currContObject.setCwTemp(contObject.getCwTemp());
 		currContObject.setHeatArea(contObject.getHeatArea());
-		currContObject.setTimezoneDefKeyname(contObject.getTimezoneDefKeyname());
 
-		//		if (contObject.getTimezoneDefKeyname() != null) {
-		//			currContObject.setTimezoneDef(timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname()));
-		//		} else {
-		//			currContObject.setTimezoneDef(null);
-		//		}
+		currContObject.setTimezoneDefKeyname(contObject.getTimezoneDefKeyname());
 
 		// Process ContObjectDaData
 		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(currContObject);
@@ -266,8 +261,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}
 
-		//		TimezoneDef timezoneDef = timezoneDefService.findTimeZoneDef(contObject.getTimezoneDefKeyname());
-		//		contObject.setTimezoneDef(timezoneDef);
 		contObject.setIsManual(true);
 
 		// Processing ContObjectDaData
@@ -589,12 +582,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
 
-		//		contObjectIds.forEach(i -> {
-		//			contEventMonitorMapList.put(i, new ArrayList<>());
-		//		});
-
 		contEventMonitors.forEach(i -> {
-			//contEventMonitorMapList.get(i.getContObjectId());
 			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
 			if (l == null) {
 				l = new ArrayList<>();

@@ -79,13 +79,6 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "owner_contacts")
 	private String ownerContacts;
 
-	// @OneToMany (fetch = FetchType.LAZY)
-	// @JoinTable(name="cont_device_object",
-	// joinColumns=@JoinColumn(name="cont_object_id"),
-	// inverseJoinColumns=@JoinColumn(name="device_object_id"))
-	// @JsonIgnore
-	// private Collection<DeviceObject> deviceObjects;
-
 	@Column(name = "current_setting_mode")
 	private String currentSettingMode;
 
@@ -114,19 +107,8 @@ public class ContObject extends AbstractAuditableModel
 	@Fetch(value = FetchMode.SUBSELECT)
 	private List<ContManagement> contManagements = new ArrayList<>();
 
-	//	@ManyToOne(fetch = FetchType.EAGER)
-	//	@JoinColumn(name = "timezone_def")
-	//	private TimezoneDef timezoneDef;
-
-	//	@Column(name = "timezone_def", insertable = false, updatable = false)
 	@Column(name = "timezone_def")
 	private String timezoneDefKeyname;
-
-	//	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
-	//	private ContObjectFias contObjectFias;
-
-	//	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
-	//	private ContObjectGeoPos contObjectGeo;
 
 	@Column(name = "ex_system")
 	private String exSystemKeyname;
@@ -213,14 +195,6 @@ public class ContObject extends AbstractAuditableModel
 		this.version = version;
 	}
 
-	// public Collection<DeviceObject> getDeviceObjects() {
-	// return deviceObjects;
-	// }
-	//
-	// public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
-	// this.deviceObjects = deviceObjects;
-	// }
-
 	public String getCurrentSettingMode() {
 		return currentSettingMode;
 	}
@@ -268,14 +242,6 @@ public class ContObject extends AbstractAuditableModel
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	//
-	//	public TimezoneDef getTimezoneDef() {
-	//		return timezoneDef;
-	//	}
-	//
-	//	public void setTimezoneDef(TimezoneDef timezoneDef) {
-	//		this.timezoneDef = timezoneDef;
-	//	}
 
 	public Date getSettingModeMDate() {
 		return settingModeMDate;
@@ -284,22 +250,6 @@ public class ContObject extends AbstractAuditableModel
 	public void setSettingModeMDate(Date settingModeMDate) {
 		this.settingModeMDate = settingModeMDate;
 	}
-
-	//	public ContObjectFias getContObjectFias() {
-	//		return contObjectFias;
-	//	}
-
-	//	public ContObjectGeoPos getContObjectGeo() {
-	//		return contObjectGeo;
-	//	}
-
-	//	public void setContObjectFias(ContObjectFias contObjectFias) {
-	//		this.contObjectFias = contObjectFias;
-	//	}
-
-	//	public void setContObjectGeo(ContObjectGeoPos contObjectGeo) {
-	//		this.contObjectGeo = contObjectGeo;
-	//	}
 
 	@Override
 	public String getExSystemKeyname() {

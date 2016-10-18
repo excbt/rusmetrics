@@ -44,18 +44,9 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "subscriber_comment")
 	private String comment;
 
-	//	@ManyToOne
-	//	@JoinColumn(name = "organization_id")
-	//	private Organization organization;
-
 	@Column(name = "organization_id", updatable = false, insertable = false)
 	private Long organizationId;
 
-	//	@ManyToOne(fetch = FetchType.EAGER)
-	//	@JoinColumn(name = "timezone_def")
-	//	private TimezoneDef timezoneDef;
-
-	//@Column(name = "timezone_def", insertable = false, updatable = false)
 	@Column(name = "timezone_def")
 	private String timezoneDefKeyname;
 
@@ -136,14 +127,6 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 		this.comment = comment;
 	}
 
-	//	public Organization getOrganization() {
-	//		return organization;
-	//	}
-	//
-	//	public void setOrganization(Organization organization) {
-	//		this.organization = organization;
-	//	}
-
 	public int getVersion() {
 		return version;
 	}
@@ -159,14 +142,6 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	public void setSubscriberName(String subscriberName) {
 		this.subscriberName = subscriberName;
 	}
-
-	//	public TimezoneDef getTimezoneDef() {
-	//		return timezoneDef;
-	//	}
-	//
-	//	public void setTimezoneDef(TimezoneDef timezoneDef) {
-	//		this.timezoneDef = timezoneDef;
-	//	}
 
 	public UUID getSubscriberUUID() {
 		return subscriberUUID;

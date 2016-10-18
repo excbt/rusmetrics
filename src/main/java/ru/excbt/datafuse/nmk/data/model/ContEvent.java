@@ -36,19 +36,12 @@ public class ContEvent extends AbstractPersistableEntity<Long> implements ContEv
 	 */
 	private static final long serialVersionUID = -5865290731548602858L;
 
-	//	@ManyToOne(fetch = FetchType.LAZY)
-	//	@JoinColumn(name = "cont_object_id")
-	//	@JsonIgnore
-	//	private ContObject contObject;
-
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
 	@Column(name = "cont_zpoint_id", insertable = false, updatable = false)
 	private Long contZPointId;
 
-	//	@ManyToOne(fetch = FetchType.EAGER)
-	//	@JoinColumn(name = "cont_event_type_id")
 	@Transient
 	private ContEventType contEventType;
 
@@ -78,18 +71,12 @@ public class ContEvent extends AbstractPersistableEntity<Long> implements ContEv
 	@Column(name = "cont_event_deviation")
 	private String contEventDeviationKeyname;
 
-	//	public ContObject getContObject() {
-	//		return contObject;
-	//	}
-	//
-	//	public void setContObject(ContObject contObject) {
-	//		this.contObject = contObject;
-	//	}
-
+	@Override
 	public ContEventType getContEventType() {
 		return contEventType;
 	}
 
+	@Override
 	public void setContEventType(ContEventType contEventType) {
 		this.contEventType = contEventType;
 	}
@@ -154,6 +141,7 @@ public class ContEvent extends AbstractPersistableEntity<Long> implements ContEv
 		return contEventDeviationKeyname;
 	}
 
+	@Override
 	public Long getContEventTypeId() {
 		return contEventTypeId;
 	}

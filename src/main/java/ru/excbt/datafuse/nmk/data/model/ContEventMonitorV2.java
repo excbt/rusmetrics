@@ -47,8 +47,6 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implemen
 	@Column(name = "cont_event_type_id")
 	private Long contEventTypeId;
 
-	//@ManyToOne(fetch = FetchType.EAGER)
-	//@JoinColumn(name = "cont_event_type_id", insertable = false, updatable = false)
 	@Transient
 	private ContEventType contEventType;
 
