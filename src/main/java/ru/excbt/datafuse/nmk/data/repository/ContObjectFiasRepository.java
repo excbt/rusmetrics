@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectIdModelRepository;
+import ru.excbt.datafuse.nmk.data.repository.support.ContObjectIdModelRepository;
 
 /**
  * Repository для ContObjectFias
@@ -13,13 +13,4 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectIdModelRepository
  */
 public interface ContObjectFiasRepository extends ContObjectIdModelRepository<ContObjectFias> {
 
-	//public List<ContObjectFias> findByContObjectId(Long contObjectId);
-
-	/**
-	 * 
-	 * @param contObjectIds
-	 * @return
-	 */
-	//	@Query("SELECT f FROM #{#entityName} f WHERE f.contObjectId in (:contObjectIds)")
-	//	public List<ContObjectFias> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
 }

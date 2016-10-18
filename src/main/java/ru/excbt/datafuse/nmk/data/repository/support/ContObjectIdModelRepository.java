@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ru.excbt.datafuse.nmk.data.repository.keyname;
+package ru.excbt.datafuse.nmk.data.repository.support;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectIdModelRepository;
+import ru.excbt.datafuse.nmk.data.repository.support.ContObjectIdModelRepository;
 
 /**
  * 
@@ -14,13 +14,5 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectIdModelRepository
  * 
  */
 public interface ContObjectGeoPosRepository extends ContObjectIdModelRepository<ContObjectGeoPos> {
-
-	/**
-	 * 
-	 * @param contObjectIds
-	 * @return
-	 */
-	//	@Query("SELECT p FROM #{#entityName} p WHERE p.contObjectId in (:contObjectIds)")
-	//	public List<ContObjectGeoPos> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
 
 }
