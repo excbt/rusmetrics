@@ -53,8 +53,13 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
+	@JsonIgnore
 	@Version
 	private int version;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	// 1	
 	@Column(name = "p_ap_1")
@@ -402,6 +407,10 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 
 	public void setDataChanged(Boolean dataChanged) {
 		this.dataChanged = dataChanged;
+	}
+
+	public int getDeleted() {
+		return deleted;
 	}
 
 }

@@ -57,6 +57,10 @@ public class ContServiceDataElProfile extends AbstractAuditableModel implements 
 	@Version
 	private int version;
 
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
+
 	@Column(name = "profile_interval")
 	private Integer profileInterval;
 
@@ -160,6 +164,10 @@ public class ContServiceDataElProfile extends AbstractAuditableModel implements 
 
 	public void setQ_Rn(BigDecimal q_Rn) {
 		this.q_Rn = q_Rn;
+	}
+
+	public int getDeleted() {
+		return deleted;
 	}
 
 }

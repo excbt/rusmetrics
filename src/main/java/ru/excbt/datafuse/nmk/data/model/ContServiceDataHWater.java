@@ -68,8 +68,13 @@ public class ContServiceDataHWater extends AbstractAuditableModel implements Dat
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
+	@JsonIgnore
 	@Version
 	private int version;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	@Column
 	private BigDecimal t_in;
@@ -349,6 +354,10 @@ public class ContServiceDataHWater extends AbstractAuditableModel implements Dat
 
 	public void setDataChanged(Boolean dataChanged) {
 		this.dataChanged = dataChanged;
+	}
+
+	public int getDeleted() {
+		return deleted;
 	}
 
 }

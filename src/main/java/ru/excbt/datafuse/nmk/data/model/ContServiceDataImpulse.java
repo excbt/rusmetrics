@@ -9,6 +9,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -42,6 +45,14 @@ public class ContServiceDataImpulse extends AbstractAuditableModel {
 
 	@Column(name = "data_value")
 	private BigDecimal dataValue;
+
+	@JsonIgnore
+	@Version
+	private int version;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	public Date getDataDate() {
 		return dataDate;
@@ -81,6 +92,14 @@ public class ContServiceDataImpulse extends AbstractAuditableModel {
 
 	public void setDataValue(BigDecimal dataValue) {
 		this.dataValue = dataValue;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public int getDeleted() {
+		return deleted;
 	}
 
 }

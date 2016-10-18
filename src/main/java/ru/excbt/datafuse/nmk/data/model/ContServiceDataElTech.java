@@ -54,8 +54,13 @@ public class ContServiceDataElTech extends AbstractAuditableModel implements Dat
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
+	@JsonIgnore
 	@Version
 	private int version;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	@Column(name = "u_1")
 	private BigDecimal u1;
@@ -238,6 +243,10 @@ public class ContServiceDataElTech extends AbstractAuditableModel implements Dat
 
 	public BigDecimal getI3_c() {
 		return this.i3 == null ? null : this.i3.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
+	}
+
+	public int getDeleted() {
+		return deleted;
 	}
 
 }

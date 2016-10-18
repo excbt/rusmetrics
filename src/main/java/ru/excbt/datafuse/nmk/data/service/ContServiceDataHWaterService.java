@@ -311,7 +311,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 				+ " sum(v_in) as v_in, sum(v_out) as v_out, sum(v_delta) as v_delta "
 				+ " FROM ContServiceDataHWater hw " + " WHERE hw.timeDetailType = :timeDetailType "
 				+ " AND hw.contZPoint.id = :contZPointId " + " AND hw.dataDate >= :beginDate "
-				+ " AND hw.dataDate <= :endDate ");
+				+ " AND hw.dataDate <= :endDate AND hw.deleted = 0");
 
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());
 		q1.setParameter("contZPointId", contZPointId);
@@ -367,6 +367,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		sqlString.append(" AND hw.contZPoint.id = :contZPointId ");
 		sqlString.append(" AND hw.dataDate >= :beginDate ");
 		sqlString.append(" AND hw.dataDate <= :endDate ");
+		sqlString.append(" AND hw.deleted = 0 ");
 		logger.debug("Sql: {}", sqlString.toString());
 
 		Query q1 = em.createQuery(sqlString.toString());

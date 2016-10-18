@@ -33,7 +33,7 @@ public interface ContServiceDataImpulseRepository extends JpaRepository<ContServ
 	 */
 	@Query("SELECT d FROM ContServiceDataImpulse d "
 			+ " WHERE d.contZpointId = :contZpointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
-			+ " AND time_detail_type = :timeDetailType ")
+			+ " AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
 	public Page<ContServiceDataImpulse> selectByZPoint(@Param("contZpointId") Long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
 			@Param("endDate") Date endDate, Pageable pageable);

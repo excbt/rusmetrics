@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
  * @since 12.15.2015
  *
  */
-public interface ContServiceDataElProfileRepository extends CrudRepository<ContServiceDataElProfile, Long> {
+public interface ContServiceDataElProfileRepository extends Repository<ContServiceDataElProfile, Long> {
 	/**
 	 * 
 	 * @param contZPointId
@@ -30,7 +30,7 @@ public interface ContServiceDataElProfileRepository extends CrudRepository<ContS
 	 */
 	@Query("SELECT d FROM ContServiceDataElProfile d "
 			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
-			+ " AND time_detail_type = :timeDetailType ORDER BY d.dataDate ")
+			+ " AND time_detail_type = :timeDetailType AND d.deleted = 0 ORDER BY d.dataDate ")
 	public List<ContServiceDataElProfile> selectByZPoint(@Param("contZPointId") Long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
 			@Param("endDate") Date endDate);
@@ -46,7 +46,7 @@ public interface ContServiceDataElProfileRepository extends CrudRepository<ContS
 	 */
 	@Query("SELECT d FROM ContServiceDataElProfile d "
 			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
-			+ " AND time_detail_type = :timeDetailType ")
+			+ " AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
 	public Page<ContServiceDataElProfile> selectByZPoint(@Param("contZPointId") Long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
 			@Param("endDate") Date endDate, Pageable pageable);
@@ -60,7 +60,7 @@ public interface ContServiceDataElProfileRepository extends CrudRepository<ContS
 	 */
 	@Query("SELECT d FROM ContServiceDataElProfile d "
 			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :dataDate "
-			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate ASC ")
+			+ " AND time_detail_type IN (:timeDetailType) AND d.deleted = 0 " + " ORDER BY d.dataDate ASC ")
 	public List<ContServiceDataElProfile> selectFirstDataByZPoint(@Param("contZPointId") Long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
@@ -74,7 +74,7 @@ public interface ContServiceDataElProfileRepository extends CrudRepository<ContS
 	 */
 	@Query("SELECT d FROM ContServiceDataElProfile d "
 			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
-			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate DESC ")
+			+ " AND time_detail_type IN (:timeDetailType) AND d.deleted = 0 " + " ORDER BY d.dataDate DESC ")
 	public List<ContServiceDataElProfile> selectLastDataByZPoint(@Param("contZPointId") Long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
