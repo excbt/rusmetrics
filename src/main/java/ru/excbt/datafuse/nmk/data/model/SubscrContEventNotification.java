@@ -62,7 +62,6 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 
 	@Column(name = "cont_event_time", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@JsonIgnore
 	private Date contEventTime;
 
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
@@ -194,6 +193,7 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 		this.revisionSubscrUserId = revisionSubscrUserId;
 	}
 
+	@Override
 	public Long getContEventTypeId() {
 		return contEventTypeId;
 	}
@@ -250,10 +250,12 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 		this.monVersion = monVersion;
 	}
 
+	@Override
 	public ContEventType getContEventType() {
 		return contEventType;
 	}
 
+	@Override
 	public void setContEventType(ContEventType contEventType) {
 		this.contEventType = contEventType;
 	}
