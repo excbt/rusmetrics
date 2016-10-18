@@ -28,7 +28,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
-				<version>Hopper-SR3</version>
+				<version>Hopper-SR4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
