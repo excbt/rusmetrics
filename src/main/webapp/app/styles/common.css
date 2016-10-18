@@ -917,7 +917,7 @@ tr.nmc-main-table-header-indicator > th {
 
 .nmc-table-nowrap-data > tbody > tr > td{
     white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: auto; /*Обрезаем все, что не вмещается*/
+/*    overflow: auto; *//*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px;/* Устанавливаем отступ от границ ячейки = 1*/
  }
@@ -928,7 +928,7 @@ tr.nmc-main-table-header-indicator > th {
 
 .nmc-table-nowrap-data1 > tbody > tr > td{
     white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: auto; /*Обрезаем все, что не вмещается*/
+/*    overflow: auto; *//*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
     border: none !important;
