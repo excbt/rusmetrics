@@ -43,6 +43,9 @@ angular.module('portalNMC')
         startDate : angular.copy($scope.indicatorDates.startDate),
         endDate :  angular.copy($scope.indicatorDates.endDate)
     };
+    $rootScope.startDateToDel = moment($scope.date.deleteIndicatorDates.startDate).format('YYYY-MM-DD');
+    $rootScope.endDateToDel = moment($scope.date.deleteIndicatorDates.endDate).format('YYYY-MM-DD'); 
+    
     
     $scope.$watch('date.deleteIndicatorDates', function (newDates, oldDates, scope) {
 //console.log(scope);        
@@ -450,27 +453,51 @@ angular.module('portalNMC')
     };
         
     //file upload settings
-    var initFileUploader =  function(){    
-         var contZPoint = $cookies.contZPoint;
-         var timeDetailType = "24h";
-         var contObject = $cookies.contObject;
+    $scope.initFileUploader =  function() {
+        var contZPoint = $cookies.contZPoint;
+        var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;//"24h";
+        var contObject = $cookies.contObject;
 //         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
-        $scope.uploader = new FileUploader({
-            url: "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZPoint + "/service/" + timeDetailType + "/csv",
-           
-        });
-        
+        var url = "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZPoint + "/service/" + timeDetailType + "/csv";        
+        $scope.uploader = new FileUploader({url: url});        
         $scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
             console.info('onErrorItem', status, response);
             errorCallback(response);
+            $scope.successOnUpload = false;
+            $scope.errorOnUpload = true;
+            $scope.uploadFlag = false;
             //notificationFactory.errorInfo(response.resultCode, response.description);
         };
         
         $scope.uploader.onSuccessItem = function(item, response, status, headers) {
-//console.log(item);            
+//console.log(item);
         };
+        $scope.uploader.onCompleteAll = function() {
+            $scope.getData(1);
+            $scope.successOnUpload = true;
+            $scope.errorOnUpload = false;
+//            $scope.$apply();
+        };
+        
+        //register listeners for window
+        window.setTimeout(function () {
+            $("#upLoadFileModal").on('shown.bs.modal', function() {
+//        console.log("upLoadFileModal shown");        
+
+            });  
+
+            $("#upLoadFileModal").on('hidden.bs.modal', function() {
+//        console.log("upLoadFileModal hidden");        
+                $scope.uploader = null;
+                $scope.uploadFlag = false;
+                $scope.successOnUpload = false;
+                $scope.errorOnUpload = false;
+                $scope.$apply();
+            });
+        }, 10);
+        
     };
-    initFileUploader();
+//    $scope.initFileUploader();
         
         //Functions for work with date
         //function for date converting
@@ -1195,6 +1222,8 @@ angular.module('portalNMC')
     };
         //Upload file with the indicator data to the server
     $scope.uploadFile = function(){
+//console.log($scope.uploader);
+        $scope.uploadFlag = true;
         $scope.uploader.queue[$scope.uploader.queue.length - 1].upload();
     };
     
@@ -1202,7 +1231,7 @@ angular.module('portalNMC')
     $scope.deleteData = function(){
         var contObject = $scope.contObject || $cookies.contObject;
         var contZpoint = $scope.contZPoint || $cookies.contZpoint;
-        var timeDetailType = "24h";
+        var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;//"24h";
         var fromDate = $rootScope.startDateToDel;
         var toDate = $rootScope.endDateToDel;
         var url = "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZpoint + "/service/" + timeDetailType + "/csv" + "?beginDate=" + fromDate + "&endDate=" + toDate;
@@ -1282,7 +1311,7 @@ angular.module('portalNMC')
 //        if (!mainSvc.checkUndefinedNull(columnPrefs))
 //            columnPrefs = columnPrefs.split(',');
 //        setColumnPref(columnPrefs);
-//    }        
+//    }
         
         //control visibles
     var setVisibles = function(ctxId) {
