@@ -567,11 +567,11 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	public List<ContServiceDataHWater> deleteManualDataHWater(Long contZPointId, LocalDatePeriod localDatePeriod,
-			File outFile) {
+			TimeDetailKey timeDetailKey, File outFile) {
 
 		checkNotNull(contZPointId);
-
 		checkNotNull(localDatePeriod);
+		checkNotNull(timeDetailKey);
 
 		ContZPoint zpoint = contZPointService.findOne(contZPointId);
 
@@ -580,8 +580,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkState(BooleanUtils.isTrue(zpoint.getIsManualLoading()),
 				String.format("Manual Loading and Deleting for ContZPoint with id:%d is not allowed", contZPointId));
 
-		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(contZPointId, TimeDetailKey.TYPE_24H,
-				localDatePeriod);
+		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(contZPointId, timeDetailKey, localDatePeriod);
 
 		try {
 			ByteArrayInputStream is = new ByteArrayInputStream(hWatersCsvService.writeHWaterDataToCsv(deleteCandidate));

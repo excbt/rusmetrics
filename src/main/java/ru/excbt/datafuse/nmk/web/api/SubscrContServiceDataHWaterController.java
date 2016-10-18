@@ -723,9 +723,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", dateFromStr, dateToStr));
 		}
 
-		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
-			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
+		if (TimeDetailKey.searchKeyname(timeDetailType) == null) {
+			return responseBadRequest(ApiResult.badRequest("TimeDetailKey %s is not supported", timeDetailType));
 		}
+
+		//		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
+		//			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
+		//		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
@@ -745,7 +749,8 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 				@SuppressWarnings("unused")
 				List<ContServiceDataHWater> deletedRecords = contServiceDataHWaterService.deleteManualDataHWater(
-						contZPointId, datePeriodParser.getLocalDatePeriod().buildEndOfDay(), outFile);
+						contZPointId, datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
+						TimeDetailKey.searchKeyname(timeDetailType), outFile);
 				FileInfoMD5 resultFileInfo = new FileInfoMD5(outFile);
 				setResultEntity(resultFileInfo);
 			}
