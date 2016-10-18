@@ -311,31 +311,61 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
 //console.log(el);            
             oneNotice = {};
             oneNotice.id = el.id;
-            var noticeCaption = el.contEvent.contEventType.caption || el.contEvent.contEventType.name;
+            var noticeCaption = el.contEventType.caption || el.contEventType.name;
             oneNotice.contEventCategoryKeyname = el.contEventCategoryKeyname;
             oneNotice.noticeType = noticeCaption;//el.contEvent.contEventType.caption;
-            oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
-            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";  
+            oneNotice.isBaseEvent = el.contEventType.isBaseEvent;
+            oneNotice.noticeMessage = mainSvc.checkUndefinedNull(el.contEvent) ? "" : el.contEvent.message;//+" ("+el.contEvent.id+")";  
+            oneNotice.zpoint = null;
+            oneNotice.imgSTPath = $scope.imgPathTmpl + "green.png";
             if (angular.isString(noticeCaption)){
                 if (noticeCaption.length > $scope.TYPE_CAPTION_LENGTH){
                         oneNotice.noticeTypeCaption= noticeCaption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
                     }else{
                          oneNotice.noticeTypeCaption= noticeCaption;
                 };
-            };            
-            if (el.contEvent.message == null){
-                oneNotice.noticeCaption = "";
-            }else{
-                if (el.contEvent.message.length > $scope.TEXT_CAPTION_LENGTH){
-                        oneNotice.noticeCaption = el.contEvent.message.substr(0, $scope.TEXT_CAPTION_LENGTH) + "...";
-                    }else{
-                         oneNotice.noticeCaption = el.contEvent.message;
-                };
             };
+            if (!mainSvc.checkUndefinedNull(el.contEvent)) {
+                if (el.contEvent.message == null){
+                    oneNotice.noticeCaption = "";
+                }else{
+                    if (el.contEvent.message.length > $scope.TEXT_CAPTION_LENGTH) {
+                            oneNotice.noticeCaption = el.contEvent.message.substr(0, $scope.TEXT_CAPTION_LENGTH) + "...";
+                        } else {
+                             oneNotice.noticeCaption = el.contEvent.message;
+                    }
+                }
+                oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);
+                switch (el.contEvent.contServiceType)
+                {
+                    case "heat" : //oneNotice.noticeZpoint = "Теплоснабжение"; 
+                        oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
+                        break;
+                    case "hw" : //oneNotice.noticeZpoint = "ГВС";
+                        oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
+                        break;
+                    case "cw" : //oneNotice.noticeZpoint = "ХВС"; 
+                        oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
+                        break;
+                    case "gas" : //oneNotice.noticeZpoint = "Газ"; 
+                        oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
+                        break;
+                    case "env" :// oneNotice.noticeZpoint = "Климат"; 
+                        oneNotice.imgSTPath = "images/es.png";
+                        break;
+                    case "el" : //oneNotice.noticeZpoint = "Элка"; 
+                        oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";
+                        break;    
+                    case null :// oneNotice.noticeZpoint = ""; 
+                        oneNotice.imgSTPath = "null";
+                        break;
+                    default: oneNotice.noticeZpoint = el.contServiceType;
+                        oneNotice.imgSTPath = el.contServiceType;
+                 };
+            }
             
             oneNotice.contObjectId = el.contObjectId;
-//            oneNotice.zpointId = el.contEvent.contZPointId;
-            oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);            
+//            oneNotice.zpointId = el.contEvent.contZPointId;            
             for (var i=0; i < $scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
                     oneNotice.noticeObjectName = $scope.objects[i].fullName;  
@@ -351,38 +381,12 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
                 };
             };
             
-            oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
+            oneNotice.noticeDate = $scope.dateFormat(el.contEventTime);
             oneNotice.contEventLevelColor = mainSvc.checkUndefinedNull(el.contEventLevelColor) ? "GREEN" : el.contEventLevelColor;
             oneNotice.imgpath = $scope.imgPathTmpl + oneNotice.contEventLevelColor.toLowerCase() + ".png";
             oneNotice.imgclass = oneNotice.contEventLevelColor === "GREEN" ? "" : "nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
             
-            switch (el.contEvent.contServiceType)
-            {
-                case "heat" : //oneNotice.noticeZpoint = "Теплоснабжение"; 
-                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
-                    break;
-                case "hw" : //oneNotice.noticeZpoint = "ГВС";
-                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
-                    break;
-                case "cw" : //oneNotice.noticeZpoint = "ХВС"; 
-                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
-                    break;
-                case "gas" : //oneNotice.noticeZpoint = "Газ"; 
-                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
-                    break;
-                case "env" :// oneNotice.noticeZpoint = "Климат"; 
-                    oneNotice.imgSTPath = "images/es.png";
-                    break;
-                case "el" : //oneNotice.noticeZpoint = "Элка"; 
-                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";
-                    break;    
-                case null :// oneNotice.noticeZpoint = ""; 
-                    oneNotice.imgSTPath = "null";
-                    break;
-                default: oneNotice.noticeZpoint = "" + el.contServiceType + "";
-                    oneNotice.imgSTPath = "" + el.contServiceType + "";
-             };
             if (oneNotice.zpoint != null){
                 oneNotice.noticeZpoint = oneNotice.zpoint.customServiceName || oneNotice.zpoint.contServiceTypeCaption;
             };
