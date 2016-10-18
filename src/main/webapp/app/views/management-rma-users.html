@@ -20,6 +20,17 @@
                data-toggle="tab">Модемы
             </a>
         </li>
+        <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
+            id="modems_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/device-models/" 
+               aria-controls="device-models" 
+               role="tab" 
+               data-target="#device-models" 
+               data-toggle="tab">Модели приборов
+            </a>
+        </li>        
         <li id="organizations_edit_2nd_menu_item" role="presentation" class="" >
             <a class="nmc-main-tab-button" 
                href="#/management/organizations/" 
