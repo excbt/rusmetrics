@@ -14,6 +14,7 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 /**
  * 
@@ -24,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_service_data_impulse")
-public class ContServiceDataImpulse extends AbstractAuditableModel {
+public class ContServiceDataImpulse extends AbstractAuditableModel implements DataDateFormatter {
 
 	/**
 	 * 
