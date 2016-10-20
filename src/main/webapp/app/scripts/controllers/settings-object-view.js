@@ -10,6 +10,8 @@ angular.module('portalNMC')
                 var USER_VCOOKIE_URL = "../api/subscr/vcookie/user";
                 var OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES";
                 
+                var measureUnits = null;
+                
                 $scope.crudTableName = objectSvc.getObjectsUrl();
                 
                     //messages for user
@@ -880,6 +882,17 @@ angular.module('portalNMC')
                                 if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)){                       zpoint.deviceObject = zPointsByObject[i].deviceObjects[0];         
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                                        zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
+                                        if (zpoint.isImpulse === true) {
+                                            if (!mainSvc.checkUndefinedNull(measureUnits)) {
+                                                measureUnits.all.some(function(mu) {
+                                                    if (mu.keyname === zPointsByObject[i].deviceObjects[0].impulseMu) {
+                                                        zpoint.measureUnitCaption = mu.caption;
+                                                    }
+                                                });
+                                            
+                                            }
+                                        }
                                     }else{
                                         zpoint.zpointModel = "Не задано";
                                     };
@@ -1168,17 +1181,24 @@ angular.module('portalNMC')
                                       
 //                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                     var url = "#/objects";
-                    if ($scope.currentZpoint.zpointType === 'el'){
+                         
+                    if ($scope.currentZpoint.isImpulse === true) {
+                        url += "/impulse-indicators";
+                    } else if ($scope.currentZpoint.zpointType === 'el') {
                         url += "/indicator-electricity";
-                    }else{
+                    } else {
                         url += "/indicators";
-                    };                    
+                    }
                     url += "/?objectId=" + objectId + "&zpointId=" + zpointId + "&objectName=" + $scope.currentObject.fullName + "&zpointName=" + $scope.currentZpoint.zpointName;
                     //add info about device
 //console.log($scope.currentZpoint);                    
                     
                     url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
                     url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                    
+                    if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
+                        url += "&mu=" + $scope.currentZpoint.measureUnitCaption;
+                    }
                     
                     window.open(url, '_blank');
                 };
@@ -2697,6 +2717,9 @@ console.log("openSchedule");
 // *****************************************************************************************
 //             end   Zpoint data source
 // ******************************************************************************************                  
+                $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function() {
+                    measureUnits = objectSvc.getDeviceMetadataMeasures();
+                });
                 
                 var initCtrl = function(){
                                         //if tree is off
@@ -2706,6 +2729,7 @@ console.log("openSchedule");
                     //if tree is on                         
                         objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);                        
                     };
+                    measureUnits = objectSvc.getDeviceMetadataMeasures();
                 }; 
                 
                 initCtrl();

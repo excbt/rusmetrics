@@ -446,10 +446,10 @@ app.service('indicatorSvc', function (mainSvc) {
                 isvisible: 'isvisible'
             },
             {
-                header : "Показания, м3",
+                header : "Показания",
                 headerClass : "col-xs-1",
                 dataClass : "col-xs-1",
-                fieldName: "v_in",
+                fieldName: "dataValue", /*dataValue*/
                 "1h": "1h",
                 "24h" : "24h",
                 "1h_abs" : "1h_abs",

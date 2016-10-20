@@ -396,6 +396,10 @@ angular.module('portalNMC')
                 indicatorSvc.setDeviceSN(pathParams.deviceSN);
             }
         }
+        //read measure units from url
+        if (angular.isDefined(pathParams.mu)) {
+            $scope.deviceMu = pathParams.mu;
+        }        
         
         if (angular.isUndefined(tmpTimeDetailType) || (tmpTimeDetailType === null)){
             if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType !== "null")){
@@ -473,7 +477,7 @@ angular.module('portalNMC')
         
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
-         $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/service/" + timeDetailType + "/" + $scope.contZPoint + "/paged?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd + "&page=" + (pageNumber - 1) + "&size=" + $scope.indicatorsPerPage + "&dataDateSort=" + $scope.ctrlSettings.orderBy.order;
+         $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceImpulse/" + timeDetailType + "/" + $scope.contZPoint + "/paged?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd + "&page=" + (pageNumber - 1) + "&size=" + $scope.indicatorsPerPage + "&dataDateSort=" + $scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
 //console.log(table);        
 //        crudGridDataFactory(table).get(function(data){
@@ -614,149 +618,128 @@ angular.module('portalNMC')
         };
         
         // get summary (score)
-        var table_summary = table.replace("paged", "summary");
+        //var table_summary = table.replace("paged", "summary");
 //console.log(table_summary);        
-        crudGridDataFactory(table_summary).get(function(data) {        
-                $scope.setScoreStyles();
-                $scope.intotalColumns.forEach(function(element, index, array) {
-                    element.imgpath = EMPTY_IMG_PATH;
-                    element.imgclass = "";
-                    element.title = "";
-                });
-
-                $scope.summary = angular.copy(data);
-//console.log(data);            
-                if ($scope.summary.hasOwnProperty('diffs')) {
-                    prepareSummary($scope.summary.diffs);
-//                    $scope.intotalColumns.forEach(function(element){
-//                        var columnName = element.fieldName;
-//                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
-//                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
-//                        }else{
-//                            $scope.summary.diffs[columnName] = "-";
-//                        };
+//        crudGridDataFactory(table_summary).get(function(data) {        
+//                $scope.setScoreStyles();
+//                $scope.intotalColumns.forEach(function(element, index, array) {
+//                    element.imgpath = EMPTY_IMG_PATH;
+//                    element.imgclass = "";
+//                    element.title = "";
+//                });
+//
+//                $scope.summary = angular.copy(data);         
+//                if ($scope.summary.hasOwnProperty('diffs')) {
+//                    prepareSummary($scope.summary.diffs);
+//
+//                }
+//                if ($scope.summary.hasOwnProperty('totals')) { 
+//                    prepareSummary($scope.summary.totals);
+//                }
+//                if ($scope.summary.hasOwnProperty('average')) { 
+//                    prepareSummary($scope.summary.average);
+//                }
+//                if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')) {
+//                    return;
+//                }
+//
+//                $scope.intotalColumns.forEach(function(element, index, array) {
+//                    var columnName = element.fieldName;                  
+//                    if (angular.isUndefined($scope.summary.firstData) || angular.isUndefined($scope.summary.lastData) || ($scope.summary.firstData === null) || ($scope.summary.lastData === null) || !$scope.summary.firstData.hasOwnProperty(columnName) || !$scope.summary.lastData.hasOwnProperty(columnName)) {
+//                        return;
+//                    }
+//                    var textDetails = "Начальное значение = " + $scope.summary.firstData[columnName] + " ";
+//                    var timeSuffix = "";
+//                    if ($scope.summary.firstData['dataDateString'].length == 10) { timeSuffix = " 00:00";}
+//                    textDetails += "(Дата = " + $scope.summary.firstData['dataDateString'] + timeSuffix + ");<br><br>";
+//                    textDetails += "Конечное значение = " + $scope.summary.lastData[columnName] + " ";
+//                    timeSuffix = "";
+//                    if ($scope.summary.lastData['dataDateString'].length == 10) { timeSuffix = " 00:00";}
+//                    textDetails += "(Дата = " + $scope.summary.lastData['dataDateString'] + timeSuffix + ");";
+//                    var titleDetails = "Детальная информация";
+//                    var elDOM = "#diffBtn" + columnName;
+//                    var targetDOM = "#total" + columnName;                 
+//                    $(elDOM).qtip({
+//                        suppress: false,
+//                        content: {
+//                            text: textDetails,
+//                            title: titleDetails,
+//                            button : true
+//                        },
+//                        show: {
+//                            event: 'click'
+//                        },
+//                        style: {
+//                            classes: 'qtip-nmc-indicator-tooltip',
+//                            width: 1000
+//                        },
+//                        hide: {
+//                            event: 'unfocus'
+//                        },
+//                        position: {
+//                            my: 'top right',
+//                            at: 'bottom right',
+//                            target: $(targetDOM)
+//                        }
 //                    });
-                }
-                if ($scope.summary.hasOwnProperty('totals')) { 
-                    prepareSummary($scope.summary.totals);
-//                    $scope.intotalColumns.forEach(function(element){                       
-//                        var columnName = element.fieldName;
-//                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
-//                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
-//                        }else{
-//                            $scope.summary.totals[columnName] = "-";
-//                        };
-//                    });
-                }
-                if ($scope.summary.hasOwnProperty('average')) { 
-                    prepareSummary($scope.summary.average);
-                }
-                if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')) {
-                    return;
-                }
-                        //work with fractional part
-                //search the shortest fractional part
-                $scope.intotalColumns.forEach(function(element, index, array) {
-                    var columnName = element.fieldName;                  
-                    if (angular.isUndefined($scope.summary.firstData) || angular.isUndefined($scope.summary.lastData) || ($scope.summary.firstData === null) || ($scope.summary.lastData === null) || !$scope.summary.firstData.hasOwnProperty(columnName) || !$scope.summary.lastData.hasOwnProperty(columnName)) {
-                        return;
-                    }
-                    var textDetails = "Начальное значение = " + $scope.summary.firstData[columnName] + " ";
-//                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
-                    var timeSuffix = "";
-                    if ($scope.summary.firstData['dataDateString'].length == 10) { timeSuffix = " 00:00";}
-                    textDetails += "(Дата = " + $scope.summary.firstData['dataDateString'] + timeSuffix + ");<br><br>";
-                    textDetails += "Конечное значение = " + $scope.summary.lastData[columnName] + " ";
-//                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
-                    timeSuffix = "";
-                    if ($scope.summary.lastData['dataDateString'].length == 10) { timeSuffix = " 00:00";}
-                    textDetails += "(Дата = " + $scope.summary.lastData['dataDateString'] + timeSuffix + ");";
-                    var titleDetails = "Детальная информация";
-                    var elDOM = "#diffBtn" + columnName;
-                    var targetDOM = "#total" + columnName;                 
-                    $(elDOM).qtip({
-                        suppress: false,
-                        content: {
-                            text: textDetails,
-                            title: titleDetails,
-                            button : true
-                        },
-                        show: {
-                            event: 'click'
-                        },
-                        style: {
-                            classes: 'qtip-nmc-indicator-tooltip',
-                            width: 1000
-                        },
-                        hide: {
-                            event: 'unfocus'
-                        },
-                        position: {
-                            my: 'top right',
-                            at: 'bottom right',
-                            target: $(targetDOM)
-                        }
-                    });
-              
-                    if ($scope.summary.diffs.hasOwnProperty(columnName) && (!isNaN($scope.summary.diffs[columnName])) && ($scope.summary.diffs[columnName] != null)) {
-                        $scope.summary.diffs[columnName] = Number($scope.summary.diffs[columnName]).toFixed(3);
-                    }
-                    if ($scope.summary.totals.hasOwnProperty(columnName) && (!isNaN($scope.summary.totals[columnName])) && ($scope.summary.totals[columnName] != null)){
-                        $scope.summary.totals[columnName] = Number($scope.summary.totals[columnName]).toFixed(3);
-                    }
-                    if (!$scope.summary.diffs.hasOwnProperty(columnName) || !$scope.summary.totals.hasOwnProperty(columnName)) {
-                        return;
-                    }
-                    var lengthFractPart = 0;
-                    var diff = $scope.summary.diffs[columnName];
-                    var total = $scope.summary.totals[columnName];
-//console.log(diff);                    
-//console.log(total);                                        
-                    if ((diff == null) || (total == null) || (diff == "-") || (total == "-")) {
-                        return;
-                    }
-                    var diffStr = diff.toString();
-                    var tempStrArr = diffStr.split(".");
-                    var diffFractPart = tempStrArr.length > 1 ? tempStrArr[1].length : 0;
-                    var totalStr = total.toString();
-                    tempStrArr = totalStr.split(".");
-                    var totalFractPart = tempStrArr.length > 1 ? tempStrArr[1].length : 0;
+//              
+//                    if ($scope.summary.diffs.hasOwnProperty(columnName) && (!isNaN($scope.summary.diffs[columnName])) && ($scope.summary.diffs[columnName] != null)) {
+//                        $scope.summary.diffs[columnName] = Number($scope.summary.diffs[columnName]).toFixed(3);
+//                    }
+//                    if ($scope.summary.totals.hasOwnProperty(columnName) && (!isNaN($scope.summary.totals[columnName])) && ($scope.summary.totals[columnName] != null)){
+//                        $scope.summary.totals[columnName] = Number($scope.summary.totals[columnName]).toFixed(3);
+//                    }
+//                    if (!$scope.summary.diffs.hasOwnProperty(columnName) || !$scope.summary.totals.hasOwnProperty(columnName)) {
+//                        return;
+//                    }
+//                    var lengthFractPart = 0;
+//                    var diff = $scope.summary.diffs[columnName];
+//                    var total = $scope.summary.totals[columnName];                     
+//                    if ((diff == null) || (total == null) || (diff == "-") || (total == "-")) {
+//                        return;
+//                    }
+//                    var diffStr = diff.toString();
+//                    var tempStrArr = diffStr.split(".");
+//                    var diffFractPart = tempStrArr.length > 1 ? tempStrArr[1].length : 0;
+//                    var totalStr = total.toString();
+//                    tempStrArr = totalStr.split(".");
+//                    var totalFractPart = tempStrArr.length > 1 ? tempStrArr[1].length : 0;
                     //29.06.2015 - поступило требование - выводить 3 знака после запятой
-                    lengthFractPart = 3;//totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
+//                    lengthFractPart = 3;//totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
 //                    $scope.summary.diffs[columnName] = diff.toFixed(lengthFractPart);
 //                    $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);                  
 
-                    var precision = Number("0.00000000000000000000".substring(0, lengthFractPart + 1) + "1");
+//                    var precision = Number("0.00000000000000000000".substring(0, lengthFractPart + 1) + "1");
 //            console.log("diff = "+$scope.summary.diffs[columnName]);           
 //            console.log("total = "+$scope.summary.totals[columnName]);           
 //            console.log("precision = "+precision);        
 
-                    var difference = Math.abs(($scope.summary.diffs[columnName] - $scope.summary.totals[columnName])).toFixed(lengthFractPart);
+//                    var difference = Math.abs(($scope.summary.diffs[columnName] - $scope.summary.totals[columnName])).toFixed(lengthFractPart);
 //            console.log("difference = "+difference);         
             //        var difference = Math.abs(total - diff);
-                    if ((difference > precision) && (difference <= 1))
-                    {
+//                    if ((difference > precision) && (difference <= 1))
+//                    {
 //            console.log(ALERT_IMG_PATH);         
-                       element.imgpath = ALERT_IMG_PATH;
-                       element.imgclass = "nmc-img-divergence-indicator";
-                       element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
-                       return;
-
-                    }
-                    if ((difference > 1))
-                    {  
+//                       element.imgpath = ALERT_IMG_PATH;
+//                       element.imgclass = "nmc-img-divergence-indicator";
+//                       element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
+//                       return;
+//
+//                    }
+//                    if ((difference > 1))
+//                    {  
 //            console.log(CRIT_IMG_PATH);            
-                        element.imgpath = CRIT_IMG_PATH;
-                        element.imgclass = "nmc-img-divergence-indicator";
-                        element.title = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
-                        return;
-                    }
-                    element.imgpath = EMPTY_IMG_PATH;
-                    element.imgclass = "";
-                    element.title = "";   
-                });
+//                        element.imgpath = CRIT_IMG_PATH;
+//                        element.imgclass = "nmc-img-divergence-indicator";
+//                        element.title = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
+//                        return;
+//                    }
+//                    element.imgpath = EMPTY_IMG_PATH;
+//                    element.imgclass = "";
+//                    element.title = "";   
+//                });
 //console.log(data);            
-        });
+//        });
     };
         
                 //run init method

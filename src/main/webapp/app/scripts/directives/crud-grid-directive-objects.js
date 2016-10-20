@@ -23,6 +23,8 @@ angular.module('portalNMC')
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location) {
                 
 //console.log("Objects directive.");
+                var measureUnits = null;
+                
                 //default date interval settings for monitor
                 $rootScope.monitorStart = $location.search().fromDate || monitorSvc.getMonitorSettings().fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
                 $rootScope.monitorEnd =  $location.search().toDate || monitorSvc.getMonitorSettings().toDate || moment().endOf('day').format('YYYY-MM-DD');
@@ -654,6 +656,16 @@ angular.module('portalNMC')
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')) {
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
                                         zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
+                                        if (zpoint.isImpulse === true) {
+                                            if (!mainSvc.checkUndefinedNull(measureUnits)) {
+                                                measureUnits.all.some(function(mu) {
+                                                    if (mu.keyname === zPointsByObject[i].deviceObjects[0].impulseMu) {
+                                                        zpoint.measureUnitCaption = mu.caption;
+                                                    }
+                                                });
+                                            
+                                            }
+                                        }
                                     } else {
                                         zpoint.zpointModel = "Не задано";
                                     }
@@ -996,6 +1008,10 @@ angular.module('portalNMC')
                     
                     url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
                     url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                    
+                    if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
+                        url += "&mu=" + $scope.currentZpoint.measureUnitCaption;
+                    }   
                     
                     window.open(url, '_blank');
                 };
@@ -1973,8 +1989,13 @@ angular.module('portalNMC')
 //                  end Object monitor
 // ***********************************************************************************************                
                 
+                $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function() {
+                    measureUnits = objectSvc.getDeviceMetadataMeasures();
+                });
+                
                 var initCtrl = function(){
-//console.log('initCtrl');                    
+//console.log('initCtrl');       
+                    measureUnits = objectSvc.getDeviceMetadataMeasures();                    
                     checkTreeSettingsAndGetObjectsData();
                                         //if tree is off
 //                    if ($scope.objectCtrlSettings.isTreeView == false){
