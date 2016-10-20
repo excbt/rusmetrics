@@ -2,85 +2,85 @@
 /*global angular, moment, $*/
 'use strict';
 angular.module('portalNMC')
-    .controller('ImpulseIndicatorsCtrl', ['$scope', '$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc', function ($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc) {
+    .controller('ImpulseIndicatorsCtrl', ['$scope', '$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc', '$timeout', function ($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc, $timeout) {
         
         //dev
-        var impulseIndicatorsTest1 = [
-            {
-                id: 1,
-                dataDate: 1111903080497209,
-                dataDateString: "14-10-2016",
-                workTime: 30,
-                value: 10                
-            },
-            {
-                id: 2,
-                dataDate: 1111903080497209,
-                dataDateString: "13-10-2016",
-                workTime: 20,
-                value: 100                
-            },
-            {
-                id: 3,
-                dataDate: 1111903080497209,
-                dataDateString: "12-10-2016",
-                workTime: 14,
-                value: 50                
-            }
-            
-        ];
-        var impulseIndicatorsTest = [],
-            i;        
-        for (i = 0; i < 30; i += 1) {
-            var testObj = {
-                id: i,
-                dataDate: 1111903080497209,
-                dataDateString: i + "-10-2016",
-                workTime: i*10,
-                value: i*100
-            };
-            impulseIndicatorsTest.push(testObj); 
-        }
-        var impulseDataRespond = {
-            objects: impulseIndicatorsTest,
-            totalElements: impulseIndicatorsTest.length,
-            totalPages: Math.round(impulseIndicatorsTest.length / $scope.indicatorsPerPage)
-        };
-        var impulseIndicatorsColumnsTest = [
-            {
-                header : "Дата",
-                headerClass : "col-xs-2",
-                dataClass : "col-xs-2",
-                fieldName: "dataDate",
-                "1h": "1h",
-                "24h" : "24h",
-                "1h_abs" : "1h_abs",
-                istunable: false,
-                isvisible: 'isvisible'
-            }, 
-            {
-                header : "Время наработки, час",
-                headerClass : "col-xs-1",
-                dataClass : "col-xs-1",
-                fieldName: "workTime",
-                "1h": "1h",
-                "24h" : "24h",
-                "1h_abs" : "1h_abs",
-                istunable: false,
-                isvisible: 'isvisible'
-            }, 
-            {
-                header : "Показания, м3",
-                headerClass : "col-xs-1",
-                dataClass : "col-xs-1",
-                fieldName: "v_in",
-                "1h": "1h",
-                "24h" : "24h",
-                "1h_abs" : "1h_abs",
-                istunable: "istunable",
-                isvisible: 'isvisible'
-            }
-        ];
+//        var impulseIndicatorsTest1 = [
+//            {
+//                id: 1,
+//                dataDate: 1111903080497209,
+//                dataDateString: "14-10-2016",
+//                workTime: 30,
+//                value: 10                
+//            },
+//            {
+//                id: 2,
+//                dataDate: 1111903080497209,
+//                dataDateString: "13-10-2016",
+//                workTime: 20,
+//                value: 100                
+//            },
+//            {
+//                id: 3,
+//                dataDate: 1111903080497209,
+//                dataDateString: "12-10-2016",
+//                workTime: 14,
+//                value: 50                
+//            }
+//            
+//        ];
+//        var impulseIndicatorsTest = [],
+//            i;        
+//        for (i = 0; i < 30; i += 1) {
+//            var testObj = {
+//                id: i,
+//                dataDate: 1111903080497209,
+//                dataDateString: i + "-10-2016",
+//                workTime: i*10,
+//                value: i*100
+//            };
+//            impulseIndicatorsTest.push(testObj); 
+//        }
+//        var impulseDataRespond = {
+//            objects: impulseIndicatorsTest,
+//            totalElements: impulseIndicatorsTest.length,
+//            totalPages: Math.round(impulseIndicatorsTest.length / $scope.indicatorsPerPage)
+//        };
+//        var impulseIndicatorsColumnsTest = [
+//            {
+//                header : "Дата",
+//                headerClass : "col-xs-2",
+//                dataClass : "col-xs-2",
+//                fieldName: "dataDate",
+//                "1h": "1h",
+//                "24h" : "24h",
+//                "1h_abs" : "1h_abs",
+//                istunable: false,
+//                isvisible: 'isvisible'
+//            }, 
+//            {
+//                header : "Время наработки, час",
+//                headerClass : "col-xs-1",
+//                dataClass : "col-xs-1",
+//                fieldName: "workTime",
+//                "1h": "1h",
+//                "24h" : "24h",
+//                "1h_abs" : "1h_abs",
+//                istunable: false,
+//                isvisible: 'isvisible'
+//            }, 
+//            {
+//                header : "Показания, м3",
+//                headerClass : "col-xs-1",
+//                dataClass : "col-xs-1",
+//                fieldName: "v_in",
+//                "1h": "1h",
+//                "24h" : "24h",
+//                "1h_abs" : "1h_abs",
+//                istunable: "istunable",
+//                isvisible: 'isvisible'
+//            }
+//        ];
         
         //end dev
         
@@ -511,9 +511,13 @@ angular.module('portalNMC')
                 });
                 $scope.data = data.objects;
 //console.log($scope.data);            
-                $scope.ctrlSettings.loading = false;            
+                $scope.ctrlSettings.loading = false;
+                $timeout(function() {
+                    $scope.setScoreStyles();
+                }, 100);
         })
         .error(errorCallback);
+    };
          
         $scope.setScoreStyles = function(){
 //            return;
@@ -535,7 +539,8 @@ angular.module('portalNMC')
 //            $scope.tableDef.columns.forEach(function(element){
             $scope.tableDef.columns.some(function(element) {    
                 var indicatorTd = document.getElementById("indicators_th_" + element.fieldName);
-                var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);                               
+                var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
+                var indicatorHead1 = document.getElementById("indicators_head1_" + element.fieldName);
 //                var indicatorTdh = document.getElementById("indicators_tdh_" + element.fieldName);
 //console.log("indicators_td_"+element.fieldName);                
 //console.log(indicatorHead.offsetWidth);                    
@@ -543,7 +548,8 @@ angular.module('portalNMC')
                 if ((angular.isDefined(indicatorTd)) && (indicatorTd != null) && (angular.isDefined(indicatorHead)) && (indicatorHead != null)) {                   
 //                    if (indicatorTd.offsetWidth>indicatorHead.offsetWidth){
                         var thWidth = Math.max(indicatorTd.offsetWidth, indicatorTd.clientWidth);
-                        indicatorHead.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
+                        indicatorHead.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";          
+                        indicatorHead1.style.width = thWidth + "px";
                         //indicatorTdh.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
 //                    }else{
 //                        indicatorTd.style.width =indicatorHead.offsetWidth+"px";                   
@@ -598,24 +604,24 @@ angular.module('portalNMC')
         
         
         //prepare summary data to the view - apply toFixed
-        var prepareSummary = function (arr) {
-            $scope.intotalColumns.forEach(function(element) {                       
-                var columnName = element.fieldName;
-                if (arr.hasOwnProperty(columnName) && (!isNaN(arr[columnName])) && (arr[columnName] != null)) {                
-                    arr[columnName] = arr[columnName].toFixed(3);
-                }else{
-                    if ((columnName == "m_delta") && (arr.m_out != "-") && (arr.m_in != "-")) {
-                        arr[columnName] = (arr.m_in - arr.m_out).toFixed(3);
-                    }else if ((columnName == "v_delta") && (arr.v_out != "-") && (arr.v_in != "-")) {
-                        arr[columnName] = (arr.v_in - arr.v_out).toFixed(3);
-                    }else if ((columnName == "p_delta") && (arr.p_out != "-") && (arr.p_in != "-")) {
-                        arr[columnName] = (arr.p_in - arr.p_out).toFixed(3);
-                    }else{
-                        arr[columnName] = "-";
-                    }
-                }
-            });
-        };
+//        var prepareSummary = function (arr) {
+//            $scope.intotalColumns.forEach(function(element) {                       
+//                var columnName = element.fieldName;
+//                if (arr.hasOwnProperty(columnName) && (!isNaN(arr[columnName])) && (arr[columnName] != null)) {                
+//                    arr[columnName] = arr[columnName].toFixed(3);
+//                }else{
+//                    if ((columnName == "m_delta") && (arr.m_out != "-") && (arr.m_in != "-")) {
+//                        arr[columnName] = (arr.m_in - arr.m_out).toFixed(3);
+//                    }else if ((columnName == "v_delta") && (arr.v_out != "-") && (arr.v_in != "-")) {
+//                        arr[columnName] = (arr.v_in - arr.v_out).toFixed(3);
+//                    }else if ((columnName == "p_delta") && (arr.p_out != "-") && (arr.p_in != "-")) {
+//                        arr[columnName] = (arr.p_in - arr.p_out).toFixed(3);
+//                    }else{
+//                        arr[columnName] = "-";
+//                    }
+//                }
+//            });
+//        };
         
         // get summary (score)
         //var table_summary = table.replace("paged", "summary");
@@ -740,7 +746,7 @@ angular.module('portalNMC')
 //                });
 //console.log(data);            
 //        });
-    };
+//    };
         
                 //run init method
     initIndicatorParams();

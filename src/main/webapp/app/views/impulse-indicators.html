@@ -192,7 +192,7 @@
             <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
         </div>
         <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
-            <div class="col-xs-3 noPadding"> 
+            <div class="col-xs-2 noPadding"> 
     <!--        Непрокручиваемая шапка таблицы показаний-->
 <!--            style="margin-bottom: -20px;"-->
             <table id="indicatorTableHeader" class="nmc-table-nowrap-data1 nmc-main-table noMarginBottom" 
@@ -209,13 +209,21 @@
                            ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
                            ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" 
                            ng-click="setOrderBy(column.fieldName)">
-                        </i>
-                        <span ng-if="column.dataType==='temperature'">,&deg;C</span>
-                        <span ng-show="column.fieldName==='dataValue'">
-                            , <span ng-bind="deviceMu"></span>
+                        </i>                        
+                    </th>
+                </tr>
+                <tr ng-class="tableDef.headerClassTR">
+                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'"  
+                        ng-attr-id="{{'indicators_head1_'+column.fieldName}}"                         
+                        ng-class = "column.headerClass"
+                        ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">                        
+                        <span ng-if="column.dataType==='temperature'">&deg;C</span>
+                        <span ng-if="column.fieldName==='dataValue'">
+                            <span ng-bind="deviceMu"></span>
                         </span>
                     </th>
                 </tr>
+                
 <!--                style="opacity:0;"-->
 <!--
                 <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
@@ -234,7 +242,7 @@
             </div>
         </div>
     </div>
-    <div id="divIndicatorTable" class="col-xs-3 nmc-indicator-table-without-fixed-header noPadding">
+    <div id="divIndicatorTable" class="col-xs-2 nmc-indicator-table-without-fixed-header noPadding">
         <div id="divCFIndicatorTable" class="container-fluid">
         <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
 <!--            style="margin-top: -79px;"-->
@@ -246,7 +254,19 @@
                     <th ng-repeat = "column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
                         ng-class = "column.headerClass" 
                         ng-attr-id = "{{'indicators_th_' + column.fieldName}}">
-                        {{column.header}}<span ng-if = "column.dataType === 'temperature'">,&deg;C</span>
+                        {{column.header}}
+                        
+                    </th>
+
+                </tr>
+                <tr class="" ng-class = "tableDef.headerClassTR">
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                        ng-class = "column.headerClass" 
+                        ng-attr-id = "{{'indicators_th2_' + column.fieldName}}">
+                        <span ng-if = "column.dataType === 'temperature'">&deg;C</span>
+                        <span ng-if="column.fieldName==='dataValue'">
+                            <span ng-bind="deviceMu"></span>
+                        </span>
                     </th>
 
                 </tr>

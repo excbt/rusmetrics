@@ -447,7 +447,7 @@ app.service('indicatorSvc', function (mainSvc) {
             },
             {
                 header : "Показания",
-                headerClass : "col-xs-1",
+                headerClass : "col-xs-1 nmc-text-align-center",
                 dataClass : "col-xs-1",
                 fieldName: "dataValue", /*dataValue*/
                 "1h": "1h",
