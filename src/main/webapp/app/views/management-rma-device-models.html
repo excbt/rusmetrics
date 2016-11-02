@@ -156,7 +156,7 @@
                                 </td>                                
                             </tr> 
                             <tr>
-                                <td class="col-sm-3"><label for="inputModelName">Название</label>
+                                <td class="col-sm-3"><label for="inputModelName">modelName</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" 
@@ -168,7 +168,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputCaption">Название для пользователя</label>
+                                <td class="col-sm-3"><label for="inputCaption">Caption</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" 
@@ -182,7 +182,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputKeyname">Системное имя</label>
+                                <td class="col-sm-3"><label for="inputKeyname">Keyname</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.keyname > '')}">-->
@@ -194,7 +194,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputExCode">Внешний код</label>
+                                <td class="col-sm-3"><label for="inputExCode">exCode</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exCode > '')}">-->
@@ -206,7 +206,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputKeyname">Внешняя метка</label>
+                                <td class="col-sm-3"><label for="inputKeyname">exLabel</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exLabel > '')}">-->
@@ -218,7 +218,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputExSystem">Внешняя система</label>
+                                <td class="col-sm-3"><label for="inputExSystem">exSystem</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
@@ -226,6 +226,49 @@
                                                type="text" 
                                                id="inputExSystem" 
                                                ng-model="data.currentModel.exSystem"/>
+<!--                                    </div>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputMDT">Model driver type</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputMDT" 
+                                               ng-model="data.currentModel.modelDriverType"/>
+<!--                                    </div>-->
+                                </td>
+                            </tr>
+                            <tr ng-show="data.currentModel.isImpulse === true">
+                                <td class="col-sm-3"><label for="inputDIK">Default impulse K</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputDIK" 
+                                               ng-model="data.currentModel.defaultImpulseK"/>
+<!--                                    </div>-->
+                                </td>
+                            </tr>
+                            <tr ng-show="data.currentModel.isImpulse === true">
+                                <td class="col-sm-3"><label for="inputDIMu">Default impulse Mu</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
+                                    <select class="form-control nmc-text-input-form"
+                                            id="inputDIMu" 
+                                            ng-model="data.currentModel.defaultImpulseMu"
+                                            ng-options="mu.keyname as mu.caption for mu in data.measures.all">
+                                    </select>
+<!--
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputDIMu" 
+                                               ng-model="data.currentModel.defaultImpulseMu"/>
+-->
 <!--                                    </div>-->
                                 </td>
                             </tr>

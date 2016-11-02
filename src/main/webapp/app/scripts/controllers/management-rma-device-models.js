@@ -183,8 +183,14 @@ angular.module('portalNMC')
         return mainSvc.isSystemuser();
     };
     
+    // device metadata 
+    $scope.data.measures = objectSvc.getDeviceMetadataMeasures();   
+    $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function() {
+        $scope.data.measures = objectSvc.getDeviceMetadataMeasures();       
+    });
+    
     // controller initialization
-    $scope.initCtrl = function(){
+    $scope.initCtrl = function() {
         getModels();
     };
     
