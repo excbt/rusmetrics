@@ -2,10 +2,10 @@
 /*global angular, $*/
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDeviceModelsCtrl', ['$rootScope', '$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc){
+.controller('MngmtDeviceModelsCtrl', ['$rootScope', '$scope', '$http', 'objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function ($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc) {
 //console.log('Run model management controller.');
     $rootScope.ctxId = "management_rma_device_models_page";
-    $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "modelName", "nameColumnName" : "modelName"}; 
+    $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "modelName", "nameColumnName" : "modelName"};
     $scope.orderBy = { field: $scope.extraProps.defaultOrderBy, asc: true};
     
     //controller settings
@@ -17,43 +17,49 @@ angular.module('portalNMC')
     $scope.headers = {};
     
     //model columns
-    $scope.ctrlSettings.modelColumns =[
+    $scope.ctrlSettings.modelColumns = [
         {
             "name": "modelName",
-            "caption": "Название",
+            "caption": "modelName",
             "class": "col-xs-3",
             "type": "name"
         },
         {
             "name": "caption",
-            "caption": "Название для пользователя",
+            "caption": "Caption",
             "class": "col-xs-3"
-        },        
+        },
         {
             "name": "keyname",
-            "caption": "Системное имя",
+            "caption": "Keyname",
             "class": "col-xs-1"
         },
         {
             "name": "exCode",
-            "caption": "Внеш. код",
+            "caption": "exCode",
             "class": "col-xs-1"
         },
         {
             "name": "exLabel",
-            "caption": "Внеш. метка",
+            "caption": "exLabel",
             "class": "col-xs-1"
         },
         {
             "name": "exSystem",
-            "caption": "Внеш. система",
+            "caption": "exSystem",
             "class": "col-xs-1"
+        },
+        {
+            "name": "isImpulse",
+            "caption": "isImpulse",
+            "class": "col-xs-1",
+            "type": "checkbox"
         }
         
 
     ];
     //data
-    $scope.data= {};
+    $scope.data = {};
     $scope.data.models = [];
     $scope.data.currentModel = {};
     
@@ -69,10 +75,10 @@ angular.module('portalNMC')
     ];
     
 //    get models
-    var getModels = function(){
+    var getModels = function() {
         var targetUrl = $scope.ctrlSettings.modelsUrl;
         $http.get(targetUrl)
-        .then(function(response){            
+        .then(function (response) {            
             if (!mainSvc.checkUndefinedNull(response.data) && angular.isArray(response.data) && response.data.length > 0){               
                 $scope.data.models = response.data;
             }
@@ -83,7 +89,7 @@ angular.module('portalNMC')
         });
     };
     
-    $scope.selectModel = function(model){
+    $scope.selectModel = function(model) {
         $scope.data.currentModel = model;
     };
     $scope.selectedItem = function (item) {
@@ -91,7 +97,7 @@ angular.module('portalNMC')
         $scope.data.currentModel = curObject;        
     };
     
-    $scope.addModel = function(){
+    $scope.addModel = function() {
         $scope.data.currentModel = {};
         $('#showModelOptionModal').modal();
     };
@@ -170,7 +176,7 @@ angular.module('portalNMC')
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
     };
     
-    $scope.deleteObjectInit = function(object){
+    $scope.deleteObjectInit = function(object) {
         $scope.selectedItem(object);
         //generation confirm code
         $scope.confirmCode = null;
@@ -179,7 +185,7 @@ angular.module('portalNMC')
         $scope.sumNums = tmpCode.result;
     };
     
-    $scope.isSystemuser = function(){
+    $scope.isSystemuser = function() {
         return mainSvc.isSystemuser();
     };
     
