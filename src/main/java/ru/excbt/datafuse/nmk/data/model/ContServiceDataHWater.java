@@ -36,9 +36,9 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 @JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime" })
 @SQLInsert(
 		sql = "insert into cont_service_data_hwater (created_by, last_modified_by, last_modified_date, cont_zpoint_id, data_date, data_mstatus, "
-				+ " device_object_id, fail_time, h_delta, h_in, h_out, m_delta, m_in, m_out, p_delta, p_in, p_out, t_cold, t_in, t_out, t_outdoor, "
+				+ " deleted, device_object_id, fail_time, h_delta, h_in, h_out, m_delta, m_in, m_out, p_delta, p_in, p_out, t_cold, t_in, t_out, t_outdoor, "
 				+ " time_detail_type, v_delta, v_in, v_out, version, work_time, id) "
-				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		check = ResultCheckStyle.NONE)
 
 public class ContServiceDataHWater extends AbstractAuditableModel implements DataDateFormatter {
