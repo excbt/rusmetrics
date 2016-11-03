@@ -6,6 +6,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,16 +27,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {
-		"ru.excbt.datafuse.nmk.data.repository" })
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data"})
+@EnableJpaRepositories(basePackages = { "ru.excbt.datafuse.nmk.data.repository" })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfig {
 
 	@Autowired
 	private Environment env;
 
-	
 	/**
 	 * 
 	 * @return
@@ -44,8 +43,7 @@ public class JpaConfig {
 	public DataSource dataSource() {
 		final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
 		dsLookup.setResourceRef(true);
-		DataSource dataSource = dsLookup.getDataSource(env
-				.getProperty("dataSource.jndi"));
+		DataSource dataSource = dsLookup.getDataSource(env.getProperty("dataSource.jndi"));
 		return dataSource;
 	}
 
@@ -114,6 +112,15 @@ public class JpaConfig {
 				return env.getProperty("dataSource.password");
 			}
 		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 
 }

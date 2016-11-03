@@ -3,7 +3,9 @@ package ru.excbt.datafuse.nmk.web.api;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,17 +14,22 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
+import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
+import ru.excbt.datafuse.nmk.data.model.keyname.ExSystem;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ExSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -49,6 +56,12 @@ public class SystemInfoController extends SubscrApiController {
 
 	@Autowired
 	private SessionRegistry sessionRegistry;
+
+	@Autowired
+	private ExSystemRepository exSystemRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	/**
 	 * 
@@ -209,6 +222,21 @@ public class SystemInfoController extends SubscrApiController {
 	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getIsCMode() {
 		return responseOK(getSubscriberParam().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@GetMapping(value = "/exSystem", produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getExSystem() {
+		List<ExSystem> exSystems = exSystemRepository.findAll();
+
+		ApiActionObjectProcess actionProcess = () -> {
+			return exSystems.stream().map(i -> modelMapper.map(i, ExSystemDto.class)).collect(Collectors.toList());
+		};
+		return responseOK(actionProcess);
+
 	}
 
 }
