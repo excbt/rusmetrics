@@ -229,7 +229,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	private Boolean isImpulse;
 
 	@Column(name = "impulse_k")
-	private Integer impulseK;
+	private BigDecimal impulseK;
 
 	@Column(name = "impulse_mu")
 	private String impulseMu;
@@ -482,11 +482,11 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		this.isImpulse = isImpulse;
 	}
 
-	public Integer getImpulseK() {
+	public BigDecimal getImpulseK() {
 		return impulseK;
 	}
 
-	public void setImpulseK(Integer impulseK) {
+	public void setImpulseK(BigDecimal impulseK) {
 		this.impulseK = impulseK;
 	}
 
