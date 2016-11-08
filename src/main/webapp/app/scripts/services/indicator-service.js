@@ -20,9 +20,9 @@ app.service('indicatorSvc', function (mainSvc) {
 // ************************************************************************    
     var intotalColumns = [
             {
-                header : "Потребление тепла, ГКал",
+                header : "Потребление тепловой энергии, ГКал",
 //                header : "",
-                class : "col-xs-1 col-md-1",
+                class : "col-xs-1 col-md-1 nmc-distinguish",
                 fieldName: "h_delta",
                 "imgpath" : "",
                 "imgclass": "",
@@ -49,7 +49,7 @@ app.service('indicatorSvc', function (mainSvc) {
             {
                 header : "Разница масс воды, т",
 //                header : "",
-                class : "col-xs-1 col-md-1",
+                class : "col-xs-1 col-md-1 nmc-distinguish",
 //                class : "col-md-1 nmc-th-invisible",
                 fieldName: "m_delta",
                 "imgpath" : "",
@@ -122,7 +122,7 @@ app.service('indicatorSvc', function (mainSvc) {
                 header : "Разница объемов, м3",
 //                header : "",
                 
-                class : "col-xs-1 col-md-1",
+                class : "col-xs-1 col-md-1 nmc-distinguish",
 //                class : "col-md-1 nmc-th-invisible",
                 fieldName: "v_delta",
                 "imgpath" : "",
@@ -204,9 +204,9 @@ app.service('indicatorSvc', function (mainSvc) {
             isvisible: 'isvisible'
         },
         {
-            header : "Потребление тепла, ГКал",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
+            header : "Потребление тепловой энергии, ГКал",
+            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
+            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
             fieldName: "h_delta",
             "1h": "1h",
             "24h" : "24h",
@@ -235,8 +235,8 @@ app.service('indicatorSvc', function (mainSvc) {
         },
         {
             header : "Разность масс, т",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
+            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
+            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
             fieldName: "m_delta",
             "1h": "1h",
             "24h" : "24h",
@@ -305,8 +305,8 @@ app.service('indicatorSvc', function (mainSvc) {
         },
         {
             header : "Разность объемов, м3",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
+            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
+            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
             fieldName: "v_delta",
             "1h": "1h",
             "24h" : "24h",

@@ -151,7 +151,9 @@
             </div>    
         </div>
         <div class="row" ng-show="ctrlSettings.loading" class="nmc-loading">
+            <div class="col-xs-12">
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+            </div>
         </div>
 
         <div class="row" 
@@ -263,7 +265,7 @@
                         class="nmc-text-align-right nmc-totals-indicator-highlight" 
                         ng-class="{'nmc-text-align-right': summary.totals[column.fieldName] != '-', 'nmc-text-align-center': summary.totals[column.fieldName] === '-'}" 
                         ng-style="{'min-width': column.ngstyle + 'px'}">
-                        {{summary.totals[column.fieldName]}}
+                        <b>{{summary.totals[column.fieldName]}}</b>
                     </td>
                 </tr> 
                 <tr>

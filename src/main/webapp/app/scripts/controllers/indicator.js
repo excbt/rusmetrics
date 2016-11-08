@@ -422,7 +422,7 @@ angular.module('portalNMC')
     
     $scope.summary = {};        
     $scope.totalIndicators = 0;
-    $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page    
+    $scope.indicatorsPerPage = 100; // this should match however many results your API puts on one page    
     $scope.timeDetailType = "24h";    
     $scope.data = [];    
     $scope.pagination = {
