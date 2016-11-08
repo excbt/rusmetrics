@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrServiceItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePermissionRepository;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -267,9 +268,10 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public <T> List<T> filterObjectAccess(List<T> objectList, Long subscriberId, boolean isRma, LocalDate accessDate) {
-		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberId, accessDate);
-		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, isRma);
+	public <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam, LocalDate accessDate) {
+		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberParam.getSubscriberId(),
+				accessDate);
+		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, subscriberParam);
 		return filter.filterObjects(objectList);
 	}
 

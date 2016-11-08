@@ -31,24 +31,28 @@ public class SubscrServicePermissionFilter {
 	private final List<SubscrServicePermission> permissionList = new ArrayList<>();
 	private final boolean isRma;
 
+	private final SubscriberParam subscriberParam;
+
 	/**
 	 * 
 	 * @param permissionList
 	 * @param isRma
 	 */
-	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList, boolean isRma) {
+	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList,
+			SubscriberParam subscriberParam) {
 		checkNotNull(permissionList);
 		this.permissionList.addAll(permissionList);
-		this.isRma = isRma;
+		this.subscriberParam = subscriberParam;
+		this.isRma = subscriberParam.isRma();
 	}
 
 	/**
 	 * 
 	 * @param permissionList
 	 */
-	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
-		this(permissionList, false);
-	}
+	//	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
+	//		this(permissionList, false);
+	//	}
 
 	/**
 	 * 

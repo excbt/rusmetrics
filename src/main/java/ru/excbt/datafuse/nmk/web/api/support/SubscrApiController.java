@@ -173,7 +173,7 @@ public class SubscrApiController extends WebApiController {
 
 		boolean isRma = currentSubscriberService.isRma();
 
-		return filterObjectAccess(objectList, getCurrentSubscriberId(), isRma);
+		return filterObjectAccess(objectList, getSubscriberParam());
 	}
 
 	/**
@@ -182,11 +182,11 @@ public class SubscrApiController extends WebApiController {
 	 * @param objectList
 	 * @return
 	 */
-	protected <T> List<T> filterObjectAccess(List<T> objectList, Long subscriberId, Boolean isRma) {
+	protected <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam) {
 		checkNotNull(objectList);
 
-		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, subscriberId, isRma,
-				getSubscriberLocalDate(subscriberId));
+		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, subscriberParam,
+				getSubscriberLocalDate(subscriberParam.getSubscriberId()));
 
 		return resultObjects;
 	}
