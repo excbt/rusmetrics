@@ -1,3 +1,4 @@
+
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
@@ -479,8 +480,10 @@ angular.module('portalNMC')
                     makeZpointTable($scope.currentObject);
                     //update object info about zpoint count
                     var objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);                    
-                    if (objectIndex > -1)
+                    if (objectIndex > -1) {
                         $scope.objects[objectIndex].contObjectStats.contZpointCount--;
+                        deleteObjectFromArray($scope.currentZpoint.id, $scope.objects[objectIndex].zpoints);
+                    }
                     
                     successCallback(e, null);
                 };
@@ -635,9 +638,8 @@ angular.module('portalNMC')
                     };
                 };
               
-                $scope.selectedItem = function (item) {
-			        var curObject = angular.copy(item);
-			        $scope.currentObject = curObject;                    
+                $scope.selectedItem = function (item) {			        
+			        $scope.currentObject = angular.copy(item);                    
 			    };
                 
                 function testCmOrganizationAtList(){
