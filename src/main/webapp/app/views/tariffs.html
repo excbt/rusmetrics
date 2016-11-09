@@ -441,16 +441,16 @@
                                 </div>
                             </div>
 -->
-                            <div class="col-md-12 nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table" id="object_list">
+                            <div class="col-xs-12 nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table" id="object_list">
                                 <div><label class="nmc-form-label">Выбранные объекты</label></div>
                                 <div>
                                     <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td class="col-md-11">
+                                            <td class="col-xs-11">
 <!--                                                <input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">-->
                                                 {{object.fullName}}
                                             </td>
-                                            <td class="col-md-1"><button ng-disabled="isROfield()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+                                            <td class="col-xs-1"><button ng-disabled="isROfield()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
 <!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                             </td>
                                         </tr>
@@ -466,7 +466,7 @@
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid ">
 					<div class="row">
-                        <div class=" col-md-3">
+                        <div class=" col-xs-3">
                             <div class="btn-group">
                               <button ng-disabled="isROfield()"
                                       title="Добавить объекты"
@@ -486,12 +486,21 @@
                               </ul>
                             </div>
                         </div>
-                        <div class="col-xs-offset-3 col-md-3">
+                        <div class="col-xs-3 noPadding">
+							<button ng-show="currentObject.id"
+                                    ng-disabled="isROfield() || !checkRequiredFields()"                                     
+                                    class="btn btn-block btn-xs nmc-add-button-in-modal"
+                                    ng-click="saveObjectAsNew(currentObject)" 
+                                    >
+                                Сохранить как новый
+                            </button>
+						</div>
+                        <div class="col-xs-3">
 							<input ng-disabled="isROfield() || !checkRequiredFields()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="saveObject()"
+								ng-click="saveObject(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noPadding noMargin">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -499,12 +508,7 @@
 						</div>
 					</div>
 				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
+		</div>		
 	</div>
 </div>
 

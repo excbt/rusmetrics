@@ -194,9 +194,9 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         
     };
     
-    $scope.saveObject = function () {
-        if (!mainSvc.checkUndefinedNull($scope.currentObject.tariffOption)) {
-            $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
+    $scope.saveObject = function (tariff) {
+        if (!mainSvc.checkUndefinedNull(tariff.tariffOption)) {
+            tariff.tariffOptionKey = tariff.tariffOption.keyname;
         }
         
 //console.log($scope.psStartDateFormatted);        
@@ -206,24 +206,30 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         var UTCstdt = stDate.getTime();
 //console.log(stDate);        
 //console.log(UTCstdt - 3*3600*1000);        
-        $scope.currentObject.startDate = (!isNaN(UTCstdt)) ? UTCstdt - serverTimeZoneMs : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+        tariff.startDate = (!isNaN(UTCstdt)) ? UTCstdt - serverTimeZoneMs : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
 //console.log($scope.currentObject.startDate);
 //return;
         //perform end interval
         var endDate = (new Date(moment($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
 //        var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
         var UTCenddt = endDate.getTime();
-        $scope.currentObject.endDate = (!isNaN(UTCenddt)) ? UTCenddt -  serverTimeZoneMs : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+        tariff.endDate = (!isNaN(UTCenddt)) ? UTCenddt -  serverTimeZoneMs : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
 //        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || 
 //        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;    
         var tmp = $scope.selectedObjects.map(function (elem) {
             return elem.id;
         });
-        if (($scope.currentObject.id != null) && (typeof $scope.currentObject.id != 'undefined')) {
-            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id, contObjectIds: tmp}, $scope.currentObject, successPostCallback, errorCallback);
+        if ((tariff.id != null) && (typeof tariff.id != 'undefined')) {
+            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: tariff.rso.id, tariffTypeId: tariff.tariffType.id, contObjectIds: tmp}, tariff, successPostCallback, errorCallback);
         } else {
-            saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({contObjectIds: tmp}, $scope.currentObject, successPostCallback, errorCallback);
+            saveTariffOnServer($scope.crudTableName, tariff.rso.id, tariff.tariffType.id).save({contObjectIds: tmp}, tariff, successPostCallback, errorCallback);
         }
+    };
+    
+    $scope.saveObjectAsNew = function (tariff) {
+        var tmpTariff = angular.copy(tariff);
+        tmpTariff.id = null;
+        $scope.saveObject(tmpTariff);        
     };
     
     var activateMainPropertiesTab = function () {
