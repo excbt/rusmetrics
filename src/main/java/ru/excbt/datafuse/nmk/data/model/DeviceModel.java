@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -85,7 +86,7 @@ public class DeviceModel extends AbstractAuditableModel
 	private Boolean isImpulse;
 
 	@Column(name = "default_impulse_k")
-	private Integer defaultImpulseK;
+	private BigDecimal defaultImpulseK;
 
 	@Column(name = "default_impulse_mu")
 	private String defaultImpulseMu;
@@ -199,11 +200,11 @@ public class DeviceModel extends AbstractAuditableModel
 		this.isImpulse = isImpulse;
 	}
 
-	public Integer getDefaultImpulseK() {
+	public BigDecimal getDefaultImpulseK() {
 		return defaultImpulseK;
 	}
 
-	public void setDefaultImpulseK(Integer defaultImpulseK) {
+	public void setDefaultImpulseK(BigDecimal defaultImpulseK) {
 		this.defaultImpulseK = defaultImpulseK;
 	}
 
