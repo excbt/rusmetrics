@@ -55,7 +55,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 
 	@Test
 	public void testServicePacks() throws Exception {
-		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList(getSubscriberParam());
 		assertNotNull(result);
 	}
 
@@ -121,7 +121,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
 				.selectSubscriberPermissions(MANUAL_SUBSCRIBER_ID, LocalDate.now());
 		assertTrue(permissions.size() > 0);
-		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions);
+		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, getSubscriberParam());
 		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
 		assertTrue(reportTypes.size() > 0);
 		List<ReportType> filteredReports = filter.filterObjects(reportTypes);
@@ -136,7 +136,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 		// Long rmaSubscriberId = 37176875L;
 		Long rmaSubscriberId = EXCBT_RMA_SUBSCRIBER_ID;
 
-		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList(getSubscriberParam());
 
 		servicePackList.forEach(i -> {
 			logger.info("Service Pack {}: {}", i.getId(), i.getPackName());

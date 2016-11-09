@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
@@ -32,7 +32,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Entity
 @Table(name = "subscr_service_pack")
 @JsonInclude(Include.NON_NULL)
-public class SubscrServicePack extends AbstractAuditableModel implements KeynameObject, ActiveObject {
+public class SubscrServicePack extends JsonAbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**
 	 * 
@@ -72,8 +72,8 @@ public class SubscrServicePack extends AbstractAuditableModel implements Keyname
 	private Integer packOrder;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "subscr_service_pack_item", joinColumns = @JoinColumn(name = "subscr_service_pack_id") ,
-			inverseJoinColumns = @JoinColumn(name = "subscr_service_item_id") )
+	@JoinTable(name = "subscr_service_pack_item", joinColumns = @JoinColumn(name = "subscr_service_pack_id"),
+			inverseJoinColumns = @JoinColumn(name = "subscr_service_item_id"))
 	private List<SubscrServiceItem> serviceItems = new ArrayList<>();
 
 	@Column(name = "keyname")
@@ -81,6 +81,9 @@ public class SubscrServicePack extends AbstractAuditableModel implements Keyname
 
 	@Column(name = "is_persistent_service")
 	private Boolean isPersistentService;
+
+	@Column(name = "is_special")
+	private Boolean isSpecial;
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -138,6 +141,10 @@ public class SubscrServicePack extends AbstractAuditableModel implements Keyname
 
 	public Boolean getIsPersistentService() {
 		return isPersistentService;
+	}
+
+	public Boolean getIsSpecial() {
+		return isSpecial;
 	}
 
 }

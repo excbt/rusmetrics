@@ -65,7 +65,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/servicePackList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePacks() {
-		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList(getSubscriberParam());
 		List<SubscrServicePack> result = ObjectFilters.activeFilter(packList);
 		return responseOK(result);
 	}
