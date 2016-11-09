@@ -66,7 +66,7 @@
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
         <tr class="nmc-main-table-header">
-            <th class="col-md-1 nmc-td-for-buttons">
+            <th class="col-xs-1 nmc-td-for-buttons">
 
             </th>
 
@@ -79,7 +79,7 @@
                     </i>
                 </div>
             </th>
-            <th class="col-md-1">
+            <th class="col-xs-1">
             </th>
         </tr>
 </table>
@@ -87,7 +87,7 @@
 <div class="nmc-tariff-main-div">
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
         <tr class="nmc-main-table-header nmc-hide">
-            <th class="col-md-1 nmc-td-for-buttons">
+            <th class="col-xs-1 nmc-td-for-buttons">
 
             </th>
 
@@ -100,7 +100,7 @@
                     </i>
                 </div>
             </th>
-            <th class="col-md-1">
+            <th class="col-xs-1">
             </th>
         </tr>
 
@@ -117,11 +117,18 @@
                     </div>
                 </div>
             </td>
+            <td ng-repeat="column in columns" ng-class="column.class">
+                <span ng-class="{'nmc-distinguish': object.isDefault}">
+                    <span ng-bind="object[column.name]"></span>
+                    <span ng-if="$index === 0" ng-show="isSystemuser()"> (id = {{object['id']}})</span>
+                </span>
+            </td>
+<!--
             <td ng-class="columns[0].class">
                 <span ng-class="{'nmc-distinguish': object.isDefault}">{{object.tariffType.tariffTypeName}} </span>
             </td>
             <td ng-class="columns[1].class">
-                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span></span>
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanName}} ></span>
             </td>
             <td ng-class="columns[2].class">
                 <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.rso.organizationName}}</span>
@@ -135,6 +142,7 @@
             <td ng-class="columns[5].class">
                 <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanDescription}}</span>
             </td>
+-->
             <td>
                 <div class="btn-toolbar">
                     <div class="btn-group">                   
@@ -312,18 +320,14 @@
                                         <td class="nmc-text-align-left"><input ng-disabled="isROfield()" type="text" class="form-control nmc-text-input-form" id="inputName" placeholder="Наименование"  ng-model="currentObject.tariffPlanName"/>
                                         </td>
                                     </tr>
+<!--
                                     <tr>
                                         <td><label for="inputDescription" class="nmc-form-label">Описание</label>
                                         </td>
                                         <td class="nmc-text-align-left"><textarea ng-disabled="isROfield()" class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td><label for="inputComment" class="nmc-form-label">Комментарий</label>
-                                        </td>
-                                        <td class="nmc-text-align-left"><textarea ng-disabled="isROfield()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
-                                        </td>
-                                    </tr>
+-->                                    
                                     <tr>
                                         <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Вид услуги</label>
                                         </td>
@@ -344,6 +348,7 @@
                                             </div>    
                                         </td>
                                     </tr>
+<!--
                                     <tr>
                                         <td class="col-sm-3"><label for="inputOption" class="nmc-form-label">Опция</label>
                                         </td>
@@ -354,6 +359,7 @@
                                             </div>
                                         </td>
                                     </tr>
+-->
 
                                     <tr>
                                         <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Срок действия</label>
@@ -382,7 +388,7 @@
                                         </td>                         
                                     </tr>                           
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Стоимость</label>
+                                        <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Стоимость тарифа</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="col-sm-3 noMargin noPadding form-group" 
@@ -404,9 +410,15 @@
                                             <input ng-disabled="isROfield()" 
                                                    type=checkbox 
                                                    ng-model="currentObject.isDefault" 
-                                                   class="nmc-checkbox-form">По умолчанию
+                                                   class="nmc-checkbox-form">Тариф по умолчанию
                                         </td>
-                                    </tr> 
+                                    </tr>
+                                    <tr>
+                                        <td><label for="inputComment" class="nmc-form-label">Комментарий</label>
+                                        </td>
+                                        <td class="nmc-text-align-left"><textarea ng-disabled="isROfield()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>        
                         </div>     
