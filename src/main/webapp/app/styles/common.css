@@ -208,13 +208,14 @@ body{
 /*******************************************/
 
 .nmc-img-logo-left-v {
+    min-height: 140px;
     width: 100%; 
     max-width: 100%; 
     height: 50vh;
 }
 
 .nmc-div-help-img-logo-left-v {
-    height: 10%;
+    height: 5%;
 }
 
 @media (max-height: 570px) {
@@ -240,6 +241,14 @@ body{
 }
 
 @media (max-height: 700px) {
+    .nmc-img-logo-left-v {
+        width: 100%; 
+        max-width: 100%; 
+        height: 35vh;
+    }
+}
+
+@media (max-height: 650px) {
     .nmc-img-logo-left-v {
         width: 100%; 
         max-width: 100%; 
@@ -465,7 +474,7 @@ body{
  ***********************/
 /* Главное меню */
 .nmc-main-menu {
-    min-height: 361px;
+    min-height: 501px;
     padding-top: 21px;
     min-width: 155px;
     width: 10%;
