@@ -148,6 +148,117 @@ body{
 /*	background-color: aqua!important;*/
 }
 
+/*******************************************/
+    /* Логотип под главным меню (Вариант с background)*/
+/*******************************************/
+.nmc-div-logo-left-v {
+    background-image: url(../images/logo-left-v.png);
+    width: 60%;
+    margin-left: 25%;
+    height: 60%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 50%;
+    background-position-y: 50%;
+}
+    /* Логотип в минимизированном состоянии*/
+.nmc-div-logo-left-v-min {
+    background-image: url(../images/logo-left-v.png);
+    height: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 50%;
+    background-position-y: 50%;
+    height: 290px;
+    width: 52px;
+}
+
+.nmc-div-help-logo-left-v {
+    height: 15%;
+}
+
+@media (max-height: 770px) {
+    .nmc-div-logo-left-v-min {
+        background-image: url(../images/logo-left-v.png);
+        height: 45%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-x: 50%;
+        background-position-y: 50%;
+    }
+    
+    .nmc-div-logo-left-v {
+        background-image: url(../images/logo-left-v.png);
+        width: 60%;
+        margin-left: 25%;
+        height: 45%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position-x: 50%;
+        background-position-y: 50%;
+    }
+    
+    .nmc-div-help-logo-left-v {
+        height: 0;
+    }
+}
+
+/*******************************************/
+    /* Логотип под главным меню (Вариант с img)*/
+/*******************************************/
+
+.nmc-img-logo-left-v {
+    width: 100%; 
+    max-width: 100%; 
+    height: 50vh;
+}
+
+.nmc-div-help-img-logo-left-v {
+    height: 10%;
+}
+
+@media (max-height: 570px) {
+    .nmc-div-help-img-logo-left-v {
+        height: 0;
+    }
+}
+
+@media (max-height: 870px) {
+    .nmc-img-logo-left-v {
+        width: 100%; 
+        max-width: 100%; 
+        height: 45vh;
+    }
+}
+
+@media (max-height: 770px) {
+    .nmc-img-logo-left-v {
+        width: 100%; 
+        max-width: 100%; 
+        height: 40vh;
+    }
+}
+
+@media (max-height: 700px) {
+    .nmc-img-logo-left-v {
+        width: 100%; 
+        max-width: 100%; 
+        height: 30vh;
+    }
+}
+
+    /* Пользовательское меню - Выход, Личный кабинет, сменить пароль ...   */
+.nmc-nav-user-menu {
+    position: absolute; 
+    bottom: 0; 
+    width: 70%;
+}
+
+.nmc-nav-user-menu-item {
+    cursor: pointer;
+    font-size: 12px !important;
+}
+
 /* Основная рабочая область */
 
     /* Надпись о загрузке*/
@@ -354,6 +465,7 @@ body{
  ***********************/
 /* Главное меню */
 .nmc-main-menu {
+    min-height: 361px;
     padding-top: 21px;
     min-width: 155px;
     width: 10%;
@@ -633,7 +745,7 @@ body{
 
     /* Пункт главного меню */
         /*в фокусе*/    /* на который наведен курсор*/
-.nmc-main-menu-item:focus, .nmc-main-menu-item:hover{
+.nmc-mode-menu-item:focus, .nmc-mode-menu-item:hover{
     word-wrap: break-word;
     padding-right: 1px;
     border: none;

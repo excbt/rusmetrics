@@ -256,20 +256,70 @@
                    ng-click="mainCtrlSettings.showFullMenuFlag=!mainCtrlSettings.showFullMenuFlag" 
                    ng-class="{'glyphicon-menu-left':mainCtrlSettings.showFullMenuFlag,'glyphicon-menu-right':!mainCtrlSettings.showFullMenuFlag}" >
                 </i>
-            </span>            
-            <div id="nmcLogoLeft"> 
-<!--
-                 class=""
-                 style="width: 100%;height: 60vh;background: url(images/logo-left.png);">
--->
-                <img src="images/logo-left.png" style="width: 100%"/>
+            </span>
+            <div class="nmc-div-help-img-logo-left-v">
             </div>
+<!--
+            <div ng-if="!mainCtrlSettings.showFullMenuFlag"
+                 class="nmc-div-help-logo-left-v">
+            </div>
+            <div ng-class="{'nmc-div-logo-left-v-min': !mainCtrlSettings.showFullMenuFlag, 'nmc-div-logo-left-v': mainCtrlSettings.showFullMenuFlag}">
+-->
+            <div>
+                <img class="nmc-img-logo-left-v" src="images/logo-left-v.png"/>
+            </div>
+            
+            <nav class="sidebar-nav nmc-nav-user-menu" 
+                 role="navigation"> 
+                <div id="sidebar-entries" class="list-group dropup noMargin">
+                    <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle" 
+                       data-toggle="dropdown">
+                                <i ng-if="!mainCtrlSettings.showFullMenuFlag" 
+                                   class="glyphicon glyphicon-user nmc-main-menu-item-icon" 
+                                   title="Пользовательское меню">
+                                </i>                    
+                                <span ng-show="mainCtrlSettings.showFullMenuFlag">
+                                    <span class="nmc-hide" 
+                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">
+                                        <b>{{userInfo.userName}}</b><br/>
+                                    </span>
+                                    <span class="nmc-hide" 
+                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" 
+                                          ng-show="userInfo.subscriber!=null">
+                                        {{userInfo.subscriber.subscriberName}}
+                                    </span>
+                                </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
+                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
+                        </p></a></li>			
+
+                        <li ng-if="userInfo.isReadonly != true"><a href="" 
+                               ng-click="changePasswordInit()"
+                               title='Сменить пароль'
+                               data-target="#changePasswordModal"
+                               data-toggle="modal">
+                                <p> 
+                                    <b>Сменить пароль</b>
+                                </p>
+                            </a>
+                        </li>
+                        <li><a href="../logout" ng-click="logOut();"
+                            title='logout'><p> <b>Выход </b>
+                        </p></a></li>
+                    </ul>
+
+                </div>
+            </nav>
+            
         </div>                
 
         <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace" 
              ng-class="{'nmc-main-workspace-maximize':!mainCtrlSettings.showFullMenuFlag || isCabinet()}" ng-cloak>
 					
 					<div id="main" ng-view></div>
+<!--            <a class="btn btn-block btn-primary" href="index1.html"> Вариант 2</a>-->
         </div>
 
      </div>    
@@ -371,7 +421,7 @@
 
 </div> <!-- end id=wrap -->
       
-      <div class="navbar-fixed-bottom row-fluid nmc-main-footer" >
+      <div class="navbar-fixed-bottom row-fluid nmc-main-footer nmc-hide" >
           <div class="container-fluid" >
               <div class="row">
 <!--

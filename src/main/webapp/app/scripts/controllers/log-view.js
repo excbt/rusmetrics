@@ -585,7 +585,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
 //console.log("Get session data");        
         data.sessions = logSvc.getSessions();
         //dev
-        data.sessions.push(testSession);
+//        data.sessions.push(testSession);
         //end dev
         $scope.ctrlSettings.sessionsLoading = false;    
         if (mainSvc.checkUndefinedNull(data.sessions) || data.sessions.length == 0){
@@ -662,7 +662,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $http.get(url).then(function(resp){
             $scope.data.sessionLog = resp.data;
             //dev
-            $scope.data.sessionLog.push(testStep);
+//            $scope.data.sessionLog.push(testStep);
             //end dev
             $scope.ctrlSettings.logLoading = false;
         }, errorCallback)
