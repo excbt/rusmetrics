@@ -84,8 +84,8 @@ body{
 	/* Меню в строке заголовка*/
 .nmc-main-header-menu{
 
-	padding-top: 5px;
-    margin-right: 0;
+/*	padding-top: 5px;*/
+/*    margin-left: 10px;*/
 	/*background-color: yellow;
 */
 }
@@ -98,7 +98,13 @@ body{
     
 .nmc-main-header-menu > li > a{
 /*    color: wheat !important;*/
-    color: #FFFFFF !important;
+/*    color: #FFFFFF !important;*/
+    color: black !important;
+    cursor: pointer;
+}
+
+.nmc-main-header-menu > li > a:hover{    
+    background-color: #7BA9D0;
 }
 
 	/* Раскрытый пункт меню*/
@@ -107,7 +113,7 @@ body{
 	background-color: orange;
     color: white !important;
 */
-    background-color:#7BA9D0;
+    background-color: #7BA9D0;
 }
 .nmc-main-header-menu > li.open > a{
 /*	background-color: orange !important;*/
@@ -162,7 +168,7 @@ body{
 }
 
 .wrap > .container-fluid {
-    padding-top: 50px;
+/*    padding-top: 50px;*/
 /*    min-width: 1320px;*/
     min-width: 1572px;
 }
@@ -187,7 +193,7 @@ body{
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 10px;
-    height: 88vh;
+    height: 94vh;
 /*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
@@ -216,8 +222,8 @@ body{
 
 /* Футер */
 .nmc-main-footer {
-    height: 10px;
-    padding-top: 19px;
+/*    height: 100px;*/
+/*    padding-top: 19px;*/
     background-color: 646263;
 }
 
@@ -348,8 +354,10 @@ body{
  ***********************/
 /* Главное меню */
 .nmc-main-menu {
+    padding-top: 21px;
     min-width: 155px;
     width: 10%;
+    height: 94vh;
 }
 /* Главное меню в минимизированном состоянии*/
 .nmc-main-menu-minimize {

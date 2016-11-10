@@ -1,6 +1,62 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', 'logSvc', '$rootScope', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory, logSvc, $rootScope){
+app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', 'logSvc', '$rootScope', function($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory, logSvc, $rootScope) {
+    
+    //dev
+        var testStep = {
+        "id": 1296685,
+        "sessionId": 1296681,
+        "stepUuid": "33167812-a64a-11e6-ba8e-db3d6c83c90a",
+        "stepDate": 1478674829628,
+        "stepModule": "ADAPTER",
+        "stepType": "INFO",
+        "stepMessage": "Тест Загрузка суточных интеграторов ,начиная с 2016-11-09 10:00:04. Прибор ID 128647060, модель Bts2 Загрузка суточных интеграторов ,начиная с 2016-11-09 10:00:04. Прибор ID 128647060, модель Bts2 Загрузка суточных интеграторов ,начиная с 2016-11-09 10:00:04. Прибор ID 128647060, модель Bts2 Загрузка суточных интеграторов ,начиная с 2016-11-09 10:00:04. Прибор ID 128647060, модель Bts2 " 
+            + "Мой дядя самых честных правил, " 
+            + "Когда в не шутку занемог, "             
+            + "Он уважать себя заставил" 
+            + "И лучше выдумать не мог.",
+        "stepDescription": null,
+        "isChecked": false,
+        "sumRows": null,
+        "isIncremental": null,
+        "lastIncrementDate": null,
+        "version": 0,
+        "stepDateStr": "09-11-2016 10:00:29"
+      };
+    
+      var testSession = {
+        "id": 1296789,
+        "sessionType": "SESSION_T1",
+        "sessionUuid": "8b20dde4-a6bf-11e6-ba8e-33670b0e2b8e",
+        "masterSessionUuid": "8b20b6d3-a6bf-11e6-ba8e-d350cd2d8b05",
+        "sessionDate": 1478725228453,
+        "sessionOwner": "SYSTEM",
+        "sessionMessage": "Talend_Loader_Device",
+        "sessionStatus": "FAILURE",
+        "statusMessage": "Тест Сессия завершена успешно (все загружено)  Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено) Сессия завершена успешно (все загружено)",
+        "statusDate": 1478725862787,
+        "dataSourceId": 128647056,
+        "deviceObjectId": 128656466,
+        "version": 0,
+        "sessionDateStr": "10-11-2016 00:00:28",
+        "statusDateStr": "10-11-2016 00:11:02",
+        "dataSourceInfo": {
+          "id": 128647056,
+          "dataSourceName": "1-ый корпус Ромашково"
+        },
+        "deviceObjectInfo": {
+          "id": 128656466,
+          "number": "52#2",
+          "deviceModelId": 128647057,
+          "deviceModelName": "БТС-2"
+        },
+        "authorInfo": {
+          "authorId": null,
+          "authorName": "Расписание"
+        }
+      };
+    //end Dev
+    
     var REFRESH_PERIOD = 300000;
     var ROW_PER_PAGE = 20; 
     $scope.messages = {};
@@ -528,6 +584,9 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     function getSessionsData(){
 //console.log("Get session data");        
         data.sessions = logSvc.getSessions();
+        //dev
+        data.sessions.push(testSession);
+        //end dev
         $scope.ctrlSettings.sessionsLoading = false;    
         if (mainSvc.checkUndefinedNull(data.sessions) || data.sessions.length == 0){
             $scope.data.totalSessions = 0;
@@ -601,7 +660,10 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $scope.data.currentSession = session;
         var url = $scope.ctrlSettings.sessionsUrl + "/" + session.id + "/steps";
         $http.get(url).then(function(resp){
-            $scope.data.sessionLog = resp.data;                
+            $scope.data.sessionLog = resp.data;
+            //dev
+            $scope.data.sessionLog.push(testStep);
+            //end dev
             $scope.ctrlSettings.logLoading = false;
         }, errorCallback)
     }
