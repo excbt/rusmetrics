@@ -257,18 +257,25 @@
                    ng-class="{'glyphicon-menu-left':mainCtrlSettings.showFullMenuFlag,'glyphicon-menu-right':!mainCtrlSettings.showFullMenuFlag}" >
                 </i>
             </span>
+<!--
             <div class="nmc-div-help-img-logo-left-v">
             </div>
+-->
 <!--
             <div ng-if="!mainCtrlSettings.showFullMenuFlag"
                  class="nmc-div-help-logo-left-v">
             </div>
             <div ng-class="{'nmc-div-logo-left-v-min': !mainCtrlSettings.showFullMenuFlag, 'nmc-div-logo-left-v': mainCtrlSettings.showFullMenuFlag}">
 -->
-            <div>
+<!--
+            <div style="text-align: center;">
                 <img class="nmc-img-logo-left-v" src="images/logo-left-v.png"/>
             </div>
-            
+-->
+            <div id="nmcLogoLeft"                 
+                 class="nmc-div-logo-left-h">             
+                <img src="images/logo-left-h.png" class="nmc-img-logo-left-h"/>
+            </div>
             <nav class="sidebar-nav nmc-nav-user-menu" 
                  role="navigation"> 
                 <div id="sidebar-entries" class="list-group dropup noMargin">
@@ -291,8 +298,11 @@
                                 </span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
-                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
+                        <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}">
+                            <a href="#/private/" 
+                               title='Private office' 
+                               ng-click="showPrivateOfficeMenu=true;showMenuReport=false;">
+                                <p> <b>Личный кабинет</b> 
                         </p></a></li>			
 
                         <li ng-if="userInfo.isReadonly != true"><a href="" 
@@ -319,7 +329,7 @@
              ng-class="{'nmc-main-workspace-maximize':!mainCtrlSettings.showFullMenuFlag || isCabinet()}" ng-cloak>
 					
 					<div id="main" ng-view></div>
-<!--            <a class="btn btn-block btn-primary" href="index1.html"> Вариант 2</a>-->
+<!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
         </div>
 
      </div>    
@@ -338,7 +348,7 @@
             <div class="modal-body nmc-modal-body paddingLeftRight15">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                             <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                 <tr>
                                     <td class="col-sm-3"><label for="viewLogin">Логин</label>
@@ -445,6 +455,7 @@
                       </div>
                   </nav>
 -->
+<!--
                   <div class="col-xs-1 noPadding"
                        ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag}">
                       <ul class="nav navbar-nav navbar-left nmc-main-header-menu">	
@@ -486,6 +497,7 @@
                         </li>
                     </ul>
                 </div>
+-->
               </div>
             
 <!--

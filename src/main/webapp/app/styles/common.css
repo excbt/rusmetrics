@@ -209,7 +209,7 @@ body{
 
 .nmc-img-logo-left-v {
     min-height: 140px;
-    width: 100%; 
+    width: auto; 
     max-width: 100%; 
     height: 50vh;
 }
@@ -218,15 +218,17 @@ body{
     height: 5%;
 }
 
+/*
 @media (max-height: 570px) {
     .nmc-div-help-img-logo-left-v {
         height: 0;
     }
 }
+*/
 
 @media (max-height: 870px) {
     .nmc-img-logo-left-v {
-        width: 100%; 
+        width: auto; 
         max-width: 100%; 
         height: 45vh;
     }
@@ -234,7 +236,7 @@ body{
 
 @media (max-height: 770px) {
     .nmc-img-logo-left-v {
-        width: 100%; 
+        width: auto; 
         max-width: 100%; 
         height: 40vh;
     }
@@ -242,7 +244,7 @@ body{
 
 @media (max-height: 700px) {
     .nmc-img-logo-left-v {
-        width: 100%; 
+        width: auto; 
         max-width: 100%; 
         height: 35vh;
     }
@@ -250,10 +252,21 @@ body{
 
 @media (max-height: 650px) {
     .nmc-img-logo-left-v {
-        width: 100%; 
+        width: auto; 
         max-width: 100%; 
         height: 30vh;
     }
+}
+
+/* Логотип под главным меню, горизонтальный вариант */
+.nmc-div-logo-left-h {
+    position: absolute; 
+    bottom: 48px;
+}
+
+.nmc-img-logo-left-h {
+    width: 100%; 
+    height: 90px;
 }
 
     /* Пользовательское меню - Выход, Личный кабинет, сменить пароль ...   */
@@ -305,7 +318,7 @@ body{
 /* Главная рабочая область страницы*/
 .nmc-main-workspace {
     margin-left: 10pt;
-    width: 87%;
+    width: 88%;
 	min-height: 500px;
     border: none;
     -webkit-box-shadow: 5px 5px 5px 0px #646263;
@@ -313,7 +326,7 @@ body{
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 10px;
-    height: 94vh;
+    height: 95vh;
 /*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
@@ -373,7 +386,7 @@ body{
 
 /* Фон главного окна */
 .nmc-main-window-background {
-    padding-top: 20px;
+    padding-top: 15px;
     padding-bottom: 20px;
     font-size: 12px;
     background-color: #BEBEBE !important; /*body background color*/
@@ -478,7 +491,7 @@ body{
     padding-top: 21px;
     min-width: 155px;
     width: 10%;
-    height: 94vh;
+    height: 95vh;
 }
 /* Главное меню в минимизированном состоянии*/
 .nmc-main-menu-minimize {
@@ -1072,7 +1085,7 @@ tr.nmc-main-table-header-indicator > th {
 .nmc-table-with-fixed-header{
     overflow: scroll;
 /*    height:685px;*/
-    height: 68vh;
+    height: 70vh;
     min-height: 360px;
     position:relative
 }
