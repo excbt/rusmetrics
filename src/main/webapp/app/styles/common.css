@@ -266,7 +266,7 @@ body{
 
 .nmc-img-logo-left-h {
     width: 100%; 
-    height: 90px;
+    height: 78px;
 }
 
     /* Пользовательское меню - Выход, Личный кабинет, сменить пароль ...   */
@@ -279,6 +279,7 @@ body{
 .nmc-nav-user-menu-item {
     cursor: pointer;
     font-size: 12px !important;
+    padding: 7px 1px 7px 15px;
 }
 
 /* Основная рабочая область */
