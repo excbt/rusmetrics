@@ -882,6 +882,7 @@ angular.module('portalNMC')
                                 if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)){                       zpoint.deviceObject = zPointsByObject[i].deviceObjects[0];         
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                                        zpoint.devCaption = zPointsByObject[i].deviceObjects[0].deviceModel.modelName || "";
                                         zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
                                         if (zpoint.isImpulse === true) {
                                             if (!mainSvc.checkUndefinedNull(measureUnits)) {
@@ -896,7 +897,8 @@ angular.module('portalNMC')
                                     }else{
                                         zpoint.zpointModel = "Не задано";
                                     };
-                                    zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;                                    
+                                    zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;
+                                    zpoint.devCaption += zPointsByObject[i].deviceObjects[0].number ? ", №" + zPointsByObject[i].deviceObjects[0].number : "";
                                 };
                                 zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;
                                 if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObjectTimeOffset)){
@@ -1249,6 +1251,7 @@ angular.module('portalNMC')
                     zps.doublePipe = object.doublePipe;
 //console.log(zps);
                     zps.zpointModel = object.zpointModel;
+                    zps.devCaption = object.devCaption;
                     zps.zpointRSO = object.zpointRSO;
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
@@ -1259,6 +1262,7 @@ angular.module('portalNMC')
                     $scope.prepareRefRange();
 
                 };
+                
                 $scope.getZpointSettingsExpl = function(objId, zpointId){
                     $scope.getZpointSettings(objId, zpointId);
                     var winterSet = {};

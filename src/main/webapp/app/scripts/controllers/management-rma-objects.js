@@ -1429,32 +1429,40 @@ angular.module('portalNMC')
 //                };
 //                $scope.getVzletSystemList();
                     //get devices
-                $scope.getDevices = function(obj, showFlag){
+                $scope.getDevices = function(obj, showFlag) {
                     objectSvc.getDevicesByObject(obj).then(
-                        function(response){
+                        function (response) {
                             //select only vzlet devices
                             var tmpArr = response.data;
-                            tmpArr.forEach(function(elem){
-                                if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)){
+                            tmpArr.forEach(function (elem) {
+                                if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)) {
                                     elem.contObjectId = elem.contObjectInfo.contObjectId;
-                                };
-                                if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)){
+                                }
+                                if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)) {
                                     elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
                                     elem.curDatasource = elem.activeDataSource.subscrDataSource;
                                     elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
                                     elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
                                     elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
-                                };
+                                }
+                                
+                                var tmpDevCaption = elem.deviceModel.modelName || "";
+                                tmpDevCaption += elem.number ? ", №" + elem.number : "";
+                                elem.devCaption = tmpDevCaption;
+//                                if (!mainSvc.checkUndefinedNull(elem.number)) {
+//                                    device.deviceModel.modelName + ', №' + device.number
+//                                    elem.deviceCaption = tmpDevCaption + ", №" + elem.number;
+//                                }
                             });
                             obj.devices = tmpArr;//response.data;
                             $scope.selectedItem(obj);
-                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)){
+                            if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)) {
                                 $scope.zpointSettings._activeDeviceObjectId = obj.devices[0].id;
                             }
 //console.log(obj);                            
-                            if (showFlag == true){
+                            if (showFlag == true) {
                                 $('#contObjectDevicesModal').modal();
-                            };
+                            }
 //                            if (showFlag == false){
 //                                $('#contObjectDevicesModal').modal();
 //                            };
