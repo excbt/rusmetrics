@@ -250,8 +250,21 @@ angular.module('portalNMC')
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl, httpOptions)
-            .success(function(data, satus, headers, config){
-                $rootScope.userInfo = angular.copy(data);
+            .success(function (data, satus, headers, config) {        
+                var tmp = angular.copy(data);
+//                tmp.userName = "Администратор Всея Руси";
+//                tmp.subscriber.subscriberName = "Большая и Малая, Белая и остальная Русь"
+                if (tmp.userName.length > 10) {
+                    tmp.userNameCaption = tmp.userName.substring(0, 10) + "...";
+                } else {
+                    tmp.userNameCaption = tmp.userName;
+                }
+                if (tmp.subscriber.subscriberName.length > 15) {
+                    tmp.userSubscrCaption = tmp.subscriber.subscriberName.substring(0, 15) + "...";
+                } else {
+                    tmp.userSubscrCaption = tmp.subscriber.subscriberName;
+                }                
+                $rootScope.userInfo = tmp;
 //console.log($rootScope.userInfo);
 //                if (!checkUndefinedNull($rootScope.userInfo.subscriber)){                    
 //                    var mapSettings = {};

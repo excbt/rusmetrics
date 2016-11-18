@@ -33,7 +33,7 @@
     margin-left: -200px !important;/*задаем отступ слева, чтобы центр попап сообщения находился над маркером*/
 }
 
-.leaflet-popup-content{
+.leaflet-popup-content {
     width: 550px !important;/* Увеличиваем ширину всплывающего окна, чтобы влезло наше содержимое*/
 }
 
@@ -58,7 +58,7 @@ body{
 }
 
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
-.nmc-main-header-brand{
+.nmc-main-header-brand {
     color: #FFFFFF !important;
     margin-top: 7px;
     width: 230px;
@@ -68,7 +68,7 @@ body{
 
 /*  Текст по центру шапки портала*/
 
-@media (min-width: 1600px){
+@media (min-width: 1600px) {
     .nmc-main-header-title {
         padding-left: 10em;
         color: #fff !important;
@@ -82,7 +82,7 @@ body{
     font: bold 190% arial;
 }
 	/* Меню в строке заголовка*/
-.nmc-main-header-menu{
+.nmc-main-header-menu {
 
 /*	padding-top: 5px;*/
 /*    margin-left: 10px;*/
@@ -91,19 +91,19 @@ body{
 }
 
 	/* Пункт меню заголовка*/
-.nmc-main-header-menu > li{
+.nmc-main-header-menu > li {
 /*	background-color: brown;*/
     
 }
     
-.nmc-main-header-menu > li > a{
+.nmc-main-header-menu > li > a {
 /*    color: wheat !important;*/
 /*    color: #FFFFFF !important;*/
     color: black !important;
     cursor: pointer;
 }
 
-.nmc-main-header-menu > li > a:hover{    
+.nmc-main-header-menu > li > a:hover {    
     background-color: #7BA9D0;
 }
 
@@ -115,36 +115,36 @@ body{
 */
     background-color: #7BA9D0;
 }
-.nmc-main-header-menu > li.open > a{
+.nmc-main-header-menu > li.open > a {
 /*	background-color: orange !important;*/
     background-color: #7BA9D0 !important;
 }
     /* Пункт меню, на который наведен фокус*/
-.nmc-main-header-menu > li.open > a:focus{
+.nmc-main-header-menu > li.open > a:focus {
 	background-color: #7BA9D0 !important;
 }
-.nmc-main-header-menu > li.open > a:hover{
+.nmc-main-header-menu > li.open > a:hover {
 	background-color: #7BA9D0 !important;
 }
 
     /* Раскрывающееся меню*/
-.nmc-main-header-menu > li > ul{
+.nmc-main-header-menu > li > ul {
 /*	background-color: white ;*/
     
 }
     /* Пункт раскрывающегося меню*/
-.nmc-main-header-menu > li > ul > li{
+.nmc-main-header-menu > li > ul > li {
 /*	background-color: greenyellow ;*/
 }
 
     /* Пункт раскрывающегося меню, на который наведен указатель*/
-.nmc-main-header-menu > li > ul > li > a:hover{
+.nmc-main-header-menu > li > ul > li > a:hover {
 /*	background-color: blueviolet !important;*/
     background-color: #7BA9D0 !important;
 }
 
     /* Пункт раскрывающегося меню, который в фокусе*/
-.nmc-main-header-menu > li > ul > li > a:focus{
+.nmc-main-header-menu > li > ul > li > a:focus {
 /*	background-color: aqua!important;*/
 }
 
@@ -265,8 +265,12 @@ body{
 }
 
 .nmc-img-logo-left-h {
-    width: 100%; 
+/*    width: 100%; */
     height: 78px;
+}
+
+.nmc-img-logo-left-h-min {
+    width: 100%;
 }
 
     /* Пользовательское меню - Выход, Личный кабинет, сменить пароль ...   */
@@ -285,7 +289,7 @@ body{
 /* Основная рабочая область */
 
     /* Надпись о загрузке*/
-.nmc-loading{
+.nmc-loading {
     
 }
 
@@ -307,7 +311,7 @@ body{
     min-width: 1572px;
 }
 
-.wrap > .container-fluid >.row {
+.wrap > .container-fluid > .row {
 /*    min-width: 1320px;*/
     min-width: 1572px;
 }
@@ -319,7 +323,7 @@ body{
 /* Главная рабочая область страницы*/
 .nmc-main-workspace {
     margin-left: 10pt;
-    width: 88%;
+    width: 88.1%;
 	min-height: 500px;
     border: none;
     -webkit-box-shadow: 5px 5px 5px 0px #646263;
@@ -349,7 +353,7 @@ body{
 }
 
 /* главная область в распахнутом состоянии - при минимизации левого меню*/
-.nmc-main-workspace-maximize{
+.nmc-main-workspace-maximize {
     width: 96%;
     margin-left: 0;
 }
@@ -366,7 +370,7 @@ body{
     
 }
 /* Горизонтальная линия в заголовке рабочей области*/
-.nmc-main-workspace-header hr{
+.nmc-main-workspace-header hr {
     -moz-border-bottom-colors: none;
     -moz-border-image: none;
     -moz-border-left-colors: none;
@@ -381,7 +385,7 @@ body{
 }
 
 /*Футер рабочей области*/
-.nmc-main-workspace-footer{
+.nmc-main-workspace-footer {
     
 }
 
@@ -409,7 +413,7 @@ body{
 
     /* Разметка страницы Отчеты*/
 /* Стиль главного дива, чтобы содержимое подстраивалось под изменение размера окна браузера*/
-.nmc-report-main-div{
+.nmc-report-main-div {
     overflow: auto;
     height:79vh;
     min-height: 425px;
@@ -417,13 +421,22 @@ body{
 
     /* Разметка страницы Настройки */
 /* Стиль главных дивов разделов "Тарифы" и "Группы объектов"*/
-.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div{
+.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div {
     overflow: auto;
-    height:61vh;
+    height: 82vh;
+/*    height:61vh;*/
     min-height: 290px;
 }
+@media (max-height: 800px) {
+    .nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div {
+        overflow: auto;
+        height: 72vh;
+    /*    height:61vh;*/
+        min-height: 290px;
+    }
+}
 
-.nmc-el-view-main-div-with-chart{
+.nmc-el-view-main-div-with-chart {
     overflow: auto;
     height:45vh;
     min-height: 190px;
@@ -431,26 +444,35 @@ body{
 
 
 /*  Стиль главных дивов разделов "Отчеты" и "Контакты"*/
-.nmc-report-settings-main-div{
+.nmc-report-settings-main-div {
     overflow: auto;
-    height:61vh;
+    height: 79vh;
+/*    height:61vh;*/
     min-height: 290px;
 }
 
-.nmc-contacts-main-div{
+@media (max-height: 800px) {
+    .nmc-report-settings-main-div {
+        overflow: auto;
+        height: 69vh;
+    /*    height:61vh;*/
+        min-height: 290px;
+    }
+}
+.nmc-contacts-main-div {
     overflow: auto;
     height:60vh;
     min-height: 250px;
 }
 
 /* Стиль главного дива "Рассылки"*/
-.nmc-delivery-settings-main-div{
+.nmc-delivery-settings-main-div {
     overflow: auto;
     height:52vh;
     min-height: 250px;
 }
 /*    Стиль для графиков электричества*/
-.nmc-electro-chart{
+.nmc-electro-chart {
     width: 1050px;
     height: 150px;
 }
@@ -468,15 +490,15 @@ body{
 }
 */
 /*    Классы для настройки интерфейса "Настройки программы"*/
-.nmc-table-program-settings{
+.nmc-table-program-settings {
     padding: 5px 0 5px 5px;
 }
-.nmc-table-program-settings:nth-of-type(odd){
+.nmc-table-program-settings:nth-of-type(odd) {
     background-color: #eee;
 }
 
 /* Разметка "Журналы" - "Журнал загрузки данных"*/
-.nmc-log-footer-part-not-used{
+.nmc-log-footer-part-not-used {
     max-height: 600px;
     min-height: 100px;
     overflow-y: auto;
@@ -502,7 +524,7 @@ body{
 }
 
     /* Пункт главного меню - неактивный*/
-.nmc-main-menu-item{
+.nmc-main-menu-item {
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
@@ -524,7 +546,7 @@ body{
 
     /* Пункт главного меню */
         /*в фокусе*/    /* на который наведен курсор*/
-.nmc-main-menu-item:focus, .nmc-main-menu-item:hover{
+.nmc-main-menu-item:focus, .nmc-main-menu-item:hover {
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
@@ -534,7 +556,7 @@ body{
 }
 
     /*Активный пункт главного меню*/
-.nmc-main-menu-item-active{
+.nmc-main-menu-item-active {
     font-weight: bold;
     color: #555 !important;
     text-decoration: none;
@@ -549,12 +571,12 @@ body{
 
 
 /*   Выпадающее меню - аля контекстное меню у объектов, приборов и т.п.*/
-.nmc-dropdown-menu>li>a:hover, .nmc-dropdown-menu>li>a:focus{
+.nmc-dropdown-menu>li>a:hover, .nmc-dropdown-menu>li>a:focus {
     background-color: #D2D2D2 !important; 
 }
 
 /*  Выпадающее меню фильтров*/
-.nmc-dropdown-menu-filter{
+.nmc-dropdown-menu-filter {
     min-width: 280px;
     max-width: 600px;
     width: 350px;
@@ -566,7 +588,7 @@ body{
 */
 
 /* Выпадающее меню "Действие над уведомлениями"*/
-.nmc-dropdown-toggle-notices{
+.nmc-dropdown-toggle-notices {
     height: 15px; 
     font-size: 8px; 
     width: 15px; 
@@ -574,15 +596,15 @@ body{
     margin-bottom: 6px;
 }
 
-.nmc-dropdown-toggle-filter{
+.nmc-dropdown-toggle-filter {
     
 }
 
-.nmc-dropdown-toggle-filter:hover{
+.nmc-dropdown-toggle-filter:hover {
     background-color: #fff;
 }
 
-.nmc-dropdown-hover{
+.nmc-dropdown-hover {
     margin: 0;
 }
     
@@ -607,7 +629,7 @@ body{
 }
 
     /* активная вкладка */
-.nmc-main-tab-panel > ul > li.active > a{
+.nmc-main-tab-panel > ul > li.active > a {
     /*background-color: orange;*/
 /*    background-color: #FFFFFF !important;*/
 /*    background: linear-gradient(to bottom, #C8C8C8, #FFFFFF);*/
@@ -623,13 +645,13 @@ body{
 .nmc-tab-panel {
 }
     /* Нижняя граница под вкладками*/
-.nmc-tab-panel > .nav-tabs{
+.nmc-tab-panel > .nav-tabs {
     border-bottom-color: #337ab7 !important;
 }
 
 
     /* неактивная вкладка*/
-.nmc-tab-button{
+.nmc-tab-button {
     /*background-color: red;
     color: white;*/
 /*
@@ -668,7 +690,7 @@ body{
 
 
     /* на вкладку наведен курсор*/
-.nmc-tab-panel > ul > li > a:hover{
+.nmc-tab-panel > ul > li > a:hover {
     /*background-color: red;
     color: white;*/
 /*
@@ -681,7 +703,7 @@ body{
     border-radius: 0 !important;
     position:relative;
 /*    width:480px;*/
-    padding:.5em 2em .5em 1em!important;
+    padding:.5em 2em .5em 1em !important;
 /*    margin:2em auto;*/
     color:#fff;
     background:#7BA9D0;
@@ -689,7 +711,7 @@ body{
 }
 
     /* активная вкладка */
-.nmc-tab-panel > ul > li.active > a{
+.nmc-tab-panel > ul > li.active > a {
  /*   background-color: orange;*/
 /*    border-bottom: transparent !important;*/
     border: 1px solid #337ab7 !important;
@@ -697,29 +719,29 @@ body{
 }
     /* Правый верхний уголок активной вкладки - затираем его, создавая эффект раскрытия вкладки*/
 .nmc-tab-panel > ul > li.active > a:before {
-    content:"";
-    position:absolute;
-    top:0;
-    right:0;
-    border-width:0 0px 0px 0; /* Данный трюк устраняет ошибку в браузерах webkit (сдвиг)  */
-    border-style:solid;
-    border-color:#fff #fff #fff #fff; /* Для работы с .rounded */
-    background:#fff; /* Для Opera при применении border-radius */
-    display:block; width:0; /* Только для Firefox 3.0 для снятия ограничений */
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-width: 0 0px 0px 0; /* Данный трюк устраняет ошибку в браузерах webkit (сдвиг)  */
+    border-style: solid;
+    border-color: #fff #fff #fff #fff; /* Для работы с .rounded */
+    background: #fff; /* Для Opera при применении border-radius */
+    display: block; width:0; /* Только для Firefox 3.0 для снятия ограничений */
     /* Опционально: тени */
-    -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
-       -moz-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
-            box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+       -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
 }
 
 /* Пункт меню "Изменить режим" в списке объектов*/
-.nmc-menu-item-change-obj-mode{
+.nmc-menu-item-change-obj-mode {
     display: inline !important;
     padding: 5px 5px 5px 0px !important;
 }
 
     /* Список режимов - представлений просмотра показаний объекта*/
-.nmc-view-mode-list-items{
+.nmc-view-mode-list-items {
     overflow-y: auto;
     max-height: 320px;
 }
@@ -727,26 +749,26 @@ body{
 /* Блок номеров страниц */
 .nmc-pages {
 }
-.nmc-pages-active{
+.nmc-pages-active {
     
 }
 
-.nmc-pagination{
+.nmc-pagination {
     margin: 0;
 }
 
 /* Элемент списка - Выбрать / Отменить все (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
-.nmc-li-select-all{
+.nmc-li-select-all {
     background: #337ab7; 
     color: white;
 }
 
-.nmc-li-select-all > label{
+.nmc-li-select-all > label {
     cursor: pointer;
 }
 
     /* Пункт меню настройки режимов показаний*/
-.nmc-mode-menu-item{
+.nmc-mode-menu-item {
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
@@ -768,7 +790,7 @@ body{
 
     /* Пункт главного меню */
         /*в фокусе*/    /* на который наведен курсор*/
-.nmc-mode-menu-item:focus, .nmc-mode-menu-item:hover{
+.nmc-mode-menu-item:focus, .nmc-mode-menu-item:hover {
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
@@ -778,7 +800,7 @@ body{
 }
 
     /*Активный пункт главного меню*/
-.nmc-mode-menu-item-active{
+.nmc-mode-menu-item-active {
     font-weight: bold;
     color: #555 !important;
     text-decoration: none;
@@ -807,46 +829,46 @@ td {
     vertical-align: middle !important;
 }
 /* Строка таблицы подсвечивающаяся при наведении*/
-.nmc-tr-hover:hover{
+.nmc-tr-hover:hover {
     background-color: #D2D2D2 !important;
 }
-.nmc-tr-hover:hover > td{
+.nmc-tr-hover:hover > td {
     background-color: #D2D2D2 !important;
 }
 
 /* Нечетная строка таблицы*/
-.nmc-tr-odd{
+.nmc-tr-odd {
 /*    background-color: #DCDCDC;*/
 }
 
-.nmc-tr-odd:hover{
+.nmc-tr-odd:hover {
     background-color: #D2D2D2 !important;
 }
-tr.nmc-tr-odd > td{
+tr.nmc-tr-odd > td {
     background-color: #eee;
 }
 
-tr.nmc-tr-striped:nth-of-type(odd)>td, .nmc-div-module-info:nth-of-type(odd){
+tr.nmc-tr-striped:nth-of-type(odd) > td, .nmc-div-module-info:nth-of-type(odd) {
     background-color: #eee;
 }
 
-.nmc-tr-striped > td{
+.nmc-tr-striped > td {
     padding: 0 !important;
 }
 
 /* Подстветка строк таблицы показаний, которые были загружены в ручную*/
-.nmc-tr-indicator-manual{
+.nmc-tr-indicator-manual {
 /*    background-color: lightblue;*/
     color: blue;
 }
 /* Подстветка строк таблицы показаний, у которых нарушен CRC*/
-.nmc-tr-indicator-crc-error{
+.nmc-tr-indicator-crc-error {
 /*    background-color: lightcoral;*/
     color: red;
 }
 
     /*Стиль колонки с кнопками*/
-.nmc-td-for-button{
+.nmc-td-for-button {
     min-width: 35px;
     width: 2%;
 }
@@ -859,17 +881,17 @@ tr.nmc-tr-striped:nth-of-type(odd)>td, .nmc-div-module-info:nth-of-type(odd){
 */
 
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
-.nmc-td-for-button-checkbox, .nmc-td-for-button-object-control{
+.nmc-td-for-button-checkbox, .nmc-td-for-button-object-control {
     min-width: 45px;
     width: 3%;
 }
 
-.nmc-td-for-buttons{
+.nmc-td-for-buttons {
     min-width: 65px;
     width: 4%;
 }
 
-.nmc-td-for-buttons-paramset{
+.nmc-td-for-buttons-paramset {
     min-width: 72px;
     width: 4%;
     background: linear-gradient(to top, #FF6802,#FF811B); 
@@ -877,7 +899,7 @@ tr.nmc-tr-striped:nth-of-type(odd)>td, .nmc-div-module-info:nth-of-type(odd){
     text-align: center;
 }
 
-.nmc-td-for-buttons-in-object-page{
+.nmc-td-for-buttons-in-object-page {
     padding-left: 5px;
     min-width: 45px;
     width: 4%;
@@ -885,19 +907,19 @@ tr.nmc-tr-striped:nth-of-type(odd)>td, .nmc-div-module-info:nth-of-type(odd){
 }
 
     /*Стиль колонки с кнопками - для колонок с 2мя кнопками + иконка*/
-.nmc-td-for-buttons-2-ico{
+.nmc-td-for-buttons-2-ico {
     min-width: 80px;
     width: 4%;
 }
 
     /*Стиль колонки с кнопками - для колонок с 3мя кнопками*/
-.nmc-td-for-buttons-3{
+.nmc-td-for-buttons-3 {
     min-width: 95px;
     width: 4%;
 }
 
     /*Стиль колонки с кнопками - для колонок с 4мя кнопками*/
-.nmc-td-for-buttons-4{
+.nmc-td-for-buttons-4 {
     min-width: 110px;
     width: 4%;
 }
@@ -910,7 +932,7 @@ td.nmc-td-for-buttons{
 }
 */
     /*  Стиль для колонки с числовой информацией по уведомлениям на странице Монитора  */
-.nmc-td-notices-counts{
+.nmc-td-notices-counts {
     min-width: 97px;
 }
 
@@ -959,7 +981,7 @@ tr.nmc-main-table-header-indicator > th {
     margin-bottom: 0px !important;
 /*    background-color: #EEEEEE;*/
 }
-.nmc-table-container > tbody > tr>td {
+.nmc-table-container > tbody > tr > td {
     border: none;
     padding: 0 !important;
 }
@@ -989,7 +1011,7 @@ tr.nmc-main-table-header-indicator > th {
 }
 
 /*  Ячейка таблицы, в которой содержится дочерняя таблица - используется для задания отступа от надписи родительской таблицы*/
-.nmc-td-for-child-table{
+.nmc-td-for-child-table {
     padding-top: 2px !important;
 }
  
@@ -1015,12 +1037,12 @@ tr.nmc-main-table-header-indicator > th {
 */
 
     /* Шапка вложенной таблицы*/
-.nmc-child-table-header{
+.nmc-child-table-header {
      background-color: #646263 !important; /*background color*/
      color: #FFFFFF;
 }
 
-.nmc-child-table-without-header{
+.nmc-child-table-without-header {
     margin-left: 2%;
     width: 97%;
     border-radius: 4px;
@@ -1034,7 +1056,7 @@ tr.nmc-main-table-header-indicator > th {
 .nmc-modal-table-with-chkbx {
 }
 
-.nmc-modal-table-with-chkbx > tbody > tr > td{
+.nmc-modal-table-with-chkbx > tbody > tr > td {
     padding: 0 !important;
 }
 
@@ -1045,36 +1067,36 @@ tr.nmc-main-table-header-indicator > th {
 }
 
 /* Таблица с данными по потреблению в попапе*/
-.nmc-table-popup{
+.nmc-table-popup {
     
 }
 
-.nmc-table-popup > tbody > tr > td{
+.nmc-table-popup > tbody > tr > td {
     padding: 0 !important;
 }
 
 /* Стиль, запрещающий многострочность в ячейке таблицы. Используются на страницах Уведомления и Показания для того,
     чтобы данные внутри ячейки отображались в одну строку.
 */
-.nmc-notice-table-nowrap-data > tbody > tr > td{
+.nmc-notice-table-nowrap-data > tbody > tr > td {
     white-space: nowrap; /* Запрещаем перенос строк */
     overflow: auto; /*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px 5px; /* Устанавливаем отступ от границ ячейки = 1*/
  }
 
-.nmc-table-nowrap-data > tbody > tr > td{
+.nmc-table-nowrap-data > tbody > tr > td {
     white-space: nowrap; /* Запрещаем перенос строк */
 /*    overflow: auto; *//*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px;/* Устанавливаем отступ от границ ячейки = 1*/
  }
 
-.nmc-table-nowrap-data1{
+.nmc-table-nowrap-data1 {
     border-bottom: none;
 }
 
-.nmc-table-nowrap-data1 > tbody > tr > td{
+.nmc-table-nowrap-data1 > tbody > tr > td {
     white-space: nowrap; /* Запрещаем перенос строк */
 /*    overflow: auto; *//*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
@@ -1083,15 +1105,25 @@ tr.nmc-main-table-header-indicator > th {
  }
 
 /*  Таблица с непрокручиваемой шапкой*/
-.nmc-table-with-fixed-header{
+.nmc-table-with-fixed-header {
     overflow: scroll;
 /*    height:685px;*/
-    height: 70vh;
+    height: 82vh;
     min-height: 360px;
     position:relative
 }
+
+@media (max-height: 680px) {
+    .nmc-table-with-fixed-header {
+        overflow: scroll;    
+        height: 75vh;
+        min-height: 360px;
+        position:relative
+    }
+}
+
 /* Таблица для сессий*/
-.nmc-session-table-with-fixed-header{
+.nmc-session-table-with-fixed-header {
     overflow: scroll;
     height: 50vh;
     min-height: 63px;
@@ -1099,7 +1131,7 @@ tr.nmc-main-table-header-indicator > th {
 }
 
 /*  Дерево объектов*/
-.nmc-tree-with-fixed-header{
+.nmc-tree-with-fixed-header {
     overflow: scroll;
     height: 73vh;
     min-height: 360px;
@@ -1107,12 +1139,12 @@ tr.nmc-main-table-header-indicator > th {
     padding-left: 15px;
 }
 
-.nmc-ui-tree-handle:focus{
+.nmc-ui-tree-handle:focus {
     background-color: #eee;
 }
 
 /*  Таблица с непрокручиваемой шапкой для страницы Показания*/
-.nmc-indicator-table-with-fixed-header{
+.nmc-indicator-table-with-fixed-header {
 /*    overflow-y: hidden;*/
 /*
     overflow-x: auto;
@@ -1125,16 +1157,24 @@ tr.nmc-main-table-header-indicator > th {
 */
 }
     /* прокручиваемая часть таблицы */
-.nmc-indicator-table-without-fixed-header{
+.nmc-indicator-table-without-fixed-header {
     overflow-y: auto;
     overflow-x: hidden;
 /*    height:685px;*/
-    height: 60vh;
+    height: 73vh;
     min-height: 360px;
 /*    position: absolute;*/
 }
+@media (max-height: 720px) {
+    .nmc-indicator-table-without-fixed-header {
+        overflow-y: auto;
+        overflow-x: hidden;    
+        height: 61vh;
+        min-height: 360px;
+    }
+}
 /*  */
-.nmc-notice-table-with-fixed-header{
+.nmc-notice-table-with-fixed-header {
     overflow: auto;
 /*    height:685px;*/
     height: 60vh;
@@ -1142,35 +1182,35 @@ tr.nmc-main-table-header-indicator > th {
     position:relative
 }
 
-.nmc-notice-th{
+.nmc-notice-th {
     padding: 5px 0px 0 5px !important;
 /*    border-bottom-width: 0px;*/
 }
 /* Подсветка показаний Итого и Итого по интеграторам*/
-.nmc-totals-indicator-highlight{
+.nmc-totals-indicator-highlight {
     background-color: aquamarine;
 }
 
 /* Подсветка показаний Итого для электричества*/
-.nmc-el-totals-indicator-highlight{
+.nmc-el-totals-indicator-highlight {
     background-color: aquamarine;/*azure;*/
 }
 /*diff <= 1 : #FFFFA4*/
-.nmc-el-totals-indicator-highlight-warn{
+.nmc-el-totals-indicator-highlight-warn {
     background-color: #FFFFA4;
 }
 /*diff > 1 : #FF7171*/
-.nmc-el-totals-indicator-highlight-err{
+.nmc-el-totals-indicator-highlight-err {
     background-color: #FF7171;
 }
 
 /* Подсветка действующего/активного прайса*/
-tr.nmc-active-price > td{
+tr.nmc-active-price > td {
     background-color: bisque;
     font-weight: bold;
 }
 /* Подсветка HE действующего/активного прайса*/
-tr.nmc-inactive-price > td{
+tr.nmc-inactive-price > td {
     font-style: italic;
 }
 
@@ -1181,7 +1221,7 @@ tr.nmc-inactive-price > td{
 .nmc-form-label {
 }
 /* метка для элемента выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
-.nmc-label-dropdown{
+.nmc-label-dropdown {
     padding: 0px 20px;
     white-space: nowrap;
     font-weight: normal;
@@ -1192,13 +1232,13 @@ tr.nmc-inactive-price > td{
 .nmc-search-form {
 }
     /* приставка к строке поиска*/
-.nmc-search-form-addon{
+.nmc-search-form-addon {
     font-size: 12px;
     height: 24px;
     padding: 4px;
 }
     /* кнопка поиска*/
-.nmc-searh-form-button{
+.nmc-searh-form-button {
     
 }
 
@@ -1211,7 +1251,7 @@ tr.nmc-inactive-price > td{
 }
 
 /* выпадающий список при использовании ui-select*/
-.nmc-ui-select-form > .ui-select-match > span{
+.nmc-ui-select-form > .ui-select-match > span {
     font-size: 12px;
     height: 26px;
     padding: 3px;
@@ -1790,8 +1830,8 @@ tr.nmc-inactive-price > td{
 
 /* панель для кнопок в столбце таблице - для 1-2 кнопок*/
 .nmc-btn-toolbar-in-table{
-    padding-left:5px !important;
-    width:50px !important;
+    padding-left: 5px !important;
+    width: 50px !important;
 }
 
 .nmc-btn-toolbar-in-paramset-table{
@@ -1800,9 +1840,9 @@ tr.nmc-inactive-price > td{
 }
 
 /* панель для кнопок в столбце таблице - 3 кнопки*/
-.nmc-btn-toolbar-in-table-3{
-    padding-left:5px !important;
-    width:90px !important;
+.nmc-btn-toolbar-in-table-3 {
+    padding-left: 5px !important;
+    min-width: 90px !important;
 }
  
 /* Переключатель */
@@ -1849,7 +1889,7 @@ tr.nmc-inactive-price > td{
     /* Переключатель для действующих шаблонов/вариантов отчетов */
 .nmc-toggle-active{
     border: 1px solid #ddd !important;
-    border-radius:4px !important;
+    border-radius: 4px !important;
 }
     /* Переключатель для архивных шаблонов/вариантов отчетов */
 .nmc-toggle-archive{
@@ -1858,8 +1898,8 @@ tr.nmc-inactive-price > td{
     margin-left:0px !important;
 }
 .nmc-toggle-archive > a{
-    width:108px !important;
-    text-align:center !important;
+    width: 108px !important;
+    text-align: center !important;
 }
 
 .nmc-toggle-button-active {
@@ -1974,12 +2014,12 @@ tr.nmc-inactive-price > td{
 }
 
 /* Тело модального окна (фон)*/
-.nmc-modal-body{
+.nmc-modal-body {
     padding: 10px 0 0 0;
 }
  
 /* Поле с таблицей */
-.nmc-modal-panel-with-table{
+.nmc-modal-panel-with-table {
 }
 /* поле с таблицей колонок*/    /* поле с таблицей объектов*/
 /* устанавливаем у них прокрутку*/
@@ -1992,52 +2032,52 @@ tr.nmc-inactive-price > td{
         и вариантов отчетов
     */
     /* Высота листа с колоноками отчета*/
-.nmc-column-list  {
+.nmc-column-list {
     height: 346px;
 }
     /* Правая граница для окна Конструктора отчета*/
-.nmc-column-list-border{
+.nmc-column-list-border {
     border: 1px solid #e3e3e3;
 /*    border-bottom: 1px solid #e3e3e3;*/
 }
     /* Высота листа с объектами*/
-.nmc-object-list  {
+.nmc-object-list {
     height: 520px;
 }
 
 /* Настройки таблицы температурного графика в модальном окне*/
-.nmc-temp-sch-schedules-modal{
+.nmc-temp-sch-schedules-modal {
     overflow-y: auto;
     max-height: 250px;
 }
 
     /* Настройка списка мета свойств у точки учета*/
-.nmc-metadata-list-in-zpoint{
+.nmc-metadata-list-in-zpoint {
     overflow-y: auto;
     min-height: 441px;
     max-height: 463px;    
 }
     /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
     /* Настройка списка мета свойств у прибора*/
-.nmc-object-list-in-notices, .nmc-metadata-list-in-devices{
+.nmc-object-list-in-notices, .nmc-metadata-list-in-devices {
     overflow-y: auto;
     max-height: 520px;
 }
 
-.nmc-object-filter-in-notices, .nmc-types-filter-in-notices, .nmc-filter-list-items, .nmc-tree-list-items{
+.nmc-object-filter-in-notices, .nmc-types-filter-in-notices, .nmc-filter-list-items, .nmc-tree-list-items {
     overflow-y: auto;
     max-height: 520px;
     top: 400%;
 }
 
 /*  Настройка прокрутки списка деревьев в интерфейсе настроек*/
-.nmc-tree-list-items{
+.nmc-tree-list-items {
     overflow-y: auto;
     max-height: 320px;
     top: 340%;
 }
     /* в интерфейсах просмотра*/
-.nmc-view-tree-list-items{
+.nmc-view-tree-list-items {
     overflow-y: auto;
     max-height: 320px;
     top: 240%;
@@ -2047,13 +2087,13 @@ tr.nmc-inactive-price > td{
     padding-top: 150px;
 }
     /* Отступ для кнопок-стрелок, которыми управляются объекты в списках*/
-.nmc-object-list-button  {
+.nmc-object-list-button {
    padding-top: 250px;
 }
 
     /* Разметка модального окна выбора объектов на странице Уведомления*/
 /*.excbt_selectObjectWindow > .modal-backdrop {*/
-.nmc-select-objects-window > .modal-backdrop{   
+.nmc-select-objects-window > .modal-backdrop {   
     background-color: inherit;
 }
 
@@ -2061,13 +2101,13 @@ tr.nmc-inactive-price > td{
     margin-top: 200px;
 }
 
-.nmc-select-objects-window > .modal-dialog > .modal-content{
+.nmc-select-objects-window > .modal-dialog > .modal-content {
     margin: 0 0 0 -100px;
 }
 
     /* Разметка модального с фильтрами на странице Уведомления*/
 /*.excbt_selectObjectWindow > .modal-backdrop {*/
-.nmc-select-filters-window > .modal-backdrop{   
+.nmc-select-filters-window > .modal-backdrop {   
     background-color: inherit;
 }
 
@@ -2075,25 +2115,25 @@ tr.nmc-inactive-price > td{
     margin-top: 200px;
 }
 
-.nmc-select-filters-window > .modal-dialog > .modal-content{
+.nmc-select-filters-window > .modal-dialog > .modal-content {
     margin: 0 0 0 -100px;
 }
 
     /* Панель с выбранными объектами в модальном окне создания/редактирования группы объектов*/
 /*.editGroupWindowSelectedObjectsArea{*/
-.nmc-modal-panel-with-objects{  
+.nmc-modal-panel-with-objects {  
     height: 380px;
     overflow-y: scroll;
 }
 
     /* Панель с выбранными объектами в модальном окне создания/редактирования тарифов/вариантов отчета */
 /*.editGroupWindowSelectedObjectsArea{*/
-.nmc-modal-panel-with-objects-tp{  
+.nmc-modal-panel-with-objects-tp {  
     height: 500px;
     overflow-y: auto;
 }
 
-.nmc-hr-in-modal{
+.nmc-hr-in-modal {
     -moz-border-bottom-colors: none;
     -moz-border-image: none;
     -moz-border-left-colors: none;
@@ -2108,7 +2148,7 @@ tr.nmc-inactive-price > td{
 }
 
 /*  Модальное окно выбора типов уведомлений на странице Уведомления*/
-.nmc-select-notice-types-window >.modal-dialog >.modal-content{
+.nmc-select-notice-types-window > .modal-dialog > .modal-content {
     margin: 0 0 0 200px; /* двигаем содержимое под фильтр выбора Типов - так правильнее*/
 }
 
@@ -2117,7 +2157,7 @@ tr.nmc-inactive-price > td{
 *               Карты
 ********************************************************/
 /* Карта монитора - на странице увеодомлений*/
-.nmc-map-monitor{
+.nmc-map-monitor {
 /*    height: 865px;*/
 /*    height: 770px;*/
     height: 80vh;
@@ -2126,14 +2166,14 @@ tr.nmc-inactive-price > td{
 }
 
 /* Карта потребления - на странице объектов*/
-.nmc-map-objects{
+.nmc-map-objects {
 /*    height: 770px;*/
     height: 80vh;
     min-height: 450px;
     width: 100%;
 }
 /* Настройки для попапа маркера города на карте потребления*/
-.nmc-city-marker-popup-in-objects{
+.nmc-city-marker-popup-in-objects {
     width: 450px; 
 }
  
@@ -2165,17 +2205,17 @@ tr.nmc-inactive-price > td{
  * Вспомогательные
  *********************/
 
-.nmc-dotted-border-top{
+.nmc-dotted-border-top {
     border-top: 1px solid black !important;
 }
 
 /* Вертикальное выравнивание содержимого*/
-.nmc-valign-middle{
+.nmc-valign-middle {
     vertical-align: middle;
 }
 
 /*Класс для форматирования дива, в который выводятся данные о потребелении*/
-.nmc-div-data{
+.nmc-div-data {
     height: 2em;
 }
 /* Шрифты */
@@ -2189,39 +2229,38 @@ tr.nmc-inactive-price > td{
 }
 
 /* Классы для цветовой индикации - используются на карте объектов в попапах*/
-.nmc-alert{
+.nmc-alert {
     color:red;
 }
 
-.nmc-warning{
+.nmc-warning {
     color:yellow;
 }
 
-.nmc-normal{
+.nmc-normal {
     color:green;
 }
 
-.nmc-normal-alt{
+.nmc-normal-alt {
     color:blue;
 }
 
-.nmc-normal-alter{
+.nmc-normal-alter {
     color:green;
 }
 
-.nmc-bg-alert{
+.nmc-bg-alert {
     background-color: red;
 }
 
 /* Класс, для выделения фона элемента - используется на карте объектов в попапах*/
-.nmc-bg-distinguish{
+.nmc-bg-distinguish {
     background-color: #eee;
 }
 /* Класс, для выделения фона колонки таблицы - используется в журналах*/
-tr.nmc-bg-distinguish > td{
+tr.nmc-bg-distinguish > td {
     background-color: #D2D2D2 !important;
 }
-
  
 /* Заголовки */
 
@@ -2275,11 +2314,11 @@ tr.nmc-bg-distinguish > td{
 }
 
     /*Вертикальная линия в кнопках на странице Объекты*/
-.nmc-line-right{
+.nmc-line-right {
     border-right: 1px solid black;
 }
 
-.nmc-line-left{
+.nmc-line-left {
     border-left: 1px solid black;
 }
 
@@ -2298,17 +2337,17 @@ tr.nmc-bg-distinguish > td{
     border-left: 1px solid #e0e0e0;
 }
 
-.nmc-textfield{
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+.nmc-textfield {
+    font-family: "Helvetica Neue", Helvetica,Arial, sans-serif;
     color: #333;
 }
 
 /* Отображение строк с макс. кол-вом смс в настройках*/
-.nmc-sms-prop-row{
+.nmc-sms-prop-row {
     display: table-cell;
 }
     /* Специальные параметры вариантов отчетов*/
-.nmc-sp-sbool{
+.nmc-sp-sbool {
     display: table-cell;
 }
 
@@ -2339,11 +2378,11 @@ tr.nmc-bg-distinguish > td{
     margin-bottom: 15px;
 }
 
-.marginBottom0_8em{
+.marginBottom0_8em {
     margin-bottom: .8em;
 }
 
-.marginBottomMinus20{
+.marginBottomMinus20 {
     margin: 0 0 -20px 0;
 /*    margin-bottom: -20px;*/
 }
@@ -2396,13 +2435,13 @@ tr.nmc-bg-distinguish > td{
     margin-top: -27px;
 }
 
-.marginTopMinus79{
+.marginTopMinus79 {
     margin-top: -79px;
 }
-.marginTopMinus45{
+.marginTopMinus45 {
     margin-top: -45px;
 }
-.marginTopMinus57{
+.marginTopMinus57 {
     margin-top: -57px;
 }
 
@@ -2411,21 +2450,21 @@ tr.nmc-bg-distinguish > td{
 }
 
 .marginRight2 {
-    margin-right:2px;
+    margin-right: 2px;
 }
 .marginRight15 {
-    margin-right:15px;
+    margin-right: 15px;
 }
 .marginRight5 {
-    margin-right:5px;
+    margin-right: 5px;
 }
 
 .marginRight28 {
-    margin-right:28px;
+    margin-right: 28px;
 }
 
 .marginLeft24 {
-    margin-left:24px;
+    margin-left: 24px;
 }
 
 .noMargin {
@@ -2532,23 +2571,23 @@ tr.nmc-bg-distinguish > td{
     padding-left: 5px !important;
 }
 
-.paddingRight5{
+.paddingRight5 {
     padding-right: 5px;
 }
 
-.paddingRight10{
+.paddingRight10 {
     padding-right: 10px;
 }
 
-.paddingRight20{
+.paddingRight20 {
     padding-right: 20px;
 }
 
-.paddingLeftRight5I{
+.paddingLeftRight5I {
     padding: 5px 0 !important;
 }
 
-.paddingLeftRight15{
+.paddingLeftRight15 {
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -2572,11 +2611,11 @@ tr.nmc-bg-distinguish > td{
     /* Управление отображением элементов*/
 /*Показать*/
 .nmc-show {
-    display:inherit;
+    display: inherit;
 }
 /*Скрыть*/
 .nmc-hide {
-    display:none !important;
+    display: none !important;
 }
 /*Сделать прозрачным*/
 .nmc-transparent {
@@ -2603,26 +2642,26 @@ tr.nmc-bg-distinguish > td{
 }
 
 /* Стиль для подсветки позитивных уведомлений*/
-.nmc-positive-notice{
+.nmc-positive-notice {
     color: green;
 }
 
 /*  Стиль изменяет курсор при наведении на уведомление мыши - используется на стр. Уведомления*/
-.nmc-link-notice-detail, .nmc-link{
+.nmc-link-notice-detail, .nmc-link {
     cursor: pointer;
 }
 
 /*    Стиль ссылки "Добавить" в настройках Вариантов отчетов и Шаблонах*/
-.nmc-link-report-add{
+.nmc-link-report-add {
     cursor: pointer;
 }
 
 /* Стиль оформления записи пакета услуг*/
-.nmc-service-package-caption{
+.nmc-service-package-caption {
     cursor: help;
 }
 
-.nmc-width0{
+.nmc-width0 {
     width: 0;
 }
 
@@ -2684,55 +2723,55 @@ input[type="checkbox"] {
     position:relative;
 }
 */
-.dropdown-submenu > .dropdown-menu{
-    top:0;
-    left:100%;
-    margin-top:-6px;
-    margin-left:-1px;
-    -webkit-border-radius:0 6px 6px 6px;
-    -moz-border-radius:0 6px 6px 6px;
-    border-radius:0 6px 6px 6px;}
-.dropdown-submenu:hover > .dropdown-menu{
-    display:block;
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px 6px;
+    border-radius: 0 6px 6px 6px;}
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
 }
-.dropdown-submenu > a:after{
-    display:block;
-    content:" ";
-    float:right;
-    width:0;
-    height:0;
-    border-color:transparent;
-    border-style:solid;
-    border-width:5px 0 5px 5px;
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
 /*    border-left-color:#cccccc;*/
-    border-left-color:#646263;
-    margin-top:5px;
-    margin-right:-10px;
+    border-left-color: #646263;
+    margin-top: 5px;
+    margin-right: -10px;
 }
-.dropdown-submenu:hover > a:after{
-    border-left-color:#ffffff;
+.dropdown-submenu:hover > a:after {
+    border-left-color: #ffffff;
 }
-.dropdown-submenu.pull-left{
-    float:none;
+.dropdown-submenu.pull-left {
+    float: none;
 }
-.dropdown-submenu.pull-left > .dropdown-menu{
-    left:-100%;
-    margin-left:10px;
-    -webkit-border-radius:6px 0 6px 6px;
-    -moz-border-radius:6px 0 6px 6px;
-    border-radius:6px 0 6px 6px;
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
 }
 /*******************************************************************/
 /* Классы для настройки деревьев*/
 /********************************************************************/
 .angular-ui-tree-handle {
-    cursor:default !important;
+    cursor: default !important;
 }
 
 /*******************************************************************/
 /*  Классы для настройки resizable компоненты*/
 /*******************************************************************/
-.ui-resizable-s{
+.ui-resizable-s {
     height: 14px;
     background-image: url(../images/resizable.png);
     background-repeat: no-repeat;
@@ -2746,12 +2785,12 @@ input[type="checkbox"] {
 
 }
 
-.rui-resizable-bottom{
+.rui-resizable-bottom {
     border: none !important;
     max-height: 600px;
 }
 
-.rui-resizable-content{
+.rui-resizable-content {
     padding: 0 !important;
     max-height: 600px;
 }

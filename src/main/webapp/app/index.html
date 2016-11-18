@@ -274,26 +274,31 @@
 -->
             <div id="nmcLogoLeft"                 
                  class="nmc-div-logo-left-h">             
-                <img src="images/logo-left-h.png" class="nmc-img-logo-left-h"/>
+                <img src="images/logo-left-h.png" 
+                     class="nmc-img-logo-left-h-min"
+                     ng-class="{'nmc-img-logo-left-h': mainCtrlSettings.showFullMenuFlag}"
+                     />
             </div>
             <nav class="sidebar-nav nmc-nav-user-menu" 
                  role="navigation"> 
                 <div id="sidebar-entries" class="list-group dropup noMargin">
                     <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle" 
                        data-toggle="dropdown">
-                                <i ng-if="!mainCtrlSettings.showFullMenuFlag" 
-                                   class="glyphicon glyphicon-user nmc-main-menu-item-icon" 
+<!--                        ng-if="!mainCtrlSettings.showFullMenuFlag"-->
+                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon" 
                                    title="Пользовательское меню">
                                 </i>                    
-                                <span ng-show="mainCtrlSettings.showFullMenuFlag">
+                                <span ng-show="mainCtrlSettings.showFullMenuFlag"
+                                      ng-attr-title="{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
+                                      >
                                     <span class="nmc-hide" 
-                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">
-                                        <b>{{userInfo.userName}}</b><br/>
+                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}">
+                                        <b>{{userInfo.userNameCaption}}</b><br/>
                                     </span>
                                     <span class="nmc-hide" 
-                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" 
-                                          ng-show="userInfo.subscriber!=null">
-                                        {{userInfo.subscriber.subscriberName}}
+                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}" 
+                                          ng-show="userInfo.subscriber != null">
+                                        {{userInfo.userSubscrCaption}}
                                     </span>
                                 </span>
                     </a>
