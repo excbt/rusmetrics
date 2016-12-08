@@ -96,7 +96,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 
 		final Map<UUID, U> cityObjectsMap = new HashMap<>();
 
-		contObjects.stream().filter((i) -> i.getContObjectFias() != null).forEach((i) -> {
+		contObjects.stream().filter((i) -> i.getContObjectFias() != null).forEach((i) -> {			
 			UUID cityUUID = i.getContObjectFias().getCityFiasUUID();
 			U cityObject = cityObjectsMap.get(cityUUID);
 			if (cityObject == null) {

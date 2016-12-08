@@ -32,6 +32,10 @@ public class ContObjectServiceTypeInfo
 	public ContObjectServiceTypeInfo(ContObject contObject, ContObjectFias contObjectFias) {
 		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias);
 	}
+	
+	public ContObjectServiceTypeInfo(ContObject contObject, ContObjectFias contObjectFias, ContObjectGeoPos contObjectGeoPos) {
+		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias, contObjectGeoPos);
+	}
 
 	/**
 	 * 

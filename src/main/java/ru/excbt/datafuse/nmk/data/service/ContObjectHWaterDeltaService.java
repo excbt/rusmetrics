@@ -31,7 +31,10 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 /**
  * Сервис по работе с вычисляемыми данными по горячей воде
@@ -340,8 +343,18 @@ public class ContObjectHWaterDeltaService {
 			final Map<Long, ContServiceTypeInfoART> heatContObjectARTs) {
 
 		List<ContObjectServiceTypeInfo> resultList = new ArrayList<>();
+		
+		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
+
+		// Second check. For safe only
+//		if (contObjectIds.isEmpty()) {
+//			contObjectIds = NO_DATA_IDS;
+//		}
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 		contObjects.forEach((contObject) -> {
-			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject, null);
+			//ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject, null);
+			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject, contObjectFiasMap.get(contObject.getId()), contObjectGeoPosMap.get(contObject.getId()));
 
 			{
 				ContServiceTypeInfoART hwART = hwContObjectARTs.get(contObject.getId());
@@ -374,10 +387,8 @@ public class ContObjectHWaterDeltaService {
 			LocalDatePeriod ldp) {
 
 		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfoList(subscriberId, ldp, null);
-
 		List<CityContObjectsServiceTypeInfo> result = CityContObjects.makeCityContObjects(allInfo,
 				CityContObjectsServiceTypeInfo.FACTORY_INSTANCE);
-
 		return result;
 	}
 
