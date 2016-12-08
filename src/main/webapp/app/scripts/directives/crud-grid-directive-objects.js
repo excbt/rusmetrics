@@ -126,6 +126,11 @@ angular.module('portalNMC')
                 var successGetObjectsCallback = function(response) {
                     $scope.messages.noObjects = "Объектов нет.";
                     var tempArr = response.data;
+                    if (mainSvc.checkUndefinedNull(tempArr) || !angular.isArray(tempArr) || tempArr.length === 0) {                        
+                        $scope.loading = false;
+                        $rootScope.$broadcast('objectSvc:loaded');
+                        return false;
+                    }
 //console.log(tempArr);                    
                     tempArr.forEach(function(element){
                         element.imgsrc = 'images/object-mode-' + element.currentSettingMode + '.png';

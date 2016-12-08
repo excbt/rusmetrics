@@ -1,3 +1,6 @@
+/*jslint white: true, node: true*/
+/*global angular, moment*/
+'use strict';
 angular.module('portalNMC')
 .controller('ObjectsMapCtrl', function($rootScope, $scope, $cookies, objectSvc, mainSvc, $timeout){
     $rootScope.ctxId = "object_map_page";
@@ -40,19 +43,19 @@ angular.module('portalNMC')
     
     if (angular.isDefined(objectSvc.getObjectSettings().mapZoomDetail)){
         $scope.mapSettings.zoomDetail = Number(objectSvc.getObjectSettings().mapZoomDetail);
-    };
+    }
     
     if (angular.isDefined(objectSvc.getObjectSettings().mapZoom)){
         mapCenter.zoom = Number(objectSvc.getObjectSettings().mapZoom);
-    };
+    }
     if (angular.isDefined(objectSvc.getObjectSettings().mapCenterLat)){
         mapCenter.lat = Number(objectSvc.getObjectSettings().mapCenterLat);
-    };
+    }
     if (angular.isDefined(objectSvc.getObjectSettings().mapCenterLng)){
         mapCenter.lng = Number(objectSvc.getObjectSettings().mapCenterLng);
-    };  
+    }  
     angular.extend($scope, {
-       mapCenter 
+       mapCenter
     });
     
     var monitorMarker = {
@@ -210,6 +213,9 @@ angular.module('portalNMC')
     };
     
     var changeCmpPeriod = function(firstPeriod, daysAgo, secondPeriod){
+//console.log(firstPeriod);
+//console.log(daysAgo);
+//console.log(secondPeriod);        
         $scope.markerSettings.runFlag = false;
         var result = {};
         result.dateFrom = moment(firstPeriod.dateFrom).subtract(daysAgo, 'days').format($scope.mapSettings.systemFormat);
@@ -218,6 +224,8 @@ angular.module('portalNMC')
         result.dateToUserformat = moment(result.dateTo).format($scope.mapSettings.userFormat);
         secondPeriod = result;
         $scope.cmpPeriod = result;      
+//console.log(result);        
+//console.log("===========================================================================");                
         return result;
     };
 
@@ -624,7 +632,7 @@ console.log(newMarker);
             return [];
         };
         oldmarkerArray = deleteCityMarkers(cityArray, oldmarkerArray);
-       markerArray = [];
+        var markerArray = [];
         cityArray.forEach(function(elem){            
             if(angular.isUndefined(elem.cityGeoPosX)||angular.isUndefined(elem.cityGeoPosY)||(elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
 console.warn("Warning. City without coordinates.");                
@@ -883,6 +891,7 @@ console.warn(elem);
                         dateTo: $scope.mapSettings.dateTo
                     }
                 });
+            
                 var obj = angular.copy(marker.object);
                 angular.extend($scope,{curObject:obj});
                 angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
@@ -1036,6 +1045,12 @@ console.warn(elem);
         objectSvc.setObjectSettings({mapCenterLng:newLng});        
     });
     
+    //test
+//    $scope.$watch('markerSettings',function(newval, oldval){
+//console.log(newval);        
+//console.log(oldval);        
+//    });
+    //end test 
     function findObjectById(objId){
         var obj = null;
         $scope.objects.some(function(element){
@@ -1116,7 +1131,7 @@ console.warn(elem);
         $scope.newObjectData =[];
         $scope.newCityData = {};
         $scope.diffCityData = {};
-        $scope.markerSettings = {};
+//        $scope.markerSettings = {};
         $scope.diffData ={};
         $scope.newData = {};
     });
