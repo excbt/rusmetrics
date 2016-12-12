@@ -374,7 +374,8 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscriberOrganizationVO> enhanceSubscriber(final List<Subscriber> subscribers) {
 		checkNotNull(subscribers);
-		long[] organizationIds = subscribers.stream().mapToLong(i -> i.getOrganizationId()).toArray();
+		long[] organizationIds = subscribers.stream().filter(i -> i.getOrganizationId() != null)
+				.mapToLong(i -> i.getOrganizationId()).toArray();
 
 		final List<Organization> organizations = organizationRepository
 				.selectByIds(Arrays.asList(ArrayUtils.toObject(organizationIds)));

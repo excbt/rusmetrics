@@ -44,7 +44,7 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "subscriber_comment")
 	private String comment;
 
-	@Column(name = "organization_id", updatable = false, insertable = false)
+	@Column(name = "organization_id")
 	private Long organizationId;
 
 	@Column(name = "timezone_def")
