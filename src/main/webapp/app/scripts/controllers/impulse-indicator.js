@@ -400,7 +400,7 @@ angular.module('portalNMC')
         if (angular.isDefined(pathParams.mu)) {
             $scope.deviceMu = pathParams.mu;
         }        
-        
+//console.log($scope.deviceMu);        
         if (angular.isUndefined(tmpTimeDetailType) || (tmpTimeDetailType === null)){
             if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType !== "null")){
 //                indicatorSvc.setTimeDetailType(pathParams.timeDetailType);
@@ -417,9 +417,10 @@ angular.module('portalNMC')
         }
         
         var tmpTDTypeParts = $scope.timeDetailType.split("_");
+//console.log(tmpTDTypeParts);        
         if (tmpTDTypeParts.length > 1) {
             $scope.timeType = tmpTDTypeParts[0];
-            $scope.detailType = tmpTDTypeParts[1];
+            $scope.detailType = "_" + tmpTDTypeParts[1];
         } else if (tmpTDTypeParts.length = 1) {
             $scope.timeType = tmpTDTypeParts[0];
             $scope.detailType = "";
@@ -510,6 +511,7 @@ angular.module('portalNMC')
                     }                    
                 });
                 $scope.data = data.objects;
+//$scope.data.push(angular.copy($scope.data[0]));
 //console.log($scope.data);            
                 $scope.ctrlSettings.loading = false;
                 $timeout(function() {
@@ -540,7 +542,9 @@ angular.module('portalNMC')
             $scope.tableDef.columns.some(function(element) {    
                 var indicatorTd = document.getElementById("indicators_th_" + element.fieldName);
                 var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
-                var indicatorHead1 = document.getElementById("indicators_head1_" + element.fieldName);
+                if (!mainSvc.checkUndefinedNull($scope.deviceMu)) {
+                    var indicatorHead1 = document.getElementById("indicators_head1_" + element.fieldName);
+                }
 //                var indicatorTdh = document.getElementById("indicators_tdh_" + element.fieldName);
 //console.log("indicators_td_"+element.fieldName);                
 //console.log(indicatorHead.offsetWidth);                    
@@ -549,7 +553,9 @@ angular.module('portalNMC')
 //                    if (indicatorTd.offsetWidth>indicatorHead.offsetWidth){
                         var thWidth = Math.max(indicatorTd.offsetWidth, indicatorTd.clientWidth);
                         indicatorHead.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";          
-                        indicatorHead1.style.width = thWidth + "px";
+                        if (!mainSvc.checkUndefinedNull($scope.deviceMu)) {
+                            indicatorHead1.style.width = thWidth + "px";
+                        }
                         //indicatorTdh.style.width = thWidth + "px";//indicatorTd.offsetWidth+"px";                   
 //                    }else{
 //                        indicatorTd.style.width =indicatorHead.offsetWidth+"px";                   

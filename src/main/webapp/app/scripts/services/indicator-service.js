@@ -442,6 +442,7 @@ app.service('indicatorSvc', function (mainSvc) {
                 "1h": "1h",
                 "24h" : "24h",
                 "1h_abs" : "1h_abs",
+                "24h_abs" : "24h_abs",
                 istunable: false,
                 isvisible: 'isvisible'
             },
@@ -453,6 +454,7 @@ app.service('indicatorSvc', function (mainSvc) {
                 "1h": "1h",
                 "24h" : "24h",
                 "1h_abs" : "1h_abs",
+                "24h_abs" : "24h_abs",
                 istunable: "istunable",
                 isvisible: 'isvisible'
             }
