@@ -230,7 +230,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param subscriberId
 	 * @return
 	 */
-	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);

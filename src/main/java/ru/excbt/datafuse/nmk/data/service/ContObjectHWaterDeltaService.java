@@ -34,8 +34,6 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-
 /**
  * Сервис по работе с вычисляемыми данными по горячей воде
  * 
@@ -343,32 +341,25 @@ public class ContObjectHWaterDeltaService {
 			final Map<Long, ContServiceTypeInfoART> heatContObjectARTs) {
 
 		List<ContObjectServiceTypeInfo> resultList = new ArrayList<>();
-		
-		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
-		// Second check. For safe only
-//		if (contObjectIds.isEmpty()) {
-//			contObjectIds = NO_DATA_IDS;
-//		}
+		List<Long> contObjectIds = contObjects.stream().filter(i -> i.getId() != null).map(i -> i.getId())
+				.collect(Collectors.toList());
+
 		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
+
 		contObjects.forEach((contObject) -> {
-			//ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject, null);
-			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject, contObjectFiasMap.get(contObject.getId()), contObjectGeoPosMap.get(contObject.getId()));
+			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject,
+					contObjectFiasMap.get(contObject.getId()), contObjectGeoPosMap.get(contObject.getId()));
 
-			{
-				ContServiceTypeInfoART hwART = hwContObjectARTs.get(contObject.getId());
-				if (hwART != null) {
-
-					item.addServiceTypeART(hwART);
-				}
-
+			ContServiceTypeInfoART hwART = hwContObjectARTs.get(contObject.getId());
+			if (hwART != null) {
+				item.addServiceTypeART(hwART);
 			}
-			{
-				ContServiceTypeInfoART heatART = heatContObjectARTs.get(contObject.getId());
-				if (heatART != null) {
-					item.addServiceTypeART(heatART);
-				}
+
+			ContServiceTypeInfoART heatART = heatContObjectARTs.get(contObject.getId());
+			if (heatART != null) {
+				item.addServiceTypeART(heatART);
 			}
 
 			resultList.add(item);
