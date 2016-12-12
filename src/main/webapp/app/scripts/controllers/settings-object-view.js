@@ -364,14 +364,20 @@ angular.module('portalNMC')
 //                                        "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
 //                                "</i>";
                         trHTML += "<li>";
-                        if (zpoint.zpointType === 'el'){
+                        if (zpoint.isImpulse === true) {
+                            trHTML += "<a href='#/objects/impulse-indicators/";
+                        } else if (zpoint.zpointType === 'el'){
                             trHTML += "<a href='#/objects/indicator-electricity/";
                         }else{
-                            trHTML+="<a href='#/objects/indicators/";
+                            trHTML += "<a href='#/objects/indicators/";
                         }
 //                        url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
 //                    url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
-                        trHTML += "?objectId=" + object.id + "&zpointId=" + zpoint.id + "&objectName=" + object.fullName + "&zpointName=" + zpoint.zpointName + "&deviceModel=" + zpoint.zpointModel + "&deviceSN=" + zpoint.zpointNumber + "' target=\"_blank\" ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\">" + 
+                        trHTML += "?objectId=" + encodeURIComponent(object.id) + "&zpointId=" + encodeURIComponent(zpoint.id) + "&objectName=" + encodeURIComponent(object.fullName) + "&zpointName=" + encodeURIComponent(zpoint.zpointName) + "&deviceModel=" + encodeURIComponent(zpoint.zpointModel) + "&deviceSN=" + encodeURIComponent(zpoint.zpointNumber);
+                        if (!mainSvc.checkUndefinedNull(zpoint.measureUnitCaption)) {
+                            trHTML += "&mu=" + encodeURIComponent(zpoint.measureUnitCaption);
+                        }
+                        trHTML += "' target=\"_blank\" ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\">" + 
 //                            "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\"" +
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
 //                                    "ng-mousedown=\"setIndicatorsParams(" + object.id + "," + zpoint.id + ")\"" + 
@@ -1191,15 +1197,15 @@ angular.module('portalNMC')
                     } else {
                         url += "/indicators";
                     }
-                    url += "/?objectId=" + objectId + "&zpointId=" + zpointId + "&objectName=" + $scope.currentObject.fullName + "&zpointName=" + $scope.currentZpoint.zpointName;
+                    url += "/?objectId=" + encodeURIComponent(objectId) + "&zpointId=" + encodeURIComponent(zpointId) + "&objectName=" + encodeURIComponent($scope.currentObject.fullName) + "&zpointName=" + encodeURIComponent($scope.currentZpoint.zpointName);
                     //add info about device
 //console.log($scope.currentZpoint);                    
                     
-                    url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
-                    url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                    url += "&deviceModel=" + encodeURIComponent($scope.currentZpoint.zpointModel);
+                    url += "&deviceSN=" + encodeURIComponent($scope.currentZpoint.zpointNumber);
                     
                     if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
-                        url += "&mu=" + $scope.currentZpoint.measureUnitCaption;
+                        url += "&mu=" + encodeURIComponent($scope.currentZpoint.measureUnitCaption);
                     }
                     
                     window.open(url, '_blank');

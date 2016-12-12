@@ -1007,15 +1007,15 @@ angular.module('portalNMC')
                     } else {
                         url += "/indicators";
                     }                    
-                    url += "/?objectId=" + objectId + "&zpointId=" + zpointId + "&objectName=" + $scope.currentObject.fullName + "&zpointName=" + $scope.currentZpoint.zpointName;
+                    url += "/?objectId=" + encodeURIComponent(objectId) + "&zpointId=" + encodeURIComponent(zpointId) + "&objectName=" + encodeURIComponent($scope.currentObject.fullName) + "&zpointName=" + encodeURIComponent($scope.currentZpoint.zpointName);
                     //add info about device
 //console.log($scope.currentZpoint);                    
                     
-                    url += "&deviceModel=" + $scope.currentZpoint.zpointModel;
-                    url += "&deviceSN=" + $scope.currentZpoint.zpointNumber;
+                    url += "&deviceModel=" + encodeURIComponent($scope.currentZpoint.zpointModel);
+                    url += "&deviceSN=" + encodeURIComponent($scope.currentZpoint.zpointNumber);
                     
                     if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
-                        url += "&mu=" + $scope.currentZpoint.measureUnitCaption;
+                        url += "&mu=" + encodeURIComponent($scope.currentZpoint.measureUnitCaption);
                     }   
                     
                     window.open(url, '_blank');
