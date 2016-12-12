@@ -60,10 +60,10 @@ angular.module('portalNMC')
                 return false;
             }
             response.data.forEach(function (el) {
-                if (mainSvc.checkUndefinedNull(el.organization) || mainSvc.checkUndefinedNull(el.organization.organizationFullName)) {
+                if (mainSvc.checkUndefinedNull(el.organization)) {
                     return false;
                 }
-                el.organizationName = el.organization.organizationFullName;
+                el.organizationName = el.organization.organizationFullName || el.organization.organizationName;
             });
             $scope.data.clients = response.data;
             

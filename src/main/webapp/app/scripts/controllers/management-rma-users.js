@@ -74,8 +74,11 @@ angular.module('portalNMC')
             if (!angular.isArray(response.data) || response.data.length === 0) {
                 return "Subscribers is incorrect!";
             }
-            response.data.forEach(function(el){
-                el.organizationName = el.organization.organizationFullName;
+            response.data.forEach(function (el) {
+                if (mainSvc.checkUndefinedNull(el.organization)) {
+                    return false;
+                }
+                el.organizationName = el.organization.organizationFullName || el.organization.organizationName;
             });
             $scope.data.clients = response.data;
 //console.log($scope.data.clients);             
