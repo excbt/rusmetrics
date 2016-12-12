@@ -55,8 +55,14 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.clientsUrl;
         $http.get(targetUrl)
         .then(function(response){
-//console.log(response.data);            
-            response.data.forEach(function(el){
+//console.log(response.data);
+            if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data) || !angular.isArray(response.data)) {
+                return false;
+            }
+            response.data.forEach(function (el) {
+                if (mainSvc.checkUndefinedNull(el.organization) || mainSvc.checkUndefinedNull(el.organization.organizationFullName)) {
+                    return false;
+                }
                 el.organizationName = el.organization.organizationFullName;
             });
             $scope.data.clients = response.data;
