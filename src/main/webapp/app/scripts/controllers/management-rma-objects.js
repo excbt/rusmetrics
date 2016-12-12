@@ -1661,12 +1661,19 @@ angular.module('portalNMC')
 //******************************* Work with subscribers ****************************************
 // *********************************************************************************************                
                 //    get subscribers
-                var getClients = function(){
+                var getClients = function() {
                     var targetUrl = $scope.objectCtrlSettings.clientsUrl;
                     $http.get(targetUrl)
-                    .then(function(response){
-                        response.data.forEach(function(el){
+                    .then(function(response) {
+                        if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data) || !angular.isArray(response.data)) {
+                            return false;
+                        }
+                        response.data.forEach(function (el) {
+                            if (mainSvc.checkUndefinedNull(el.organization) || mainSvc.checkUndefinedNull(el.organization.organizationFullName)) {
+                                return false;
+                            }
                             el.organizationName = el.organization.organizationFullName;
+                            
                         });
                         $scope.data.clients = response.data;
 //console.log($scope.data.clients);            
