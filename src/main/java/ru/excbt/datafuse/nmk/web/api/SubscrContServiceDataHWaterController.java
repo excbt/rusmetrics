@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
@@ -60,6 +61,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -641,6 +643,45 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param multipartFiles
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/service/hwater/upload", method = RequestMethod.POST,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> uploadManualDataHWaterMulty(@RequestParam("files") MultipartFile[] multipartFiles) {
+
+		checkNotNull(multipartFiles);
+
+		SubscriberParam subscriberParam = getSubscriberParam();
+
+		UUID trxId = UUID.randomUUID();
+
+		for (MultipartFile multipartFile : multipartFiles) {
+
+			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
+
+			String inFilename = new StringBuilder().append(webAppPropsService.getHWatersCsvInputDir())
+					.append(File.separator).append(subscriberParam.getSubscriberId()).append(File.separator)
+					.append(subscriberParam.getSubscrUserId()).append(File.separator).append(trxId).append('_')
+					.append(fileName).toString();
+
+			File inFile = new File(inFilename);
+
+			try {
+				@SuppressWarnings("unused")
+				String digestMD5 = FileWriterUtils.writeFile(multipartFile.getInputStream(), inFile);
+			} catch (IOException e) {
+				logger.error("Exception:{}", e);
+				return responseInternalServerError(ApiResult.error(e));
+			}
+		}
+
+		return responseOK();
+
 	}
 
 	/**

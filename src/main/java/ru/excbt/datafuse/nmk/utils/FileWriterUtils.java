@@ -58,7 +58,7 @@ public class FileWriterUtils {
 		File dir = outputFile.getParentFile();
 
 		if (!dir.exists()) {
-			logger.info("Making dir: {}", dir.getAbsolutePath());
+			logger.debug("Making dir: {}", dir.getAbsolutePath());
 			dir.mkdirs();
 		}
 
@@ -79,7 +79,8 @@ public class FileWriterUtils {
 			}
 		}
 
-		logger.info("Writed file: {}. Size:{} . MD5: {}", outputFile.getAbsolutePath(), outputFile.length(), digestMD5);
+		logger.debug("Writed file: {}. Size:{} . MD5: {}", outputFile.getAbsolutePath(), outputFile.length(),
+				digestMD5);
 
 		return digestMD5;
 	}
