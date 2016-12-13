@@ -1,0 +1,101 @@
+<div ng-if="uploader && uploader != null" id="upLoadFilesModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="upLoadFilesLabel" tabindex="-1">
+
+	<div class="modal-dialog modal-content nmc-modal-dialog-low ">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="upLoadFilesLabel" class="nmc-h3">
+				Загрузка показаний из файлов 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<div class="marginLeft15 marginRight15">
+                    <input id="upload_hidden"
+                           class="nmc-hide"
+                           ng-disabled="uploadFlag" 
+                           type="file" 
+                           nv-file-select uploader="uploader" multiple/>
+                    <button ng-disabled="uploadFlag" 
+                            onclick="document.getElementById('upload_hidden').click();">Выбрать файлы</button>
+                    <br/>
+                    <div class="marginRight15" >
+                        <div class="nmc-div-file-list">
+
+                            <table class="table noMargin">
+                                <tr ng-repeat="item in uploader.queue">
+                                    <td>
+                                        <span ng-bind="item.file.name"></span>
+                                    </td>
+                                    <td>
+                                        {{item.file.size / 1024 / 1024 | number: 2}} MB
+                                    </td>
+                                    <td>
+<!--
+                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                            <span class="glyphicon glyphicon-trash"></span> Remove
+                                        </button>
+-->
+                                        <button class="btn btn-xs nmc-remove-button" 
+                                                ng-click="item.remove()">
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="progress" style="">
+                            <div class="progress-bar progress-bar-striped active" 
+                                 role="progressbar" 
+                                 aria-valuenow="70" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100" 
+                                 ng-style="{ 'width': uploader.progress + '%' }">
+                                {{uploader.progress + '%'}}
+                            </div>
+                        </div>
+                        <div class="alert alert-success"
+                             role="alert"
+                             ng-show="successOnUpload">
+                            Загрузка успешно завершена!
+                        </div>
+                        <div class="alert alert-danger"
+                             role="alert"
+                             ng-show="errorOnUpload">
+                            Загрузка завершена с ошибкой!
+                        </div>
+
+                    </div>            
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="uploadFile()"
+                                   ng-disabled="uploadFlag || uploader.queue.length == 0"
+								value="Загрузить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#upLoadFileModal');">
+								Закрыть
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
