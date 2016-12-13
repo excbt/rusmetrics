@@ -312,6 +312,13 @@
                                             <li><a href="" ng-click="selectedObject(object.id, false)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>            
                                             <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>            
                                             <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
+                                            <li>
+                                                <a href="" 
+                                                   data-target="#upLoadFilesModal"
+                                                   data-toggle="modal">
+                                                    {{messages.loadIndicators}}
+                                                </a>
+                                            </li>  
 <!--
                                             <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'">
                                                 <a href="" 
@@ -1930,3 +1937,6 @@
       </li>
     </ol>
 </script>
+
+<!-- window: upload file-->
+<upload-files-modal></upload-files-modal>
