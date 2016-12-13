@@ -711,6 +711,19 @@ angular.module('portalNMC')
         return result;
     }
     
+    function errorCallbackHandler(e) {
+        console.log(e);
+        var errorCode = "-1";
+        if (checkUndefinedNull(e) || checkUndefinedNull(e.data)) {
+            errorCode = "ERR_CONNECTION";
+        }
+        if (!checkUndefinedNull(e) && (!checkUndefinedNull(e.resultCode) || (!checkUndefinedNull(e.data) && !checkUndefinedNull(e.data.resultCode)))) {
+            errorCode = e.resultCode || e.data.resultCode;
+        }
+        return getServerErrorByResultCode(errorCode);
+        
+    }
+    
 //    var getServerErrorByResult = function(result){
 ////console.log(resultCode);
 //        var result = DEFAULT_ERROR_MESSAGE;
