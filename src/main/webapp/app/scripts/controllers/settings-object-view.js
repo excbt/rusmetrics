@@ -1,5 +1,5 @@
 /*jslint node: true, white: true, nomen: true*/
-/*global angular, $*/
+/*global angular, $, moment*/
 'use strict';
 
 angular.module('portalNMC')    
@@ -738,7 +738,7 @@ angular.module('portalNMC')
                         text += "<table class='table table-condensed noMargin'>";
                         text += "<tboby>";
                         tdld[key].forEach(function(el){
-                            text += "<tr><td>"
+                            text += "<tr><td>";
                             switch (el.timeDetailType) {
                                 case "1h":
                                     text += "Часовые показания";
@@ -837,13 +837,13 @@ angular.module('portalNMC')
                         curObject.showGroupDetails = !curObject.showGroupDetails;
                     }                                           
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
-                    if (curObject.showGroupDetails === true){                                                
+                    if (curObject.showGroupDetails === true) {                                                
                       
                         var mode = "/vo";
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
                             if (mode === "Ex"){
-                                tmp = response.data.map(function(el){
+                                tmp = response.data.map(function (el) {
                                     var result = {};
                                     result = el.object;
                                     result.lastDataDate = el.lastDataDate;                                    
@@ -851,13 +851,13 @@ angular.module('portalNMC')
 //console.log(el.lastDataDate);                                    
                                     return result;
                                 });
-                            }else{
+                            } else {
                                 tmp = response.data;
                             }
-                            var zPointsByObject = tmp;
-//console.log(tmp);                            
-                            var zpoints = [];
-                            for(var i = 0; i < zPointsByObject.length; i++){
+                            var zPointsByObject = tmp,
+                                zpoints = [],
+                                i;
+                            for(i = 0; i < zPointsByObject.length; i += 1) {
                                 var zpoint = {};                                
 //console.log(zPointsByObject[i]);                                
                                 zpoint.id = zPointsByObject[i].id;
@@ -873,7 +873,7 @@ angular.module('portalNMC')
                                     zpoint.zpointRSO = zPointsByObject[i].rso.organizationFullName || zPointsByObject[i].rso.organizationName;
                                 }else{
                                     zpoint.zpointRSO = "Не задано"
-                                };
+                                }
                                 zpoint.checkoutTime = zPointsByObject[i].checkoutTime;
                                 zpoint.checkoutDay = zPointsByObject[i].checkoutDay;
                                 if((typeof zPointsByObject[i].doublePipe == 'undefined')){
@@ -883,7 +883,7 @@ angular.module('portalNMC')
                                     zpoint.piped = true;
                                     zpoint.doublePipe = (zPointsByObject[i].doublePipe === null) ? false : zPointsByObject[i].doublePipe;
                                     zpoint.singlePipe = !zpoint.doublePipe;
-                                };
+                                }
 //console.log(zpoint);
                                 if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)){                       zpoint.deviceObject = zPointsByObject[i].deviceObjects[0];         
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
@@ -902,10 +902,10 @@ angular.module('portalNMC')
                                         }
                                     }else{
                                         zpoint.zpointModel = "Не задано";
-                                    };
+                                    }
                                     zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;
                                     zpoint.devCaption += zPointsByObject[i].deviceObjects[0].number ? ", №" + zPointsByObject[i].deviceObjects[0].number : "";
-                                };
+                                }
                                 zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;
                                 if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObjectTimeOffset)){
                                     zpoint.zpointTimeOffsetString = prepareTimeOffset(zPointsByObject[i].deviceObjectTimeOffset);
@@ -924,7 +924,7 @@ angular.module('portalNMC')
                             if (angular.isDefined(btnDetail) && (btnDetail != null)){
                                 btnDetail.classList.remove("glyphicon-chevron-right");
                                 btnDetail.classList.add("glyphicon-chevron-down");
-                            };
+                            }
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                             
@@ -939,7 +939,7 @@ angular.module('portalNMC')
                         var btnDetail = document.getElementById("btnDetail" + curObject.id);
                         btnDetail.classList.remove("glyphicon-chevron-down");
                         btnDetail.classList.add("glyphicon-chevron-right");
-                    };
+                    }
                     
                 };
                 
@@ -976,7 +976,7 @@ angular.module('portalNMC')
                     .error(function(e){
                         console.log(e);
                     });
-                };
+                }
                 
                 // ***************************************************************************************
                 //                          **  Работа с отчетами 
@@ -1128,7 +1128,7 @@ angular.module('portalNMC')
                     var element = document.getElementById("zpointRefRange"+zpoint.id);
                     if (angular.isUndefined(element) || element == null){
                         return false;
-                    };
+                    }
                     //Записываем эталонный интервал в таблицу
 //console.log(zpoint);                    
                     switch (zpoint.zpointRefRangeAuto){
@@ -1146,7 +1146,7 @@ angular.module('portalNMC')
                     }
                     $compile(element)($scope);
                     
-                };
+                }
                 
                 //for page "Objects"
                 
@@ -1155,14 +1155,14 @@ angular.module('portalNMC')
                 $scope.showRow = function(obj){
                     if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)){
                         return true;
-                    };                                     
+                    }                                     
                     if($scope.onlyNoRead){
                         if($scope.onlyNoRead == !obj.isRead){
                             return true;
                         }else{
                             return false;
                         }
-                    };
+                    }
                     return true;
                 };
                                
@@ -1223,7 +1223,7 @@ angular.module('portalNMC')
 
                     if (angular.isUndefined($cookies.timeDetailType)||($cookies.timeDetailType=="undefined")||($cookies.timeDetailType=="null")){
                         $cookies.timeDetailType="24h";
-                    };
+                    }
                     
                     $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
 //console.log($scope.currentZpoint);                    
@@ -1251,7 +1251,7 @@ angular.module('portalNMC')
                        case "hw" : zps.zpointType="ГВС"; break;
                        case "cw" : zps.zpointType="ХВ"; break;    
                         default : zps.zpointType=object.zpointType;        
-                    };
+                    }
                     zps.piped = object.piped;
                     zps.singlePipe = object.singlePipe;
                     zps.doublePipe = object.doublePipe;
