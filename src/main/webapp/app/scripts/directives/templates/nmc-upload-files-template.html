@@ -18,7 +18,8 @@
                            ng-disabled="uploadFlag" 
                            type="file" 
                            nv-file-select uploader="uploader" multiple/>
-                    <button ng-disabled="uploadFlag" 
+                    <button ng-disabled="uploadFlag"
+                            ng-class="{'nmc-button-disabled': uploadFlag}"
                             onclick="document.getElementById('upload_hidden').click();">Выбрать файлы</button>
                     <br/>
                     <div class="marginRight15" >

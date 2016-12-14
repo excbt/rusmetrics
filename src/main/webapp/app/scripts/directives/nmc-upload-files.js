@@ -10,7 +10,7 @@ angular.module("portalNMC")
             templateUrl: "scripts/directives/templates/nmc-upload-files-template.html",
             controller: ['$scope', 'FileUploader', 'mainSvc', 'notificationFactory', '$timeout', function ($scope, FileUploader, mainSvc, notificationFactory, $timeout) {
 //console.log($scope);                
-                $scope.serverUrl = "../api/subscr/service/datahwater/contObjects/upload";
+                $scope.serverUrl = "../api/subscr/service/datahwater/contObjects/importData";
                 
                 function errorCallback(e) {
                     var errorObj = mainSvc.errorCallbackHandler(e);
@@ -31,7 +31,6 @@ angular.module("portalNMC")
                         errorCallback(response);
                         $scope.successOnUpload = false;
                         $scope.errorOnUpload = true;
-                        $scope.uploadFlag = false;
                         //notificationFactory.errorInfo(response.resultCode, response.description);
                     };
                     
@@ -47,6 +46,7 @@ angular.module("portalNMC")
 //console.log("onCompleteAll");                        
 //                        $scope.getData(1);
                         $scope.onUploadAll = true;
+//                        $scope.uploadFlag = false;
 //                        $scope.successOnUpload = true;
 //                        $scope.errorOnUpload = false;
             //            $scope.$apply();
@@ -70,7 +70,7 @@ angular.module("portalNMC")
                             $scope.uploadFlag = false;
                             $scope.successOnUpload = false;
                             $scope.errorOnUpload = false;
-                            $scope.onUploadAll = true;
+                            $scope.onUploadAll = false;
                             $scope.$apply();
                         });
                     }, 10);

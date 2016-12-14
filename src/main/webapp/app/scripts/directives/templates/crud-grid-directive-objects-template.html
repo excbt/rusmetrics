@@ -19,7 +19,8 @@
             </a>
         </li>
         
-        <li id="upload_files_2nd_menu_item" role="presentation">
+        <li ng-hide="isTestMode()"
+            id="upload_files_2nd_menu_item" role="presentation">
             <p class="nmc-main-tab-button noMargin nmc-link" 
                href="" 
                aria-controls="upload_files" 
@@ -30,8 +31,13 @@
                 Загрузка показаний из файлов
             </p>
         </li>
-
-    </ul>
+        <i ng-hide="isTestMode()"
+           title="Загрузка показаний из файлов"
+           class="btn glyphicon glyphicon-download-alt gly-rotate-180 pull-right" 
+           data-target="#upLoadFilesModal" 
+           data-toggle="modal">
+        </i>
+    </ul>    
 
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
