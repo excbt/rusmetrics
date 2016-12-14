@@ -18,8 +18,6 @@ public class ServiceDataImportInfo {
 
 	private final Long contZPointId;
 
-	private final String timeDetailType;
-
 	private final String fileName;
 
 	/**
@@ -29,12 +27,10 @@ public class ServiceDataImportInfo {
 	 * @param timeDetailType
 	 * @param fileName
 	 */
-	public ServiceDataImportInfo(Long subscriberId, Long contObjectId, Long contZPointId, String timeDetailType,
-			String fileName) {
+	public ServiceDataImportInfo(Long subscriberId, Long contObjectId, Long contZPointId, String fileName) {
 		this.subscriberId = subscriberId;
 		this.contObjectId = contObjectId;
 		this.contZPointId = contZPointId;
-		this.timeDetailType = timeDetailType;
 		this.fileName = fileName;
 	}
 
@@ -48,10 +44,6 @@ public class ServiceDataImportInfo {
 
 	public Long getContZPointId() {
 		return contZPointId;
-	}
-
-	public String getTimeDetailType() {
-		return timeDetailType;
 	}
 
 	public String getFileName() {

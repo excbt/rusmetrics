@@ -2,7 +2,10 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
+
+import javax.persistence.Tuple;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
@@ -24,6 +28,9 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private SubscrContObjectRepository subscrContObjectRepository;
 
 	/**
 	 * 
@@ -64,6 +71,22 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	public void testSelectContObjectShortInfo() throws Exception {
 		List<ContObjectShortInfo> result = subscrContObjectService.selectSubscriberContObjectsShortInfo(64166466L);
 		result.forEach(i -> logger.info("id:{}", i.getContObjectId()));
+	}
+
+	@Test
+	public void testSubscrDeviceObjects() throws Exception {
+
+		List<Tuple> resultRows = subscrContObjectRepository
+				.selectSubscrDeviceObjectByNumber(getSubscriberParam().getSubscriberId(), Arrays.asList("104115"));
+
+		List<Tuple> resultRows2 = subscrContObjectService.selectSubscriberDeviceObjectByNumber(getSubscriberParam(),
+				Arrays.asList("104115"));
+
+		for (Tuple t : resultRows) {
+			logger.info("subscriberId: {}", t.get("subscriberId"));
+
+		}
+
 	}
 
 }

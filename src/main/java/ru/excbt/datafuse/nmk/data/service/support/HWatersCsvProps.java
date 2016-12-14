@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.DateTime;
 
@@ -56,6 +57,21 @@ public interface HWatersCsvProps {
 		sb.append(RandomStringUtils.randomNumeric(5));
 		sb.append(CSV_EXT);
 		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrUserId
+	 * @param filename
+	 * @return
+	 */
+	public default String getSubscriberCsvPath(Long subscriberId, Long subscrUserId, String filename) {
+		DateTime fileDateTime = DateTime.now();
+		return new StringBuilder().append(getHWatersCsvInputDir()).append(File.separator).append("s_")
+				.append(subscriberId).append(File.separator).append("u_").append(subscrUserId).append(File.separator)
+				.append(FilenameUtils.getBaseName(filename)).append("_").append(fileDateTime.toString("yyyyMMddHHmmss"))
+				.append('.').append(FilenameUtils.getExtension(filename)).toString();
 	}
 
 }

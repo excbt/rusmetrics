@@ -89,4 +89,20 @@ public class DBRowUtils {
 		throw new IllegalArgumentException();
 	}
 
+	/**
+	 * 
+	 * @param arg
+	 * @return
+	 */
+	public static Boolean asBoolean(Object arg) {
+		if (arg == null) {
+			return null;
+		}
+		if (arg instanceof Boolean) {
+			return (Boolean) arg;
+
+		}
+		throw new IllegalArgumentException();
+	}
+
 }

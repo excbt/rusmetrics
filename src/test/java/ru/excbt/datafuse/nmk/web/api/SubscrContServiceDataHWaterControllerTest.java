@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
@@ -265,6 +266,54 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		_testGet(urlStr, requestExtraInitializer);
 
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testManualLoadDataMultipleFiles() throws Exception {
+
+		// Prepare File
+		LocalDatePeriod dp = LocalDatePeriod.builder().dateFrom("2014-04-01").dateTo("2014-04-30").build()
+				.buildEndOfDay();
+		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
+				TimeDetailKey.TYPE_24H, dp);
+
+		byte[] fileBytes = HWatersCsvService.writeHWaterDataToCsv(dataHWater);
+
+		// Processing POST
+
+		String firstFilename = "713631_1_abracadabra.csv";
+		String secondFilename = "1400708_1_abracadabra.csv";
+
+		MockMultipartFile firstFile = new MockMultipartFile("files", firstFilename, "text/plain", fileBytes);
+		MockMultipartFile secondFile = new MockMultipartFile("files", secondFilename, "text/plain", fileBytes);
+
+		String url = "/api/subscr/service/datahwater/contObjects/importData";
+		//				apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
+		//				MANUAL_HW_CONT_ZPOINT_ID));
+
+		ResultActions resultActions = mockMvc.perform(
+				MockMvcRequestBuilders.fileUpload(url).file(firstFile).file(secondFile).with(testSecurityContext()));
+
+		resultActions.andDo(MockMvcResultHandlers.print());
+		resultActions.andExpect(status().is2xxSuccessful());
+		String resultContent = resultActions.andReturn().getResponse().getContentAsString();
+
+		logger.info("Uploaded FileInfoMD5:{}", resultContent);
+
+	}
+
+	@Override
+	public long getSubscriberId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
+	}
+
+	@Override
+	public long getSubscrUserId() {
+		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
 	}
 
 }

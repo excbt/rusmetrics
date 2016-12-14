@@ -59,6 +59,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectService.class);
 
 	private static final List<ContObject> EMPTY_CONT_OBJECTS_LIST = Collections.unmodifiableList(new ArrayList<>());
+
 	@Autowired
 	private SubscrContObjectRepository subscrContObjectRepository;
 
@@ -833,6 +834,22 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectContObjectSubscriberIdsByRma(Long rmaSubscriberId, Long contObjectId) {
 		return subscrContObjectRepository.selectContObjectSubscriberIdsByRma(rmaSubscriberId, contObjectId);
+	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @param deviceObjectNumbers
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Tuple> selectSubscriberDeviceObjectByNumber(SubscriberParam subscriberParam,
+			List<String> deviceObjectNumbers) {
+		checkNotNull(deviceObjectNumbers);
+
+		return deviceObjectNumbers.isEmpty() ? new ArrayList<>()
+				: subscrContObjectRepository.selectSubscrDeviceObjectByNumber(subscriberParam.getSubscriberId(),
+						deviceObjectNumbers);
 	}
 
 }

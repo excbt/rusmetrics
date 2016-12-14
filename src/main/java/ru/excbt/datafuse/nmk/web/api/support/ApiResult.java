@@ -2,6 +2,9 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 
 /**
@@ -17,23 +20,34 @@ public class ApiResult {
 	private final ApiResultCode resultCode;
 	private final String description;
 	private final HttpStatus httpStatus;
+	private final List<String> descriptionLines;
 
 	public ApiResult(ApiResultCode resultCode, String description) {
 		this.resultCode = resultCode;
 		this.description = description;
 		this.httpStatus = null;
+		this.descriptionLines = null;
+	}
+
+	public ApiResult(ApiResultCode resultCode, List<String> descriptionLines) {
+		this.resultCode = resultCode;
+		this.description = null;
+		this.httpStatus = null;
+		this.descriptionLines = descriptionLines != null ? new ArrayList<>(descriptionLines) : null;
 	}
 
 	public ApiResult(ApiResultCode resultCode, String description, HttpStatus httpStatus) {
 		this.resultCode = resultCode;
 		this.description = description;
 		this.httpStatus = httpStatus;
+		this.descriptionLines = null;
 	}
 
 	public ApiResult(ApiResultCode resultCode) {
 		this.resultCode = resultCode;
 		this.description = null;
 		this.httpStatus = null;
+		this.descriptionLines = null;
 	}
 
 	public ApiResultCode getResultCode() {
@@ -55,7 +69,7 @@ public class ApiResult {
 	 */
 	public static ApiResult build(ApiResultCode code) {
 		checkNotNull(code);
-		return new ApiResult(code, null);
+		return new ApiResult(code, null, null);
 	}
 
 	/**
@@ -87,7 +101,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult ok(String description) {
-		return build(ApiResultCode.OK, description);
+		return new ApiResult(ApiResultCode.OK, description);
 	}
 
 	/**
@@ -95,7 +109,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult ok() {
-		return build(ApiResultCode.OK, null);
+		return new ApiResult(ApiResultCode.OK, null, null);
 	}
 
 	/**
@@ -104,7 +118,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult validationError(String description) {
-		return build(ApiResultCode.ERR_VALIDATION, description);
+		return new ApiResult(ApiResultCode.ERR_VALIDATION, description);
 	}
 
 	/**
@@ -113,7 +127,16 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult badRequest(String description) {
-		return build(ApiResultCode.ERR_BAD_REQUEST, description);
+		return new ApiResult(ApiResultCode.ERR_BAD_REQUEST, description);
+	}
+
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
+	public static ApiResult badRequest(List<String> descriptionLines) {
+		return new ApiResult(ApiResultCode.ERR_BAD_REQUEST, descriptionLines);
 	}
 
 	/**
@@ -132,7 +155,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult validationError(String description, Object... args) {
-		return build(ApiResultCode.ERR_VALIDATION, String.format(description, args));
+		return new ApiResult(ApiResultCode.ERR_VALIDATION, String.format(description, args));
 	}
 
 	/**
@@ -141,7 +164,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult error(Exception e) {
-		return build(ApiResultCode.describeException(e), e.getMessage());
+		return new ApiResult(ApiResultCode.describeException(e), e.getMessage());
 	}
 
 	/**
@@ -151,7 +174,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult error(Exception e, HttpStatus httpStatus) {
-		return build(ApiResultCode.describeException(e), e.getMessage(), httpStatus);
+		return new ApiResult(ApiResultCode.describeException(e), e.getMessage(), httpStatus);
 	}
 
 	/**
@@ -161,7 +184,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult error(ApiResultCode apiResultCode, String description, HttpStatus httpStatus) {
-		return build(apiResultCode, description, httpStatus);
+		return new ApiResult(apiResultCode, description, httpStatus);
 	}
 
 	/**
@@ -171,7 +194,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult error(Exception e, String description) {
-		return build(ApiResultCode.describeException(e), description);
+		return new ApiResult(ApiResultCode.describeException(e), description);
 	}
 
 	/**
@@ -180,7 +203,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult internalError(String description) {
-		return build(ApiResultCode.ERR_INTERNAL, description);
+		return new ApiResult(ApiResultCode.ERR_INTERNAL, description);
 	}
 
 	/**
@@ -189,11 +212,15 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult invalidState(String description) {
-		return build(ApiResultCode.ERR_INVALID_STATE, description);
+		return new ApiResult(ApiResultCode.ERR_INVALID_STATE, description);
 	}
 
 	public HttpStatus getHttpStatus() {
 		return httpStatus;
+	}
+
+	public List<String> getDescriptionLines() {
+		return descriptionLines;
 	}
 
 }

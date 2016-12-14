@@ -9,11 +9,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,12 +55,15 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
+import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContObjectHWaterDeltaService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
@@ -96,9 +101,6 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(ReportService.DATE_TEMPLATE);
 
 	@Autowired
-	private ContServiceDataHWaterService contServiceDataHWaterService;
-
-	@Autowired
 	private ContZPointService contZPointService;
 
 	@Autowired
@@ -111,7 +113,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
+	private ContServiceDataHWaterService contServiceDataHWaterService;
+
+	@Autowired
 	private ContObjectHWaterDeltaService contObjectHWaterDeltaService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -650,24 +658,91 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	 * @param multipartFiles
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/service/hwater/upload", method = RequestMethod.POST,
+	@RequestMapping(value = "/service/datahwater/contObjects/importData", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> uploadManualDataHWaterMulty(@RequestParam("files") MultipartFile[] multipartFiles) {
+	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 		checkNotNull(multipartFiles);
 
 		SubscriberParam subscriberParam = getSubscriberParam();
 
+		List<String> fileNameErrorDesc = new ArrayList<>();
+		List<String[]> fileNameData = new ArrayList<>();
+
+		// Check file names
+		for (MultipartFile multipartFile : multipartFiles) {
+			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
+			if (fileName == null) {
+				return responseBadRequest();
+			}
+
+			String[] nameParts = fileName.split("_");
+			if (nameParts == null || nameParts.length < 2) {
+				fileNameErrorDesc.add("Некоррекное имя файла: " + fileName);
+				break;
+			}
+
+			fileNameData.add(new String[] { nameParts[0], nameParts[1], fileName });
+		}
+
+		if (fileNameErrorDesc.size() > 0) {
+			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
+		}
+
+		logger.info("Looking for subscriberId: {}, serials: {}", getSubscriberParam().getSubscriberId(),
+				fileNameData.stream().map(i -> i[0]).collect(Collectors.toList()));
+
+		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
+				getSubscriberParam(), fileNameData.stream().map(i -> i[0]).collect(Collectors.toList()));
+
+		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
+				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
+
+		for (String[] s : fileNameData) {
+
+			final List<Tuple> checkRows = deviceObjectsData.stream()
+					.filter(i -> s[0].equals(i.get("deviceObjectNumber").toString())
+							&& s[1].equals(i.get("tsNumber").toString()))
+					.collect(Collectors.toList());
+
+			if (checkRows.size() == 0) {
+				fileNameErrorDesc.add(String.format(
+						"Точка учета с прибором № %s и теплосистемой № %s не найдена. Файл: %s", s[0], s[1], s[2]));
+				continue;
+			}
+
+			if (checkRows.size() > 1) {
+				fileNameErrorDesc.add(String.format(
+						"Точка учета с прибором № %s и теплосистемой № %s не уникальна. Файл: %s", s[0], s[1], s[2]));
+				continue;
+			}
+
+			final Tuple row = checkRows.get(0);
+
+			if (!Boolean.TRUE.equals(DBRowUtils.asBoolean(row.get("isManualLoading")))) {
+				fileNameErrorDesc.add(String.format(
+						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают загрузку данных. Файл: %s",
+						s[0], s[1], s[2]));
+				continue;
+			}
+
+			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
+					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")), s[2]);
+		}
+
+		if (fileNameErrorDesc.size() > 0) {
+			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
+		}
+
+		// All conditions is passed
 		UUID trxId = UUID.randomUUID();
 
 		for (MultipartFile multipartFile : multipartFiles) {
 
 			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
 
-			String inFilename = new StringBuilder().append(webAppPropsService.getHWatersCsvInputDir())
-					.append(File.separator).append(subscriberParam.getSubscriberId()).append(File.separator)
-					.append(subscriberParam.getSubscrUserId()).append(File.separator).append(trxId).append('_')
-					.append(fileName).toString();
+			String inFilename = webAppPropsService.getSubscriberCsvPath(subscriberParam.getSubscriberId(),
+					subscriberParam.getSubscrUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
 
 			File inFile = new File(inFilename);
 

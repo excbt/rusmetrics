@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Tuple;
+
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -221,5 +223,17 @@ public interface SubscrContObjectRepository
 			+ " AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
 	public List<Long> selectContObjectSubscriberIdsByRma(@Param("rmaSubscriberId") Long rmaSubscriberId,
 			@Param("contObjectId") Long contObjectId);
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Query(value = "SELECT sco.subscriberId as subscriberId, sco.contObjectId as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, "
+			+ " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber"
+			+ " FROM SubscrContObject sco, ContZPoint zp INNER JOIN zp.deviceObjects d "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL AND zp.contObjectId= "
+			+ " sco.contObjectId AND d.number IN (:deviceObjectNumbers) ")
+	public List<Tuple> selectSubscrDeviceObjectByNumber(@Param("subscriberId") Long subscriberId,
+			@Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
 
 }
