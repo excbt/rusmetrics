@@ -12,6 +12,7 @@
 		<div class="modal-body nmc-modal-body">
 			<form name="confirmActionForm" novalidate>
 				<div class="marginLeft15 marginRight15">
+<!--                    <input type="text" class="form-control" ng-model="serverUrl">-->
                     <input id="upload_hidden"
                            class="nmc-hide"
                            ng-disabled="uploadFlag" 
@@ -24,7 +25,8 @@
                         <div class="nmc-div-file-list">
 
                             <table class="table noMargin">
-                                <tr ng-repeat="item in uploader.queue">
+                                <tr ng-repeat="item in uploader.queue"
+                                    ng-class="{'alert-danger': item.isError, 'alert-success': item.isSuccess}">
                                     <td>
                                         <span ng-bind="item.file.name"></span>
                                     </td>
@@ -59,13 +61,13 @@
                         </div>
                         <div class="alert alert-success"
                              role="alert"
-                             ng-show="successOnUpload">
-                            Загрузка успешно завершена!
+                             ng-show="onUploadAll">
+                            Загрузка завершена!
                         </div>
                         <div class="alert alert-danger"
                              role="alert"
                              ng-show="errorOnUpload">
-                            Загрузка завершена с ошибкой!
+                            При загрузке возникли ошибки!
                         </div>
 
                     </div>            
@@ -78,8 +80,8 @@
 					<div class="row">
 						<div class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="uploadFile()"
-                                   ng-disabled="uploadFlag || uploader.queue.length == 0"
+								ng-click="uploadFiles()"
+                                   ng-disabled="uploadFlag || !uploader.getNotUploadedItems().length"
 								value="Загрузить" />
 						</div>
 
@@ -92,10 +94,12 @@
 					</div>
 				</div>		
 		</div>
+<!--
 		<span class="alert alert-error dialogErrorMessage"
 			ng-show="errorOnSubmit"> Request error
 		</span> <span class="alert alert-error dialogErrorMessage"
 			ng-show="errorIllegalAccess"> Request illegal access
 		</span>
+-->
 	</div>
 </div>
