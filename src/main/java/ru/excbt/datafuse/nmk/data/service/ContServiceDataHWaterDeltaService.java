@@ -44,9 +44,9 @@ import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
  */
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-public class ContObjectHWaterDeltaService {
+public class ContServiceDataHWaterDeltaService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContObjectHWaterDeltaService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterDeltaService.class);
 
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
@@ -65,7 +65,7 @@ public class ContObjectHWaterDeltaService {
 	 * @param timeDetailType
 	 * @return
 	 */
-	public List<Object[]> selectRawContObjectHWaterDeltaAgr(Long subscriberId, LocalDatePeriod ldp,
+	public List<Object[]> selectRawHWaterDeltaAgr(Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey, Long contObjectId) {
 
 		checkNotNull(subscriberId);
@@ -121,7 +121,7 @@ public class ContObjectHWaterDeltaService {
 	 * @param cityFiasUUID
 	 * @return
 	 */
-	public List<Object[]> selectRawContObjectHWaterDeltaAgr_ByCity(Long subscriberId, LocalDatePeriod ldp,
+	public List<Object[]> selectRawHWaterDeltaAgr_ByCity(Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey, UUID cityFiasUUID) {
 
 		checkNotNull(subscriberId);
@@ -173,10 +173,10 @@ public class ContObjectHWaterDeltaService {
 	 * @param timeDetailType
 	 * @return
 	 */
-	protected Map<Long, ContServiceTypeInfoART> selectContObjectHWaterDeltaART(Long subscriberId, LocalDatePeriod ldp,
+	protected Map<Long, ContServiceTypeInfoART> selectHWaterDeltaART(Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey) {
 
-		List<Object[]> contObjectHWaterDeltaAgr = selectRawContObjectHWaterDeltaAgr(subscriberId, ldp,
+		List<Object[]> contObjectHWaterDeltaAgr = selectRawHWaterDeltaAgr(subscriberId, ldp,
 				contServiceTypeKey, timeDetailKey, null);
 
 		Map<Long, ContServiceTypeInfoART> resultMap = processRawServiceTypeARTRecords(contServiceTypeKey,
@@ -193,10 +193,10 @@ public class ContObjectHWaterDeltaService {
 	 * @param timeDetailKey
 	 * @return
 	 */
-	public Map<Long, ContServiceTypeInfoART> selectContObjectHWaterDeltaART(Long subscriberId, LocalDatePeriod ldp,
+	public Map<Long, ContServiceTypeInfoART> selectHWaterDeltaART(Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey, Long contObjectId) {
 
-		List<Object[]> contObjectHWaterDeltaAgr = selectRawContObjectHWaterDeltaAgr(subscriberId, ldp,
+		List<Object[]> contObjectHWaterDeltaAgr = selectRawHWaterDeltaAgr(subscriberId, ldp,
 				contServiceTypeKey, timeDetailKey, contObjectId);
 
 		Map<Long, ContServiceTypeInfoART> resultMap = processRawServiceTypeARTRecords(contServiceTypeKey,
@@ -214,11 +214,11 @@ public class ContObjectHWaterDeltaService {
 	 * @param cityFiasUUID
 	 * @return
 	 */
-	public Map<Long, ContServiceTypeInfoART> selectContObjectHWaterDeltaART_ByCity(Long subscriberId,
+	public Map<Long, ContServiceTypeInfoART> selectHWaterDeltaART_ByCity(Long subscriberId,
 			LocalDatePeriod ldp, ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey,
 			UUID cityFiasUUID) {
 
-		List<Object[]> contObjectHWaterDeltaAgr = selectRawContObjectHWaterDeltaAgr_ByCity(subscriberId, ldp,
+		List<Object[]> contObjectHWaterDeltaAgr = selectRawHWaterDeltaAgr_ByCity(subscriberId, ldp,
 				contServiceTypeKey, timeDetailKey, cityFiasUUID);
 
 		Map<Long, ContServiceTypeInfoART> resultMap = processRawServiceTypeARTRecords(contServiceTypeKey,
@@ -259,7 +259,7 @@ public class ContObjectHWaterDeltaService {
 	 * @param timeDetailKey
 	 * @return
 	 */
-	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfoList(Long subscriberId, LocalDatePeriod ldp,
+	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfo(Long subscriberId, LocalDatePeriod ldp,
 			Long contObjectId) {
 
 		checkNotNull(subscriberId, "subscriberId is null");
@@ -279,10 +279,10 @@ public class ContObjectHWaterDeltaService {
 			contObjects.add(contObject);
 		}
 
-		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART(subscriberId, ldp,
+		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectHWaterDeltaART(subscriberId, ldp,
 				ContServiceTypeKey.HW, TimeDetailKey.TYPE_24H, contObjectId);
 
-		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectContObjectHWaterDeltaART(subscriberId, ldp,
+		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectHWaterDeltaART(subscriberId, ldp,
 				ContServiceTypeKey.HEAT, TimeDetailKey.TYPE_24H, contObjectId);
 
 		List<ContObjectServiceTypeInfo> resultList = processContObjectServiceTypeInfo(contObjects, hwContObjectARTs,
@@ -298,7 +298,7 @@ public class ContObjectHWaterDeltaService {
 	 * @param contObjectId
 	 * @return
 	 */
-	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfoList_ByCity(Long subscriberId,
+	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfo_ByCity(Long subscriberId,
 			LocalDatePeriod ldp, UUID cityFiasUUID) {
 
 		checkNotNull(subscriberId, "subscriberId is null");
@@ -317,10 +317,10 @@ public class ContObjectHWaterDeltaService {
 						&& cityFiasUUID.equals(contObjectFiasMap.get(i.getId()).getCityFiasUUID()))
 				.collect(Collectors.toList());
 
-		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART_ByCity(subscriberId, ldp,
+		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectHWaterDeltaART_ByCity(subscriberId, ldp,
 				ContServiceTypeKey.HW, TimeDetailKey.TYPE_24H, cityFiasUUID);
 
-		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectContObjectHWaterDeltaART_ByCity(subscriberId, ldp,
+		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectHWaterDeltaART_ByCity(subscriberId, ldp,
 				ContServiceTypeKey.HEAT, TimeDetailKey.TYPE_24H, cityFiasUUID);
 
 		List<ContObjectServiceTypeInfo> resultList = processContObjectServiceTypeInfo(cityContObjects, hwContObjectARTs,
@@ -374,10 +374,10 @@ public class ContObjectHWaterDeltaService {
 	 * @param ldp
 	 * @return
 	 */
-	public List<CityContObjectsServiceTypeInfo> getAllCityMapContObjectsServiceTypeInfoList(Long subscriberId,
+	public List<CityContObjectsServiceTypeInfo> getAllCityMapContObjectsServiceTypeInfo(Long subscriberId,
 			LocalDatePeriod ldp) {
 
-		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfoList(subscriberId, ldp, null);
+		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfo(subscriberId, ldp, null);
 		List<CityContObjectsServiceTypeInfo> result = CityContObjects.makeCityContObjects(allInfo,
 				CityContObjectsServiceTypeInfo.FACTORY_INSTANCE);
 		return result;
@@ -390,10 +390,10 @@ public class ContObjectHWaterDeltaService {
 	 * @param cityFiasUUID
 	 * @return
 	 */
-	public List<CityContObjectsServiceTypeInfo> getOneCityMapContObjectsServiceTypeInfoList(Long subscriberId,
+	public List<CityContObjectsServiceTypeInfo> getOneCityMapContObjectsServiceTypeInfo(Long subscriberId,
 			LocalDatePeriod ldp, UUID cityFiasUUID) {
 
-		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfoList_ByCity(subscriberId, ldp,
+		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfo_ByCity(subscriberId, ldp,
 				cityFiasUUID);
 
 		List<CityContObjectsServiceTypeInfo> result = CityContObjects.makeCityContObjects(allInfo,

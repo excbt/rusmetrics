@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingType;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingTypeCategory;
@@ -48,7 +46,7 @@ public class BuildingTypeService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<BuildingTypeCategory> selectAllBuildingTypeCategories() {
-		return Lists.newArrayList(buildingTypeCategoryRepository.findAll());
+		return buildingTypeCategoryRepository.selectAllBuildingTypes();
 	}
 
 }

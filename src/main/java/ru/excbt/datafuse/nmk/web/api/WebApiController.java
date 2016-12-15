@@ -335,7 +335,7 @@ public class WebApiController {
 	 * @param destClass
 	 * @return
 	 */
-	protected <S, M> List<M> modelMapperList(Collection<S> srcList, Class<M> destClass) {
+	protected <S, M> List<M> makeModelMapper(Collection<S> srcList, Class<M> destClass) {
 		checkNotNull(srcList);
 		return srcList.stream().map((i) -> modelMapper.map(i, destClass)).collect(Collectors.toList());
 	}
@@ -346,7 +346,7 @@ public class WebApiController {
 	 * @param destClass
 	 * @return
 	 */
-	protected <S, M> List<M> modelMapperList(Stream<S> srcStream, Class<M> destClass) {
+	protected <S, M> List<M> makeModelMapper(Stream<S> srcStream, Class<M> destClass) {
 		checkNotNull(srcStream);
 		return srcStream.map((i) -> modelMapper.map(i, destClass)).collect(Collectors.toList());
 	}

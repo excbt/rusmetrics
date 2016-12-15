@@ -57,7 +57,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.service.ContObjectHWaterDeltaService;
+import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterDeltaService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
@@ -116,7 +116,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	private ContServiceDataHWaterService contServiceDataHWaterService;
 
 	@Autowired
-	private ContObjectHWaterDeltaService contObjectHWaterDeltaService;
+	private ContServiceDataHWaterDeltaService contObjectHWaterDeltaService;
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
@@ -903,7 +903,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getAllCityMapContObjectsServiceTypeInfoList(getCurrentSubscriberId(),
+				.getAllCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return responseOK(resultList);
@@ -937,7 +937,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
-				.getContObjectServiceTypeInfoList(getCurrentSubscriberId(),
+				.getContObjectServiceTypeInfo(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectId);
 
 		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
@@ -975,7 +975,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getOneCityMapContObjectsServiceTypeInfoList(getCurrentSubscriberId(),
+				.getOneCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), cityFiasUUID);
 
 		return responseOK(resultList);

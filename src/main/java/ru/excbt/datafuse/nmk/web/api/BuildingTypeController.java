@@ -39,7 +39,7 @@ public class BuildingTypeController extends WebApiController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getBuildingType() {
 		List<BuildingType> resultList = buildingTypeService.selectAllBuildingTypes();
-		return responseOK(modelMapperList(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
+		return responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
 				BuildingTypeDto.class));
 	}
 
@@ -50,7 +50,7 @@ public class BuildingTypeController extends WebApiController {
 	@RequestMapping(value = "/category/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getBuildingTypeCategory() {
 		List<BuildingTypeCategory> resultList = buildingTypeService.selectAllBuildingTypeCategories();
-		return responseOK(modelMapperList(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
+		return responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
 				BuildingTypeCategoryDto.class));
 	}
 

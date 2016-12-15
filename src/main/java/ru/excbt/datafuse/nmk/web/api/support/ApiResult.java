@@ -7,9 +7,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 /**
  * Результат REST запроса
  * 
@@ -18,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @since 15.05.2015
  *
  */
-@JsonInclude(value = Include.NON_NULL)
 public class ApiResult {
 
 	private final ApiResultCode resultCode;

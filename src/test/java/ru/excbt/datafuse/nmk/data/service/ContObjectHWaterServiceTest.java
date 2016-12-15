@@ -24,7 +24,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 			.getLogger(ContObjectHWaterServiceTest.class);
 
 	@Autowired
-	private ContObjectHWaterDeltaService contObjectHWaterService;
+	private ContServiceDataHWaterDeltaService contObjectHWaterService;
 
 	/**
 	 * 
@@ -35,7 +35,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 	public void testDeltaAgr() throws Exception {
 
 		List<Object[]> result = contObjectHWaterService
-				.selectRawContObjectHWaterDeltaAgr(728L,
+				.selectRawHWaterDeltaAgr(728L,
 						LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW,
 						TimeDetailKey.TYPE_1H, null);
 
@@ -47,7 +47,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 
 		Map<Long, ContServiceTypeInfoART> resultMap =
 
-		contObjectHWaterService.selectContObjectHWaterDeltaART(728L,
+		contObjectHWaterService.selectHWaterDeltaART(728L,
 				LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW,
 				TimeDetailKey.TYPE_1H);
 
@@ -62,7 +62,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 	public void testDeltaInfoByCity() throws Exception {
 		Map<Long, ContServiceTypeInfoART> resultMap =
 
-		contObjectHWaterService.selectContObjectHWaterDeltaART_ByCity(728L,
+		contObjectHWaterService.selectHWaterDeltaART_ByCity(728L,
 				LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW,
 				TimeDetailKey.TYPE_1H,
 				UUID.fromString("deb1d05a-71ce-40d1-b726-6ba85d70d58f"));
