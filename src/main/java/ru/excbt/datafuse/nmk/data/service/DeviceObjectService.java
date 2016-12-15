@@ -277,15 +277,17 @@ public class DeviceObjectService implements SecuredRoles {
 				List<DeviceMetadata> deviceMetadataList = deviceMetadataService.selectDeviceMetadata(
 						deviceObject.getDeviceModelId(), DeviceMetadataService.DEVICE_METADATA_TYPE);
 				// Если изменилась модель, а новых типовых метаданных нет, то бросаем exception
-				if (deviceMetadataList.size() == 0) {
-					throw new PersistenceException(String.format("DeviceMetadata for DeviceModel (id=%d) is not found",
-							deviceObject.getDeviceModelId()));
+				if (deviceMetadataList.size() != 0) {
+					// Удаляем текущие метаданные
+					deviceObjectMetadataService.deleteDeviceObjectMetadata(deviceObject.getId());
+					// Заполняем типовые метаданные
+					deviceObjectMetadataService.copyDeviceMetadata(deviceObject.getDeviceModelId(),
+							deviceObject.getId());
+				} else {
+					//					throw new PersistenceException(String.format("DeviceMetadata for DeviceModel (id=%d) is not found",
+					//					deviceObject.getDeviceModelId()));
 				}
 
-				// Удаляем текущие метаданные
-				deviceObjectMetadataService.deleteDeviceObjectMetadata(deviceObject.getId());
-				// Заполняем типовые метаданные
-				deviceObjectMetadataService.copyDeviceMetadata(deviceObject.getDeviceModelId(), deviceObject.getId());
 			}
 
 		}
