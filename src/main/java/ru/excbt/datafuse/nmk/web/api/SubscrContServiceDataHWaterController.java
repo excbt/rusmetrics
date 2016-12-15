@@ -755,7 +755,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			}
 		}
 
-		return responseOK(ApiResult.ok(trxId.toString()));
+		return responseOK(trxId.toString());
 
 	}
 

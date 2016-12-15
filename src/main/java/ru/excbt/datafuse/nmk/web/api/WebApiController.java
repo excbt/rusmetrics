@@ -5,11 +5,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -53,6 +59,9 @@ public class WebApiController {
 	public final static String MIME_TEXT = "text/html";
 
 	public final static String FILE_CSV_EXT = ".csv";
+
+	@Autowired
+	protected ModelMapper modelMapper;
 
 	/**
 	 * 
@@ -319,4 +328,27 @@ public class WebApiController {
 
 		return processDownloadResource(resource, mediaType, contentLength, filename, true);
 	}
+
+	/**
+	 * 
+	 * @param srcList
+	 * @param destClass
+	 * @return
+	 */
+	protected <S, M> List<M> modelMapperList(Collection<S> srcList, Class<M> destClass) {
+		checkNotNull(srcList);
+		return srcList.stream().map((i) -> modelMapper.map(i, destClass)).collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @param srcStream
+	 * @param destClass
+	 * @return
+	 */
+	protected <S, M> List<M> modelMapperList(Stream<S> srcStream, Class<M> destClass) {
+		checkNotNull(srcStream);
+		return srcStream.map((i) -> modelMapper.map(i, destClass)).collect(Collectors.toList());
+	}
+
 }
