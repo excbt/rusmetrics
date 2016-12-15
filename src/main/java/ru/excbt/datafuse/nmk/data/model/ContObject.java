@@ -139,6 +139,15 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "is_valid_geo_pos")
 	private Boolean isValidGeoPos;
 
+	@Column(name = "building_type")
+	private String buildingType;
+
+	@Column(name = "building_type_category")
+	private String buildingTypeCategory;
+
+	@Column(name = "num_of_storeys")
+	private Integer numOfStories;
+
 	public String getName() {
 		return name;
 	}
@@ -364,6 +373,30 @@ public class ContObject extends AbstractAuditableModel
 
 	public void setIsValidGeoPos(Boolean isValidGeoPos) {
 		this.isValidGeoPos = isValidGeoPos;
+	}
+
+	public String getBuildingType() {
+		return buildingType;
+	}
+
+	public void setBuildingType(String buildingType) {
+		this.buildingType = buildingType;
+	}
+
+	public String getBuildingTypeCategory() {
+		return buildingTypeCategory;
+	}
+
+	public void setBuildingTypeCategory(String buildingTypeCategory) {
+		this.buildingTypeCategory = buildingTypeCategory;
+	}
+
+	public Integer getNumOfStories() {
+		return numOfStories;
+	}
+
+	public void setNumOfStories(Integer numOfStories) {
+		this.numOfStories = numOfStories;
 	}
 
 	/**
