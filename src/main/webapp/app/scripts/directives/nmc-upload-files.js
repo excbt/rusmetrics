@@ -11,17 +11,23 @@ angular.module("portalNMC")
             controller: ['$scope', 'FileUploader', 'mainSvc', 'notificationFactory', '$timeout', function ($scope, FileUploader, mainSvc, notificationFactory, $timeout) {
 //console.log($scope);                
                 $scope.serverUrl = "../api/subscr/service/datahwater/contObjects/importData";
+                $scope.messages = [];
                 
                 function errorCallback(e) {
-                    var errorObj = mainSvc.errorCallbackHandler(e);
-                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//                    var errorObj = mainSvc.errorCallbackHandler(e);
+//                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+                    console.log(e);
+                    if (mainSvc.checkUndefinedNull(e) ||  !angular.isArray(e.descriptionLines)) {
+                        return false;
+                    }
+                    $scope.messages.push(e.descriptionLines[0]);
                 }
                 
                 //file upload settings
                 $scope.initFileUploader =  function () {
 //console.log("initFileUploader");                    
 //                    var url = "../api/subscr/service/datahwater/contObjects/upload";
-                    $scope.uploader = new FileUploader({url: $scope.serverUrl});
+                    $scope.uploader = new FileUploader({url: $scope.serverUrl, alias: "files"});
 //                    $scope.uploader = new FileUploader();
 //console.log($scope.uploader);
 //console.log(typeof $scope.uploader);                    
@@ -71,6 +77,7 @@ angular.module("portalNMC")
                             $scope.successOnUpload = false;
                             $scope.errorOnUpload = false;
                             $scope.onUploadAll = false;
+                            $scope.messages = [];
                             $scope.$apply();
                         });
                     }, 10);

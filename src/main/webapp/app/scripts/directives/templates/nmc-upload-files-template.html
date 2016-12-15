@@ -1,18 +1,16 @@
 <div ng-if="uploader && uploader != null" id="upLoadFilesModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="upLoadFilesLabel" tabindex="-1">
-
-	<div class="modal-dialog modal-content nmc-modal-dialog-low ">
+	<div class="modal-dialog modal-content">
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="upLoadFilesLabel" class="nmc-h3">
-				Загрузка показаний из файлов 
+				Загрузка показаний из файлов
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body">
 			<form name="confirmActionForm" novalidate>
 				<div class="marginLeft15 marginRight15">
-<!--                    <input type="text" class="form-control" ng-model="serverUrl">-->
                     <input id="upload_hidden"
                            class="nmc-hide"
                            ng-disabled="uploadFlag" 
@@ -27,7 +25,9 @@
 
                             <table class="table noMargin">
                                 <tr ng-repeat="item in uploader.queue"
-                                    ng-class="{'alert-danger': item.isError, 'alert-success': item.isSuccess}">
+                                    ng-class="{'alert-danger': item.isError, 'alert-success': item.isSuccess}"
+                                    ng-attr-title="item.message"
+                                    >
                                     <td>
                                         <span ng-bind="item.file.name"></span>
                                     </td>
@@ -35,22 +35,15 @@
                                         {{item.file.size / 1024 / 1024 | number: 2}} MB
                                     </td>
                                     <td>
-<!--
-                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                                        </button>
-                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                            <span class="glyphicon glyphicon-trash"></span> Remove
-                                        </button>
--->
-                                        <button class="btn btn-xs nmc-remove-button" 
+                                        <button class="btn btn-xs nmc-remove-button"
+                                                ng-disabled="uploadFlag"
                                                 ng-click="item.remove()">
                                         </button>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                        <div class="progress" style="">
+                        <div class="progress">
                             <div class="progress-bar progress-bar-striped active" 
                                  role="progressbar" 
                                  aria-valuenow="70" 
@@ -65,10 +58,15 @@
                              ng-show="onUploadAll">
                             Загрузка завершена!
                         </div>
-                        <div class="alert alert-danger"
+                        <div class="alert alert-danger nmc-div-file-list"
                              role="alert"
                              ng-show="errorOnUpload">
                             При загрузке возникли ошибки!
+                            <table class="table">
+                                <tr ng-repeat="message in messages">
+                                    <td><span ng-bind="message"></span></td>
+                                </tr>
+                            </table>
                         </div>
 
                     </div>            
@@ -95,12 +93,5 @@
 					</div>
 				</div>		
 		</div>
-<!--
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
--->
 	</div>
 </div>
