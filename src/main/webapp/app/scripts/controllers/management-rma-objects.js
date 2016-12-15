@@ -1975,7 +1975,7 @@ angular.module('portalNMC')
                 
                 $('#showObjOptionModal').on('hidden.bs.modal', function(){
                     $scope.currentObject.isSaving = false;
-                    $scope.currentSug = null;
+                    $scope.currentSug = null;                    
                 });
                 
 // *****************************************************************************************
@@ -2202,6 +2202,23 @@ console.log(tmpSrc);
 // ********************************************************************************************
                 //  end TREEVIEW
 //*********************************************************************************************
+// ********************************************************************************************
+                //  Building types
+//*********************************************************************************************
+                $scope.data.buildingTypes = [];
+                $scope.data.buildingCategories = [];
+                $scope.data.buildingCategories = objectSvc.getBuildingCategories();
+                $scope.data.buildingTypes = objectSvc.getBuildingTypes();
+                $scope.$on(objectSvc.BROADCASTS.BUILDING_TYPES_LOADED, function () {
+                    $scope.data.buildingTypes = objectSvc.getBuildingTypes();
+                });
+                $scope.$on(objectSvc.BROADCASTS.BUILDING_CATEGORIES_LOADED, function () {
+                    $scope.data.buildingCategories = objectSvc.getBuildingCategories();
+                });
+// ********************************************************************************************
+                //  end Building types
+//*********************************************************************************************                
+                
                 
                 //set focus on first input element when window will be opened                
                 $('#showTreeOptionModal').on('shown.bs.modal', function(){                   
@@ -2214,6 +2231,7 @@ console.log(tmpSrc);
                 
                 $('#showObjOptionModal').on('shown.bs.modal', function(){
                     $('#inputContObjectName').focus();
+                    $('#inputNumOfStories').inputmask();
                 });
                 
                 $('#showZpointOptionModal').on('shown.bs.modal', function(){

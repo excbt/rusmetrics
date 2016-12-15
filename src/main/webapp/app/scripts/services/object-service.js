@@ -12,6 +12,9 @@ angular.module('portalNMC')
         ];
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
             OBJECT_PER_SCROLL = 38;
+        var BROADCASTS = {};
+        BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
+        BROADCASTS.BUILDING_CATEGORIES_LOADED = "objectSvc:buildingCategoriesLoaded";
         var loading = true,
             urlApi = '../api',
             urlSubscr = urlApi + '/subscr',
@@ -37,7 +40,9 @@ angular.module('portalNMC')
             urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits",
             rmaTreeTemplatesUrl = urlSubscr + '/subscrObjectTreeTemplates',
             controlTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1',
-            subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';
+            subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1',
+            urlBuildingTypes = urlSubscr + '/service/buildingType/list',
+            urlBuildingCategories = urlSubscr + '/service/buildingType/category/list';
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -49,6 +54,8 @@ angular.module('portalNMC')
         var currentObject = null; //the current selected object at interface
 
         var objectSvcSettings = {};
+        var buildingTypes = [],
+            buildingCategories = [];
         
         //request canceling params
         var requestCanceler = null;
@@ -131,6 +138,13 @@ angular.module('portalNMC')
         var getLoadingStatus = function(){
             return loading;
         };
+                                  
+        function getBuildingCategories() {
+            return buildingCategories;
+        }
+        function getBuildingTypes() {
+            return buildingTypes;
+        }
         
         var getRsoOrganizations = function(){
             var url = urlRsoOrganizations;
@@ -761,7 +775,43 @@ angular.module('portalNMC')
         }
 // **************************************************************
 //     end Device methods
+// ************************************************************** 
+                 
+// **************************************************************
+//      Bulding types
 // **************************************************************                 
+        function loadBuildingTypes() {
+console.log("getBuildingTypes");            
+            var url = urlBuildingTypes;
+            $http.get(url).then(function (resp) {
+                $rootScope.$broadcast(BROADCASTS.BUILDING_TYPES_LOADED);
+                if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data) || !angular.isArray(resp.data)) {
+                    console.log("Building type list is empty!");
+                    return false;
+                }
+                buildingTypes = angular.copy(resp.data);                
+            }, function () {
+                console.log(e);
+            });
+        }
+                 
+        function loadBuildingCategories() {
+            var url = urlBuildingCategories;
+            $http.get(url).then(function (resp) {
+                $rootScope.$broadcast(BROADCASTS.BUILDING_CATEGORIES_LOADED);
+                if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data) || !angular.isArray(resp.data)) {
+                    console.log("Building category list is empty!");
+                    return false;
+                }
+                buildingCategories = angular.copy(resp.data);                
+            }, function () {
+                console.log(e);
+            });
+        }
+// **************************************************************
+//      Bulding types
+// **************************************************************                                  
+                 
         
         //service initialization
         var initSvc = function(){
@@ -773,6 +823,8 @@ angular.module('portalNMC')
             
             getVzletSystemListFromServer();
             getRmaDeviceMetadataMeasures();
+            loadBuildingTypes();
+            loadBuildingCategories();
             loadTreeTemplates(rmaTreeTemplatesUrl);
             loadData();
         };
@@ -780,11 +832,14 @@ angular.module('portalNMC')
         initSvc();
                     
         return {
+            BROADCASTS,
             OBJECT_PER_SCROLL,
             createTree,
             deleteTree,
             deleteTreeNode,
             getAllDevices,
+            getBuildingCategories,
+            getBuildingTypes,
             getCityConsumingData,
             getCitiesConsumingData,
             getCmOrganizations,

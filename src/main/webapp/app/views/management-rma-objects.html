@@ -1069,129 +1069,226 @@
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                            <tr>
-                                <td class="col-sm-3"><label for="inputContObjectName">Наименование</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.fullName)}">
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputContObjectName" 
-                                               placeholder="Наименование" 
-                                               ng-model="currentObject.fullName"
-                                               />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputDescription" >Описание</label>
-                                </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputComment" >Комментарий</label>
-                                </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
-                                </td>
-                            </tr>
-                            <tr ng-show="currentObject.isLightForm == false">
-                                <td class="col-sm-3">
-                                    <label for="inputObjAddress">Адрес</label>
+            <div role="tabpanel" 
+                 class="nmc-tab-panel">
+              
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" 
+                    class="active" 
+                    id="main_object_properties_tab">
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="main_object_properties" 
+                       data-target="#main_object_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Основные
+                    </a>
+                  </li>
+                <li role="presentation" 
+                    id="extra_object_properties_tab"> 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="extra_object_properties" 
+                       data-target="#extra_object_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Тип здания
+                    </a>
+                  </li>                  
+              </ul>
 
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputObjAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
-                                    <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
-                                        <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
-                                        </small>
-                                        <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
-                                        </small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr ng-if="currentObject.isLightForm == false">
-                                <td class="col-sm-3"><label for="inputMode">Часовой пояс</label>
-                                </td>
-                                <td class="nmc-text-align-left col-sm-9">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.timezoneDefKeyname)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" 
-                                                id="inputMode" 
-                                                ng-model="currentObject.timezoneDefKeyname" 
-                                                ng-options="timezone.keyname as timezone.caption for timezone in data.timezones"
-                                                ng-change="changeTimeZone()"
-                                                >
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr> 
-                            <tr ng-if="currentObject.isLightForm == false">
-                                <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(currentObject.contManagementId)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" 
-                                                id="inputCm" 
-                                                ng-model="currentObject.contManagementId" 
-                                                ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations"
-                                                ng-change="changeContManagement()"
-                                                >
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr ng-if="currentObject.isLightForm == false">
-                                <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
-                                </td>
-                                <td class="nmc-text-align-left col-sm-9">
-                                    <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error': emptyString(currentObject.currentSettingMode)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" 
-                                                id="inputMode" 
-                                                ng-model="currentObject.currentSettingMode" 
-                                                ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check"
-                                                ng-change="changeSettingMode()"
-                                                >
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>       
-                            <tr ng-if="currentObject.isLightForm == false">
-                                <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
-                                </td>
-                                <td class="nmc-text-align-left col-sm-9">
-                                    <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputThv" 
-                                               placeholder="" 
-                                               ng-model="currentObject.cwTemp"> &deg; C 
-                                    </div>
-                                </td>                               
-                            </tr>                           
-                            <tr>
-                                <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
-                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" 
-                                           type="text" 
-                                           id="inputSquare" 
-                                           placeholder="" 
-                                           ng-model="currentObject.heatArea"> кв. м.
-                                    </div>        
-                                </td>
-                            </tr>
-                        </table>
-                    </div>    
-                </div>  
-            </div>        
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Варианты отчетов-->
+                <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="main_object_properties"> 
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputContObjectName">Наименование</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.fullName)}">
+                                                    <input class="form-control nmc-text-input-form" 
+                                                           type="text" 
+                                                           id="inputContObjectName" 
+                                                           placeholder="Наименование" 
+                                                           ng-model="currentObject.fullName"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputDescription" >Описание</label>
+                                            </td>
+                                            <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputComment" >Комментарий</label>
+                                            </td>
+                                            <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="currentObject.isLightForm == false">
+                                            <td class="col-sm-3">
+                                                <label for="inputObjAddress">Адрес</label>
+
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" type="text" id="inputObjAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                                <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
+                                                    <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
+                                                    </small>
+                                                    <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputMode">Часовой пояс</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(currentObject.timezoneDefKeyname)}">
+                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.timezoneDefKeyname" 
+                                                            ng-options="timezone.keyname as timezone.caption for timezone in data.timezones"
+                                                            ng-change="changeTimeZone()"
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr> 
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(currentObject.contManagementId)}">
+                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                            id="inputCm" 
+                                                            ng-model="currentObject.contManagementId" 
+                                                            ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations"
+                                                            ng-change="changeContManagement()"
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': emptyString(currentObject.currentSettingMode)}">
+                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.currentSettingMode" 
+                                                            ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check"
+                                                            ng-change="changeSettingMode()"
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>       
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
+                                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                           type="text" 
+                                                           id="inputThv" 
+                                                           placeholder="" 
+                                                           ng-model="currentObject.cwTemp"> &deg; C 
+                                                </div>
+                                            </td>                               
+                                        </tr>                           
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
+                                                <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputSquare" 
+                                                       placeholder="" 
+                                                       ng-model="currentObject.heatArea"> кв. м.
+                                                </div>        
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>    
+                            </div>  
+                        </div>
+                  </div>
+                  <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="extra_object_properties">
+                      <div class="container-fluid">
+                          <div class="row">
+                              <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputBuildingType">Тип здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': emptyString(currentObject.buildingType)}">
+                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.buildingType" 
+                                                            ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
+                                                            ng-change="changeBuildingType()"
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error': emptyString(currentObject.buildingTypeCategory)}">
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputBuildingCategory"
+                                                            ng-disabled="!currentObject.buildingType"
+                                                            ng-model="currentObject.buildingTypeCategory" 
+                                                            ng-options="bcategory.keyname as bcategory.caption for bcategory in data.buildingCategories">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="currentObject.isLightForm == false">
+                                            <td class="col-sm-3"><label for="inputNumOfStories">Количество этажей</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom"
+                                                     ng-class="{'has-error':!checkNumericValue(currentObject.numOfStories)}">
+                                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputNumOfStories" 
+                                                       placeholder="" 
+                                                       ng-model="currentObject.numOfStories"
+                                                       data-inputmask="'mask': '9[9]', 'greedy':false">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                  </table>
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid  ">
