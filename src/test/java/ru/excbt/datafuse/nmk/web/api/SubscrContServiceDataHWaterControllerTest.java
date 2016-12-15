@@ -288,8 +288,8 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 		String firstFilename = "713631_1_abracadabra.csv";
 		String secondFilename = "1400708_1_abracadabra.csv";
 
-		MockMultipartFile firstFile = new MockMultipartFile("files", firstFilename, "text/plain", fileBytes);
-		MockMultipartFile secondFile = new MockMultipartFile("files", secondFilename, "text/plain", fileBytes);
+		MockMultipartFile firstFile = new MockMultipartFile("file", firstFilename, "text/plain", fileBytes);
+		MockMultipartFile secondFile = new MockMultipartFile("file", secondFilename, "text/plain", fileBytes);
 
 		String url = "/api/subscr/service/datahwater/contObjects/importData";
 		//				apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,

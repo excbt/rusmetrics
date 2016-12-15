@@ -660,7 +660,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/service/datahwater/contObjects/importData", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
+	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("file") MultipartFile[] multipartFiles) {
 
 		checkNotNull(multipartFiles);
 
@@ -755,7 +755,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			}
 		}
 
-		return responseOK();
+		return responseOK(ApiResult.ok(trxId.toString()));
 
 	}
 
