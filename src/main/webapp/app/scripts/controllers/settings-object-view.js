@@ -36,7 +36,7 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings = {};
                 $scope.objectCtrlSettings.isCtrlEnd =false;
                 $scope.objectCtrlSettings.allSelected = false;
-                $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.objectsPerScroll = objectSvc.OBJECT_PER_SCROLL;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
 //                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
 //                $scope.objectCtrlSettings.objectTopOnPage =0;

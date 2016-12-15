@@ -34,7 +34,7 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings.allSelected = false;      //флаг для объектов: true - все объекты выбраны
                 $scope.objectCtrlSettings.anySelected = false;      //выбран хотя бы один объект                
                 $scope.objectCtrlSettings.anyClientSelected = false; //выбран хотя бы один абонент
-                $scope.objectCtrlSettings.objectsPerScroll = 34;    //the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.objectsPerScroll = objectSvc.OBJECT_PER_SCROLL;    //the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
                 
                 $scope.objectCtrlSettings.vzletSystemList = []; //list of system for meta data editor

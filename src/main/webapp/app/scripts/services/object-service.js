@@ -10,7 +10,8 @@ angular.module('portalNMC')
             {fullName: "Ошибка. Объекты не были загружены."
             }
         ];
-        var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";
+        var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
+            OBJECT_PER_SCROLL = 38;
         var loading = true,
             urlApi = '../api',
             urlSubscr = urlApi + '/subscr',
@@ -779,6 +780,7 @@ angular.module('portalNMC')
         initSvc();
                     
         return {
+            OBJECT_PER_SCROLL,
             createTree,
             deleteTree,
             deleteTreeNode,
