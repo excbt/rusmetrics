@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,7 +22,6 @@ import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
@@ -672,6 +672,10 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		checkNotNull(multipartFiles);
 
+		if (multipartFiles.length == 0) {
+			return responseBadRequest();
+		}
+
 		SubscriberParam subscriberParam = getSubscriberParam();
 
 		List<String> fileNameErrorDesc = new ArrayList<>();
@@ -679,21 +683,26 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		// Check file names
 		for (MultipartFile multipartFile : multipartFiles) {
+
 			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
+			logger.debug("Checking file to import {}", fileName);
 			if (fileName == null) {
 				return responseBadRequest();
 			}
 
 			String[] nameParts = fileName.split("_");
+			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
 			if (nameParts == null || nameParts.length < 2) {
 				fileNameErrorDesc.add("Некоррекное имя файла: " + fileName);
 				break;
 			}
+			for (String s : nameParts) {
+				logger.info("Name parts: {}", s);
+			}
 
-			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
 		}
 
-		if (fileNameErrorDesc.size() > 0) {
+		if (fileNameErrorDesc.size() > 0 || fileNameData.size() == 0) {
 			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
 		}
 
@@ -708,7 +717,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		List<ServiceDataImportInfo> serviceDataImportInfos = new ArrayList<>();
 
-		Map<String, Tuple> filenameDBInfos = new HashedMap();
+		Map<String, Tuple> filenameDBInfos = new HashMap<>();
 
 		for (String[] s : fileNameData) {
 
