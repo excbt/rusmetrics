@@ -52,7 +52,7 @@
 	
 	<logger name="net.sf.jasperreports" level="warn" />
 	
-	
+	<logger name="ru.excbt.datafuse.slogwriter" level="error" />
 
 	<root level="info">
 		<appender-ref ref="console" />

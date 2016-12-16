@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
@@ -67,6 +70,7 @@ import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -77,6 +81,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
+import ru.excbt.datafuse.slogwriter.service.SLogSessionTN;
 
 /**
  * Контроллер для работы с данными по теплоснабжению для абонента
@@ -120,6 +125,9 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
+
+	@Autowired
+	private SLogWriterService sLogWriterService;
 
 	/**
 	 * 
@@ -660,7 +668,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/service/datahwater/contObjects/importData", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("file") MultipartFile[] multipartFiles) {
+	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 		checkNotNull(multipartFiles);
 
@@ -682,7 +690,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 				break;
 			}
 
-			fileNameData.add(new String[] { nameParts[0], nameParts[1], fileName });
+			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
 		}
 
 		if (fileNameErrorDesc.size() > 0) {
@@ -690,19 +698,23 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		logger.info("Looking for subscriberId: {}, serials: {}", getSubscriberParam().getSubscriberId(),
-				fileNameData.stream().map(i -> i[0]).collect(Collectors.toList()));
+				fileNameData.stream().map(i -> i[1]).collect(Collectors.toList()));
 
 		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
-				getSubscriberParam(), fileNameData.stream().map(i -> i[0]).collect(Collectors.toList()));
+				getSubscriberParam(), fileNameData.stream().map(i -> i[1]).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
 
+		List<ServiceDataImportInfo> serviceDataImportInfos = new ArrayList<>();
+
+		Map<String, Tuple> filenameDBInfos = new HashedMap();
+
 		for (String[] s : fileNameData) {
 
 			final List<Tuple> checkRows = deviceObjectsData.stream()
-					.filter(i -> s[0].equals(i.get("deviceObjectNumber").toString())
-							&& s[1].equals(i.get("tsNumber").toString()))
+					.filter(i -> s[1].equals(i.get("deviceObjectNumber").toString())
+							&& s[2].equals(i.get("tsNumber").toString()))
 					.collect(Collectors.toList());
 
 			if (checkRows.size() == 0) {
@@ -721,21 +733,28 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 			if (!Boolean.TRUE.equals(DBRowUtils.asBoolean(row.get("isManualLoading")))) {
 				fileNameErrorDesc.add(String.format(
-						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают загрузку данных. Файл: %s",
+						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
 						s[0], s[1], s[2]));
 				continue;
 			}
 
-			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
-					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")), s[2]);
+			filenameDBInfos.put(s[0], row);
+
 		}
 
 		if (fileNameErrorDesc.size() > 0) {
 			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
 		}
 
+		List<UUID> trxIds = new ArrayList<>();
+
 		// All conditions is passed
-		UUID trxId = UUID.randomUUID();
+
+		SLogSessionTN sLogSessionTN = sLogWriterService.newSessionWebT1(subscriberParam.getSubscrUserId());
+
+		UUID trxId = sLogSessionTN.getSessionUUID();
+
+		trxIds.add(trxId);
 
 		for (MultipartFile multipartFile : multipartFiles) {
 
@@ -753,9 +772,21 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 				logger.error("Exception:{}", e);
 				return responseInternalServerError(ApiResult.error(e));
 			}
+
+			Tuple row = filenameDBInfos.get(fileName);
+
+			checkState(row != null);
+
+			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
+					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")),
+					DBRowUtils.asLong(row.get("deviceObjectId")), DBRowUtils.asLong(row.get("subscrDataSourceId")),
+					subscriberParam.getSubscrUserId(), inFilename);
+
+			serviceDataImportInfos.add(importInfo);
+
 		}
 
-		return responseOK(trxId.toString());
+		return responseOK(trxIds.toString());
 
 	}
 

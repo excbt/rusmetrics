@@ -285,8 +285,8 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		// Processing POST
 
-		String firstFilename = "713631_1_abracadabra.csv";
-		String secondFilename = "1400708_1_abracadabra.csv";
+		String firstFilename = "AK-SERIAL-777_1_abracadabra.csv";
+		String secondFilename = "AK-SERIAL-777_1_abracadabra2.csv";
 
 		MockMultipartFile firstFile = new MockMultipartFile("file", firstFilename, "text/plain", fileBytes);
 		MockMultipartFile secondFile = new MockMultipartFile("file", secondFilename, "text/plain", fileBytes);
