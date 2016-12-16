@@ -1250,6 +1250,14 @@ tr.nmc-inactive-price > td {
     padding: 3px;
 }
 
+/* высокий выпадающий список */
+.nmc-select-form-high {
+    font-size: 12px;
+    height: 60px;
+    white-space: normal;
+    padding: 3px;
+}
+
 /* выпадающий список при использовании ui-select*/
 .nmc-ui-select-form > .ui-select-match > span {
     font-size: 12px;

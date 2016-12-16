@@ -633,6 +633,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.sendObjectToServer = function (obj) {
+console.log(obj);                    
                     obj.isSaving = true;
                     if (!checkObjectSettings(obj)) {
                         obj.isSaving = false;
@@ -685,6 +686,9 @@ angular.module('portalNMC')
                         testCmOrganizationAtList();
                         if (!mainSvc.checkUndefinedNull(isLightForm)){
                             $scope.currentObject.isLightForm = isLightForm;
+                        }
+                        if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
+                            
                         }
                         checkGeo();
                     }, function(error){
@@ -1510,6 +1514,13 @@ angular.module('portalNMC')
                     if (!mainSvc.checkUndefinedNull($cookies.recentSettingMode)){
                         $scope.currentObject.currentSettingMode = $cookies.recentSettingMode;
                     }
+                    if (!mainSvc.checkUndefinedNull($cookies.recentBuildingType)){
+                        $scope.currentObject.buildingType = $cookies.recentBuildingType;
+                        $scope.changeBuildingType($scope.currentObject.buildingType);
+                    }
+                    if (!mainSvc.checkUndefinedNull($cookies.recentBuildingTypeCategory)){
+                        $scope.currentObject.buildingTypeCategory = $cookies.recentBuildingTypeCategory;
+                    }
                     checkGeo();
                     $('#showObjOptionModal').modal();
                     $('#showObjOptionModal').css("z-index", "1041");
@@ -1848,7 +1859,7 @@ angular.module('portalNMC')
                     return result;
                 };
                 
-                $scope.checkPositiveNumberValue = function(numvalue){                    
+                $scope.checkPositiveNumberValue = function (numvalue) {                    
                     var result = true;
                     result = $scope.checkNumericValue(numvalue)
                     if (!result){
@@ -1857,6 +1868,10 @@ angular.module('portalNMC')
                     }
                     result = parseInt(numvalue) >= 0 ? true : false;
                     return result;
+                };
+                
+                $scope.isPositiveNumberValue = function (val) {
+                    return mainSvc.isPositiveNumberValue(val);
                 };
                 
                 $scope.checkNumericInterval = function(leftBorder, rightBorder){  
@@ -1975,7 +1990,8 @@ angular.module('portalNMC')
                 
                 $('#showObjOptionModal').on('hidden.bs.modal', function(){
                     $scope.currentObject.isSaving = false;
-                    $scope.currentSug = null;                    
+                    $scope.currentSug = null;
+                    setActiveObjectPropertiesTab("main_object_properties_tab");
                 });
                 
 // *****************************************************************************************
@@ -2207,6 +2223,7 @@ console.log(tmpSrc);
 //*********************************************************************************************
                 $scope.data.buildingTypes = [];
                 $scope.data.buildingCategories = [];
+                $scope.data.preparedBuildingCategoryList = [];
                 $scope.data.buildingCategories = objectSvc.getBuildingCategories();
                 $scope.data.buildingTypes = objectSvc.getBuildingTypes();
                 $scope.$on(objectSvc.BROADCASTS.BUILDING_TYPES_LOADED, function () {
@@ -2215,6 +2232,64 @@ console.log(tmpSrc);
                 $scope.$on(objectSvc.BROADCASTS.BUILDING_CATEGORIES_LOADED, function () {
                     $scope.data.buildingCategories = objectSvc.getBuildingCategories();
                 });
+                $scope.changeBuildingType = function (buildingType) {                    
+                    $scope.currentObject.buildingTypeCategory = null;
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                    $('#inputBuildingCategory').addClass('nmc-select-form');
+                    if (mainSvc.checkUndefinedNull(buildingType)) {
+                        return false;
+                    }
+                    $cookies.recentBuildingType = buildingType;
+                    performBuildingCategoryList(buildingType);
+                };
+                
+                function performBuildingCategoryList(buildingType) {
+                    //find b cat when buildingType === input buildingType
+                    //find b cat when parentCat === keyname from up ^
+                    var categoryListByBuildingType = [],
+                        filtredCategoryList = [],
+                        preparedCategory = null;
+                    $scope.data.buildingCategories.forEach(function (bcat) {
+                        if (bcat.buildingType === buildingType) {
+                            categoryListByBuildingType.push(angular.copy(bcat));
+                        } 
+                    });
+                    categoryListByBuildingType.forEach(function (pcat) {
+                        $scope.data.buildingCategories.forEach(function (bcat) {
+                            if (bcat.parentCategory === pcat.keyname) {                                
+                                preparedCategory = angular.copy(bcat);                                
+                                preparedCategory.parentCategoryCaption = pcat.caption;
+                                filtredCategoryList.push(preparedCategory);
+                            } 
+                        });
+                    });
+                    $scope.data.preparedBuildingCategoryList = filtredCategoryList;
+//                    console.log($scope.data.preparedBuildingCategoryList);
+                }
+                
+                $scope.changeBuildingCategory = function () {
+                    var bCat = null;
+                    $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+                        if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
+                            bCat = bcat;
+                            return true;
+                        }
+                    });
+                    //50 symbols
+//                    console.log(bCat);
+                    if (bCat.caption.length >= 50) { 
+                        $('#inputBuildingCategory').removeClass('nmc-select-form');
+                        $('#inputBuildingCategory').addClass('nmc-select-form-high');
+                    } else {
+                        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                        $('#inputBuildingCategory').addClass('nmc-select-form');
+                    }
+                    if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
+                        return false;
+                    }
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                };
 // ********************************************************************************************
                 //  end Building types
 //*********************************************************************************************                
@@ -2229,14 +2304,42 @@ console.log(tmpSrc);
                     $('#inputLevelName').focus();
                 });
                 
-                $('#showObjOptionModal').on('shown.bs.modal', function(){
+                $('#showObjOptionModal').on('shown.bs.modal', function(){                    
                     $('#inputContObjectName').focus();
-                    $('#inputNumOfStories').inputmask();
+                    $('#inputNumOfStories').inputmask('integer', {min: 1, max: 100});
                 });
                 
                 $('#showZpointOptionModal').on('shown.bs.modal', function(){
                     $('#inputZpointName').focus();
                 });
+                
+                $scope.objectCtrlSettings.objectModalWindowTabs = [
+                    {
+                        name: "main_object_properties_tab",
+                        tabpanel: "main_object_properties"
+                    },        
+                    {
+                        name: "extra_object_properties_tab",
+                        tabpanel: "extra_object_properties"
+                    }
+                ];
+                
+                function setActiveObjectPropertiesTab(tabName) {
+                    $scope.objectCtrlSettings.objectModalWindowTabs.forEach(function (tabElem) {
+                        var tab, tabPanel;
+                        tab = document.getElementById(tabElem.name) || null;
+                        tabPanel = document.getElementById(tabElem.tabpanel) || null;                            
+                        if (tabElem.name.localeCompare(tabName) !== 0) {                
+
+                            tab.classList.remove("active");                
+                            tabPanel.classList.remove("active");
+                        } else {                
+                            tab.classList.add("active");
+                            tabPanel.classList.add("in");
+                            tabPanel.classList.add("active");
+                        }
+                    });
+                }
                 
                 //set tooltips for meta device fields
                 function setMetaToolTips () {
@@ -2269,8 +2372,7 @@ console.log(tmpSrc);
                 $("#metaDataEditorModal").on('shown.bs.modal', function () {                
                     setMetaToolTips();
                 })
-                
-                
+                                
                 //controller initialization
                 var initCtrl = function(){
                     getRsoOrganizations();

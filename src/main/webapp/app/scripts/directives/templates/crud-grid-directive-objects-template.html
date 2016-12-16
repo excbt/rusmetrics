@@ -19,7 +19,7 @@
             </a>
         </li>
         
-        <li ng-hide="isTestMode()"
+        <li ng-hide="isTestMode() || !isRma()"
             id="upload_files_2nd_menu_item" role="presentation">
             <p class="nmc-main-tab-button noMargin nmc-link" 
                href="" 
@@ -31,7 +31,7 @@
                 Загрузка показаний из файлов
             </p>
         </li>
-        <li ng-hide="isTestMode()" class="pull-right">
+        <li ng-hide="isTestMode() || !isRma()" class="pull-right">
             <i               
                title="Загрузка показаний из файлов"
                class="btn glyphicon glyphicon-download-alt gly-rotate-180 pull-right" 

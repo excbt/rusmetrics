@@ -490,6 +490,14 @@ angular.module('portalNMC')
         return result;
     };
     
+    function isPositiveNumberValue(val) {
+        if (checkUndefinedNull(val)) {
+            return false;
+        } else {
+            return checkPositiveNumberValue(val);
+        }
+    }
+    
     var checkHHmm = function(hhmmValue){
         if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
             return true;
@@ -878,6 +886,7 @@ angular.module('portalNMC')
         isAdmin,
         isCabinet,
         isNumeric,
+        isPositiveNumberValue,
         isRma,
         isReadonly,
         isSystemuser,

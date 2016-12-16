@@ -781,7 +781,6 @@ angular.module('portalNMC')
 //      Bulding types
 // **************************************************************                 
         function loadBuildingTypes() {
-console.log("getBuildingTypes");            
             var url = urlBuildingTypes;
             $http.get(url).then(function (resp) {
                 $rootScope.$broadcast(BROADCASTS.BUILDING_TYPES_LOADED);
