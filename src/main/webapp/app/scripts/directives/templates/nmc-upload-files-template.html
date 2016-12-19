@@ -1,6 +1,6 @@
 <div ng-if="uploader && uploader != null" id="upLoadFilesModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="upLoadFilesLabel" tabindex="-1">
-	<div class="modal-dialog modal-content">
+	<div class="modal-dialog modal-content nmc-modal-dialog">
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -22,7 +22,6 @@
                     <br/>
                     <div class="marginRight15" >
                         <div class="nmc-div-file-list">
-
                             <table class="table noMargin">
                                 <tr ng-repeat="item in uploader.queue"
                                     ng-class="{'alert-danger': item.isError, 'alert-success': item.isSuccess}"
@@ -35,7 +34,8 @@
                                         {{item.file.size / 1024 / 1024 | number: 2}} MB
                                     </td>
                                     <td>
-                                        <button class="btn btn-xs nmc-remove-button"
+                                        <button ng-hide="uploadFlag"
+                                                class="btn btn-xs nmc-remove-button"
                                                 ng-disabled="uploadFlag"
                                                 ng-click="item.remove()">
                                         </button>
@@ -53,7 +53,7 @@
                                 {{uploader.progress + '%'}}
                             </div>
                         </div>
-                        <div class="alert alert-success"
+                        <div class="alert alert-info"
                              role="alert"
                              ng-show="onUploadAll">
                             Загрузка завершена!

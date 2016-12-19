@@ -674,21 +674,23 @@ console.log(obj);
 //console.log($scope.data.cmOrganizations);                     
                 }
                 
-                $scope.selectedObject = function(objId, isLightForm){
+                $scope.selectedObject = function(objId, isLightForm) {
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
                         $scope.currentObject = resp.data;
 //console.log($scope.currentObject);                        
                         if (angular.isDefined($scope.currentObject._activeContManagement) && 
-                            ($scope.currentObject._activeContManagement != null)){
+                            ($scope.currentObject._activeContManagement != null)) {
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                         }
                         testCmOrganizationAtList();
-                        if (!mainSvc.checkUndefinedNull(isLightForm)){
+                        if (!mainSvc.checkUndefinedNull(isLightForm)) {
                             $scope.currentObject.isLightForm = isLightForm;
                         }
                         if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
-                            
+//                            $scope.changeBuildingType($scope.currentObject.buildingType);
+                            performBuildingCategoryList($scope.currentObject.buildingType);
+                            setBuildingCategory();
                         }
                         checkGeo();
                     }, function(error){
@@ -2232,17 +2234,6 @@ console.log(tmpSrc);
                 $scope.$on(objectSvc.BROADCASTS.BUILDING_CATEGORIES_LOADED, function () {
                     $scope.data.buildingCategories = objectSvc.getBuildingCategories();
                 });
-                $scope.changeBuildingType = function (buildingType) {                    
-                    $scope.currentObject.buildingTypeCategory = null;
-                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
-                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-                    $('#inputBuildingCategory').addClass('nmc-select-form');
-                    if (mainSvc.checkUndefinedNull(buildingType)) {
-                        return false;
-                    }
-                    $cookies.recentBuildingType = buildingType;
-                    performBuildingCategoryList(buildingType);
-                };
                 
                 function performBuildingCategoryList(buildingType) {
                     //find b cat when buildingType === input buildingType
@@ -2268,7 +2259,20 @@ console.log(tmpSrc);
 //                    console.log($scope.data.preparedBuildingCategoryList);
                 }
                 
-                $scope.changeBuildingCategory = function () {
+                $scope.changeBuildingType = function (buildingType) {
+//                    console.log("changeBuildingType");
+                    $scope.currentObject.buildingTypeCategory = null;
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                    $('#inputBuildingCategory').addClass('nmc-select-form');
+                    if (mainSvc.checkUndefinedNull(buildingType)) {
+                        return false;
+                    }
+                    $cookies.recentBuildingType = buildingType;
+                    performBuildingCategoryList(buildingType);
+                };
+                
+                function setBuildingCategory() {
                     var bCat = null;
                     $scope.data.preparedBuildingCategoryList.some(function (bcat) {
                         if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
@@ -2276,9 +2280,12 @@ console.log(tmpSrc);
                             return true;
                         }
                     });
+//                    if (bCat === null) {
+//                        return false;
+//                    }
                     //50 symbols
 //                    console.log(bCat);
-                    if (bCat.caption.length >= 50) { 
+                    if (bCat !== null && bCat.caption.length >= 50) { 
                         $('#inputBuildingCategory').removeClass('nmc-select-form');
                         $('#inputBuildingCategory').addClass('nmc-select-form-high');
                     } else {
@@ -2288,6 +2295,10 @@ console.log(tmpSrc);
                     if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
                         return false;
                     }
+                }
+                
+                $scope.changeBuildingCategory = function () {
+                    setBuildingCategory();
                     $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
                 };
 // ********************************************************************************************
@@ -2306,7 +2317,7 @@ console.log(tmpSrc);
                 
                 $('#showObjOptionModal').on('shown.bs.modal', function(){                    
                     $('#inputContObjectName').focus();
-                    $('#inputNumOfStories').inputmask('integer', {min: 1, max: 100});
+                    $('#inputNumOfStories').inputmask('integer', {min: 1, max: 200});
                 });
                 
                 $('#showZpointOptionModal').on('shown.bs.modal', function(){
