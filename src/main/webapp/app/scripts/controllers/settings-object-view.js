@@ -679,6 +679,11 @@ angular.module('portalNMC')
                 
                 $scope.selectedObject = function(objId){
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
+//                            $scope.changeBuildingType($scope.currentObject.buildingType);
+                        performBuildingCategoryList($scope.currentObject.buildingType);
+                        setBuildingCategory();
+                    }
 //console.log($scope.currentObject);                    
                 };
                 
@@ -2727,6 +2732,129 @@ console.log("openSchedule");
 // *****************************************************************************************
 //             end   Zpoint data source
 // ******************************************************************************************                  
+// ********************************************************************************************
+                //  Building types
+//*********************************************************************************************
+                $scope.data.buildingTypes = [];
+                $scope.data.buildingCategories = [];
+                $scope.data.preparedBuildingCategoryList = [];
+                $scope.data.buildingCategories = objectSvc.getBuildingCategories();
+                $scope.data.buildingTypes = objectSvc.getBuildingTypes();
+                $scope.$on(objectSvc.BROADCASTS.BUILDING_TYPES_LOADED, function () {
+                    $scope.data.buildingTypes = objectSvc.getBuildingTypes();
+                });
+                $scope.$on(objectSvc.BROADCASTS.BUILDING_CATEGORIES_LOADED, function () {
+                    $scope.data.buildingCategories = objectSvc.getBuildingCategories();
+                });
+                
+                function performBuildingCategoryList(buildingType) {
+                    //find b cat when buildingType === input buildingType
+                    //find b cat when parentCat === keyname from up ^
+                    var categoryListByBuildingType = [],
+                        filtredCategoryList = [],
+                        preparedCategory = null;
+                    $scope.data.buildingCategories.forEach(function (bcat) {
+                        if (bcat.buildingType === buildingType) {
+                            categoryListByBuildingType.push(angular.copy(bcat));
+                        } 
+                    });
+                    categoryListByBuildingType.forEach(function (pcat) {
+                        $scope.data.buildingCategories.forEach(function (bcat) {
+                            if (bcat.parentCategory === pcat.keyname) {                                
+                                preparedCategory = angular.copy(bcat);                                
+                                preparedCategory.parentCategoryCaption = pcat.caption;
+                                filtredCategoryList.push(preparedCategory);
+                            } 
+                        });
+                    });
+                    $scope.data.preparedBuildingCategoryList = filtredCategoryList;
+//                    console.log($scope.data.preparedBuildingCategoryList);
+                }
+                
+                $scope.changeBuildingType = function (buildingType) {
+//                    console.log("changeBuildingType");
+                    $scope.currentObject.buildingTypeCategory = null;
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                    $('#inputBuildingCategory').addClass('nmc-select-form');
+                    if (mainSvc.checkUndefinedNull(buildingType)) {
+                        return false;
+                    }
+                    $cookies.recentBuildingType = buildingType;
+                    performBuildingCategoryList(buildingType);
+                };
+                
+                function setBuildingCategory() {
+                    var bCat = null;
+                    $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+                        if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
+                            bCat = bcat;
+                            return true;
+                        }
+                    });
+//                    if (bCat === null) {
+//                        return false;
+//                    }
+                    //50 symbols
+//                    console.log(bCat);
+                    if (bCat !== null && bCat.caption.length >= 50) { 
+                        $('#inputBuildingCategory').removeClass('nmc-select-form');
+                        $('#inputBuildingCategory').addClass('nmc-select-form-high');
+                    } else {
+                        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                        $('#inputBuildingCategory').addClass('nmc-select-form');
+                    }
+                    if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
+                        return false;
+                    }
+                }
+                
+                $scope.changeBuildingCategory = function () {
+                    setBuildingCategory();
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                };
+// ********************************************************************************************
+                //  end Building types
+//*********************************************************************************************                
+                $('#showObjOptionModal').on('shown.bs.modal', function(){                    
+                    $('#inputContObjectName').focus();
+                    $('#inputNumOfStories').inputmask('integer', {min: 1, max: 200});
+                });
+                
+                $scope.objectCtrlSettings.objectModalWindowTabs = [
+                    {
+                        name: "main_object_properties_tab",
+                        tabpanel: "main_object_properties"
+                    },        
+                    {
+                        name: "extra_object_properties_tab",
+                        tabpanel: "extra_object_properties"
+                    }
+                ];
+                
+                function setActiveObjectPropertiesTab(tabName) {
+                    $scope.objectCtrlSettings.objectModalWindowTabs.forEach(function (tabElem) {
+                        var tab, tabPanel;
+                        tab = document.getElementById(tabElem.name) || null;
+                        tabPanel = document.getElementById(tabElem.tabpanel) || null;                            
+                        if (tabElem.name.localeCompare(tabName) !== 0) {                
+
+                            tab.classList.remove("active");                
+                            tabPanel.classList.remove("active");
+                        } else {                
+                            tab.classList.add("active");
+                            tabPanel.classList.add("in");
+                            tabPanel.classList.add("active");
+                        }
+                    });
+                }
+                
+                $('#showObjOptionModal').on('hidden.bs.modal', function(){
+//                    $scope.currentObject.isSaving = false;
+//                    $scope.currentSug = null;
+                    setActiveObjectPropertiesTab("main_object_properties_tab");
+                });
+                
                 $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function() {
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
                 });

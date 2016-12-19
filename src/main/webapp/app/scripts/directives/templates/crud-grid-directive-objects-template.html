@@ -346,7 +346,7 @@
                                             <a href=""
                                                class=""
                                                ng-click="selectedObjectEx(object.id)" 
-                                               data-target="#showObjOptionModal" 
+                                               data-target="#showObjOptionModalView" 
                                                data-toggle="modal">
                                                 Свойства объекта                                        
                                             </a>
@@ -1165,7 +1165,7 @@
 -->
 
 <!--Show Object options-->
-<div id="showObjOptionModal" class="modal fade nmc-modal-window" role="dialog"
+<div id="showObjOptionModalView" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showObjOptionLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
@@ -1175,78 +1175,175 @@
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
- <!--                            <tr>
-                                <td class="col-sm-3"><label for="inputCode">Код объекта</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
-                                </td>
-                            </tr> -->
-                            <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputDescription" >Описание</label>
-                                </td>
-                                <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputComment" >Комментарий</label>
-                                </td>
-                                <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputAddress">Адрес</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-<!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
-                                    <select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
-                                </td>
-                                <td class="nmc-text-align-left col-sm-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
-                                    </select>
-                                </td>
-                            </tr>       
-                            <tr>
-                                <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
-                                </td>
-                                <td class="nmc-text-align-left col-sm-9">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                        <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
-                                    </div>
-                                </td>                               
-                            </tr>                           
-                            <tr>
-                                <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
-                                    <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
-                                    </div>        
-                                </td>
-                            </tr>
-                        </table>
-                    </div>    
-                </div>  
-            </div>        
+            <div role="tabpanel" 
+                 class="nmc-tab-panel">
+              
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" 
+                    class="active" 
+                    id="view_main_object_properties_tab">
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="view_main_object_properties" 
+                       data-target="#view_main_object_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Основные
+                    </a>
+                  </li>
+                <li role="presentation" 
+                    id="view_extra_object_properties_tab"> 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="view_extra_object_properties" 
+                       data-target="#view_extra_object_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Тип здания
+                    </a>
+                  </li>                  
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Варианты отчетов-->
+                <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="view_main_object_properties">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+             <!--                            <tr>
+                                            <td class="col-sm-3"><label for="inputCode">Код объекта</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
+                                            </td>
+                                        </tr> -->
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputDescription" >Описание</label>
+                                            </td>
+                                            <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputComment" >Комментарий</label>
+                                            </td>
+                                            <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputAddress">Адрес</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left">
+            <!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
+                                                <select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                                </select>
+                                            </td>
+                                        </tr>       
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
+                                                    <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
+                                                </div>
+                                            </td>                               
+                                        </tr>                           
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
+                                            </td>
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
+                                                <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
+                                                </div>        
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>    
+                            </div>  
+                        </div> 
+                    </div>
+                    <div role="tabpanel" 
+                     class="tab-pane fade" 
+                     id="view_extra_object_properties">
+                      <div class="container-fluid">
+                          <div class="row">
+                              <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputBuildingType">Тип здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.buildingType" 
+                                                            ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
+                                                            ng-change="changeBuildingType(currentObject.buildingType)"
+                                                            ng-disabled="!isAdmin()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom"
+                                                     >
+<!--                                                    ng-class="{'has-error': emptyString(currentObject.buildingTypeCategory) && currentObject.buildingType}"-->
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputBuildingCategory"                                                            
+                                                            ng-disabled="!currentObject.buildingType || !isAdmin()"
+                                                            ng-model="currentObject.buildingTypeCategory" 
+                                                            ng-options="bcategory.keyname as bcategory.caption || bcategory.keyname  group by bcategory.parentCategoryCaption for bcategory in data.preparedBuildingCategoryList"
+                                                            ng-change="changeBuildingCategory()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputNumOfStories">Количество этажей</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <input class="form-control nmc-input-digital-data nmc-text-input-form"
+                                                           ng-disabled="!isAdmin()" 
+                                                           type="text" 
+                                                           id="inputNumOfStories"                                                           
+                                                           ng-model="currentObject.numOfStories">
+<!--                                                    data-inputmask="'mask': '9[9]', 'greedy':false, min: 1"-->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                  </table>
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+                </div>
+            </div>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid  ">

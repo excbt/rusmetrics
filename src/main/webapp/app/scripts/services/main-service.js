@@ -4,7 +4,7 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout){
+.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout) {
     
     //Test special settings
     var isUseTest = true,
@@ -42,9 +42,9 @@ angular.module('portalNMC')
     
     var contextIds = [];
     
-    function checkUndefinedNull (numvalue){
+    function checkUndefinedNull (numvalue) {
         var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue == null)){
+        if ((angular.isUndefined(numvalue)) || (numvalue == null)) {
             result = true;
         }
         return result;
@@ -54,7 +54,7 @@ angular.module('portalNMC')
     var requestCanceler = null;
     var httpOptions = null;
     
-    function isCancelParamsIncorrect(){
+    function isCancelParamsIncorrect() {
         return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
     }
     function getRequestCanceler () {
@@ -62,7 +62,7 @@ angular.module('portalNMC')
     }
     ////////////////////////////
     
-    function checkEmptyObject (obj){
+    function checkEmptyObject (obj) {
         return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
     
@@ -845,7 +845,7 @@ angular.module('portalNMC')
         }, tDelay);
     };
     
-    function initSvc(){
+    function initSvc() {
         requestCanceler = $q.defer();
         httpOptions = {
             timeout: requestCanceler.promise

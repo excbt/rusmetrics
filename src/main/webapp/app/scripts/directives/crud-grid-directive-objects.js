@@ -242,7 +242,7 @@ angular.module('portalNMC')
                         var globalElementIndex = $scope.objectCtrlSettings.objectBottomOnPage-objectArray.length + index;
                         var trClass = globalElementIndex % 2 > 0 ? "" : "nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
                         tableHTML += "<tr class=\"" + trClass + "\" id=\"obj" + element.id + "\"><td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть точки учета\" id=\"btnDetail" + element.id + "\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails(" + element.id + ")\"></i>";
-                        tableHTML += "<i title=\"Редактировать свойства объекта\" ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject(" + element.id + ")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
+                        tableHTML += "<i title=\"Редактировать свойства объекта\" ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject(" + element.id + ")\" data-target=\"#showObjOptionModalView\" data-toggle=\"modal\"></i>";
                         tableHTML += "</td>";
                         tableHTML += "<td ng-click=\"toggleShowGroupDetails(" + element.id + ")\">" + element.fullName;
                         if ($scope.isSystemuser()){
@@ -369,7 +369,7 @@ angular.module('portalNMC')
                 var successCallback = function (e, cb) {
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
-                    $('#showObjOptionModal').modal('hide');
+                    $('#showObjOptionModalView').modal('hide');
                     var elIndex = -1;                 
                     if ((angular.isDefined($scope.currentObject)) && ($scope.currentObject !== {})) {
                         $scope.objects.some(function(element, index) {                     
@@ -452,6 +452,11 @@ angular.module('portalNMC')
                 
                 $scope.selectedObject = function(objId){
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
+//                            $scope.changeBuildingType($scope.currentObject.buildingType);
+                        performBuildingCategoryList($scope.currentObject.buildingType);
+                        setBuildingCategory();
+                    }
 //console.log($scope.currentObject);                    
                 };
                 
@@ -595,7 +600,7 @@ angular.module('portalNMC')
                 }
                 
                 $scope.toggleShowGroupDetails = function(objId) {//switch option: current goup details
-                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                  
+                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;
                     //if cur object = null => exit function
                     if (curObject == null) {
                         return;
@@ -604,19 +609,19 @@ angular.module('portalNMC')
                     
                     var zpTable = document.getElementById("zpointTable" + curObject.id);
 //console.log(zpTable);
-                    if ((curObject.showGroupDetails == true) && (zpTable == null)) {                        
+                    if ((curObject.showGroupDetails == true) && (zpTable == null)) {
                         curObject.showGroupDetails = true;
-                    }else{                       
+                    } else {                       
                         curObject.showGroupDetails = !curObject.showGroupDetails;
                     }                                           
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
-                    if (curObject.showGroupDetails === true){
+                    if (curObject.showGroupDetails === true) {
                       
                         var mode = "/vo";
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response) {
                             var tmp = [];
                             if (mode == "Ex") {
-                                tmp = response.data.map(function(el){
+                                tmp = response.data.map(function (el) {
                                     var result = {};
                                     result = el.object;
                                     result.lastDataDate = el.lastDataDate;
@@ -643,21 +648,20 @@ angular.module('portalNMC')
                                 zpoint.zpointName = zPointsByObject[i].customServiceName;
                                 if ((typeof zPointsByObject[i].rso != 'undefined') && (zPointsByObject[i].rso != null)) {
                                     zpoint.zpointRSO = zPointsByObject[i].rso.organizationFullName || zPointsByObject[i].rso.organizationName;
-                                }else{
+                                } else {
                                     zpoint.zpointRSO = "Не задано";
                                 }
                                 zpoint.checkoutTime = zPointsByObject[i].checkoutTime;
                                 zpoint.checkoutDay = zPointsByObject[i].checkoutDay;
                                 if ((typeof zPointsByObject[i].doublePipe == 'undefined')) {
                                     zpoint.piped = false;
-
                                 }else {
                                     zpoint.piped = true;
                                     zpoint.doublePipe = (zPointsByObject[i].doublePipe === null) ? false : zPointsByObject[i].doublePipe;
                                     zpoint.singlePipe = !zpoint.doublePipe;
                                 }
 //console.log(zpoint);
-                                if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)) {              
+                                if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)) {
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')) {
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
                                         zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
@@ -668,7 +672,6 @@ angular.module('portalNMC')
                                                         zpoint.measureUnitCaption = mu.caption;
                                                     }
                                                 });
-                                            
                                             }
                                         }
                                     } else {
@@ -676,10 +679,10 @@ angular.module('portalNMC')
                                     }
                                     zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;
                                 }
-                                zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;   
+                                zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;
                                 // Получаем эталонный интервал для точки учета
                                 getRefRangeByObjectAndZpoint(curObject, zpoint);
-                                zpoints[i] = zpoint;                  
+                                zpoints[i] = zpoint;
                             }
                             mainSvc.sortItemsBy(zpoints, 'zpointOrder');
                             curObject.zpoints = zpoints;
@@ -689,29 +692,27 @@ angular.module('portalNMC')
                                 btnDetail.classList.remove("glyphicon-chevron-right");
                                 btnDetail.classList.add("glyphicon-chevron-down");
                             }
-                            
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         });
                     }//else if curObject.showGroupDetails = false => hide child zpoint table
                     else {
                         var trObj = document.getElementById("obj" + curObject.id);
-                        var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");                      
+                        var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");
                         trObjZp.innerHTML = "";
                         var btnDetail = document.getElementById("btnDetail" + curObject.id);
                         btnDetail.classList.remove("glyphicon-chevron-down");
                         btnDetail.classList.add("glyphicon-chevron-right");
                     }
-                    
                 };
                 //Формируем таблицу с точками учета
-                function makeZpointTable(object){ 
+                function makeZpointTable(object) {
 //console.log(object);                                        
                     var trObj = document.getElementById("obj" + object.id);
 //console.log(trObj);                    
                     if ((angular.isUndefined(trObj)) || (trObj === null)) {
                         return;
                     }
-                    var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");                    
+                    var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");
 //console.log(trObjZp);                                        
 //                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
                     var trHTML = "";
@@ -719,14 +720,14 @@ angular.module('portalNMC')
                     trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-hover nmc-child-object-table\">";
                     trHTML += "<thead><tr class=\"nmc-child-table-header\">";
 //                    trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
-                    $scope.oldColumns.forEach(function(column){
+                    $scope.oldColumns.forEach(function(column) {
                         trHTML += "<th class=\"" + column.class + "\">";
                         trHTML += "" + (column.header || column.name) + "";
                         trHTML += "</th>";
                     });
                     trHTML += "</tr></thead>";
-                    
-                    object.zpoints.forEach(function(zpoint){
+
+                    object.zpoints.forEach(function(zpoint) {
                         trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
 //                        trHTML += "<td class=\"nmc-td-for-buttons-3\">"+
 //                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\"" +
@@ -757,9 +758,9 @@ angular.module('portalNMC')
 //                                "</i></a>";
 //                        trHTML += "</td>";
                         $scope.oldColumns.forEach(function(column) {
-                            switch (column.name){
-                                case "zpointName": 
-                                    var imgPath = "";                                  
+                            switch (column.name) {
+                                case "zpointName":
+                                    var imgPath = "";
                                     switch (zpoint['zpointType']) {
                                         case "cw":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
@@ -780,34 +781,34 @@ angular.module('portalNMC')
                                             //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-206-electricity.png";
                                         //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-543-lamp.png";
                                             //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-65-lightbulb.png";         
-                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";               
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";
                                             break;
                                         default:
                                             imgPath = column['zpointType'];
-                                            break;   
-                                    }                                   
+                                            break;
+                                    }
                                     trHTML += "<td>";
                                     trHTML += "<img class='marginLeft5' height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
-                                    trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>"; 
+                                    trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>";
                                     break;
-                                case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
+                                case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;
                                 case "zpointRefRange" : trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
-                                case "empty" : trHTML += "<td></td>"; break;    
+                                case "empty" : trHTML += "<td></td>"; break;
                                 default : trHTML += "<td>" + (mainSvc.checkUndefinedNull(zpoint[column.name]) ? "" : zpoint[column.name]) + "</td>"; break;
                             }
                         });
                         trHTML += "</tr>";
-                    });    
+                    });
                     trHTML += "</table></td>";
                     trObjZp.innerHTML = trHTML;
-                    
-                    $compile(trObjZp)($scope);                
-                } 
-                
-                $scope.dateFormat = function(millisec){
-                    var result ="";
+
+                    $compile(trObjZp)($scope);
+                }
+
+                $scope.dateFormat = function(millisec) {
+                    var result = "";
                     var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone * 3600.0 * 1000.0);
-                    var tmpDate = (new Date(millisec + serverTimeZoneDifferent));            
+                    var tmpDate = (new Date(millisec + serverTimeZoneDifferent));
                     result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
                     return result;//
                 };
@@ -961,7 +962,7 @@ angular.module('portalNMC')
                 //Фильтр "Только непросмотренные"
                 $scope.onlyNoRead = false;
                 $scope.showRow = function(obj) {
-                    if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)) {
+                    if ((typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)) {
                         return true;
                     }
                     if ($scope.onlyNoRead) {
@@ -973,7 +974,7 @@ angular.module('portalNMC')
                     }
                     return true;
                 };
-                               
+
                 $scope.showDetails = function(obj) {
                     if ($scope.bdirectories) {
                         $scope.currentObject = obj;
@@ -982,7 +983,7 @@ angular.module('portalNMC')
                 };
 
                 // Показания точек учета
-                $scope.getIndicators = function(objectId, zpointId){  
+                $scope.getIndicators = function(objectId, zpointId) {
                     $scope.setIndicatorsParams(objectId, zpointId);
 //                    $scope.selectedZpoint(objectId, zpointId);
 //                    $cookies.contZPoint = $scope.currentZpoint.id;
@@ -1996,10 +1997,133 @@ angular.module('portalNMC')
                 });
 // ***********************************************************************************************                
 //                  end Object monitor
-// ***********************************************************************************************                
+// ***********************************************************************************************
+// ********************************************************************************************
+                //  Building types
+//*********************************************************************************************
+                $scope.data.buildingTypes = [];
+                $scope.data.buildingCategories = [];
+                $scope.data.preparedBuildingCategoryList = [];
+                $scope.data.buildingCategories = objectSvc.getBuildingCategories();
+                $scope.data.buildingTypes = objectSvc.getBuildingTypes();
+                $scope.$on(objectSvc.BROADCASTS.BUILDING_TYPES_LOADED, function () {
+                    $scope.data.buildingTypes = objectSvc.getBuildingTypes();
+                });
+                $scope.$on(objectSvc.BROADCASTS.BUILDING_CATEGORIES_LOADED, function () {
+                    $scope.data.buildingCategories = objectSvc.getBuildingCategories();
+                });
+                
+                function performBuildingCategoryList(buildingType) {
+                    //find b cat when buildingType === input buildingType
+                    //find b cat when parentCat === keyname from up ^
+                    var categoryListByBuildingType = [],
+                        filtredCategoryList = [],
+                        preparedCategory = null;
+                    $scope.data.buildingCategories.forEach(function (bcat) {
+                        if (bcat.buildingType === buildingType) {
+                            categoryListByBuildingType.push(angular.copy(bcat));
+                        } 
+                    });
+                    categoryListByBuildingType.forEach(function (pcat) {
+                        $scope.data.buildingCategories.forEach(function (bcat) {
+                            if (bcat.parentCategory === pcat.keyname) {                                
+                                preparedCategory = angular.copy(bcat);                                
+                                preparedCategory.parentCategoryCaption = pcat.caption;
+                                filtredCategoryList.push(preparedCategory);
+                            } 
+                        });
+                    });
+                    $scope.data.preparedBuildingCategoryList = filtredCategoryList;
+//                    console.log($scope.data.preparedBuildingCategoryList);
+                }
+                
+                $scope.changeBuildingType = function (buildingType) {
+//                    console.log("changeBuildingType");
+                    $scope.currentObject.buildingTypeCategory = null;
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                    $('#inputBuildingCategory').addClass('nmc-select-form');
+                    if (mainSvc.checkUndefinedNull(buildingType)) {
+                        return false;
+                    }
+                    $cookies.recentBuildingType = buildingType;
+                    performBuildingCategoryList(buildingType);
+                };
+                
+                function setBuildingCategory() {
+                    var bCat = null;
+                    $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+                        if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
+                            bCat = bcat;
+                            return true;
+                        }
+                    });
+//                    if (bCat === null) {
+//                        return false;
+//                    }
+                    //50 symbols
+//                    console.log(bCat);
+                    if (bCat !== null && bCat.caption.length >= 50) { 
+                        $('#inputBuildingCategory').removeClass('nmc-select-form');
+                        $('#inputBuildingCategory').addClass('nmc-select-form-high');
+                    } else {
+                        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+                        $('#inputBuildingCategory').addClass('nmc-select-form');
+                    }
+                    if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
+                        return false;
+                    }
+                }
+                
+                $scope.changeBuildingCategory = function () {
+                    setBuildingCategory();
+                    $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                };
+// ********************************************************************************************
+                //  end Building types
+//*********************************************************************************************                
                 
                 $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function() {
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
+                });
+                
+                $('#showObjOptionModalView').on('shown.bs.modal', function(){                    
+                    $('#inputContObjectName').focus();
+                    $('#inputNumOfStories').inputmask('integer', {min: 1, max: 200});
+                });
+                
+                $scope.objectCtrlSettings.objectModalWindowTabs = [
+                    {
+                        name: "view_main_object_properties_tab",
+                        tabpanel: "view_main_object_properties"
+                    },        
+                    {
+                        name: "view_extra_object_properties_tab",
+                        tabpanel: "view_extra_object_properties"
+                    }
+                ];
+                
+                function setActiveObjectPropertiesTab(tabName) {
+                    $scope.objectCtrlSettings.objectModalWindowTabs.forEach(function (tabElem) {
+                        var tab, tabPanel;
+                        tab = document.getElementById(tabElem.name) || null;
+                        tabPanel = document.getElementById(tabElem.tabpanel) || null;
+                        if (tabElem.name.localeCompare(tabName) !== 0) {                
+
+                            tab.classList.remove("active");                
+                            tabPanel.classList.remove("active");
+                        } else {                
+                            tab.classList.add("active");
+                            tabPanel.classList.add("in");
+                            tabPanel.classList.add("active");
+                        }
+                    });
+                }
+                
+                $('#showObjOptionModalView').on('hidden.bs.modal', function() {
+//                    $scope.currentObject.isSaving = false;
+//                    $scope.currentSug = null;
+                    setActiveObjectPropertiesTab("view_main_object_properties_tab");
                 });
                 
                 var initCtrl = function(){
