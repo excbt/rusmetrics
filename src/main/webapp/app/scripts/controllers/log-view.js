@@ -89,40 +89,40 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             name: "currentStatusColor",
             caption: "",
             type: 'color',
-            headerClass: "col-xs-1 col-md-1 nmc-td-for-button noPadding"
+            headerClass: "col-xs-1 nmc-td-for-button noPadding"
         }, {
             name: "dataSource",
             caption: "Источник",
-            headerClass: "col-xs-2 col-md-2 noPadding",
+            headerClass: "col-xs-2 noPadding",
             type: 'id'
         }, {
             name: "deviceModel",
             caption: "Модель",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-1"
         }, {
             name: "deviceNumber",
             caption: "Номер прибора",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-1"
         }, {
             name: "startDate",
             caption: "Время начала",
-            headerClass: "col-xs-1 col-md-1 noPadding"
-        }, {
+            headerClass: "col-xs-1 noPadding"
+        }, /*{
             name: "endDate",
             caption: "Время завершения",
-            headerClass: "col-xs-1 col-md-1 noPadding"
-        }, {
+            headerClass: "col-xs-1 noPadding"
+        },*/ {
             name: "author",
             caption: "Инициатор",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-1"
         }, {
             name: "currentStatus",
             caption: "Текущий статус",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-1"
         }, {
             name: "statusMessage",
             caption: "Сообщение",
-            headerClass: "col-xs-3 col-md-3"
+            headerClass: "col-xs-4"
         }
         
     ];
@@ -130,26 +130,26 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         {
             name: "stepDateStr",
             caption: "Дата-время",
-            headerClass: "col-xs-2 col-md-2",
+            headerClass: "col-xs-2",
             type: "id"
         }, {
             name: "stepType",
             caption: "Тип",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-1"
         }, {
             name: "stepMessage",
             caption: "Текст",
-            headerClass: "col-xs-7 col-md-7"
+            headerClass: "col-xs-7"
         }, {
             name: "isIncremental",
             caption: "Счетчик",
-            headerClass: "col-xs-1 col-md-1",
+            headerClass: "col-xs-1",
             type: "checkbox"
             
         }, {
             name: "sumRows",
             caption: "Значение",
-            headerClass: "col-xs-1 col-md-1"
+            headerClass: "col-xs-1"
         }
         
     ];
