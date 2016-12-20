@@ -633,7 +633,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.sendObjectToServer = function (obj) {
-console.log(obj);                    
+//console.log(obj);                    
                     obj.isSaving = true;
                     if (!checkObjectSettings(obj)) {
                         obj.isSaving = false;
