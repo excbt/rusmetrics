@@ -1,8 +1,11 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 
@@ -16,5 +19,19 @@ import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
  */
 public interface V_FullUserInfoRepository extends JpaRepository<V_FullUserInfo, Long> {
 
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
 	public List<V_FullUserInfo> findByUserName(String userName);
+
+	/**
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@Query("SELECT i FROM V_FullUserInfo i WHERE i.id in (:ids)")
+	public List<V_FullUserInfo> selectFullUsersById(@Param("ids") Collection<Long> ids);
+
 }

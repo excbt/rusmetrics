@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import javax.persistence.Tuple;
@@ -47,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.uuid.Generators;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -61,16 +63,17 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterDeltaService;
+import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterImportService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberExecutorService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
-import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -81,7 +84,6 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
-import ru.excbt.datafuse.slogwriter.service.SLogSessionTN;
 
 /**
  * Контроллер для работы с данными по теплоснабжению для абонента
@@ -127,7 +129,10 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
-	private SLogWriterService sLogWriterService;
+	private ContServiceDataHWaterImportService contServiceDataHWaterImportService;
+
+	@Autowired
+	private SubscriberExecutorService subscriberExecutorService;
 
 	/**
 	 * 
@@ -418,7 +423,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		List<ContServiceDataHWaterAbs_Csv> cvsDataList = contServiceDataHWaterService.selectDataAbs_Csv(contZPointId,
 				timeDetail, beginD, endOfDay);
 
-		byte[] byteArray = hWatersCsvService.writeHWaterDataToCsvAbs(cvsDataList);
+		byte[] byteArray = hWatersCsvService.writeDataHWaterToCsvAbs(cvsDataList);
 
 		response.setContentType(MIME_CSV);
 		response.setContentLength(byteArray.length);
@@ -482,7 +487,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		byte[] csaBytes;
 		try {
-			csaBytes = hWatersCsvService.writeHWaterDataToCsv(dataHWaterList);
+			csaBytes = hWatersCsvService.writeDataHWaterToCsv(dataHWaterList);
 		} catch (JsonProcessingException e) {
 			return responseInternalServerError(ApiResult.error(e));
 		}
@@ -542,7 +547,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		List<ContServiceDataHWater> inData;
 		try (FileInputStream fio = new FileInputStream(inFilename)) {
-			inData = hWatersCsvService.parseHWaterDataCsv(fio);
+			inData = hWatersCsvService.parseDataHWaterCsv(fio);
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
 			return responseInternalServerError(ApiResult.error(e));
@@ -630,7 +635,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		List<ContServiceDataHWater> inData;
 		try (FileInputStream fio = new FileInputStream(inFilename)) {
-			inData = hWatersCsvService.parseHWaterDataCsv(fio);
+			inData = hWatersCsvService.parseDataHWaterCsv(fio);
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
 			return responseInternalServerError(ApiResult.error(e));
@@ -755,24 +760,22 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
 		}
 
-		List<UUID> trxIds = new ArrayList<>();
-
 		// All conditions is passed
 
-		SLogSessionTN sLogSessionTN = sLogWriterService.newSessionWebT1(subscriberParam.getSubscrUserId());
+		//SLogSessionTN sLogSessionTN = sLogWriterService.newSessionWebTN(subscriberParam.getSubscrUserId());
 
-		UUID trxId = sLogSessionTN.getSessionUUID();
-
-		trxIds.add(trxId);
+		UUID trxId = Generators.timeBasedGenerator().generate();
+		//
+		//		result.put("sessionTrxId", trxId.toString());
 
 		for (MultipartFile multipartFile : multipartFiles) {
 
 			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
 
-			String inFilename = webAppPropsService.getSubscriberCsvPath(subscriberParam.getSubscriberId(),
+			String internalFilename = webAppPropsService.getSubscriberCsvPath(subscriberParam.getSubscriberId(),
 					subscriberParam.getSubscrUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
 
-			File inFile = new File(inFilename);
+			File inFile = new File(internalFilename);
 
 			try {
 				@SuppressWarnings("unused")
@@ -789,13 +792,17 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
 					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")),
 					DBRowUtils.asLong(row.get("deviceObjectId")), DBRowUtils.asLong(row.get("subscrDataSourceId")),
-					subscriberParam.getSubscrUserId(), inFilename);
+					subscriberParam.getSubscrUserId(), fileName, internalFilename);
 
 			serviceDataImportInfos.add(importInfo);
 
 		}
 
-		return responseOK(trxIds.toString());
+		Callable<Boolean> task = contServiceDataHWaterImportService.newTask(serviceDataImportInfos);
+
+		subscriberExecutorService.submit(subscriberParam.getSubscriberId(), task);
+
+		return responseOK();
 
 	}
 

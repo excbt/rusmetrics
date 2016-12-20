@@ -150,8 +150,10 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setOwnerContacts(contObject.getOwnerContacts());
 		currContObject.setCwTemp(contObject.getCwTemp());
 		currContObject.setHeatArea(contObject.getHeatArea());
-
 		currContObject.setTimezoneDefKeyname(contObject.getTimezoneDefKeyname());
+		currContObject.setBuildingType(contObject.getBuildingType());
+		currContObject.setBuildingTypeCategory(contObject.getBuildingTypeCategory());
+		currContObject.setNumOfStories(contObject.getNumOfStories());
 
 		// Process ContObjectDaData
 		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(currContObject);

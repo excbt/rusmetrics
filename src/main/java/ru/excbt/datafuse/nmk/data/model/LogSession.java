@@ -85,6 +85,9 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 	@Column(name = "deleted")
 	private int deleted;
 
+	@Column(name = "author_id")
+	private Long authorId;
+
 	@JsonIgnore
 	@Transient
 	private SubscrDataSource subscrDataSource;
@@ -92,6 +95,10 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 	@JsonIgnore
 	@Transient
 	private DeviceObject deviceObject;
+
+	@JsonIgnore
+	@Transient
+	private V_FullUserInfo fullUserInfo;
 
 	public Long getMasterId() {
 		return masterId;
@@ -268,6 +275,22 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 	public String getStatusDateStr() {
 		return statusDate == null ? null
 				: DateFormatUtils.formatDateTime(statusDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
+	}
+
+	public Long getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(Long authorId) {
+		this.authorId = authorId;
+	}
+
+	public V_FullUserInfo getFullUserInfo() {
+		return fullUserInfo;
+	}
+
+	public void setFullUserInfo(V_FullUserInfo fullUserInfo) {
+		this.fullUserInfo = fullUserInfo;
 	}
 
 }

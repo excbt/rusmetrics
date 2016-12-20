@@ -19,6 +19,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.slogwriter.service.SLogService;
+import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionTN;
 
 /**
@@ -62,7 +63,11 @@ public class SLogWriterService {
 	 * @param sessionMessage
 	 * @return
 	 */
-	public SLogSessionTN newSessionWebT1(Long authorId) {
+	public SLogSessionT1 newSessionWebT1(Long dataSourceId, Long deviceObjectId, String sessionMessage, Long authorId) {
+		return sLogService.newWebSessionT1(dataSourceId, deviceObjectId, sessionMessage, authorId);
+	}
+
+	public SLogSessionTN newSessionWebTN(Long dataSourceId, Long deviceObjectId, String sessionMessage, Long authorId) {
 		return sLogService.newWebSessionTN();
 	}
 

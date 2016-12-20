@@ -117,8 +117,14 @@ public class LogSessionVO implements Serializable {
 		private final String authorName;
 
 		public AuthorInfo(LogSession logSession) {
-			this.authorId = null;
-			this.authorName = "Расписание";
+			this.authorId = logSession.getAuthorId() != null ? logSession.getAuthorId().toString() : null;
+			this.authorName = logSession.getFullUserInfo() != null ? String.format("Портал. %s %s ",
+					logSession.getFullUserInfo().getFirstName() != null ? logSession.getFullUserInfo().getFirstName()
+							: "",
+					logSession.getFullUserInfo().getLastName() != null ? logSession.getFullUserInfo().getLastName()
+							: "")
+					: "Расписание";
+			//"Расписание";
 		}
 
 		public String getAuthorName() {

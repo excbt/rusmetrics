@@ -5,7 +5,8 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import javax.annotation.PreDestroy;
 
@@ -34,16 +35,30 @@ public class SubscriberExecutorService {
 	 * @param subscriberId
 	 * @return
 	 */
-	public Executor getExecutor(Long subscriberId) {
+	public Future<Boolean> submit(Long subscriberId, Runnable task) {
 		checkNotNull(subscriberId);
-		return subscriberExecutors.getSubscriberExecutor(subscriberId);
+		checkNotNull(task);
+		return subscriberExecutors.submit(subscriberId, task);
 	}
 
 	/**
 	 * 
+	 * @param subscriberId
+	 * @param task
+	 * @return
+	 */
+	public Future<Boolean> submit(Long subscriberId, Callable<Boolean> task) {
+		checkNotNull(subscriberId);
+		checkNotNull(task);
+		return subscriberExecutors.submit(subscriberId, task);
+	}
+
+	/**
+	 * @throws InterruptedException
+	 * 
 	 */
 	@PreDestroy
-	private void shutdown() {
+	private void shutdown() throws InterruptedException {
 		logger.info("Shutdown Subscriber executor service");
 		subscriberExecutors.shutDown();
 	}

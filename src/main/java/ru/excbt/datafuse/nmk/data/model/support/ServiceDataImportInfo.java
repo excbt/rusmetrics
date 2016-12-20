@@ -24,7 +24,9 @@ public class ServiceDataImportInfo {
 
 	private final Long authorId;
 
-	private final String fileName;
+	private final String internalFileName;
+
+	private final String userFileName;
 
 	/**
 	 * @param subscriberId
@@ -36,7 +38,7 @@ public class ServiceDataImportInfo {
 	 * @param fileName
 	 */
 	public ServiceDataImportInfo(Long subscriberId, Long contObjectId, Long contZPointId, Long deviceObjectId,
-			Long dataSourceId, Long authorId, String fileName) {
+			Long dataSourceId, Long authorId, String userFileName, String internalFileName) {
 		super();
 		this.subscriberId = subscriberId;
 		this.contObjectId = contObjectId;
@@ -44,7 +46,8 @@ public class ServiceDataImportInfo {
 		this.deviceObjectId = deviceObjectId;
 		this.dataSourceId = dataSourceId;
 		this.authorId = authorId;
-		this.fileName = fileName;
+		this.userFileName = userFileName;
+		this.internalFileName = internalFileName;
 	}
 
 	public Long getSubscriberId() {
@@ -59,8 +62,8 @@ public class ServiceDataImportInfo {
 		return contZPointId;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getInternalFileName() {
+		return internalFileName;
 	}
 
 	public Long getDeviceObjectId() {
@@ -73,6 +76,10 @@ public class ServiceDataImportInfo {
 
 	public Long getAuthorId() {
 		return authorId;
+	}
+
+	public String getUserFileName() {
+		return userFileName;
 	}
 
 }

@@ -18,10 +18,12 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.LogSessionStep;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.repository.LogSessionRepository;
 import ru.excbt.datafuse.nmk.data.repository.LogSessionStepRepository;
+import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 @Service
@@ -39,6 +41,9 @@ public class LogSessionService extends AbstractService {
 	@Autowired
 	private DeviceObjectService deviceObjectService;
 
+	@Autowired
+	private V_FullUserInfoRepository fullUserInfoRepository;
+
 	/**
 	 * 
 	 * @param logSessionList
@@ -47,8 +52,12 @@ public class LogSessionService extends AbstractService {
 
 		Set<Long> dataSourceIds = logSessionList.stream().filter(i -> i.getDataSourceId() != null)
 				.map(i -> i.getDataSourceId()).collect(Collectors.toSet());
+
 		Set<Long> deviceObjectIds = logSessionList.stream().filter(i -> i.getDeviceObjectId() != null)
 				.map(i -> i.getDeviceObjectId()).collect(Collectors.toSet());
+
+		Set<Long> authorIds = logSessionList.stream().filter(i -> i.getAuthorId() != null).map(i -> i.getAuthorId())
+				.collect(Collectors.toSet());
 
 		List<SubscrDataSource> subscrDataSources = dataSourceIds.isEmpty() ? new ArrayList<>()
 				: subscrDataSourceService.selectDataSourceByIds(dataSourceIds);
@@ -56,17 +65,22 @@ public class LogSessionService extends AbstractService {
 		List<DeviceObject> deviceObjects = deviceObjectIds.isEmpty() ? new ArrayList<>()
 				: deviceObjectService.selectDeviceObjectsByIds(deviceObjectIds);
 
+		List<V_FullUserInfo> fullUserInfos = authorIds.isEmpty() ? new ArrayList<>()
+				: fullUserInfoRepository.selectFullUsersById(authorIds);
+
 		final Map<Long, SubscrDataSource> dataSourceMap = subscrDataSources.stream()
-				.collect(Collectors.toMap(SubscrDataSource::getId,
-						Function.identity()));
+				.collect(Collectors.toMap(SubscrDataSource::getId, Function.identity()));
 
 		final Map<Long, DeviceObject> deviceObjectsMap = deviceObjects.stream()
-				.collect(Collectors.toMap(DeviceObject::getId,
-						Function.identity()));
+				.collect(Collectors.toMap(DeviceObject::getId, Function.identity()));
+
+		final Map<Long, V_FullUserInfo> fullUserInfoMap = fullUserInfos.stream()
+				.collect(Collectors.toMap(V_FullUserInfo::getId, Function.identity()));
 
 		logSessionList.forEach(i -> {
 			i.setSubscrDataSource(dataSourceMap.get(i.getDataSourceId()));
 			i.setDeviceObject(deviceObjectsMap.get(i.getDeviceObjectId()));
+			i.setFullUserInfo(fullUserInfoMap.get(i.getAuthorId()));
 		});
 
 	}
@@ -84,8 +98,7 @@ public class LogSessionService extends AbstractService {
 		}
 
 		List<LogSession> preResult = logSessionRepository.selectLogSessions(dataSourceIds,
-				localDatePeriod.getDateFrom(),
-				localDatePeriod.getDateTo());
+				localDatePeriod.getDateFrom(), localDatePeriod.getDateTo());
 
 		loadLogSessionProps(preResult);
 
@@ -108,9 +121,7 @@ public class LogSessionService extends AbstractService {
 		}
 
 		List<LogSession> preResult = logSessionRepository.selectLogSessions(dataSourceIds,
-				localDatePeriod.getDateFrom(),
-				localDatePeriod.getDateTo(),
-				contObjectIds);
+				localDatePeriod.getDateFrom(), localDatePeriod.getDateTo(), contObjectIds);
 
 		loadLogSessionProps(preResult);
 

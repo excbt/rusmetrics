@@ -18,7 +18,9 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWaterImport;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterImport_CsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 
 /**
@@ -43,7 +45,7 @@ public class HWatersCsvService {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public byte[] writeHWaterDataToCsv(List<ContServiceDataHWater> contServiceDataHWaterList)
+	public byte[] writeDataHWaterToCsv(List<ContServiceDataHWater> contServiceDataHWaterList)
 			throws JsonProcessingException {
 		checkNotNull(contServiceDataHWaterList);
 
@@ -66,7 +68,7 @@ public class HWatersCsvService {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public byte[] writeHWaterDataToCsvAbs(List<ContServiceDataHWaterAbs_Csv> contServiceDataHWaterList)
+	public byte[] writeDataHWaterToCsvAbs(List<ContServiceDataHWaterAbs_Csv> contServiceDataHWaterList)
 			throws JsonProcessingException {
 		checkNotNull(contServiceDataHWaterList);
 
@@ -90,7 +92,7 @@ public class HWatersCsvService {
 	 * @throws IOException
 	 * @throws JsonProcessingException
 	 */
-	public List<ContServiceDataHWater> parseHWaterDataCsv(InputStream inputStream)
+	public List<ContServiceDataHWater> parseDataHWaterCsv(InputStream inputStream)
 			throws JsonProcessingException, IOException {
 
 		CsvMapper mapper = new CsvMapper();
@@ -105,6 +107,33 @@ public class HWatersCsvService {
 		iterator = reader.readValues(inputStream);
 		while (iterator.hasNext()) {
 			ContServiceDataHWater d = iterator.next();
+			parsedData.add(d);
+		}
+		return parsedData;
+	}
+
+	/**
+	 * 
+	 * @param inputStream
+	 * @return
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 */
+	public List<ContServiceDataHWaterImport> parseDataHWaterImportCsv(InputStream inputStream)
+			throws JsonProcessingException, IOException {
+
+		CsvMapper mapper = new CsvMapper();
+		mapper.addMixIn(ContServiceDataHWaterImport.class, ContServiceDataHWaterImport_CsvFormat.class);
+		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterImport.class).withHeader();
+		ObjectReader reader = mapper.readerFor(ContServiceDataHWaterImport.class).with(schema);
+
+		MappingIterator<ContServiceDataHWaterImport> iterator = null;
+		List<ContServiceDataHWaterImport> parsedData = new ArrayList<>();
+
+		iterator = reader.readValues(inputStream);
+		while (iterator.hasNext()) {
+			ContServiceDataHWaterImport d = iterator.next();
 			parsedData.add(d);
 		}
 		return parsedData;

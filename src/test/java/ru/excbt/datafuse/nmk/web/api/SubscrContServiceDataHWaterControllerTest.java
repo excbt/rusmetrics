@@ -130,7 +130,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
 				TimeDetailKey.TYPE_24H, dp);
 
-		byte[] fileBytes = HWatersCsvService.writeHWaterDataToCsv(dataHWater);
+		byte[] fileBytes = HWatersCsvService.writeDataHWaterToCsv(dataHWater);
 
 		String srcFilename = webAppPropsService.getHWatersCsvOutputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(728L, 123L);
@@ -281,7 +281,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
 				TimeDetailKey.TYPE_24H, dp);
 
-		byte[] fileBytes = HWatersCsvService.writeHWaterDataToCsv(dataHWater);
+		byte[] fileBytes = HWatersCsvService.writeDataHWaterToCsv(dataHWater);
 
 		// Processing POST
 

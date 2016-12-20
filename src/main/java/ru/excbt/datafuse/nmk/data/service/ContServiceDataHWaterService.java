@@ -584,7 +584,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(contZPointId, timeDetailKey, localDatePeriod);
 
 		try {
-			ByteArrayInputStream is = new ByteArrayInputStream(hWatersCsvService.writeHWaterDataToCsv(deleteCandidate));
+			ByteArrayInputStream is = new ByteArrayInputStream(hWatersCsvService.writeDataHWaterToCsv(deleteCandidate));
 
 			@SuppressWarnings("unused")
 			String digestMD5 = FileWriterUtils.writeFile(is, outFile);
