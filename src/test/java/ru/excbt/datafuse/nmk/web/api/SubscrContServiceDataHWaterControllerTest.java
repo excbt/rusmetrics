@@ -304,6 +304,8 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		logger.info("Uploaded FileInfoMD5:{}", resultContent);
 
+		Thread.sleep(5000);
+
 	}
 
 	@Override

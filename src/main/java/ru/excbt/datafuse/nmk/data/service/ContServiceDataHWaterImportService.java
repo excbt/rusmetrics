@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterImportRepository;
+import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
@@ -48,7 +50,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterImportService.class);
 
-	private final static String IMPORT_ERROR_TEMPLATE = "Ошибка импорта данных. Файл %";
+	private final static String IMPORT_ERROR_TEMPLATE = "Ошибка импорта данных. Файл %s";
 	private final static String IMPORT_COMPLETE_TEMPLATE = "Данные из файла %s успешно загружены";
 	private final static String IMPORT_EXCEPTION_TEMPLATE = "Data Import Error. %s. File: %s";
 
@@ -123,7 +125,6 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			try (FileInputStream fio = new FileInputStream(importInfo.getInternalFileName())) {
 				inDataHWaterImport = hWatersCsvService.parseDataHWaterImportCsv(fio);
 			} catch (IOException e) {
-				session.invalidate();
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
 				logger.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
@@ -139,7 +140,6 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				session.web().trace("Ошибка. Не задано значение detail_type");
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-				session.invalidate();
 				throw new IllegalArgumentException(
 						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
@@ -150,7 +150,6 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				session.web().trace("Ошибка. В файле задано более 2-х типов detail_type ");
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-				session.invalidate();
 				throw new IllegalArgumentException(
 						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
@@ -159,7 +158,6 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				session.web().trace("Ошибка. Пустое значение date");
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-				session.invalidate();
 				throw new IllegalArgumentException(
 						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
@@ -177,7 +175,6 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				session.web().trace("Точка учета не найдена");
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-				session.invalidate();
 				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE, "ContZPoint is not found",
 						importInfo.getUserFileName()));
 			}
@@ -189,7 +186,6 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (!BooleanUtils.isTrue(zpoint.getIsManualLoading())) {
 				session.web().trace("Точка учета не поддерживает импорт данных");
-				session.invalidate();
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
 				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE,
@@ -221,20 +217,49 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 							timeDetailKey.getKeyname(), dateFormat.format(minDateData.getDataDate()),
 							dateFormat.format(maxDateData.getDataDate())));
 
-			session.web().trace("Импорт данных в БД");
+			session.web().trace("Загрузка данных в БД");
 
 			try {
 				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
 			} catch (Exception e) {
 				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
 						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-				session.invalidate();
 				logger.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), e);
 				throw new IllegalArgumentException(
 						String.format(IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
 			}
-			session.web().trace("Импорт данных в БД успешно завершен");
+			session.web().trace("Загрузка данных в БД успешно завершена");
+
+			session.web().trace("Обновление данных запущено");
+
+			// Call Stored proc
+			try {
+				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import");
+				contServiceDataHWaterImportRepository.processImport(session.getSessionUUID().toString());
+				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import SUCCESS");
+			} catch (Exception e) {
+				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import ERROR");
+				session.web().trace("Ошибка при обновлении данных");
+				logger.debug("processImport.Status FAILURE");
+
+				PSQLException pe = DBExceptionUtils.getPSQLException(e);
+
+				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
+
+				logger.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
+
+				session.web().trace(sqlExceptiomMessage);
+
+				session.status(SLogSessionStatuses.FAILURE.getKeyname(),
+						String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
+
+				throw new IllegalArgumentException(
+						String.format(IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
+			}
+
+			session.web().trace("Обновление данных успешно завершено");
 
 			session.status(SLogSessionStatuses.COMPLETE.getKeyname(),
 					String.format(IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName()));

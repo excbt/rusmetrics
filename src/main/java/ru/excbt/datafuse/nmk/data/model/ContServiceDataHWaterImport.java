@@ -9,6 +9,10 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,6 +24,9 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_service_data_hwater_import")
+@NamedStoredProcedureQueries({ @NamedStoredProcedureQuery(name = "importData",
+		procedureName = "portal.process_service_data_hwater_import", parameters = {
+				@StoredProcedureParameter(mode = ParameterMode.IN, name = "par_session_uuid", type = String.class) }) })
 public class ContServiceDataHWaterImport extends AbstractPersistableEntity<Long> {
 
 	/**
