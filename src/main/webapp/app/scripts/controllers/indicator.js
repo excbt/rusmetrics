@@ -454,9 +454,9 @@ angular.module('portalNMC')
         
     //file upload settings
     $scope.initFileUploader =  function() {
-        var contZPoint = $cookies.contZPoint;
+        var contZPoint = $scope.contZPoint || $cookies.contZPoint;
         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;//"24h";
-        var contObject = $cookies.contObject;
+        var contObject = $scope.contObject || $cookies.contObject;
 //         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
         var url = "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZPoint + "/service/" + timeDetailType + "/csv";        
         $scope.uploader = new FileUploader({url: url});        
