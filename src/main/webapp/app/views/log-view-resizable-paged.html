@@ -10,7 +10,7 @@
                data-target="#session-log" 
                role="tab" data-toggle="tab">Журнал загрузки данных</a>
         </li>   
-        <li id="sms_log_2nd_menu_item" role="presentation" class="">
+        <li id="sms_log_2nd_menu_item" role="presentation">
             <a id="smsLogTab" 
                class="nmc-main-tab-button" 
                href="#/log/sms-log/" 
@@ -18,6 +18,16 @@
                data-target="#datasources" 
                role="tab" 
                data-toggle="tab">Журнал отправки СМС уведомлений</a>           
+        </li>
+        <li role="presentation" class="pull-right">
+            <i               
+               title="Загрузка показаний из файлов"               
+               class="btn btn-sm glyphicon glyphicon-download-alt gly-rotate-180"
+               aria-controls="upload_files" 
+               role="tab"
+               data-target="#upLoadFilesModal" 
+               data-toggle="modal">                
+            </i>
         </li>
         
     </ul>
@@ -372,3 +382,5 @@
     </div>
     <div class="rui-resizable-handle"></div>
 </div>
+
+<upload-files-modal></upload-files-modal>
