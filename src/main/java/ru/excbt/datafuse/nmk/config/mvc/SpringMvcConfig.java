@@ -1,9 +1,6 @@
 package ru.excbt.datafuse.nmk.config.mvc;
 
-import javax.servlet.MultipartConfigElement;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +8,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -56,20 +54,12 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 		configurer.enable();
 	}
 
-	//	@Bean(name = "multipartResolver")
-	//	public CommonsMultipartResolver getMultipartResolver() {
-	//		CommonsMultipartResolver result = new CommonsMultipartResolver();
-	//		result.setMaxUploadSize(20971520);
-	//		result.setMaxUploadSize(1048576);
-	//		return result;
-	//	}
-
-	@Bean
-	public MultipartConfigElement multipartConfigElement() {
-		MultipartConfigFactory factory = new MultipartConfigFactory();
-		factory.setMaxFileSize("10MB");
-		factory.setMaxRequestSize("10MB");
-		return factory.createMultipartConfig();
+	@Bean(name = "multipartResolver")
+	public CommonsMultipartResolver getMultipartResolver() {
+		CommonsMultipartResolver result = new CommonsMultipartResolver();
+		result.setMaxUploadSize(20971520);
+		//result.setMaxUploadSize(1048576);
+		return result;
 	}
 
 	@Bean(name = "internalResourceViewResolver")
