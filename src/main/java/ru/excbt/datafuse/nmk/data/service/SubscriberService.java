@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -374,11 +375,16 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscriberOrganizationVO> enhanceSubscriber(final List<Subscriber> subscribers) {
 		checkNotNull(subscribers);
+
+		if (subscribers.isEmpty()) {
+			return new ArrayList<>();
+		}
+
 		long[] organizationIds = subscribers.stream().filter(i -> i.getOrganizationId() != null)
 				.mapToLong(i -> i.getOrganizationId()).toArray();
 
-		final List<Organization> organizations = organizationRepository
-				.selectByIds(Arrays.asList(ArrayUtils.toObject(organizationIds)));
+		final List<Organization> organizations = organizationIds.length == 0 ? new ArrayList<>()
+				: organizationRepository.selectByIds(Arrays.asList(ArrayUtils.toObject(organizationIds)));
 
 		final Map<Long, Organization> organizationsMap = organizations.stream()
 				.collect(Collectors.toMap(Organization::getId, Function.identity()));
