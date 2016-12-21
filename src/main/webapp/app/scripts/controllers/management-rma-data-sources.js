@@ -1,6 +1,8 @@
+/*jslint node: true, white: true*/
+/*global angular*/
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDatasourcesCtrl', ['$rootScope', '$scope','$http', 'mainSvc', 'notificationFactory', function($rootScope, $scope, $http, mainSvc, notificationFactory){
+.controller('MngmtDatasourcesCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', function ($rootScope, $scope, $http, mainSvc, notificationFactory) {
 //console.log('Run data sources management controller.');
         //default raw data source params
     var TIMEOUT = 25;
@@ -16,8 +18,8 @@ angular.module('portalNMC')
     //ctrl variables
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.subscrUrl = "../api/rma";
-    $scope.ctrlSettings.datasourcesUrl = $scope.ctrlSettings.subscrUrl+"/dataSources";
-    $scope.ctrlSettings.datasourceTypesUrl = $scope.ctrlSettings.subscrUrl+"/dataSourceTypes";
+    $scope.ctrlSettings.datasourcesUrl = $scope.ctrlSettings.subscrUrl + "/dataSources";
+    $scope.ctrlSettings.datasourceTypesUrl = $scope.ctrlSettings.subscrUrl + "/dataSourceTypes";
     $scope.ctrlSettings.rawModemModelsUrl = $scope.ctrlSettings.subscrUrl + "/dataSources/rawModemModels";
     $scope.ctrlSettings.DEVICE_MODES = [
         {
@@ -41,25 +43,25 @@ angular.module('portalNMC')
     
     //ctrl methods
         //get data source types
-    var getDatasourceTypes = function(url){
+    var getDatasourceTypes = function (url) {
         var targetUrl = url;
         $http.get(targetUrl)
-        .then(function(response){
-            var tmp = response.data;           
+        .then(function (response) {
+            var tmp = response.data;
             $scope.data.dataSourcesTypes = tmp;
         },
-              function(e){
+              function (e) {
             console.log(e);
         });
     };
     getDatasourceTypes($scope.ctrlSettings.datasourceTypesUrl);
     
         //get data sources
-    var getDatasources = function(url){
+    var getDatasources = function (url) {
         var targetUrl = url;
         $http.get(targetUrl)
-        .then(function(response){
-            var tmp = response.data;      
+        .then(function (response) {
+            var tmp = response.data;
 //console.log(tmp);
             $scope.data.dataSources = tmp;
             mainSvc.sortItemsBy($scope.data.dataSources, 'dataSourceName');
@@ -71,12 +73,12 @@ angular.module('portalNMC')
     
     getDatasources($scope.ctrlSettings.datasourcesUrl);
     
-    function findModemIdentity(mmId){
+    function findModemIdentity(mmId) {
         if ($scope.data.rawModemModels.length == 0)
             return null;
         var result = null;
-        $scope.data.rawModemModels.some(function(model){
-            if (model.id == mmId){
+        $scope.data.rawModemModels.some(function (model) {
+            if (model.id == mmId) {
                 result = model;
                 return true;
             }
@@ -84,45 +86,45 @@ angular.module('portalNMC')
         return result;
     }
     
-    $scope.changeModemModel = function(){
+    $scope.changeModemModel = function () {
         var modemModel = findModemIdentity($scope.data.currentObject.rawModemModelId);
         $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;        
         $scope.data.currentObject.rawModemDialupAvailable = modemModel.isDialup;
     }
     
-    $scope.selectedItem = function(item){
+    $scope.selectedItem = function (item) {
         $scope.data.currentObject = angular.copy(item);
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawTimeout)){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawTimeout)) {
             $scope.data.currentObject.rawTimeout = TIMEOUT;
         }
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawSleepTime)){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawSleepTime)) {
             $scope.data.currentObject.rawSleepTime = SLEEPTIME;
         }
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawResendAttempts)){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawResendAttempts)) {
             $scope.data.currentObject.rawResendAttempts = RESENDS;
         }
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectAttempts)){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectAttempts)) {
             $scope.data.currentObject.rawReconnectAttempts = RECONNECTS;
         }
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectTimeout)){
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectTimeout)) {
             $scope.data.currentObject.rawReconnectTimeout = RECONNECT_TIMEOUT;
         }
         if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemIdentity) &&
-            !mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemModelId)){
+            !mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemModelId)) {
             var modemModel = findModemIdentity($scope.data.currentObject.rawModemModelId);
             $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;
             $scope.data.currentObject.rawModemDialupAvailable = modemModel.isDialup;
         }
     };
     
-    function getRawModemModels(){
-        $http.get($scope.ctrlSettings.rawModemModelsUrl).then(function(resp){            
+    function getRawModemModels() {
+        $http.get($scope.ctrlSettings.rawModemModelsUrl).then(function (resp) {            
             $scope.data.rawModemModels = resp.data;
         }, errorCallback)
     }
     getRawModemModels();
     
-    $scope.addDatasource = function(){
+    $scope.addDatasource = function () {
         $scope.data.currentObject = {};
         $scope.data.currentObject.dataSourceTypeKey = DATA_SOURCE_TYPE_KEY_DEFAULT;
         $scope.data.currentObject.rawConnectionType = RAW_CONNECTION_TYPE_DEFAULT;
@@ -134,13 +136,13 @@ angular.module('portalNMC')
         
         $('#showDatasourceModal').modal();
     };
-    $scope.editDatasource = function(dsource){
+    $scope.editDatasource = function (dsource) {
         $scope.selectedItem(dsource);
 //        $scope.data.currentObject = angular.copy(dsource);
         $('#showDatasourceModal').modal();
     };
     
-    var successCallback = function(response){
+    var successCallback = function (response) {
         notificationFactory.success();
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDatasourceModal').modal('hide');
@@ -150,11 +152,11 @@ angular.module('portalNMC')
         $scope.data.currentObject.rawConnectionType = RAW_CONNECTION_TYPE_DEFAULT;
     };
     
-    var errorCallback = function(e){
+    var errorCallback = function (e) {
 //        notificationFactory.errorInfo(e.statusText,e.data.description);       
         console.log(e);
         var errorCode = "-1";
-        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)) {
             errorCode = "ERR_CONNECTION";
         };
         if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
@@ -164,9 +166,9 @@ angular.module('portalNMC')
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
-    function checkDatasource(dsource){
+    function checkDatasource(dsource) {
         var checkDsourceFlag = true;
-        if (angular.isUndefined(dsource.dataSourceName) || (dsource.dataSourceName === null) || (dsource.dataSourceName === "")){
+        if (angular.isUndefined(dsource.dataSourceName) || (dsource.dataSourceName === null) || (dsource.dataSourceName === "")) {
             notificationFactory.errorInfo("Ошибка","Не задано имя источника данных.");
             checkDsourceFlag = false;
         };
@@ -175,24 +177,24 @@ angular.module('portalNMC')
             return checkDsourceFlag;
         }
         
-        if ((dsource.rawConnectionType != 'CLIENT') && (!$scope.checkPositiveNumberValue(dsource.dataSourcePort))){
+        if ((dsource.rawConnectionType != 'CLIENT') && (!$scope.checkPositiveNumberValue(dsource.dataSourcePort))) {
             notificationFactory.errorInfo("Ошибка","Не корректно задан порт источника данных.");
             checkDsourceFlag = false;
         };        
         
 //        if (!$("#inputIP").inputmask("isComplete")){
-        if ((dsource.rawConnectionType != 'CLIENT') && (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === ""))){
+        if ((dsource.rawConnectionType != 'CLIENT') && (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === ""))) {
             notificationFactory.errorInfo("Ошибка","Не заполнен ip \\ hostname источника данных.");
             checkDsourceFlag = false;
         };        
         
-        if (dsource.dataSourceTypeKey == 'DEVICE'){
+        if (dsource.dataSourceTypeKey == 'DEVICE') {
             if (dsource.rawTimeout == ""){
                 notificationFactory.errorInfo("Ошибка","Не корректно задано время ожидания ответа.");
                 checkDsourceFlag = false;
-            }else{
+            } else {
                 dsource.rawTimeout = Number(dsource.rawTimeout);
-                if (!$scope.checkPositiveNumberValue(dsource.rawTimeout)){
+                if (!$scope.checkPositiveNumberValue(dsource.rawTimeout)) {
                     notificationFactory.errorInfo("Ошибка","Не корректно задано время ожидания ответа.");
                     checkDsourceFlag = false;
                 }
