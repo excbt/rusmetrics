@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,9 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberExecutorService;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
@@ -133,6 +136,9 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	@Autowired
 	private SubscriberExecutorService subscriberExecutorService;
+
+	@Autowired
+	private SubscrDataSourceService subscrDataSourceService;
 
 	/**
 	 * 
@@ -685,6 +691,9 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		List<String> fileNameErrorDesc = new ArrayList<>();
 		List<String[]> fileNameData = new ArrayList<>();
+		final int __filenameIdx = 0;
+		final int __deviceIdx = 1;
+		final int __tsNumIdx = 2;
 
 		// Check file names
 		for (MultipartFile multipartFile : multipartFiles) {
@@ -695,12 +704,18 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 				return responseBadRequest();
 			}
 
+			if (!"csv".equalsIgnoreCase(FilenameUtils.getExtension(fileName))) {
+				fileNameErrorDesc.add("Некоррекный тип файла: " + fileName + ". Ожидается расширение CSV");
+				continue;
+			}
+
 			String[] nameParts = fileName.split("_");
-			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
 			if (nameParts == null || nameParts.length < 2) {
 				fileNameErrorDesc.add("Некоррекное имя файла: " + fileName);
-				break;
+				continue;
 			}
+
+			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
 			for (String s : nameParts) {
 				logger.info("Name parts: {}", s);
 			}
@@ -711,7 +726,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
 		}
 
-		logger.info("Looking for subscriberId: {}, serials: {}", getSubscriberParam().getSubscriberId(),
+		logger.info("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
 				fileNameData.stream().map(i -> i[1]).collect(Collectors.toList()));
 
 		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
@@ -727,19 +742,21 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		for (String[] s : fileNameData) {
 
 			final List<Tuple> checkRows = deviceObjectsData.stream()
-					.filter(i -> s[1].equals(i.get("deviceObjectNumber").toString())
-							&& s[2].equals(i.get("tsNumber").toString()))
+					.filter(i -> s[__deviceIdx].equals(i.get("deviceObjectNumber").toString())
+							&& s[__tsNumIdx].equals(i.get("tsNumber").toString()))
 					.collect(Collectors.toList());
 
 			if (checkRows.size() == 0) {
-				fileNameErrorDesc.add(String.format(
-						"Точка учета с прибором № %s и теплосистемой № %s не найдена. Файл: %s", s[0], s[1], s[2]));
+				fileNameErrorDesc
+						.add(String.format("Точка учета с прибором № %s и теплосистемой № %s не найдена. Файл: %s",
+								s[__deviceIdx], s[__tsNumIdx], s[__filenameIdx]));
 				continue;
 			}
 
 			if (checkRows.size() > 1) {
-				fileNameErrorDesc.add(String.format(
-						"Точка учета с прибором № %s и теплосистемой № %s не уникальна. Файл: %s", s[0], s[1], s[2]));
+				fileNameErrorDesc
+						.add(String.format("Точка учета с прибором № %s и теплосистемой № %s не уникальна. Файл: %s",
+								s[__deviceIdx], s[__tsNumIdx], s[__filenameIdx]));
 				continue;
 			}
 
@@ -748,12 +765,29 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			if (!Boolean.TRUE.equals(DBRowUtils.asBoolean(row.get("isManualLoading")))) {
 				fileNameErrorDesc.add(String.format(
 						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
-						s[0], s[1], s[2]));
+						s[__deviceIdx], s[__tsNumIdx], s[__filenameIdx]));
 				continue;
 			}
 
-			filenameDBInfos.put(s[0], row);
+			filenameDBInfos.put(s[__filenameIdx], row);
 
+		}
+
+		Collection<Long> checkContZPoints = filenameDBInfos.values().stream()
+				.map(i -> DBRowUtils.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
+
+		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
+				.map(i -> DBRowUtils.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
+
+		if (!canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
+			fileNameErrorDesc.add("Нет доступа к точке учета");
+		}
+
+		List<Long> availableDataSourceIds = subscrDataSourceService
+				.selectDataSourceIdsBySubscriber(subscriberParam.getSubscriberId());
+
+		if (!AbstractService.checkIds(checkDataSourceIds, availableDataSourceIds)) {
+			fileNameErrorDesc.add("Нет доступа к источнику данных");
 		}
 
 		if (fileNameErrorDesc.size() > 0) {

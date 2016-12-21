@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service.support;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,7 +80,26 @@ public abstract class AbstractService {
 	 * @param availableIds
 	 * @return
 	 */
-	protected boolean checkIds(Long[] checkIds, List<Long> availableIds) {
+	public static boolean checkIds(Long[] checkIds, List<Long> availableIds) {
+
+		if (availableIds == null || availableIds.isEmpty()) {
+			return false;
+		}
+
+		boolean result = true;
+		for (Long id : checkIds) {
+			result = result && availableIds.contains(id);
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param checkIds
+	 * @param availableIds
+	 * @return
+	 */
+	public static boolean checkIds(Collection<Long> checkIds, Collection<Long> availableIds) {
 
 		if (availableIds == null || availableIds.isEmpty()) {
 			return false;
