@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window) {
+.controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window', 'objectSvc',
+            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window, objectSvc) {
                 $rootScope.ctxId = "settings_tenants_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
@@ -31,7 +31,7 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings.allSelected = false;
                 //выбран хотя бы один объект
                 $scope.objectCtrlSettings.anySelected = false;
-                $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.objectsPerScroll = objectSvc.OBJECT_PER_SCROLL;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
                 
                 //list of system for meta data editor

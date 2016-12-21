@@ -1660,7 +1660,7 @@ angular.module('portalNMC')
                     return mainSvc.isCabinet();
                 };
                 
-                $scope.isTestMode = function () {
+                $scope.isTestMode = function () {                    
                     return mainSvc.isTestMode();
                 }
                 

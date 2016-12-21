@@ -143,10 +143,12 @@
        
         <!-- Side bar menu -->
         <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu" 
-             ng-class="{'nmc-main-menu-minimize':!mainCtrlSettings.showFullMenuFlag, 'nmc-hide':isCabinet(), 'nmc-show':!isCabinet()}" ng-cloak>
+             ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag || isCabinet()}" ng-cloak>
                         <nav class="sidebar-nav"
                              role="navigation" 
-                             ng-show="!showPrivateOfficeMenu">
+                             ng-show="!showPrivateOfficeMenu"
+                             ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}"
+                             >
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
    
@@ -250,11 +252,12 @@
 
                             </div>
                         </nav>                      
-            <span class="pull-right">
+            <span class="pull-right"
+                  ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
                 <i title="Свернуть / распахнуть меню" 
                    class="btn btn-lg glyphicon glyphicon-menu-left noPadding" 
-                   ng-click="mainCtrlSettings.showFullMenuFlag=!mainCtrlSettings.showFullMenuFlag" 
-                   ng-class="{'glyphicon-menu-left':mainCtrlSettings.showFullMenuFlag,'glyphicon-menu-right':!mainCtrlSettings.showFullMenuFlag}" >
+                   ng-click="mainCtrlSettings.showFullMenuFlag = !mainCtrlSettings.showFullMenuFlag" 
+                   ng-class="{'glyphicon-menu-left': mainCtrlSettings.showFullMenuFlag, 'glyphicon-menu-right': !mainCtrlSettings.showFullMenuFlag}">
                 </i>
             </span>
 <!--
@@ -276,7 +279,7 @@
                  class="nmc-div-logo-left-h">             
                 <img src="images/logo-left-h.png" 
                      class="nmc-img-logo-left-h-min"
-                     ng-class="{'nmc-img-logo-left-h': mainCtrlSettings.showFullMenuFlag}"
+                     ng-class="{'nmc-img-logo-left-h': mainCtrlSettings.showFullMenuFlag && !isCabinet()}"
                      />
             </div>
             <nav class="sidebar-nav nmc-nav-user-menu" 
@@ -288,7 +291,7 @@
                                 <i class="glyphicon glyphicon-user nmc-main-menu-item-icon" 
                                    title="Пользовательское меню">
                                 </i>                    
-                                <span ng-show="mainCtrlSettings.showFullMenuFlag"
+                                <span ng-show="mainCtrlSettings.showFullMenuFlag && !isCabinet()"
                                       ng-attr-title="{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
                                       >
                                     <span class="nmc-hide" 
@@ -331,7 +334,7 @@
         </div>                
 
         <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace" 
-             ng-class="{'nmc-main-workspace-maximize':!mainCtrlSettings.showFullMenuFlag || isCabinet()}" ng-cloak>
+             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag || isCabinet()}" ng-cloak>
 					
 					<div id="main" ng-view></div>
 <!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
