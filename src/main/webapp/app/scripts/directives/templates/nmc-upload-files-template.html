@@ -56,12 +56,13 @@
                         <div class="alert alert-info"
                              role="alert"
                              ng-show="onUploadAll">
-                            Загрузка завершена!
+                            Проверка файлов завершена. 
+                                Процесс загрузки данных можно отслеживать в разделе "Журналы" -> "Журнал загрузки данных"
                         </div>
                         <div class="alert alert-danger nmc-div-file-list"
                              role="alert"
                              ng-show="errorOnUpload">
-                            При загрузке возникли ошибки!
+                            При проверке файлов обнаружены ошибки
                             <table class="table">
                                 <tr ng-repeat="message in messages">
                                     <td><span ng-bind="message"></span></td>
@@ -78,15 +79,18 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-xs-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="uploadFiles()"
-                                   ng-disabled="uploadFlag || !uploader.getNotUploadedItems().length"
-								value="Загрузить" />
+							<input type="submit" 
+                                   class="btn btn-xs btn-primary btn-block nmc-ok-button" 
+                                   ng-click="uploadFiles()"
+                                   ng-disabled="uploadFlag || !uploader.getNotUploadedItems().length" 
+                                   value="Загрузить" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#upLoadFileModal');">
+							<button class="btn btn-xs btn-default btn-block" 
+                                    ng-class="{'nmc-button-in-modal': onUploadAll === true}"
+                                    data-dismiss="modal" 
+                                    ng-click="exit('#upLoadFileModal');">
 								Закрыть
 							</button>
 						</div>
