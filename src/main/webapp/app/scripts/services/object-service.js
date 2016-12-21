@@ -11,7 +11,7 @@ angular.module('portalNMC')
             }
         ];
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
-            OBJECT_PER_SCROLL = 38;
+            OBJECT_PER_SCROLL = 42;
         var BROADCASTS = {};
         BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
         BROADCASTS.BUILDING_CATEGORIES_LOADED = "objectSvc:buildingCategoriesLoaded";
