@@ -2,6 +2,9 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -137,6 +140,28 @@ public class HWatersCsvService {
 			parsedData.add(d);
 		}
 		return parsedData;
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public boolean checkCsvSeparators(String file) throws FileNotFoundException, IOException {
+		boolean result = true;
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			String header = br.readLine();
+			String[] headerNames = header.split(",");
+			int checkCnt = headerNames.length;
+			String line;
+			while (result && (line = br.readLine()) != null) {
+				String[] lineValues = line.split(",");
+				result = result & (lineValues.length == checkCnt);
+			}
+		}
+		return result;
 	}
 
 }
