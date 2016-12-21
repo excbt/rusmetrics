@@ -1,12 +1,14 @@
-/*jslint node: true, white: true, nomen: true*/
-/*global angular, $*/
+/*jslint node: true, white: true, nomen: true, eqeq: true*/
+/*global angular, $, alert, moment*/
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {                                
                 $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
+                
+                var RADIX = 10;
                 
                     //messages for user
                 $scope.messages = {};                
@@ -238,10 +240,7 @@ angular.module('portalNMC')
                     ];//angular.fromJson($attrs.zpointcolumns);
                 // Эталонный интервал
                 $scope.refRange = {};
-                $scope.urlRefRange = '../api/subscr/contObjects/';
-                // Промежуточные переменные для начала и конца интервала
-                $scope.beginDate;
-                $scope.endDate;
+                $scope.urlRefRange = '../api/subscr/contObjects/';            
                 
                 //Режимы функционирования (лето/зима)
                 $scope.cont_zpoint_setting_mode_check = [
@@ -304,6 +303,71 @@ angular.module('portalNMC')
                     object.editMode = !object.editMode;
                 };
                 
+                var mapZpointProp = function (zpoint) {
+                    var result = {};
+                              
+                    result.id = zpoint.id;
+                    result.zpointOrder = zpoint.contServiceType.serviceOrder + zpoint.customServiceName;
+                    result.exSystemKeyname = zpoint.exSystemKeyname;
+                    result.tsNumber = zpoint.tsNumber;
+                    result.exCode = zpoint.exCode;
+                    result.version = zpoint.version;
+                    result.contObjectId = zpoint.contObjectId;
+                    result.startDate = zpoint.startDate;
+                    result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
+                    result.rsoId = zpoint.rsoId;
+                    result.zpointType = zpoint.contServiceType.keyname;
+                    result.isManualLoading = zpoint.isManualLoading;
+                    result.customServiceName = zpoint.customServiceName;
+                    result.contServiceTypeKeyname = zpoint.contServiceTypeKeyname;
+                    result.zpointName = zpoint.customServiceName;
+                    result.contZPointComment = zpoint.contZPointComment;
+                    if ((typeof zpoint.rso != 'undefined') && (zpoint.rso != null)) {
+                        result.zpointRSO = zpoint.rso.organizationFullName || zpoint.rso.organizationName;
+                        result.rsoId = zpoint.rsoId;
+                    } else {
+                        result.zpointRSO = "Не задано";
+                    }
+                    result.checkoutTime = zpoint.checkoutTime;
+                    result.checkoutDay = zpoint.checkoutDay;
+                    if((typeof zpoint.doublePipe == 'undefined')){
+                        result.piped = false;
+
+
+                    } else {
+                        result.piped = true;
+                        result.doublePipe = (zpoint.doublePipe === null) ? false : zpoint.doublePipe;
+                        result.singlePipe = !result.doublePipe;
+                    }
+//console.log(zpoint);
+                    if ((typeof zpoint.deviceObjects != 'undefined') && (zpoint.deviceObjects.length > 0)) {
+                        if (zpoint.deviceObjects[0].hasOwnProperty('deviceModel')) {
+                            result.zpointModel = zpoint.deviceObjects[0].deviceModel.modelName;
+                        } else {
+                            result.zpointModel = "Не задано";
+                        }
+                        result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObjects[0].number) ? "" : zpoint.deviceObjects[0].number;
+                    }
+                    result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
+                    result.zpointLastDataDate  = zpoint.lastDataDate;  
+                    result.isDroolsDisable = zpoint.isDroolsDisable;
+                    result.temperatureChartId = zpoint.temperatureChartId;
+//                    result.tempSchedules = zpoint.tempSchedules;
+                    return result;
+                };
+                
+                                
+                var findObjectIndexInArray = function(objId, targetArr) {                  
+                    var result = -1;
+                    targetArr.some(function(elem, index) {
+                            if (elem.id == objId) {                              
+                                result = index;
+                                return true;
+                            }
+                        });
+                    return result;
+                };
+                
                 var successCallbackOnZpointUpdate = function(e){
 //console.log(e);              
                     //e.data содержит данные измененной/созданной точки учета
@@ -341,9 +405,9 @@ angular.module('portalNMC')
                             if(($scope.currentObject.zpoints[curIndex].zpointName!==$scope.zpointSettings.customServiceName)){
                                 repaintZpointTableFlag = true;
                             }
-                            var objectIndex = -1;
+                            objectIndex = -1;
                             objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
-                            var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
+                            objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
                             if (objectIndex>-1){
                                 //update zpoint data in arrays                             
                                 $scope.objects[objectIndex].zpoints[curIndex] = mappedZpoint;
@@ -387,17 +451,6 @@ angular.module('portalNMC')
                         }
                         el.selected = false;
                     });
-                };
-                
-                var findObjectIndexInArray = function(objId, targetArr){                  
-                    var result = -1;
-                    targetArr.some(function(elem, index){
-                            if (elem.id == objId){                              
-                                result = index;
-                                return true;
-                            }
-                        });
-                    return result;
                 };                
                 
                 var deleteObjectFromArray = function(objId, targetArr){
@@ -499,7 +552,28 @@ angular.module('portalNMC')
                 function successCreateObjectAtGroupCallback () {
                     getObjectsData();
                 }
-
+                
+                var errorProtoCallback = function(e){
+                    console.log(e);
+                    var errorCode = "-1";
+                    if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
+                        errorCode = "ERR_CONNECTION";
+                    }
+                    if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || (!mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode)))) {
+                        errorCode = e.resultCode || e.data.resultCode;
+                    }
+                    var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);                    
+                };
+                
+                var errorCallback = function (e) { 
+                    errorProtoCallback(e);
+                    //zpoint settings saving flag reset
+                    $scope.zpointSettings.isSaving = false;
+                    if(!mainSvc.checkUndefinedNull($scope.currentObject)) {
+                        $scope.currentObject.isSaving = false;
+                    }
+                };
 
                 var successPostCallback = function (e) {                  
                     successCallback(e, null);
@@ -531,28 +605,6 @@ angular.module('portalNMC')
                         }
                     }
                     
-                };
-                
-                var errorProtoCallback = function(e){
-                    console.log(e);
-                    var errorCode = "-1";
-                    if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-                        errorCode = "ERR_CONNECTION";
-                    }
-                    if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || (!mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode)))) {
-                        errorCode = e.resultCode || e.data.resultCode;
-                    }
-                    var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);                    
-                };
-
-                var errorCallback = function (e) { 
-                    errorProtoCallback(e);
-                    //zpoint settings saving flag reset
-                    $scope.zpointSettings.isSaving = false;
-                    if(!mainSvc.checkUndefinedNull($scope.currentObject)) {
-                        $scope.currentObject.isSaving = false;
-                    }
                 };
 
                 $scope.addObject = function (url, obj) {                    
@@ -652,27 +704,40 @@ angular.module('portalNMC')
 			        $scope.currentObject = angular.copy(item);                    
 			    };
                 
-                function testCmOrganizationAtList(){
+                function testCmOrganizationAtList() {
                     //find cmOrganization
                     var cmOrgId = $scope.currentObject.contManagementId;                    
                     var cmOrgFindFlag = false;                    
-                    $scope.data.cmOrganizations.some(function(org){
-                        if (org.id == cmOrgId){
+                    $scope.data.cmOrganizations.some(function (org) {
+                        if (org.id == cmOrgId) {
                             cmOrgFindFlag = true;
                             return true;
                         }
                     });
                     //if cm not found
-                    if (cmOrgFindFlag == false){
-                        objectSvc.getCmOrganizationsWithId(cmOrgId).then(function(resp){
+                    if (cmOrgFindFlag == false) {
+                        objectSvc.getCmOrganizationsWithId(cmOrgId).then(function (resp) {
                             $scope.data.cmOrganizations = resp.data;
                             mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
-                        }, function(e){console.log(e)});
+                        }, function (e) {console.log(e); });
                     }
 //console.log(cmOrgId);                    
 //console.log(cmOrgFindFlag);                    
 //console.log($scope.data.cmOrganizations);                     
                 }
+                
+                var checkGeo = function () {
+                   $scope.currentObject.geoState = "red";
+                   $scope.currentObject.geoStateText = "Не отображается на карте";
+// console.log($scope.currentObject.isValidGeoPos);
+// console.log($scope.currentSug);
+// console.log($scope.currentSug.data.geo_lat);
+// console.log($scope.currentSug.data.geo_lon);                
+                   if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null) {
+                        $scope.currentObject.geoState = "green";
+                        $scope.currentObject.geoStateText = "Отображается на карте";
+                    } 
+                };
                 
                 $scope.selectedObject = function(objId, isLightForm) {
                     objectSvc.getRmaObject(objId)
@@ -726,60 +791,7 @@ angular.module('portalNMC')
                     }
                     $scope.currentZpoint = curZpoint;
 //console.log($scope.currentZpoint);                                        
-                };
-                
-                var mapZpointProp = function (zpoint) {
-                    var result = {};
-                              
-                    result.id = zpoint.id;
-                    result.zpointOrder = "" + zpoint.contServiceType.serviceOrder + zpoint.customServiceName;
-                    result.exSystemKeyname = zpoint.exSystemKeyname;
-                    result.tsNumber = zpoint.tsNumber;
-                    result.exCode = zpoint.exCode;
-                    result.version = zpoint.version;
-                    result.contObjectId = zpoint.contObjectId;
-                    result.startDate = zpoint.startDate;
-                    result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
-                    result.rsoId = zpoint.rsoId;
-                    result.zpointType = zpoint.contServiceType.keyname;
-                    result.isManualLoading = zpoint.isManualLoading;
-                    result.customServiceName = zpoint.customServiceName;
-                    result.contServiceTypeKeyname = zpoint.contServiceTypeKeyname;
-                    result.zpointName = zpoint.customServiceName;
-                    result.contZPointComment = zpoint.contZPointComment;
-                    if ((typeof zpoint.rso != 'undefined') && (zpoint.rso != null)) {
-                        result.zpointRSO = zpoint.rso.organizationFullName || zpoint.rso.organizationName;
-                        result.rsoId = zpoint.rsoId;
-                    } else {
-                        result.zpointRSO = "Не задано";
-                    }
-                    result.checkoutTime = zpoint.checkoutTime;
-                    result.checkoutDay = zpoint.checkoutDay;
-                    if((typeof zpoint.doublePipe == 'undefined')){
-                        result.piped = false;
-
-
-                    } else {
-                        result.piped = true;
-                        result.doublePipe = (zpoint.doublePipe === null) ? false : zpoint.doublePipe;
-                        result.singlePipe = !result.doublePipe;
-                    }
-//console.log(zpoint);
-                    if ((typeof zpoint.deviceObjects != 'undefined') && (zpoint.deviceObjects.length > 0)) {
-                        if (zpoint.deviceObjects[0].hasOwnProperty('deviceModel')) {
-                            result.zpointModel = zpoint.deviceObjects[0].deviceModel.modelName;
-                        } else {
-                            result.zpointModel = "Не задано";
-                        }
-                        result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObjects[0].number) ? "" : zpoint.deviceObjects[0].number;
-                    }
-                    result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
-                    result.zpointLastDataDate  = zpoint.lastDataDate;  
-                    result.isDroolsDisable = zpoint.isDroolsDisable;
-                    result.temperatureChartId = zpoint.temperatureChartId;
-//                    result.tempSchedules = zpoint.tempSchedules;
-                    return result;
-                };
+                };            
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
                     var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                
@@ -814,10 +826,11 @@ angular.module('portalNMC')
                                 });
                             } else {
                                 tmp = copyTmp;
-                            };
+                            }
                             var zPointsByObject = tmp;                          
-                            var zpoints = [];
-                            for(var i = 0; i < zPointsByObject.length; i++){
+                            var zpoints = [],
+                                i;
+                            for(i = 0; i < zPointsByObject.length; i += 1){
                                 var zpoint = mapZpointProp(zPointsByObject[i]);
                                 zpoints[i] = zpoint;                  
                             }
@@ -828,7 +841,7 @@ angular.module('portalNMC')
                             if (!mainSvc.checkUndefinedNull(btnDetail)){
                                 btnDetail.classList.remove("glyphicon-chevron-right");
                                 btnDetail.classList.add("glyphicon-chevron-down");
-                            };
+                            }
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         }, 
@@ -842,7 +855,7 @@ angular.module('portalNMC')
                         var btnDetail = document.getElementById("btnDetail" + curObject.id);
                         btnDetail.classList.remove("glyphicon-chevron-down");
                         btnDetail.classList.add("glyphicon-chevron-right");
-                    };
+                    }
                     
                 };
                 //Формируем таблицу с точками учета
@@ -863,7 +876,7 @@ angular.module('portalNMC')
                     trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-button\"></th>";
                     $scope.oldColumns.forEach(function(column) {
                         trHTML += "<th class=\"" + column.class + "\">";
-                        trHTML += "" + (column.header || column.name) + "";
+                        trHTML += (column.header || column.name);
                         trHTML += "</th>";
                     });
                     trHTML += "<th></th>";
@@ -926,7 +939,7 @@ angular.module('portalNMC')
                                         default:
                                             imgPath = column['zpointType'];
                                             break;   
-                                    };                                   
+                                    }                                   
                                     trHTML += "<td>";
                                     trHTML += "<img class='marginLeft5' height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
                                     trHTML += (zpoint[column.name] || "Не задано")+"<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>"; 
@@ -934,7 +947,7 @@ angular.module('portalNMC')
                                 case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
                                 case "zpointRefRange": trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
                                 default : trHTML += "<td>" + (mainSvc.checkUndefinedNull(zpoint[column.name]) ? "" : zpoint[column.name]) + "</td>"; break;
-                            };
+                            }
                         });
                         trHTML += "<td>";
                         trHTML += "<div class=\"btn-toolbar\">" +
@@ -949,7 +962,7 @@ angular.module('portalNMC')
                     trObjZp.innerHTML = trHTML;
                     
                     $compile(trObjZp)($scope);                
-                }; 
+                } 
                 
                 $scope.dateFormat = function(millisec){
                     var result = "";
@@ -969,48 +982,48 @@ angular.module('portalNMC')
                 
                 //Фильтр "Только непросмотренные"
                 $scope.onlyNoRead = false;
-                $scope.showRow = function(obj){
-                    if ( (typeof obj.isRead == 'undefined') && (!$scope.onlyNoRead)){
+                $scope.showRow = function(obj) {
+                    if ( (typeof obj.isRead == 'undefined') && (!$scope.onlyNoRead)) {
                         return true;
-                    };                                     
-                    if($scope.onlyNoRead){
+                    }                                     
+                    if($scope.onlyNoRead) {
                         if($scope.onlyNoRead == !obj.isRead){
                             return true;
                         }else{
                             return false;
                         }
-                    };
+                    }
                     return true;
                 };
                                
-                $scope.showDetails = function(obj){
-                    if($scope.bdirectories){
-                        $scope.currentObject = obj;
-                        $('#showDirectoryStructModal').modal();
-                    }
-                };
+//                $scope.showDetails = function(obj) {
+//                    if ($scope.bdirectories) {
+//                        $scope.currentObject = obj;
+//                        $('#showDirectoryStructModal').modal();
+//                    }
+//                };
         
                 //Свойства точки учета
                 $scope.zpointSettings = {};
                 $scope.addZpoint = function(object){                    
                     $scope.selectedItem(object);                    
                     $scope.zpointSettings = {};     
-                    if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)){
+                    if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
                         $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
                         $scope.changeServiceType($scope.zpointSettings);
-                    };
-                    if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)){
+                    }
+                    if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
                         $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
-                    };
+                    }
                     $scope.getDevices(object, false);
                     getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
                 };
                 
-                $scope.getZpointSettings = function(objId, zpointId){
+                $scope.getZpointSettings = function(objId, zpointId) {
                     $scope.selectedZpoint(objId, zpointId);
-                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)){
+                    if (mainSvc.checkUndefinedNull($scope.currentZpoint)) {
                         return "currentZpoint is undefined or null.";
-                    };
+                    }
 //console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
@@ -1033,7 +1046,7 @@ angular.module('portalNMC')
                        case "hw" : zps.zpointType = "ГВС"; break;
                        case "cw" : zps.zpointType = "ХВС"; break;    
                         default : zps.zpointType = object.zpointType;        
-                    };
+                    }
                     zps.piped = object.piped;
                     zps.singlePipe = object.singlePipe;
                     zps.doublePipe = object.doublePipe;
@@ -1067,50 +1080,51 @@ angular.module('portalNMC')
                         objectSvc.getRsoOrganizationsWithId(rsoOrgId).then(function(resp){
                             $scope.data.rsoOrganizations = resp.data;
                             mainSvc.sortOrganizationsByName($scope.data.rsoOrganizations);
-                        }, function(e){console.log(e)});
-                    };
+                        }, function(e){console.log(e);});
+                    }
 //console.log(rsoOrgId);                    
 //console.log(rsoOrgFindFlag);                    
 //console.log($scope.data.rsoOrganizations);                     
                 }
                 
                 
-                $scope.getZpointSettingsEx = function(objId, zpointId){
+                $scope.getZpointSettingsEx = function(objId, zpointId) {
                     $scope.getZpointSettings(objId, zpointId);
                     testRsoOrganizationAtList();
                 };
                 
-                $scope.getZpointSettingsExpl = function(objId, zpointId){
+                $scope.getZpointSettingsExpl = function(objId, zpointId) {
                     $scope.getZpointSettings(objId, zpointId);
-                    var winterSet = {};
-                    var summerSet = {};
+                    var winterSet = {},
+                        summerSet = {},
+                        i;
                                         //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
                     var table = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(table).query(function (data) {
-                        for(var i = 0; i < data.length; i++){                                                    
-                            if(data[i].settingMode == "winter"){
+                        for (i = 0; i < data.length; i += 1) {
+                            if (data[i].settingMode == "winter") {
                                 winterSet = data[i];
-                            }else if(data[i].settingMode == "summer"){
+                            } else if (data[i].settingMode == "summer") {
                                 summerSet = data[i];
                             }
-                        };                 
+                        }
                         $scope.zpointSettings.winter = winterSet;
                         $scope.zpointSettings.summer = summerSet;
                     });
+                };
+                
+                var successZpointWinterCallback = function (e) {
+                    notificationFactory.success();    
+                    $('#showZpointOptionModal').modal('hide');
+                    $('#showZpointExplParameters').modal('hide');
+                   //  $scope.zpointSettings = {};
                 };
             
                 var successZpointSummerCallback = function (e) {
                     notificationFactory.success();
                     var tableWinter = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(tableWinter).update({ id: $scope.zpointSettings.winter.id }, $scope.zpointSettings.winter, successZpointWinterCallback, errorCallback);           
-                };
-                
-                 var successZpointWinterCallback = function (e) {
-                    notificationFactory.success();    
-                    $('#showZpointOptionModal').modal('hide');
-                    $('#showZpointExplParameters').modal('hide');
-                   //  $scope.zpointSettings = {};
-                };
+                };                
                 
                 //Save new Zpoint | Update the common zpoint setiing - for example, Name
                 //$scope.checkString  
@@ -1127,19 +1141,19 @@ angular.module('portalNMC')
                     if ($scope.emptyString($scope.zpointSettings.customServiceName)){
                         notificationFactory.errorInfo("Ошибка", "Не задано наименование точки учета!");
                         result = false;
-                    };
+                    }
                     if ($scope.emptyString($scope.zpointSettings.contServiceTypeKeyname)){
                         notificationFactory.errorInfo("Ошибка", "Не задан тип точки учета!");
                         result = false;
-                    };
+                    }
                     if ($scope.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)){
                         notificationFactory.errorInfo("Ошибка", "Не задан прибор для точки учета!");
                         result = false;
-                    };
+                    }
                     if ($scope.checkUndefinedNull($scope.zpointSettings.rsoId)){
                         notificationFactory.errorInfo("Ошибка", "Не задано РСО для точки учета!");
                         result = false;
-                    };
+                    }
                     return result;
                 };
                 
@@ -1150,7 +1164,7 @@ angular.module('portalNMC')
                         //zpoint settings saving flag reset
                         $scope.zpointSettings.isSaving = false;
                         return false;
-                    };
+                    }
                     //prepare piped info
 //                    if ($scope.zpointSettings.singlePipe){
 //                        $scope.zpointSettings.doublePipe = false;
@@ -1159,7 +1173,7 @@ angular.module('portalNMC')
                     if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)){
                         $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
                         $scope.zpointSettings.tChart = null;
-                    };
+                    }
                     var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)){
                         url = url + "/" + $scope.zpointSettings.id;
@@ -1178,7 +1192,7 @@ angular.module('portalNMC')
                             data: $scope.zpointSettings
                         })
                             .then(successCallbackOnZpointUpdate, errorCallback);
-                    };
+                    }
                     
 //                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
                 };
@@ -1194,7 +1208,7 @@ angular.module('portalNMC')
                 $scope.searchObjects = function(searchString){
                     if (($scope.objects.length <= 0)){
                         return;
-                    };
+                    }
                     
                                           //close all opened objects zpoints
                     $scope.objectsOnPage.forEach(function(obj){
@@ -1206,33 +1220,32 @@ angular.module('portalNMC')
                                 var btnDetail = document.getElementById("btnDetail" + obj.id);
                                 btnDetail.classList.remove("glyphicon-chevron-down");
                                 btnDetail.classList.add("glyphicon-chevron-right");
-                            };
-                        };
+                            }
+                        }
                         obj.showGroupDetailsFlag = false;
                     });
                     
-                    if (angular.isUndefined(searchString) || (searchString === '')){                      
-                        var tempArr = [];
+                    var tempArr = [];
+                    if (angular.isUndefined(searchString) || (searchString === '')) {
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                         tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                         $scope.objectsOnPage = tempArr;
-                    }else{
+                    } else {
 //                        $scope.objectsOnPage = $scope.objects;
-                        var tempArr = [];                        
-                        $scope.objects.forEach(function(elem){                
+                        $scope.objects.forEach(function (elem) {
                             if (angular.isDefined(elem.fullName) && elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1){
                                 tempArr.push(elem);
-                            };
+                            }
                         });
                         $scope.objectsOnPage = tempArr;
-                    };
+                    }
 //console.log($scope.objectsOnPage);                    
                 };
                 
                 $scope.changeServiceType = function(zpSettings){
                     if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)){
                         $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
-                    };
+                    }
                     if ($scope.emptyString(zpSettings.customServiceName)){
                         switch (zpSettings.contServiceTypeKeyname){
                             case "heat": 
@@ -1243,17 +1256,17 @@ angular.module('portalNMC')
                                     if (svType.keyname == zpSettings.contServiceTypeKeyname){
                                         zpSettings.customServiceName = svType.caption;
                                         return true;
-                                    };
+                                    }
                                 });
                                  
-                        };
-                    };
+                        }
+                    }
                 };
                 
                 $scope.changeRso = function(zpSettings){
                     if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)){
                         $cookies.recentRsoId = zpSettings.rsoId;
-                    };
+                    }
                 };
                 
                 $scope.$on('$destroy', function() {
@@ -1262,7 +1275,7 @@ angular.module('portalNMC')
                 
                 
                 //keydown listener for ctrl+end
-                window.onkeydown = function(e){
+                window.onkeydown = function(e) {
 //console.log(e);                    
 //                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
 //                        $scope.loading =  true;    
@@ -1273,48 +1286,40 @@ angular.module('portalNMC')
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
 //                        
 //                    };
-                    
-                    if (e.keyCode == 38){                        
-                        var elem = document.getElementById("divWithObjectTable");
-                        elem.scrollTop = elem.scrollTop - 20;                        
+                    var elem = document.getElementById("divWithObjectTable");
+                    if (e.keyCode == 38) {
+                        elem.scrollTop = elem.scrollTop - 20;    
                         return;
-                    };
-                    if (e.keyCode == 40){
-                        var elem = document.getElementById("divWithObjectTable");
+                    }
+                    if (e.keyCode == 40) {
                         elem.scrollTop = elem.scrollTop + 20;                        
                         return;
-                    };
-                    if (e.keyCode == 34){
-//                        $scope.addMoreObjects();
-//                        $scope.$apply();
-                        var elem = document.getElementById("divWithObjectTable");
-                        elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;                        
+                    }
+                    if (e.keyCode == 34) {
+                        elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll * 10;
                         return;
-                    };
-                    if (e.keyCode == 33){
-                        var elem = document.getElementById("divWithObjectTable");
-                        elem.scrollTop = elem.scrollTop - $scope.objectCtrlSettings.objectsPerScroll*10;
+                    }
+                    if (e.keyCode == 33) {
+                        elem.scrollTop = elem.scrollTop - $scope.objectCtrlSettings.objectsPerScroll * 10;
                         return;
-                    };
-                    if (e.ctrlKey && e.keyCode == 36){
-                        var elem = document.getElementById("divWithObjectTable");
+                    }
+                    if (e.ctrlKey && e.keyCode == 36) {
                         elem.scrollTop = 0;
                         return;
-                    };
+                    }
                     if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){ 
-                        if ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length){                            
-                            $scope.loading = true;    
-                            $timeout(function(){$scope.loading = false;}, $scope.objects.length);
-                        };
+                        if ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length) {
+                            $scope.loading = true;
+                            $timeout(function(){ $scope.loading = false; }, $scope.objects.length);
+                        }
                         var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                        $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
                         $scope.$apply();
-                        var elem = document.getElementById("divWithObjectTable");
                         elem.scrollTop = elem.scrollHeight;                                            
                         
-                    };
+                    }
                 };
                 
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
@@ -1333,14 +1338,14 @@ angular.module('portalNMC')
 //console.log("addMoreObjects. Run");
                     if (($scope.objects.length <= 0)){
                         return;
-                    };
+                    }
                     
                     //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
                     var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
 //console.log($scope.objects.length);                    
                     if((endIndex >= $scope.objects.length)){
                         endIndex = $scope.objects.length;
-                    };
+                    }
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
                     var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
                         //добавляем к выведимому на экран массиву новый блок элементов
@@ -1349,14 +1354,14 @@ angular.module('portalNMC')
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
                     }else{
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
-                    };
+                    }
                 };
                 
                 var tableScrolling = function(){                    
                     if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
                         $scope.addMoreObjects();
                         $scope.$apply();
-                    };
+                    }
                 };
                 
                 $("#divWithObjectTable").scroll(tableScrolling);               
@@ -1367,7 +1372,7 @@ angular.module('portalNMC')
                     $scope.userInfo = $rootScope.userInfo;
                     if (angular.isDefined($scope.userInfo)){
                         result = $scope.userInfo._system;
-                    };
+                    }
                     return result;
                 };
                 
@@ -1393,24 +1398,24 @@ angular.module('portalNMC')
                         if (elem.selected == true){
                             anySelectedFlag = true;
                             return true;
-                        };
+                        }
                     });
                     $scope.objectCtrlSettings.anySelected = anySelectedFlag;
                 };
                 
-                $scope.setModeForObjects = function(mode){
+                $scope.setModeForObjects = function(mode) {
                     $scope.settedMode = mode;
                     //get the object ids array
                     var contObjectIds = [];
-                    if ($scope.objectCtrlSettings.allSelected === true){
-                        contObjectIds = $scope.objects.map(function(el){return el.id});
-                    }else{
-                        $scope.objectsOnPage.forEach(function(el){
-                            if(el.selected === true){
+                    if ($scope.objectCtrlSettings.allSelected === true) {
+                        contObjectIds = $scope.objects.map(function (el) { return el.id; });
+                    } else {
+                        $scope.objectsOnPage.forEach(function (el) {
+                            if(el.selected === true) {
                                 contObjectIds.push(el.id);
-                            };
+                            }
                         });
-                    };
+                    }
                     
                     //send data to server
                     var url = objectSvc.getObjectsUrl() + "/settingModeType";
@@ -1489,6 +1494,14 @@ angular.module('portalNMC')
                 
                 $scope.invokeHelp = function(){
                     alert('This is SPRAVKA!!!111');
+                };
+                
+                
+                var setConfirmCode = function(useImprovedMethodFlag) {
+                    $scope.confirmCode = null;
+                    var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
+                    $scope.confirmLabel = tmpCode.label;
+                    $scope.sumNums = tmpCode.result;                    
                 };
                 
                 $scope.deleteObjectInit = function(object){
@@ -1588,7 +1601,7 @@ angular.module('portalNMC')
                         if (source.id === $scope.currentDevice.subscrDataSourceId){
                             curDataSource = source;
                             return true;
-                        };
+                        }
                     });
                     $scope.currentDevice.curDatasource = curDataSource;       
                 };
@@ -1596,14 +1609,7 @@ angular.module('portalNMC')
                 $scope.selectDevice = function(device){
                     $scope.currentDevice = angular.copy(device);
 //                    $scope.currentDevice.contObjectId = $scope.currentObject.id;
-                };
-                
-                var setConfirmCode = function(useImprovedMethodFlag){
-                    $scope.confirmCode = null;
-                    var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
-                    $scope.confirmLabel = tmpCode.label;
-                    $scope.sumNums = tmpCode.result;                    
-                };
+                };                
                 
                 $scope.addDevice = function(){
                     $scope.currentDevice = {};
@@ -1627,7 +1633,7 @@ angular.module('portalNMC')
                         tmpArr = $scope.objects;
                         $scope.currentObject.deleteObjects = angular.copy($scope.objects);
                         //create array with objects ids 
-                        $scope.currentObject.deleteObjectIds = $scope.objects.map(function(obj){return obj.id});
+                        $scope.currentObject.deleteObjectIds = $scope.objects.map(function (obj) { return obj.id; });
                         $scope.currentObject.countDeleteObjects = $scope.objects.length;
                         $('#deleteObjectModal').modal();
                     }else{
@@ -1641,15 +1647,15 @@ angular.module('portalNMC')
                                 dmas.push(angular.copy(el));
                                 dmasIds.push(el.id);
                                 dcount += 1;
-                            };
+                            }
                         });
-                        if(dcount>0){
+                        if (dcount>0) {
                             $scope.currentObject.deleteObjects = dmas;
                             $scope.currentObject.deleteObjectIds = dmasIds;
                             $scope.currentObject.countDeleteObjects = dcount;
                             $('#deleteObjectModal').modal();
-                        };
-                    };
+                        }
+                    }
                 };
                 
                 $scope.saveDevice = function(device){ 
@@ -1658,14 +1664,14 @@ angular.module('portalNMC')
                     if (device.contObjectId == null){
                         notificationFactory.errorInfo("Ошибка","Не задан объект учета");
                         checkDsourceFlag = false;
-                    };
+                    }
                     if (device.subscrDataSourceId == null){
                         notificationFactory.errorInfo("Ошибка","Не задан источник данных");
                         checkDsourceFlag = false;
-                    };
+                    }
                     if (checkDsourceFlag === false){
                         return;
-                    };
+                    }
             //console.log(device);        
                     //send to server
                     objectSvc.sendDeviceToServer(device).then(successDeviceCallback, errorCallback);
@@ -1705,16 +1711,16 @@ angular.module('portalNMC')
                 };
                 
                                 
-               var deleteDoubleElements = function(targetArray){
+               var deleteDoubleElements = function (targetArray) {
                     var resultArray = angular.copy(targetArray);
                     resultArray = resultArray.sort();
                     var arrLength = resultArray.length;
-                    while (arrLength >= 2){
-                        arrLength--;                                               
-                        if (resultArray[arrLength] == resultArray[arrLength-1]){                                          
+                    while (arrLength >= 2) {
+                        arrLength -= 1;                                               
+                        if (resultArray[arrLength] == resultArray[arrLength-1]) {
                             resultArray.splice(arrLength, 1);
-                        };
-                    };                 
+                        }
+                    }                 
                     return resultArray;
                 };
                 
@@ -1722,7 +1728,7 @@ angular.module('portalNMC')
                     var ids = angular.copy(objIdsArr);
                     $http.get(table).then(function(response){
                         var subscrObjs = response.data;
-                        var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
+                        var subscrObjIds = subscrObjs.map(function(obj){return obj.id;});
 //console.log(objIdsArr);                        
 //console.log(subscrObjIds);                        
                         Array.prototype.push.apply(ids, subscrObjIds);
@@ -1751,7 +1757,7 @@ angular.module('portalNMC')
                             if (!angular.isArray(resp.data)){
                                 $('#setClientModal').modal();
                                 return "Object subscribers array is empty.";
-                            };
+                            }
                             //if object subscribers is no empty,
                             //set seleted flag for clients at clients form.
                             var selectedClientIds = resp.data;
@@ -1761,7 +1767,7 @@ angular.module('portalNMC')
                                         clientOnPage.selected = true;
                                         clientOnPage.selectionDisabled = true;
                                         return true;
-                                    };
+                                    }
                                 });
                             });
                             //view clients form
@@ -1771,7 +1777,7 @@ angular.module('portalNMC')
                         });                                                
                     }else{                    
                         $('#setClientModal').modal();
-                    };
+                    }
                 };
                 
                 var prepareObjectsIdsArray = function(){
@@ -1781,16 +1787,16 @@ angular.module('portalNMC')
                             if (elem.selected == true){
                                 tmp.push(elem.id);
                                 elem.selected = false;
-                            };
+                            }
                         });
                     }else{
                         $scope.objectsOnPage.forEach(function(elem){
                             if (elem.selected == true){
                                 tmp.push(elem.id);
                                 elem.selected = false;
-                            };
+                            }
                         });
-                    };
+                    }
                     return tmp;
                 };
                 
@@ -1804,20 +1810,20 @@ angular.module('portalNMC')
                     //собираем идишники выбранных объектов в один массив
                         tmp = prepareObjectsIdsArray();
                         $scope.objectCtrlSettings.anySelected = false;
-                    };
+                    }
                     //для каждого абонента надо вызвать rest для задания объектов, 
                     //передавая полученный массив идишников
                     $scope.data.clientsOnPage.forEach(function(cl){
                        if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true) && (cl.selectionDisabled != true)){
                             var url = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
                             prepareClient(url, tmp);
-                        }; 
+                        } 
                     });                    
                 };
                 
                 $scope.selectAllClients = function(){
                     $scope.data.clientsOnPage.forEach(function(el){
-                        if (el.selectionDisabled == true) return;
+                        if (el.selectionDisabled == true) {return;}
                         el.selected = $scope.objectCtrlSettings.selectedAllClients;
                     });
                     $scope.objectCtrlSettings.anyClientSelected = $scope.objectCtrlSettings.selectedAllClients;
@@ -1829,11 +1835,39 @@ angular.module('portalNMC')
                         if (elem.selected == true && elem.selectionDisabled != true){
                             anySelectedFlag = true;
                             return true;
-                        };
+                        }
                     });
                     $scope.objectCtrlSettings.anyClientSelected = anySelectedFlag;
                 };
-// ******************************* end subscriber region ***********************                
+// ******************************* end subscriber region ***********************
+                
+                $scope.objectCtrlSettings.objectModalWindowTabs = [
+                    {
+                        name: "main_object_properties_tab",
+                        tabpanel: "main_object_properties"
+                    },        
+                    {
+                        name: "extra_object_properties_tab",
+                        tabpanel: "extra_object_properties"
+                    }
+                ];
+                
+                function setActiveObjectPropertiesTab(tabName) {
+                    $scope.objectCtrlSettings.objectModalWindowTabs.forEach(function (tabElem) {
+                        var tab, tabPanel;
+                        tab = document.getElementById(tabElem.name) || null;
+                        tabPanel = document.getElementById(tabElem.tabpanel) || null;                            
+                        if (tabElem.name.localeCompare(tabName) !== 0) {                
+
+                            tab.classList.remove("active");                
+                            tabPanel.classList.remove("active");
+                        } else {                
+                            tab.classList.add("active");
+                            tabPanel.classList.add("in");
+                            tabPanel.classList.add("active");
+                        }
+                    });
+                }
                 
                 //checkers            
                 $scope.checkEmptyNullValue = function(numvalue){                    
@@ -1847,7 +1881,7 @@ angular.module('portalNMC')
                 
                 function isNumeric(n) {
                   return !isNaN(parseFloat(n)) && isFinite(n);
-                };
+                }
                 
                 $scope.checkNumericValue = function(numvalue){ 
                     var result = true;
@@ -1857,18 +1891,18 @@ angular.module('portalNMC')
                     if (!isNumeric(numvalue)){
                         result = false;
                         return result;
-                    };
+                    }
                     return result;
                 };
                 
                 $scope.checkPositiveNumberValue = function (numvalue) {                    
                     var result = true;
-                    result = $scope.checkNumericValue(numvalue)
+                    result = $scope.checkNumericValue(numvalue);
                     if (!result){
                         //if numvalue is not number -> return false
                         return result;
                     }
-                    result = parseInt(numvalue) >= 0 ? true : false;
+                    result = parseInt(numvalue, RADIX) >= 0 ? true : false;
                     return result;
                 };
                 
@@ -1876,16 +1910,16 @@ angular.module('portalNMC')
                     return mainSvc.isPositiveNumberValue(val);
                 };
                 
-                $scope.checkNumericInterval = function(leftBorder, rightBorder){  
-                     if (($scope.checkEmptyNullValue(leftBorder)) || ( $scope.checkEmptyNullValue(rightBorder))){                                     
+                $scope.checkNumericInterval = function(leftBorder, rightBorder) {  
+                     if (($scope.checkEmptyNullValue(leftBorder)) || ( $scope.checkEmptyNullValue(rightBorder))) {                                     
                          return false;
-                     };
-                     if (!(($scope.checkNumericValue(leftBorder)) && ( $scope.checkNumericValue(rightBorder)))){                         
+                     }
+                     if (!(($scope.checkNumericValue(leftBorder)) && ( $scope.checkNumericValue(rightBorder)))) {                         
                          return false;
-                     };
-                     if(parseInt(rightBorder) >= parseInt(leftBorder)){                        
+                     }
+                     if (parseInt(rightBorder, RADIX) >= parseInt(leftBorder, RADIX)) {                        
                          return true;
-                     };
+                     }
                      return false;
                 };
                 
@@ -1893,14 +1927,14 @@ angular.module('portalNMC')
 //console.log(hhmmValue);                    
                     if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
                         return true;
-                    };
+                    }
                     return false;
                 };
                 
                 $scope.checkZpointSettingsFrom = function(zpointSettings){              
                     if((zpointSettings == null) || (!zpointSettings.hasOwnProperty('summer')) || (!zpointSettings.hasOwnProperty('winter'))){
                         return true;
-                    };
+                    }
                     return $scope.checkPositiveNumberValue(zpointSettings.summer.ov_BalanceM_ctrl) && 
                         $scope.checkPositiveNumberValue(zpointSettings.winter.ov_BalanceM_ctrl) &&
                         $scope.checkHHmm(zpointSettings.summer.ov_Worktime) &&
@@ -1931,21 +1965,8 @@ angular.module('portalNMC')
 //                    if ((object==null)||(object.cwTemp === undefined)){
                     if ((object == null) || (!object.hasOwnProperty('cwTemp')) || (!object.hasOwnProperty('heatArea'))){
                         return true;
-                    };
+                    }
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
-                };
-
-                var checkGeo = function(){
-                   $scope.currentObject.geoState = "red";
-                   $scope.currentObject.geoStateText = "Не отображается на карте";
-// console.log($scope.currentObject.isValidGeoPos);
-// console.log($scope.currentSug);
-// console.log($scope.currentSug.data.geo_lat);
-// console.log($scope.currentSug.data.geo_lon);                
-                   if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null){
-                        $scope.currentObject.geoState = "green";
-                        $scope.currentObject.geoStateText = "Отображается на карте";
-                    }; 
                 };
                 
                 $(document).ready(function(){
@@ -2085,7 +2106,7 @@ console.log(tmpSrc);
                     $scope.data.currentTree = null;
                     $scope.data.selectedNode = null;
                     $scope.objectCtrlSettings.isFullObjectView = true;
-                    $scope.messages.treeMenuHeader = 'Полный список объектов'
+                    $scope.messages.treeMenuHeader = 'Полный список объектов';
                     getObjectsData();                    
                 };
                 
@@ -2108,12 +2129,12 @@ console.log(tmpSrc);
                     if (!mainSvc.checkUndefinedNull(selectedNode)){                        
                         if (selectedNode.id == item.id || selectedNode.type == item.type == 'root'){                       
                             return ;
-                        };             
+                        }             
                         var preNode = findNodeInTree(selectedNode, treeForSearch);
                         if (!mainSvc.checkUndefinedNull(preNode)){
                             preNode.isSelected = false;
                         }
-                    };
+                    }
                     
                     item.isSelected = true;                    
                     $scope.data.selectedNode = angular.copy(item); 
@@ -2122,14 +2143,14 @@ console.log(tmpSrc);
                         objectSvc.loadSubscrFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                     }else{              
                         objectSvc.loadSubscrObjectsByTreeNode($scope.data.currentTree.id, item.id).then(performObjectsData);
-                    };                    
+                    }                    
                 };
                 
                 $scope.loadTree = function(tree, objId/*for moving*/){
                     $scope.loading = true;             
                      if (!mainSvc.checkUndefinedNull(objId)){
                         $scope.data.moveToObjectId =  objId;
-                    };
+                    }
                     objectSvc.loadSubscrTree(tree.id).then(function(resp){
                             $scope.messages.treeMenuHeader = tree.objectName || tree.id; 
                             var respTree = angular.copy(resp.data);
@@ -2144,7 +2165,7 @@ console.log(tmpSrc);
                             if (!mainSvc.checkUndefinedNull($scope.data.moveToObjectId)){
                                 moveToObject($scope.data.moveToObjectId);
                                 $scope.data.moveToObjectId = null;
-                            };
+                            }
                         }, errorCallback);
                 };
                 
@@ -2168,14 +2189,19 @@ console.log(tmpSrc);
                         $scope.data.trees = angular.copy(resp.data);
                         if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)){
                             $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));                   
-                        };
+                        }
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree) ){ 
                             $scope.viewFullObjectList();
                             return "View full object list!";
-                        };                        
+                        }                        
                         $scope.loadTree($scope.data.defaultTree);                        
                         
                     }, errorCallback);
+                };
+                
+                var successLoadTreeSetting = function(resp){
+                    $scope.objectCtrlSettings.isTreeView = resp.data.isActive;
+                    loadTrees(resp.data);
                 };
                 
                 $scope.toggleTreeView = function(){
@@ -2188,12 +2214,7 @@ console.log(tmpSrc);
                     //if tree is on
 //                        loadTrees();
                         objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);
-                    };
-                };
-                
-                var successLoadTreeSetting = function(resp){
-                    $scope.objectCtrlSettings.isTreeView = resp.data.isActive;
-                    loadTrees(resp.data);
+                    }
                 };
                 
 //                $scope.toggleTreeView = function(){
@@ -2214,7 +2235,7 @@ console.log(tmpSrc);
                             objectSvc.loadFreeObjectsByTree($scope.data.currentTree.id).then(performObjectsData);
                         }else{              
                             objectSvc.loadObjectsByTreeNode($scope.data.currentTree.id, $scope.data.selectedNode.id).then(performObjectsData);
-                        };
+                        }
                     }, errorCallback);
                 };
 // ********************************************************************************************
@@ -2324,34 +2345,6 @@ console.log(tmpSrc);
                     $('#inputZpointName').focus();
                 });
                 
-                $scope.objectCtrlSettings.objectModalWindowTabs = [
-                    {
-                        name: "main_object_properties_tab",
-                        tabpanel: "main_object_properties"
-                    },        
-                    {
-                        name: "extra_object_properties_tab",
-                        tabpanel: "extra_object_properties"
-                    }
-                ];
-                
-                function setActiveObjectPropertiesTab(tabName) {
-                    $scope.objectCtrlSettings.objectModalWindowTabs.forEach(function (tabElem) {
-                        var tab, tabPanel;
-                        tab = document.getElementById(tabElem.name) || null;
-                        tabPanel = document.getElementById(tabElem.tabpanel) || null;                            
-                        if (tabElem.name.localeCompare(tabName) !== 0) {                
-
-                            tab.classList.remove("active");                
-                            tabPanel.classList.remove("active");
-                        } else {                
-                            tab.classList.add("active");
-                            tabPanel.classList.add("in");
-                            tabPanel.classList.add("active");
-                        }
-                    });
-                }
-                
                 //set tooltips for meta device fields
                 function setMetaToolTips () {
                     $scope.currentZpoint.metaData.metaData.forEach(function(metaField){
@@ -2378,27 +2371,27 @@ console.log(tmpSrc);
                 
                 $scope.changeMetaToolTips = function () {                    
                     setMetaToolTips();
-                }
+                };
                 
                 $("#metaDataEditorModal").on('shown.bs.modal', function () {                
                     setMetaToolTips();
-                })
+                });
                                 
                 //controller initialization
-                var initCtrl = function(){
+                var initCtrl = function () {
                     getRsoOrganizations();
                     getCmOrganizations();
                     getServiceTypes();
                     getTimezones();
                     getClients();
                     //if tree is off
-                    if ($scope.objectCtrlSettings.isTreeView == false){
+                    if ($scope.objectCtrlSettings.isTreeView == false) {
                         getObjectsData();
-                    }else{
+                    } else {
                     //if tree is on
 //                        loadTrees(); 
                         objectSvc.loadDefaultTreeSetting().then(successLoadTreeSetting, errorCallback);
-                    };
+                    }
                 };
                 initCtrl();
 //            }]
