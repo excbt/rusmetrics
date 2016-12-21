@@ -166,19 +166,25 @@ angular.module('portalNMC')
     
     function checkDatasource(dsource){
         var checkDsourceFlag = true;
-        if ((dsource.rawConnectionType != 'CLIENT') && (!$scope.checkPositiveNumberValue(dsource.dataSourcePort))){
-            notificationFactory.errorInfo("Ошибка","Не корректно задан порт источника данных.");
-            checkDsourceFlag = false;
-        };
-//        if (!$("#inputIP").inputmask("isComplete")){
-        if ((dsource.rawConnectionType != 'CLIENT') && (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === ""))){
-            notificationFactory.errorInfo("Ошибка","Не заполнен ip \\ hostname источника данных.");
-            checkDsourceFlag = false;
-        };
         if (angular.isUndefined(dsource.dataSourceName) || (dsource.dataSourceName === null) || (dsource.dataSourceName === "")){
             notificationFactory.errorInfo("Ошибка","Не задано имя источника данных.");
             checkDsourceFlag = false;
         };
+        
+        if (dsource.dataSourceTypeKey === 'MANUAL') {
+            return checkDsourceFlag;
+        }
+        
+        if ((dsource.rawConnectionType != 'CLIENT') && (!$scope.checkPositiveNumberValue(dsource.dataSourcePort))){
+            notificationFactory.errorInfo("Ошибка","Не корректно задан порт источника данных.");
+            checkDsourceFlag = false;
+        };        
+        
+//        if (!$("#inputIP").inputmask("isComplete")){
+        if ((dsource.rawConnectionType != 'CLIENT') && (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === ""))){
+            notificationFactory.errorInfo("Ошибка","Не заполнен ip \\ hostname источника данных.");
+            checkDsourceFlag = false;
+        };        
         
         if (dsource.dataSourceTypeKey == 'DEVICE'){
             if (dsource.rawTimeout == ""){
@@ -325,25 +331,37 @@ angular.module('portalNMC')
         $("#inputDSReconnectionInterval").inputmask();
     });
     
-    var setMainPropertiesActiveTab = function(){
-        var tab = document.getElementById('con_properties_tab');     
-        tab.classList.remove("active");
-        var tab = document.getElementById('con_properties');     
-        tab.classList.remove("active");
-        var tab = document.getElementById('ex_properties_tab');
-        if (!mainSvc.checkUndefinedNull(tab))
+    var setMainPropertiesActiveTab = function () {
+        var tab = null;
+        tab = document.getElementById('con_properties_tab');
+        if (!mainSvc.checkUndefinedNull(tab)) {
             tab.classList.remove("active");
-        var tab = document.getElementById('ex_properties');     
-        tab.classList.remove("active");
+        }
+        tab = document.getElementById('con_properties');
+        if (!mainSvc.checkUndefinedNull(tab)) {
+            tab.classList.remove("active");
+        }
+        tab = document.getElementById('ex_properties_tab');
+        if (!mainSvc.checkUndefinedNull(tab)) {
+            tab.classList.remove("active");
+        }
+        tab = document.getElementById('ex_properties');
+        if (!mainSvc.checkUndefinedNull(tab)) {
+            tab.classList.remove("active");
+        }
         
-        var tab = document.getElementById("main_properties_tab");        
-        tab.classList.add("active");
-        var tab = document.getElementById("main_properties");
-        tab.classList.add("in");
-        tab.classList.add("active"); 
+        tab = document.getElementById("main_properties_tab");
+        if (!mainSvc.checkUndefinedNull(tab)) {
+            tab.classList.add("active");
+        }
+        tab = document.getElementById("main_properties");
+        if (!mainSvc.checkUndefinedNull(tab)) {
+            tab.classList.add("in");
+            tab.classList.add("active");
+        }
     };
 
-    $("#showDatasourceModal").on("hidden.bs.modal", function(){
+    $("#showDatasourceModal").on("hidden.bs.modal", function () {
         setMainPropertiesActiveTab();
     });
     

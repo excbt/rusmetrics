@@ -330,7 +330,7 @@ angular.module('portalNMC')
                         }
                     }
                     elem.deviceTimeOffsetString = mainSvc.prepareTimeOffset(elem.deviceObjectTimeOffset);
-                    if (!mainSvc.checkUndefinedNull(elem.deviceTimeOffsetString)){
+                    if (!mainSvc.checkUndefinedNull(elem.deviceTimeOffsetString)) {
                         if (elem.deviceTimeOffsetString.indexOf("+") === 0){
                             elem.deviceTimeOffsetStringTitle = "Часы прибора спешат";
                         }
@@ -640,7 +640,7 @@ angular.module('portalNMC')
         if (checkImpulseCompatibility(device.curModel, device.curDatasource) === false) {            
             checkDsourceFlag = false;
         }
-        if (device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
+        if (!mainSvc.checkUndefinedNull(device.curModel) && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
             var inputCDFlag = checkDsourceFlag;
             if (checkDeviceImpulseProperties(device) === false) {
                 checkDsourceFlag = false;

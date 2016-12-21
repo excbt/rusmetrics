@@ -188,7 +188,8 @@
                        ng-click="">Основные свойства
                     </a>
                   </li>
-                <li role="presentation" 
+                <li ng-if="data.currentObject.dataSourceTypeKey != 'MANUAL'" 
+                    role="presentation" 
                     id="con_properties_tab"                                         
                     > 
                     <a class="nmc-tab-button"
@@ -200,9 +201,9 @@
                        >Параметры подключения
                     </a>
                   </li>
-                  <li role="presentation" 
-                    id="ex_properties_tab"                                         
-                    > 
+                  <li ng-if="data.currentObject.dataSourceTypeKey != 'MANUAL'"
+                      role="presentation" 
+                      id="ex_properties_tab"> 
                     <a class="nmc-tab-button"
                        href="" 
                        aria-controls="ex_properties" 
