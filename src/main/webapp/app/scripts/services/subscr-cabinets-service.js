@@ -18,7 +18,7 @@ angular.module('portalNMC')
         var urlRma = urlApi + '/rma';
         var crudTableName = urlSubscr + '/contObjects';
         var urlRmaContCabinets = urlRma + '/contObjects';                 
-        var rmaTreeTemplatesUrl = urlRma + '/subscrObjectTreeTemplates';
+        var rmaTreeTemplatesUrl = urlSubscr + '/subscrObjectTreeTemplates';
         var rmaTreesUrl = urlRma + '/subscrObjectTree/contObjectTreeType1';
         var subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1';                 
         

@@ -180,8 +180,8 @@ angular.module('portalNMC')
                 $scope.loading = subscrCabinetsSvc.getLoadingStatus();//loading;
                 $scope.columns = [
 
-                        {"name":"fullName", "header" : "Название", "class":"col-md-5"},
-                        {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
+                        {"name":"fullName", "header" : "Название", "class":"col-xs-5"},
+                        {"name":"fullAddress", "header" : "Адрес", "class":"col-xs-5"}
 
                     ];//angular.fromJson($attrs.columns);
                 $scope.captions = {"loading":"loading", "totalElements":"totalElements"};//angular.fromJson($attrs.captions);
@@ -545,6 +545,10 @@ console.log(e);
                 
                 var errorProtoCallback = function(e){
                     console.log(e);
+                    if (!mainSvc.checkUndefinedNull(e) && mainSvc.checkUndefinedNull(e.status) && e.status === 406) {
+                        notificationFactory.errorInfo("Ошибка", "Не все кабинеты были созданы.");
+                        performCabinetsData(e);
+                    }
                     var errorCode = "-1";
                     if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
                         errorCode = "ERR_CONNECTION";

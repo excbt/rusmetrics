@@ -39,9 +39,9 @@
 </div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-3 col-md-3 noPadding paddingRight20" ng-show="objectCtrlSettings.isTreeView == true">                    
+        <div class="col-xs-3 noPadding paddingRight20" ng-show="objectCtrlSettings.isTreeView == true">                    
             <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
-                <div class="col-xs-6 col-md-6">
+                <div class="col-xs-6">
                     <div class="btn-group">
                           <button 
                                   title="Действия над объектом" 
@@ -104,7 +104,7 @@
                         </div>
 
                 </div>
-                <div class="col-xs-6 col-md-6">
+                <div class="col-xs-6">
                     <div class="input-group  filter pull-left nmc-search-form">   
                         <span class="input-group-addon nmc-search-form-addon">
                             <i class="glyphicon glyphicon-search nmc-search-form-button">
@@ -127,21 +127,21 @@
              </div>
         </div>
         <div class="noPadding" 
-             ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">
+             ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true, 'col-xs-9': objectCtrlSettings.isTreeView == true}">
             <div  ng-show="loading" class="nmc-loading">
                 <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
             </div>
             <div class="container-fluid" ng-hide="loading">
                 <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
-                    <div class="col-md-3 noPadding">
+                    <div class="col-xs-3 noPadding">
 <!--                        <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Создать объект</button>-->
                     </div>
-                    <div class="col-md-7"></div>
-                    <div class="input-group col-md-4 filter pull-left nmc-search-form">   
+                    <div class="col-xs-7"></div>
+                    <div class="input-group col-xs-4 filter pull-left nmc-search-form">   
                         <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                         <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                     </div>
-                    <div class="col-md-offset-2 col-md-2">
+                    <div class="col-xs-offset-2 col-xs-2">
                             <label class="nmc-form-label">Всего:</label>
                              <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
                             <span id="timeOutput"></span>
@@ -201,15 +201,15 @@
                                                 <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
                                             </th>
 <!--                                            <th class="nmc-td-for-button"></th>-->
-                                            <th class="col-xs-3 col-md-3">Название объекта
+                                            <th class="col-xs-3">Название объекта
                                             </th>
-                                            <th class="col-xs-2 col-md-2">Имя пользователя
+                                            <th class="col-xs-2">Имя пользователя
                                             </th>
-                                            <th class="col-xs-2 col-md-2">Эл. почта
+                                            <th class="col-xs-2">Эл. почта
                                             </th>
-                                            <th class="col-xs-1 col-md-1">Логин
+                                            <th class="col-xs-1">Логин
                                             </th>
-                                            <th class="col-xs-1 col-md-1">Пароль
+                                            <th class="col-xs-1">Пароль
                                             </th>
                                             <th>
 <!--
@@ -260,15 +260,15 @@
                                                 </div>
                                             </th>
 <!--                                            <th class="nmc-td-for-button"></th>-->
-                                            <th class="col-xs-3 col-md-3">Название объекта
+                                            <th class="col-xs-3">Название объекта
                                             </th>
-                                            <th class="col-xs-2 col-md-2">Имя пользователя
+                                            <th class="col-xs-2">Имя пользователя
                                             </th>
-                                            <th class="col-xs-2 col-md-2">Эл. почта
+                                            <th class="col-xs-2">Эл. почта
                                             </th>
-                                            <th class="col-xs-1 col-md-1">Логин
+                                            <th class="col-xs-1">Логин
                                             </th>
-                                            <th class="col-xs-1 col-md-1">Пароль
+                                            <th class="col-xs-1">Пароль
                                             </th>
                                             <th>
                                             </th>
@@ -358,20 +358,20 @@
 <!--                                        <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i> -->
 <!--                                    </td>-->
 
-                                    <td class="col-xs-3 col-md-3">                                        
+                                    <td class="col-xs-3">                                        
                                         {{object.contObjectInfo.fullName || object.contObjectInfo.name}}
 <!--                                        <span ng-show="isSystemuser()">(id = {{object.id}})</span>-->
                                     </td>
-                                    <td class="col-xs-2 col-md-2">
+                                    <td class="col-xs-2">
                                         {{object.cabinet.subscrUser.userNickname}}
                                     </td>
-                                    <td class="col-xs-2 col-md-2">
+                                    <td class="col-xs-2">
                                         {{object.cabinet.subscrUser.contactEmail}}
                                     </td>
-                                    <td class="col-xs-1 col-md-1">
-                                        {{object.cabinet.subscrCabinetNr}}
+                                    <td class="col-xs-1">
+                                        {{object.cabinet.subscrUser.userName}}
                                     </td>
-                                    <td class="col-xs-1 col-md-1">
+                                    <td class="col-xs-1">
                                         {{object.cabinet.subscrUser.passwordPocket}}
                                     </td>
                                     <td>
@@ -408,7 +408,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputTenantLogin">Логин</label>
@@ -418,7 +418,7 @@
                                            type="text" 
                                            id="inputTenantLogin" 
                                            placeholder="Логин" 
-                                           ng-model="data.selectedCabinet.cabinet.subscrCabinetNr"
+                                           ng-model="data.selectedCabinet.cabinet.subscrUser.userName"
                                            disabled
                                            />
                                 </td>
@@ -501,14 +501,14 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input 
                                    type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="updateCabinet(data.selectedCabinet)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -547,13 +547,13 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
 								ng-click="confirmAction();"
 								value="Ок" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#confirmActionModal');">
 								Отменить
@@ -581,7 +581,7 @@
 				<p>
 					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить кабинет для  
 					</label> 
-					<label class="text-primary nmc-form-label">{{data.selectedCabinet.cabinet.subscrCabinetNr || data.selectedCabinet.cabinet.id || (data.selectedCabinet.cabinetsIdsForDelete.length + " объектов")}}</label>
+					<label class="text-primary nmc-form-label">{{data.selectedCabinet.cabinet.subscrUser.userName || data.selectedCabinet.cabinet.id || (data.selectedCabinet.cabinetsIdsForDelete.length + " объектов")}}</label>
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
@@ -596,13 +596,13 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteCabinets(data.selectedCabinet)"
 								value="Удалить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteCabinetModal');">
 								Отменить
@@ -627,13 +627,13 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-sm-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="viewLogin">Логин</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="data.selectedCabinet.cabinet.subscrCabinetNr" disabled>
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="data.selectedCabinet.cabinet.subscrUser.userName" disabled>
                                 </td>
                             </tr>
                             <tr>
@@ -676,12 +676,12 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="createPassword(data.selectedCabinet)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#createPasswordModal')">
 								Отменить
@@ -706,7 +706,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-sm-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputLevelName">Наименование</label>
@@ -785,7 +785,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-sm-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputTreeName">Наименование</label>
@@ -858,7 +858,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 noPadding marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-sm-12 noPadding marginBottom10 nmc-modal-panel-with-table" style="">
                           <div ui-tree="options" data-drag-enabled="false">
                             <ol ui-tree-nodes ng-model="data.treeForMove" >
                               <li ng-repeat="item in data.treeForMove.childObjectList" 
