@@ -545,7 +545,7 @@ console.log(e);
                 
                 var errorProtoCallback = function(e){
                     console.log(e);
-                    if (!mainSvc.checkUndefinedNull(e) && mainSvc.checkUndefinedNull(e.status) && e.status === 406) {
+                    if (!mainSvc.checkUndefinedNull(e) && !mainSvc.checkUndefinedNull(e.status) && e.status === 406) {
                         notificationFactory.errorInfo("Ошибка", "Не все кабинеты были созданы.");
                         performCabinetsData(e);
                     }
