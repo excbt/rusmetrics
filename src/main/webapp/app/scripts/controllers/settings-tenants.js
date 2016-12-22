@@ -546,16 +546,17 @@ console.log(e);
                 var errorProtoCallback = function(e){
                     console.log(e);
                     if (!mainSvc.checkUndefinedNull(e) && !mainSvc.checkUndefinedNull(e.status) && e.status === 406) {
-                        notificationFactory.errorInfo("Ошибка", "Не все кабинеты были созданы.");
+                        notificationFactory.warning("Не все кабинеты были созданы.");
                         performCabinetsData(e);
+                        return true;
                     }
                     var errorCode = "-1";
                     if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
                         errorCode = "ERR_CONNECTION";
-                    };
+                    }
                     if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
                         errorCode = e.resultCode || e.data.resultCode;
-                    };
+                    }
                     var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
                     notificationFactory.errorInfo(errorObj.caption, errorObj.description);                    
                 };
