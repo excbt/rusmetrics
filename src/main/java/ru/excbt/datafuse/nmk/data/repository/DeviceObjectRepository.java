@@ -24,7 +24,8 @@ public interface DeviceObjectRepository extends CrudRepository<DeviceObject, Lon
 	 * @param contObjectId
 	 * @return
 	 */
-	@Query("SELECT do FROM DeviceObject do LEFT JOIN do.contObject co " + " WHERE co.id = :contObjectId")
+	@Query("SELECT do FROM DeviceObject do LEFT JOIN do.contObject co "
+			+ " WHERE co.id = :contObjectId ORDER BY do.number NULLS LAST")
 	public List<DeviceObject> selectDeviceObjectsByContObjectId(@Param("contObjectId") Long contObjectId);
 
 	/**
@@ -32,7 +33,7 @@ public interface DeviceObjectRepository extends CrudRepository<DeviceObject, Lon
 	 * @param ids
 	 * @return
 	 */
-	@Query("SELECT do FROM DeviceObject do WHERE do.id IN (:ids)")
+	@Query("SELECT do FROM DeviceObject do WHERE do.id IN (:ids) ORDER BY do.id")
 	public List<DeviceObject> selectDeviceObjectsByIds(@Param("ids") Collection<Long> ids);
 
 }

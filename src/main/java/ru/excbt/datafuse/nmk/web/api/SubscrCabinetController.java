@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +23,10 @@ import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
+import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -64,24 +67,27 @@ public class SubscrCabinetController extends SubscrApiController {
 	@RequestMapping(value = "/create", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putCreateContObjectCabinetInfo(@RequestBody final List<Long> cabinetContObjectList) {
 
-		ApiAction action = new ApiActionEntityAdapter<List<ContObjectCabinetInfo>>() {
+		final List<Exception> errExceptions = new ArrayList<>();
 
-			@Override
-			public List<ContObjectCabinetInfo> processAndReturnResult() {
-
-				for (Long contObjectId : cabinetContObjectList) {
-					try {
-						//SubscrCabinetInfo cabinetInfo = 
-						subscrCabinetService.createSubscrUserCabinet(getCurrentSubscriber(),
-								new Long[] { contObjectId });
-					} catch (PersistenceException e) {
-					}
+		ApiActionObjectProcess actionProcess = () -> {
+			for (Long contObjectId : cabinetContObjectList) {
+				try {
+					//SubscrCabinetInfo cabinetInfo = 
+					subscrCabinetService.createSubscrUserCabinet(getCurrentSubscriber(), new Long[] { contObjectId });
+				} catch (PersistenceException e) {
+					errExceptions.add(e);
+				} catch (SubscrLdapException e) {
+					errExceptions.add(e);
 				}
-				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 			}
+			return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		ResponseEntity<?> result = responseUpdate(actionProcess, (x) -> {
+			return errExceptions.isEmpty() ? null : ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(x);
+		});
+
+		return result;
 	}
 
 	/**

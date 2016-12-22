@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.EmailNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
@@ -47,6 +48,8 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 public class SubscrCabinetService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetService.class);
+
+	private static final String CABINET_SEQ_DEVICE_NUMBER = "{deviceObjectNumber}";
 
 	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
@@ -74,6 +77,9 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	@Autowired
 	private EmailNotificationService emailNotificationService;
+
+	@Autowired
+	private DeviceObjectService deviceObjectService;
 
 	/*
 	 * 
@@ -153,6 +159,33 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		Long subscrCabinetNr = getSubscrCabinetNr();
 
+		String subscrCabinetUsername = null;
+		if (parentSubscriber.getSubscrCabinetSeq() != null
+				&& parentSubscriber.getSubscrCabinetSeq().contains(CABINET_SEQ_DEVICE_NUMBER)) {
+			List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObject.getId())
+					.stream().filter(i -> i.getNumber() != null).collect(Collectors.toList());
+
+			if (deviceObjects.isEmpty()) {
+				throw new PersistenceException(
+						String.format("Can't create Child Subscriber for contObjects=%s. DeviceObject is not found",
+								contObjectIds.toString()));
+			}
+
+			if (deviceObjects.get(0).getNumber() == null) {
+				throw new PersistenceException(
+						String.format("Can't create Child Subscriber for contObjects=%s. DeviceObjectNumber is empty",
+								contObjectIds.toString()));
+			}
+
+			String deviceNumber = deviceObjects.get(0).getNumber();
+
+			subscrCabinetUsername = parentSubscriber.getSubscrCabinetSeq().replace(CABINET_SEQ_DEVICE_NUMBER,
+					deviceNumber);
+
+		} else {
+			subscrCabinetUsername = subscrCabinetNr.toString();
+		}
+
 		logger.trace("subscriberCabinetNr:{}", subscrCabinetNr);
 
 		Subscriber newSubscriber = new Subscriber();
@@ -172,7 +205,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		subscrUser.setSubscriber(newSubscriber);
 		subscrUser.setSubscriberId(newSubscriber.getId());
 		subscrUser.setSubscrRoles(subscrRoleService.subscrCabinetRoles());
-		subscrUser.setUserName(subscrCabinetNr.toString());
+		subscrUser.setUserName(subscrCabinetUsername);
 		subscrUser.setUserNickname("Не задано");
 		subscrUser.setUserComment(contObject.getFullName());
 		subscrUser.setPassword(PasswordUtils.generateRandomPassword());

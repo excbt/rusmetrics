@@ -9,11 +9,10 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 /**
@@ -26,9 +25,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
  */
 @Entity
 @Table(name = "subscriber")
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class Subscriber extends AbstractAuditableModel implements DeletableObject {
+public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -103,6 +101,10 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	@Column(name = "subscr_cabinet_nr")
 	private String subscrCabinetNr;
+
+	@JsonIgnore
+	@Column(name = "subscr_cabinet_seq")
+	private String subscrCabinetSeq;
 
 	@Column(name = "contact_email")
 	private String contactEmail;
@@ -295,6 +297,14 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setParentSubscriberId(Long parentSubscriberId) {
 		this.parentSubscriberId = parentSubscriberId;
+	}
+
+	public String getSubscrCabinetSeq() {
+		return subscrCabinetSeq;
+	}
+
+	public void setSubscrCabinetSeq(String subscrCabinetSeq) {
+		this.subscrCabinetSeq = subscrCabinetSeq;
 	}
 
 }

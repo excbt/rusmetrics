@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
+import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -277,11 +278,13 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 		SubscrTypeKey subscrTypeKey = SubscrTypeKey.searchKeyname(subscrUser.getSubscriber().getSubscrType());
 
-		String gidNumber = subscrTypeKey != null && subscrTypeKey.isChild() ? subscrUser.getUserName() : null;
+		String gidNumber = (subscrTypeKey != null && subscrTypeKey.isChild())
+				&& (subscrUser.getSubscriber() != null && subscrUser.getSubscriber().getSubscrCabinetNr() != null)
+						? subscrUser.getSubscriber().getSubscrCabinetNr() : null;
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
-				subscrUser.getUserEMail(), subscrUser.getUserDescription(),
-				gidNumber, subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
+				subscrUser.getUserEMail(), subscrUser.getUserDescription(), gidNumber,
+				subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
 		return user;
 
 	}
@@ -298,7 +301,15 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 			logger.error("LDAP Service Error Message: {}", e.getMessage());
 			logger.error("LDAP Service Exception: {}", e);
 			logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
-			throw new PersistenceException(String.format("Can't process LDAP action for user: %s", user.getUserName()));
+
+			if (org.springframework.ldap.NamingException.class.isAssignableFrom(e.getClass())) {
+				throw new SubscrLdapException(
+						String.format("Can't process LDAP action for user: %s", user.getUserName()), e);
+			} else {
+				throw new SubscrLdapException(
+						String.format("Can't process LDAP action for user: %s", user.getUserName()));
+			}
+
 		}
 	}
 
