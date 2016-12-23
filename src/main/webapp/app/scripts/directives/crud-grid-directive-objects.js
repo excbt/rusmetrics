@@ -797,6 +797,18 @@ angular.module('portalNMC')
                                 default : trHTML += "<td>" + (mainSvc.checkUndefinedNull(zpoint[column.name]) ? "" : zpoint[column.name]) + "</td>"; break;
                             }
                         });
+                        trHTML += "</tr>";                        
+                        trHTML += "<tr>";
+                        trHTML += "<td colspan='3'>";
+                        
+                        trHTML += "<div ng-controller='widgetContainer'>" +
+                              "<span ng-show='title' ng-bind='title'></span>" +                              
+                              "<div ng-show='isLoading'>Загрузка...</div>" +
+                              "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
+                              "<ng-widget src=\"'chart'\" options=\"options\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+                            "</div>";
+                        
+                        trHTML += "</td>";
                         trHTML += "</tr>";
                     });
                     trHTML += "</table></td>";

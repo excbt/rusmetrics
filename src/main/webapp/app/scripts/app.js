@@ -1,3 +1,5 @@
+/*jslint node: true*/
+/*global angular*/
 'use strict';
 
 /**
@@ -10,23 +12,26 @@
  */
 
 var app = angular
-  .module('portalNMC', [
-    'ngAnimate',
-    'ngCookies',
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch',
-    'ui.tree',
-    'daterangepicker'
-      ,'angularUtils.directives.dirPagination'
-      ,'ngIdle'
-      ,'infinite-scroll'
-      ,'angularFileUpload'
-      ,'leaflet-directive'
-      ,'ui.select'
-      ,'ui.mask'
-  ]);
+    .module('portalNMC', [
+        'ngAnimate',
+        'ngCookies',
+        'ngResource',
+        'ngRoute',
+        'ngSanitize',
+        'ngTouch',
+        'ui.tree',
+        'daterangepicker',
+        'angularUtils.directives.dirPagination',
+        'ngIdle',
+        'infinite-scroll',
+        'angularFileUpload',
+        'leaflet-directive',
+        'ui.select',
+        'ui.mask',
+        'angularWidget',
+        'chart.js',
+        'googlechart'
+    ]);
 
 //routing config
 app.config(function ($routeProvider) {
@@ -35,8 +40,8 @@ app.config(function ($routeProvider) {
       .when('/', {
         templateUrl: 'views/objects_edit.html',
         controller: 'ObjectsCtrl',
-        resolve:{
-            permissions: ['mainSvc', function(mainSvc){
+        resolve: {
+            permissions: ['mainSvc', function (mainSvc) {
                 return mainSvc.getLoadedServicePermission();
             }]
         }
@@ -44,8 +49,8 @@ app.config(function ($routeProvider) {
       .when('/objects/list', {
         templateUrl: 'views/objects_edit.html',
         controller: 'ObjectsCtrl',
-        resolve:{
-            permissions: ['mainSvc', function(mainSvc){
+        resolve: {
+            permissions: ['mainSvc', function (mainSvc) {
                 return mainSvc.getLoadedServicePermission();
             }]
         }
@@ -53,8 +58,8 @@ app.config(function ($routeProvider) {
       .when('/objects/demo-map', {
         templateUrl: 'views/objects_map.html',
         controller: 'ObjectsMapCtrl',
-        resolve:{
-            permissions: ['mainSvc', function(mainSvc){                
+        resolve: {
+            permissions: ['mainSvc', function (mainSvc) {
                 return mainSvc.getLoadedServicePermission();
             }]
         }
@@ -63,8 +68,8 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl',
         reloadOnSearch: false,
-        resolve:{
-            permissions: ['mainSvc', function(mainSvc){
+        resolve: {
+            permissions: ['mainSvc', function (mainSvc) {
                 return mainSvc.getLoadedServicePermission();
             }]
         }
@@ -281,6 +286,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/log-sms.html',
         controller: 'LogSmsCtrl'
       })
+      .when('/test', {
+        templateUrl: 'views/test.html',
+        controller: 'testCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -292,7 +301,7 @@ app.config(function ($routeProvider) {
 //}]);
 
 //config for ngIdle
-app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, IdleProvider) {
+app.config(['KeepaliveProvider', 'IdleProvider', function (KeepaliveProvider, IdleProvider) {
 //  IdleProvider.idle(3600); //idle time in seconds
 //  IdleProvider.timeout(30); //time out in seconds
 //  KeepaliveProvider.interval(10);//keepAlive - not used
@@ -303,13 +312,29 @@ app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, Idl
 //}]);
 
 //configure $log service
-app.config(function($logProvider){
+app.config(function ($logProvider) {
     $logProvider.debugEnabled(true);
 });
 
-app.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
-  uiMaskConfigProvider.maskDefinitions({'a':/[a-z]/, 'A': /[A-Z]/, '*': /[a-zA-Z0-9]/, '9':/\d/, 'M': /[A-F0-9]/});
+app.config(['uiMask.ConfigProvider', function (uiMaskConfigProvider) {
+  uiMaskConfigProvider.maskDefinitions({'a': /[a-z]/, 'A': /[A-Z]/, '*': /[a-zA-Z0-9]/, '9': /\d/, 'M': /[A-F0-9]/});
 }]);
+
+//config widget
+app.config(function initializemanifestGenerator(widgetsProvider) {
+    widgetsProvider.setManifestGenerator(function () {
+      return function (name) {          
+        return {
+          module: name + 'Widget',
+          html: 'widgets/' + name + '/' + name + '.html',
+          files: [
+            'widgets/' + name + '/' + name + '.js',
+            'widgets/' + name + '/' + name + '.css'
+          ]
+        };
+      };
+    });
+});
 
 //app.run(['objectSvc', 'mainSvc', function(objectSvc, mainSvc){
 //console.log("Run main, object and monitor services.");  
@@ -317,7 +342,7 @@ app.config(['uiMask.ConfigProvider', function(uiMaskConfigProvider) {
 //    var objectSvcInit = objectSvc.promise;
 //}]);
 
-app.run(['objectSvc', 'monitorSvc', 'mainSvc', 'reportSvc', function(objectSvc, monitorSvc, mainSvc, reportSvc){
+app.run(['objectSvc', 'monitorSvc', 'mainSvc', 'reportSvc', function (objectSvc, monitorSvc, mainSvc, reportSvc) {
 //console.log("Run main, object and monitor services.");  
     var mainSvcInit = mainSvc.getUserServicesPermissions();
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
@@ -328,7 +353,7 @@ app.run(['objectSvc', 'monitorSvc', 'mainSvc', 'reportSvc', function(objectSvc, 
 * Define filters (описываем фильтры)
 **********************************************************************************************************
 */
-app.filter('columnFilter', function() {
+app.filter('columnFilter', function () {
   return function(items, props) {      
     var props = [props];
     var out = [];
@@ -357,11 +382,11 @@ app.filter('columnFilter', function() {
   }
 });
 
-app.filter('propsFilter', function() {
-  return function(items, props) {
+app.filter('propsFilter', function () {
+  return function (items, props) {
     var out = [];     
     if (angular.isArray(items)) {
-      items.forEach(function(item) {
+      items.forEach(function (item) {
         var itemMatches = false;
         var keys = Object.keys(props);                  
         for (var i = 0; i < keys.length; i++) {
@@ -389,7 +414,7 @@ app.filter('propsFilter', function() {
 });
 
 // Filter for zpoint metadata editor
-app.filter('isIntegrators', function() {
+app.filter('isIntegrators', function () {
   return function(items, propVal) {
     var out = [];     
     if (angular.isArray(items)) {
@@ -407,8 +432,8 @@ app.filter('isIntegrators', function() {
   }
 });
 
-app.filter('notEmptyCategoriesByContServiceType', ['$filter', function($filter){
-    return function(items, props){
+app.filter('notEmptyCategoriesByContServiceType', ['$filter', function ($filter) {
+    return function (items, props) {
 //console.log(items);        
         var out = [];
         if (angular.isArray(items)){

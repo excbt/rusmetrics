@@ -56,11 +56,12 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") !== -1 ? true : false);
         $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/") !== -1 ? true : false);
         $scope.menuMassive.log_menu_item = (loca.indexOf("/log") !== -1 ? true : false);
+        $scope.menuMassive.test_menu_item = (loca.indexOf("/test") !== -1 ? true : false);
         
         //check menu flags
         mkeys = Object.keys($scope.menuMassive);
         mkeys.some(function(mkey){
-          if ($scope.menuMassive[mkey] === false){
+          if ($scope.menuMassive[mkey] === false) {
               return false;
           }
           menuFlag = true;
@@ -77,34 +78,37 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         if (!menuFlag){
           $scope.setDefaultMenuState();//set default menu
         }         
-        if ($location.path() !== ""){
+        if ($location.path() !== "") {
           return;
         }
         //look menu flags and set location with current flag value
-        if ($scope.menuMassive.object_menu_item){
+        if ($scope.menuMassive.object_menu_item) {
           window.location.assign("#/");
         }
-        if ($scope.menuMassive.report_menu_item){
+        if ($scope.menuMassive.report_menu_item) {
           window.location.assign("#/reports/");
         }
 //        if ($scope.menuMassive.notice_menu_item){
 //         window.location.assign("#/notices/monitor/");
 //        }
-        if ($scope.menuMassive.setting_menu_item){
+        if ($scope.menuMassive.setting_menu_item) {
           window.location.assign("#/settings/tariffs/");
         }
-        if ($scope.menuMassive.admin_menu_item){
+        if ($scope.menuMassive.admin_menu_item) {
           window.location.assign("#/management/objects/");
         }
-        if ($scope.menuMassive.log_menu_item){
+        if ($scope.menuMassive.log_menu_item) {
           window.location.assign("#/log/");
+        }
+        if ($scope.menuMassive.test_menu_item) {
+          window.location.assign("#/test/");
         }
     }
       
 //      set selected menu item
-    $scope.clickMenu = function(menu){
+    $scope.clickMenu = function(menu) {
         var mkeys = Object.keys($scope.menuMassive);
-        mkeys.forEach(function(key){
+        mkeys.forEach(function (key) {
             $scope.menuMassive[key] = false;
         });
 //          for (var k in $scope.menuMassive){ 
@@ -114,10 +118,10 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     };
 
       //set default menu state
-    $scope.setDefaultMenuState = function(){
+    $scope.setDefaultMenuState = function () {
 //console.log("setDefaultMenuState"); 
         var mkeys = Object.keys($scope.menuMassive);
-        mkeys.forEach(function(key){
+        mkeys.forEach(function (key) {
             $scope.menuMassive[key] = false;
         });
 //      for (var k in $scope.menuMassive){
@@ -128,13 +132,13 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //console.log(window.location);        
     };
       
-    $(window).bind("beforeunload",function(){
-      console.log("beforeunload");
+    $(window).bind("beforeunload", function () {
+//      console.log("beforeunload");
       $scope.setDefaultMenuState();
     });
     
     function allRequestCancel () {
-    	$http.pendingRequests.forEach(function(request) {
+        $http.pendingRequests.forEach(function (request) {
             if (request.cancel) {
                 request.cancel.resolve();                
                 console.log("Cancelling Request " + request.method + " on URL:" + request.url);                
@@ -142,12 +146,12 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         });
     }
       
-    $scope.logOut = function(){
+    $scope.logOut = function () {
         $cookies = {};
 //        allRequestCancel();
         //cancel all request        
         objectSvc.getRequestCanceler().resolve();
-        mainSvc.getRequestCanceler().resolve();        
+        mainSvc.getRequestCanceler().resolve();
         reportSvc.getRequestCanceler().resolve();
         monitorSvc.getRequestCanceler().resolve();
         logSvc.getRequestCanceler().resolve();
@@ -162,19 +166,19 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //        $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag(); 
 //    });
     //control visibles
-    var setVisibles = function(ctxId){
+    var setVisibles = function (ctxId) {
         var /*ctxFlag = false,*/
             tmp;
         tmp = mainSvc.getContextIds();
-        tmp.forEach(function(element){         
+        tmp.forEach(function (element) {
 //            if(element.permissionTagId.localeCompare(ctxId) === 0){
 //                ctxFlag = true;
 //            }
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-            if (angular.isUndefined(elDOM) || (elDOM === null)){
+            if (angular.isUndefined(elDOM) || (elDOM === null)) {
                 return;
-            }              
-            $('#'+element.permissionTagId).removeClass('nmc-hide');
+            }
+            $('#' + element.permissionTagId).removeClass('nmc-hide');
         });
 //        if (ctxFlag == false){
 //            window.location.assign('#/');
@@ -182,7 +186,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     };
     setVisibles($scope.mainCtrlSettings.ctxId);
     //listen change of service list
-    $rootScope.$on('servicePermissions:loaded', function(){
+    $rootScope.$on('servicePermissions:loaded', function () {
         setVisibles($scope.mainCtrlSettings.ctxId);
     });
     
@@ -191,25 +195,25 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //    }, 500);
       
       //check user
-    $scope.isRma = function(){
+    $scope.isRma = function () {
         return mainSvc.isRma();
     };
-    $scope.isCabinet = function(){
+    $scope.isCabinet = function () {
         return mainSvc.isCabinet();
     };
       
-    $scope.getCtx = function(){
+    $scope.getCtx = function () {
       return $rootScope.ctxId;
     };
       
-    $scope.emptyString = function(str){
+    $scope.emptyString = function (str) {
         return mainSvc.checkUndefinedEmptyNullValue(str);
     };
     
     $scope.isTestMode = function () {
 //console.log("mainCtrl isTestMode = " + mainSvc.isTestMode());        
         return mainSvc.isTestMode();
-    }
+    };
       
       
     function errorCallback (e) {
@@ -220,41 +224,41 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 // *****************************************************************************
 //          work with user password
 // *****************************************************************************
-    $scope.changePasswordInit = function(){
+    $scope.changePasswordInit = function () {
         $scope.data.userInfo = angular.copy($rootScope.userInfo);
     };
       
-    $scope.checkPasswordFields = function(userInfo){
-        if (mainSvc.checkUndefinedNull(userInfo)){
+    $scope.checkPasswordFields = function (userInfo) {
+        if (mainSvc.checkUndefinedNull(userInfo)) {
             return false;
         }
         var result = true;
-        if ($scope.emptyString(userInfo.oldPassword)){            
+        if ($scope.emptyString(userInfo.oldPassword)) {
             result = false;
         }
-        if ($scope.emptyString(userInfo.newPassword)){                       
+        if ($scope.emptyString(userInfo.newPassword)) {
             result = false;
         }
-        if (userInfo.newPassword !== userInfo.newPasswordConfirm){                        
+        if (userInfo.newPassword !== userInfo.newPasswordConfirm) {
             result = false;
         }
         return result;
     };
 
     function checkPassword (userInfo) {
-        if (mainSvc.checkUndefinedNull(userInfo)){
+        if (mainSvc.checkUndefinedNull(userInfo)) {
             return false;
         }
         var result = true;
-        if ($scope.emptyString(userInfo.oldPassword)){
+        if ($scope.emptyString(userInfo.oldPassword)) {
             notificationFactory.errorInfo("Ошибка", "Поле \"Текущий пароль\" должно быть заполнено!");
             result = false;
         }
-        if ($scope.emptyString(userInfo.newPassword)){
+        if ($scope.emptyString(userInfo.newPassword)) {
             notificationFactory.errorInfo("Ошибка", "Пароль не должен быть пустым!");
             result = false;
         }
-        if (userInfo.newPassword !== userInfo.newPasswordConfirm){
+        if (userInfo.newPassword !== userInfo.newPasswordConfirm) {
             notificationFactory.errorInfo("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
             result = false;
         }
@@ -262,8 +266,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     }
       
       //change user password
-    $scope.changeUserPassword = function(userInfo){
-        if (checkPassword(userInfo) === false){return "Password is incorrect!";}
+    $scope.changeUserPassword = function (userInfo) {
+        if (checkPassword(userInfo) === false) {return "Password is incorrect!";}
         var url = "../api/systemInfo/passwordChange",
         params = {
             oldPassword : userInfo.oldPassword,
@@ -273,7 +277,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
             method: "PUT",
             url: url,
             params: params
-        }).then(function(){
+        }).then(function () {
             notificationFactory.success();
             $('#changePasswordModal').modal('hide');
         }, errorCallback);
@@ -286,5 +290,3 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //    initCtrl();
       
   }]);
-
-
