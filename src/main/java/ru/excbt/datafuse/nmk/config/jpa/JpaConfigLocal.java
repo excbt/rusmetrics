@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = { "ru.excbt.datafuse.nmk.data.repository" })
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog" })
 @EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
 public class JpaConfigLocal {
 
