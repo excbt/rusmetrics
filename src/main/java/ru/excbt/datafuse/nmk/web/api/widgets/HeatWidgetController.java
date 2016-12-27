@@ -16,7 +16,6 @@ import com.google.common.collect.Sets;
 
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.data.service.widget.HeatWidgetService;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * 
@@ -52,8 +51,8 @@ public class HeatWidgetController extends WidgetController {
 			return responseBadRequest();
 		}
 
-		java.time.LocalDate d = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
-		//java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
+		//java.time.LocalDate d = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
+		java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
 
 		List<HeatWidgetTemperatureDto> resultList = heatWidgetService.selectWidgetData(contZpointId, d,
 				mode.toUpperCase());
