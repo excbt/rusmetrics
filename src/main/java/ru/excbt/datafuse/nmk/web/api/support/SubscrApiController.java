@@ -152,6 +152,15 @@ public class SubscrApiController extends WebApiController {
 
 	/**
 	 * 
+	 * @return
+	 */
+	protected Date getCurrentSubscriberDate() {
+		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+		return d;
+	}
+
+	/**
+	 * 
 	 * @param subscriberId
 	 * @return
 	 */

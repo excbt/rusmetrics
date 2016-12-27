@@ -148,15 +148,20 @@ public class ColumnHelper {
 	public <T> T getResultAsClass(Object[] results, String column, Class<T> valueClass) {
 		int idx = indexOf(column);
 		checkNotNull(valueClass);
-		checkState(idx >= 0, "Invalid column index");
+		checkState(idx >= 0, "Invalid column index: " + column);
 		Object value = results[idx];
 
 		if (value == null) {
 			return null;
 		}
 
+		//		if (!(valueClass.isAssignableFrom(value.getClass()))) {
+		//		}		
+
 		if (!(valueClass.isInstance(value))) {
-			throw new IllegalArgumentException(String.format("Column %s is not type of String", column));
+			throw new IllegalArgumentException(String.format("Column %s is not type of class: %s. Actual class: %s",
+					column, valueClass.getName(), value.getClass().getName()));
+
 		}
 
 		return (T) value;
