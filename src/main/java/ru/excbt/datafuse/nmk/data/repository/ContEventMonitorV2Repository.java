@@ -25,10 +25,27 @@ public interface ContEventMonitorV2Repository extends JpaRepository<ContEventMon
 	 */
 	public List<ContEventMonitorV2> findByContObjectId(Long contObjectId);
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
 	@Query(" SELECT m FROM ContEventMonitorV2 m "
 			+ " WHERE m.contObjectId = :contObjectId AND (m.isScalar IS NULL OR m.isScalar = FALSE) "
 			+ " ORDER BY m.contEventTime ")
 	public List<ContEventMonitorV2> selectByContObjectId(@Param("contObjectId") Long contObjectId);
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZpointId
+	 * @return
+	 */
+	@Query(" SELECT m FROM ContEventMonitorV2 m, ContEvent ce "
+			+ " WHERE m.contObjectId = :contObjectId AND (m.isScalar IS NULL OR m.isScalar = FALSE) "
+			+ " AND m.contEventId = ce.id AND ce.contZPointId = :contZpointId " + " ORDER BY m.contEventTime ")
+	public List<ContEventMonitorV2> selectByZpointId(@Param("contObjectId") Long contObjectId,
+			@Param("contZpointId") Long contZpointId);
 
 	/**
 	 * 

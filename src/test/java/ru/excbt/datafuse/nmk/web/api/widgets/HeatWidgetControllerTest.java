@@ -6,7 +6,6 @@ package ru.excbt.datafuse.nmk.web.api.widgets;
 import org.junit.Test;
 
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 /**
  * 
@@ -39,13 +38,15 @@ public class HeatWidgetControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testHeatWidget() throws Exception {
+	public void testHeatWidgetChart() throws Exception {
 
-		RequestExtraInitializer param = (builder) -> {
-			builder.param("contZpointId", "107365375");
-			builder.param("mode", "YESTERDAY");
-		};
-		_testGetJson("/api/subscr/widgets/chart/heatTemp", param);
+		_testGetJson("/api/subscr/widgets/heat/chart/data/107365375/week");
+	}
+
+	@Test
+	public void testHeatWidgetMonitor() throws Exception {
+
+		_testGetJson("/api/subscr/widgets/heat/monitor/107365375");
 	}
 
 }

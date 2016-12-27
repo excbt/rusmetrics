@@ -205,4 +205,14 @@ public class ContEventMonitorV2Service {
 		return resultMap;
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZpointId
+	 * @return
+	 */
+	public List<ContEventMonitorV2> selectByContZpoint(Long contObjectId, Long contZpointId) {
+		return contEventMonitorV2Repository.selectByZpointId(contObjectId, contZpointId);
+	}
+
 }
