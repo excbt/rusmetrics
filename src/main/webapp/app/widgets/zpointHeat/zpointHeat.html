@@ -1,0 +1,91 @@
+<div class="widget1" ng-controller="zpointHeatWidgetCtrl">
+    <div class="container-fluid">
+        <div class="row">            
+<!--
+            <div class = "col-xs-1">
+                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{data.imgPath}}">
+            </div>
+            <div class = "col-xs-1">
+                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{widgetOptions.zpointStatus}}">
+            </div>
+-->
+            <div class = "col-xs-11 nmc-text-align-center">
+                <img class='marginLeft5' height="16" width="16" ng-src="{{data.imgPath}}">
+                <span ng-bind="widgetOptions.zpointName"></span>
+            </div>
+            <div class = "col-xs-1">
+<!--                <span class="glyphicons glyphicons-temperature"></span>-->
+                <i class="fa fa-thermometer-half" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="row">            
+<!--
+            <div class = "col-xs-1">
+                <img class='marginLeft5' height="25" width="25" ng-src="{{data.imgPath}}">
+            </div>
+-->
+            <div class = "col-xs-1" style="padding-left: 7%">
+                <img class = 'marginLeft5' 
+                     style = "cursor: pointer"
+                     height = "25" width = "25" 
+                     ng-src = "{{data.zpointStatus}}" 
+                     ng-attr-title = {{data.zpointStatusTitle}}>
+            </div>
+            <div class = "col-xs-7" style="padding-left: 25%">
+                <ul class="nav nav-pills" ng-init="weekFlag = true">
+<!--
+                    <li role="presentation" class="active"><a href="">Вчера</a></li>
+                    <li role="presentation"><a href="">Сегодня</a></li>
+                    <li role="presentation"><a href="">Неделя</a></li>
+-->
+                    <li role="presentation"
+                        ng-class="{'active': yesterdayFlag === true}">
+                        <a href="" class = "nmc-period-toogle" ng-click="yesterdayFlag = true; todayFlag = false; weekFlag = false;">
+                            Вчера
+                        </a>
+                    </li>
+                    <li role="presentation" 
+                        ng-class="{'active': todayFlag === true}">
+                        <a href="" class = "nmc-period-toogle" ng-click="todayFlag = true; yesterdayFlag = false; weekFlag = false;">
+                            Сегодня
+                        </a>
+                    </li>
+                    <li role="presentation" 
+                        ng-class="{'active': weekFlag === true}">
+                        <a href="" class = "nmc-period-toogle" ng-click="weekFlag = true; yesterdayFlag = false; todayFlag = false;">
+                            Неделя
+                        </a>
+                    </li>
+                </ul>
+<!--                Временные интервалы-->
+            </div>            
+            <div class = "col-xs-3">
+                <a href="" style="font-size: 12px">
+                    Открыть показания
+                </a>
+            </div>
+        </div>
+        <div class="row">            
+            <div class = "col-xs-12">
+                <canvas id="line" 
+                        class="chart chart-line" 
+                        chart-data="lineChart.data"
+                        chart-labels="lineChart.labels" 
+                        chart-series="lineChart.series" 
+                        chart-options="lineChart.options"
+                        chart-dataset-override="lineChart.datasetOverride" 
+                        chart-click="onClick">
+                </canvas>
+            </div>            
+        </div>
+<!--
+        <div class="row">            
+            <div class = "col-xs-12">
+                <a href="" style="font-size: 12px; float: right">
+                    Посмотреть уведомления
+                </a>
+            </div>            
+        </div>
+-->
+    </div>
+</div>

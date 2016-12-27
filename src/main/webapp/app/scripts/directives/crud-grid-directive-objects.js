@@ -707,7 +707,11 @@ angular.module('portalNMC')
                 //Формируем таблицу с точками учета
                 function makeZpointTable(object) {
 //console.log(object);                                        
-                    var trObj = document.getElementById("obj" + object.id);
+                    var trObj = document.getElementById("obj" + object.id),
+                        zpointWidget = {};
+                    zpointWidget.type = "chart";
+                    zpointWidget.zpointStatus = "yellow";
+                    zpointWidget.zpointStatusTitle = "На точке учета были происшествия";
 //console.log(trObj);                    
                     if ((angular.isUndefined(trObj)) || (trObj === null)) {
                         return;
@@ -718,17 +722,20 @@ angular.module('portalNMC')
                     var trHTML = "";
 
                     trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-hover nmc-child-object-table\">";
-                    trHTML += "<thead><tr class=\"nmc-child-table-header\">";
-//                    trHTML += "<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
-                    $scope.oldColumns.forEach(function(column) {
-                        trHTML += "<th class=\"" + column.class + "\">";
-                        trHTML += "" + (column.header || column.name) + "";
-                        trHTML += "</th>";
-                    });
-                    trHTML += "</tr></thead>";
-
-                    object.zpoints.forEach(function(zpoint) {
-                        trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
+//                    
+//                    trHTML += "<thead><tr class=\"nmc-child-table-header\">";
+//                    $scope.oldColumns.forEach(function(column) {
+//                        trHTML += "<th class=\"" + column.class + "\">";
+//                        trHTML += "" + (column.header || column.name) + "";
+//                        trHTML += "</th>";
+//                    });
+//                    trHTML += "</tr></thead>";
+                    trHTML += "<tr><td><div class = 'row'>";
+                    object.zpoints.forEach(function(zpoint, ind) {
+                        zpointWidget.type = "chart";
+                 //       trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
+                        
+                        
 //                        trHTML += "<td class=\"nmc-td-for-buttons-3\">"+
 //                                "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\"" +
 //                                    "ng-click=\"getZpointSettings(" + object.id + "," + zpoint.id + ")\"" +
@@ -760,6 +767,7 @@ angular.module('portalNMC')
                         $scope.oldColumns.forEach(function(column) {
                             switch (column.name) {
                                 case "zpointName":
+                                    zpointWidget.zpointName = zpoint.zpointName;
                                     var imgPath = "";
                                     switch (zpoint['zpointType']) {
                                         case "cw":
@@ -770,6 +778,7 @@ angular.module('portalNMC')
                                             break;
                                         case "heat":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
+                                            zpointWidget.type = "zpointHeat";
                                             break;
                                         case "gas":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
@@ -787,30 +796,39 @@ angular.module('portalNMC')
                                             imgPath = column['zpointType'];
                                             break;
                                     }
-                                    trHTML += "<td>";
-                                    trHTML += "<img class='marginLeft5' height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
-                                    trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>";
+//                                    trHTML += "<td>";
+//                                    trHTML += "<img class='marginLeft5' height=12 width=12 src=\"" + imgPath + "\"> <span class='paddingLeft5'></span>";
+//                                    trHTML += (zpoint[column.name] || "Не задано") + "<span ng-show=\"isSystemuser()\">(id = " + zpoint.id + ")</span></td>";
                                     break;
-                                case "zpointLastDataDate" : trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;
-                                case "zpointRefRange" : trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>"; break;
-                                case "empty" : trHTML += "<td></td>"; break;
-                                default : trHTML += "<td>" + (mainSvc.checkUndefinedNull(zpoint[column.name]) ? "" : zpoint[column.name]) + "</td>"; break;
+                                case "zpointLastDataDate" : /*trHTML += "<td>{{" + zpoint[column.name] + " | date: 'dd.MM.yyyy HH:mm'}}</td>";*/ break;
+                                case "zpointRefRange" : /*trHTML += "<td id=\"zpointRefRange" + zpoint.id + "\"></td>";*/ break;
+                                case "empty" : /*trHTML += "<td></td>";*/ break;
+                                default : /*trHTML += "<td>" + (mainSvc.checkUndefinedNull(zpoint[column.name]) ? "" : zpoint[column.name]) + "</td>";*/ break;
                             }
                         });
-                        trHTML += "</tr>";                        
-                        trHTML += "<tr>";
-                        trHTML += "<td colspan='3'>";
+//                        trHTML += "</tr>";                        
+                        
+//                        trHTML += "<tr>";
+//                        if (ind === 0 || ind % 2 === 0) {
+//                            trHTML += "<div class = 'row'>";
+//                        }
+                        trHTML += "<div class='col-xs-6'>";
                         
                         trHTML += "<div ng-controller='widgetContainer'>" +
                               "<span ng-show='title' ng-bind='title'></span>" +                              
                               "<div ng-show='isLoading'>Загрузка...</div>" +
                               "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
-                              "<ng-widget src=\"'chart'\" options=\"options\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+                              "<ng-widget src=\"'" + zpointWidget.type + "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + "', 'zpointStatus': '" + zpointWidget.zpointStatus + "', 'zpointStatusTitle': '" + zpointWidget.zpointStatusTitle + "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
                             "</div>";
                         
-                        trHTML += "</td>";
-                        trHTML += "</tr>";
+                        trHTML += "</div>";
+                        if (ind % 2 !== 0) {
+//                            trHTML += "</tr><tr>";
+                            trHTML += "</div><div class = 'row'>";
+                        }
+                        
                     });
+                    trHTML += "</div></td></tr>";
                     trHTML += "</table></td>";
                     trObjZp.innerHTML = trHTML;
 
