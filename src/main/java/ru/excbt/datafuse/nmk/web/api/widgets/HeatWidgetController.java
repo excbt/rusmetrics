@@ -59,8 +59,8 @@ public class HeatWidgetController extends WidgetController {
 			return responseBadRequest();
 		}
 
-		//java.time.LocalDate d = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
-		java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
+		java.time.LocalDate d = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
+		//java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
 
 		List<HeatWidgetTemperatureDto> resultList = heatWidgetService.selectChartData(contZpointId, d,
 				mode.toUpperCase());
