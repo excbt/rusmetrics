@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  * @since 27.12.2016
  * 
  */
+@RequestMapping("/{contZpointId}")
 public class WidgetController extends SubscrApiController {
 
 	@Autowired
@@ -40,7 +41,7 @@ public class WidgetController extends SubscrApiController {
 	 * @param contZpointId
 	 * @return
 	 */
-	@RequestMapping(value = "/monitor/{contZpointId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/monitor", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZpointMonitor(
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
@@ -48,7 +49,24 @@ public class WidgetController extends SubscrApiController {
 			responseForbidden();
 		}
 
+		Map<String, Object> result = new HashMap<>();
+		result.put("color", getMonitorColorValue(contZpointId));
+
+		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param contZpointId
+	 * @return
+	 */
+	protected Object getMonitorColorValue(Long contZpointId) {
+
 		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
+
+		if (contObjectId == null) {
+			return null;
+		}
 
 		List<ContEventMonitorV2> mon = contEventMonitorV2Service.selectByContZpoint(contObjectId, contZpointId);
 
@@ -57,11 +75,7 @@ public class WidgetController extends SubscrApiController {
 
 		final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
 				: ContEventLevelColorKeyV2.GREEN;
-
-		Map<String, String> result = new HashMap<>();
-		result.put("color", resultColorKey.getKeyname());
-
-		return responseOK(result);
+		return resultColorKey.getKeyname();
 	}
 
 }

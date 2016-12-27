@@ -40,13 +40,13 @@ public class HeatWidgetControllerTest extends AnyControllerTest {
 	@Test
 	public void testHeatWidgetChart() throws Exception {
 
-		_testGetJson("/api/subscr/widgets/heat/chart/data/107365375/week");
+		_testGetJson("/api/subscr/widgets/heat/107365375/chart/data/week");
 	}
 
 	@Test
 	public void testHeatWidgetMonitor() throws Exception {
 
-		_testGetJson("/api/subscr/widgets/heat/monitor/107365375");
+		_testGetJson("/api/subscr/widgets/heat/107365375/monitor");
 	}
 
 }

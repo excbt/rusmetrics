@@ -25,9 +25,8 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  * @since 27.12.2016
  * 
  */
-
-@RequestMapping(value = "/api/subscr/widgets/heat")
 @Controller
+@RequestMapping(value = "/api/subscr/widgets/heat/{contZpointId}")
 public class HeatWidgetController extends WidgetController {
 
 	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK" };
@@ -41,8 +40,7 @@ public class HeatWidgetController extends WidgetController {
 	 * @param mode
 	 * @return
 	 */
-	@RequestMapping(value = "/chart/data/{contZpointId}/{mode}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getHeatWidgetTemperature(
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
