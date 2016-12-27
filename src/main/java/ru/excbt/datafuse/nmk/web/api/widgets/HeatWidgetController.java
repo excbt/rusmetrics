@@ -3,7 +3,9 @@
  */
 package ru.excbt.datafuse.nmk.web.api.widgets;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.common.collect.Sets;
 
+import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.widget.HeatWidgetService;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * 
@@ -32,6 +37,9 @@ public class HeatWidgetController extends WidgetController {
 
 	@Autowired
 	private HeatWidgetService heatWidgetService;
+
+	@Autowired
+	private ContObjectService contObjectService;
 
 	/**
 	 * 
@@ -54,9 +62,42 @@ public class HeatWidgetController extends WidgetController {
 		//java.time.LocalDate d = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
 		java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
 
-		List<HeatWidgetTemperatureDto> resultList = heatWidgetService.selectWidgetData(contZpointId, d,
+		List<HeatWidgetTemperatureDto> resultList = heatWidgetService.selectChartData(contZpointId, d,
 				mode.toUpperCase());
 		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contZpointId
+	 * @return
+	 */
+	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZpointStatus(
+			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
+
+		if (!canAccessContZPoint(contZpointId)) {
+			responseForbidden();
+		}
+
+		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
+
+		if (contObjectId == null) {
+			return null;
+		}
+
+		java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
+
+		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(contObjectId, currentDate);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("color", getMonitorColorValue(contObjectId, contZpointId).getKeyname());
+		if (weatherForecast != null
+				&& currentDate.compareTo(LocalDateUtils.asLocalDate(weatherForecast.getForecastDateTime())) == 0) {
+			result.put("forecastTemp", weatherForecast.getTemperatureValue());
+		}
+
+		return responseOK(result);
 	}
 
 }

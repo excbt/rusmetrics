@@ -34,7 +34,7 @@ public class WidgetController extends SubscrApiController {
 	private ContEventMonitorV2Service contEventMonitorV2Service;
 
 	@Autowired
-	private ContZPointService contZPointService;
+	protected ContZPointService contZPointService;
 
 	/**
 	 * 
@@ -49,8 +49,14 @@ public class WidgetController extends SubscrApiController {
 			responseForbidden();
 		}
 
+		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
+
+		if (contObjectId == null) {
+			return null;
+		}
+
 		Map<String, Object> result = new HashMap<>();
-		result.put("color", getMonitorColorValue(contZpointId));
+		result.put("color", getMonitorColorValue(contObjectId, contZpointId).getKeyname());
 
 		return responseOK(result);
 	}
@@ -60,11 +66,9 @@ public class WidgetController extends SubscrApiController {
 	 * @param contZpointId
 	 * @return
 	 */
-	protected Object getMonitorColorValue(Long contZpointId) {
+	protected ContEventLevelColorKeyV2 getMonitorColorValue(Long contObjectId, Long contZpointId) {
 
-		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
-
-		if (contObjectId == null) {
+		if (contObjectId == null || contZpointId == null) {
 			return null;
 		}
 
@@ -75,7 +79,7 @@ public class WidgetController extends SubscrApiController {
 
 		final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
 				: ContEventLevelColorKeyV2.GREEN;
-		return resultColorKey.getKeyname();
+		return resultColorKey;
 	}
 
 }

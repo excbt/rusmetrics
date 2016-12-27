@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ContObjectServiceTest extends JpaSupportTest {
@@ -54,6 +55,15 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	@Test
 	public void testDelete() throws Exception {
 		// contObjectService.deleteOnePermanent(66181945L);
+	}
+
+	@Test
+	public void testGetWeatherForecast() throws Exception {
+		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(114426490L,
+				java.time.LocalDate.now());
+		assertNotNull(weatherForecast);
+		logger.info("current temp: {} at {}. weatherPlaceId {}", weatherForecast.getTemperatureValue(),
+				weatherForecast.getForecastDateTime(), weatherForecast.getWeatherPlaceId());
 	}
 
 }

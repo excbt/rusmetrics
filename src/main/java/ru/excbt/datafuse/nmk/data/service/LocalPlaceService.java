@@ -56,6 +56,9 @@ public class LocalPlaceService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public LocalPlace selectLocalPlaceByFias(UUID fiasUUID) {
+		if (fiasUUID == null) {
+			return null;
+		}
 		List<LocalPlace> resultList = localPlaceRepository.selectLocalPlacesByFias(fiasUUID);
 		return resultList.isEmpty() ? null : resultList.get(0);
 	}

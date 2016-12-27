@@ -33,8 +33,10 @@ import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
@@ -98,6 +100,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private ContEventMonitorV2Service contEventMonitorV2Service;
+
+	@Autowired
+	private WeatherForecastService weatherForecastService;
 
 	/**
 	 * 
@@ -697,6 +702,27 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		return selectContObjectsGeoPos(contObjectIds).stream()
 				.collect(Collectors.toMap(ContObjectGeoPos::getContObjectId, Function.identity()));
 
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param currentDate
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public WeatherForecast selectWeatherForecast(Long contObjectId, java.time.LocalDate currentDate) {
+
+		List<ContObjectFias> co = contObjectFiasRepository.findByContObjectId(contObjectId);
+		UUID cityUUID = null;
+		if (!co.isEmpty()) {
+			cityUUID = co.get(0).getCityFiasUUID();
+		}
+
+		LocalPlace localPlace = localPlaceService.selectLocalPlaceByFias(cityUUID);
+
+		return localPlace != null
+				? weatherForecastService.selectLastWeatherForecast(localPlace.getWeatherPlaceId(), currentDate) : null;
 	}
 
 }

@@ -43,7 +43,7 @@ public class HeatWidgetService extends AbstractService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<HeatWidgetTemperatureDto> selectWidgetData(Long contZpointId, java.time.LocalDate date, String mode) {
+	public List<HeatWidgetTemperatureDto> selectChartData(Long contZpointId, java.time.LocalDate date, String mode) {
 
 		List<HeatWidgetTemperatureDto> result = new ArrayList<>();
 
