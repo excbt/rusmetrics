@@ -83,7 +83,7 @@ public class HeatWidgetController extends WidgetController {
 		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
 
 		if (contObjectId == null) {
-			return null;
+			return responseBadRequest();
 		}
 
 		java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
