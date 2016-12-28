@@ -21,7 +21,7 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 
 	public List<ContZPoint> findByContObjectId(Long contObjectId);
 
-	public List<ContZPoint> findByIdAndContObject(long contZPointId, long contObjectId);
+	public List<ContZPoint> findByIdAndContObject(long contZpointId, long contObjectId);
 
 	/**
 	 * 
@@ -41,11 +41,11 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
-	@Query("SELECT zp.deviceObjects FROM ContZPoint zp WHERE zp.id = :contZPointId ")
-	public List<DeviceObject> selectDeviceObjects(@Param("contZPointId") long contZPointId);
+	@Query("SELECT zp.deviceObjects FROM ContZPoint zp WHERE zp.id = :contZpointId ")
+	public List<DeviceObject> selectDeviceObjects(@Param("contZpointId") long contZpointId);
 
 	/**
 	 * 
@@ -57,18 +57,18 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
-	@Query("SELECT do.id FROM ContZPoint zp INNER JOIN zp.deviceObjects do WHERE zp.id = :contZPointId ")
-	public List<Long> selectDeviceObjectIds(@Param("contZPointId") long contZPointId);
+	@Query("SELECT do.id FROM ContZPoint zp INNER JOIN zp.deviceObjects do WHERE zp.id = :contZpointId ")
+	public List<Long> selectDeviceObjectIds(@Param("contZpointId") long contZpointId);
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
-	@Query("SELECT zp.contObjectId FROM ContZPoint zp WHERE zp.id = :contZPointId ")
-	public List<Long> selectContObjectByContZPointId(@Param("contZPointId") Long contZPointId);
+	@Query("SELECT zp.contObjectId FROM ContZPoint zp WHERE zp.id = :contZpointId ")
+	public List<Long> selectContObjectByContZPointId(@Param("contZpointId") Long contZpointId);
 
 }
