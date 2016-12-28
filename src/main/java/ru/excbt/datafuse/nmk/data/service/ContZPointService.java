@@ -55,7 +55,7 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 @Service
 public class ContZPointService extends AbstractService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContZPointService.class);
+	private static final Logger log = LoggerFactory.getLogger(ContZPointService.class);
 
 	private final static boolean CONT_ZPOINT_EX_OPTIMIZE = false;
 	private final static String[] CONT_SERVICE_HWATER = new String[] { ContServiceTypeKey.HEAT.getKeyname(),
@@ -141,12 +141,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	/**
 	 * /**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContZPoint findOne(long contZPointId) {
-		ContZPoint result = contZPointRepository.findOne(contZPointId);
+	public ContZPoint findOne(long contZpointId) {
+		ContZPoint result = contZPointRepository.findOne(contZpointId);
 		if (result != null && result.getDeviceObjects() != null) {
 			result.getDeviceObjects().forEach(j -> {
 				j.loadLazyProps();
@@ -242,15 +242,15 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param zPointList
+	 * @param zpointList
 	 * @return
 	 */
 	@Deprecated
-	private List<ContZPointEx> processContZPointHwater(List<ContZPoint> zPointList) {
+	private List<ContZPointEx> processContZPointHwater(List<ContZPoint> zpointList) {
 		List<ContZPointEx> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
 
-		for (ContZPoint zp : zPointList) {
+		for (ContZPoint zp : zpointList) {
 
 			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
 				continue;
@@ -277,11 +277,11 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		return result;
 	}
 
-	private List<ContZPointVO> makeContZPointVO_Hwater(List<ContZPoint> zPointList) {
+	private List<ContZPointVO> makeContZPointVO_Hwater(List<ContZPoint> zpointList) {
 		List<ContZPointVO> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
 
-		for (ContZPoint zp : zPointList) {
+		for (ContZPoint zp : zpointList) {
 
 			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
 				continue;
@@ -300,15 +300,15 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param zPointList
+	 * @param zpointList
 	 * @return
 	 */
 	@Deprecated
-	private List<ContZPointEx> processContZPointEl(List<ContZPoint> zPointList) {
+	private List<ContZPointEx> processContZPointEl(List<ContZPoint> zpointList) {
 		List<ContZPointEx> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
 
-		for (ContZPoint zp : zPointList) {
+		for (ContZPoint zp : zpointList) {
 
 			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
 				continue;
@@ -337,14 +337,14 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param zPointList
+	 * @param zpointList
 	 * @return
 	 */
-	private List<ContZPointVO> makeContZPointVO_El(List<ContZPoint> zPointList) {
+	private List<ContZPointVO> makeContZPointVO_El(List<ContZPoint> zpointList) {
 		List<ContZPointVO> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
 
-		for (ContZPoint zp : zPointList) {
+		for (ContZPoint zp : zpointList) {
 
 			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
 				continue;
@@ -363,13 +363,13 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param contObjectId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkContZPointOwnership(long contZPointId, long contObjectId) {
-		List<?> checkIds = contZPointRepository.findByIdAndContObject(contZPointId, contObjectId);
+	public boolean checkContZPointOwnership(long contZpointId, long contObjectId) {
+		List<?> checkIds = contZPointRepository.findByIdAndContObject(contZpointId, contObjectId);
 		return checkIds.size() > 0;
 	}
 
@@ -420,14 +420,6 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
 
 			minCheck.check(startDay);
-
-			// if (zPointLastDate != null) {
-			// if (fromDateTime == null) {
-			// fromDateTime = zPointLastDate;
-			// } else if (fromDateTime.compareTo(zPointLastDate) < 0) {
-			// fromDateTime = zPointLastDate;
-			// }
-			// }
 
 			ContZPointStatInfo item = new ContZPointStatInfo(id, zPointLastDate);
 			resultList.add(item);
@@ -488,16 +480,16 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
-	public void deleteManualZPoint(Long contZPointId) {
-		ContZPoint contZPoint = findOne(contZPointId);
+	public void deleteManualZPoint(Long contZpointId) {
+		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
 		if (ExSystemKey.MANUAL.isNotEquals(contZPoint.getExSystemKeyname())) {
 			throw new PersistenceException(String.format("Delete ContZPoint(id=%d) with exSystem=%s is not supported ",
-					contZPointId, contZPoint.getExSystemKeyname()));
+					contZpointId, contZPoint.getExSystemKeyname()));
 		}
 		contZPointRepository.delete(contZPoint);
 	}
@@ -536,27 +528,27 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public void deleteOne(Long contZPointId) {
-		ContZPoint contZPoint = findOne(contZPointId);
+	public void deleteOne(Long contZpointId) {
+		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
 		contZPointRepository.save(softDelete(contZPoint));
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public void deleteOnePermanent(Long contZPointId) {
-		checkNotNull(contZPointId);
-		ContZPoint contZPoint = findOne(contZPointId);
+	public void deleteOnePermanent(Long contZpointId) {
+		checkNotNull(contZpointId);
+		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
-		contZPointSettingModeService.deleteByContZPoint(contZPointId);
+		contZPointSettingModeService.deleteByContZPoint(contZpointId);
 		contZPointRepository.delete(contZPoint);
 	}
 
@@ -664,32 +656,32 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<DeviceObject> selectDeviceObjects(long contZPointId) {
-		return contZPointRepository.selectDeviceObjects(contZPointId);
+	public List<DeviceObject> selectDeviceObjects(long contZpointId) {
+		return contZPointRepository.selectDeviceObjects(contZpointId);
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> selectDeviceObjectIds(long contZPointId) {
-		return contZPointRepository.selectDeviceObjectIds(contZPointId);
+	public List<Long> selectDeviceObjectIds(long contZpointId) {
+		return contZPointRepository.selectDeviceObjectIds(contZpointId);
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public Long selectContObjectId(long contZPointId) {
-		List<Long> ids = contZPointRepository.selectContObjectByContZPointId(contZPointId);
+	public Long selectContObjectId(long contZpointId) {
+		List<Long> ids = contZPointRepository.selectContObjectByContZPointId(contZpointId);
 		return ids.isEmpty() ? null : ids.get(0);
 	}
 
