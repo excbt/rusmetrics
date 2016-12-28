@@ -9,12 +9,18 @@
                 <img class='marginLeft5' height="12" width="12" ng-attr-src="{{widgetOptions.zpointStatus}}">
             </div>
 -->
-            <div class = "col-xs-11 nmc-text-align-center">
+            <div class = "col-xs-10 nmc-text-align-center">
                 <img class='marginLeft5' height="16" width="16" ng-src="{{data.imgPath}}">
                 <span ng-bind="widgetOptions.zpointName"></span>
             </div>
-            <div class = "col-xs-1">
+            <div class = "col-xs-2">
 <!--                <span class="glyphicons glyphicons-temperature"></span>-->
+                
+                <span ng-show = "data.curTemp === null" 
+                      class="glyphicon glyphicon-ban-circle"></span>
+                <span ng-show = "data.curTemp !== null" 
+                      class = ""
+                      ng-bind = "data.curTemp"></span>
                 <i class="fa fa-thermometer-half" aria-hidden="true"></i>
             </div>
         </div>
@@ -24,7 +30,8 @@
                 <img class='marginLeft5' height="25" width="25" ng-src="{{data.imgPath}}">
             </div>
 -->
-            <div class = "col-xs-1" style="padding-left: 7%">
+            <div class = "col-xs-1">
+<!--                style="padding-left: 7%">-->
                 <img class = 'marginLeft5' 
                      style = "cursor: pointer"
                      height = "25" width = "25" 
@@ -38,6 +45,14 @@
                     <li role="presentation"><a href="">Сегодня</a></li>
                     <li role="presentation"><a href="">Неделя</a></li>
 -->
+                    <li role="presentation" ng-repeat="mode in data.MODES"
+                        ng-class="mode.modeClass">
+                        <a href="" class = "nmc-period-toogle" ng-click="modeClick(mode)">
+                            <span ng-bind="mode.caption"></span>
+                        </a>
+                    </li>
+                    
+<!--
                     <li role="presentation"
                         ng-class="{'active': yesterdayFlag === true}">
                         <a href="" class = "nmc-period-toogle" ng-click="yesterdayFlag = true; todayFlag = false; weekFlag = false;">
@@ -56,6 +71,7 @@
                             Неделя
                         </a>
                     </li>
+-->
                 </ul>
 <!--                Временные интервалы-->
             </div>            
@@ -67,15 +83,21 @@
         </div>
         <div class="row">            
             <div class = "col-xs-12">
-                <canvas id="line" 
-                        class="chart chart-line" 
-                        chart-data="lineChart.data"
-                        chart-labels="lineChart.labels" 
-                        chart-series="lineChart.series" 
-                        chart-options="lineChart.options"
-                        chart-dataset-override="lineChart.datasetOverride" 
-                        chart-click="onClick">
-                </canvas>
+                <div ng-show = "presentDataFlag === false"
+                     class = "nmc-text-align-center">                    
+                        <span class="glyphicon glyphicon-ban-circle"></span> Нет данных
+                </div>
+                <div ng-show = "presentDataFlag ===  true">
+                    <canvas id="line" 
+                            class="chart chart-line" 
+                            chart-data="lineChart.data"
+                            chart-labels="lineChart.labels" 
+                            chart-series="lineChart.series" 
+                            chart-options="lineChart.options"
+                            chart-dataset-override="lineChart.datasetOverride" 
+                            chart-click="onClick">
+                    </canvas>
+                </div>
             </div>            
         </div>
 <!--

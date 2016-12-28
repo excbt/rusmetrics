@@ -818,7 +818,17 @@ angular.module('portalNMC')
                               "<span ng-show='title' ng-bind='title'></span>" +                              
                               "<div ng-show='isLoading'>Загрузка...</div>" +
                               "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
-                              "<ng-widget src=\"'" + zpointWidget.type + "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + "', 'zpointStatus': '" + zpointWidget.zpointStatus + "', 'zpointStatusTitle': '" + zpointWidget.zpointStatusTitle + "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+                              "<ng-widget src=\"'" + zpointWidget.type + 
+                            "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
+                            "', 'zpointStatus': '" + zpointWidget.zpointStatus + 
+                            "', 'zpointStatusTitle': '" + zpointWidget.zpointStatusTitle +                             
+                            "', 'contZpointId': '" + zpoint.id +  
+                            "', 'zpointModel': '" + zpoint.zpointModel +  
+                            "', 'zpointNumber': '" + zpoint.zpointNumber +
+                            "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
+                            "', 'contObjectId': '" + object.id + 
+                            "', 'contObjectFullName': '" + object.fullName + 
+                            "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
                             "</div>";
                         
                         trHTML += "</div>";
