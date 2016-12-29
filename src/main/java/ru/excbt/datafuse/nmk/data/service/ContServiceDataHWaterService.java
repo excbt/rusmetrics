@@ -92,143 +92,143 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			PageRequest pageRequest) {
-		checkArgument(contZPointId > 0);
+		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(pageRequest);
 
-		Page<ContServiceDataHWater> page = contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+		Page<ContServiceDataHWater> page = contServiceDataHWaterRepository.selectByZPoint(contZpointId,
 				timeDetail.getKeyname(), pageRequest);
 		return page.getContent();
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private List<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+	private List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate) {
-		checkArgument(contZPointId > 0);
+		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
 		checkNotNull(endDate, "endDate is null");
 		checkArgument(beginDate.compareTo(endDate) <= 0);
 
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(), beginDate.toDate(),
+		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(), beginDate.toDate(),
 				endDate.toDate());
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDateTime beginDate, LocalDateTime endDate) {
-		checkArgument(contZPointId > 0);
+		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
 		checkNotNull(endDate, "endDate is null");
 		checkArgument(beginDate.compareTo(endDate) <= 0);
 
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(), beginDate.toDate(),
+		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(), beginDate.toDate(),
 				endDate.toDate());
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param timeDetail
 	 * @param datePeriod
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod datePeriod) {
-		checkArgument(contZPointId > 0);
+		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(datePeriod, "beginDate is null");
 		checkArgument(datePeriod.isValid());
 
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(),
+		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(),
 				datePeriod.getDateFrom(), datePeriod.getDateTo());
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+	public Page<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate, PageRequest pageRequest) {
-		checkArgument(contZPointId > 0);
+		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
 		checkNotNull(endDate, "endDate is null");
 		checkArgument(beginDate.compareTo(endDate) <= 0);
 		checkNotNull(pageRequest);
 
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(), beginDate.toDate(),
+		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(), beginDate.toDate(),
 				endDate.toDate(), pageRequest);
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param timeDetail
 	 * @param datePeriod
 	 * @param pageable
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+	public Page<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod datePeriod, PageRequest pageRequest) {
-		checkArgument(contZPointId > 0);
+		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(datePeriod, "beginDate is null");
 		checkArgument(datePeriod.isValid());
 		checkNotNull(pageRequest);
 
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(),
+		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(),
 				datePeriod.getDateFrom(), datePeriod.getDateTo(), pageRequest);
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContServiceDataHWater selectLastData(long contZPointId) {
-		checkArgument(contZPointId > 0);
-		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZPointId,
+	public ContServiceDataHWater selectLastData(long contZpointId) {
+		checkArgument(contZpointId > 0);
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId,
 				LIMIT1_PAGE_REQUEST);
 		return resultList.size() > 0 ? resultList.get(0) : null;
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date selectLastDataDate(long contZPointId, Date fromDateTime) {
-		checkArgument(contZPointId > 0);
+	public Date selectLastDataDate(long contZpointId, Date fromDateTime) {
+		checkArgument(contZpointId > 0);
 
 		Date actialFromDate = fromDateTime;
 		if (actialFromDate == null) {
@@ -237,11 +237,11 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 			logger.debug("MinCheck: {}", actialFromDate);
 		}
 
-		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZPointId,
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId,
 				actialFromDate, LIMIT1_PAGE_REQUEST);
 
 		if (resultList.size() == 0) {
-			resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+			resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId, LIMIT1_PAGE_REQUEST);
 		}
 
 		checkNotNull(resultList);
@@ -250,24 +250,24 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param fromDateTime
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date selectLastDataDate(long contZPointId) {
-		return selectLastDataDate(contZPointId, null);
+	public Date selectLastDataDate(long contZpointId) {
+		return selectLastDataDate(contZpointId, null);
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date selectAnyDataDate(long contZPointId) {
-		checkArgument(contZPointId > 0);
-		Page<ContServiceDataHWater> resultPage = contServiceDataHWaterRepository.selectAnyDataByZPoint(contZPointId,
+	public Date selectAnyDataDate(long contZpointId) {
+		checkArgument(contZpointId > 0);
+		Page<ContServiceDataHWater> resultPage = contServiceDataHWaterRepository.selectAnyDataByZPoint(contZpointId,
 				LIMIT1_PAGE_REQUEST);
 		List<ContServiceDataHWater> resultList = resultPage.getContent();
 		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
@@ -275,27 +275,27 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Boolean selectExistsAnyData(long contZPointId) {
-		checkArgument(contZPointId > 0);
-		List<Long> resultList = contServiceDataHWaterRepository.selectExistsAnyDataByZPoint(contZPointId,
+	public Boolean selectExistsAnyData(long contZpointId) {
+		checkArgument(contZpointId > 0);
+		List<Long> resultList = contServiceDataHWaterRepository.selectExistsAnyDataByZPoint(contZpointId,
 				LIMIT1_PAGE_REQUEST);
 		return resultList.size() > 0;
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
 	 * @param endDate
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContServiceDataHWaterTotals selectContZPoint_Totals(long contZPointId, TimeDetailKey timeDetail,
+	public ContServiceDataHWaterTotals selectContZPoint_Totals(long contZpointId, TimeDetailKey timeDetail,
 			LocalDateTime beginDate, LocalDateTime endDate) {
 
 		checkNotNull(timeDetail);
@@ -303,18 +303,18 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkNotNull(endDate);
 		checkArgument(beginDate.compareTo(endDate) <= 0);
 
-		logger.debug("selectContZPointTotals: contZPoint:{}; timeDetailType:{}; beginDate:{}; endDate:{}", contZPointId,
+		logger.debug("selectContZPointTotals: contZPoint:{}; timeDetailType:{}; beginDate:{}; endDate:{}", contZpointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 
 		Query q1 = em.createQuery("SELECT sum(m_in) as m_in, sum(m_out) as m_out, sum(m_delta) as m_delta, "
 				+ " sum(h_in) as h_in, sum(h_out) as h_out, sum(h_delta) as h_delta, "
 				+ " sum(v_in) as v_in, sum(v_out) as v_out, sum(v_delta) as v_delta "
 				+ " FROM ContServiceDataHWater hw " + " WHERE hw.timeDetailType = :timeDetailType "
-				+ " AND hw.contZPoint.id = :contZPointId " + " AND hw.dataDate >= :beginDate "
+				+ " AND hw.contZPoint.id = :contZpointId " + " AND hw.dataDate >= :beginDate "
 				+ " AND hw.dataDate <= :endDate AND hw.deleted = 0");
 
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());
-		q1.setParameter("contZPointId", contZPointId);
+		q1.setParameter("contZpointId", contZpointId);
 		q1.setParameter("beginDate", beginDate.toDate());
 		q1.setParameter("endDate", endDate.toDate());
 
@@ -335,7 +335,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		result.setV_out((BigDecimal) results[7]);
 		result.setV_delta((BigDecimal) results[8]);
 
-		result.setContZPointId(contZPointId);
+		result.setContZPointId(contZpointId);
 		result.setBeginDate(beginDate.toDate());
 		result.setEndDate(beginDate.toDate());
 
@@ -345,7 +345,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContServiceDataHWater selectContZPoint_Avgs(long contZPointId, TimeDetailKey timeDetail,
+	public ContServiceDataHWater selectContZPoint_Avgs(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod period) {
 
 		checkNotNull(timeDetail);
@@ -364,7 +364,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		sqlString.append(" FROM ");
 		sqlString.append(" ContServiceDataHWater hw ");
 		sqlString.append(" WHERE hw.timeDetailType = :timeDetailType ");
-		sqlString.append(" AND hw.contZPoint.id = :contZPointId ");
+		sqlString.append(" AND hw.contZPoint.id = :contZpointId ");
 		sqlString.append(" AND hw.dataDate >= :beginDate ");
 		sqlString.append(" AND hw.dataDate <= :endDate ");
 		sqlString.append(" AND hw.deleted = 0 ");
@@ -373,7 +373,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		Query q1 = em.createQuery(sqlString.toString());
 
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());
-		q1.setParameter("contZPointId", contZPointId);
+		q1.setParameter("contZpointId", contZpointId);
 		q1.setParameter("beginDate", period.getDateFrom());
 		q1.setParameter("endDate", period.getDateTo());
 
@@ -406,12 +406,12 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param localDateTime
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private ContServiceDataHWater selectLastAbsData(long contZPointId, LocalDateTime localDateTime) {
+	private ContServiceDataHWater selectLastAbsData(long contZpointId, LocalDateTime localDateTime) {
 
 		checkNotNull(localDateTime);
 
@@ -419,19 +419,19 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 				TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
 
 		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-				.selectLastDetailDataByZPoint(contZPointId, timeDetails, localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+				.selectLastDetailDataByZPoint(contZpointId, timeDetails, localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
 
 		return dataList.size() > 0 ? dataList.get(0) : null;
 	}
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param localDateTime
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContServiceDataHWater selectLastAbsData(long contZPointId, TimeDetailKey timeDetail,
+	public ContServiceDataHWater selectLastAbsData(long contZpointId, TimeDetailKey timeDetail,
 			LocalDateTime localDateTime, boolean isEndDate) {
 
 		checkNotNull(localDateTime);
@@ -443,7 +443,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 		if (isEndDate) {
 			List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository.selectLastDetailDataByZPoint(
-					contZPointId, dataTimeDetails, localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+					contZpointId, dataTimeDetails, localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
 
 			if (dataList.isEmpty()) {
 				return null;
@@ -460,10 +460,10 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		String[] integratorTimeDetails = { TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
 		List<ContServiceDataHWater> integratorList = null;
 		if (isEndDate) {
-			integratorList = contServiceDataHWaterRepository.selectLastDetailDataByZPoint(contZPointId,
+			integratorList = contServiceDataHWaterRepository.selectLastDetailDataByZPoint(contZpointId,
 					integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
 		} else {
-			integratorList = contServiceDataHWaterRepository.selectFirstDetailDataByZPoint(contZPointId,
+			integratorList = contServiceDataHWaterRepository.selectFirstDetailDataByZPoint(contZpointId,
 					integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
 		}
 		;
@@ -473,17 +473,17 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
 	 * @param endDate
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContServiceDataHWaterAbs_Csv> selectDataAbs_Csv(long contZPointId, TimeDetailKey timeDetail,
+	public List<ContServiceDataHWaterAbs_Csv> selectDataAbs_Csv(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate) {
 
-		List<ContServiceDataHWater> srcDataList = selectByContZPoint(contZPointId, timeDetail, beginDate, endDate);
+		List<ContServiceDataHWater> srcDataList = selectByContZPoint(contZpointId, timeDetail, beginDate, endDate);
 
 		List<ContServiceDataHWaterAbs_Csv> cvsDataList = new ArrayList<>();
 		try {
@@ -507,23 +507,23 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param inData
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public void insertManualLoadDataHWater(Long contZPointId, List<ContServiceDataHWater> inData, File outFile) {
+	public void insertManualLoadDataHWater(Long contZpointId, List<ContServiceDataHWater> inData, File outFile) {
 
-		checkNotNull(contZPointId);
+		checkNotNull(contZpointId);
 		checkNotNull(inData);
 		checkArgument(inData.size() > 0);
 
-		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+		ContZPoint zpoint = contZPointService.findOne(contZpointId);
 
-		checkNotNull(zpoint, String.format("ContZPoint with id:%d is not found", contZPointId));
+		checkNotNull(zpoint, String.format("ContZPoint with id:%d is not found", contZpointId));
 
 		checkState(BooleanUtils.isTrue(zpoint.getIsManualLoading()),
-				String.format("Manual Loading for ContZPoint with id:%d is not allowed", contZPointId));
+				String.format("Manual Loading for ContZPoint with id:%d is not allowed", contZpointId));
 
 		// Device Object Check And Save
 		DeviceObject deviceObject = null;
@@ -549,7 +549,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 		final DeviceObject dObject = deviceObject;
 		inData.forEach((d) -> {
-			d.setContZPointId(contZPointId);
+			d.setContZPointId(contZpointId);
 			//d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
 			d.setDeviceObject(dObject);
 		});
@@ -560,28 +560,28 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param localDatePeriod
 	 * @param outFile
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public List<ContServiceDataHWater> deleteManualDataHWater(Long contZPointId, LocalDatePeriod localDatePeriod,
+	public List<ContServiceDataHWater> deleteManualDataHWater(Long contZpointId, LocalDatePeriod localDatePeriod,
 			TimeDetailKey timeDetailKey, File outFile) {
 
-		checkNotNull(contZPointId);
+		checkNotNull(contZpointId);
 		checkNotNull(localDatePeriod);
 		checkNotNull(timeDetailKey);
 
-		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+		ContZPoint zpoint = contZPointService.findOne(contZpointId);
 
-		checkNotNull(zpoint, String.format("ContZPoint with id:%d is not found", contZPointId));
+		checkNotNull(zpoint, String.format("ContZPoint with id:%d is not found", contZpointId));
 
 		checkState(BooleanUtils.isTrue(zpoint.getIsManualLoading()),
-				String.format("Manual Loading and Deleting for ContZPoint with id:%d is not allowed", contZPointId));
+				String.format("Manual Loading and Deleting for ContZPoint with id:%d is not allowed", contZpointId));
 
-		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(contZPointId, timeDetailKey, localDatePeriod);
+		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(contZpointId, timeDetailKey, localDatePeriod);
 
 		try {
 			ByteArrayInputStream is = new ByteArrayInputStream(hWatersCsvService.writeDataHWaterToCsv(deleteCandidate));
@@ -591,8 +591,8 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 		} catch (IOException e) {
 			throw new PersistenceException(
-					String.format("Can't save into file (%s) cadidate for delete rows for contZPointId=%d",
-							outFile.getAbsolutePath(), contZPointId));
+					String.format("Can't save into file (%s) cadidate for delete rows for contZpointId=%d",
+							outFile.getAbsolutePath(), contZpointId));
 		}
 
 		contServiceDataHWaterRepository.delete(deleteCandidate);
@@ -602,17 +602,17 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointId
+	 * @param contZpointId
 	 * @param fromDateTime
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<TimeDetailLastDate> selectTimeDetailLastDate(long contZPointId) {
-		checkArgument(contZPointId > 0);
+	public List<TimeDetailLastDate> selectTimeDetailLastDate(long contZpointId) {
+		checkArgument(contZpointId > 0);
 
 		List<TimeDetailLastDate> resultList = new ArrayList<>();
 
-		List<Object[]> qryResultList = contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZPointId);
+		List<Object[]> qryResultList = contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZpointId);
 
 		for (Object[] row : qryResultList) {
 
@@ -631,16 +631,16 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 	/**
 	 * 
-	 * @param contZPointIds
+	 * @param contZpointIds
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMap(List<Long> contZPointIds) {
-		checkArgument(contZPointIds != null);
+	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMap(List<Long> contZpointIds) {
+		checkArgument(contZpointIds != null);
 
-		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
+		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZpointIds.isEmpty()
 				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
-						contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZPointIds))
+						contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZpointIds))
 				: new HashMap<>();
 
 		return resultMap;
@@ -657,11 +657,11 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 			List<Pair<String, Long>> idServiceTypePairs) {
 		checkArgument(idServiceTypePairs != null);
 
-		List<Long> contZPointIds = idServiceTypePairs.stream()
+		List<Long> contZpointIds = idServiceTypePairs.stream()
 				.filter(i -> HWATER_SERVICE_TYPE_SET.contains(i.getLeft())).map(i -> i.getRight())
 				.collect(Collectors.toList());
 
-		return selectTimeDetailLastDateMap(contZPointIds);
+		return selectTimeDetailLastDateMap(contZpointIds);
 
 	}
 
