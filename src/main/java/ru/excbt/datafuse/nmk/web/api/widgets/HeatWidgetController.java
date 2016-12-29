@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 @RequestMapping(value = "/api/subscr/widgets/heat/{contZpointId}")
 public class HeatWidgetController extends WidgetController {
 
-	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK" };
+	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK", "MONTH", "24" };
 
 	@Autowired
 	private HeatWidgetService heatWidgetService;
