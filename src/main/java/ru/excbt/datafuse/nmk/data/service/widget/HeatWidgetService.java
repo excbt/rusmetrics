@@ -21,7 +21,6 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * 
@@ -38,12 +37,13 @@ public class HeatWidgetService extends AbstractService {
 	/**
 	 * 
 	 * @param contZpointId
-	 * @param date
+	 * @param dateTime
 	 * @param mode
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<HeatWidgetTemperatureDto> selectChartData(Long contZpointId, java.time.LocalDate date, String mode) {
+	public List<HeatWidgetTemperatureDto> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
+			String mode) {
 
 		List<HeatWidgetTemperatureDto> result = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class HeatWidgetService extends AbstractService {
 		Query q1 = em.createNativeQuery(sqlString.toString());
 
 		q1.setParameter("contZpointId", contZpointId);
-		q1.setParameter("currentDate", LocalDateUtils.asDate(date));
+		q1.setParameter("currentDate", Date.from(dateTime.toInstant()));
 		q1.setParameter("mode", mode);
 
 		List<?> results = q1.getResultList();
