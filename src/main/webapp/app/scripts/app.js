@@ -321,7 +321,7 @@ app.config(['uiMask.ConfigProvider', function (uiMaskConfigProvider) {
 }]);
 
 //config widget
-app.config(function initializemanifestGenerator(widgetsProvider) {
+app.config(function initializemanifestGenerator(widgetsProvider) {    
     widgetsProvider.setManifestGenerator(function () {
       return function (name) {          
         return {

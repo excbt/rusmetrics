@@ -14,7 +14,13 @@
     font-size: 60px;
   }
 }*/
-
+.zpoint-heat-widget {
+    position: relative;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 18px;
+    font-weight: 200;
+}
 .nmc-period-toogle {
     padding: 5px !important;
 }

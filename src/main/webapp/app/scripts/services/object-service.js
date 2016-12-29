@@ -544,7 +544,8 @@ angular.module('portalNMC')
                  
         function findObjectById(objId, objectArr){
             var obj = null;
-            if (!angular.isArray(objectArr)){
+            if (!angular.isArray(objectArr) || !angular.isNumber(objId)){
+//                console.log("findObjectById: Incorrect input params.");
                 return obj;
             }
             objectArr.some(function(element){

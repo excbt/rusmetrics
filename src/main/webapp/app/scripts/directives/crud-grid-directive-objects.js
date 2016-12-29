@@ -450,9 +450,16 @@ angular.module('portalNMC')
                     objectSvc.setCurrentObject($scope.currentObject);
 			    };
                 
-                $scope.selectedObject = function(objId){
+                $scope.selectedObject = function(objId) {
+//console.log("selectedObject: objId = " + objId);                    
+//console.log(objId);
+                    objId = Number(objId);
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
-                    if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
+//console.log("selectedObject: currentObject: ");                    
+//console.log($scope.currentObject);             
+//console.log("selectedObject: objects: ");                    
+//console.log($scope.objects);                    
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject) && !mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
 //                            $scope.changeBuildingType($scope.currentObject.buildingType);
                         performBuildingCategoryList($scope.currentObject.buildingType);
                         setBuildingCategory();
@@ -489,19 +496,19 @@ angular.module('portalNMC')
                     $("#trZpoint" + $scope.markedZpoint.id).addClass("nmc-bg-distinguish");
                 };
                 
-                $scope.selectedZpoint = function(objId, zpointId) {
-                    $scope.selectedObject(objId);
-                    
-                    var curZpoint = null;
-                    $scope.currentObject.zpoints.some(function(element) {
-                        if (element.id === zpointId) {
-                            curZpoint = angular.copy(element);
-                            return true;
-                        }
-                    });
-                    $scope.currentZpoint = curZpoint;
+//                $scope.selectedZpoint = function(objId, zpointId) {
+//                    $scope.selectedObject(objId);
+//                    
+//                    var curZpoint = null;
+//                    $scope.currentObject.zpoints.some(function(element) {
+//                        if (element.id === zpointId) {
+//                            curZpoint = angular.copy(element);
+//                            return true;
+//                        }
+//                    });
+//                    $scope.currentZpoint = curZpoint;
 //console.log($scope.currentObject);                    
-                };
+//                };
                 
                 function testCmOrganizationAtList() {
                     //find cmOrganization
@@ -536,7 +543,9 @@ angular.module('portalNMC')
                 
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedObject(objId);
-                    
+                    zpointId = Number(zpointId);
+//console.log(objId);                    
+//console.log(zpointId);                    
                     var curZpoint = null;
                     $scope.currentObject.zpoints.some(function(element){
                         if (element.id === zpointId){
@@ -814,20 +823,26 @@ angular.module('portalNMC')
 //                        }
                         trHTML += "<div class='col-xs-6'>";
                         
+                        
+//                        "', 'zpointStatus': '" + zpointWidget.zpointStatus + 
+//                            "', 'zpointStatusTitle': '" + zpointWidget.zpointStatusTitle + 
+                        
                         trHTML += "<div ng-controller='widgetContainer'>" +
                               "<span ng-show='title' ng-bind='title'></span>" +                              
                               "<div ng-show='isLoading'>Загрузка...</div>" +
                               "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
                               "<ng-widget src=\"'" + zpointWidget.type + 
                             "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
-                            "', 'zpointStatus': '" + zpointWidget.zpointStatus + 
-                            "', 'zpointStatusTitle': '" + zpointWidget.zpointStatusTitle +                             
+                                                        
                             "', 'contZpointId': '" + zpoint.id +  
-                            "', 'zpointModel': '" + zpoint.zpointModel +  
+                            "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +  
                             "', 'zpointNumber': '" + zpoint.zpointNumber +
+                            "', 'zpointType': '" + zpoint.zpointType +
                             "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
                             "', 'contObjectId': '" + object.id + 
-                            "', 'contObjectFullName': '" + object.fullName + 
+                            "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
+                            "', 'isImpulse': '" + zpoint.isImpulse + 
+                            "', 'isManualLoading': '" + zpoint.isManualLoading + 
                             "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
                             "</div>";
                         
@@ -1023,7 +1038,7 @@ angular.module('portalNMC')
                 };
 
                 // Показания точек учета
-                $scope.getIndicators = function(objectId, zpointId) {
+                $scope.getIndicators = function(objectId, zpointId) {                    
                     $scope.setIndicatorsParams(objectId, zpointId);
 //                    $scope.selectedZpoint(objectId, zpointId);
 //                    $cookies.contZPoint = $scope.currentZpoint.id;
@@ -1064,10 +1079,11 @@ angular.module('portalNMC')
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId) {
                     $scope.selectedZpoint(objectId, zpointId);
+//console.log($scope.currentZpoint);                    
                     $cookies.contZPoint = $scope.currentZpoint.id;
-                    $cookies.contObject=$scope.currentObject.id;
+                    $cookies.contObject = $scope.currentObject.id;
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
-                    $cookies.contObjectName=$scope.currentObject.fullName;
+                    $cookies.contObjectName = $scope.currentObject.fullName;
                     
                     $cookies.deviceModel = $scope.currentZpoint.zpointModel;
                     $cookies.deviceSN = $scope.currentZpoint.zpointNumber;
@@ -2015,6 +2031,13 @@ angular.module('portalNMC')
                     monitorSvc.setMonitorSettings({objectMonitorId:objId});
                     $rootScope.reportStart = $rootScope.monitorStart;
                     $rootScope.reportEnd = $rootScope.monitorEnd;      
+                };
+                
+                $scope.openNotices = function (objId) {
+                    $scope.setNoticeFilterByObject(objId);
+                    var url = "#/notices/list/?objectMonitorId=";//{{object.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}";
+                    url += objId + "&monitorFlag=true&fromDate=" + $scope.monitorStart + "&toDate=" + $scope.monitorEnd;
+                    window.open(url, "_blank");                                                   
                 };
 // ***********************************************************************************************
 //                  end Work with Notices
