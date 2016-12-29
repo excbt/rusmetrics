@@ -17,10 +17,11 @@
 .zpoint-heat-widget {
     position: relative;
 /*    border: 1px solid black;*/
-    border-radius: 6px;
+    border-radius: 6px;    
     background-color: white;
     font-size: 18px;
     font-weight: 200;
+    padding: 10px 0 0 0;
 }
 .nmc-period-toogle {
     padding: 5px !important;

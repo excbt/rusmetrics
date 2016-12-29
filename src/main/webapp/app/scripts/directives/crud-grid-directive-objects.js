@@ -730,7 +730,7 @@ angular.module('portalNMC')
 //                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
                     var trHTML = "";
 
-                    trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-hover nmc-child-object-table\">";
+                    trHTML += "<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable" + object.id + "\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-hover nmc-child-object-table\" style='background-color: #ddd;'>";
 //                    
 //                    trHTML += "<thead><tr class=\"nmc-child-table-header\">";
 //                    $scope.oldColumns.forEach(function(column) {
@@ -739,9 +739,11 @@ angular.module('portalNMC')
 //                        trHTML += "</th>";
 //                    });
 //                    trHTML += "</tr></thead>";
-                    trHTML += "<tr><td><div class = 'row'>";
+                    trHTML += "<tr><td>";
+//                    trHTML += "<div class = 'row'>";
                     object.zpoints.forEach(function(zpoint, ind) {
                         zpointWidget.type = "chart";
+                        zpointWidget.type1 = "chart";
                  //       trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
                         
                         
@@ -787,7 +789,8 @@ angular.module('portalNMC')
                                             break;
                                         case "heat":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
-                                            zpointWidget.type = "zpointHeat";
+                                            zpointWidget.type = "zpointHeat_v1";
+                                            zpointWidget.type1 = "zpointHeat";
                                             break;
                                         case "gas":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
@@ -821,12 +824,8 @@ angular.module('portalNMC')
 //                        if (ind === 0 || ind % 2 === 0) {
 //                            trHTML += "<div class = 'row'>";
 //                        }
-                        trHTML += "<div class='col-xs-6'>";
-                        
-                        
-//                        "', 'zpointStatus': '" + zpointWidget.zpointStatus + 
-//                            "', 'zpointStatusTitle': '" + zpointWidget.zpointStatusTitle + 
-                        
+                        trHTML += "<div class = 'row marginBottom10'>";
+                        trHTML += "<div class='col-xs-6'>";                        
                         trHTML += "<div ng-controller='widgetContainer'>" +
                               "<span ng-show='title' ng-bind='title'></span>" +                              
                               "<div ng-show='isLoading'>Загрузка...</div>" +
@@ -847,13 +846,34 @@ angular.module('portalNMC')
                             "</div>";
                         
                         trHTML += "</div>";
-                        if (ind % 2 !== 0) {
-//                            trHTML += "</tr><tr>";
-                            trHTML += "</div><div class = 'row'>";
-                        }
+                        trHTML += "<div class='col-xs-6'>";                        
+                        trHTML += "<div ng-controller='widgetContainer'>" +
+                              "<span ng-show='title' ng-bind='title'></span>" +                              
+                              "<div ng-show='isLoading'>Загрузка...</div>" +
+                              "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
+                              "<ng-widget src=\"'" + zpointWidget.type1 + 
+                            "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
+                                                        
+                            "', 'contZpointId': '" + zpoint.id +  
+                            "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +  
+                            "', 'zpointNumber': '" + zpoint.zpointNumber +
+                            "', 'zpointType': '" + zpoint.zpointType +
+                            "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
+                            "', 'contObjectId': '" + object.id + 
+                            "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
+                            "', 'isImpulse': '" + zpoint.isImpulse + 
+                            "', 'isManualLoading': '" + zpoint.isManualLoading + 
+                            "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+                            "</div>";
+                        
+                        trHTML += "</div>";//col-xs-6
+                        trHTML += "</div>";//row
+//                        if (ind % 2 !== 0) {
+//                            trHTML += "</div><div class = 'row'>";
+//                        }
                         
                     });
-                    trHTML += "</div></td></tr>";
+                    trHTML += "</td></tr>";
                     trHTML += "</table></td>";
                     trObjZp.innerHTML = trHTML;
 

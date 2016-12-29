@@ -1,4 +1,4 @@
-<div class="zpoint-heat-widget" ng-controller="zpointHeatWidgetCtrl">
+<div class="zpoint-heat-widget" ng-controller="zpointHeat_v1WidgetCtrl">
     <div class="container-fluid">
         <div class="row">            
 <!--
@@ -10,12 +10,11 @@
             </div>
 -->
             <div class = "col-xs-8">
-                <img class='marginLeft5' height="16" width="16" ng-src="{{data.imgPath}}">
+                <img class='' height="16" width="16" ng-src="{{data.imgPath}}">
                 <span ng-bind="widgetOptions.zpointName"></span>
             </div>
-            <div class = "col-xs-4">
-<!--                <span class="glyphicons glyphicons-temperature"></span>-->
-                
+<!--
+            <div class = "col-xs-4">                
                 <span style="font-size: 12px">
                     Температура окр. среды
                 </span>
@@ -29,6 +28,16 @@
                     <i class="fa fa-thermometer-half" aria-hidden="true"></i>
                 </span>
             </div>
+-->
+            <div class = "col-xs-3"
+                 style = "">
+<!--
+                <a href="" style="font-size: 12px; float: right;"
+                   ng-click = "openNotices()">
+                    Открыть уведомления
+                </a>
+-->
+            </div>
         </div>
         <div class="row">            
 <!--
@@ -36,18 +45,42 @@
                 <img class='marginLeft5' height="25" width="25" ng-src="{{data.imgPath}}">
             </div>
 -->
-            <div class = "col-xs-1">
-<!--                style="padding-left: 7%">-->
-                <img class = 'marginLeft5' 
-                     style = ""
-                     height = "25" width = "25" 
-                     ng-src = "{{data.zpointStatus}}" 
-                     ng-attr-title = {{data.zpointStatusTitle}}>
-            </div>
             
 <!--
-            <div class = "col-xs-7" style="padding-left: 25%">
-                <ul class="nav nav-pills" ng-init="weekFlag = true">
+            <div class = "col-xs-1">
+                <a href="" style="font-size: 12px"
+                   ng-click = "openNotices()">
+                    Уведомления
+                </a>
+            </div>
+-->
+            <div class = "col-xs-3"
+                 style = "padding-right: 0; padding-top: 12px">                
+                <span ng-style="{'color': data.forecastTempColor}">
+                    t <sub>окр</sub>, &deg;C = 
+                </span>
+<!--
+                <span ng-show = "data.forecastTemp === null" 
+                      class = "glyphicon glyphicon-ban-circle"
+                      title = "Нет данных о текущей температуре окружающей среды"></span>
+-->                
+                <img ng-show = "data.forecastTemp === null"
+                     src = "widgets/zpointHeat_v1/no-temp.png"
+                     width = "20"
+                     height = "20"
+                     title = "Нет данных о текущей температуре окружающей среды"                  
+                     />
+                
+                <span ng-show = "data.forecastTemp !== null" 
+                      class = ""
+                      ng-style="{'color': data.forecastTempColor}">
+                      <span ng-bind = "data.forecastTemp"></span>
+                    
+<!--                    <i class="fa fa-thermometer-half fa-lg" aria-hidden="true"></i>-->
+                </span>
+            </div>
+            <div class = "col-xs-5">
+                <ul class="nav nav-pills" style="float: right;">
                     <li role="presentation" ng-repeat="mode in data.MODES"
                         ng-class="mode.modeClass">
                         <a href="" class = "nmc-period-toogle" ng-click="modeClick(mode)">
@@ -55,27 +88,32 @@
                         </a>
                     </li>
                 </ul>
-            </div>            
--->
-            <div class = "col-xs-6">
-                <select class="form-control nmc-select-form"
-                        ng-model = "data.currentMode"
-                        ng-options = "mode as mode.caption for mode in data.MODES"
-                        ng-change = "modeChange()">
-                </select>
-            </div>            
-            <div class = "col-xs-2">
-                <a href="" style="font-size: 12px"
+            </div>                        
+            <div class = "col-xs-4"
+                 style = "">
+                <a href="" style="font-size: 12px; float: right; margin-bottom: 5px;"
                    ng-click = "openNotices()">
-                    Уведомления
+                    <img class = 'marginLeft5' 
+                     style = ""
+                     height = "16" width = "16" 
+                     ng-src = "{{data.zpointStatus}}" 
+                     ng-attr-title = {{data.zpointStatusTitle}}>
+                    Открыть уведомления
                 </a>
-            </div>
-            <div class = "col-xs-3">
-                <a href="" style="font-size: 12px"
+                <a href="" style="font-size: 12px; float: right;"
                    ng-click = "getIndicators()">
                     Открыть показания
                 </a>
             </div>
+<!--
+            <div class = "col-xs-1">
+                <img class = 'marginLeft5' 
+                     style = ""
+                     height = "16" width = "16" 
+                     ng-src = "{{data.zpointStatus}}" 
+                     ng-attr-title = {{data.zpointStatusTitle}}>
+            </div>
+-->
         </div>
         <div class="row">            
             <div class = "col-xs-12">

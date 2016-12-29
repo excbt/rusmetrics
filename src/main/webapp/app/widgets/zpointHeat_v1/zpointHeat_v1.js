@@ -2,7 +2,7 @@
 /*global angular, moment*/
 'use strict';
 
-angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
+angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies'])
     .config(['ChartJsProvider', function (ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
@@ -14,7 +14,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 //            showLines: false
 //        });
     }])
-    .controller('zpointHeatWidgetCtrl', function ($scope, $http, $cookies, $rootScope, widgetConfig) {
+    .controller('zpointHeat_v1WidgetCtrl', function ($scope, $http, $cookies, $rootScope, widgetConfig) {
         moment.locale('ru', {
             months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
             monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
@@ -27,19 +27,41 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 //        var zpstatus = $scope.widgetOptions.zpointStatus;
         $scope.data = {};
         $scope.data.forecastTemp = null;
+//        $scope.data.MODES = [
+//            {
+//                keyname: "TODAY",
+//                caption: "Сегодня",
+//                modeClass: "",
+//                timeDetailType: "1h"
+//            }, {
+//                keyname: "24",
+//                caption: "Сутки",
+//                modeClass: "",
+//                timeDetailType: "1h"
+//            }, {
+//                keyname: "YESTERDAY",
+//                caption: "Вчера",
+//                modeClass: "",
+//                timeDetailType: "1h"
+//            }, {
+//                keyname: "WEEK",
+//                caption: "Неделя",
+//                modeClass: "active",
+//                timeDetailType: "24h"
+//            }, {
+//                keyname: "MONTH",
+//                caption: "Текущий месяц",
+//                modeClass: "",
+//                timeDetailType: "24h"
+//            }
+//        ];
         $scope.data.MODES = [
             {
-                keyname: "TODAY",
-                caption: "Сегодня",
-                modeClass: "",
-                timeDetailType: "1h",
-                dateFormat: "HH:mm"
-            }, {
-                keyname: "24",
-                caption: "Сутки",
-                modeClass: "",
-                timeDetailType: "1h",
-                dateFormat: "HH:mm"
+                keyname: "WEEK",
+                caption: "Неделя",
+                modeClass: "active",
+                timeDetailType: "24h",
+                dateFormat: "DD, MMM"
             }, {
                 keyname: "YESTERDAY",
                 caption: "Вчера",
@@ -47,20 +69,14 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
                 timeDetailType: "1h",
                 dateFormat: "HH:mm"
             }, {
-                keyname: "WEEK",
-                caption: "Неделя",
-                modeClass: "active",
-                timeDetailType: "24h",
-                dateFormat: "DD, MMM"
-            }, {
-                keyname: "MONTH",
-                caption: "Текущий месяц",
+                keyname: "TODAY",
+                caption: "Сегодня",
                 modeClass: "",
-                timeDetailType: "24h",
-                dateFormat: "DD"
+                timeDetailType: "1h",
+                dateFormat: "HH:mm"
             }
         ];
-        $scope.data.startModeIndex = 3;//default mode index; 0 - WEEK
+        $scope.data.startModeIndex = 0;//default mode index; 0 - WEEK
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
         $scope.data.imgPath = "widgets/zpointHeat/glyphicons-85-heat.png";
@@ -123,8 +139,8 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
             $scope.presentDataFlag = true;
             $scope.lineChart.labels = [];
             $scope.lineChart.data = [[], []];
-            rsp.data.forEach(function (elm) {                
-                $scope.lineChart.labels.push(moment(elm.dataDateString, "DD-MM-YYYY HH:mm").format($scope.data.currentMode.dateFormat));
+            rsp.data.forEach(function (elm) {
+                $scope.lineChart.labels.push(moment(elm.dataDateString, "DD-MM-YYYY HH:mm").format($scope.data.currentMode.dateFormat));                
                 $scope.lineChart.data[0].push(elm.chartT_in);
                 $scope.lineChart.data[1].push(elm.t_in);
             });
@@ -150,39 +166,30 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
             }
             if (angular.isDefined(resp.data.forecastTemp) && resp.data.forecastTemp !== null) {
                 $scope.data.forecastTemp = resp.data.forecastTemp;
+                if ($scope.data.forecastTemp <= 0) {
+                    $scope.data.forecastTempColor = "#337ab7";
+                } else {
+                    $scope.data.forecastTempColor = "#ef473a";
+                }
             } else {
                 console.log("zpointHeatWidget: forecast temperature is empty.");
             }
+            //$scope.data.forecastTemp = -88;//для теста
         }
     
-//        $scope.modeClick = function (mode) {
-//            $scope.data.currentMode = mode;
-//            //set class
-//            $scope.data.MODES.forEach(function (mod) {
-//                mod.modeClass = "";
-//            });
-//            mode.modeClass = "active";
-//            //get data
-//            if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
-//                console.log("zpointHeatWidget: contZpoint or mode is null!");
-//                return false;
-//            }
-//            var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
-//            $http.get(url).then(getDataSuccessCallback, errorCallback);
-//        };
-    
-        $scope.modeChange = function () {
+        $scope.modeClick = function (mode) {
+            $scope.data.currentMode = mode;
             //set class
             $scope.data.MODES.forEach(function (mod) {
                 mod.modeClass = "";
             });
-            $scope.data.currentMode.modeClass = "active";
+            mode.modeClass = "active";
             //get data
-            if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || $scope.data.currentMode === null || $scope.data.currentMode.keyname === null) {
+            if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
                 console.log("zpointHeatWidget: contZpoint or mode is null!");
                 return false;
             }
-            var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent($scope.data.currentMode.keyname);
+            var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
             $http.get(url).then(getDataSuccessCallback, errorCallback);
         };
     
@@ -203,8 +210,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
         };
         
         function initWidget() {
-//            $scope.modeClick($scope.data.currentMode);
-            $scope.modeChange();
+            $scope.modeClick($scope.data.currentMode);
             getZpointState();
         }
         
