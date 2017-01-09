@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 			+ " d.dataDate >= :fromDateTime AND d.timeDetailType = :timeDetailType AND d.deleted = 0 "
 			+ " ORDER BY d.dataDate desc")
 	public List<ContServiceDataHWater> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
-			@Param("timeDetailType") String timeDetailType, @Param("fromDateTime") ZonedDateTime fromDateTime,
+			@Param("timeDetailType") String timeDetailType, @Param("fromDateTime") Date fromDateTime,
 			Pageable pageable);
 
 	/**

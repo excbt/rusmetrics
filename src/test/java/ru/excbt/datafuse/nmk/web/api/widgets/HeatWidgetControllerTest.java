@@ -44,7 +44,7 @@ public class HeatWidgetControllerTest extends AnyControllerTest {
 	}
 
 	@Test
-	public void testHeatWidgetMonitor() throws Exception {
+	public void testHeatWidgetStatus() throws Exception {
 
 		_testGetJson("/api/subscr/widgets/heat/107365375/status");
 	}

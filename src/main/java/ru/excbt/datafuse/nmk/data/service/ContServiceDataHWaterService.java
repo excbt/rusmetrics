@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,6 +56,7 @@ import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис по работе с данными по горячей воде
@@ -257,14 +257,14 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWater> selectLastDataFromDate(Long contZpointId, String timeDetailType,
-			ZonedDateTime fromDateTime) {
+			java.time.LocalDate fromDateTime) {
 
 		checkNotNull(contZpointId);
 
 		checkArgument(contZpointId > 0);
 
 		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId,
-				timeDetailType, fromDateTime, LIMIT1_PAGE_REQUEST);
+				timeDetailType, LocalDateUtils.asDate(fromDateTime), LIMIT1_PAGE_REQUEST);
 		return resultList;
 
 	}
