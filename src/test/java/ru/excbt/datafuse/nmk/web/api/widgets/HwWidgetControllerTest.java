@@ -11,7 +11,7 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
  * 
  * @author A.Kovtonyuk
  * @version 1.0
- * @since dd.12.2016
+ * @since 09.01.2017
  * 
  */
 public class HwWidgetControllerTest extends AnyControllerTest {
@@ -22,8 +22,23 @@ public class HwWidgetControllerTest extends AnyControllerTest {
 	//	}
 
 	@Test
-	public void testHeatWidgetStatus() throws Exception {
+	public void testHwWidgetStatus() throws Exception {
 		_testGetJson("/api/subscr/widgets/hw/71843421/status");
+	}
+
+	@Test
+	public void testHwWidgetChartDataWeek() throws Exception {
+		_testGetJson("/api/subscr/widgets/hw/71843421/chart/data/week");
+	}
+
+	@Test
+	public void testHwWidgetChartDataYesterday() throws Exception {
+		_testGetJson("/api/subscr/widgets/hw/71843421/chart/data/yesterday");
+	}
+
+	@Test
+	public void testHwWidgetChartDataToday() throws Exception {
+		_testGetJson("/api/subscr/widgets/hw/71843421/chart/data/today");
 	}
 
 }

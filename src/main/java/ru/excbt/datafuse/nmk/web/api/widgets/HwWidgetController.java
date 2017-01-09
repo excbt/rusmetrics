@@ -22,7 +22,9 @@ import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.widget.HwWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 /**
  * 
@@ -35,11 +37,16 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 @RequestMapping(value = "/api/subscr/widgets/hw/{contZpointId}")
 public class HwWidgetController extends WidgetController {
 
+	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK" };
+
 	@Inject
 	private ContServiceDataHWaterService contServiceDataHWaterService;
 
 	@Inject
 	private ContObjectService contObjectService;
+
+	@Inject
+	private HwWidgetService hwWidgetService;
 
 	/**
 	 * 
@@ -81,6 +88,32 @@ public class HwWidgetController extends WidgetController {
 		}
 
 		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param contZpointId
+	 * @param mode
+	 * @return
+	 */
+	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getWidgetData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
+			@PathVariable(value = "mode", required = true) String mode) {
+		if (!canAccessContZPoint(contZpointId)) {
+			responseForbidden();
+		}
+
+		if (mode == null || !hwWidgetService.getAvailableModes().contains(mode.toUpperCase())) {
+			return responseBadRequest();
+		}
+
+		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
+
+		ApiActionProcess<List<ContServiceDataHWater>> action = () -> hwWidgetService.selectChartData(contZpointId,
+				subscriberDateTime, mode.toUpperCase());
+
+		return responseOK(action);
+
 	}
 
 }

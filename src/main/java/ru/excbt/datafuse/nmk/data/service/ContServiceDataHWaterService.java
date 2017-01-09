@@ -131,6 +131,27 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	/**
 	 * 
 	 * @param contZpointId
+	 * @param timeDetail
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail, Date beginDate,
+			Date endDate) {
+		checkArgument(contZpointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(beginDate, "beginDate is null");
+		checkNotNull(endDate, "endDate is null");
+		checkArgument(beginDate.compareTo(endDate) <= 0);
+
+		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(), beginDate,
+				endDate);
+	}
+
+	/**
+	 * 
+	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
 	 * @return
