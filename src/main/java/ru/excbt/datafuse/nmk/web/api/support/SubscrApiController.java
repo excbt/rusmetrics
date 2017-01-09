@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -157,6 +159,15 @@ public class SubscrApiController extends WebApiController {
 	protected Date getCurrentSubscriberDate() {
 		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
 		return d;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected ZonedDateTime getSubscriberZonedDateTime() {
+		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+		return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()) : ZonedDateTime.now();
 	}
 
 	/**

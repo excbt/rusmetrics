@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -246,6 +247,26 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 		checkNotNull(resultList);
 		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+	}
+
+	/**
+	 * 
+	 * @param contZpointId
+	 * @param fromDateTime
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContServiceDataHWater> selectLastDataFromDate(Long contZpointId, String timeDetailType,
+			ZonedDateTime fromDateTime) {
+
+		checkNotNull(contZpointId);
+
+		checkArgument(contZpointId > 0);
+
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId,
+				timeDetailType, fromDateTime, LIMIT1_PAGE_REQUEST);
+		return resultList;
+
 	}
 
 	/**

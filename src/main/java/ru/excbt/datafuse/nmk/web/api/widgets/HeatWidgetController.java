@@ -3,7 +3,6 @@
  */
 package ru.excbt.datafuse.nmk.web.api.widgets;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +60,7 @@ public class HeatWidgetController extends WidgetController {
 			return responseBadRequest();
 		}
 
-		ZonedDateTime d = ZonedDateTime.ofInstant(getCurrentSubscriberDate().toInstant(), ZoneId.systemDefault());
+		ZonedDateTime d = getSubscriberZonedDateTime();
 		//java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
 
 		List<HeatWidgetTemperatureDto> resultList = heatWidgetService.selectChartData(contZpointId, d,
