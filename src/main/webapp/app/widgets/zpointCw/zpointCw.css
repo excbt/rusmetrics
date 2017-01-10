@@ -1,0 +1,53 @@
+
+/*.widget1 {
+  position: relative;
+  border-radius: 6px;
+  background-color: white;*//* #eeeeee;*/
+/*  padding: 10px;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 200;
+
+  h1 {
+    line-height: 1;
+    letter-spacing: -1px;
+    font-size: 60px;
+  }
+}*/
+.zpoint-cw-widget {
+    position: relative;
+/*    border: 1px solid black;*/
+    border-radius: 6px;    
+    background-color: white;
+    font-size: 18px;
+    font-weight: 200;
+    padding: 10px 0 0 0;
+}
+.nmc-period-toogle {
+    padding: 5px !important;
+}
+/* Настройки для всплывающей подсказки на графике*/
+canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+#chartjs-tooltip-cw {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+.chartjs-tooltip-key-cw {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
