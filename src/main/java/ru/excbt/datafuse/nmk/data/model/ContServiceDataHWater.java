@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 /**
  * Учет показаний ГВС и Теплоснабжения
@@ -41,7 +42,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		check = ResultCheckStyle.NONE)
 
-public class ContServiceDataHWater extends AbstractAuditableModel implements DataDateFormatter {
+public class ContServiceDataHWater extends AbstractAuditableModel implements DataDateFormatter, DeletedMarker {
 
 	/**
 	 * 
@@ -356,6 +357,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel implements Dat
 		this.dataChanged = dataChanged;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}

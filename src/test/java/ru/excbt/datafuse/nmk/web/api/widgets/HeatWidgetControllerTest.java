@@ -38,15 +38,21 @@ public class HeatWidgetControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testHeatWidgetChart() throws Exception {
+	public void testWidgetChartData() throws Exception {
 
-		_testGetJson("/api/subscr/widgets/heat/107365375/chart/data/week");
+		_testGetJson(String.format("/api/subscr/widgets/heat/%d/chart/data/week", TestWidgetConstants.HEAT_ZPOINT_ID));
 	}
 
 	@Test
-	public void testHeatWidgetStatus() throws Exception {
+	public void testWidgetChartDataWeek() throws Exception {
 
-		_testGetJson("/api/subscr/widgets/heat/107365375/status");
+		_testGetJson(String.format("/api/subscr/widgets/heat/%d/chart/data/week", TestWidgetConstants.HEAT_ZPOINT_ID));
+	}
+
+	@Test
+	public void testWidgetStatus() throws Exception {
+
+		_testGetJson(String.format("/api/subscr/widgets/heat/%d/status", TestWidgetConstants.HEAT_ZPOINT_ID));
 	}
 
 }

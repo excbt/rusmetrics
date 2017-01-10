@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.widget.HeatWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 /**
  * 
@@ -61,11 +62,11 @@ public class HeatWidgetController extends WidgetController {
 		}
 
 		ZonedDateTime d = getSubscriberZonedDateTime();
-		//java.time.LocalDate d = java.time.LocalDate.of(2016, 03, 07);
 
-		List<HeatWidgetTemperatureDto> resultList = heatWidgetService.selectChartData(contZpointId, d,
-				mode.toUpperCase());
-		return responseOK(resultList);
+		ApiActionProcess<List<HeatWidgetTemperatureDto>> action = () -> heatWidgetService.selectChartData(contZpointId,
+				d, mode.toUpperCase());
+
+		return responseOK(action);
 	}
 
 	/**

@@ -31,56 +31,21 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  * 
  * @author A.Kovtonyuk
  * @version 1.0
- * @since dd.12.2016
+ * @since 09.01.2017
  * 
  */
 @Service
-public class HwWidgetService extends AbstractService {
+public class CwWidgetService extends AbstractService {
 
-	private static final Logger log = LoggerFactory.getLogger(HwWidgetService.class);
+	private static final Logger log = LoggerFactory.getLogger(CwWidgetService.class);
 
-	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK" };
+	private final static String[] availableModes = { "WEEK" };
 
 	private final static Collection<String> availableModesCollection = Collections
 			.unmodifiableList(Arrays.asList(availableModes));
 
 	@Inject
 	private ContServiceDataHWaterService contServiceDataHWaterService;
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Collection<String> getAvailableModes() {
-		return availableModesCollection;
-	}
-
-	/**
-	 * 
-	 * @param dateTime
-	 * @param mode
-	 * @return
-	 */
-	//	private Pair<LocalDateTime, LocalDateTime> calculateDatePairs(ZonedDateTime dateTime, String mode) {
-	//
-	//		ZonedDateTime endOfDay = dateTime.truncatedTo(ChronoUnit.DAYS).plusDays(1).minusSeconds(1);
-	//
-	//		if ("TODAY".equals(mode)) {
-	//			return Pair.of(dateTime.truncatedTo(ChronoUnit.DAYS).toLocalDateTime(), endOfDay.toLocalDateTime());
-	//		}
-	//
-	//		if ("YESTERDAY".equals(mode)) {
-	//			return Pair.of(dateTime.minusDays(1).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
-	//					endOfDay.minusDays(1).toLocalDateTime());
-	//		}
-	//
-	//		if ("WEEK".equals(mode)) {
-	//			return Pair.of(dateTime.minusDays(7).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
-	//					endOfDay.toLocalDateTime());
-	//		}
-	//
-	//		return null;
-	//	}
 
 	/**
 	 * 
@@ -112,7 +77,6 @@ public class HwWidgetService extends AbstractService {
 				LocalDateUtils.asDate(datePairs.getLeft()), LocalDateUtils.asDate(datePairs.getRight()));
 
 		return ObjectFilters.deletedFilter(result);
-
 	}
 
 }
