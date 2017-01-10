@@ -785,6 +785,7 @@ angular.module('portalNMC')
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
                                             break;
                                         case "hw":
+                                            zpointWidget.type = "zpointHw";
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
                                             break;
                                         case "heat":

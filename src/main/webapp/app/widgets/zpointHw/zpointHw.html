@@ -1,0 +1,146 @@
+<div class="zpoint-hw-widget" ng-controller="zpointHwWidgetCtrl">
+    <div class="container-fluid">
+        <div class="row">            
+<!--
+            <div class = "col-xs-1">
+                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{data.imgPath}}">
+            </div>
+            <div class = "col-xs-1">
+                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{widgetOptions.zpointStatus}}">
+            </div>
+-->
+            <div class = "col-xs-8">
+                <img class='' height="16" width="16" ng-src="{{data.imgPath}}">
+                <span ng-bind="widgetOptions.zpointName"></span>
+            </div>
+<!--
+            <div class = "col-xs-4">                
+                <span style="font-size: 12px">
+                    Температура окр. среды
+                </span>
+                <span ng-show = "data.currentHwTemp === null" 
+                      class="glyphicon glyphicon-ban-circle"></span>
+                
+                <span ng-show = "data.currentHwTemp !== null" 
+                      class = "">
+                      <span ng-bind = "data.currentHwTemp"></span>
+                    &deg;C
+                    <i class="fa fa-thermometer-half" aria-hidden="true"></i>
+                </span>
+            </div>
+-->
+            <div class = "col-xs-3"
+                 style = "">
+<!--
+                <a href="" style="font-size: 12px; float: right;"
+                   ng-click = "openNotices()">
+                    Открыть уведомления
+                </a>
+-->
+            </div>
+        </div>
+        <div class="row">            
+<!--
+            <div class = "col-xs-1">
+                <img class='marginLeft5' height="25" width="25" ng-src="{{data.imgPath}}">
+            </div>
+-->
+            
+<!--
+            <div class = "col-xs-1">
+                <a href="" style="font-size: 12px"
+                   ng-click = "openNotices()">
+                    Уведомления
+                </a>
+            </div>
+-->
+            <div class = "col-xs-3"
+                 style = "padding-right: 0; padding-top: 12px">                
+                <span ng-style="{'color': data.currentHwTempColor}">
+                    t <sub>гвс</sub>, &deg;C = 
+                </span>
+<!--
+                <span ng-show = "data.currentHwTemp === null" 
+                      class = "glyphicon glyphicon-ban-circle"
+                      title = "Нет данных о текущей температуре окружающей среды"></span>
+-->                
+                <img ng-show = "data.currentHwTemp === null"
+                     src = "widgets/zpointHw/no-temp.png"
+                     width = "20"
+                     height = "20"
+                     title = "Нет данных о текущей температуре окружающей среды"                  
+                     />
+                
+                <span ng-show = "data.currentHwTemp !== null" 
+                      class = ""
+                      ng-style="{'color': data.currentHwTempColor}">
+                      <span ng-bind = "data.currentHwTemp"></span>
+                    
+<!--                    <i class="fa fa-thermometer-half fa-lg" aria-hidden="true"></i>-->
+                </span>
+            </div>
+            <div class = "col-xs-5">
+                <ul class="nav nav-pills" style="float: right;">
+                    <li role="presentation" ng-repeat="mode in data.MODES"
+                        ng-class="mode.modeClass">
+                        <a href="" class = "nmc-period-toogle" ng-click="modeClick(mode)">
+                            <span ng-bind="mode.caption"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>                        
+            <div class = "col-xs-4"
+                 style = "">
+                <a href="" style="font-size: 12px; float: right; margin-bottom: 5px;"
+                   ng-click = "openNotices()">
+                    <img class = 'marginLeft5' 
+                     style = ""
+                     height = "16" width = "16" 
+                     ng-src = "{{data.zpointStatus}}" 
+                     ng-attr-title = {{data.zpointStatusTitle}}>
+                    Открыть уведомления
+                </a>
+                <a href="" style="font-size: 12px; float: right;"
+                   ng-click = "getIndicators()">
+                    Открыть показания
+                </a>
+            </div>
+<!--
+            <div class = "col-xs-1">
+                <img class = 'marginLeft5' 
+                     style = ""
+                     height = "16" width = "16" 
+                     ng-src = "{{data.zpointStatus}}" 
+                     ng-attr-title = {{data.zpointStatusTitle}}>
+            </div>
+-->
+        </div>
+        <div class="row">            
+            <div class = "col-xs-12">
+                <div ng-show = "presentDataFlag === false"
+                     class = "nmc-text-align-center">                    
+                        <span class="glyphicon glyphicon-ban-circle"></span> Нет данных
+                </div>
+                <div ng-show = "presentDataFlag ===  true">
+                    <canvas id="line" 
+                            class="chart chart-line" 
+                            chart-data="lineChart.data"
+                            chart-labels="lineChart.labels" 
+                            chart-series="lineChart.series" 
+                            chart-options="lineChart.options"
+                            chart-dataset-override="lineChart.datasetOverride">
+                    </canvas>
+                </div>
+            </div>            
+        </div>
+<!--
+        <div class="row">            
+            <div class = "col-xs-12">
+                <a href="" style="font-size: 12px; float: right">
+                    Посмотреть уведомления
+                </a>
+            </div>            
+        </div>
+-->
+    </div>
+</div>
