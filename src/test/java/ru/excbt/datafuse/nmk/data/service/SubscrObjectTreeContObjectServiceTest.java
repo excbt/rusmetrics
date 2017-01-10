@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,15 +21,18 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 	private SubscrContObjectService subscrContObjectService;
 
 	/**
+	 * Test ignored due to deleting of subscrObjectTree ID = 64166466L
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
 	@Test
 	public void testGetContObjectIds() throws Exception {
 
 		SubscriberParam param = SubscriberParam.builder().subscriberId(64166466L).build();
 
-		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(param, 512111663L);
+		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(param,
+				512111663L);
 		assertNotNull(contObjectIds);
 
 		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(64166466L,
