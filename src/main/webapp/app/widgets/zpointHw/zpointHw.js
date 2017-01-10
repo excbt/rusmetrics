@@ -6,7 +6,7 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
     .config(['ChartJsProvider', function (ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
-            chartColors: ['#ef473a', '#FDB45C', '#803690', '#00ADF9'],
+            chartColors: ['#ef473a', '#FDB45C', '#803690', '#337ab7'],
             responsive: true
         });
         // Configure all line charts
@@ -21,8 +21,7 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
         });
         var DATA_URL = "../api/subscr/widgets/hw",/*//chart/HwTemp";*/
             ZPOINT_STATUS_TEMPLATE = "widgets/zpointHw/zpoint-state-",
-            SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
-            USER_DATE_FORMAT = "DD.MM.YYYY HH:mm",
+            SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",            
             T_MAX = 75,
             T_NORM = 60,
             T_COLD = 40;
@@ -66,19 +65,22 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
                 caption: "Неделя",
                 modeClass: "",
                 timeDetailType: "24h",
-                dateFormat: "DD, MMM"
+                dateFormat: "DD, MMM",
+                tooltipDateFormat: "DD.MM.YYYY"
             }, {
                 keyname: "YESTERDAY",
                 caption: "Вчера",
                 modeClass: "",
                 timeDetailType: "1h",
-                dateFormat: "HH:mm"
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
                 keyname: "TODAY",
                 caption: "Сегодня",
                 modeClass: "active",
                 timeDetailType: "1h",
-                dateFormat: "HH:mm"
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }
         ];
         $scope.data.startModeIndex = 2;//default mode index; 2 - TODAY
@@ -128,11 +130,11 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
                 var index = null;
                 if (tooltip.dataPoints && tooltip.dataPoints.length > 0) {
                     index = tooltip.dataPoints[0].index;
-                }                
+                }
 
 				var innerHtml = '<thead>';
                 if (index !== null && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[index].dataDateString !== null) {
-                    innerHtml += '<tr><th>' + moment($scope.lineChart.dataTitle[index].dataDateString, SERVER_DATE_FORMAT).format(USER_DATE_FORMAT) + '</th></tr>';
+                    innerHtml += '<tr><th>' + moment($scope.lineChart.dataTitle[index].dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.tooltipDateFormat) + '</th></tr>';
                 } else {
                     titleLines.forEach(function (title) {
                         innerHtml += '<tr><th>' + title + '</th></tr>';
@@ -175,7 +177,7 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
 		};
         $scope.lineChart = {};
         $scope.lineChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-        $scope.lineChart.series = ['T макс', 'T норм', 'T факт', 'T хвс'];
+        $scope.lineChart.series = ['T макс, ' + '\u2103', 'T норм, ' + '\u2103', 'T факт, ' + '\u2103', 'T хвс, ' + '\u2103'];
         $scope.lineChart.data = [[], [], [], []];
         $scope.lineChart.dataTitle = [];
 //        var tmpData = [
@@ -187,6 +189,12 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
         };
         $scope.lineChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
         $scope.lineChart.options = {
+            /*responsive: false,*/
+            elements: {
+                line: {
+                    fill: false
+                }
+            },
             legend: {
                 display: true
             },
@@ -195,12 +203,12 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
                 mode: 'index',
                 position: 'nearest',
                 custom: customTooltips_v1
-                */            
+                */
                 callbacks: {
                     beforeTitle: function (arr, data) {
                         var result = "";
                         if (angular.isArray(arr) && arr.length > 0 && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[arr[0].index].dataDateString !== null) {
-                            result = moment($scope.lineChart.dataTitle[arr[0].index].dataDateString, SERVER_DATE_FORMAT).format(USER_DATE_FORMAT);
+                            result = moment($scope.lineChart.dataTitle[arr[0].index].dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.tooltipDateFormat);
                         }
                         return result;
                     },
@@ -231,7 +239,7 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
                 $scope.lineChart.data[2].push(elm.t_in);
                 $scope.lineChart.data[3].push(T_COLD);
                 dataTitleElem = {
-                    dataDateString : elm.dataDateString                    
+                    dataDateString : elm.dataDateString
                 };
                 $scope.lineChart.dataTitle.push(dataTitleElem);
             });
@@ -257,10 +265,13 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
             }
             if (angular.isDefined(resp.data.lastHwData) && resp.data.lastHwData !== null) {
                 $scope.data.currentHwTemp = resp.data.lastHwData.t_in;
-                if ($scope.data.currentHwTemp <= 0) {
+//                ['#ef473a', '#FDB45C', '#803690', '#00ADF9'],
+                if ($scope.data.currentHwTemp <= T_COLD) {
                     $scope.data.currentHwTempColor = "#337ab7";
-                } else {
+                } else if ($scope.data.currentHwTemp > T_MAX) {
                     $scope.data.currentHwTempColor = "#ef473a";
+                } else {
+                    $scope.data.currentHwTempColor = "#FDB45C";
                 }
             } else {
                 console.log("zpointHwWidget: current hw temperature is empty.");

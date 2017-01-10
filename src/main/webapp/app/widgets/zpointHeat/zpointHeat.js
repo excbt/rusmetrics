@@ -21,8 +21,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
         });
         var DATA_URL = "../api/subscr/widgets/heat",/*//chart/heatTemp";*/
             ZPOINT_STATUS_TEMPLATE = "widgets/zpointHeat/zpoint-state-",
-            SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
-            USER_DATE_FORMAT = "DD.MM.YYYY HH:mm";
+            SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm";
         
         $scope.widgetOptions = widgetConfig.getOptions();
         //console.log($scope.widgetOptions);
@@ -35,31 +34,36 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
                 caption: "Сегодня",
                 modeClass: "",
                 timeDetailType: "1h",
-                dateFormat: "HH:mm"
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
                 keyname: "24",
                 caption: "Сутки",
                 modeClass: "",
                 timeDetailType: "1h",
-                dateFormat: "HH:mm"
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
                 keyname: "YESTERDAY",
                 caption: "Вчера",
                 modeClass: "",
                 timeDetailType: "1h",
-                dateFormat: "HH:mm"
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
                 keyname: "WEEK",
                 caption: "Неделя",
                 modeClass: "active",
                 timeDetailType: "24h",
-                dateFormat: "DD, MMM"
+                dateFormat: "DD, MMM",
+                tooltipDateFormat: "DD.MM.YYYY"
             }, {
                 keyname: "MONTH",
                 caption: "Текущий месяц",
                 modeClass: "",
                 timeDetailType: "24h",
-                dateFormat: "DD"
+                dateFormat: "DD",
+                tooltipDateFormat: "DD.MM.YYYY"
             }
         ];
         $scope.data.startModeIndex = 3;//default mode index; 0 - WEEK
@@ -113,7 +117,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 
 				var innerHtml = '<thead>';
                 if (index !== null && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[index].dataDateString !== null) {
-                    innerHtml += '<tr><th>' + moment($scope.lineChart.dataTitle[index].dataDateString, SERVER_DATE_FORMAT).format(USER_DATE_FORMAT) + '</th></tr>';
+                    innerHtml += '<tr><th>' + moment($scope.lineChart.dataTitle[index].dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.tooltipDateFormat) + '</th></tr>';
                 } else {
                     titleLines.forEach(function (title) {
                         innerHtml += '<tr><th>' + title + '</th></tr>';
@@ -157,7 +161,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
     
         $scope.lineChart = {};
         $scope.lineChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-        $scope.lineChart.series = ['T норм', 'T факт'];
+        $scope.lineChart.series = ['T норм, ' + '\u2103', 'T факт, ' + '\u2103'];
         $scope.lineChart.data = [[], []];
         $scope.lineChart.dataTitle = [];
 //        var tmpData = [
@@ -184,7 +188,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 //                        console.log(data);
                         var result = "";
                         if (angular.isArray(arr) && arr.length > 0 && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[arr[0].index].dataDateString !== null) {
-                            result = moment($scope.lineChart.dataTitle[arr[0].index].dataDateString, SERVER_DATE_FORMAT).format(USER_DATE_FORMAT);
+                            result = moment($scope.lineChart.dataTitle[arr[0].index].dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.tooltipDateFormat);
                         }
                         return result;
                     },
@@ -193,7 +197,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 //                        console.log(data);
                         var result = "";
                         if (angular.isArray(arr) && arr.length > 0 && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[arr[0].index].t_ambiance !== null) {
-                            result = "t окр. = " + $scope.lineChart.dataTitle[arr[0].index].t_ambiance;
+                            result = "t окр., " + '\u2103' + " = " + $scope.lineChart.dataTitle[arr[0].index].t_ambiance;
                         }
                         return result;
 //                        return "t окр. = " + arr[2].yLabel + " C";
