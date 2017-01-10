@@ -19,7 +19,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
             months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
             monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
         });
-        var DATA_URL = "../api/subscr/widgets/hw",/*//chart/HwTemp";*/
+        var DATA_URL = "../api/subscr/widgets/cw",/*//chart/HwTemp";*/
             ZPOINT_STATUS_TEMPLATE = "widgets/zpointCw/zpoint-state-",
             SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm";
         
@@ -174,7 +174,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
 		};
         $scope.barChart = {};
         $scope.barChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-        $scope.barChart.series = ['Потребление холодной воды, м3'];
+        $scope.barChart.series = ['Потребление холодной воды, м' + '\u00B3'];
         $scope.barChart.data = [[]];
         $scope.barChart.dataTitle = [];
 //        var tmpData = [

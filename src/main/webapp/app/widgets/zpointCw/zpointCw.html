@@ -1,6 +1,6 @@
 <div class="zpoint-cw-widget" ng-controller="zpointCwWidgetCtrl">
     <div class="container-fluid">
-        <div class="row">            
+<div class="row">            
 <!--
             <div class = "col-xs-1">
                 <img class='marginLeft5' height="12" width="12" ng-attr-src="{{data.imgPath}}">
@@ -54,28 +54,7 @@
                 </a>
             </div>
 -->
-<!--
-            <div class = "col-xs-3"
-                 style = "padding-right: 0; padding-top: 12px">                
-                <span ng-style="{'color': data.currentCwTempColor}">
-                    t <sub>гвс</sub>, &deg;C = 
-                </span>         
-                <img ng-show = "data.currentCwTemp === null"
-                     src = "widgets/zpointCw/no-temp.png"
-                     width = "20"
-                     height = "20"
-                     title = "Нет данных о текущей температуре ГВС"                  
-                     />
-                
-                <span ng-show = "data.currentCwTemp !== null" 
-                      class = ""
-                      ng-style="{'color': data.currentCwTempColor}">
-                      <span ng-bind = "data.currentCwTemp"></span>
-                    
 
-                </span>
-            </div>
--->
             <div class = "col-xs-offset-3 col-xs-5">
                 <ul class="nav nav-pills" style="float: right;">
                     <li role="presentation" ng-repeat="mode in data.MODES"
