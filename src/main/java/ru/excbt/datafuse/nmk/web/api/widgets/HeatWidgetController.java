@@ -87,14 +87,15 @@ public class HeatWidgetController extends WidgetController {
 			return responseBadRequest();
 		}
 
-		java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(getCurrentSubscriberDate());
+		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
 
-		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(contObjectId, currentDate);
+		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(contObjectId,
+				subscriberDateTime.toLocalDate());
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("color", getMonitorColorValue(contObjectId, contZpointId).getKeyname());
-		if (weatherForecast != null
-				&& currentDate.compareTo(LocalDateUtils.asLocalDate(weatherForecast.getForecastDateTime())) == 0) {
+		if (weatherForecast != null && subscriberDateTime.toLocalDate()
+				.compareTo(LocalDateUtils.asLocalDate(weatherForecast.getForecastDateTime())) == 0) {
 			result.put("forecastTemp", weatherForecast.getTemperatureValue());
 		}
 

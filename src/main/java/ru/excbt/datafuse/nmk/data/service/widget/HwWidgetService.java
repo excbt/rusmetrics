@@ -5,7 +5,8 @@ package ru.excbt.datafuse.nmk.data.service.widget;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,19 +62,22 @@ public class HwWidgetService extends AbstractService {
 	 * @param mode
 	 * @return
 	 */
-	private Pair<LocalDate, LocalDate> calculateDatePairs(java.time.ZonedDateTime dateTime, String mode) {
+	private Pair<LocalDateTime, LocalDateTime> calculateDatePairs(ZonedDateTime dateTime, String mode) {
+
+		ZonedDateTime endOfDay = dateTime.truncatedTo(ChronoUnit.DAYS).plusDays(1).minusSeconds(1);
 
 		if ("TODAY".equals(mode)) {
-			return Pair.of(dateTime.truncatedTo(ChronoUnit.DAYS).toLocalDate(), dateTime.toLocalDate());
+			return Pair.of(dateTime.truncatedTo(ChronoUnit.DAYS).toLocalDateTime(), endOfDay.toLocalDateTime());
 		}
 
 		if ("YESTERDAY".equals(mode)) {
-			return Pair.of(dateTime.minusDays(1).truncatedTo(ChronoUnit.DAYS).toLocalDate(),
-					dateTime.truncatedTo(ChronoUnit.DAYS).minusSeconds(1).toLocalDate());
+			return Pair.of(dateTime.minusDays(1).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
+					endOfDay.minusDays(1).toLocalDateTime());
 		}
 
 		if ("WEEK".equals(mode)) {
-			return Pair.of(dateTime.minusDays(7).truncatedTo(ChronoUnit.DAYS).toLocalDate(), dateTime.toLocalDate());
+			return Pair.of(dateTime.minusDays(7).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
+					endOfDay.toLocalDateTime());
 		}
 
 		throw new UnsupportedOperationException();
@@ -93,9 +97,13 @@ public class HwWidgetService extends AbstractService {
 		checkArgument(contZpointId != null && contZpointId > 0);
 		checkArgument(availableModesCollection.contains(mode));
 
-		Pair<LocalDate, LocalDate> datePairs = calculateDatePairs(dateTime, mode);
+		Pair<LocalDateTime, LocalDateTime> datePairs = calculateDatePairs(dateTime, mode);
 
 		TimeDetailKey timeDetail = "WEEK".equals(mode) ? TimeDetailKey.TYPE_24H : TimeDetailKey.TYPE_1H;
+
+		log.info("from: {} to :{}", LocalDateUtils.asDate(datePairs.getLeft()),
+				LocalDateUtils.asDate(datePairs.getRight()));
+		log.info("timeDetail: {}", timeDetail.getKeyname());
 
 		List<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZpointId, timeDetail,
 				LocalDateUtils.asDate(datePairs.getLeft()), LocalDateUtils.asDate(datePairs.getRight()));
