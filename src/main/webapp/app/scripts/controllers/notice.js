@@ -187,6 +187,7 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
     $scope.currentNotices = null;
     $scope.totalNotices = 0;
     $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
+    $scope.noticesPerPageList = [15, 25, 50, 75, 100];
     
     $scope.groups = [];
     
@@ -420,7 +421,8 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
         $scope.ctrlSettings.loading = true;
         $scope.pagination.current = pageNumber;        
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
-        var url = $scope.crudTableName + "/paged" + "?" + "page=" + (pageNumber-1) + "&" + "size=" + $scope.noticesPerPage;  
+//        var url = $scope.crudTableName + "/paged" + "?" + "page=" + (pageNumber-1) + "&" + "size=" + $scope.noticesPerPage;  
+        var url = $scope.crudTableName + "/paged?page=" + (pageNumber-1) + "&size=" + $scope.noticesPerPage;
 //console.log($rootScope.reportStart); 
 //console.log(loca);         
         if (angular.isDefined(loca.fromDate) && (angular.isDefined(loca.toDate))){

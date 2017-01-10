@@ -116,12 +116,15 @@
             <label class="nmc-form-label">Записей на странице:</label>
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
             <select class="form-control nmc-select-form nmc-view-allcount" ng-model="noticesPerPage"    
-                    ng-disabled="isDisabledFilters()">
+                    ng-disabled = "isDisabledFilters()"
+                    ng-options = "noticesPerPage for noticesPerPage in noticesPerPageList">
+<!--
                         <option>15</option>
                         <option>25</option>
                         <option>50</option>
                         <option>75</option>
                         <option>100</option>
+-->
     <!--            <option>100</option>-->
             </select>
         </div>

@@ -135,12 +135,15 @@
                      <div class="col-xs-7 col-md-7 noPadding">
                         <label class="nmc-form-label">Записей на странице:</label>
                 <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-                        <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="indicatorsPerPage"    >
+                        <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="indicatorsPerPage"
+                                ng-options = "indicatorsPerPage for indicatorsPerPage in indicatorsPerPageList">
+<!--
                             <option>15</option>
                             <option>25</option>
                             <option>50</option>
                             <option>75</option>
                             <option>100</option>
+-->
                         </select>
                     </div>
                     <div class="col-xs-5 col-md-5 noPadding">
