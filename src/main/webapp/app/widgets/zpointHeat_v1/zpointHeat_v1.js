@@ -20,7 +20,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
             monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
         });
         var DATA_URL = "../api/subscr/widgets/heat",/*//chart/heatTemp";*/
-            ZPOINT_STATUS_TEMPLATE = "widgets/zpointHeat/zpoint-state-",
+            ZPOINT_STATUS_TEMPLATE = "widgets/zpointHeat_v1/zpoint-state-",
             SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
             USER_DATE_FORMAT = "DD.MM.YYYY HH:mm";
         
@@ -81,7 +81,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
         $scope.data.startModeIndex = 0;//default mode index; 0 - WEEK
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
-        $scope.data.imgPath = "widgets/zpointHeat/glyphicons-85-heat.png";
+        $scope.data.imgPath = "widgets/zpointHeat_v1/glyphicons-85-heat.png";
         $scope.data.zpointStatus = "";//"widgets/zpointHeat/zpoint-state-" + zpstatus + ".png";
         $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
         $scope.data.contZpointId = $scope.widgetOptions.contZpointId;
