@@ -4,7 +4,9 @@
 package ru.excbt.datafuse.nmk.web.api.widgets;
 
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -17,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.widget.CwWidgetService;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 /**
@@ -36,6 +41,9 @@ public class CwWidgetController extends WidgetController {
 	@Inject
 	private CwWidgetService cwWidgetService;
 
+	@Inject
+	private ContObjectService contObjectService;
+
 	/**
 	 * 
 	 * @param contZpointId
@@ -43,8 +51,7 @@ public class CwWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getHeatWidgetTemperature(
-			@PathVariable(value = "contZpointId", required = true) Long contZpointId,
+	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
 			responseForbidden();
@@ -60,6 +67,38 @@ public class CwWidgetController extends WidgetController {
 				mode.toUpperCase());
 
 		return responseOK(action);
+	}
+
+	/**
+	 * 
+	 * @param contZpointId
+	 * @return
+	 */
+	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
+
+		if (!canAccessContZPoint(contZpointId)) {
+			responseForbidden();
+		}
+
+		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
+
+		if (contObjectId == null) {
+			return responseBadRequest();
+		}
+
+		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
+
+		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(contObjectId,
+				subscriberDateTime.toLocalDate());
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("color", getMonitorColorValue(contObjectId, contZpointId).getKeyname());
+		if (weatherForecast != null && subscriberDateTime.toLocalDate()
+				.compareTo(LocalDateUtils.asLocalDate(weatherForecast.getForecastDateTime())) == 0) {
+			result.put("forecastTemp", weatherForecast.getTemperatureValue());
+		}
+		return responseOK(result);
 	}
 
 }
