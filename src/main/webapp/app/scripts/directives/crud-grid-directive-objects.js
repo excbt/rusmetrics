@@ -803,6 +803,7 @@ angular.module('portalNMC')
                                             imgPath = "images/es.png";
                                             break;
                                         case "el":
+                                            zpointWidget.type = "zpointEl";
                                             //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-206-electricity.png";
                                         //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-543-lamp.png";
                                             //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-65-lightbulb.png";         
