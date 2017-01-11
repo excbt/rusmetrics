@@ -37,7 +37,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
                 dateFormat: "HH:mm",
                 tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
-                keyname: "24",
+                keyname: "DAY",
                 caption: "Сутки",
                 modeClass: "",
                 timeDetailType: "1h",
