@@ -54,8 +54,7 @@ public class HwWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getStatus(
-			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
+	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {
 			responseForbidden();
@@ -103,7 +102,7 @@ public class HwWidgetController extends WidgetController {
 			responseForbidden();
 		}
 
-		if (mode == null || !hwWidgetService.getAvailableModes().contains(mode.toUpperCase())) {
+		if (mode == null || !hwWidgetService.isModeSupported(mode)) {
 			return responseBadRequest();
 		}
 

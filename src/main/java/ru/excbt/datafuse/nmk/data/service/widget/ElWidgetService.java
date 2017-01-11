@@ -18,10 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
@@ -32,17 +31,17 @@ import ru.excbt.datafuse.nmk.utils.DateInterval;
  * 
  */
 @Service
-public class CwWidgetService extends WidgetService {
+public class ElWidgetService extends WidgetService {
 
-	private static final Logger log = LoggerFactory.getLogger(CwWidgetService.class);
+	private static final Logger log = LoggerFactory.getLogger(ElWidgetService.class);
 
-	private final static MODES[] availableModes = { MODES.TODAY, MODES.YESTERDAY, MODES.WEEK };
+	private final static MODES[] availableModes = { MODES.DAY, MODES.WEEK, MODES.MONTH, MODES.YEAR };
 
 	private final static Collection<MODES> availableModesCollection = Collections
 			.unmodifiableList(Arrays.asList(availableModes));
 
 	@Inject
-	private ContServiceDataHWaterService contServiceDataHWaterService;
+	private ContServiceDataElService contServiceDataElService;
 
 	/**
 	 * 
@@ -61,7 +60,7 @@ public class CwWidgetService extends WidgetService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContServiceDataHWater> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
+	public List<ContServiceDataElCons> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
 			String mode) {
 
 		checkArgument(contZpointId != null && contZpointId > 0);
@@ -77,10 +76,10 @@ public class CwWidgetService extends WidgetService {
 		log.debug("from: {} to :{}", dateInterval.getFromDate(), dateInterval.getToDate());
 		log.debug("timeDetail: {}", timeDetail.getKeyname());
 
-		List<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZpointId, timeDetail,
-				dateInterval.getFromDate(), dateInterval.getToDate());
+		List<ContServiceDataElCons> result = contServiceDataElService.selectConsByContZPoint(contZpointId, timeDetail,
+				dateInterval);
 
-		return ObjectFilters.deletedFilter(result);
+		return result;
 	}
 
 }

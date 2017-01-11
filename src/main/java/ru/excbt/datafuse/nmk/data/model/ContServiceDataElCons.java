@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 /**
  * Электричество - потребление
@@ -26,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
  */
 @Entity
 @Table(name = "cont_service_data_el_cons")
-public class ContServiceDataElCons extends AbstractAuditableModel implements DataDateFormatter {
+public class ContServiceDataElCons extends AbstractAuditableModel implements DataDateFormatter, DeletedMarker {
 
 	/**
 	 * 
@@ -409,6 +410,7 @@ public class ContServiceDataElCons extends AbstractAuditableModel implements Dat
 		this.dataChanged = dataChanged;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}

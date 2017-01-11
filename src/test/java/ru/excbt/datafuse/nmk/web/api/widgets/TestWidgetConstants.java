@@ -15,5 +15,6 @@ public final class TestWidgetConstants {
 	public final static long CW_ZPOINT_ID = 71843429;
 	public final static long HW_ZPOINT_ID = 71843421;
 	public final static long HEAT_ZPOINT_ID = 107365375;
+	public final static long EL_ZPOINT_ID = 128072748;
 
 }

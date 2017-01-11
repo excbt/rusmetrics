@@ -7,6 +7,9 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 
 /**
@@ -30,9 +32,14 @@ import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
  * 
  */
 @Service
-public class HeatWidgetService extends AbstractService {
+public class HeatWidgetService extends WidgetService {
 
 	private static final Logger log = LoggerFactory.getLogger(HeatWidgetService.class);
+
+	private final static MODES[] availableModes = { MODES.DAY, MODES.TODAY, MODES.YESTERDAY, MODES.WEEK, MODES.MONTH };
+
+	private final static Collection<MODES> availableModesCollection = Collections
+			.unmodifiableList(Arrays.asList(availableModes));
 
 	/**
 	 * 
@@ -44,6 +51,8 @@ public class HeatWidgetService extends AbstractService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<HeatWidgetTemperatureDto> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
 			String mode) {
+
+		log.debug("widgets.get_heat_data({},{},{})", contZpointId, dateTime, mode);
 
 		List<HeatWidgetTemperatureDto> result = new ArrayList<>();
 
@@ -77,6 +86,14 @@ public class HeatWidgetService extends AbstractService {
 		}
 
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.service.widget.WidgetService#getAvailableModes()
+	 */
+	@Override
+	public Collection<MODES> getAvailableModes() {
+		return availableModesCollection;
 	}
 
 }

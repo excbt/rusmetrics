@@ -39,13 +39,11 @@ public class HeatWidgetControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testWidgetChartData() throws Exception {
-
-		_testGetJson(String.format("/api/subscr/widgets/heat/%d/chart/data/week", TestWidgetConstants.HEAT_ZPOINT_ID));
+		_testGetJson(String.format("/api/subscr/widgets/heat/%d/chart/data/day", TestWidgetConstants.HEAT_ZPOINT_ID));
 	}
 
 	@Test
 	public void testWidgetChartDataWeek() throws Exception {
-
 		_testGetJson(String.format("/api/subscr/widgets/heat/%d/chart/data/week", TestWidgetConstants.HEAT_ZPOINT_ID));
 	}
 

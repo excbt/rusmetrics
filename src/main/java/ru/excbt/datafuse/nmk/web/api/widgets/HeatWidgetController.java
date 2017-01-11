@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Sets;
-
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
@@ -50,14 +48,13 @@ public class HeatWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getChartData(
-			@PathVariable(value = "contZpointId", required = true) Long contZpointId,
+	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
 			responseForbidden();
 		}
 
-		if (mode == null || !Sets.newHashSet(availableModes).contains(mode.toUpperCase())) {
+		if (mode == null || !heatWidgetService.isModeSupported(mode)) {
 			return responseBadRequest();
 		}
 
@@ -75,8 +72,7 @@ public class HeatWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getStatus(
-			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
+	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {
 			responseForbidden();

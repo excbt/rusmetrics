@@ -22,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
@@ -33,13 +32,13 @@ import ru.excbt.datafuse.nmk.utils.DateInterval;
  * 
  */
 @Service
-public class HwWidgetService extends AbstractService {
+public class HwWidgetService extends WidgetService {
 
 	private static final Logger log = LoggerFactory.getLogger(HwWidgetService.class);
 
-	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK" };
+	private final static MODES[] availableModes = { MODES.TODAY, MODES.YESTERDAY, MODES.WEEK };
 
-	private final static Collection<String> availableModesCollection = Collections
+	private final static Collection<MODES> availableModesCollection = Collections
 			.unmodifiableList(Arrays.asList(availableModes));
 
 	@Inject
@@ -49,7 +48,8 @@ public class HwWidgetService extends AbstractService {
 	 * 
 	 * @return
 	 */
-	public Collection<String> getAvailableModes() {
+	@Override
+	public Collection<MODES> getAvailableModes() {
 		return availableModesCollection;
 	}
 
@@ -96,13 +96,13 @@ public class HwWidgetService extends AbstractService {
 
 		//Pair<LocalDateTime, LocalDateTime> datePairs = WidgetServiceUtils.calculateModeDatePairs(dateTime, mode);
 
-		DateInterval dateInterval = WidgetServiceUtils.calculateModeDateInterval(dateTime, mode);
+		DateInterval dateInterval = calculateModeDateInterval(dateTime, mode);
 
 		if (dateInterval == null) {
 			throw new UnsupportedOperationException();
 		}
 
-		TimeDetailKey timeDetail = WidgetServiceUtils.getDetailTypeKey(mode);
+		TimeDetailKey timeDetail = getDetailTypeKey(mode);
 
 		log.debug("from: {} to :{}", dateInterval.getFromDate(), dateInterval.getToDate());
 		log.debug("timeDetail: {}", timeDetail.getKeyname());
