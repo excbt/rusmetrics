@@ -28,7 +28,7 @@ public class WidgetServiceUtils {
 	 * @param mode
 	 * @return
 	 */
-	public static Pair<LocalDateTime, LocalDateTime> calculateDatePairs(ZonedDateTime dateTime, String mode) {
+	public static Pair<LocalDateTime, LocalDateTime> calculateModeDatePairs(ZonedDateTime dateTime, String mode) {
 
 		ZonedDateTime endOfDay = dateTime.truncatedTo(ChronoUnit.DAYS).plusDays(1).minusSeconds(1);
 

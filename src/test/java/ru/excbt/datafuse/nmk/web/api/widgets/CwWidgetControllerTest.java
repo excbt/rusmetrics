@@ -21,4 +21,14 @@ public class CwWidgetControllerTest extends AnyControllerTest {
 		_testGetJson(String.format("/api/subscr/widgets/cw/%d/chart/data/week", TestWidgetConstants.CW_ZPOINT_ID));
 	}
 
+	@Test
+	public void testWidgetChartDataToday() throws Exception {
+		_testGetJson(String.format("/api/subscr/widgets/cw/%d/chart/data/today", TestWidgetConstants.CW_ZPOINT_ID));
+	}
+
+	@Test
+	public void testWidgetChartDataYesterday() throws Exception {
+		_testGetJson(String.format("/api/subscr/widgets/cw/%d/chart/data/yesterday", TestWidgetConstants.CW_ZPOINT_ID));
+	}
+
 }

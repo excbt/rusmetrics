@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Sets;
-
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.service.widget.CwWidgetService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -34,8 +32,6 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 public class CwWidgetController extends WidgetController {
 
 	private static final Logger log = LoggerFactory.getLogger(CwWidgetController.class);
-
-	private final static String[] availableModes = { "WEEK" };
 
 	@Inject
 	private CwWidgetService cwWidgetService;
@@ -54,7 +50,7 @@ public class CwWidgetController extends WidgetController {
 			responseForbidden();
 		}
 
-		if (mode == null || !Sets.newHashSet(availableModes).contains(mode.toUpperCase())) {
+		if (mode == null || !cwWidgetService.getAvailableModes().contains(mode.toUpperCase())) {
 			return responseBadRequest();
 		}
 

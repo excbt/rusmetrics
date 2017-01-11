@@ -96,7 +96,7 @@ public class HwWidgetService extends AbstractService {
 		checkArgument(contZpointId != null && contZpointId > 0);
 		checkArgument(availableModesCollection.contains(mode));
 
-		Pair<LocalDateTime, LocalDateTime> datePairs = WidgetServiceUtils.calculateDatePairs(dateTime, mode);
+		Pair<LocalDateTime, LocalDateTime> datePairs = WidgetServiceUtils.calculateModeDatePairs(dateTime, mode);
 
 		if (datePairs == null) {
 			throw new UnsupportedOperationException();
