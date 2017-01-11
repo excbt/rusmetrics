@@ -5,7 +5,6 @@ package ru.excbt.datafuse.nmk.data.service.widget;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +12,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
  * 
@@ -96,20 +94,21 @@ public class HwWidgetService extends AbstractService {
 		checkArgument(contZpointId != null && contZpointId > 0);
 		checkArgument(availableModesCollection.contains(mode));
 
-		Pair<LocalDateTime, LocalDateTime> datePairs = WidgetServiceUtils.calculateModeDatePairs(dateTime, mode);
+		//Pair<LocalDateTime, LocalDateTime> datePairs = WidgetServiceUtils.calculateModeDatePairs(dateTime, mode);
 
-		if (datePairs == null) {
+		DateInterval dateInterval = WidgetServiceUtils.calculateModeDateInterval(dateTime, mode);
+
+		if (dateInterval == null) {
 			throw new UnsupportedOperationException();
 		}
 
-		TimeDetailKey timeDetail = "WEEK".equals(mode) ? TimeDetailKey.TYPE_24H : TimeDetailKey.TYPE_1H;
+		TimeDetailKey timeDetail = WidgetServiceUtils.getDetailTypeKey(mode);
 
-		log.debug("from: {} to :{}", LocalDateUtils.asDate(datePairs.getLeft()),
-				LocalDateUtils.asDate(datePairs.getRight()));
+		log.debug("from: {} to :{}", dateInterval.getFromDate(), dateInterval.getToDate());
 		log.debug("timeDetail: {}", timeDetail.getKeyname());
 
 		List<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZpointId, timeDetail,
-				LocalDateUtils.asDate(datePairs.getLeft()), LocalDateUtils.asDate(datePairs.getRight()));
+				dateInterval.getFromDate(), dateInterval.getToDate());
 
 		return ObjectFilters.deletedFilter(result);
 

@@ -7,9 +7,11 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 
+import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
-public class DatePeriod {
+@Deprecated
+public class DatePeriod implements DateInterval {
 
 	public static class Builder {
 
@@ -60,8 +62,8 @@ public class DatePeriod {
 
 	private static DateTime endOfDay(DateTime dateTime) {
 		checkNotNull(dateTime);
-		DateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
+		DateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+				.withMillisOfSecond(999);
 		return endOfDay;
 	}
 
@@ -72,8 +74,7 @@ public class DatePeriod {
 	}
 
 	public static DatePeriod lastWeek() {
-		DatePeriod result = builder()
-				.dateFrom(startOfDay(DateTime.now().minusWeeks(1)))
+		DatePeriod result = builder().dateFrom(startOfDay(DateTime.now().minusWeeks(1)))
 				.dateTo(endOfDay(DateTime.now())).build();
 		return result;
 	}
@@ -106,8 +107,7 @@ public class DatePeriod {
 		if (dateTimeFrom == null || dateTimeTo == null) {
 			return false;
 		}
-		return dateTimeFrom.isBefore(dateTimeTo)
-				|| dateTimeFrom.isEqual(dateTimeTo);
+		return dateTimeFrom.isBefore(dateTimeTo) || dateTimeFrom.isEqual(dateTimeTo);
 	}
 
 	public boolean isValid() {
@@ -140,8 +140,29 @@ public class DatePeriod {
 
 	@Override
 	public String toString() {
-		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo="
-				+ dateTimeTo + "]";
+		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo=" + dateTimeTo + "]";
 	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.DateInterval#getFromDate()
+	 */
+	@Override
+	public Date getFromDate() {
+		// TODO Auto-generated method stub
+		return getDateFrom();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.DateInterval#getToDate()
+	 */
+	@Override
+	public Date getToDate() {
+		// TODO Auto-generated method stub
+		return getDateTo();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.DateInterval#getFromDate()
+	 */
 
 }

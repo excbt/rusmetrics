@@ -35,6 +35,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
+import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
@@ -97,14 +98,14 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataElCons> selectConsByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
-			LocalDatePeriod localDatePeriod) {
+			DateInterval localDatePeriod) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(localDatePeriod);
 		checkArgument(localDatePeriod.isValidEq(), "LocalDatePeriod is invalid");
 
 		return contServiceDataElConsRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(),
-				localDatePeriod.getDateFrom(), localDatePeriod.getDateTo());
+				localDatePeriod.getFromDate(), localDatePeriod.getToDate());
 
 	}
 
@@ -623,9 +624,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 			List<Pair<String, Long>> idServiceTypePairs) {
 		checkArgument(idServiceTypePairs != null);
 
-		List<Long> contZPointIds = idServiceTypePairs.stream()
-				.filter(i -> EL_SERVICE_TYPE_SET.contains(i.getLeft())).map(i -> i.getRight())
-				.collect(Collectors.toList());
+		List<Long> contZPointIds = idServiceTypePairs.stream().filter(i -> EL_SERVICE_TYPE_SET.contains(i.getLeft()))
+				.map(i -> i.getRight()).collect(Collectors.toList());
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
 				? ContServiceDataUtils.collectContZPointTimeDetailTypes(

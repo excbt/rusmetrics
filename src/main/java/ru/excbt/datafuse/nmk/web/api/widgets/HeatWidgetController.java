@@ -50,7 +50,7 @@ public class HeatWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getHeatWidgetTemperature(
+	public ResponseEntity<?> getChartData(
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
@@ -75,7 +75,7 @@ public class HeatWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZpointStatus(
+	public ResponseEntity<?> getStatus(
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {

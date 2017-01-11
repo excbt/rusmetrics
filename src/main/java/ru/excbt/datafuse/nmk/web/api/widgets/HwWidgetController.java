@@ -54,7 +54,7 @@ public class HwWidgetController extends WidgetController {
 	 * @return
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZpointStatus(
+	public ResponseEntity<?> getStatus(
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {

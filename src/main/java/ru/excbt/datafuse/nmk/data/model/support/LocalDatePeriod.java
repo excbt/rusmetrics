@@ -9,9 +9,10 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
-public class LocalDatePeriod {
+public class LocalDatePeriod implements DateInterval {
 
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
 	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_TEMPLATE);
@@ -198,6 +199,22 @@ public class LocalDatePeriod {
 
 	public String getDateToStr() {
 		return dateTimeTo == null ? null : dateTimeTo.toString(DATE_TEMPLATE);
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.DateInterval#getFromDate()
+	 */
+	@Override
+	public Date getFromDate() {
+		return getDateFrom();
+	}
+
+	/* (non-Javadoc)
+	 * @see ru.excbt.datafuse.nmk.data.model.support.DateInterval#getToDate()
+	 */
+	@Override
+	public Date getToDate() {
+		return getDateTo();
 	}
 
 }
