@@ -20,6 +20,26 @@ app.service('indicatorSvc', function (mainSvc) {
 // ************************************************************************    
     var intotalColumns = [
             {
+                header : "ГКал на входе",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
+                fieldName: "h_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "ГКал на выходе",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
+                fieldName: "h_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
                 header : "Потребление тепловой энергии, ГКал",
 //                header : "",
                 class : "col-xs-1 col-md-1 nmc-distinguish",
@@ -52,6 +72,65 @@ app.service('indicatorSvc', function (mainSvc) {
                 class : "col-xs-1 col-md-1 nmc-distinguish",
 //                class : "col-md-1 nmc-th-invisible",
                 fieldName: "m_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "Объем подачи, м3",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+                fieldName: "v_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "Объем обратки, м3",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+                fieldName: "v_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "Разница объемов, м3",
+//                header : "",
+                
+                class : "col-xs-1 col-md-1 nmc-distinguish",
+//                class : "col-md-1 nmc-th-invisible",
+                fieldName: "v_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "Давление на подаче, Мпа",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
+                fieldName: "p_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "Давление на обратке, Мпа",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
+                fieldName: "p_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title": ""
+            },
+            {
+                header : "Разность давлений, Мпа",
+//                header : "",
+                class : "col-xs-1 col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
+                fieldName: "p_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title": ""
@@ -99,85 +178,6 @@ app.service('indicatorSvc', function (mainSvc) {
                 "imgclass": "",
                 "title": "",
                 dataType: "temperature"
-            },
-            {
-                header : "Объем подачи, м3",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-                fieldName: "v_in",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "Объем обратки, м3",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-                fieldName: "v_out",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "Разница объемов, м3",
-//                header : "",
-                
-                class : "col-xs-1 col-md-1 nmc-distinguish",
-//                class : "col-md-1 nmc-th-invisible",
-                fieldName: "v_delta",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "ГКал на входе",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-//                class : "col-md-1 nmc-th-invisible",
-                fieldName: "h_in",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "ГКал на выходе",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-//                class : "col-md-1 nmc-th-invisible",
-                fieldName: "h_out",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "Давление на подаче, Мпа",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-//                class : "col-md-1 nmc-th-invisible",
-                fieldName: "p_in",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "Давление на обратке, Мпа",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-//                class : "col-md-1 nmc-th-invisible",
-                fieldName: "p_out",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
-            },
-            {
-                header : "Разность давлений, Мпа",
-//                header : "",
-                class : "col-xs-1 col-md-1",
-//                class : "col-md-1 nmc-th-invisible",
-                fieldName: "p_delta",
-                "imgpath" : "",
-                "imgclass": "",
-                "title": ""
             }];
 
     var indicatorColumns = [
@@ -189,6 +189,7 @@ app.service('indicatorSvc', function (mainSvc) {
             "1h": "1h",
             "24h" : "24h",
             "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: false,
             isvisible: 'isvisible'
         },
@@ -200,117 +201,9 @@ app.service('indicatorSvc', function (mainSvc) {
             "1h": "1h",
             "24h" : "24h",
             "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: false,
             isvisible: 'isvisible'
-        },
-        {
-            header : "Потребление тепловой энергии, ГКал",
-            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
-            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
-            fieldName: "h_delta",
-            "1h": "1h",
-            "24h" : "24h",
-            "1h_abs" : "1h_abs",
-            istunable: "istunable"
-        },
-        {
-            header : "Масса подачи, т",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "m_in",
-            "1h": "1h",
-            "24h" : "24h",
-            "1h_abs" : "1h_abs",
-            istunable: "istunable"
-        },
-        {
-            header : "Масса обратки, т",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "m_out",
-            "1h": "1h",
-            "24h" : "24h",
-            "1h_abs" : "1h_abs",
-            istunable: "istunable"
-        },
-        {
-            header : "Разность масс, т",
-            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
-            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
-            fieldName: "m_delta",
-            "1h": "1h",
-            "24h" : "24h",
-            istunable: "istunable"
-        },
-        {
-            header : "Темп. подачи",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "t_in",
-            dataType: "temperature",
-            "1h": "1h",
-            "24h" : "24h",
-            istunable: "istunable"
-        },
-        {
-            header : "Темп. обратки",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "t_out",
-            dataType: "temperature",
-            "1h": "1h",
-            "24h" : "24h",
-            istunable: "istunable"
-        },
-        {
-            header : "Темп. ХВС",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "t_cold",
-            dataType: "temperature",
-            "1h": "1h",
-            "24h" : "24h",
-            istunable: "istunable"
-        },
-        {
-            header : "Темп. окр. среды",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "t_outdoor",
-            dataType: "temperature",
-            "1h": "1h",
-            "24h" : "24h",
-            istunable: "istunable"
-        },
-
-        {
-            header : "Объем подачи, м3",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "v_in",
-            "1h": "1h",
-            "24h" : "24h",
-            "1h_abs" : "1h_abs",
-            istunable: "istunable"
-        },
-        {
-            header : "Объем обратки, м3",
-            headerClass : "col-xs-1 col-md-1",
-            dataClass : "col-xs-1 col-md-1",
-            fieldName: "v_out",
-            "1h": "1h",
-            "24h" : "24h",
-            "1h_abs" : "1h_abs",
-            istunable: "istunable"
-        },
-        {
-            header : "Разность объемов, м3",
-            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
-            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
-            fieldName: "v_delta",
-            "1h": "1h",
-            "24h" : "24h",
-            istunable: "istunable"
         },
         {
             header : "ГКал на входе",
@@ -320,6 +213,7 @@ app.service('indicatorSvc', function (mainSvc) {
             "1h": "1h",
             "24h" : "24h",
             "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: "istunable"
         },
         {
@@ -330,6 +224,84 @@ app.service('indicatorSvc', function (mainSvc) {
             "1h": "1h",
             "24h" : "24h",
             "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Потребление тепловой энергии, ГКал",
+            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
+            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
+            fieldName: "h_delta",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Масса подачи, т",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "m_in",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Масса обратки, т",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "m_out",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Разность масс, т",
+            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
+            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
+            fieldName: "m_delta",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Объем подачи, м3",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "v_in",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Объем обратки, м3",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "v_out",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Разность объемов, м3",
+            headerClass : "col-xs-1 col-md-1 nmc-distinguish",
+            dataClass : "col-xs-1 col-md-1 nmc-distinguish",
+            fieldName: "v_delta",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: "istunable"
         },
         {
@@ -339,6 +311,8 @@ app.service('indicatorSvc', function (mainSvc) {
             fieldName: "p_in",
             "1h": "1h",
             "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: "istunable"
         },
         {
@@ -348,6 +322,8 @@ app.service('indicatorSvc', function (mainSvc) {
             fieldName: "p_out",
             "1h": "1h",
             "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: "istunable"
         },
         {
@@ -357,6 +333,56 @@ app.service('indicatorSvc', function (mainSvc) {
             fieldName: "p_delta",
             "1h": "1h",
             "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Темп. подачи",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "t_in",
+            dataType: "temperature",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Темп. обратки",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "t_out",
+            dataType: "temperature",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Темп. ХВС",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "t_cold",
+            dataType: "temperature",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
+            istunable: "istunable"
+        },
+        {
+            header : "Темп. окр. среды",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
+            fieldName: "t_outdoor",
+            dataType: "temperature",
+            "1h": "1h",
+            "24h" : "24h",
+            "1h_abs" : "1h_abs",
+            "24h_abs" : "24h_abs",
             istunable: "istunable"
         }
     ];

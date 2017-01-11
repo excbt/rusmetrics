@@ -1,4 +1,4 @@
-/*jslint node: true, es5: true, white: true, nomen: true*/
+/*jslint node: true, es5: true, white: true, nomen: true, eqeq: true*/
 /*global angular, moment, $*/
 'use strict';
 angular.module('portalNMC')
