@@ -44,4 +44,21 @@ public interface DateInterval {
 	public default boolean isInvalidEq() {
 		return !isValidEq();
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+
+	public default String getFromDateStr() {
+		return DateFormatUtils.formatDateTime(getFromDate());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public default String getToDateStr() {
+		return DateFormatUtils.formatDateTime(getToDate());
+	}
 }

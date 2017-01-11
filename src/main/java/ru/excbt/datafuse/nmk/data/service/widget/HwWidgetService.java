@@ -55,33 +55,6 @@ public class HwWidgetService extends WidgetService {
 
 	/**
 	 * 
-	 * @param dateTime
-	 * @param mode
-	 * @return
-	 */
-	//	private Pair<LocalDateTime, LocalDateTime> calculateDatePairs(ZonedDateTime dateTime, String mode) {
-	//
-	//		ZonedDateTime endOfDay = dateTime.truncatedTo(ChronoUnit.DAYS).plusDays(1).minusSeconds(1);
-	//
-	//		if ("TODAY".equals(mode)) {
-	//			return Pair.of(dateTime.truncatedTo(ChronoUnit.DAYS).toLocalDateTime(), endOfDay.toLocalDateTime());
-	//		}
-	//
-	//		if ("YESTERDAY".equals(mode)) {
-	//			return Pair.of(dateTime.minusDays(1).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
-	//					endOfDay.minusDays(1).toLocalDateTime());
-	//		}
-	//
-	//		if ("WEEK".equals(mode)) {
-	//			return Pair.of(dateTime.minusDays(7).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
-	//					endOfDay.toLocalDateTime());
-	//		}
-	//
-	//		return null;
-	//	}
-
-	/**
-	 * 
 	 * @param contZpointId
 	 * @param dateTime
 	 * @param mode
@@ -92,9 +65,6 @@ public class HwWidgetService extends WidgetService {
 			String mode) {
 
 		checkArgument(contZpointId != null && contZpointId > 0);
-		checkArgument(availableModesCollection.contains(mode));
-
-		//Pair<LocalDateTime, LocalDateTime> datePairs = WidgetServiceUtils.calculateModeDatePairs(dateTime, mode);
 
 		DateInterval dateInterval = calculateModeDateInterval(dateTime, mode);
 
@@ -104,8 +74,8 @@ public class HwWidgetService extends WidgetService {
 
 		TimeDetailKey timeDetail = getDetailTypeKey(mode);
 
-		log.debug("from: {} to :{}", dateInterval.getFromDate(), dateInterval.getToDate());
-		log.debug("timeDetail: {}", timeDetail.getKeyname());
+		log.debug("from {} to {}", dateInterval.getFromDateStr(), dateInterval.getToDateStr());
+		log.debug("timeDetail {}", timeDetail.getKeyname());
 
 		List<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZpointId, timeDetail,
 				dateInterval.getFromDate(), dateInterval.getToDate());

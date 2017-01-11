@@ -16,11 +16,6 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
  */
 public class HwWidgetControllerTest extends AnyControllerTest {
 
-	//	@Test
-	//	public void testHeatWidgetChart() throws Exception {
-	//		_testGetJson("/api/subscr/widgets/hw/71843421/chart/data/week");
-	//	}
-
 	@Test
 	public void testHwWidgetStatus() throws Exception {
 		_testGetJson(String.format("/api/subscr/widgets/hw/%d/status", TestWidgetConstants.HW_ZPOINT_ID));

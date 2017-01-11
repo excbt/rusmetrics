@@ -73,8 +73,8 @@ public class ElWidgetService extends WidgetService {
 
 		TimeDetailKey timeDetail = getDetailTypeKey(mode);
 
-		log.debug("from: {} to :{}", dateInterval.getFromDate(), dateInterval.getToDate());
-		log.debug("timeDetail: {}", timeDetail.getKeyname());
+		log.debug("from {} to {}", dateInterval.getFromDateStr(), dateInterval.getToDateStr());
+		log.debug("timeDetail {}", timeDetail.getKeyname());
 
 		List<ContServiceDataElCons> result = contServiceDataElService.selectConsByContZPoint(contZpointId, timeDetail,
 				dateInterval);
