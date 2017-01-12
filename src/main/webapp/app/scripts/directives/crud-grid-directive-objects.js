@@ -851,26 +851,27 @@ angular.module('portalNMC')
                             "</div>";
                         
                         trHTML += "</div>";
-                        trHTML += "<div class='col-xs-6'>";                        
-                        trHTML += "<div ng-controller='widgetContainer'>" +
-                              "<span ng-show='title' ng-bind='title'></span>" +                              
-                              "<div ng-show='isLoading'>Загрузка...</div>" +
-                              "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
-                              "<ng-widget src=\"'" + zpointWidget.type1 + 
-                            "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
-                                                        
-                            "', 'contZpointId': '" + zpoint.id +  
-                            "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +  
-                            "', 'zpointNumber': '" + zpoint.zpointNumber +
-                            "', 'zpointType': '" + zpoint.zpointType +
-                            "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
-                            "', 'contObjectId': '" + object.id + 
-                            "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
-                            "', 'isImpulse': '" + zpoint.isImpulse + 
-                            "', 'isManualLoading': '" + zpoint.isManualLoading + 
-                            "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
-                            "</div>";
-                        
+                        trHTML += "<div class='col-xs-6'>";
+                        if (zpointWidget.type1 != "chart") {
+                            trHTML += "<div ng-controller='widgetContainer'>" +
+                                  "<span ng-show='title' ng-bind='title'></span>" +                              
+                                  "<div ng-show='isLoading'>Загрузка...</div>" +
+                                  "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
+                                  "<ng-widget src=\"'" + zpointWidget.type1 + 
+                                "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
+
+                                "', 'contZpointId': '" + zpoint.id +  
+                                "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +  
+                                "', 'zpointNumber': '" + zpoint.zpointNumber +
+                                "', 'zpointType': '" + zpoint.zpointType +
+                                "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
+                                "', 'contObjectId': '" + object.id + 
+                                "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
+                                "', 'isImpulse': '" + zpoint.isImpulse + 
+                                "', 'isManualLoading': '" + zpoint.isManualLoading + 
+                                "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+                                "</div>";
+                        };
                         trHTML += "</div>";//col-xs-6
                         trHTML += "</div>";//row
 //                        if (ind % 2 !== 0) {
