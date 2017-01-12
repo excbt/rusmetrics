@@ -1726,6 +1726,9 @@ angular.module('portalNMC')
 //console.log("isDirectDevice");
                     $scope.selectedObject(objId);
                     var curZpoint = null;
+                    if (mainSvc.checkUndefinedNull($scope.currentObject) || mainSvc.checkUndefinedNull($scope.currentObject.zpoints)) {
+                        return false;
+                    }
                     $scope.currentObject.zpoints.some(function(element){
                         if (element.id === zpointId){
                             curZpoint = angular.copy(element);
