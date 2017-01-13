@@ -42,7 +42,7 @@ angular.module('portalNMC')
                 
                 $scope.messages.groupMenuHeader = "Полный список объектов";
                 
-                $scope.messages.setIndicatorInterface = "Настройка интефейса просмотра показаний";
+                $scope.messages.setIndicatorInterface = "Настройка интерфейса просмотра показаний";
                 
                     //object settings
                 $scope.objectCtrlSettings = {};
