@@ -1440,6 +1440,27 @@ console.log(e);
 // ********************************************************************************************
                 //  end TREEVIEW
 //*********************************************************************************************
+                
+ // ********************************************************************************************
+                //  Print tenant info
+//*********************************************************************************************               
+                $scope.printTenant = function () {
+                    $('body').addClass('printSelected'); //добавляем класс <body>      
+                    $('body').append("<div class='printSelection'></div>"); //создаем "призрачный" блок для печати
+                    $('#showTenantOptionModal').clone().appendTo('.printSelection');
+                    //$('.innerBlock img').clone().appendTo('.printSelection');  // вставляем в блок то, что нужно вывести на печать (в данном случае лишь картинку)        
+                    //$("<p><img src='../images/logo-grey.jpg'></p>").insertBefore('.printSelection img'); // в шаблон печати добавляем сверху логотип компании      
+                    window.print(); // выводи на печать      
+                    window.setTimeout(pageCleaner, 0); // затираем следы 
+                }
+
+                function pageCleaner() {
+                    $('body').removeClass('printSelected');         
+                    $('.printSelection').remove(); 
+                }
+// ********************************************************************************************
+                //  end Print tenant info
+//*********************************************************************************************                                                  
                 //set focus on first input element when window will be opened                
                 $('#showTreeOptionModal').on('shown.bs.modal', function(){                   
                     $('#inputTreeName').focus();

@@ -1631,6 +1631,13 @@ tr.nmc-inactive-price > td {
     color: #FFFFFF;
 }
 
+/* Кнопка печати модального окна */
+.nmc-modal-button-print, .nmc-modal-button-print:hover {
+    color: #FFFFFF;
+    margin-top: -12px !important;
+/*    margin-right: 10px;*/
+}
+
 /* Кнопка Удалить ака Красивый крестик*/
 .nmc-remove-button{
     width: 12px;
@@ -2821,3 +2828,17 @@ input[type="checkbox"] {
 .table-hover > tbody > tr.active:hover > th {
   background-color: #D2D2D2 !important;
 }
+
+/*--- Настройка печати ---*/
+@media print {         
+    .printSelected > * {
+        display: none; 
+    }
+    .printSelected > .printSelection { 
+        display: block; 
+    }
+}      
+.printSelection {
+    display: none;
+}
+/*---  ---*/
