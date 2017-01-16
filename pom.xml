@@ -376,8 +376,8 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>		
-		
+		</dependency>
+
 
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -420,7 +420,15 @@
 			<artifactId>modelmapper-spring-boot-starter</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-		
+
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+
 	</dependencies>
 
 
