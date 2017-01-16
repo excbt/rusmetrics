@@ -29,14 +29,23 @@
                 </span>
             </div>
 -->
-            <div class = "col-xs-3"
-                 style = "">
-<!--
-                <a href="" style="font-size: 12px; float: right;"
-                   ng-click = "openNotices()">
-                    Открыть уведомления
-                </a>
--->
+            <div class = "col-xs-4"
+                 style = "text-align: right">                
+                <span ng-style="{'color': data.currentHwTempColor}">
+                    t <sub>гвс</sub>, &deg;C = 
+                </span>                
+                <img ng-show = "data.currentHwTemp === null"
+                     src = "widgets/zpointHw/no-temp.png"
+                     width = "20"
+                     height = "20"
+                     title = "Нет данных о текущей температуре ГВС"                  
+                     />
+                
+                <span ng-show = "data.currentHwTemp !== null" 
+                      class = ""
+                      ng-style="{'color': data.currentHwTempColor}">
+                      <span ng-bind = "data.currentHwTemp"></span>
+                </span>
             </div>
         </div>
         <div class="row">            
@@ -54,16 +63,12 @@
                 </a>
             </div>
 -->
+<!--
             <div class = "col-xs-3"
                  style = "padding-right: 0; padding-top: 12px">                
                 <span ng-style="{'color': data.currentHwTempColor}">
                     t <sub>гвс</sub>, &deg;C = 
-                </span>
-<!--
-                <span ng-show = "data.currentHwTemp === null" 
-                      class = "glyphicon glyphicon-ban-circle"
-                      title = "Нет данных о текущей температуре окружающей среды"></span>
--->                
+                </span>                
                 <img ng-show = "data.currentHwTemp === null"
                      src = "widgets/zpointHw/no-temp.png"
                      width = "20"
@@ -75,11 +80,10 @@
                       class = ""
                       ng-style="{'color': data.currentHwTempColor}">
                       <span ng-bind = "data.currentHwTemp"></span>
-                    
-<!--                    <i class="fa fa-thermometer-half fa-lg" aria-hidden="true"></i>-->
                 </span>
             </div>
-            <div class = "col-xs-5">
+-->
+            <div class = "col-xs-offset-3 col-xs-5">
                 <ul class="nav nav-pills" style="float: right;">
                     <li role="presentation" ng-repeat="mode in data.MODES"
                         ng-class="mode.modeClass">
