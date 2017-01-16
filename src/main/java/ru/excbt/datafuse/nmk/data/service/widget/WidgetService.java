@@ -50,7 +50,7 @@ public abstract class WidgetService extends AbstractService {
 	 * @param mode
 	 * @return
 	 */
-	protected Pair<LocalDateTime, LocalDateTime> calculateModeDatePairs(ZonedDateTime dateTime, String mode) {
+	public static Pair<LocalDateTime, LocalDateTime> calculateModeDatePairs(ZonedDateTime dateTime, String mode) {
 
 		ZonedDateTime endOfDay = dateTime.truncatedTo(ChronoUnit.DAYS).plusDays(1).minusSeconds(1);
 
@@ -79,7 +79,8 @@ public abstract class WidgetService extends AbstractService {
 						endOfDay.toLocalDateTime());
 				// Current Month	
 			} else {
-				return Pair.of(dateTime.truncatedTo(ChronoUnit.MONTHS).toLocalDateTime(), endOfDay.toLocalDateTime());
+				return Pair.of(dateTime.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
+						endOfDay.toLocalDateTime());
 			}
 		}
 
@@ -97,7 +98,7 @@ public abstract class WidgetService extends AbstractService {
 	 * @param mode
 	 * @return
 	 */
-	protected DateInterval calculateModeDateInterval(ZonedDateTime dateTime, String mode) {
+	public static DateInterval calculateModeDateInterval(ZonedDateTime dateTime, String mode) {
 		Pair<LocalDateTime, LocalDateTime> preResult = calculateModeDatePairs(dateTime, mode);
 		return preResult != null ? new LocalDateTimeInterval(preResult) : null;
 	}
