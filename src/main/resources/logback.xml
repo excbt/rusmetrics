@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true">
 
-
+<!-- 	<include resource="org/springframework/boot/logging/logback/base.xml"/> -->
 	<!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under the 
 		key "bySecond" into the logger context. This value will be available to all 
 		subsequent configuration elements. -->
@@ -44,7 +44,10 @@
 	
 	<logger name="org.hibernate.SQL" level="info" />
 	
-	<logger name="org.springframework.web" level="info" />
+	<logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+	<logger name="org.hibernate.engine.internal" level="WARN"/>
+		
+	<logger name="org.springframework.web" level="debug" />
 
 	<logger name="org.springframework.security.saml" level="info" />
 	

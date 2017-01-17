@@ -15,7 +15,8 @@ import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+//@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -25,8 +26,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
 	@Autowired
-	public void registerGlobalAuthentication(AuthenticationManagerBuilder auth)
-			throws Exception {
+	public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(userAuthenticationProvider);
 	}
 
@@ -34,41 +34,29 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		// выключаем защиту от CSRF атак
-		http.csrf()
-				.disable()
+		http.csrf().disable()
 				// указываем правила запросов
 				// по которым будет определятся доступ к ресурсам и остальным
 				// данным
-				.authorizeRequests().antMatchers("/").permitAll()
-				.antMatchers("/WEB-INF/**").denyAll()
-				.antMatchers("/app/**").authenticated()
-				.antMatchers("/api/benchmark/**").permitAll()
-				.antMatchers("/api/appStatus/**").permitAll()
-				.antMatchers("/api/securityCheck/**").permitAll()
+				.authorizeRequests().antMatchers("/").permitAll().antMatchers("/WEB-INF/**").denyAll()
+				.antMatchers("/app/**").authenticated().antMatchers("/api/benchmark/**").permitAll()
+				.antMatchers("/api/appStatus/**").permitAll().antMatchers("/api/securityCheck/**").permitAll()
 				.antMatchers("/api/**").access(RolesAccess.API_SUBSR_ACCESS)//.authenticated()
-				.antMatchers("/api/rma/**").access(RolesAccess.API_RMA_ACCESS)
-				.antMatchers("/resources/**").permitAll()
+				.antMatchers("/api/rma/**").access(RolesAccess.API_RMA_ACCESS).antMatchers("/resources/**").permitAll()
 
-				.antMatchers("/bower_components/**").permitAll()
-				.antMatchers("/vendor_components/**").permitAll().and();
+				.antMatchers("/bower_components/**").permitAll().antMatchers("/vendor_components/**").permitAll().and();
 
-		http
-				.sessionManagement()
-				.maximumSessions(5)
-				.sessionRegistry(getSessionRegistry())
-				.expiredUrl("/login");
+		http.sessionManagement().maximumSessions(5).sessionRegistry(getSessionRegistry()).expiredUrl("/login");
 
 		http.formLogin()
 				// указываем страницу с формой логина
 				.loginPage("/login")
 				// указываем action с формы логина
-				.loginProcessingUrl("/j_spring_security_check")
-				.defaultSuccessUrl("/app", true)
+				.loginProcessingUrl("/j_spring_security_check").defaultSuccessUrl("/app/", true)
 				// указываем URL при неудачном логине
 				.failureUrl("/login?error")
 				// Указываем параметры логина и пароля с формы логина
-				.usernameParameter("j_username")
-				.passwordParameter("j_password")
+				.usernameParameter("j_username").passwordParameter("j_password")
 				.successHandler(authenticationSuccessHandler)
 				// даем доступ к форме логина всем
 				.permitAll();

@@ -29,11 +29,16 @@ import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 @Import({ PropertyConfig.class })
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
+	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
+			"classpath:/resources/", "classpath:/static/", "classpath:/public/" };
+
 	@Autowired
 	private LoginInterceptor loginInterceptor;
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		//registry.addResourceHandler("/app").addResourceLocations("/app/index.html");
+		registry.addResourceHandler("/app/**").addResourceLocations("/app/");
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("/api/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("/bower_components/**").addResourceLocations("/app/bower_components/");
@@ -90,6 +95,15 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 		registry.addInterceptor(webContentInterceptor);
 	}
+
+	/**
+	 * 
+	 * @param registry
+	 */
+	//	@Override
+	//	public void addViewControllers(ViewControllerRegistry registry) {
+	//		registry.addViewController("/app").setViewName("forward:/app/index.html");
+	//	}
 
 	// @Override
 	// public void configureMessageConverters(List<HttpMessageConverter<?>>

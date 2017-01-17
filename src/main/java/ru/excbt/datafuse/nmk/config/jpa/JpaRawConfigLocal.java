@@ -1,30 +1,30 @@
 package ru.excbt.datafuse.nmk.config.jpa;
 
-import java.util.Properties;
-
 import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.postgresql.ds.PGPoolingDataSource;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@PropertySource(value = "classpath:META-INF/data-access.properties")
+@EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository",
 		entityManagerFactoryRef = "entityManagerFactoryRaw", transactionManagerRef = "transactionManagerRaw")
-@ComponentScan(basePackages = { "ru.excbt.datafuse.raw.data" })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.raw" })
 public class JpaRawConfigLocal {
 
 	@Autowired
@@ -33,17 +33,11 @@ public class JpaRawConfigLocal {
 	/**
 	 * 
 	 * @return
-	 * @throws NamingException
 	 */
-	@Bean(name = "dataSourceRaw", destroyMethod = "")
+	@Bean(name = "dataSourceRaw")
+	@ConfigurationProperties(prefix = "raw.datasource")
 	public DataSource dataSourceRaw() {
-
-		PGPoolingDataSource source = new PGPoolingDataSource();
-		source.setUrl(env.getProperty("dataSourceRaw.url"));
-		source.setUser(env.getProperty("dataSourceRaw.username"));
-		source.setPassword(env.getProperty("dataSourceRaw.password"));
-		source.setMaxConnections(10);
-		return source;
+		return DataSourceBuilder.create().build();
 	}
 
 	/**
@@ -52,20 +46,11 @@ public class JpaRawConfigLocal {
 	 * @throws NamingException
 	 */
 	@Bean(name = "entityManagerFactoryRaw")
-	public EntityManagerFactory entityManagerFactoryRaw() {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactoryRaw(EntityManagerFactoryBuilder builder,
+			@Qualifier("dataSourceRaw") DataSource dataSource) {
 
-		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-
-		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setJpaVendorAdapter(vendorAdapter);
-		emf.setPersistenceUnitName("dataraw");
-		Properties hibernateProperties = HibernateProps.readEnvProps(env,
-				"dataSourceRaw");
-		emf.setJpaProperties(hibernateProperties);
-		emf.setDataSource(dataSourceRaw());
-		emf.setPackagesToScan("ru.excbt.datafuse.raw.data.model");
-		emf.afterPropertiesSet();
-		return emf.getObject();
+		return builder.dataSource(dataSource).packages("ru.excbt.datafuse.raw.data.model").persistenceUnit("dataraw")
+				.build();
 	}
 
 	/**
@@ -75,10 +60,43 @@ public class JpaRawConfigLocal {
 	 */
 	@Bean(name = "transactionManagerRaw")
 	@Autowired
-	public PlatformTransactionManager transactionManagerRaw() {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactoryRaw());
-		return transactionManager;
+	public PlatformTransactionManager transactionManagerRaw(
+			@Qualifier("entityManagerFactoryRaw") EntityManagerFactory entityManagerFactory) {
+		return new JpaTransactionManager(entityManagerFactory);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	//	@Bean
+	//	public JasperDatabaseConnectionSettings jasperDatabaseConnectionSettings() {
+	//		return new JasperDatabaseConnectionSettings() {
+	//
+	//			@Override
+	//			public String getDatasourceUrl() {
+	//				return env.getProperty("jasper.dataSource.url");
+	//			}
+	//
+	//			@Override
+	//			public String getDatasourceUsername() {
+	//				return env.getProperty("jasper.dataSource.username");
+	//			}
+	//
+	//			@Override
+	//			public String getDatasourcePassword() {
+	//				return env.getProperty("jasper.dataSource.password");
+	//			}
+	//		};
+	//	}
 
 }
