@@ -190,14 +190,16 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
         };
         $scope.lineChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
         $scope.lineChart.options = {
-            /*responsive: false,*/
+            /*responsive: false,*/            
             elements: {
                 line: {
-                    fill: false
+                    fill: false,
+                    tension: 0
                 }
             },
             legend: {
-                display: true
+                display: true,
+                position: 'top'
             },
             tooltips: {
                 /*enabled: false,

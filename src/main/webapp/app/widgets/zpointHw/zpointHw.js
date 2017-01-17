@@ -192,7 +192,8 @@ angular.module('zpointHwWidget', ['angularWidget', 'chart.js'])
             /*responsive: false,*/
             elements: {
                 line: {
-                    fill: false
+                    fill: false,
+                    tension: 0
                 }
             },
             legend: {

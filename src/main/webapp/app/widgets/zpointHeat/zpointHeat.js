@@ -173,6 +173,11 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
         };
         $scope.lineChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
         $scope.lineChart.options = {
+            elements: {
+                line: {
+                    tension: 0
+                }
+            },
             legend: {
                 display: true
             },
