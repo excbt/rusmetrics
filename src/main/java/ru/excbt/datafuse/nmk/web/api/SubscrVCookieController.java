@@ -5,7 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.service.SubscrVCookieService;
+import ru.excbt.datafuse.nmk.data.service.WidgetMetaService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -26,8 +28,11 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 @RequestMapping(value = "/api/subscr/vcookie")
 public class SubscrVCookieController extends SubscrApiController {
 
-	@Autowired
+	@Inject
 	private SubscrVCookieService subscrVCookieService;
+
+	@Inject
+	private WidgetMetaService widgetMetaService;
 
 	/**
 	 * 
@@ -43,8 +48,7 @@ public class SubscrVCookieController extends SubscrApiController {
 
 		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookie(getSubscriberParam());
 
-		List<SubscrVCookie> resultList = vCookieList.stream()
-				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+		List<SubscrVCookie> resultList = vCookieList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
 				.filter(i -> vcKey == null || vcKey.equals(i.getVcKey())).collect(Collectors.toList());
 
@@ -56,8 +60,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	 * @param requestEntities
 	 * @return
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/list", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrVCookie(@RequestBody List<SubscrVCookie> requestEntities) {
 
 		checkNotNull(requestEntities);
@@ -154,8 +157,7 @@ public class SubscrVCookieController extends SubscrApiController {
 
 		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookieByUser(getSubscriberParam());
 
-		List<SubscrVCookie> resultList = vCookieList.stream()
-				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+		List<SubscrVCookie> resultList = vCookieList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
 				.filter(i -> vcKey == null || vcKey.equals(i.getVcKey())).collect(Collectors.toList());
 
@@ -167,8 +169,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	 * @param requestEntities
 	 * @return
 	 */
-	@RequestMapping(value = "/user/list", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/user/list", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrVCookieUser(@RequestBody List<SubscrVCookie> requestEntities) {
 
 		checkNotNull(requestEntities);
@@ -205,4 +206,12 @@ public class SubscrVCookieController extends SubscrApiController {
 		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> widgetList() {
+		return responseOK(() -> widgetMetaService.selectAllWidgets());
+	}
 }
