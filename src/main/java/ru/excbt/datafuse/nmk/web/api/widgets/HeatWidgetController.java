@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,12 +34,10 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 @RequestMapping(value = "/api/subscr/widgets/heat/{contZpointId}")
 public class HeatWidgetController extends WidgetController {
 
-	//	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK", "MONTH", "24" };
-
-	@Autowired
+	@Inject
 	private HeatWidgetService heatWidgetService;
 
-	@Autowired
+	@Inject
 	private ContObjectService contObjectService;
 
 	/**

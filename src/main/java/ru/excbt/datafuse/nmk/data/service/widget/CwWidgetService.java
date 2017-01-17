@@ -36,7 +36,7 @@ public class CwWidgetService extends WidgetService {
 
 	private static final Logger log = LoggerFactory.getLogger(CwWidgetService.class);
 
-	private final static MODES[] availableModes = { MODES.TODAY, MODES.YESTERDAY, MODES.WEEK };
+	private final static MODES[] availableModes = { MODES.DAY, MODES.TODAY, MODES.YESTERDAY, MODES.WEEK, MODES.MONTH };
 
 	private final static Collection<MODES> availableModesCollection = Collections
 			.unmodifiableList(Arrays.asList(availableModes));

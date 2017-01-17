@@ -37,8 +37,6 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 @RequestMapping(value = "/api/subscr/widgets/hw/{contZpointId}")
 public class HwWidgetController extends WidgetController {
 
-	private final static String[] availableModes = { "TODAY", "YESTERDAY", "WEEK" };
-
 	@Inject
 	private ContServiceDataHWaterService contServiceDataHWaterService;
 
