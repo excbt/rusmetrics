@@ -76,6 +76,9 @@ public class Widget extends AbstractPersistableEntity<Long> implements JsonModel
 	@Column(name = "deleted")
 	private int deleted;
 
+	@Column(name = "order_idx")
+	private Integer orderIdx;
+
 	/**
 	 * 
 	 * @return

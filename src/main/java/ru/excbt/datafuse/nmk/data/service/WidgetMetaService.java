@@ -3,6 +3,7 @@
  */
 package ru.excbt.datafuse.nmk.data.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,7 @@ public class WidgetMetaService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Widget> selectAllWidgets() {
 		return widgetRepository.findAll().stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.sorted(Comparator.comparing(Widget::getOrderIdx, Comparator.nullsLast(Integer::compareTo)))
 				.collect(Collectors.toList());
 	}
 

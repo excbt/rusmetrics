@@ -75,8 +75,6 @@ public class SubscrVCookieControllerTest extends RmaControllerTest {
 	@Test
 	public void testWidgetsList() throws Exception {
 		_testGetJson("/api/subscr/vcookie/widgets/list");
-
-		_testGetJson("/api/subscr/vcookie/widgets/listRaw");
 	}
 
 }
