@@ -15,6 +15,61 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
 //        });
     }])
     .controller('zpointCwWidgetCtrl', function ($scope, $http, $rootScope, widgetConfig) {
+    //data generator
+        var timeDetailTypes = {            
+            month: {
+                timeDetailType: "24h",
+                count: 30,
+                dateFormatter: function(param) {                    
+                    return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
+                }
+            },
+            day: {
+                timeDetailType: "1h",
+                count: 24,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+                }
+            },
+            week: {
+                timeDetailType: "24h",
+                count: 7,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
+                }
+            },
+            today: {
+                timeDetailType: "1h",
+                count: 24,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+                }
+            },
+            yesterday: {
+                timeDetailType: "1h",
+                count: 24,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+                }
+            }
+        };
+        function generateTestData(timeDetailType) {
+            var result = [],
+                i,
+                node;
+            for (i = 1; i <= timeDetailType.count; i += 1) {
+                node = {};
+                node.timeDetailType = timeDetailType.timeDetailType;
+                node.v_in = Math.random()*10 + 1;
+                var v_delta = Math.random();
+                node.v_out = node.v_in - v_delta;
+                node.dataDateString = timeDetailType.dateFormatter(i);
+                result.push(node);
+            }
+            //console.log(result);
+            return result;
+        }
+    //end data generator
         moment.locale('ru', {
             months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
             monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
@@ -84,7 +139,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
         $scope.data.imgPath = "widgets/zpointCw/snowflake.png";
-        $scope.data.zpointStatus = "";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
+        $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
         $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
         $scope.data.contZpointId = $scope.widgetOptions.contZpointId;
     
@@ -214,7 +269,11 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
     
         function getDataSuccessCallback(rsp) {
 //            console.log(rsp.data);
-            if (!angular.isArray(rsp.data) || rsp.data.length === 0) {
+            var tmpData = rsp.data;
+            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+                tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
+            }
+            if (!angular.isArray(tmpData) || tmpData.length === 0) {
                 $scope.presentDataFlag = false;
                 console.log("zpointCwWidget: response data is empty!");
                 return false;
@@ -224,7 +283,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
             $scope.barChart.data = [[]];
             $scope.barChart.dataTitle = [];
             var dataTitleElem = {};
-            rsp.data.forEach(function (elm) {
+            tmpData.forEach(function (elm) {
                 $scope.barChart.labels.push(moment(elm.dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.dateFormat));                
                 $scope.barChart.data[0].push((elm.v_in - elm.v_out).toFixed(3));
                 dataTitleElem = {
@@ -239,6 +298,9 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
         }
     
         function getStatusSuccessCallback(resp) {
+            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+                return true;
+            }
             if (angular.isUndefined(resp) || resp === null) {
                 console.log("zpointCwWidget: status response is empty.");
                 return false;
@@ -271,11 +333,17 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
         };
     
         function getZpointState() {
+            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+                return true;
+            }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/status";
             $http.get(url).then(getStatusSuccessCallback, errorCallback);
         }
                 // Показания точек учета
         $scope.getIndicators = function () {
+            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+                return true;
+            }
 //            widgetConfig.requestToGetIndicators({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId});
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId, action: "openIndicators"});
 //            $scope.$broadcast('requestToGetIndicators', {contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId});
@@ -283,6 +351,9 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
         };
     
         $scope.openNotices = function () {
+            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+                return true;
+            }
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, action: "openNotices"});
         };
         

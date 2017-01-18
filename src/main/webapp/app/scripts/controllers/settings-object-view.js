@@ -6,9 +6,10 @@ angular.module('portalNMC')
     .controller('SettingsObjectViewCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc',
             function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc) {
                 
-                var VCOOKIE_URL = "../api/subscr/vcookie";
-                var USER_VCOOKIE_URL = "../api/subscr/vcookie/user";
-                var OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES";
+                var VCOOKIE_URL = "../api/subscr/vcookie",
+                    USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
+                    OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
+                    WIDGETS_URL = "../api/subscr/vcookie/widgets/list";
                 
                 var measureUnits = null;
                 
@@ -22,7 +23,7 @@ angular.module('portalNMC')
                 $scope.messages.setAllInSummerMode = "Перевести все объекты на летний режим";
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
-                $scope.messages.setIndicatorInterfaceForObjects = "Выбрать представление для просмотра показаний";
+                $scope.messages.setIndicatorInterfaceForObjects = "Выбрать представление для точек учета";
                 
                 $scope.messages.noObjects = "Объектов нет.";
                 
@@ -2237,7 +2238,7 @@ console.log("openSchedule");
                         indicatorHwPerPage: 25,
                         electricityColumns: angular.copy(electricityColumns),
                         indicatorElMode: "",
-                        indicatorElKind: "24h"
+                        indicatorElKind: "24h"                        
                     };
                 DEFAULT_INDICATOR_MODE.waterColumns.forEach(function(wCol){
                     wCol.isVisible = true;
@@ -2251,7 +2252,8 @@ console.log("openSchedule");
                 $scope.data.indicatorModes = [];
                 
                 function performIndicatorModes (inputData) {
-//console.log(inputData);                    
+//console.log(inputData); 
+//console.log($scope.data.heatWidgetList);                    
                     var result = [];
                     if (angular.isArray(inputData) && inputData.length > 0){                                    
                         inputData.forEach(function(elem){
@@ -2270,6 +2272,25 @@ console.log("openSchedule");
                             tmpMode.indicatorHwPerPage = vcvalue.indicatorHwPerPage;
                             tmpMode.indicatorElKind = vcvalue.indicatorElKind;
                             tmpMode.indicatorElMode = vcvalue.indicatorElMode;
+                            if (mainSvc.checkUndefinedNull(vcvalue.widgets)) {
+                                tmpMode.widgets = {};                            
+                            // ??????????????????????????????????????????????????????????????
+                                if ($scope.data.heatWidgetList.length > 0) {
+                                    tmpMode.widgets.heat = $scope.data.heatWidgetList[0].widgetName;
+                                }
+                                if ($scope.data.hwWidgetList.length > 0) {
+                                    tmpMode.widgets.hw = $scope.data.hwWidgetList[0].widgetName;
+                                }
+                                if ($scope.data.cwWidgetList.length > 0) {
+                                    tmpMode.widgets.cw = $scope.data.cwWidgetList[0].widgetName;
+                                }
+                                if ($scope.data.elWidgetList.length > 0) {
+                                    tmpMode.widgets.el = $scope.data.elWidgetList[0].widgetName;
+                                }
+                            } else {
+                                tmpMode.widgets = vcvalue.widgets;
+                            }
+//console.log(tmpMode);                            
                             result.push(tmpMode);
                         });
                     }
@@ -2308,7 +2329,7 @@ console.log("openSchedule");
                     }, errorCallback);
                 }
                 
-                getIndicatorModes();
+                //getIndicatorModes();
                 
                 function getIndicatorModeForObject (obj) {
                     var url = USER_VCOOKIE_URL;
@@ -2421,6 +2442,8 @@ console.log("openSchedule");
                     if (angular.isArray($scope.data.indicatorModes) && $scope.data.indicatorModes.length > 0){
                         mainSvc.sortItemsBy($scope.data.indicatorModes, "caption");
                         $scope.data.selectedIndicatorMode = angular.copy($scope.data.indicatorModes[0]);
+//console.log($scope.data.indicatorModes);                        
+//console.log($scope.data.selectedIndicatorMode);                        
                         $scope.messages.modeHeader = $scope.data.selectedIndicatorMode.caption;
                     }
                     
@@ -2443,6 +2466,9 @@ console.log("openSchedule");
                     vcvalue.indicatorHwPerPage = mode.indicatorHwPerPage;
                     vcvalue.indicatorElMode = mode.indicatorElMode;
                     vcvalue.indicatorElKind = mode.indicatorElKind;
+                    
+                    vcvalue.widgets = mode.widgets;
+                    
                     preparedMode.vcValue = JSON.stringify(vcvalue);
                     return preparedMode;
                 }
@@ -2644,21 +2670,55 @@ console.log("openSchedule");
                     $http.put(url, [requestBody]).then(function(resp){
                         notificationFactory.success();
                     }, errorCallback);
-                }
+                };
                 
                 $scope.editDefaultIndicatorMode = function () {
                     $scope.data.selectedIndicatorMode.isEditMode = true;
-                }
+                };
                 
                 $scope.applyChangeCaption = function () {
                     $scope.messages.modeHeader = $scope.data.selectedIndicatorMode.caption;
                     $scope.data.selectedIndicatorMode.isEditMode = false;
-                }
+                };
                 
                 $scope.cancelChangeCaption = function () {
                     $scope.data.selectedIndicatorMode.caption = $scope.messages.modeHeader;
                     $scope.data.selectedIndicatorMode.isEditMode = false;
-                }
+                };
+                
+                $scope.widgetPreview = function (widgetType) {
+                    $scope.data.widgetPreview = {};
+                    $scope.data.widgetPreview.type = widgetType;
+                    $scope.data.widgetPreview.options = {
+                        zpointName: "Наименование точки учета",
+                        contZpointId: 1,
+                        contObjectId: 1,
+                        previewMode: true
+                    };
+//console.log("Widget preview1");
+//                    var zpointWidget = {};
+//                    zpointWidget.type = "zpointEl";
+//                    zpointWidget.zpointName = "zpointEl";
+//                    zpointWidget.zpointid = "1";
+//                    zpointWidget.objectid = "1";
+//                    //var setToolTip = function(title, text, elDom, targetDom, delay, width){
+//                    //var tooltipHtml = "Hello<br><hr>";
+//                    var tooltipHtml = "<div class='col-xs-12 noPadding'>";                        
+//                    tooltipHtml += "<div ng-controller='widgetContainer'>" +
+//                            "<span ng-show='title' ng-bind='title'></span>" +                              
+//                            "<div ng-show='isLoading'>Загрузка...</div>" +
+//                            "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
+//                            "<ng-widget src=\"'" + zpointWidget.type + 
+//                            "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName +                                                         
+//                            "', 'contZpointId': '" + zpointWidget.zpointid +                              
+//                            "', 'contObjectId': '" + zpointWidget.objectid +                                                                               "', 'previewMode': '" + true +            
+//                            "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+//                            "</div>";
+//                        
+//                    tooltipHtml += "</div>";                    
+//                    
+//                    mainSvc.setToolTip("Предпросмотр виджета", $compile(tooltipHtml)($scope), '#elWidgetPreviewBtn', '#elWidgetPreviewBtn', 1, 1000, 'top left', 'bottom right', 'qtip-nmc-tooltip-widget');                    
+                };
                 
 // ********************************************************************************************************
 //                  end Settings view of indicator
@@ -2819,6 +2879,68 @@ console.log("openSchedule");
 // ********************************************************************************************
                 //  end Building types
 //*********************************************************************************************                
+                
+// ********************************************************************************************
+                //  Widgets
+//*********************************************************************************************                 
+                $scope.data.heatWidgetList = [];
+                $scope.data.hwWidgetList = [];
+                $scope.data.cwWidgetList = [];
+                $scope.data.elWidgetList = [];
+                
+                function getWidgets() {
+//                            _testGetJson("/api/subscr/vcookie/widgets/list");
+                    var url = WIDGETS_URL;
+                    $http.get(url).then(function (resp) {                        
+                        //console.log(resp.data);
+                        $scope.data.heatWidgetList = [];
+                        $scope.data.hwWidgetList = [];
+                        $scope.data.cwWidgetList = [];
+                        $scope.data.elWidgetList = [];
+                        if (!angular.isArray(resp.data)) {
+                            return false;
+                        }
+                        resp.data.forEach(function (elm) {
+                            switch (elm.contServiceType) {
+                                case "heat": 
+                                    $scope.data.heatWidgetList.push(elm);
+                                    break;
+                                case "hw": 
+                                    $scope.data.hwWidgetList.push(elm);
+                                    break;
+                                case "cw": 
+                                    $scope.data.cwWidgetList.push(elm);
+                                    break;
+                                case "el": 
+                                    $scope.data.elWidgetList.push(elm);
+                                    break;    
+                            }
+                            
+                        });
+                        
+                        DEFAULT_INDICATOR_MODE.widgets = {};
+                        if ($scope.data.heatWidgetList.length > 0) {
+                            DEFAULT_INDICATOR_MODE.widgets.heat = $scope.data.heatWidgetList[0].widgetName;
+                        }
+                        if ($scope.data.hwWidgetList.length > 0) {
+                            DEFAULT_INDICATOR_MODE.widgets.hw = $scope.data.hwWidgetList[0].widgetName;
+                        }
+                        if ($scope.data.cwWidgetList.length > 0) {
+                            DEFAULT_INDICATOR_MODE.widgets.cw = $scope.data.cwWidgetList[0].widgetName;
+                        }
+                        if ($scope.data.elWidgetList.length > 0) {
+                            DEFAULT_INDICATOR_MODE.widgets.el = $scope.data.elWidgetList[0].widgetName;
+                        }
+                        getIndicatorModes();
+//console.log(DEFAULT_INDICATOR_MODE);                        
+                    }, errorCallback);
+                    
+
+                }
+// ********************************************************************************************
+                //  end Widgets
+//*********************************************************************************************                 
+                
                 $('#showObjOptionModal').on('shown.bs.modal', function(){                    
                     $('#inputContObjectName').focus();
                     $('#inputNumOfStories').inputmask('integer', {min: 1, max: 200});
@@ -2862,7 +2984,8 @@ console.log("openSchedule");
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
                 });
                 
-                var initCtrl = function(){
+                var initCtrl = function() {
+                    getWidgets();
                                         //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getObjectsData();

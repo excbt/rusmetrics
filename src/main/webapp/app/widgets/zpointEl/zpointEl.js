@@ -16,6 +16,55 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
     }])
     .controller('zpointElWidgetCtrl', function ($scope, $http, $rootScope, widgetConfig) {
         //test data
+//console.log("zpointElWidgetCtrl");
+        var timeDetailTypes = {
+            year: { 
+                timeDetailType: "1mon",
+                count: 12,
+                dateFormatter: function(param) {
+                    var param = param;
+                    return "01-" + (param >= 10 ? param : "0" + param) + "-" + moment().format("YYYY");
+                }
+            },
+            month: {
+                timeDetailType: "24h",
+                count: 30,
+                dateFormatter: function(param) {                    
+                    return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
+                }
+            },
+            day: {
+                timeDetailType: "1h",
+                count: 24,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+                }
+            },
+            week: {
+                timeDetailType: "24h",
+                count: 7,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
+                }
+            }
+        };
+        function generateTestData(timeDetailType) {
+            var result = [],
+                i,
+                node;
+            for (i = 1; i <= timeDetailType.count; i += 1) {
+                node = {};
+                node.timeDetailType = timeDetailType.timeDetailType;
+                node.p_Ap1 = Math.random();
+                node.p_Ap2 = Math.random();
+                node.p_Ap = node.p_Ap1 + node.p_Ap2;                
+                node.dataDateString = timeDetailType.dateFormatter(i);
+                result.push(node);
+            }
+            //console.log(result);
+            return result;
+        }
+    
         var test_year_data_json = [
 {
     "id": 183377246,
@@ -433,7 +482,7 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
             PRECISION = 3;
         
         $scope.widgetOptions = widgetConfig.getOptions();
-        //console.log($scope.widgetOptions);
+//console.log($scope.widgetOptions);
 //        var zpstatus = $scope.widgetOptions.zpointStatus;
         $scope.data = {};
         $scope.data.zpointName = $scope.widgetOptions.zpointName;// + " Ну о-о-о-чень длинное название для точки учета";
@@ -501,7 +550,7 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
         $scope.data.imgPath = "widgets/zpointEl/flash.png";
-        $scope.data.zpointStatus = "";//"widgets/zpointEl/zpoint-state-" + zpstatus + ".png";
+        $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointEl/zpoint-state-" + zpstatus + ".png";
         $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
         $scope.data.contZpointId = $scope.widgetOptions.contZpointId;
     
@@ -544,21 +593,28 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
     
         function getDataSuccessCallback(rsp) {
             var tmpData = rsp.data;
-            if (!angular.isArray(tmpData) || tmpData.length === 0) {
-                switch ($scope.data.currentMode.keyname) {
+//            !angular.isArray(tmpData) || tmpData.length === 0 ||
+            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+                tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
+                /*switch ($scope.data.currentMode.keyname) {
                         case "YEAR": 
-                            tmpData = test_year_data_json;
+                            //tmpData = test_year_data_json;
+                            tmpData = generateTestData(timeDetailTypes.year);
                             break;
                         case "DAY": 
-                            tmpData = test_day_data_json;
+                            //tmpData = test_day_data_json;
+                            tmpData = generateTestData(timeDetailTypes.day);
                             break;
                         case "WEEK": 
-                            tmpData = test_week_data_json;
+                            //tmpData = test_week_data_json;
+                            tmpData = generateTestData(timeDetailTypes.week);
                             break;
                         case "MONTH": 
-                            tmpData = test_month_data_json;
+                            //tmpData = test_month_data_json;
+                            tmpData = generateTestData(timeDetailTypes.month);
                             break;
                 }
+                */
             }
 //            console.log(tmpData);            
             if (!angular.isArray(tmpData) || tmpData.length === 0) {
@@ -677,11 +733,17 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
         };
     
         function getZpointState() {
+            if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
+                return true;
+            }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/status";
             $http.get(url).then(getStatusSuccessCallback, errorCallback);
         }
                 // Показания точек учета
         $scope.getIndicators = function () {
+            if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
+                return true;
+            }
 //            widgetConfig.requestToGetIndicators({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId});
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId, action: "openIndicators"});
 //            $scope.$broadcast('requestToGetIndicators', {contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId});
@@ -689,10 +751,13 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
         };
     
         $scope.openNotices = function () {
+            if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
+                return true;
+            }
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, action: "openNotices"});
         };
         
-        function initWidget() {
+        function initWidget() {            
             $scope.modeClick($scope.data.currentMode);
             getZpointState();
         }

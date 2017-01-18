@@ -2212,11 +2212,15 @@ tr.nmc-inactive-price > td {
  
 /* Всплывающая подсказка */
 .nmc-tooltip {
-    max-width: 1000px;
+    max-width: 1000px !important;
 }
 .qtip-nmc-tooltip {
 /*    background-color: aqua;*/
-    max-width: 1000px;
+    max-width: 1000px !important;
+}
+.qtip-nmc-tooltip-widget {
+/*    background-color: aqua;*/
+    max-width: 757px !important;
 }
  
 /* Неправильно введённое значение */

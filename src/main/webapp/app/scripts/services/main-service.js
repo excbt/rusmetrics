@@ -804,7 +804,7 @@ angular.module('portalNMC')
     //                     end Work with trees
     // *********************************************************************************************
     
-    var setToolTip = function(title, text, elDom, targetDom, delay, width){
+    var setToolTip_old = function(title, text, elDom, targetDom, delay, width){
         var tDelay = 1;
         if (!checkUndefinedNull(delay)){
             tDelay = delay;
@@ -839,6 +839,59 @@ angular.module('portalNMC')
                 position:{
                     my: 'top right',
                     at: 'bottom right',
+                    target: $(targetDom)
+                }
+            });
+        }, tDelay);
+    };
+    
+    var setToolTip = function(title, text, elDom, targetDom, delay, width, my, at, qtipclass){
+        var tDelay = 1;
+        if (!checkUndefinedNull(delay)){
+            tDelay = delay;
+        }
+        var tWidth = 1000;
+        if (!checkUndefinedNull(width)){
+            tWidth = width;
+        }
+        var tMy = 'top right';
+        if (!checkUndefinedNull(my)){
+            tMy = my;
+        }
+        var tAt = 'bottom right';
+        if (!checkUndefinedNull(at)){
+            tAt = at;
+        }
+        var tQtipClass = 'qtip-nmc-indicator-tooltip';
+        if (!checkUndefinedNull(qtipclass)){
+            tQtipClass = qtipclass;
+        }
+//console.log(elDom);                
+//console.log(targetDom);    
+//console.log($(elDom));        
+//console.log($(targetDom));        
+        $timeout(function(){
+//console.log($(elDom));            
+            $(elDom).qtip({
+                suppress: false,
+                content:{
+                    text: text,
+                    title: title,
+                    button : true
+                },
+                show:{
+                    event: 'click'
+                },
+                style:{
+                    classes: tQtipClass,
+                    width: tWidth
+                },
+                hide: {
+                    event: 'unfocus'
+                },
+                position:{
+                    my: tMy,
+                    at: tAt,
                     target: $(targetDom)
                 }
             });

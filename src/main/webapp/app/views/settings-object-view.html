@@ -333,7 +333,7 @@
                                                aria-haspopup="true" 
                                                aria-expanded="false"  
                                                >
-                                                Выбрать представление для просмотра показаний
+                                                Выбрать представление для точек учета
                                             </a>
                                             <ul class="dropdown-menu nmc-dropdown-menu">
                                                 <li class="menu-item dropdown" 
@@ -360,7 +360,7 @@
                                                data-target="#columnSettingsModal"
                                                data-toggle="modal"
                                                >
-                                               Настройка представлений для просмотра показаний                                        
+                                               Настройка представлений для точки учета                                        
                                             </a>
                                         </li>
                                         <li class="menu-item" role="presentation">
@@ -1362,7 +1362,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="columnSettingsLabel" class="nmc-h3">
-				Настройка интерфейса просмотра показаний
+				Настройка представления для точек учета
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -1534,7 +1534,19 @@
                                data-toggle="tab" 
                                >Электрические показания
                             </a>
-                          </li>  
+                          </li>
+                          <li role="presentation" 
+                            id="widget_properties_tab"                                         
+                            > 
+                            <a class="nmc-tab-button"
+                               href="" 
+                               aria-controls="widget_properties" 
+                               data-target="#widget_properties" 
+                               role="tab" 
+                               data-toggle="tab"                               
+                               >Виджеты
+                            </a>
+                          </li>
                       </ul>
 
                       <!-- реализация вкладок -->
@@ -1652,6 +1664,99 @@
                                             </div>
                                         </div>
                                     </div>
+                              </div>
+                          </div>
+                          <div role = "tabpanel" 
+                               class = "tab-pane fade" 
+                               id = "widget_properties">
+                                <div class = "container-fluid">
+                                    <div class = "row">                                                                                
+                                        <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                            <table class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                  
+                                                <tr>
+                                                    <td class = "col-xs-3"><label for="inputHeatWidget">Система отопления</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputHeatWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.heat" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.heatWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-xs-6">
+                                                        <i id = "heatWidgetPreviewBtn"
+                                                           class="pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.heat)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           ></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="inputHwWidget" >ГВС</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputHwWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.hw" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.hwWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-xs-6">
+                                                        <i class = "pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.hw)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           >
+                                                        </i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="inputCwWidget" >ХВС</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputCwWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.cw" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.cwWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-xs-6">
+                                                        <i class = "pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.cw)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           >
+                                                        </i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-xs-3"><label for="inputElWidget">Электроэнергия</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputElWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.el" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.elWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class = "col-xs-6">
+                                                        <i id = "elWidgetPreviewBtn"
+                                                           class = "pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.el)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           ></i>
+                                                    </td>
+                                                </tr>                                                
+                                            </table>
+                                        </div>    
+                                    </div>
+                                   
                               </div>
                           </div>
 
@@ -1800,3 +1905,45 @@ data: "@",
             btnOkCaption: "@",
             showOkButton: "@"
 -->
+
+<!-- window: widget preview-->
+<div id="widgetPreviewModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="widgetPreviewLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="widgetPreviewLabel" class="nmc-h3">
+				Предпросмотр виджета 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = 'col-xs-12 noPadding'>
+                        <div ng-controller = 'widgetContainer'>
+                            <span ng-show = 'title' ng-bind = 'title'></span>
+                            <div ng-show = 'isLoading'>Загрузка...</div>
+                            <div ng-show = 'isError'>Ошибка... <button ng-click = 'reload()'>Перезагрузка</button></div>
+                            <ng-widget src = "data.widgetPreview.type" 
+                                       options = "data.widgetPreview.options" 
+                                       ng-show="!isLoading && !isError">
+                            </ng-widget>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <div class="container-fluid">
+                <div class="row">                    
+                    <div class="pull-right col-xs-3 noMargin noPadding nmc-cancel-button">
+                        <button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+                            ng-click="exit('#widgetPreviewModal');">
+                            Закрыть
+                        </button>
+                    </div>
+                </div>
+            </div>		
+		</div>
+	</div>
+</div>
