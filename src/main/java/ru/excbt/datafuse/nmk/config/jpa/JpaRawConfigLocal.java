@@ -5,10 +5,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,24 +23,51 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import lombok.Data;
+import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal.RawDBProps;
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository",
 		entityManagerFactoryRef = "entityManagerFactoryRaw", transactionManagerRef = "transactionManagerRaw")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.raw" })
+@EnableConfigurationProperties(value = { RawDBProps.class })
 public class JpaRawConfigLocal {
+
+	private static final Logger log = LoggerFactory.getLogger(JpaRawConfigLocal.class);
 
 	@Autowired
 	private Environment env;
+
+	@Data
+	@ConfigurationProperties(prefix = "raw.datasource")
+	public static class RawDBProps {
+		private String type;
+		private String url;
+		private String username;
+		private String password;
+	}
 
 	/**
 	 * 
 	 * @return
 	 */
 	@Bean(name = "dataSourceRaw")
-	@ConfigurationProperties(prefix = "raw.datasource")
-	public DataSource dataSourceRaw() {
+	@ConfigurationProperties("raw.datasource")
+	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
+		//		if (HikariDataSource.class.getName().equals(rawDBProps.type)) {
+		//			final HikariDataSource ds = new HikariDataSource();
+		//			ds.setMaximumPoolSize(25);
+		//			ds.addDataSourceProperty("url", rawDBProps.getUrl());
+		//			ds.addDataSourceProperty("user", rawDBProps.getUsername());
+		//			ds.addDataSourceProperty("password", rawDBProps.getPassword());
+		//			//ds.setMetricRegistry(metricRegistry);
+		//			return ds;
+		//		} else {
+
+		log.info("Database url: {}", rawDBProps.getUrl());
 		return DataSourceBuilder.create().build();
+		//		}
 	}
 
 	/**

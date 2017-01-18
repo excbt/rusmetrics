@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,6 +22,9 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import lombok.Data;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.PortalDBProps;
+
 //@Configuration
 //@PropertySource(value = "classpath:META-INF/data-access.properties")
 //@EnableTransactionManagement
@@ -32,11 +36,21 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository",
 		entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog" })
+@EnableConfigurationProperties(value = { PortalDBProps.class })
 //@EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
 public class JpaConfigLocal {
 
 	@Autowired
 	private Environment env;
+
+	@Data
+	@ConfigurationProperties(prefix = "portal.datasource")
+	public static class PortalDBProps {
+		private String type;
+		private String url;
+		private String username;
+		private String password;
+	}
 
 	/**
 	 * 
@@ -44,9 +58,19 @@ public class JpaConfigLocal {
 	 */
 	@Primary
 	@Bean(name = "dataSource")
-	@ConfigurationProperties(prefix = "portal.datasource")
+	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource() {
+		//		if (HikariDataSource.class.getName().equals(env.getProperty("portal.datasource.type"))) {
+		//			final HikariDataSource ds = new HikariDataSource();
+		//			ds.setMaximumPoolSize(25);
+		//			ds.addDataSourceProperty("url", env.getProperty("portal.datasource.url"));
+		//			ds.addDataSourceProperty("user", env.getProperty("portal.datasource.username"));
+		//			ds.addDataSourceProperty("password", env.getProperty("portal.datasource.password"));
+		//			//ds.setMetricRegistry(metricRegistry);
+		//			return ds;
+		//		} else {
 		return DataSourceBuilder.create().build();
+		//}
 	}
 
 	/**
