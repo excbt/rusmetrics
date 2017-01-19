@@ -7,15 +7,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.config.jpa.ManualJpaConfigTest;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
-public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
+public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 
 	private final static long TEST_DEVICE_OBJECT_ID = 65836845;
+	private final static long SUBSCR_USER_ID = 64166469; // manual-ex1
+	public static final long SUBSCR_ORG_ID = 64166467; // РМА-EXCBT
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
@@ -53,4 +55,23 @@ public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 		checkNotNull(deviceObjectDataSource);
 		checkNotNull(deviceObjectDataSource.getId());
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscriberId() {
+		return SUBSCR_ORG_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscrUserId() {
+		return SUBSCR_USER_ID;
+	}
+
 }

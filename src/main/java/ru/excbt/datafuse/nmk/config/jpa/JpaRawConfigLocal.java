@@ -4,7 +4,6 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,19 +54,7 @@ public class JpaRawConfigLocal {
 	@Bean(name = "dataSourceRaw")
 	@ConfigurationProperties("raw.datasource")
 	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
-		//		if (HikariDataSource.class.getName().equals(rawDBProps.type)) {
-		//			final HikariDataSource ds = new HikariDataSource();
-		//			ds.setMaximumPoolSize(25);
-		//			ds.addDataSourceProperty("url", rawDBProps.getUrl());
-		//			ds.addDataSourceProperty("user", rawDBProps.getUsername());
-		//			ds.addDataSourceProperty("password", rawDBProps.getPassword());
-		//			//ds.setMetricRegistry(metricRegistry);
-		//			return ds;
-		//		} else {
-
-		log.info("Database url: {}", rawDBProps.getUrl());
 		return DataSourceBuilder.create().build();
-		//		}
 	}
 
 	/**
@@ -78,7 +65,6 @@ public class JpaRawConfigLocal {
 	@Bean(name = "entityManagerFactoryRaw")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactoryRaw(EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSourceRaw") DataSource dataSource) {
-
 		return builder.dataSource(dataSource).packages("ru.excbt.datafuse.raw.data.model").persistenceUnit("dataraw")
 				.build();
 	}
@@ -94,39 +80,5 @@ public class JpaRawConfigLocal {
 			@Qualifier("entityManagerFactoryRaw") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	//	@Bean
-	//	public JasperDatabaseConnectionSettings jasperDatabaseConnectionSettings() {
-	//		return new JasperDatabaseConnectionSettings() {
-	//
-	//			@Override
-	//			public String getDatasourceUrl() {
-	//				return env.getProperty("jasper.dataSource.url");
-	//			}
-	//
-	//			@Override
-	//			public String getDatasourceUsername() {
-	//				return env.getProperty("jasper.dataSource.username");
-	//			}
-	//
-	//			@Override
-	//			public String getDatasourcePassword() {
-	//				return env.getProperty("jasper.dataSource.password");
-	//			}
-	//		};
-	//	}
 
 }

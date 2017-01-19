@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.config.jpa;
 
-import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -16,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,19 +25,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import lombok.Data;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.PortalDBProps;
 
-//@Configuration
-//@PropertySource(value = "classpath:META-INF/data-access.properties")
-//@EnableTransactionManagement
-//@EnableJpaRepositories(basePackages = { "ru.excbt.datafuse.nmk.data.repository" })
-//@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog" })
-//@EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository",
 		entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog" })
 @EnableConfigurationProperties(value = { PortalDBProps.class })
-//@EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
+@EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfigLocal {
 
 	@Autowired
@@ -60,52 +54,9 @@ public class JpaConfigLocal {
 	@Bean(name = "dataSource")
 	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource(PortalDBProps portalDBProps) {
-		//		if (HikariDataSource.class.getName().equals(env.getProperty("portal.datasource.type"))) {
-		//			final HikariDataSource ds = new HikariDataSource();
-		//			ds.setMaximumPoolSize(25);
-		//			ds.addDataSourceProperty("url", env.getProperty("portal.datasource.url"));
-		//			ds.addDataSourceProperty("user", env.getProperty("portal.datasource.username"));
-		//			ds.addDataSourceProperty("password", env.getProperty("portal.datasource.password"));
-		//			//ds.setMetricRegistry(metricRegistry);
-		//			return ds;
-		//		} else {
 		return DataSourceBuilder.create().build();
-		//}
 	}
 
-	/**
-	 * 
-	 * @return
-	 * @throws NamingException
-	 */
-	//	@Bean
-	//	public DefaultPersistenceUnitManager persistentUnitManager() {
-	//		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
-	//		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-local.xml");
-	//		pu.setDefaultDataSource(dataSource());
-	//		return pu;
-	//	}
-
-	/**
-	 * 
-	 * @return
-	 * @throws NamingException
-	 */
-	//	@Bean(name = "entityManagerFactory")
-	//	public EntityManagerFactory entityManagerFactory() {
-	//
-	//		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-	//
-	//		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-	//		emf.setJpaVendorAdapter(vendorAdapter);
-	//		emf.setPersistenceUnitName("nmk-p");
-	//		Properties hibernateProperties = HibernateProps.readEnvProps(env, "dataSource");
-	//		emf.setJpaProperties(hibernateProperties);
-	//		emf.setDataSource(dataSource());
-	//		emf.setPackagesToScan("ru.excbt.datafuse.nmk.data.model");
-	//		emf.afterPropertiesSet();
-	//		return emf.getObject();
-	//	}
 	@Primary
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
@@ -115,18 +66,6 @@ public class JpaConfigLocal {
 				.build();
 	}
 
-	/**
-	 * 
-	 * @param entityManagerFactory
-	 * @return
-	 */
-	//	@Bean(name = "transactionManager")
-	//	public PlatformTransactionManager transactionManager() {
-	//		JpaTransactionManager transactionManager = new JpaTransactionManager();
-	//		transactionManager.setEntityManagerFactory(entityManagerFactory());
-	//		return transactionManager;
-	//	}
-
 	@Primary
 	@Bean(name = "transactionManager")
 	@Autowired
@@ -134,15 +73,6 @@ public class JpaConfigLocal {
 			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
 		return new JpaTransactionManager(entityManagerFactory);
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	//	@Bean
-	//	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-	//		return new PersistenceExceptionTranslationPostProcessor();
-	//	}
 
 	/**
 	 * 
