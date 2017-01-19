@@ -3,16 +3,21 @@ package ru.excbt.datafuse.nmk.data.service.support;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -39,8 +44,15 @@ public class HWatersCsvService {
 
 	public static final MediaType MEDIA_TYPE_CSV = MediaType.valueOf("text/csv");
 
-	@Autowired
-	public TimeZoneService timeZoneService;
+	private final TimeZoneService timeZoneService;
+
+	/**
+	 * 
+	 */
+	@Inject
+	public HWatersCsvService(TimeZoneService timeZoneService) {
+		this.timeZoneService = timeZoneService;
+	}
 
 	/**
 	 * 
@@ -151,14 +163,42 @@ public class HWatersCsvService {
 	 */
 	public boolean checkCsvSeparators(String file) throws FileNotFoundException, IOException {
 		boolean result = true;
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		try (Reader reader = new FileReader(file)) {
+			result = checkCsvSeparatorReader(reader);
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param byteArray
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
+		boolean result = true;
+		try (InputStream is = new ByteArrayInputStream(byteArray)) {
+			result = checkCsvSeparatorReader(new InputStreamReader(is));
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reader
+	 * @return
+	 * @throws IOException
+	 */
+	private boolean checkCsvSeparatorReader(Reader reader) throws IOException {
+		boolean result = true;
+		try (BufferedReader br = new BufferedReader(reader)) {
 			String header = br.readLine();
-			String[] headerNames = header.split(",");
-			int checkCnt = headerNames.length;
+			int checkCnt = StringUtils.countOccurrencesOf(header, ",");
 			String line;
 			while (result && (line = br.readLine()) != null) {
-				String[] lineValues = line.split(",");
-				result = result & (lineValues.length == checkCnt);
+				int lineCnt = StringUtils.countOccurrencesOf(line, ",");
+				result = result & (lineCnt == checkCnt);
 			}
 		}
 		return result;
