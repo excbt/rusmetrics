@@ -1317,6 +1317,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     };
         
     $("#createParamsetModal").on("shown.bs.modal", function(){
+        
         if (Number($scope.currentObject.settlementDay) > 3 && Number($scope.currentObject.settlementDay) <=9){
             $scope.currentObject.settlementDay = "0" + $scope.currentObject.settlementDay;
             $scope.$apply();
@@ -1324,22 +1325,24 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $("#inputSettlementDay").inputmask("d", {placeholder: ""});
         
         $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"} );
-        
-        $('.nmc-spec-date').datepicker({
-          dateFormat: "dd.mm.yy",
-          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-          monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
-            beforeShow: function(){
-                setTimeout(function(){
-                    $('.ui-datepicker-calendar').css("display", "table");
-                }, 1);
-            },
-            onChangeMonthYear: function(){
-                setTimeout(function(){
-                    $('.ui-datepicker-calendar').css("display", "table");
-                }, 1);
-            }
+        $scope.currentParamSpecialList.forEach( function (cps) {
+//            $('.nmc-spec-date').datepicker({
+            $('#inputSpecialDate' + cps.id).datepicker({    
+              dateFormat: "dd.mm.yy",
+              firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+              dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+              monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                beforeShow: function(input){                    
+                    setTimeout(function(){
+                        $('.ui-datepicker-calendar').css("display", "table");
+                    }, 1);
+                },
+                onChangeMonthYear: function(){
+                    setTimeout(function(){
+                        $('.ui-datepicker-calendar').css("display", "table");
+                    }, 1);
+                }
+            });
         });
     });
     

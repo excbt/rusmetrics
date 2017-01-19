@@ -505,7 +505,8 @@
 -->
                                                     <span ng-switch-when="SPECIAL_DATE">
                                                         <input class="form-control nmc-text-input-form nmc-spec-date" 
-                                                               id="inputSpecParam" 
+                                                               id="inputSpecParam"
+                                                               ng-attr-id="{{'inputSpecialDate' + paramSpecial.id}}"
                                                                type="text"  
                                                                placeholder="" 
                                                                ng-model="paramSpecial.oneDateValueFormatted" 
