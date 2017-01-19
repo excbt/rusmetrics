@@ -2277,15 +2277,39 @@ console.log("openSchedule");
                             // ??????????????????????????????????????????????????????????????
                                 if ($scope.data.heatWidgetList.length > 0) {
                                     tmpMode.widgets.heat = $scope.data.heatWidgetList[0].widgetName;
+                                    $scope.data.heatWidgetList.some(function (heatw) {
+                                        if (heatw.isDefault === true) {
+                                            tmpMode.widgets.heat = heatw.widgetName;
+                                            return true;
+                                        }
+                                    });
                                 }
                                 if ($scope.data.hwWidgetList.length > 0) {
                                     tmpMode.widgets.hw = $scope.data.hwWidgetList[0].widgetName;
+                                    $scope.data.hwWidgetList.some(function (hww) {
+                                        if (hww.isDefault === true) {
+                                            tmpMode.widgets.hw = hww.widgetName;
+                                            return true;
+                                        }
+                                    });
                                 }
                                 if ($scope.data.cwWidgetList.length > 0) {
                                     tmpMode.widgets.cw = $scope.data.cwWidgetList[0].widgetName;
+                                    $scope.data.cwWidgetList.some(function (cww) {
+                                        if (cww.isDefault === true) {
+                                            tmpMode.widgets.cw = cww.widgetName;
+                                            return true;
+                                        }
+                                    });
                                 }
                                 if ($scope.data.elWidgetList.length > 0) {
                                     tmpMode.widgets.el = $scope.data.elWidgetList[0].widgetName;
+                                    $scope.data.elWidgetList.some(function (elw) {
+                                        if (elw.isDefault === true) {
+                                            tmpMode.widgets.el = elw.widgetName;
+                                            return true;
+                                        }
+                                    });
                                 }
                             } else {
                                 tmpMode.widgets = vcvalue.widgets;
@@ -2921,15 +2945,39 @@ console.log("openSchedule");
                         DEFAULT_INDICATOR_MODE.widgets = {};
                         if ($scope.data.heatWidgetList.length > 0) {
                             DEFAULT_INDICATOR_MODE.widgets.heat = $scope.data.heatWidgetList[0].widgetName;
+                            $scope.data.heatWidgetList.some(function (heatw) {
+                                if (heatw.isDefault === true) {
+                                    DEFAULT_INDICATOR_MODE.widgets.heat = heatw.widgetName;
+                                    return true;
+                                }
+                            });
                         }
                         if ($scope.data.hwWidgetList.length > 0) {
                             DEFAULT_INDICATOR_MODE.widgets.hw = $scope.data.hwWidgetList[0].widgetName;
+                            $scope.data.hwWidgetList.some(function (hww) {
+                                if (hww.isDefault === true) {
+                                    DEFAULT_INDICATOR_MODE.widgets.hw = hww.widgetName;
+                                    return true;
+                                }
+                            });
                         }
                         if ($scope.data.cwWidgetList.length > 0) {
                             DEFAULT_INDICATOR_MODE.widgets.cw = $scope.data.cwWidgetList[0].widgetName;
+                            $scope.data.cwWidgetList.some(function (cww) {
+                                if (cww.isDefault === true) {
+                                    DEFAULT_INDICATOR_MODE.widgets.cw = cww.widgetName;
+                                    return true;
+                                }
+                            });
                         }
                         if ($scope.data.elWidgetList.length > 0) {
                             DEFAULT_INDICATOR_MODE.widgets.el = $scope.data.elWidgetList[0].widgetName;
+                            $scope.data.elWidgetList.some(function (elw) {
+                                if (elw.isDefault === true) {
+                                    DEFAULT_INDICATOR_MODE.widgets.el = elw.widgetName;
+                                    return true;
+                                }
+                            });
                         }
                         getIndicatorModes();
 //console.log(DEFAULT_INDICATOR_MODE);                        

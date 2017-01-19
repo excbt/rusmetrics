@@ -23,6 +23,12 @@ angular.module('portalNMC')
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location) {
                 
 //console.log("Objects directive.");
+                
+                var VCOOKIE_URL = "../api/subscr/vcookie",
+                    USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
+                    OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
+                    WIDGETS_URL = "../api/subscr/vcookie/widgets/list";
+                
                 var measureUnits = null;
                 
                 //default date interval settings for monitor
@@ -71,6 +77,14 @@ angular.module('portalNMC')
                 
                         //html- с индикатором загрузки страницы
                 $scope.objectCtrlSettings.htmlLoading = mainSvc.getHtmlLoading();
+                
+                //widget settings
+                $scope.objectCtrlSettings.widgetSettings = {
+                    cw: "zpointCw",
+                    el: "zpointEl",
+                    heat: "zpointHeat",
+                    hw: "zpointHw"
+                }
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();
@@ -695,7 +709,8 @@ angular.module('portalNMC')
                             }
                             mainSvc.sortItemsBy(zpoints, 'zpointOrder');
                             curObject.zpoints = zpoints;
-                            makeZpointTable(curObject);
+                            loadIndicatorMode(curObject);
+                            //makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail" + curObject.id);
                             if (angular.isDefined(btnDetail) && (btnDetail != null)) {
                                 btnDetail.classList.remove("glyphicon-chevron-right");
@@ -718,7 +733,7 @@ angular.module('portalNMC')
 //console.log(object);                                        
                     var trObj = document.getElementById("obj" + object.id),
                         zpointWidget = {};
-                    zpointWidget.type = "chart";
+                    zpointWidget.type = "";//"chart";
                     zpointWidget.zpointStatus = "yellow";
                     zpointWidget.zpointStatusTitle = "На точке учета были происшествия";
 //console.log(trObj);                    
@@ -742,8 +757,9 @@ angular.module('portalNMC')
                     trHTML += "<tr><td>";
 //                    trHTML += "<div class = 'row'>";
                     object.zpoints.forEach(function(zpoint, ind) {
-                        zpointWidget.type = "chart";
-                        zpointWidget.type1 = "chart";
+//console.log($scope.objectCtrlSettings.widgetSettings);                        
+                        zpointWidget.type = $scope.objectCtrlSettings.widgetSettings[zpoint.zpointType];//"chart";
+                        //zpointWidget.type1 = "chart";
                  //       trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
                         
                         
@@ -782,19 +798,19 @@ angular.module('portalNMC')
                                     var imgPath = "";
                                     switch (zpoint['zpointType']) {
                                         case "cw":
-                                            zpointWidget.type = "zpointCw";
+                                            //zpointWidget.type = $scope.objectCtrlSettings.widgetSettings[];
 //                                            zpointWidget.type1 = "zpointCw_v1";
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
                                             break;
                                         case "hw":
-                                            zpointWidget.type = "zpointHw";
-                                            zpointWidget.type1 = "zpointHw_v1";
+//                                            zpointWidget.type = "zpointHw";
+//                                            zpointWidget.type1 = "zpointHw_v1";
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
                                             break;
                                         case "heat":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
-                                            zpointWidget.type = "zpointHeat_v1";
-                                            zpointWidget.type1 = "zpointHeat";
+//                                            zpointWidget.type = "zpointHeat_v1";
+//                                            zpointWidget.type1 = "zpointHeat";
                                             break;
                                         case "gas":
                                             imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
@@ -803,7 +819,7 @@ angular.module('portalNMC')
                                             imgPath = "images/es.png";
                                             break;
                                         case "el":
-                                            zpointWidget.type = "zpointEl";
+//                                            zpointWidget.type = "zpointEl";
                                             //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-206-electricity.png";
                                         //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-543-lamp.png";
                                             //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-65-lightbulb.png";         
@@ -826,10 +842,10 @@ angular.module('portalNMC')
 //                        trHTML += "</tr>";                        
                         
 //                        trHTML += "<tr>";
-//                        if (ind === 0 || ind % 2 === 0) {
-//                            trHTML += "<div class = 'row'>";
-//                        }
-                        trHTML += "<div class = 'row marginBottom10'>";
+                        if (ind === 0 || ind % 2 === 0) {
+                            trHTML += "<div class = 'row marginBottom10'>";
+                        }
+//                        trHTML += "<div class = 'row marginBottom10'>";
                         trHTML += "<div class='col-xs-6'>";                        
                         trHTML += "<div ng-controller='widgetContainer'>" +
                               "<span ng-show='title' ng-bind='title'></span>" +                              
@@ -851,32 +867,32 @@ angular.module('portalNMC')
                             "</div>";
                         
                         trHTML += "</div>";
-                        trHTML += "<div class='col-xs-6'>";
-                        if (zpointWidget.type1 != "chart") {
-                            trHTML += "<div ng-controller='widgetContainer'>" +
-                                  "<span ng-show='title' ng-bind='title'></span>" +                              
-                                  "<div ng-show='isLoading'>Загрузка...</div>" +
-                                  "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
-                                  "<ng-widget src=\"'" + zpointWidget.type1 + 
-                                "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
-
-                                "', 'contZpointId': '" + zpoint.id +  
-                                "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +  
-                                "', 'zpointNumber': '" + zpoint.zpointNumber +
-                                "', 'zpointType': '" + zpoint.zpointType +
-                                "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
-                                "', 'contObjectId': '" + object.id + 
-                                "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
-                                "', 'isImpulse': '" + zpoint.isImpulse + 
-                                "', 'isManualLoading': '" + zpoint.isManualLoading + 
-                                "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
-                                "</div>";
-                        };
-                        trHTML += "</div>";//col-xs-6
-                        trHTML += "</div>";//row
-//                        if (ind % 2 !== 0) {
-//                            trHTML += "</div><div class = 'row'>";
-//                        }
+//                        trHTML += "<div class='col-xs-6'>";
+//                        if (zpointWidget.type1 != "chart") {
+//                            trHTML += "<div ng-controller='widgetContainer'>" +
+//                                  "<span ng-show='title' ng-bind='title'></span>" +                              
+//                                  "<div ng-show='isLoading'>Загрузка...</div>" +
+//                                  "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" + 
+//                                  "<ng-widget src=\"'" + zpointWidget.type1 + 
+//                                "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName + 
+//
+//                                "', 'contZpointId': '" + zpoint.id +  
+//                                "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +  
+//                                "', 'zpointNumber': '" + zpoint.zpointNumber +
+//                                "', 'zpointType': '" + zpoint.zpointType +
+//                                "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
+//                                "', 'contObjectId': '" + object.id + 
+//                                "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
+//                                "', 'isImpulse': '" + zpoint.isImpulse + 
+//                                "', 'isManualLoading': '" + zpoint.isManualLoading + 
+//                                "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
+//                                "</div>";
+//                        };
+//                        trHTML += "</div>";//col-xs-6
+    //                    trHTML += "</div>";//row
+                        if (ind % 2 !== 0) {
+                            trHTML += "</div>";//<div class = 'row'>";
+                        }
                         
                     });
                     trHTML += "</td></tr>";
@@ -2170,6 +2186,148 @@ angular.module('portalNMC')
                 };
 // ********************************************************************************************
                 //  end Building types
+//*********************************************************************************************
+                
+// ********************************************************************************************
+                //  Load widget settings
+//*********************************************************************************************                
+
+                function loadModePrefs(indicatorModeKeyname, contObject) {
+                    $scope.indicatorModes = [];
+                    $scope.currentIndicatorMode = {};
+                    if (mainSvc.checkUndefinedNull(VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE)) {
+                        console.log("Request required params is null!");
+                        $scope.$broadcast("indicators:loadedModePrefs", {contObject: contObject});
+                        return false;
+                    }
+            //        var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + indicatorModeKeyname;                
+                    var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE;                
+                    $http.get(url).then(function (resp) {
+                        var vcvalue;
+                        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data) || resp.data.length === 0) {
+                            console.log("Indicators: incorrect mode preferences!");
+                            $scope.$broadcast("objectList:loadedModePrefs");
+                            return false;
+                        }
+
+                        var tmpRespData = angular.copy(resp.data);
+                        // prepared indicator mods
+                        tmpRespData.forEach(function(imode) {
+                            if (imode.vcValue === null) {
+                                return false;
+                            }
+                            vcvalue = JSON.parse(imode.vcValue);
+                            imode.caption = vcvalue.caption;
+                            imode.vv = vcvalue;                
+                            $scope.indicatorModes.push(imode);
+
+                        });
+                        //find default indicator mode;
+                        $scope.currentIndicatorMode = null;
+                        if (!mainSvc.checkUndefinedNull(indicatorModeKeyname)) {
+                            $scope.indicatorModes.some(function(imode) {              
+                                if (imode.vcKey === indicatorModeKeyname) {
+                                    $scope.currentIndicatorMode = imode;
+                                    if (!mainSvc.checkUndefinedNull(imode.vv.widgets)) {
+                                        $scope.objectCtrlSettings.widgetSettings = imode.vv.widgets;
+                                    }
+                                    return true;
+                                }                    
+
+                            });
+                        }
+
+                        if (mainSvc.checkUndefinedNull($scope.currentIndicatorMode)) {
+                            console.log("Current indicator mode is undefined or null!");
+                            $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
+                            return false;
+                        }
+
+            //            var modePrefs = $scope.currentIndicatorMode,
+            //                vcvalue;
+            //            vcvalue = JSON.parse(modePrefs.vcValue);
+            //            $scope.currentIndicatorMode.caption = vcvalue.caption;
+//                        $scope.ctrlSettings.loadedWaterColumnsPref = $scope.currentIndicatorMode.vv.waterColumns;            
+//
+//                        $scope.timeDetailType = $scope.currentIndicatorMode.vv.indicatorHwKind;
+//                        $scope.indicatorsPerPage = $scope.currentIndicatorMode.vv.indicatorHwPerPage;
+
+                        $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
+
+                    }, errorCallback);
+                }
+
+                function loadIndicatorMode (contObject) {
+                    var objId = contObject.id;
+                    if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)) {
+                        console.log("Request required params is null!");
+                        $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
+                        return false;
+                    }
+                    var url = USER_VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=OIP_" + objId;
+                    $http.get(url).then(function(resp) {
+                        var objectIndicatorModeKeyname;            
+                        if (!(mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0)) {
+                            objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);    
+                        }
+
+                        loadModePrefs(objectIndicatorModeKeyname, contObject);
+                    }, errorCallback);
+                }
+                
+                function getWidgetList() {
+//                            _testGetJson("/api/subscr/vcookie/widgets/list");
+                    var url = WIDGETS_URL;
+                    $http.get(url).then(function (resp) {                        
+                        //console.log(resp.data);
+                        var widgetList = [], wkey, defaultWidgets = {};
+                        if (!angular.isArray(resp.data)) {
+                            return false;
+                        }
+                        resp.data.forEach(function (elm) {
+                            if (!angular.isArray(widgetList[elm.contServiceType])) {
+                                widgetList[elm.contServiceType] = [];
+                            }
+                            widgetList[elm.contServiceType].push(elm);                            
+                        });                        
+                                                
+                        for (wkey in widgetList) {
+                            if (widgetList[wkey].length > 0) {
+                                defaultWidgets[wkey] = widgetList[wkey][0].widgetName;
+                                widgetList[wkey].some(function (elm) {
+                                    if (elm.isDefault === true) {
+                                        defaultWidgets[wkey] = elm.widgetName;
+                                        return true;
+                                    }
+                                });
+                            }
+                        }
+                        $scope.objectCtrlSettings.widgetSettings = defaultWidgets;
+                    }, errorCallback);
+                    
+
+                }                            
+                
+                function applyWidgetSettings(mode) {
+                    //if mode is null - apply default
+                    if (mainSvc.checkUndefinedNull(mode) || mainSvc.checkUndefinedNull(mode.vv.widgets)) {
+                        widgets = mode.vv.widgets;
+                    } else {
+                        widgets = defaultWidgets;
+                    }
+                    //else - apply mode settings
+                }
+                
+                $scope.$on('objectList:loadedModePrefs', function(event, args) {
+//console.log('objectList:loadedModePrefs');                    
+//console.log(args);                                        
+                    if (!mainSvc.checkUndefinedNull(args.contObject)) {
+                        makeZpointTable(args.contObject);
+                    }
+//                    applyWidgetSettings($scope.currentIndicatorMode);                    
+                });
+// ********************************************************************************************
+                //  end Load widget settings
 //*********************************************************************************************                
                 
                 $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function() {
@@ -2216,7 +2374,8 @@ angular.module('portalNMC')
                 });
                 
                 var initCtrl = function(){
-//console.log('initCtrl');       
+//console.log('initCtrl');
+                    getWidgetList();
                     measureUnits = objectSvc.getDeviceMetadataMeasures();                    
                     checkTreeSettingsAndGetObjectsData();
                                         //if tree is off

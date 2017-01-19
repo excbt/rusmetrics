@@ -594,9 +594,9 @@ angular.module('portalNMC')
             $scope.$broadcast("indicators:loadedModePrefs");
 
         }, errorCallback);
-    } 
+    }
         
-    function loadIndicatorMode (objId) {        
+    function loadIndicatorMode (objId) {
         if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)) {
             console.log("Request required params is null!");
             $scope.$broadcast("indicators:loadedModePrefs");
