@@ -59,7 +59,7 @@ public class JpaConfigLocal {
 	@Primary
 	@Bean(name = "dataSource")
 	@ConfigurationProperties("portal.datasource")
-	public DataSource dataSource() {
+	public DataSource dataSource(PortalDBProps portalDBProps) {
 		//		if (HikariDataSource.class.getName().equals(env.getProperty("portal.datasource.type"))) {
 		//			final HikariDataSource ds = new HikariDataSource();
 		//			ds.setMaximumPoolSize(25);
@@ -149,12 +149,12 @@ public class JpaConfigLocal {
 	 * @return
 	 */
 	@Bean
-	public JasperDatabaseConnectionSettings jasperDatabaseConnectionSettings() {
+	public JasperDatabaseConnectionSettings jasperDatabaseConnectionSettings(PortalDBProps portalDBProps) {
 		return new JasperDatabaseConnectionSettings() {
 
-			private final String url = env.getProperty("spring.datasource.url");
-			private final String username = env.getProperty("spring.datasource.username");
-			private final String password = env.getProperty("spring.datasource.password");
+			private final String url = portalDBProps.url;
+			private final String username = portalDBProps.username;
+			private final String password = portalDBProps.password;
 
 			@Override
 			public String getDatasourceUrl() {
