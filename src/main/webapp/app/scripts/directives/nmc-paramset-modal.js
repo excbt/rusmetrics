@@ -9,8 +9,12 @@ angular.module('portalNMC')
         controller: function ($scope, mainSvc) {
             
             function setPropForSpecDate() {
+//console.log($scope.currentParamSpecialList);                
                 $scope.currentParamSpecialList.forEach( function (cps) {
-                    $('#inputSpecialDate' + cps.id).datepicker({
+                    if (cps.paramSpecialTypeKeyname !== "SPECIAL_DATE") {
+                        return true;
+                    }
+                    $('#inputSpecialDate' + cps.reportMetaParamSpecialId).datepicker({
                     //$('.nmc-spec-date').datepicker({
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,

@@ -1325,9 +1325,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $("#inputSettlementDay").inputmask("d", {placeholder: ""});
         
         $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"} );
+//console.log($scope.currentParamSpecialList);
         $scope.currentParamSpecialList.forEach( function (cps) {
 //            $('.nmc-spec-date').datepicker({
-            $('#inputSpecialDate' + cps.id).datepicker({    
+            if (cps.paramSpecialTypeKeyname !== "SPECIAL_DATE") {
+                return true;
+            }
+            $('#inputSpecialDate' + cps.reportMetaParamSpecialId).datepicker({    
               dateFormat: "dd.mm.yy",
               firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
               dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
