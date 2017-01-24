@@ -1,0 +1,95 @@
+.zpoint-el-widget-v1 {
+    position: relative;
+/*    border: 1px solid black;*/
+    border-radius: 6px;    
+    background-color: white;
+    font-size: 18px;
+    font-weight: 200;
+    padding: 10px 0 0 0;
+}
+.nmc-period-toogle {
+    padding: 5px !important;
+}
+
+.nmc-el-widget-zpname {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+.nmc-el-widget-label {
+    font-size: 12px;
+}
+
+.nmc-el-widget-modes {
+    display: inline-block; 
+    width: 80%;
+}
+
+.nmc-el-widget-btnpanel {
+    text-align: right; 
+    padding: 10px 0 0 0;
+}
+
+.nmc-el-widget-statusimg {
+    vertical-align: baseline; 
+    margin-right: 10px;
+}
+
+.nmc-el-widget-btn {
+    font-size: 40px;
+}
+
+.nmc-el-widget-temppanel {
+    padding: 20px 15px 0 0;
+}
+
+/* Настройки для всплывающей подсказки на графике*/
+canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+#chartjs-tooltip-el {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+.chartjs-tooltip-key-el {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+
+/* Легенда графика*/
+.el-chart-legend li {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+.el-chart-legend li span {
+    display: inline-block;
+    position: static;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    margin-right: 5px;    
+}
+
+/* Вспомогательные классы*/
+.marginRight10 {
+    margin-right: 10px;
+}

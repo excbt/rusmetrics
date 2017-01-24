@@ -1,0 +1,73 @@
+<div class = "zpoint-el-widget-v1" ng-controller = "zpointEl_v1WidgetCtrl">
+    <div class = "container-fluid">
+        <div class="row">
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-1">
+                        <img height="16" width="16" ng-src="{{data.imgPath}}">
+                    </div>
+                    <div class = "col-xs-10">                        
+                        <div class = "nmc-el-widget-zpname" ng-bind="widgetOptions.zpointName"></div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class = "col-xs-12">
+                        <label class = "nmc-el-widget-label">Период:</label>
+                        <select class="form-control nmc-select-form nmc-el-widget-modes"
+                                ng-model = "data.currentMode"
+                                ng-options = "mode as mode.caption for mode in data.MODES"
+                                ng-change = "modeChange()">
+                        </select>
+                    </div>
+                </div>                
+            </div>
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-6 nmc-el-widget-btnpanel">
+                        <a href="" class = "marginRight10"
+                           ng-click = "openNotices()">
+                            <img class = "nmc-el-widget-statusimg"                              
+                             height = "40" width = "40" 
+                             ng-src = "{{data.zpointStatus}}" 
+                             ng-attr-title = {{data.zpointStatusTitle}}>
+        <!--                    Открыть уведомления-->
+                            <i class = "glyphicon glyphicon-envelope nmc-el-widget-btn" title = "Открыть уведомления"></i>
+                        </a>
+                        <a href=""
+                           ng-click = "getIndicators()">
+        <!--                    Открыть показания-->
+                            <i class = "glyphicon glyphicon-th nmc-el-widget-btn" title = "Открыть показания"></i>
+                        </a>
+                    </div>
+                    <div class = "col-xs-6 nmc-el-widget-temppanel">                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="row">            
+            <div class = "col-xs-12">
+                <div ng-show = "presentDataFlag === false"
+                     class = "nmc-text-align-center">                    
+                        <span class = "glyphicon glyphicon-ban-circle"></span> Нет данных
+                </div>
+                <div ng-show = "presentDataFlag === true">
+                    <canvas id = "line" 
+                            class = "chart chart-bar" 
+                            chart-data = "barChart.data"
+                            chart-labels = "barChart.labels" 
+                            chart-series = "barChart.series" 
+                            chart-options = "barChart.options"
+                            >
+                    </canvas>
+                </div>
+            </div>            
+        </div>
+        <div class="row">            
+            <div class = "col-xs-12">
+                <div id = "el-chart-legend" class = "el-chart-legend"></div>
+            </div>
+        </div>
+    </div>
+</div>
