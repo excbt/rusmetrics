@@ -1,23 +1,7 @@
-
-/*.widget1 {
-  position: relative;
-  border-radius: 6px;
-  background-color: white;*//* #eeeeee;*/
-/*  padding: 10px;
-  width: 100%;
-  font-size: 18px;
-  font-weight: 200;
-
-  h1 {
-    line-height: 1;
-    letter-spacing: -1px;
-    font-size: 60px;
-  }
-}*/
 .zpoint-heat-widget-v1 {
     position: relative;
 /*    border: 1px solid black;*/
-    border-radius: 6px;    
+    border-radius: 6px;
     background-color: white;
     font-size: 18px;
     font-weight: 200;
@@ -25,14 +9,49 @@
 }
 .nmc-period-toogle {
     padding: 5px !important;
+/*    background-color: rgba(0,0,0,0.8)*/
 }
-/* Настройки для всплывающей подсказки на графике*/
+
+.nmc-heat-widget-zpname {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+.nmc-heat-widget-label {
+    font-size: 12px;
+}
+
+.nmc-heat-widget-modes {
+    display: inline-block; 
+    width: 80%;
+}
+
+.nmc-heat-widget-btnpanel {
+    text-align: right; 
+    padding: 10px 0 0 0;
+}
+
+.nmc-heat-widget-statusimg {
+    vertical-align: baseline; 
+    margin-right: 10px;
+}
+
+.nmc-heat-widget-btn {
+    font-size: 40px;
+}
+
+.nmc-heat-widget-temppanel {
+    padding: 20px 15px 0 0;
+}
+
+/* Стили для всплывающей подсказки на графике*/
 canvas{
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
 }
-#chartjs-tooltip-v1 {
+#chartjs-tooltip {
     opacity: 1;
     position: absolute;
     background: rgba(0, 0, 0, .7);
@@ -45,9 +64,33 @@ canvas{
     transform: translate(-50%, 0);
 }
 
-.chartjs-tooltip-key-v1 {
+.chartjs-tooltip-key {
     display: inline-block;
     width: 10px;
     height: 10px;
+    margin-right: 10px;
+}
+
+/* Легенда графика*/
+#heat-chart-legend li {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+#heat-chart-legend li span {
+    display: inline-block;
+    position: static;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    margin-right: 5px;    
+}
+
+/* Вспомогательные классы*/
+.marginRight10 {
     margin-right: 10px;
 }

@@ -1,69 +1,32 @@
 <div class="zpoint-heat-widget" ng-controller="zpointHeatWidgetCtrl">
     <div class="container-fluid">
-        <div class="row">            
-<!--
-            <div class = "col-xs-1">
-                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{data.imgPath}}">
-            </div>
-            <div class = "col-xs-1">
-                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{widgetOptions.zpointStatus}}">
-            </div>
--->
+        <div class="row">
             <div class = "col-xs-8">
-                <img class='marginLeft5' height="16" width="16" ng-src="{{data.imgPath}}">
+                <img class='' height="16" width="16" ng-src="{{data.imgPath}}">
                 <span ng-bind="widgetOptions.zpointName"></span>
             </div>
-            <div class = "col-xs-4">
-                <div class = "pull-right">
-<!--                <span class="glyphicons glyphicons-temperature"></span>-->
-                
-<!--                <span style="font-size: 12px">-->
+            <div class = "col-xs-4"
+                 style = "text-align: right">                
                 <span ng-style="{'color': data.forecastTempColor}">
-                    t <sub>окр</sub>, &deg;C = 
-                </span>
-<!--                </span>-->
+                    t <sub>наруж.</sub>, &deg;C = 
+                </span>                
                 <img ng-show = "data.forecastTemp === null"
                      src = "widgets/zpointHeat/no-temp.png"
                      width = "20"
                      height = "20"
                      title = "Нет данных о текущей температуре окружающей среды"                  
                      />
+                
                 <span ng-show = "data.forecastTemp !== null" 
                       class = ""
                       ng-style="{'color': data.forecastTempColor}">
                       <span ng-bind = "data.forecastTemp"></span>
                 </span>
-                
-<!--
-                <span ng-show = "data.forecastTemp !== null" 
-                      class = "">
-                      <span ng-bind = "data.forecastTemp"></span>
-                    &deg;C
-                    <i class="fa fa-thermometer-half" aria-hidden="true"></i>
-                </span>
--->
-                </div>
             </div>
         </div>
         <div class="row">            
-<!--
-            <div class = "col-xs-1">
-                <img class='marginLeft5' height="25" width="25" ng-src="{{data.imgPath}}">
-            </div>
--->
-<!--
-            <div class = "col-xs-1">
-                <img class = 'marginLeft5' 
-                     style = ""
-                     height = "25" width = "25" 
-                     ng-src = "{{data.zpointStatus}}" 
-                     ng-attr-title = {{data.zpointStatusTitle}}>
-            </div>
--->
-            
-<!--
-            <div class = "col-xs-7" style="padding-left: 25%">
-                <ul class="nav nav-pills" ng-init="weekFlag = true">
+            <div class = "col-xs-offset-3 col-xs-5">
+                <ul class="nav nav-pills" style="float: right;">
                     <li role="presentation" ng-repeat="mode in data.MODES"
                         ng-class="mode.modeClass">
                         <a href="" class = "nmc-period-toogle" ng-click="modeClick(mode)">
@@ -71,18 +34,10 @@
                         </a>
                     </li>
                 </ul>
-            </div>            
--->
-            <div class = "col-xs-3">
-                <select class="form-control nmc-select-form"
-                        ng-model = "data.currentMode"
-                        ng-options = "mode as mode.caption for mode in data.MODES"
-                        ng-change = "modeChange()">
-                </select>
-            </div>            
-            <div class = "col-xs-offset-3 col-xs-3"
-                 style = "padding: 0; text-align: right;">
-                <a href="" style="font-size: 12px"
+            </div>                        
+            <div class = "col-xs-4"
+                 style = "">
+                <a href="" style="font-size: 12px; float: right; margin-bottom: 5px;"
                    ng-click = "openNotices()">
                     <img class = 'marginLeft5' 
                      style = ""
@@ -91,10 +46,7 @@
                      ng-attr-title = {{data.zpointStatusTitle}}>
                     Открыть уведомления
                 </a>
-            </div>
-            <div class = "col-xs-3"
-                 style = "text-align: right;">
-                <a href="" style="font-size: 12px"
+                <a href="" style="font-size: 12px; float: right;"
                    ng-click = "getIndicators()">
                     Открыть показания
                 </a>
@@ -113,19 +65,10 @@
                             chart-labels="lineChart.labels" 
                             chart-series="lineChart.series" 
                             chart-options="lineChart.options"
-                            chart-dataset-override="lineChart.datasetOverride"s>
+                            chart-dataset-override="lineChart.datasetOverride">
                     </canvas>
                 </div>
             </div>            
         </div>
-<!--
-        <div class="row">            
-            <div class = "col-xs-12">
-                <a href="" style="font-size: 12px; float: right">
-                    Посмотреть уведомления
-                </a>
-            </div>            
-        </div>
--->
     </div>
 </div>

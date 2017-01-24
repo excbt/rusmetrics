@@ -1,105 +1,67 @@
 <div class="zpoint-hw-widget-v1" ng-controller="zpointHw_v1WidgetCtrl">
     <div class="container-fluid">
-<div class="row">            
-<!--
-            <div class = "col-xs-1">
-                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{data.imgPath}}">
+        <div class="row">
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-1">
+                        <img height="16" width="16" ng-src="{{data.imgPath}}">
+                    </div>
+                    <div class = "col-xs-10">                        
+                        <div class = "nmc-hw-widget-zpname" ng-bind="widgetOptions.zpointName"></div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class = "col-xs-12">
+                        <label class = "nmc-hw-widget-label">Период:</label>
+                        <select class="form-control nmc-select-form nmc-hw-widget-modes"
+                                ng-model = "data.currentMode"
+                                ng-options = "mode as mode.caption for mode in data.MODES"
+                                ng-change = "modeChange()">
+                        </select>
+                    </div>
+                </div>                
             </div>
-            <div class = "col-xs-1">
-                <img class='marginLeft5' height="12" width="12" ng-attr-src="{{widgetOptions.zpointStatus}}">
-            </div>
--->
-            <div class = "col-xs-8">
-                <img class='marginLeft5' height="16" width="16" ng-src="{{data.imgPath}}">
-                <span ng-bind="widgetOptions.zpointName"></span>
-            </div>
-            <div class = "col-xs-4">
-                <div class = "pull-right">
-<!--                <span class="glyphicons glyphicons-temperature"></span>-->
-                
-<!--                <span style="font-size: 12px">-->
-                <span ng-style="{'color': data.currentHwTempColor}">
-                    t <sub>гвс</sub>, &deg;C = 
-                </span>
-<!--                </span>-->
-                <img ng-show = "data.currentHwTemp === null"
-                     src = "widgets/zpointHeat/no-temp.png"
-                     width = "20"
-                     height = "20"
-                     title = "Нет данных о текущей температуре ГВС"                  
-                     />
-                <span ng-show = "data.currentHwTemp !== null" 
-                      class = ""
-                      ng-style="{'color': data.currentHwTempColor}">
-                      <span ng-bind = "data.currentHwTemp"></span>
-                </span>
-                
-<!--
-                <span ng-show = "data.currentHwTemp !== null" 
-                      class = "">
-                      <span ng-bind = "data.currentHwTemp"></span>
-                    &deg;C
-                    <i class="fa fa-thermometer-half" aria-hidden="true"></i>
-                </span>
--->
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-6 nmc-hw-widget-btnpanel">
+                        <a href="" class = "marginRight10"
+                           ng-click = "openNotices()">
+                            <img class = "nmc-hw-widget-statusimg"                              
+                             height = "40" width = "40" 
+                             ng-src = "{{data.zpointStatus}}" 
+                             ng-attr-title = {{data.zpointStatusTitle}}>
+        <!--                    Открыть уведомления-->
+                            <i class = "glyphicon glyphicon-envelope nmc-hw-widget-btn" title = "Открыть уведомления"></i>
+                        </a>
+                        <a href=""
+                           ng-click = "getIndicators()">
+        <!--                    Открыть показания-->
+                            <i class = "glyphicon glyphicon-th nmc-hw-widget-btn" title = "Открыть показания"></i>
+                        </a>
+                    </div>
+                    <div class = "col-xs-6 nmc-hw-widget-temppanel">
+                        <div class = "pull-right">
+                        <span ng-style="{'color': data.currentHwTempColor}">
+                            t <sub>гвс</sub>, &deg;C = 
+                        </span>
+                        <img ng-show = "data.currentHwTemp === null"
+                             src = "widgets/zpointHw_v1/no-temp.png"
+                             width = "20"
+                             height = "20"
+                             title = "Нет данных о текущей температуре окружающей среды"                  
+                             />
+                        <span ng-show = "data.currentHwTemp !== null" 
+                              class = ""
+                              ng-style="{'color': data.currentHwTempColor}">
+                              <span ng-bind = "data.currentHwTemp"></span>
+                        </span>                
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">            
-<!--
-            <div class = "col-xs-1">
-                <img class='marginLeft5' height="25" width="25" ng-src="{{data.imgPath}}">
-            </div>
--->
-<!--
-            <div class = "col-xs-1">
-                <img class = 'marginLeft5' 
-                     style = ""
-                     height = "25" width = "25" 
-                     ng-src = "{{data.zpointStatus}}" 
-                     ng-attr-title = {{data.zpointStatusTitle}}>
-            </div>
--->
-            
-<!--
-            <div class = "col-xs-7" style="padding-left: 25%">
-                <ul class="nav nav-pills" ng-init="weekFlag = true">
-                    <li role="presentation" ng-repeat="mode in data.MODES"
-                        ng-class="mode.modeClass">
-                        <a href="" class = "nmc-period-toogle" ng-click="modeClick(mode)">
-                            <span ng-bind="mode.caption"></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>            
--->
-            <div class = "col-xs-3">
-                <select class="form-control nmc-select-form"
-                        ng-model = "data.currentMode"
-                        ng-options = "mode as mode.caption for mode in data.MODES"
-                        ng-change = "modeChange()">
-                </select>
-            </div>            
-            <div class = "col-xs-offset-3 col-xs-3"
-                 style = "padding: 0; text-align: right;">
-                <a href="" style="font-size: 12px"
-                   ng-click = "openNotices()">
-                    <img class = 'marginLeft5' 
-                     style = ""
-                     height = "16" width = "16" 
-                     ng-src = "{{data.zpointStatus}}" 
-                     ng-attr-title = {{data.zpointStatusTitle}}>
-                    Открыть уведомления
-                </a>
-            </div>
-            <div class = "col-xs-3"
-                 style = "text-align: right;">
-                <a href="" style="font-size: 12px"
-                   ng-click = "getIndicators()">
-                    Открыть показания
-                </a>
-            </div>
-        </div>
+        
+        <br/>
         <div class="row">            
             <div class = "col-xs-12">
                 <div ng-show = "presentDataFlag === false"
@@ -118,14 +80,10 @@
                 </div>
             </div>            
         </div>
-<!--
         <div class="row">            
             <div class = "col-xs-12">
-                <a href="" style="font-size: 12px; float: right">
-                    Посмотреть уведомления
-                </a>
-            </div>            
+                <div id = "hw-chart-legend" class = "hw-chart-legend"></div>
+            </div>
         </div>
--->
     </div>
 </div>

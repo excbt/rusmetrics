@@ -1,54 +1,50 @@
-/*jslint node: true, eqeq: true, nomen: true*/
+/*jslint node: true, eqeq: true*/
 /*global angular, moment*/
 'use strict';
 
-angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies'])
+angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
     .config(['ChartJsProvider', function (ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
             chartColors: ['#46BFBD', '#803690'],
             responsive: true
         });
-        // Configure all line charts
-//        ChartJsProvider.setOptions('line', {
-//            showLines: false
-//        });
     }])
-    .controller('zpointHeat_v1WidgetCtrl', function ($scope, $http, $cookies, $rootScope, widgetConfig) {
-        //data generator
-        var timeDetailTypes = {            
+    .controller('zpointHeat_v1WidgetCtrl', function ($scope, $http, $rootScope, widgetConfig) {
+    //data generator
+        var timeDetailTypes = {
             month: {
                 timeDetailType: "24h",
                 count: 30,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
                 }
             },
             day: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             },
             week: {
                 timeDetailType: "24h",
                 count: 7,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
                 }
             },
             today: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             },
             yesterday: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             }
@@ -82,42 +78,21 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
 //        var zpstatus = $scope.widgetOptions.zpointStatus;
         $scope.data = {};
         $scope.data.forecastTemp = null;
-//        $scope.data.MODES = [
-//            {
-//                keyname: "TODAY",
-//                caption: "Сегодня",
-//                modeClass: "",
-//                timeDetailType: "1h"
-//            }, {
-//                keyname: "24",
-//                caption: "Сутки",
-//                modeClass: "",
-//                timeDetailType: "1h"
-//            }, {
-//                keyname: "YESTERDAY",
-//                caption: "Вчера",
-//                modeClass: "",
-//                timeDetailType: "1h"
-//            }, {
-//                keyname: "WEEK",
-//                caption: "Неделя",
-//                modeClass: "active",
-//                timeDetailType: "24h"
-//            }, {
-//                keyname: "MONTH",
-//                caption: "Текущий месяц",
-//                modeClass: "",
-//                timeDetailType: "24h"
-//            }
-//        ];
         $scope.data.MODES = [
             {
-                keyname: "WEEK",
-                caption: "Неделя",
-                modeClass: "active",
-                timeDetailType: "24h",
-                dateFormat: "DD, MMM",
-                tooltipDateFormat: "DD.MM.YYYY"
+                keyname: "TODAY",
+                caption: "Сегодня",
+                modeClass: "",
+                timeDetailType: "1h",
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
+            }, {
+                keyname: "DAY",
+                caption: "Сутки",
+                modeClass: "",
+                timeDetailType: "1h",
+                dateFormat: "HH:mm",
+                tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
                 keyname: "YESTERDAY",
                 caption: "Вчера",
@@ -126,15 +101,22 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
                 dateFormat: "HH:mm",
                 tooltipDateFormat: "DD.MM.YYYY HH:mm"
             }, {
-                keyname: "TODAY",
-                caption: "Сегодня",
+                keyname: "WEEK",
+                caption: "Неделя",
+                modeClass: "active",
+                timeDetailType: "24h",
+                dateFormat: "DD, MMM",
+                tooltipDateFormat: "DD.MM.YYYY"
+            }, {
+                keyname: "MONTH",
+                caption: "Текущий месяц",
                 modeClass: "",
-                timeDetailType: "1h",
-                dateFormat: "HH:mm",
-                tooltipDateFormat: "DD.MM.YYYY HH:mm"
+                timeDetailType: "24h",
+                dateFormat: "DD",
+                tooltipDateFormat: "DD.MM.YYYY"
             }
         ];
-        $scope.data.startModeIndex = 0;//default mode index; 0 - WEEK
+        $scope.data.startModeIndex = 3;//default mode index; 0 - WEEK
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
         $scope.data.imgPath = "widgets/zpointHeat_v1/glyphicons-85-heat.png";
@@ -144,97 +126,12 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
     
         $scope.presentDataFlag = false;
     
-        var customTooltips_v1 = function (tooltip) {
-			// Tooltip Element
-			var tooltipEl = document.getElementById('chartjs-tooltip-v1');
-            
-			if (!tooltipEl) {
-				tooltipEl = document.createElement('div');
-				tooltipEl.id = 'chartjs-tooltip-v1';
-				tooltipEl.innerHTML = "<table></table>";
-				document.body.appendChild(tooltipEl);
-			}
-
-			// Hide if no tooltip
-			if (tooltip.opacity === 0) {
-				tooltipEl.style.opacity = 0;
-				return;
-			}
-
-			// Set caret Position
-			tooltipEl.classList.remove('above', 'below', 'no-transform');
-			if (tooltip.yAlign) {
-				tooltipEl.classList.add(tooltip.yAlign);
-			} else {
-				tooltipEl.classList.add('no-transform');
-			}
-
-			function getBody(bodyItem) {
-				return bodyItem.lines;
-			}
-
-			// Set Text
-			if (tooltip.body) {
-//                console.log(tooltip);
-				var titleLines = tooltip.title || [];
-				var bodyLines = tooltip.body.map(getBody);
-                var index = null;
-                if (tooltip.dataPoints && tooltip.dataPoints.length > 0) {
-                    index = tooltip.dataPoints[0].index;
-                }                
-
-				var innerHtml = '<thead>';
-                if (index !== null && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[index].dataDateString !== null) {
-                    innerHtml += '<tr><th>' + moment($scope.lineChart.dataTitle[index].dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.tooltipDateFormat) + '</th></tr>';
-                } else {
-                    titleLines.forEach(function (title) {
-                        innerHtml += '<tr><th>' + title + '</th></tr>';
-                    });
-                }
-                if (index !== null && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[index].t_ambiance !== null) {
-                    innerHtml += '<tr><th>' + 't <sub>окр.</sub> = ' + $scope.lineChart.dataTitle[index].t_ambiance + '&deg;C</th></tr>';
-                }
-                
-				innerHtml += '</thead><tbody>';
-
-				bodyLines.forEach(function (body, i) {
-					var colors = tooltip.labelColors[i];
-					var style = 'background:' + colors.backgroundColor;
-					style += '; border-color:' + colors.borderColor;
-					style += '; border-width: 2px';
-					var span = '<span class="chartjs-tooltip-key-v1" style="' + style + '"></span>';
-					innerHtml += '<tr><td>' + span + body + '&deg;C</td></tr>';
-				});
-				innerHtml += '</tbody>';
-
-				var tableRoot = tooltipEl.querySelector('table');
-//                console.log(tooltipEl);
-//				console.log(tableRoot);
-				tableRoot.innerHTML = innerHtml;
-			}
-
-			var position = this._chart.canvas.getBoundingClientRect();
-//            console.log(this);
-//			console.log(this._chart);
-
-			// Display, position, and set styles for font
-			tooltipEl.style.opacity = 1;
-			tooltipEl.style.left = position.left + tooltip.caretX + 'px';
-			tooltipEl.style.top = position.top + tooltip.caretY + 'px';
-			tooltipEl.style.fontFamily = tooltip._fontFamily;
-			tooltipEl.style.fontSize = tooltip.fontSize;
-			tooltipEl.style.fontStyle = tooltip._fontStyle;
-			tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
-		};
         $scope.lineChart = {};
         $scope.lineChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-        $scope.lineChart.series = ['T норм, ' + '\u2103', 'T факт, ' + '\u2103'];
+        $scope.lineChart.series = ['t норм., ' + '\u2103', 't факт., ' + '\u2103'];
         $scope.lineChart.data = [[], []];
         $scope.lineChart.dataTitle = [];
-//        var tmpData = [
-//            [65, 59, 80, 81, 56, 55, 40],
-//            [28, 48, 40, 19, 86, 27, 90]
-//        ];
+
         $scope.onClick = function (points, evt) {
             console.log(points, evt);
         };
@@ -245,20 +142,23 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
                     tension: 0
                 }
             },
-            legend: {
-                display: true
-            },
+            legendCallback: function (chart) {
+				var text = [], i;
+				text.push('<ul class="' + chart.id + '-legend">');
+				for (i = 0; i < chart.data.datasets.length; i += 1) {
+					text.push('<li><span style="background-color:' + chart.data.datasets[i].borderColor + '"></span>');
+					if (chart.data.datasets[i].label) {
+						text.push(chart.data.datasets[i].label);
+					}
+					text.push('</li>');
+				}
+				text.push('</ul>');
+
+				return text.join('');
+			},
             tooltips: {
-                /*enabled: false,
-                mode: 'index',
-                position: 'nearest',
-                custom: customTooltips_v1
-                */
-                /*backgroundColor: 'red',*/
                 callbacks: {
                     beforeTitle: function (arr, data) {
-//                        console.log(arr);
-//                        console.log(data);
                         var result = "";
                         if (angular.isArray(arr) && arr.length > 0 && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[arr[0].index].dataDateString !== null) {
                             result = moment($scope.lineChart.dataTitle[arr[0].index].dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.tooltipDateFormat);
@@ -266,44 +166,18 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
                         return result;
                     },
                     title: function (arr, data) {
-//                        console.log(arr);
-//                        console.log(data);
                         var result = "";
                         if (angular.isArray(arr) && arr.length > 0 && $scope.lineChart.dataTitle.length > 0 && $scope.lineChart.dataTitle[arr[0].index].t_ambiance !== null) {
-                            result = "t окр., " + '\u2103' + " = " + $scope.lineChart.dataTitle[arr[0].index].t_ambiance;
+                            result = "t наруж., " + '\u2103' + " = " + $scope.lineChart.dataTitle[arr[0].index].t_ambiance;
                         }
                         return result;
-//                        return "t окр. = " + arr[2].yLabel + " C";
                     }
                     
                 }
-                
             }
         };
-//        var tmpOpt = {
-//            scales: {
-//                yAxes: [
-//                    {
-//                        id: 'y-axis-1',
-//                        type: 'linear',
-//                        display: true,
-//                        position: 'left'
-//                    },
-//                    {
-//                        id: 'y-axis-2',
-//                        type: 'linear',
-//                        display: true,
-//                        position: 'right'
-//                    }
-//                ]
-//            },
-//            legend: {
-//                display: true
-//            }
-//        };
     
         function getDataSuccessCallback(rsp) {
-//            console.log(rsp.data);
             var tmpData = rsp.data;
             if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
                 tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
@@ -358,22 +232,20 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
             } else {
                 console.log("zpointHeatWidget: forecast temperature is empty.");
             }
-            //$scope.data.forecastTemp = -88;//для теста
         }
     
-        $scope.modeClick = function (mode) {
-            $scope.data.currentMode = mode;
+        $scope.modeChange = function () {
             //set class
             $scope.data.MODES.forEach(function (mod) {
                 mod.modeClass = "";
             });
-            mode.modeClass = "active";
+            $scope.data.currentMode.modeClass = "active";
             //get data
-            if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
+            if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || $scope.data.currentMode === null || $scope.data.currentMode.keyname === null) {
                 console.log("zpointHeatWidget: contZpoint or mode is null!");
                 return false;
             }
-            var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
+            var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent($scope.data.currentMode.keyname);
             $http.get(url).then(getDataSuccessCallback, errorCallback);
         };
     
@@ -389,9 +261,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
             if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
                 return true;
             }
-//            widgetConfig.requestToGetIndicators({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId});
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId, action: "openIndicators"});
-//            $scope.$broadcast('requestToGetIndicators', {contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId});
             return true;
         };
     
@@ -401,9 +271,16 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js', 'ngCookies']
             }
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, action: "openNotices"});
         };
+    
+        $scope.$on('chart-create', function (event, chart) {
+            var chartLegend = document.getElementById("heat-chart-legend");
+            if (angular.isDefined(chartLegend) && chartLegend !== null) {
+                chartLegend.innerHTML = chart.generateLegend();
+            }
+        });
         
         function initWidget() {
-            $scope.modeClick($scope.data.currentMode);
+            $scope.modeChange();
             getZpointState();
         }
         
