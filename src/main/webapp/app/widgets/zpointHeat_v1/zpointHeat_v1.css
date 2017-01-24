@@ -72,14 +72,14 @@ canvas{
 }
 
 /* Легенда графика*/
-#heat-chart-legend li {
+.heat-chart-legend li {
     display: inline-block;
     margin-right: 10px;
     font-size: 12px;
     color: #666;
 }
 
-#heat-chart-legend li span {
+.heat-chart-legend li span {
     display: inline-block;
     position: static;
     left: 0;

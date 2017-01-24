@@ -75,14 +75,14 @@
                             chart-labels="lineChart.labels" 
                             chart-series="lineChart.series" 
                             chart-options="lineChart.options"
-                            chart-dataset-override="lineChart.datasetOverride"s>
+                            chart-dataset-override="lineChart.datasetOverride">
                     </canvas>
                 </div>
             </div>            
         </div>
         <div class="row">            
             <div class = "col-xs-12">
-                <div id = "heat-chart-legend"></div>
+                <div ng-attr-id = "{{'heat-chart-legend-' + data.contZpointId}}" class = "heat-chart-legend"></div>
             </div>
         </div>
     </div>

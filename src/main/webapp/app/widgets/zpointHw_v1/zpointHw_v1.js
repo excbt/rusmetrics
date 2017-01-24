@@ -306,7 +306,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
         };
     
         $scope.$on('chart-create', function (event, chart) {
-            var chartLegend = document.getElementById("hw-chart-legend");
+            var chartLegend = document.getElementById("hw-chart-legend-" + $scope.data.contZpointId);
             if (angular.isDefined(chartLegend) && chartLegend !== null) {
                 chartLegend.innerHTML = chart.generateLegend();
             }
