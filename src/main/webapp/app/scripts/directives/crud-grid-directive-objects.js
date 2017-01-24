@@ -84,7 +84,7 @@ angular.module('portalNMC')
                     el: "zpointEl",
                     heat: "zpointHeat",
                     hw: "zpointHw"
-                }
+                };
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();
@@ -709,7 +709,7 @@ angular.module('portalNMC')
                             }
                             mainSvc.sortItemsBy(zpoints, 'zpointOrder');
                             curObject.zpoints = zpoints;
-                            loadIndicatorMode(curObject);
+                            loadViewMode(curObject);
                             //makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail" + curObject.id);
                             if (angular.isDefined(btnDetail) && (btnDetail != null)) {
@@ -757,8 +757,8 @@ angular.module('portalNMC')
                     trHTML += "<tr><td>";
 //                    trHTML += "<div class = 'row'>";
                     object.zpoints.forEach(function(zpoint, ind) {
-//console.log($scope.objectCtrlSettings.widgetSettings);                        
-                        zpointWidget.type = $scope.objectCtrlSettings.widgetSettings[zpoint.zpointType];//"chart";
+//console.log(object.widgets);                        
+                        zpointWidget.type = object.widgets[zpoint.zpointType];//"chart";
                         //zpointWidget.type1 = "chart";
                  //       trHTML += "<tr id=\"trZpoint" + zpoint.id + "\" ng-click=\"getIndicators(" + object.id + "," + zpoint.id + ")\" class='nmc-link' >";
                         
@@ -2197,7 +2197,7 @@ angular.module('portalNMC')
                     $scope.currentIndicatorMode = {};
                     if (mainSvc.checkUndefinedNull(VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE)) {
                         console.log("Request required params is null!");
-                        $scope.$broadcast("indicators:loadedModePrefs", {contObject: contObject});
+                        $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
                         return false;
                     }
             //        var url = VCOOKIE_URL + "?vcMode=" + OBJECT_INDICATOR_PREFERENCES_VC_MODE + "&vcKey=" + indicatorModeKeyname;                
@@ -2205,8 +2205,8 @@ angular.module('portalNMC')
                     $http.get(url).then(function (resp) {
                         var vcvalue;
                         if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data) || resp.data.length === 0) {
-                            console.log("Indicators: incorrect mode preferences!");
-                            $scope.$broadcast("objectList:loadedModePrefs");
+                            console.log("objectList: incorrect mode preferences!");
+                            $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
                             return false;
                         }
 
@@ -2229,7 +2229,7 @@ angular.module('portalNMC')
                                 if (imode.vcKey === indicatorModeKeyname) {
                                     $scope.currentIndicatorMode = imode;
                                     if (!mainSvc.checkUndefinedNull(imode.vv.widgets)) {
-                                        $scope.objectCtrlSettings.widgetSettings = imode.vv.widgets;
+                                        contObject.widgets = imode.vv.widgets;
                                     }
                                     return true;
                                 }                    
@@ -2238,26 +2238,17 @@ angular.module('portalNMC')
                         }
 
                         if (mainSvc.checkUndefinedNull($scope.currentIndicatorMode)) {
-                            console.log("Current indicator mode is undefined or null!");
-                            $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
-                            return false;
+                            console.log("Current view mode is undefined or null!");
                         }
-
-            //            var modePrefs = $scope.currentIndicatorMode,
-            //                vcvalue;
-            //            vcvalue = JSON.parse(modePrefs.vcValue);
-            //            $scope.currentIndicatorMode.caption = vcvalue.caption;
-//                        $scope.ctrlSettings.loadedWaterColumnsPref = $scope.currentIndicatorMode.vv.waterColumns;            
-//
-//                        $scope.timeDetailType = $scope.currentIndicatorMode.vv.indicatorHwKind;
-//                        $scope.indicatorsPerPage = $scope.currentIndicatorMode.vv.indicatorHwPerPage;
 
                         $scope.$broadcast("objectList:loadedModePrefs", {contObject: contObject});
 
                     }, errorCallback);
                 }
 
-                function loadIndicatorMode (contObject) {
+                function loadViewMode (contObject) {
+                    //set default object view mode
+                    contObject.widgets = $scope.objectCtrlSettings.widgetSettings;
                     var objId = contObject.id;
                     if (mainSvc.checkUndefinedNull(USER_VCOOKIE_URL) || mainSvc.checkUndefinedNull(OBJECT_INDICATOR_PREFERENCES_VC_MODE) || mainSvc.checkUndefinedNull(objId)) {
                         console.log("Request required params is null!");
@@ -2308,23 +2299,12 @@ angular.module('portalNMC')
 
                 }                            
                 
-                function applyWidgetSettings(mode) {
-                    //if mode is null - apply default
-                    if (mainSvc.checkUndefinedNull(mode) || mainSvc.checkUndefinedNull(mode.vv.widgets)) {
-                        widgets = mode.vv.widgets;
-                    } else {
-                        widgets = defaultWidgets;
-                    }
-                    //else - apply mode settings
-                }
-                
                 $scope.$on('objectList:loadedModePrefs', function(event, args) {
 //console.log('objectList:loadedModePrefs');                    
 //console.log(args);                                        
                     if (!mainSvc.checkUndefinedNull(args.contObject)) {
                         makeZpointTable(args.contObject);
                     }
-//                    applyWidgetSettings($scope.currentIndicatorMode);                    
                 });
 // ********************************************************************************************
                 //  end Load widget settings
