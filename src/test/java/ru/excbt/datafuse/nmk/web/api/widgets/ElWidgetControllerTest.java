@@ -21,4 +21,14 @@ public class ElWidgetControllerTest extends AnyControllerTest {
 		_testGetJson(String.format("/api/subscr/widgets/el/%d/chart/data/week", TestWidgetConstants.EL_ZPOINT_ID));
 	}
 
+	@Test
+	public void testWidgetChartDataToday() throws Exception {
+		_testGetJson(String.format("/api/subscr/widgets/el/%d/chart/data/today", TestWidgetConstants.EL_ZPOINT_ID));
+	}
+
+	@Test
+	public void testWidgetChartDataYesterday() throws Exception {
+		_testGetJson(String.format("/api/subscr/widgets/el/%d/chart/data/yesterday", TestWidgetConstants.EL_ZPOINT_ID));
+	}
+
 }
