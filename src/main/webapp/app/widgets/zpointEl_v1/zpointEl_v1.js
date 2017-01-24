@@ -41,6 +41,20 @@ angular.module('zpointEl_v1Widget', ['angularWidget', 'chart.js'])
                 dateFormatter: function(param) {                    
                     return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
                 }
+            },
+            today: {
+                timeDetailType: "1h",
+                count: 24,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+                }
+            },
+            yesterday: {
+                timeDetailType: "1h",
+                count: 24,
+                dateFormatter: function(param) {                    
+                    return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+                }
             }
         };
         function generateTestData(timeDetailType) {
@@ -117,7 +131,7 @@ angular.module('zpointEl_v1Widget', ['angularWidget', 'chart.js'])
                 tooltipDateFormat: "DD.MM.YYYY"
             }
         ];
-        $scope.data.startModeIndex = 2;//default mode index; 2 - TODAY
+        $scope.data.startModeIndex = 3;//default mode index; 2 - TODAY
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
         $scope.data.imgPath = "widgets/zpointEl_v1/flash.png";
@@ -295,7 +309,7 @@ angular.module('zpointEl_v1Widget', ['angularWidget', 'chart.js'])
         };
     
         function getZpointState() {
-            if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
+            if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {                
                 return true;
             }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/status";
