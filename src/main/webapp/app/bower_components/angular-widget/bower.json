@@ -1,0 +1,34 @@
+{
+  "name": "angular-widget",
+  "version": "0.1.636",
+  "main": "angular-widget.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wix/angular-widget.git"
+  },
+  "ignore": [
+    ".*",
+    "Gemfile*",
+    "Gruntfile.js",
+    "pom.xml",
+    "*.json",
+    "*conf.js",
+    "app",
+    "dist",
+    "test",
+    "maven",
+    "*.sublime*"
+  ],
+  "dependencies": {
+    "angular": "~1.5.0"
+  },
+  "devDependencies": {
+    "jquery": "~2.0.3",
+    "angular-mocks": "~1.5.0",
+    "es5-shim": "~2.1.0",
+    "angular-route": "~1.5.0",
+    "angular-ui-router": "~0.2.11",
+    "angular-widget": "~0.1.30",
+    "requirejs": "~2.1.19"
+  }
+}
