@@ -129,6 +129,15 @@ angular.module('portalNMC')
                     var tempArr = response.data;
 //console.log(tempArr);                    
                     $scope.objects = response.data;
+                    //calculate all objects zpoints
+                    var zpointCount = 0;
+                    $scope.objects.forEach(function (obj) {
+                        if (mainSvc.checkUndefinedNull(obj.contObjectStats)) {
+                            return;
+                        }
+                        zpointCount += obj.contObjectStats.contZpointCount;
+                    });
+                    console.log("Количество точек учета у загруженных с сервера объектов: " + zpointCount);
                     //sort by name
                     objectSvc.sortObjectsByFullName($scope.objects);
                     if (angular.isUndefined($scope.filter) || ($scope.filter === "")) {
