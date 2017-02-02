@@ -31,12 +31,13 @@
 }
 
 .nmc-cw-widget-statusimg {
-    vertical-align: baseline; 
+/*    vertical-align: baseline; */
     margin-right: 10px;
 }
 
 .nmc-cw-widget-btn {
-    font-size: 40px;
+/*    font-size: 40px;*/
+    display: inline-block;
 }
 
 .nmc-cw-widget-temppanel {

@@ -32,14 +32,20 @@
     padding: 10px 0 0 0;
 }
 
+.nmc-heat-widget-btn {
+    display: inline-block;
+}
+
 .nmc-heat-widget-statusimg {
-    vertical-align: baseline; 
+/*    vertical-align: baseline; */
     margin-right: 10px;
 }
 
+/* Если используются не <img>, a <i>
 .nmc-heat-widget-btn {
     font-size: 40px;
 }
+*/
 
 .nmc-heat-widget-temppanel {
     padding: 20px 15px 0 0;

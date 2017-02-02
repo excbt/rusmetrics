@@ -74,8 +74,9 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
             months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
             monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
         });
+        $scope.widgetPath = "widgets/zpointCw_v1";
         var DATA_URL = "../api/subscr/widgets/cw",/*//chart/HwTemp";*/
-            ZPOINT_STATUS_TEMPLATE = "widgets/zpointCw_v1/zpoint-state-",
+            ZPOINT_STATUS_TEMPLATE = $scope.widgetPath + "/zpoint-state-",
             SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm";
         
         $scope.widgetOptions = widgetConfig.getOptions();
@@ -124,7 +125,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
         $scope.data.startModeIndex = 3;//default mode index; 3 - WEEK
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
     
-        $scope.data.imgPath = "widgets/zpointCw_v1/snowflake.png";
+        $scope.data.imgPath = $scope.widgetPath + "/snowflake.png";
         $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
         $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
         $scope.data.contZpointId = $scope.widgetOptions.contZpointId;

@@ -30,14 +30,20 @@
     padding: 10px 0 0 0;
 }
 
+.nmc-hw-widget-btn {
+    display: inline-block;
+}
+
 .nmc-hw-widget-statusimg {
-    vertical-align: baseline; 
+/*    vertical-align: baseline; */
     margin-right: 10px;
 }
 
+/* Если используются не <img>, а <i> 
 .nmc-hw-widget-btn {
     font-size: 40px;
 }
+*/
 
 .nmc-hw-widget-temppanel {
     padding: 20px 15px 0 0;

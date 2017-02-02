@@ -32,12 +32,13 @@
 }
 
 .nmc-el-widget-statusimg {
-    vertical-align: baseline; 
+/*    vertical-align: baseline; */
     margin-right: 10px;
 }
 
 .nmc-el-widget-btn {
-    font-size: 40px;
+/*    font-size: 40px;*/
+    display: inline-block;
 }
 
 .nmc-el-widget-temppanel {

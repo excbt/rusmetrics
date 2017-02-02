@@ -24,19 +24,34 @@
             <div class = "col-xs-6">
                 <div class = "row">
                     <div class = "col-xs-6 nmc-cw-widget-btnpanel">
-                        <a href="" class = "marginRight10"
+                        <a href="" class = "nmc-cw-widget-btn"
                            ng-click = "openNotices()">
                             <img class = "nmc-cw-widget-statusimg"                              
                              height = "40" width = "40" 
                              ng-src = "{{data.zpointStatus}}" 
-                             ng-attr-title = {{data.zpointStatusTitle}}>
-        <!--                    Открыть уведомления-->
-                            <i class = "glyphicon glyphicon-envelope nmc-cw-widget-btn" title = "Открыть уведомления"></i>
+                             ng-attr-title = {{data.zpointStatusTitle}}>        
+<!--                            <i class = "glyphicon glyphicon-envelope nmc-cw-widget-btn" title = "Открыть уведомления"></i>-->
+                        </a>
+                        <a href="" class = "nmc-cw-widget-btn marginRight10"
+                           ng-click = "openNotices()">
+<!--
+                            <img class = "nmc-cw-widget-statusimg"                              
+                             height = "40" width = "40" 
+                             ng-src = "{{data.zpointStatus}}" 
+                             ng-attr-title = {{data.zpointStatusTitle}}>        
+-->
+<!--                            <i class = "glyphicon glyphicon-envelope nmc-cw-widget-btn" title = "Открыть уведомления"></i>-->
+                            <img height = "30" width = "40" 
+                                 ng-src = "{{widgetPath + '/notices.png'}}" 
+                                 title = "Открыть уведомления"/>
                         </a>
                         <a href=""
-                           ng-click = "getIndicators()">
-        <!--                    Открыть показания-->
-                            <i class = "glyphicon glyphicon-th nmc-cw-widget-btn" title = "Открыть показания"></i>
+                           class = "nmc-cw-widget-btn"
+                           ng-click = "getIndicators()">        
+<!--                            <i class = "glyphicon glyphicon-th nmc-cw-widget-btn" title = "Открыть показания"></i>-->
+                            <img height = "40" width = "40" 
+                                 ng-src = "{{widgetPath + '/indicators.png'}}" 
+                                 title = "Открыть показания"/>
                         </a>
                     </div>
                     <div class = "col-xs-6 nmc-cw-widget-temppanel">                        
