@@ -210,9 +210,27 @@ angular.module('portalNMC')
                     $rootScope.$broadcast('monitor:updateObjectsRequest');
                     getObjectsData();
                 };
+                
+                function closeAllObjectsInArr(objArr) {
+                    objArr.forEach(function(obj) {
+                        if (obj.showGroupDetailsFlag == true) {
+                            var trObj = document.getElementById("obj" + obj.id);
+                            if (!mainSvc.checkUndefinedNull(trObj)) {
+//                                console.log(obj.id);
+                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
+                                trObjZp.innerHTML = "";
+                                var btnDetail = document.getElementById("btnDetail" + obj.id);
+                                btnDetail.classList.remove("glyphicon-chevron-down");
+                                btnDetail.classList.add("glyphicon-chevron-right");
+                            }
+                        }
+                        obj.showGroupDetailsFlag = false;
+                    });
+                }
                                           
                 $scope.objectsDataFilteredByGroup = function(group){
-//console.log("objectsDataFilteredByGroup : " + group);
+//console.log("objectsDataFilteredByGroup : " + group);                    
+                    closeAllObjectsInArr($scope.objectsOnPage);
                     $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                     if (mainSvc.checkUndefinedNull(group)){
                         $scope.messages.groupMenuHeader = "Полный список объектов";
@@ -1334,19 +1352,20 @@ angular.module('portalNMC')
                     }
                     
                         //close all opened objects zpoints
-                    $scope.objectsOnPage.forEach(function(obj) {
-                        if (obj.showGroupDetailsFlag == true) {
-                            var trObj = document.getElementById("obj" + obj.id);
-                            if (!mainSvc.checkUndefinedNull(trObj)) {                                    
-                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
-                                trObjZp.innerHTML = "";
-                                var btnDetail = document.getElementById("btnDetail" + obj.id);
-                                btnDetail.classList.remove("glyphicon-chevron-down");
-                                btnDetail.classList.add("glyphicon-chevron-right");
-                            }
-                        }
-                        obj.showGroupDetailsFlag = false;
-                    });
+                    closeAllObjectsInArr($scope.objectsOnPage);
+//                    $scope.objectsOnPage.forEach(function(obj) {
+//                        if (obj.showGroupDetailsFlag == true) {
+//                            var trObj = document.getElementById("obj" + obj.id);
+//                            if (!mainSvc.checkUndefinedNull(trObj)) {                                    
+//                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
+//                                trObjZp.innerHTML = "";
+//                                var btnDetail = document.getElementById("btnDetail" + obj.id);
+//                                btnDetail.classList.remove("glyphicon-chevron-down");
+//                                btnDetail.classList.add("glyphicon-chevron-right");
+//                            }
+//                        }
+//                        obj.showGroupDetailsFlag = false;
+//                    });
                     
                     var tempArr = [];
                     if (angular.isUndefined(searchString) || (searchString === '')) {
