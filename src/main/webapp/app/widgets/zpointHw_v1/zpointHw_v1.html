@@ -45,9 +45,28 @@
 <!--                            <i class = "glyphicon glyphicon-th nmc-hw-widget-btn" title = "Открыть показания"></i>-->
                             <img height = "40" width = "40" 
                                  ng-src = "{{widgetPath + '/indicators.png'}}" 
-                                 title = "Открыть уведомления"/>
+                                 title = "Открыть показания"/>
                         </a>
                     </div>
+                    <div class = "col-xs-offset-2 col-xs-4">
+                        <div class = "pull-right">
+                        <div style = "font-size: 14px;" ng-style="{'color': data.currentHwTempColor}">
+                            t <sub>гвс (текущая)</sub>
+                        </div>
+                        <img ng-show = "data.currentHwTemp === null"
+                             src = "widgets/zpointHw_v1/no-temp.png"
+                             width = "20"
+                             height = "20"
+                             title = "Нет данных о текущей температуре окружающей среды"                  
+                             />
+                        <span ng-show = "data.currentHwTemp !== null" 
+                              class = ""
+                              ng-style="{'color': data.currentHwTempColor}">
+                              <span ng-bind = "data.currentHwTemp"></span>&deg;C
+                        </span>                
+                        </div>
+                    </div>
+<!--
                     <div class = "col-xs-6 nmc-hw-widget-temppanel">
                         <div class = "pull-right">
                         <span ng-style="{'color': data.currentHwTempColor}">
@@ -66,6 +85,7 @@
                         </span>                
                         </div>
                     </div>
+-->
                 </div>
             </div>
         </div>
@@ -75,7 +95,7 @@
             <div class = "col-xs-12">
                 <div ng-show = "presentDataFlag === false"
                      class = "nmc-text-align-center">                    
-                        <span class="glyphicon glyphicon-ban-circle"></span> Нет данных
+                        <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.
                 </div>
                 <div ng-show = "presentDataFlag ===  true">
                     <canvas id="line" 

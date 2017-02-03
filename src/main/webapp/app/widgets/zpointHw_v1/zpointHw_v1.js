@@ -150,7 +150,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
         $scope.onClick = function (points, evt) {
             console.log(points, evt);
         };
-        $scope.lineChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+        $scope.lineChart.datasetOverride = [{}, {borderDash: [10, 5]}, {borderDash: [10, 5]}, {}];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
         $scope.lineChart.options = {
             elements: {
                 line: {
