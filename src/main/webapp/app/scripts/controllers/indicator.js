@@ -708,6 +708,10 @@ angular.module('portalNMC')
         $scope.deviceModel =indicatorSvc.getDeviceModel();
         $scope.deviceSN =indicatorSvc.getDeviceSN();
         
+        if (angular.isDefined(pathParams.isManualLoading)&&(pathParams.isManualLoading !== "null")){
+            $scope.isManualLoading = pathParams.isManualLoading === "true" ? true : false;;
+         }
+        
         //clear cookies
 //console.log($cookies);        
 //        $cookies.contZPoint = null;

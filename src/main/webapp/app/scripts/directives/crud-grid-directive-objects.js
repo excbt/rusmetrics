@@ -1132,7 +1132,10 @@ angular.module('portalNMC')
                     
                     if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
                         url += "&mu=" + encodeURIComponent($scope.currentZpoint.measureUnitCaption);
-                    }   
+                    }
+                    if (!mainSvc.checkUndefinedNull($scope.currentZpoint.isManualLoading)) {
+                        url += "&isManualLoading=" + encodeURIComponent($scope.currentZpoint.isManualLoading);
+                    }
                     
                     window.open(url, '_blank');
                 };
