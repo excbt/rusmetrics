@@ -547,6 +547,7 @@ angular.module('portalNMC')
     
     //set mask for price value
     $(document).ready(function(){
+//        console.log($(':input'));
         $(':input').inputmask();
     });
     

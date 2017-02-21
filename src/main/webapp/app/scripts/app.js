@@ -276,7 +276,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/management-rma-device-models.html',
         controller: 'MngmtDeviceModelsCtrl'
       })
-      
+      .when('/management/meter-period-setting', {
+        templateUrl: 'views/management-rma-meter-period-setting.html',
+        controller: 'MngmtMeterPeriodSettingCtrl'
+      })      
       .when('/log/session-log', {
         templateUrl: 'views/log-view-resizable-paged.html',
         controller: 'LogViewCtrl'
