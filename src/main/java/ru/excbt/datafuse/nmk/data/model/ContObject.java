@@ -1,20 +1,11 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Fetch;
@@ -22,17 +13,35 @@ import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
-import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
-import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
-import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Контейнер учета
@@ -47,6 +56,8 @@ import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class ContObject extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
 
@@ -148,170 +159,13 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "num_of_storeys")
 	private Integer numOfStories;
 
-	public String getName() {
-		return name;
-	}
+	@JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(schema = DBMetadata.SCHEME_PORTAL,  name="cont_object_meter_period", joinColumns=@JoinColumn(name="cont_object_id"), 
+    	inverseJoinColumns=@JoinColumn(name="meter_period_setting_id"))
+    @MapKeyColumn(name = "cont_service_type")
+    private Map<String, MeterPeriodSetting> meterPeriodSettings = new HashMap<>();
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(String fullAddress) {
-		this.fullAddress = fullAddress;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public String getOwnerContacts() {
-		return ownerContacts;
-	}
-
-	public void setOwnerContacts(String ownerContacts) {
-		this.ownerContacts = ownerContacts;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getCurrentSettingMode() {
-		return currentSettingMode;
-	}
-
-	public void setCurrentSettingMode(String currentSettingMode) {
-		this.currentSettingMode = currentSettingMode;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public BigDecimal getCwTemp() {
-		return cwTemp;
-	}
-
-	public void setCwTemp(BigDecimal cwTemp) {
-		this.cwTemp = cwTemp;
-	}
-
-	public BigDecimal getHeatArea() {
-		return heatArea;
-	}
-
-	public void setHeatArea(BigDecimal heatArea) {
-		this.heatArea = heatArea;
-	}
-
-	public List<ContManagement> getContManagements() {
-		return contManagements;
-	}
-
-	public void setContManagements(List<ContManagement> contManagements) {
-		this.contManagements = contManagements;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public Date getSettingModeMDate() {
-		return settingModeMDate;
-	}
-
-	public void setSettingModeMDate(Date settingModeMDate) {
-		this.settingModeMDate = settingModeMDate;
-	}
-
-	@Override
-	public String getExSystemKeyname() {
-		return exSystemKeyname;
-	}
-
-	@Override
-	public String getExCode() {
-		return exCode;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	@Override
-	public Boolean getIsManual() {
-		return isManual;
-	}
-
-	public void setIsManual(Boolean isManual) {
-		this.isManual = isManual;
-	}
-
-	public String getTimezoneDefKeyname() {
-		return timezoneDefKeyname;
-	}
-
-	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
-		this.timezoneDefKeyname = timezoneDefKeyname;
-	}
-
-	public void setExSystemKeyname(String exSystemKeyname) {
-		this.exSystemKeyname = exSystemKeyname;
-	}
-
-	public void setExCode(String exCode) {
-		this.exCode = exCode;
-	}
-
-	public Boolean get_haveSubscr() {
-		return _haveSubscr;
-	}
-
-	public void set_haveSubscr(Boolean _haveSubscr) {
-		this._haveSubscr = _haveSubscr;
-	}
 
 	/**
 	 * 
@@ -335,69 +189,6 @@ public class ContObject extends AbstractAuditableModel
 		return result;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String get_daDataSraw() {
-		return _daDataSraw;
-	}
-
-	/**
-	 * 
-	 * @param _daDataSraw
-	 */
-	public void set_daDataSraw(String _daDataSraw) {
-		this._daDataSraw = _daDataSraw;
-	}
-
-	public Boolean getIsAddressAuto() {
-		return isAddressAuto;
-	}
-
-	public void setIsAddressAuto(Boolean isAddressAuto) {
-		this.isAddressAuto = isAddressAuto;
-	}
-
-	public Boolean getIsValidFiasUUID() {
-		return isValidFiasUUID;
-	}
-
-	public void setIsValidFiasUUID(Boolean isValidFiasUUID) {
-		this.isValidFiasUUID = isValidFiasUUID;
-	}
-
-	public Boolean getIsValidGeoPos() {
-		return isValidGeoPos;
-	}
-
-	public void setIsValidGeoPos(Boolean isValidGeoPos) {
-		this.isValidGeoPos = isValidGeoPos;
-	}
-
-	public String getBuildingType() {
-		return buildingType;
-	}
-
-	public void setBuildingType(String buildingType) {
-		this.buildingType = buildingType;
-	}
-
-	public String getBuildingTypeCategory() {
-		return buildingTypeCategory;
-	}
-
-	public void setBuildingTypeCategory(String buildingTypeCategory) {
-		this.buildingTypeCategory = buildingTypeCategory;
-	}
-
-	public Integer getNumOfStories() {
-		return numOfStories;
-	}
-
-	public void setNumOfStories(Integer numOfStories) {
-		this.numOfStories = numOfStories;
-	}
 
 	/**
 	 * 

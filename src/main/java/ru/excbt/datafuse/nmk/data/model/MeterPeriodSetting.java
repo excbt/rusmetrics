@@ -61,4 +61,13 @@ public class MeterPeriodSetting extends AbstractAuditableModel {
 	@Column(name = "deleted")
 	private int deleted;
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public MeterPeriodSetting id(Long id){
+		setId(id);
+		return this;
+	}
 }

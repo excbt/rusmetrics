@@ -1,24 +1,8 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.DateTime;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -26,6 +10,25 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+
+import org.joda.time.DateTime;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.junit.Assert.*;
 
 public class SubscrContObjectControllerTest extends AnyControllerTest {
 
@@ -45,30 +48,46 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
+	@Autowired
+	private ContObjectFiasRepository contObjectFiasRepository;;
+
 	@Test
+	@Transactional
 	public void testContObjectsGet() throws Exception {
 		_testGetJson("/api/subscr/contObjects");
 	}
 
 	@Test
+	@Transactional
 	public void testCmOrganizatoinsGet() throws Exception {
 		_testGetJson("/api/subscr/contObjects/cmOrganizations");
 	}
 
 	@Test
+	@Transactional
 	public void testOrganizatoinsGet() throws Exception {
 		_testGetJson("/api/subscr/contObjects/organizations");
 	}
 
 	@Test
+	@Transactional	
 	public void testContObjectFiasGet() throws Exception {
-		ContObject testCO = findFirstContObject();
-
-		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"), testCO.getId());
+		
+		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+		
+		
+		List<ContObjectFias> fiasIds = contObjectFiasRepository.selectByContObjectIds(ids);
+		
+		Optional<ContObjectFias> testObjectFias = fiasIds.stream().filter(i -> i.getFiasUUID() != null).findAny();
+		
+		
+		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
+				testObjectFias.isPresent() ? testObjectFias.get().getContObjectId() : fiasIds.get(0).getContObjectId());
 		_testGetSuccessful(url);
 	}
 
 	@Test
+	@Transactional
 	public void testUpdate() throws Exception {
 
 		ContObject testCO = findFirstContObject();
@@ -104,11 +123,13 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	@Transactional
 	public void testSettingModeTypeGet() throws Exception {
 		_testGetJson(apiSubscrUrl("/contObjects/settingModeType"));
 	}
 
 	@Test
+	@Transactional
 	public void testSettingModeUpdate() throws Exception {
 
 		List<ContObject> contObjects = subscrContObjectService
@@ -117,7 +138,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 		assertNotNull(contObjects);
 		assertTrue(contObjects.size() > 0);
 
-		List<Long> contObjectIds = new ArrayList<Long>();
+		List<Long> contObjectIds = new ArrayList<>();
 		contObjectIds.add(contObjects.get(0).getId());
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
@@ -136,17 +157,14 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	 * @return
 	 */
 	private ContObject findFirstContObject() {
-		// List<ContObject> subscriberContObject = subscriberService
-		// .selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
-		//
-		// assertTrue(subscriberContObject.size() > 0);
-
-		ContObject testCO = contObjectService.findContObject(20118693L);
+		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+		ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObject(ids.get(0));
 		assertNotNull(testCO);
 		return testCO;
 	}
 
 	@Test
+	@Transactional
 	public void testContObjectDaData() throws Exception {
 		Long id = 725L;
 
@@ -165,23 +183,13 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 		testCO.set_daDataSraw(daDataJson);
 
-		//		ContObjectDaData contObjectDaData = testCO.getContObjectDaData();
-		//
-		//		if (contObjectDaData == null) {
-		//			contObjectDaData = new ContObjectDaData();
-		//			testCO.setContObjectDaData(contObjectDaData);
-		//
-		//		}
-		//
-		//		contObjectDaData.setSraw(daDataJson);
-
 		_testUpdateJson(urlStr, testCO);
 
 	}
 
 	@Test
+	@Transactional
 	public void testGetContObjectsGrouped() throws Exception {
-		//_testGetJson(url)
 		_testGetJson("/api/subscr/contObjects/?contGroupId=488528511");
 	}
 

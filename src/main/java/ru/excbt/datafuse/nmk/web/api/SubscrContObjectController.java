@@ -1,11 +1,22 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
+import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
+import ru.excbt.datafuse.nmk.data.service.ContGroupService;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,20 +29,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
-import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
-import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
-import ru.excbt.datafuse.nmk.data.service.ContGroupService;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с объектом учета для абонента
@@ -131,6 +134,46 @@ public class SubscrContObjectController extends SubscrApiController {
 		return responseOK(wrappedList.isEmpty() ? null : wrappedList.get(0));
 	}
 
+	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		ContObject result = contObjectService.findContObject(contObjectId);
+
+		ContObjectMeterPeriodSettingsDTO settings = ContObjectMeterPeriodSettingsDTO.builder()
+				.contObjectId(contObjectId).build();
+
+		for (Map.Entry<String, MeterPeriodSetting> entry : result.getMeterPeriodSettings().entrySet()) {
+			settings.putSetting(entry.getKey(), entry.getValue().getId());
+		}
+
+		return responseOK(settings);
+	}
+
+	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId,
+			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		if (!contObjectId.equals(settings.getContObjectId())) {
+			return responseBadRequest();
+		}
+		
+		ApiActionProcess<ContObject> process = () -> {
+			return contObjectService.updateMeterPeriodSettings(settings);
+		};
+
+		return responseUpdate(process);
+	}
+
 	/**
 	 * 
 	 * @param contObjectId
@@ -220,7 +263,8 @@ public class SubscrContObjectController extends SubscrApiController {
 		checkNotNull(currentSettingMode);
 		checkArgument(ContObjectCurrentSettingTypeKey.isSupported(currentSettingMode));
 
-		List<Long> contObjectIdList = ids != null ? ids : (contObjectIds != null ? Arrays.asList(contObjectIds) : null);
+		final List<Long> contObjectIdList = (ids != null ? ids
+				: (contObjectIds != null ? Arrays.asList(contObjectIds) : null));
 
 		if (contObjectIdList == null || contObjectIdList.isEmpty()) {
 			return responseBadRequest();
@@ -237,7 +281,8 @@ public class SubscrContObjectController extends SubscrApiController {
 			@Override
 			public void process() {
 
-				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(ids.toArray(new Long[] {}),
+				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(
+						contObjectIdList.toArray(new Long[] {}),
 						currentSettingMode, currentSubscriberService.getSubscriberId());
 
 				setResultEntity(result);
