@@ -1,23 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
@@ -32,6 +14,23 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с объектом учета для абонента
@@ -220,7 +219,8 @@ public class SubscrContObjectController extends SubscrApiController {
 		checkNotNull(currentSettingMode);
 		checkArgument(ContObjectCurrentSettingTypeKey.isSupported(currentSettingMode));
 
-		List<Long> contObjectIdList = ids != null ? ids : (contObjectIds != null ? Arrays.asList(contObjectIds) : null);
+		final List<Long> contObjectIdList = (ids != null ? ids
+				: (contObjectIds != null ? Arrays.asList(contObjectIds) : null));
 
 		if (contObjectIdList == null || contObjectIdList.isEmpty()) {
 			return responseBadRequest();
@@ -237,7 +237,7 @@ public class SubscrContObjectController extends SubscrApiController {
 			@Override
 			public void process() {
 
-				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(ids.toArray(new Long[] {}),
+				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(contObjectIdList.toArray(new Long[] {}),
 						currentSettingMode, currentSubscriberService.getSubscriberId());
 
 				setResultEntity(result);
