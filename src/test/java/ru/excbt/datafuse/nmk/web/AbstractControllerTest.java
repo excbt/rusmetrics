@@ -1,22 +1,10 @@
 package ru.excbt.datafuse.nmk.web;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.Filter;
-import javax.servlet.ServletContext;
+import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
+import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
+import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +16,23 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
-import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
-import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
-import ru.excbt.datafuse.nmk.web.api.WebApiController;
+import static com.google.common.base.Preconditions.*;
+import static org.junit.Assert.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AbstractControllerTest {
 
@@ -102,6 +97,28 @@ public class AbstractControllerTest {
 
 		return resultActions.andReturn().getResponse().getContentAsString();
 
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	protected ResultActions _testGetJsonResultActions(String url) throws Exception {
+		
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.accept(MediaType.APPLICATION_JSON);
+		};
+		
+		ResultActionsTester resultActionsTester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			
+			resultActions.andExpect(status().isOk())
+			.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		};
+		
+		return _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
 	}
 
 	/**

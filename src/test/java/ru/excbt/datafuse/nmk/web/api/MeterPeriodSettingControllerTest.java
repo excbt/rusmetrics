@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import static org.junit.Assert.*;
@@ -39,13 +41,27 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 
 	@Test
 	@Transactional
-	public void testGet() throws Exception {
+	public void testGetOne() throws Exception {
 		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
 		setting = meterPeriodSettingService.save(setting);
 		String content = _testGetJson("/api/rma/meter-period-settings/" + setting.getId());
 		MeterPeriodSettingDTO result = fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
 		}, content);
 		assertEquals(setting.getId(), result.getId());
+	}
+
+	@Test
+	@Transactional
+	public void testGet() throws Exception {
+		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
+		setting = meterPeriodSettingService.save(setting);
+		final MeterPeriodSettingDTO checkSetting = new MeterPeriodSettingDTO(setting);
+		_testGetJsonResultActions("/api/rma/meter-period-settings").andDo((result) -> {
+			List<MeterPeriodSettingDTO> resultDTOs = fromJSON(new TypeReference<List<MeterPeriodSettingDTO>>() {
+			}, result.getResponse().getContentAsString());
+			assertTrue(resultDTOs.stream().filter(i -> i.getId().equals(checkSetting.getId())).findAny().isPresent());
+
+		});
 	}
 
 	@Test
@@ -70,5 +86,5 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 		setting = meterPeriodSettingService.save(setting);
 		_testDeleteJson("/api/rma/meter-period-settings/" + setting.getId());
 	}
-	
+
 }

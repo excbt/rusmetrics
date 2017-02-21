@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.util.List;
+
 /**
  * 
  * @author A.Kovtonyuk
@@ -40,7 +42,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateMeterPeriodSettingDTO(
+	public ResponseEntity<?> updateMeterPeriodSetting(
 			@Valid @RequestBody MeterPeriodSettingDTO meterPeriodSettingDTO) {
 
 		if (meterPeriodSettingDTO.getId() == null) {
@@ -61,7 +63,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createMeterPeriodSettingDTO(
+	public ResponseEntity<?> createMeterPeriodSetting(
 			@Valid @RequestBody MeterPeriodSettingDTO meterPeriodSettingDTO, HttpServletRequest request) {
 
 		if (meterPeriodSettingDTO.getId() != null) {
@@ -82,7 +84,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/meter-period-settings/{id}", method = RequestMethod.DELETE,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteMeterPeriodSettingDTO(@PathVariable("id") Long id) {
+	public ResponseEntity<?> deleteMeterPeriodSetting(@PathVariable("id") Long id) {
 		return responseOK(() -> {
 			meterPeriodSettingService.delete(id);
 			return null;
@@ -96,9 +98,20 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/meter-period-settings/{id}", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getMeterPeriodSettingDTO(@PathVariable("id") Long id) {
+	public ResponseEntity<?> getMeterPeriodSetting(@PathVariable("id") Long id) {
 		MeterPeriodSettingDTO result = meterPeriodSettingService.findOne(id);
 		return result != null ? responseOK(result) : responseNotFound();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getMeterPeriodSetting() {
+		List<MeterPeriodSettingDTO> result = meterPeriodSettingService.findBySubscriberId(getSubscriberParam());
+		return responseOK(result);
 	}
 
 }

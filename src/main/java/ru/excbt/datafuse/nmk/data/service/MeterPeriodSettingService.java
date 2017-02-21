@@ -7,8 +7,10 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ import com.google.common.collect.Lists;
  * 
  */
 @Service
-public class MeterPeriodSettingService extends SubscriberService {
+public class MeterPeriodSettingService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private MeterPeriodSettingRepository meterPeriodSettingRepository;
