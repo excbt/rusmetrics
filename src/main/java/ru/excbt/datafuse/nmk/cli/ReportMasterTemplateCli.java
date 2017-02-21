@@ -243,6 +243,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.HW_QUALITY_2_REPORT,
 				ReportConstants.Files.HW_QUALITY_2_FILE_COMPILED, isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.RMA_ZPOINT_STAT_REPORT,
+				ReportConstants.Files.RMA_ZPOINT_STAT_FILE_COMPILED, isCompiled);
+
 	}
 
 	/**
@@ -287,6 +290,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_BAD_PERIODS_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_1_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_2_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.RMA_ZPOINT_STAT_REPORT);
 
 	}
 
