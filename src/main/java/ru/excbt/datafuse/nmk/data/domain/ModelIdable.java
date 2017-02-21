@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @since 20.02.2017
  * 
  */
-public interface ModelIdable<ID extends Serializable> {
-	ID getId();
+public interface ModelIdable<T extends Serializable> {
+	T getId();
+	void setId(Long id);
 }

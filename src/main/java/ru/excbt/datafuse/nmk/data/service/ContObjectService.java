@@ -1,7 +1,42 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
+import ru.excbt.datafuse.nmk.data.model.ContManagement;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.LocalPlace;
+import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
+import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
+import ru.excbt.datafuse.nmk.data.model.vo.ContObjectMonitorVO;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectGeoPosRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
+
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,40 +50,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContManagement;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
-import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
-import ru.excbt.datafuse.nmk.data.model.LocalPlace;
-import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
-import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.model.vo.ContObjectMonitorVO;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectGeoPosRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
-import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Сервис по работе с объектом учета
@@ -104,6 +106,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	@Autowired
 	private WeatherForecastService weatherForecastService;
 
+	@Autowired
+	private MeterPeriodSettingRepository meterPeriodSettingRepository;
+	
 	/**
 	 * 
 	 * @param id
@@ -725,4 +730,25 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				? weatherForecastService.selectLastWeatherForecast(localPlace.getWeatherPlaceId(), currentDate) : null;
 	}
 
+	/**
+	 * 
+	 * @param contObjectMeterPeriodSettingsDTO
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContObject updateMeterPeriodSettings(ContObjectMeterPeriodSettingsDTO contObjectMeterPeriodSettingsDTO) {
+		ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
+		if (contObject == null) {
+			entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
+		}
+
+		for (Map.Entry<String, Long> entry : contObjectMeterPeriodSettingsDTO.getMeterPeriodSettings().entrySet()) {
+			MeterPeriodSetting setting = new MeterPeriodSetting();
+			setting.setId(entry.getValue());
+			contObject.getMeterPeriodSettings().put(entry.getKey(), setting);
+		}
+		contObjectRepository.save(contObject);
+		return contObject;
+	}
+	
 }
