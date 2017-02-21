@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @param <PK>
  */
 @MappedSuperclass
-public abstract class AbstractPersistableEntity<PK extends Serializable> implements Persistable<PK> {
+public abstract class AbstractPersistableEntity<PK extends Serializable> implements Persistable<PK>, ModelIdable<PK> {
 
 	/**
 	 * 

@@ -1,6 +1,26 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
+import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Auditable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.InputStream;
@@ -12,27 +32,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Auditable;
-import org.springframework.data.domain.Persistable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-
-import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.service.ReportService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Базовый класс для контроллера
@@ -173,7 +173,7 @@ public class WebApiController {
 	 * @param actionProcess
 	 * @return
 	 */
-	protected <T extends Persistable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
+	protected <T extends ModelIdable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
 			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
 		return WebApiHelper.processResponceApiActionCreate(actionProcess, uriLocationSupplier);
 

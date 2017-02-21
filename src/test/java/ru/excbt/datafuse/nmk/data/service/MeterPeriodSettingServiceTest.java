@@ -5,6 +5,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
+import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -34,13 +35,28 @@ public class MeterPeriodSettingServiceTest extends JpaSupportTest {
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 	
+	@Autowired
+	private MeterPeriodSettingRepository meterPeriodSettingRepository;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected MeterPeriodSettingDTO createEntity() {
+		return new MeterPeriodSettingDTO();
+	}
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Transactional
 	@Test
 	public void testSave() throws Exception {
 		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 		assertFalse(ids.isEmpty());
 		
-		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().subscriberId(getSubscriberId()).build();
+		MeterPeriodSettingDTO setting = createEntity();
 		log.info("src: {}" ,setting);
 		MeterPeriodSettingDTO result = meterPeriodSettingService.save(setting);
 		

@@ -7,10 +7,13 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +30,7 @@ import com.google.common.collect.Lists;
  * 
  */
 @Service
-public class MeterPeriodSettingService {
+public class MeterPeriodSettingService extends SubscriberService {
 
 	@Autowired
 	private MeterPeriodSettingRepository meterPeriodSettingRepository;
@@ -35,6 +38,9 @@ public class MeterPeriodSettingService {
 	@Autowired
 	protected ModelMapper modelMapper;
 
+	@Autowired
+	protected CurrentSubscriberService currentSubscriberService;
+	
 	/**
 	 * 
 	 * @param subscriberParam
@@ -48,19 +54,59 @@ public class MeterPeriodSettingService {
 		return periodSettings.stream().map(i -> modelMapper.map(i, MeterPeriodSettingDTO.class)).collect(Collectors.toList());
 	}
 	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public MeterPeriodSettingDTO findOne(Long id) {
+		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
+		return setting != null ? modelMapper.map(setting, MeterPeriodSettingDTO.class) : null;
+	}	
+	
 	/**
 	 * 
 	 * @param meterPeriodSettingDTO
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
 	public MeterPeriodSettingDTO save(MeterPeriodSettingDTO meterPeriodSettingDTO) {
+		
+		if (meterPeriodSettingDTO.getId() != null) {
+			MeterPeriodSetting check = meterPeriodSettingRepository.findOne(meterPeriodSettingDTO.getId());
+			if (!check.getSubscriberId().equals(currentSubscriberService.getSubscriberId())) {
+				throw new AccessDeniedException("Invalid subscriber Id");
+			}
+		}
+		
 		MeterPeriodSetting meterPeriodSetting = modelMapper.map(meterPeriodSettingDTO, MeterPeriodSetting.class);
 		
+		meterPeriodSetting.setSubscriberId(currentSubscriberService.getSubscriberId());
 		meterPeriodSettingRepository.save(meterPeriodSetting);
 		
 		return modelMapper.map(meterPeriodSetting, MeterPeriodSettingDTO.class);
-		
 	}
+
+	/**
+	 * 
+	 * @param id
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public void delete(Long id) {
+		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
+		if (setting != null) {
+			setting.setDeleted(1);
+			meterPeriodSettingRepository.save(setting);
+		} else {
+			entityNotFoundException (MeterPeriodSetting.class, id);
+		}
+	}
+	
+	
+	
 	
 }

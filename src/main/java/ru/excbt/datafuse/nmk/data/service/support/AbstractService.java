@@ -1,19 +1,21 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
-
-import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Базовый класс для сервисов
@@ -112,4 +114,14 @@ public abstract class AbstractService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param clazz
+	 * @param id
+	 * @return
+	 */
+	public static <T extends Persistable<?>> PersistenceException entityNotFoundException (Class<T> clazz, Object id) {
+		throw new PersistenceException("Entity " + clazz.getSimpleName() + " with ID=" + id + " is not found");
+	}
+	
 }

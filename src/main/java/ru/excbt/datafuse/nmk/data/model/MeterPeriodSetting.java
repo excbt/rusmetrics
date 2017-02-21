@@ -58,4 +58,7 @@ public class MeterPeriodSetting extends AbstractAuditableModel {
 	@Column(name = "version")
 	private int version;
 
+	@Column(name = "deleted")
+	private int deleted;
+	
 }

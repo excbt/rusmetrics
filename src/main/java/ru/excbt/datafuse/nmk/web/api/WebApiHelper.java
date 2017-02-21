@@ -1,23 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.Serializable;
-import java.net.URI;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import javax.persistence.PersistenceException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Persistable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.transaction.TransactionSystemException;
-
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -26,6 +9,22 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.transaction.TransactionSystemException;
+
+import javax.persistence.PersistenceException;
+
+import java.io.Serializable;
+import java.net.URI;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Утилита для выполнения запросов контроллеров
@@ -124,7 +123,7 @@ public class WebApiHelper {
 	 * @param <T>
 	 * @param <K>
 	 */
-	private static abstract class ApiActionPersistableProcessWrapper<T extends Persistable<K>, K extends Serializable>
+	private static abstract class ApiActionPersistableProcessWrapper<T extends ModelIdable<K>, K extends Serializable>
 			extends ApiActionProcessWrapper<T> implements ApiActionAdapter, ApiActionLocation {
 
 		private ApiActionPersistableProcessWrapper() {
@@ -334,7 +333,7 @@ public class WebApiHelper {
 	 * @param uriLocationSupplier
 	 * @return
 	 */
-	public static <T extends Persistable<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
+	public static <T extends ModelIdable<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
 			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
 
 		checkNotNull(actionProcess);
