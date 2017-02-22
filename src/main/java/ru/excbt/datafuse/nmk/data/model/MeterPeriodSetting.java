@@ -4,6 +4,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "meter_period_setting")
 @Getter
 @Setter
-public class MeterPeriodSetting extends AbstractAuditableModel {
+public class MeterPeriodSetting extends AbstractAuditableModel implements DeletedMarker {
 
 	/**
 		 * 

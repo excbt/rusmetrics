@@ -20,7 +20,7 @@ import java.util.List;
  */
 public interface MeterPeriodSettingRepository extends CrudRepository<MeterPeriodSetting, Long> {
 
-	@Query("SELECT s FROM MeterPeriodSetting s WHERE s.subscriberId in (:subscriberIds)")
+	@Query("SELECT s FROM MeterPeriodSetting s WHERE s.subscriberId in (:subscriberIds) AND deleted = 0")
 	public List<MeterPeriodSetting> findBySubscriberIds (@Param("subscriberIds") List<Long> subscriberIds);
 	
 }

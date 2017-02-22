@@ -16,6 +16,8 @@ import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,8 @@ import static org.junit.Assert.*;
 
 public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 
+	private static final Logger log = LoggerFactory.getLogger(RmaSubscrContObjectControllerTest.class);
+	
 	@Autowired
 	private ContObjectService contObjectService;
 
@@ -61,6 +65,7 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 	 * @return
 	 */
 	private List<Long> findSubscriberContObjectIds() {
+		log.debug("Finding objects for subscriberId:{}", getSubscriberId());
 		List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 		assertFalse(result.isEmpty());
 		return result;
@@ -157,7 +162,7 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 
 	@Test
 	@Transactional
-	public void testGetContObjectMeterSettingsDTO() throws Exception {
+	public void testGetOneContObjectMeterSettingsDTO() throws Exception {
 		Long contObjectId = findSubscriberContObjectIds().get(0);
 		MeterPeriodSettingDTO setting = meterPeriodSettingService
 				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
@@ -165,12 +170,38 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 		MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
 
 		contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
-		contObjectRepository.save(contObject);
-		_testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId)).andDo((result) -> {
+		contObjectRepository.saveAndFlush(contObject);
+		_testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId))
+				.andDo((result) -> {
+				});
+	}
+
+	@Test
+	@Transactional
+	public void testGetAllContObjectMeterSettingsDTO() throws Exception {
+		Long contObjectId = findSubscriberContObjectIds().get(0);
+		MeterPeriodSettingDTO setting = meterPeriodSettingService
+				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
+		ContObject contObject = contObjectRepository.findOne(contObjectId);
+		MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
+
+		contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
+		contObjectRepository.saveAndFlush(contObject);
+		_testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/meterPeriodSettings")).andDo((result) -> {
 		});
+	}
 
-
-
+	@Test
+	@Transactional	
+	public void testUpdateAllContObjectMeterSettingsDTO() throws Exception {
+		MeterPeriodSettingDTO setting = meterPeriodSettingService
+				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
+		
+		ContObjectMeterPeriodSettingsDTO contObjectSettings = new ContObjectMeterPeriodSettingsDTO()
+				.contObjectIds(findSubscriberContObjectIds()).putSetting("cw", setting.getId());
+		
+		_testPutJson(apiRmaUrlTemplate("/contObjects/meterPeriodSettings"), contObjectSettings).andDo((result) -> {
+		});
 	}
 
 }

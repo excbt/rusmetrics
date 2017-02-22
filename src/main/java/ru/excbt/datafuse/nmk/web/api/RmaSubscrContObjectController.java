@@ -1,10 +1,15 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -17,13 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с объектами учета для РМА
@@ -217,6 +221,85 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		List<Long> resultList = subscrContObjectService.selectContObjectSubscriberIdsByRma(getRmaSubscriberId(),
 				contObjectId);
 		return responseOK(resultList);
+	}
+
+	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		ContObject result = contObjectService.findContObject(contObjectId);
+
+		ContObjectMeterPeriodSettingsDTO settings = ContObjectMeterPeriodSettingsDTO.builder()
+				.contObjectId(contObjectId).build();
+
+		for (Map.Entry<String, MeterPeriodSetting> entry : result.getMeterPeriodSettings().entrySet()) {
+			settings.putSetting(entry.getKey(), entry.getValue().getId());
+		}
+
+		return responseOK(settings);
+	}
+
+	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId,
+			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
+
+		if (settings.isSingle() == false) {
+			return responseBadRequest();
+		}
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		if (!contObjectId.equals(settings.getContObjectId())) {
+			return responseBadRequest();
+		}
+
+		ApiActionProcess<ContObject> process = () -> {
+			contObjectService.updateMeterPeriodSettings(settings);
+			return contObjectService.findContObject(settings.getContObjectId());
+		};
+
+		return responseUpdate(process);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectMeterPeriodSetting() {
+		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+		List<ContObjectMeterPeriodSettingsDTO> result = contObjectService.findMeterPeriodSettings(ids);
+		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateContObjectMeterPeriodSetting(
+			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
+		if (settings.isMulti() == false) {
+			return responseBadRequest();
+		}
+
+		if (!canAccessContObject(settings.getContObjectIds())) {
+			return responseForbidden();
+		}
+		ApiActionProcess<List<ContObjectMeterPeriodSettingsDTO>> process = () -> {
+			contObjectService.updateMeterPeriodSettings(settings);
+			return contObjectService.findMeterPeriodSettings(settings.getContObjectIds());
+		};
+		return responseOK(process);
 	}
 
 }
