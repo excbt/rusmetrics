@@ -223,8 +223,6 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		return responseOK(resultList);
 	}
 
-	
-
 	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
@@ -250,10 +248,10 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	public ResponseEntity<?> updateContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId,
 			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
 
-		if (settings.validateContObjectIds() == false) {
+		if (settings.isSingle() == false) {
 			return responseBadRequest();
 		}
-		
+
 		if (!canAccessContObject(contObjectId)) {
 			return responseForbidden();
 		}
@@ -261,21 +259,47 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		if (!contObjectId.equals(settings.getContObjectId())) {
 			return responseBadRequest();
 		}
-		
+
 		ApiActionProcess<ContObject> process = () -> {
-			return contObjectService.updateMeterPeriodSettings(settings);
+			contObjectService.updateMeterPeriodSettings(settings);
+			return contObjectService.findContObject(settings.getContObjectId());
 		};
 
 		return responseUpdate(process);
-	}	
+	}
 
-	
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectMeterPeriodSetting() {
-
-			return responseForbidden();
+		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+		List<ContObjectMeterPeriodSettingsDTO> result = contObjectService.findMeterPeriodSettings(ids);
+		return responseOK(result);
 	}
-	
-	
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateContObjectMeterPeriodSetting(
+			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
+		if (settings.isMulti() == false) {
+			return responseBadRequest();
+		}
+
+		if (!canAccessContObject(settings.getContObjectIds())) {
+			return responseForbidden();
+		}
+		ApiActionProcess<List<ContObjectMeterPeriodSettingsDTO>> process = () -> {
+			contObjectService.updateMeterPeriodSettings(settings);
+			return contObjectService.findMeterPeriodSettings(settings.getContObjectIds());
+		};
+		return responseOK(process);
+	}
+
 }

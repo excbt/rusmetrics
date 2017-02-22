@@ -22,10 +22,10 @@ import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectGeoPosRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 import org.joda.time.LocalDate;
@@ -92,6 +92,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
+
+	@Autowired
+	private SubscrContObjectRepository subscrContObjectRepository;
 
 	@Autowired
 	private ContManagementService contManagementService;
@@ -738,19 +741,32 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ContObject updateMeterPeriodSettings(ContObjectMeterPeriodSettingsDTO contObjectMeterPeriodSettingsDTO) {
-		ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
-		if (contObject == null) {
-			entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
+	public void updateMeterPeriodSettings(ContObjectMeterPeriodSettingsDTO contObjectMeterPeriodSettingsDTO) {
+		
+		List<ContObject> contObjectList = new ArrayList<>();
+		
+		if (contObjectMeterPeriodSettingsDTO.isSingle()) {
+			ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
+			if (contObject == null) {
+				entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
+			}
+			contObjectList.add(contObject);
+		} else if (contObjectMeterPeriodSettingsDTO.isMulti()) {
+			contObjectList.addAll(contObjectRepository.findAll(contObjectMeterPeriodSettingsDTO.getContObjectIds()));
 		}
-
-		for (Map.Entry<String, Long> entry : contObjectMeterPeriodSettingsDTO.getMeterPeriodSettings().entrySet()) {
-			MeterPeriodSetting setting = new MeterPeriodSetting();
-			setting.setId(entry.getValue());
-			contObject.getMeterPeriodSettings().put(entry.getKey(), setting);
-		}
-		contObjectRepository.save(contObject);
-		return contObject;
+		
+		contObjectList.forEach((contObject) -> {
+			if (Boolean.TRUE.equals(contObjectMeterPeriodSettingsDTO.getReplace())) {
+				contObject.getMeterPeriodSettings().clear();
+			}
+			for (Map.Entry<String, Long> entry : contObjectMeterPeriodSettingsDTO.getMeterPeriodSettings().entrySet()) {
+				MeterPeriodSetting setting = new MeterPeriodSetting();
+				setting.setId(entry.getValue());
+				contObject.getMeterPeriodSettings().put(entry.getKey(), setting);
+			}
+			contObjectRepository.save(contObject);
+		});
+		contObjectRepository.flush();
 	}
 
 	/**
@@ -759,23 +775,26 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectMeterPeriodSettingsDTO> findMeterPeriodSettings(SubscriberParam subscriberParam) {
+	public List<ContObjectMeterPeriodSettingsDTO> findMeterPeriodSettings(List<Long> contObjectIds) {
 
-		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(subscriberParam.getSubscriberId());
-
-		List<Tuple> values = contObjectRepository.findMeterPeriodSettings(ids);
+		List<Tuple> values = contObjectRepository.findMeterPeriodSettings(contObjectIds);
 		Map<Long, ContObjectMeterPeriodSettingsDTO> resultMap = values.stream().map(i -> (Long) i.get(0)).distinct()
 				.map(i -> new ContObjectMeterPeriodSettingsDTO().contObjectId(i))
 				.collect(Collectors.toMap(k -> k.getContObjectId(), v -> v));
 
 		values.forEach(i -> {
 			Long id = (Long) i.get(0);
-			resultMap.get(id).putSetting((String) i.get(1), (Long) i.get(2));
+			try {
+				MeterPeriodSetting m = (MeterPeriodSetting) i.get(2);
+				resultMap.get(id).putSetting((String) i.get(1), m.getId());				
+			} catch (Exception e) {
+				logger.error("V0:{}, V1:{}, V2:{}", i.get(0), i.get(1), i.get(2));
+				throw e;
+			}
+
 		});
 
 		return resultMap.entrySet().stream().map(m -> m.getValue()).collect(Collectors.toList());
 	}
 
-	
-	
 }

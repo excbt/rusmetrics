@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -40,14 +41,25 @@ public class ContObjectMeterPeriodSettingsDTO {
 	private Long contObjectId;
 
 	@JsonInclude(value = Include.NON_NULL)
-	private List<Long> contObjectIds = new ArrayList<>();
+	private List<Long> contObjectIds;
 	
 	private Map<String, Long> meterPeriodSettings = new HashMap<>();
 	
-	private boolean replace = false;
+	@JsonInclude(value = Include.NON_NULL)
+	private Boolean replace;
 	
 	public ContObjectMeterPeriodSettingsDTO contObjectId(Long id) {
 		this.contObjectId = id;
+		return this;
+	}
+
+	public ContObjectMeterPeriodSettingsDTO contObjectIds(List<Long> ids) {
+		if (contObjectIds == null) {
+			contObjectIds = new ArrayList<>();
+		} else {
+			contObjectIds.clear();
+		}
+		this.contObjectIds.addAll(ids);
 		return this;
 	}
 	
@@ -63,9 +75,20 @@ public class ContObjectMeterPeriodSettingsDTO {
 	 * 
 	 * @return
 	 */
+	@JsonIgnore
 	public boolean validateContObjectIds() {
-		return (contObjectId != null && (contObjectIds == null || contObjectIds.isEmpty())) ||
-			   (contObjectId == null && contObjectIds != null && !contObjectIds.isEmpty()); 	
+		return isSingle() ^ isMulti();
+//		(contObjectId != null && (contObjectIds == null || contObjectIds.isEmpty())) ||
+//			   (contObjectId == null && contObjectIds != null && !contObjectIds.isEmpty()); 	
 	}
 	
+	@JsonIgnore
+	public boolean isSingle() {
+		return contObjectId != null && (contObjectIds == null || contObjectIds.isEmpty());
+	}
+
+	@JsonIgnore
+	public boolean isMulti() {
+		return (contObjectId == null && contObjectIds != null && !contObjectIds.isEmpty());
+	}
 }

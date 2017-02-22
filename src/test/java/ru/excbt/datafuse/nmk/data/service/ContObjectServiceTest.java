@@ -4,6 +4,10 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 import org.joda.time.LocalDate;
@@ -25,7 +29,16 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	private ContObjectService contObjectService;
 
 	@Autowired
+	private ContObjectRepository contObjectRepository;
+
+	@Autowired
+	private SubscrContObjectRepository subscrContObjectRepository;
+
+	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private MeterPeriodSettingService meterPeriodSettingService;
 
 	/**
 	 * 
@@ -68,8 +81,21 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	@Test
 	@Transactional
 	public void testFindMeterPeriodSetting() throws Exception {
-		List<ContObjectMeterPeriodSettingsDTO> resultList = contObjectService.findMeterPeriodSettings(getSubscriberParam());
+		List<Long> ids = subscrContObjectRepository.selectContObjectIds(getSubscriberId());
+		List<ContObjectMeterPeriodSettingsDTO> resultList = contObjectService.findMeterPeriodSettings(ids);
 		assertTrue(resultList != null);
 	}
-	
+
+	@Test
+	@Transactional
+	public void testUpdateMeterPeriodSettingMulty() throws Exception {
+		List<Long> ids = subscrContObjectRepository.selectContObjectIds(getSubscriberId());
+		MeterPeriodSettingDTO settings = meterPeriodSettingService
+				.save(MeterPeriodSettingDTO.builder().name("My MeterPeriodSetting").build());
+		ContObjectMeterPeriodSettingsDTO contObjectsSettings = ContObjectMeterPeriodSettingsDTO.builder().contObjectIds(ids)
+				.build();
+		contObjectsSettings.putSetting(ContServiceTypeKey.CW.getKeyname(), settings.getId());
+		contObjectService.updateMeterPeriodSettings(contObjectsSettings);
+	}
+
 }
