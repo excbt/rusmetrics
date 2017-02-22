@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 import org.joda.time.LocalDate;
@@ -37,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +110,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private MeterPeriodSettingRepository meterPeriodSettingRepository;
-	
+
 	/**
 	 * 
 	 * @param id
@@ -735,7 +737,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @param contObjectMeterPeriodSettingsDTO
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ContObject updateMeterPeriodSettings(ContObjectMeterPeriodSettingsDTO contObjectMeterPeriodSettingsDTO) {
 		ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
 		if (contObject == null) {
@@ -750,5 +752,30 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObjectRepository.save(contObject);
 		return contObject;
 	}
+
+	/**
+	 * 
+	 * @param subscriberParam
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectMeterPeriodSettingsDTO> findMeterPeriodSettings(SubscriberParam subscriberParam) {
+
+		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(subscriberParam.getSubscriberId());
+
+		List<Tuple> values = contObjectRepository.findMeterPeriodSettings(ids);
+		Map<Long, ContObjectMeterPeriodSettingsDTO> resultMap = values.stream().map(i -> (Long) i.get(0)).distinct()
+				.map(i -> new ContObjectMeterPeriodSettingsDTO().contObjectId(i))
+				.collect(Collectors.toMap(k -> k.getContObjectId(), v -> v));
+
+		values.forEach(i -> {
+			Long id = (Long) i.get(0);
+			resultMap.get(id).putSetting((String) i.get(1), (Long) i.get(2));
+		});
+
+		return resultMap.entrySet().stream().map(m -> m.getValue()).collect(Collectors.toList());
+	}
+
+	
 	
 }
