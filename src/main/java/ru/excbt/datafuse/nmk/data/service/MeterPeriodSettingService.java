@@ -4,6 +4,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
@@ -53,7 +54,7 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 		List<Long> ids = Lists.newArrayList(Long.valueOf(subscriberParam.getSubscriberId()), Long.valueOf(subscriberParam.getRmaSubscriberId()));
 		
 		List<MeterPeriodSetting> periodSettings = meterPeriodSettingRepository.findBySubscriberIds(ids);
-		return periodSettings.stream().map(i -> modelMapper.map(i, MeterPeriodSettingDTO.class)).collect(Collectors.toList());
+		return periodSettings.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> modelMapper.map(i, MeterPeriodSettingDTO.class)).collect(Collectors.toList());
 	}
 	
 	
@@ -65,7 +66,7 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public MeterPeriodSettingDTO findOne(Long id) {
 		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
-		return setting != null ? modelMapper.map(setting, MeterPeriodSettingDTO.class) : null;
+		return setting != null && setting.getDeleted() == 0 ? modelMapper.map(setting, MeterPeriodSettingDTO.class) : null;
 	}	
 	
 	/**
