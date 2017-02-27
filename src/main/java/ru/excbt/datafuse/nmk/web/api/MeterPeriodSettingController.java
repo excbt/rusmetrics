@@ -29,7 +29,7 @@ import java.util.List;
  * 
  */
 @Controller
-@RequestMapping(value = "/api/rma")
+@RequestMapping(value = "/api/subscr")
 public class MeterPeriodSettingController extends SubscrApiController {
 
 	@Autowired

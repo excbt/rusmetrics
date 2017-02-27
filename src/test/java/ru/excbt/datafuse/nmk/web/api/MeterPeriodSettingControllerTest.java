@@ -35,7 +35,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 	@Transactional
 	public void testCreate() throws Exception {
 		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
-		Long id = _testCreateJson("/api/rma/meter-period-settings", setting);
+		Long id = _testCreateJson("/api/subscr/meter-period-settings", setting);
 		assertNotNull(id);
 	}
 
@@ -44,7 +44,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 	public void testGetOne() throws Exception {
 		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
 		setting = meterPeriodSettingService.save(setting);
-		String content = _testGetJson("/api/rma/meter-period-settings/" + setting.getId());
+		String content = _testGetJson("/api/subscr/meter-period-settings/" + setting.getId());
 		MeterPeriodSettingDTO result = fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
 		}, content);
 		assertEquals(setting.getId(), result.getId());
@@ -56,7 +56,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
 		setting = meterPeriodSettingService.save(setting);
 		final MeterPeriodSettingDTO checkSetting = new MeterPeriodSettingDTO(setting);
-		_testGetJsonResultActions("/api/rma/meter-period-settings").andDo((result) -> {
+		_testGetJsonResultActions("/api/subscr/meter-period-settings").andDo((result) -> {
 			List<MeterPeriodSettingDTO> resultDTOs = fromJSON(new TypeReference<List<MeterPeriodSettingDTO>>() {
 			}, result.getResponse().getContentAsString());
 			assertTrue(resultDTOs.stream().filter(i -> i.getId().equals(checkSetting.getId())).findAny().isPresent());
@@ -71,7 +71,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 		setting = meterPeriodSettingService.save(setting);
 		MeterPeriodSettingDTO newSetting = new MeterPeriodSettingDTO(setting);
 		newSetting.setName("New Name");
-		_testPutJson("/api/rma/meter-period-settings", newSetting).andExpect(status().isOk()).andDo((result) -> {
+		_testPutJson("/api/subscr/meter-period-settings", newSetting).andExpect(status().isOk()).andDo((result) -> {
 			MeterPeriodSettingDTO resultDTO = fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
 			}, result.getResponse().getContentAsString());
 			assertEquals(resultDTO.getId(), newSetting.getId());
@@ -84,7 +84,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 	public void testDelete() throws Exception {
 		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
 		setting = meterPeriodSettingService.save(setting);
-		_testDeleteJson("/api/rma/meter-period-settings/" + setting.getId());
+		_testDeleteJson("/api/subscr/meter-period-settings/" + setting.getId());
 	}
 
 }
