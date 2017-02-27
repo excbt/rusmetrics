@@ -75,7 +75,7 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_ADMIN, ROLE_ADMIN })
 	public MeterPeriodSettingDTO save(MeterPeriodSettingDTO meterPeriodSettingDTO) {
 		
 		if (meterPeriodSettingDTO.getId() != null) {
@@ -98,7 +98,7 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 	 * @param id
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_ADMIN, ROLE_ADMIN })
 	public void delete(Long id) {
 		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
 		if (setting != null) {
