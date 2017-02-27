@@ -13,6 +13,18 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
+        <li ng-hide="isTestMode()"
+            id="meter_period_setting_2nd_menu_item" 
+            role="presentation"
+            class="">
+            <a class="nmc-main-tab-button"  
+               href="#/settings/meter-period-setting/" 
+               aria-controls="meter-period-setting" 
+               role="tab" 
+               data-target="#meter-period-setting" 
+               data-toggle="tab">Настройка отчетных периодов
+            </a>
+        </li>
         <li role="presentation" ng-show="isSystemViewInfo()"><a class="nmc-main-tab-button" href="#/settings/about-program/" aria-controls="about-program" data-target="#about-program" role="tab" data-toggle="tab">О программе</a></li>
 
     </ul>

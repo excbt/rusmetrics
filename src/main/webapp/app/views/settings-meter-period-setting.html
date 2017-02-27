@@ -5,45 +5,15 @@
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
-<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
-        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
-        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
-        <li ng-if="isSystemuser()"
-            ng-hide="isTestMode()"
-            id="modems_edit_2nd_menu_item" role="presentation">
-            <a class="nmc-main-tab-button" 
-               href="#/management/modems/" 
-               aria-controls="modems" 
-               role="tab" 
-               data-target="#modems" 
-               data-toggle="tab">Модемы
-            </a>
-        </li>
-        <li ng-if="isSystemuser()"
-            ng-hide="isTestMode()"
-            id="models_edit_2nd_menu_item" role="presentation">
-            <a class="nmc-main-tab-button" 
-               href="#/management/device-models/" 
-               aria-controls="device-models" 
-               role="tab" 
-               data-target="#device-models" 
-               data-toggle="tab">Модели приборов
-            </a>
-        </li>
-        <li id="organizations_edit_2nd_menu_item" role="presentation">
-            <a class="nmc-main-tab-button" 
-               href="#/management/organizations/" 
-               aria-controls="organizations" 
-               role="tab" 
-               data-target="#organizations" 
-               data-toggle="tab">Организации
-            </a>
-        </li>
-        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-        <li id="temperature_schedules_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/object-view/" aria-controls="object-view" data-target="#object-view" role="tab" data-toggle="tab">Объекты</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>        
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
         <li id="meter_period_setting_2nd_menu_item" 
             role="presentation"
             class="active">
@@ -51,6 +21,7 @@
                >Настройка отчетных периодов
             </a>
         </li>
+        <li role="presentation" ng-show="isSystemViewInfo()"><a class="nmc-main-tab-button" href="#/settings/about-program/" aria-controls="about-program" data-target="#about-program" role="tab" data-toggle="tab">О программе</a></li>
 
     </ul>
 

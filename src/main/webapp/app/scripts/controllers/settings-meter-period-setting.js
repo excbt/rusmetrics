@@ -2,7 +2,7 @@
 /*global angular, $, alert, moment*/
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtMeterPeriodSettingCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+.controller('SettingsMeterPeriodSettingCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
     $rootScope.ctxId = "management_rma_meter_period_setting_page";
     
     var METER_PERIOD_SETTING_URl = "../api/rma/meter-period-settings";
@@ -173,6 +173,10 @@ angular.module('portalNMC')
     $scope.isTestMode = function () {
         return mainSvc.isTestMode();
     };
+    
+    $scope.isSystemViewInfo = function () {
+        return mainSvc.getViewSystemInfo();
+    }
     
     function initCtrl() {
         loadMeterPeriodSetting();
