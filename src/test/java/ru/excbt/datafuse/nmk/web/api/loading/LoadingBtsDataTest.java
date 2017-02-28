@@ -10,20 +10,31 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
 import ru.excbt.datafuse.nmk.utils.LoadingBtsData;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.utils.ResourceHelper;
+import ru.excbt.datafuse.nmk.utils.LoadingBtsData.BtsInfo;
+import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.*;
 import static org.junit.Assert.*;
 
 /**
@@ -38,9 +49,16 @@ roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_A
 		"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
 public class LoadingBtsDataTest extends RmaControllerTest {
 
+	/**
+	 * 
+	 */
+	
+	private static final Logger log = LoggerFactory.getLogger(LoadingBtsDataTest.class);
+	
 	private final long BTS_DATA_SOURCE_ID = 128908069;
 	private final long DEVICE_MODEL_ID = 128647057;
 	private final long RSO_ORGANIZARION_ID = 66244571;
+	private final long CM_ORGANIZARION_ID = 31904329;
 	private final boolean DO_DELETE = false;
 	
 	private final static Long ROM_RMA_SUBSCRIBER_USER_ID = 103926903L;
@@ -64,7 +82,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 
 		List<LoadingResult> loadingResults = new ArrayList<>();
 
-		List<LoadingBtsData.BtsInfo> btsInfos = LoadingBtsData.loadBtsInfo("БТСки.csv");
+		List<LoadingBtsData.BtsInfo> btsInfos = LoadingBtsData.loadBtsInfo("./bts-loading/БТСки.csv");
 
 		int cnt = 0;
 
@@ -74,13 +92,19 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			res.info = info;
 
 			ContObject co = new ContObject();
-			co.setDescription("Рамашкино БТС");
-			co.setName("Ромашкино " + info.getRiserNr() + " БТС № " + info.getBtsNr());
-			co.setOwner("РОМАШКИНО");
+			co.setFullName("Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr());
+			co.setDescription("Ромашкино БТС");
+			co.setFullName("Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr());
+			co.setOwner("РОМАШКОВО");
 			co.setTimezoneDefKeyname(TimezoneDefKey.MSK.getKeyname());
+			co.setCurrentSettingMode("summer");
 
+			RequestExtraInitializer params = (builder) -> {
+				builder.param("cmOrganizationId", String.valueOf(CM_ORGANIZARION_ID));
+			};
+			
 			// Make ContObject
-			Long contObjectId = _testCreateJson("/api/rma/contObjects", co);
+			Long contObjectId = _testCreateJson("/api/rma/contObjects", co, params);
 			assertNotNull(contObjectId);
 			res.contObjectId = contObjectId;
 
@@ -115,8 +139,8 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 				contZPoint.set_activeDeviceObjectId(deviceObjectIds[i - 1]);
 				contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.CW.getKeyname());
 				contZPoint.setContZPointComment(
-						"Ромашкино. " + info.getRiserNr() + " БТС № " + info.getBtsNr() + " (" + info.getAptNr() + ")");
-				contZPoint.setCustomServiceName("Водоснабжение: Имульсный Счетчик");
+						"Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr() + " (" + info.getAptNr().toLowerCase() + ")");
+				contZPoint.setCustomServiceName("Водоснабжение: Имульсный Счетчик, "+ " (" + info.getAptNr().toLowerCase() + ")");
 				contZPoint.setDoublePipe(false);
 				contZPoint.setStartDate(LocalDateUtils.asDate(LocalDate.now()));
 				contZPoint.setRsoId(RSO_ORGANIZARION_ID);
@@ -160,23 +184,80 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 		System.err.println("======================================================");
 
 		if (DO_DELETE)
-			for (LoadingResult r : loadingResults) {
-				// Delete ContZpoints
-				for (int i = 0; i < r.contZPointIds.size(); i++) {
-					_testDeleteJson(String.format("/api/rma/contObjects/%d/zpoints/%d", r.contObjectId,
-							r.contZPointIds.get(i)));
-				}
-				// Delete DeviceObjects
-				for (int i = 0; i < r.deviceObjectIds.size(); i++) {
-					_testDeleteJson(String.format("/api/rma/contObjects/%d/deviceObjects/%d", r.contObjectId,
-							r.deviceObjectIds.get(i)));
-				}
-				//
-				_testDeleteJson(String.format("/api/rma/contObjects/%d", r.contObjectId));
-			}
+			doDelete (loadingResults);
+	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	@Test
+	@Transactional
+	public void testDeleteBtsData() throws Exception {
+		
+		List<LoadingResult> loadingResults = new ArrayList<>();
+		
+		File f = ResourceHelper.findResource("./bts-loading/result-bts-test.txt");
+		log.info("File: {}", f.getAbsolutePath());
+		try (Reader r = new FileReader("result-ts.txt")) {
+			try (BufferedReader br = new BufferedReader(r)) {
+				String line;
+				Long contObjectId = 0L;
+				Long contZpointId = 0L;
+				Long deviceObjectId = 0L;
+				LoadingResult lr = null;
+				while ((line = br.readLine()) != null) {
+					log.debug("Line: {}", line);
+					String data[] = line.split(":");
+					String type = data[0].trim();
+					log.debug("type: {}, ID: {}", type, data[1]);
+					if (type.equals("A")) {
+						contObjectId = Long.parseLong(data[1]);
+						if (lr != null) {
+							loadingResults.add(lr);
+						}
+						lr = new LoadingResult();
+						lr.contObjectId = contObjectId;
+					}
+					if (type.equals("B")) {
+						contZpointId = Long.parseLong(data[1]);
+						lr.contZPointIds.add(contZpointId);
+					}
+					if (type.equals("C")) {
+						deviceObjectId = Long.parseLong(data[1]);
+						lr.deviceObjectIds.add(deviceObjectId);
+					}
+				}
+
+				if (lr != null && !loadingResults.contains(lr)) {
+					loadingResults.add(lr);
+				}
+			}
+		}	
+		doDelete (loadingResults);
 	}
 	
+	
+	/**
+	 * 
+	 */
+	private void doDelete(List<LoadingResult> loadingResults) throws Exception {
+		for (LoadingResult r : loadingResults) {
+			// Delete ContZpoints
+			for (int i = 0; i < r.contZPointIds.size(); i++) {
+				_testDeleteJson(String.format("/api/rma/contObjects/%d/zpoints/%d", r.contObjectId,
+						r.contZPointIds.get(i)));
+			}
+			// Delete DeviceObjects
+			for (int i = 0; i < r.deviceObjectIds.size(); i++) {
+				_testDeleteJson(String.format("/api/rma/contObjects/%d/deviceObjects/%d", r.contObjectId,
+						r.deviceObjectIds.get(i)));
+			}
+			//
+			_testDeleteJson(String.format("/api/rma/contObjects/%d", r.contObjectId));
+		}
+	}
 	
 	/**
 	 * 
