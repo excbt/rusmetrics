@@ -281,6 +281,11 @@ public class SubscrContObjectController extends SubscrApiController {
 		return responseOK(organizations);
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
@@ -289,18 +294,17 @@ public class SubscrContObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		ContObject result = contObjectService.findContObject(contObjectId);
-
-		ContObjectMeterPeriodSettingsDTO settings = ContObjectMeterPeriodSettingsDTO.builder()
-				.contObjectId(contObjectId).build();
-
-		for (Map.Entry<String, MeterPeriodSetting> entry : result.getMeterPeriodSettings().entrySet()) {
-			settings.putSetting(entry.getKey(), entry.getValue().getId());
-		}
-
-		return responseOK(settings);
+		ApiActionProcess<ContObjectMeterPeriodSettingsDTO> process = () -> contObjectService.getContObjectMeterPeriodSettings(contObjectId);
+		
+		return responseOK(process);
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param settings
+	 * @return
+	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId,

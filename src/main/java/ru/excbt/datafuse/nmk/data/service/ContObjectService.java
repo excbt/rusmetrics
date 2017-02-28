@@ -797,4 +797,25 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		return resultMap.entrySet().stream().map(m -> m.getValue()).collect(Collectors.toList());
 	}
 
+	
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContObjectMeterPeriodSettingsDTO getContObjectMeterPeriodSettings(Long contObjectId) {
+		ContObject result = findContObject(contObjectId);
+
+		ContObjectMeterPeriodSettingsDTO settings = ContObjectMeterPeriodSettingsDTO.builder()
+				.contObjectId(contObjectId).build();
+
+		for (Map.Entry<String, MeterPeriodSetting> entry : result.getMeterPeriodSettings().entrySet()) {
+			settings.putSetting(entry.getKey(), entry.getValue().getId());
+		}
+
+		return settings;
+	}
+	
+	
 }
