@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 import org.junit.Test;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
@@ -32,12 +33,19 @@ import static org.junit.Assert.*;
  * @since 27.02.2017
  * 
  */
+@WithMockUser(username = "rma-77-admin", 
+roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
+		"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
 public class LoadingBtsDataTest extends RmaControllerTest {
 
-	private final long BTS_DATA_SOURCE_ID = 128647056;
+	private final long BTS_DATA_SOURCE_ID = 128908069;
 	private final long DEVICE_MODEL_ID = 128647057;
-	private final long RSO_ORGANIZARION_ID = 25201856;
+	private final long RSO_ORGANIZARION_ID = 66244571;
 	private final boolean DO_DELETE = false;
+	
+	private final static Long ROM_RMA_SUBSCRIBER_USER_ID = 103926903L;
+	private final static Long ROM_RMA_SUBSCRIBER_ID = 103926764L;
+	
 
 	private final static class LoadingResult {
 		private LoadingBtsData.BtsInfo info;
@@ -168,4 +176,24 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			}
 
 	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscriberId() {
+		return ROM_RMA_SUBSCRIBER_ID;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	public long getSubscrUserId() {
+		return ROM_RMA_SUBSCRIBER_USER_ID;
+	}	
+	
 }
