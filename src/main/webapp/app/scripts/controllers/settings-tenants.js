@@ -1,10 +1,33 @@
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window', 'objectSvc',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window, objectSvc) {
+.controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window', 'objectSvc', 'meterPeriodsSvc',
+            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window, objectSvc, meterPeriodsSvc) {
                 $rootScope.ctxId = "settings_tenants_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
+                
+                var RESOURCE_SYSTEMS = [
+                    {
+                        keyname: "heat",
+                        caption: "Система отопления",
+                        shortCaption: "СО"
+                    },
+                    {
+                        keyname: "hw",
+                        caption: "Горячее водоснабжение",
+                        shortCaption: "ГВС"
+                    },
+                    {
+                        keyname: "cw",
+                        caption: "Холодное водоснабжение",
+                        shortCaption: "ХВС"
+                    },
+                    {
+                        keyname: "el",
+                        caption: "Электроэнергия",
+                        shortCaption: "Эл-во"
+                    }
+                ];
                 
                     //messages for user
                 $scope.messages = {};
@@ -17,6 +40,7 @@ angular.module('portalNMC')
                 $scope.messages.viewProps = "Данные пользователя";                
                 $scope.messages.createTenant = "Создать пользователя";
                 $scope.messages.changeTenantPassword = "Сменить пароль";
+                $scope.messages.meterPeriods = "Отчетные периоды";
  
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
@@ -69,6 +93,29 @@ angular.module('portalNMC')
                 
                 $scope.data = {};
                 
+                $scope.data.resourceSystems = [];/*[
+                    {
+                        keyname: "heat",
+                        caption: "Система отопления",
+                        shortCaption: "СО"
+                    },
+                    {
+                        keyname: "hw",
+                        caption: "Горячее водоснабжение",
+                        shortCaption: "ГВС"
+                    },
+                    {
+                        keyname: "cw",
+                        caption: "Холодное водоснабжение",
+                        shortCaption: "ХВС"
+                    },
+                    {
+                        keyname: "el",
+                        caption: "Электроэнергия",
+                        shortCaption: "Эл-во"
+                    }
+                ];
+                */
                 $scope.object = {};
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
@@ -1478,8 +1525,83 @@ console.log(e);
                     $('#inputTenantPassword').focus();
                 });
                 
+//****************************************************************************************
+//Meter periods
+//****************************************************************************************
+                
+                $scope.data.meterPeriods = [];
+                $scope.data.currentObject = {};
+                
+                function successLoadMeterPeriodsCallback(resp) {
+                    console.log(resp);
+                    if (angular.isUndefined(resp) || resp === null || !angular.isArray(resp.data)) {
+                        console.log("Meter periods is empty.");
+                        return false;
+                    }
+                    $scope.data.meterPeriods = angular.copy(resp.data);
+                }
+                
+                function successGetMeterPeriodByObjectCallback(resp) {
+                    console.log(resp);
+                    $("#nmcMeterPeriodsModal").modal();
+                }
+                
+                function loadMeterPeriods() {
+                    meterPeriodsSvc.loadMeterPeriods().then(successLoadMeterPeriodsCallback, errorCallback);
+                }
+                
+                function getMeterPeriodByObject(contObjId) {
+                    objectSvc.getMeterPeriodByObject(contObjId).then(successGetMeterPeriodByObjectCallback, errorCallback);
+                }
+                
+                $scope.openMeterPeriods = function (objectData) {
+                    $scope.data.resourceSystems = angular.copy(RESOURCE_SYSTEMS);
+                    $scope.data.currentObjectData = objectData;
+                    getMeterPeriodByObject(objectData.contObjectInfo.contObjectId);
+                };
+                
+                $scope.saveMeterPeriodSettings = function (inputData) {
+//console.log("Input data:");
+//console.log(inputData);
+                    var result = {};
+                    if (mainSvc.checkUndefinedNull($scope.data.currentObjectData) 
+                        || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo) 
+                        || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo.contObjectId)) {
+                        console.log("Current object data is incorrect.");
+                        return false;
+                    }
+                    
+                    if (!angular.isArray(inputData)) {
+                        console.log("Meter period data for resource systems is incorrect.");
+                        return false;
+                    }
+                    
+                    result.contObjectId = $scope.data.currentObjectData.contObjectInfo.contObjectId;
+                    inputData.forEach(function (systemMeterPeriodSetting) {
+                        if (!mainSvc.checkUndefinedNull(systemMeterPeriodSetting.value)) {
+                            if (mainSvc.checkUndefinedNull(result.meterPeriodSettings)) {
+                                result.meterPeriodSettings = {};
+                            }
+                            result.meterPeriodSettings[systemMeterPeriodSetting.keyname] = systemMeterPeriodSetting.value;
+                        }    
+                    });                    
+//console.log("Result:");
+//console.log(result);
+                    
+                    if (mainSvc.checkUndefinedNull(result.meterPeriodSettings)) {
+                        console.log("Meter period settings is incorrect.");
+                        return false;
+                    }
+                    
+                    objectSvc.setMeterPeriodForObject(result).then(function (resp) {
+                        console.log(resp);
+                    }, errorCallback);
+                };
+                                
+                
                 //controller initialization
-                var initCtrl = function(){
+                var initCtrl = function () {
+                    loadMeterPeriods();
                     //if tree is off
                     if ($scope.objectCtrlSettings.isTreeView == false){
                         getCabinetsData();

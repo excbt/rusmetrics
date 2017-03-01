@@ -187,7 +187,8 @@
                                                   <ul class="dropdown-menu">
                                                     <li><a href="" ng-click="createCabinets()">{{messages.createTenants}}</a></li>
                                                     <li><a href="" ng-click="resetPasswords()">{{messages.recreateTenantPasswords}}</a></li>
-                                                    <li><a href="" ng-click="sendLDByEmail()">{{messages.sendLoginInfoByEmail}}</a></li>  
+                                                    <li><a href="" ng-click="sendLDByEmail()">{{messages.sendLoginInfoByEmail}}</a></li>
+                                                    <li><a href="" ng-click="setMeterPeriods()">{{messages.meterPeriods}}</a></li>    
                                                     <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'"><a href="" 
                                                            data-target="#viewTreeModal" 
                                                            data-toggle="modal" 
@@ -353,6 +354,12 @@
                                                 <a href=""                                             
                                                    ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
                                             </li>
+                                            <li>
+                                                <a href="" 
+                                                   ng-click="openMeterPeriods(object)">
+                                                    {{messages.meterPeriods}}
+                                                </a>
+                                            </li>  
                                             <li ng-if="!checkUndefinedNull(object.cabinet)" role="separator" class="divider"></li>
                                             <li ng-if="!checkUndefinedNull(object.cabinet)">
                                                 <a href="" 
@@ -361,7 +368,7 @@
                                                    data-toggle="modal">
                                                     {{messages.deleteLogin}}
                                                 </a>
-                                            </li>  
+                                            </li>                                            
                                           </ul>
                                         </div>            
                                         <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
@@ -956,4 +963,14 @@
       <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">
       </li>
     </ol>
-</script>    
+</script>
+
+<div nmc-view-meter-periods-modal 
+     cont-object-name = "{{data.currentObjectData.contObjectInfo.fullName}}"
+     meter-period-list="data.meterPeriods"
+     resource-system-list = "data.resourceSystems"
+     btn-click="saveMeterPeriodSettings(data.resourceSystems)"
+     btn-ok-caption="Сохранить"
+     show-ok-button="true"
+     show-cancel-button="true">
+</div>

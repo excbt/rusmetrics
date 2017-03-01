@@ -8,7 +8,7 @@ angular.module('portalNMC')
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
                 
-                var RADIX = 10;
+                var RADIX = 10;//for parseInt
                 
                     //messages for user
                 $scope.messages = {};
