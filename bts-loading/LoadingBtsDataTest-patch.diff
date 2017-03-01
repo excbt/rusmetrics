@@ -1,0 +1,38 @@
+diff --git a/src/test/java/ru/excbt/datafuse/nmk/web/api/loading/LoadingBtsDataTest.java b/src/test/java/ru/excbt/datafuse/nmk/web/api/loading/LoadingBtsDataTest.java
+index a79e9f4..0db25e7 100644
+--- a/src/test/java/ru/excbt/datafuse/nmk/web/api/loading/LoadingBtsDataTest.java
++++ b/src/test/java/ru/excbt/datafuse/nmk/web/api/loading/LoadingBtsDataTest.java
+@@ -55,10 +55,10 @@ public class LoadingBtsDataTest extends RmaControllerTest {
+ 	
+ 	private static final Logger log = LoggerFactory.getLogger(LoadingBtsDataTest.class);
+ 	
+-	private final long BTS_DATA_SOURCE_ID = 128908069;
+-	private final long DEVICE_MODEL_ID = 128647057;
++	private final long BTS_DATA_SOURCE_ID = 193304911;
++	private final long DEVICE_MODEL_ID = 193304913;
+ 	private final long RSO_ORGANIZARION_ID = 66244571;
+-	private final long CM_ORGANIZARION_ID = 31904329;
++	private final long CM_ORGANIZARION_ID = 103926978;
+ 	private final boolean DO_DELETE = false;
+ 	
+ 	private final static Long ROM_RMA_SUBSCRIBER_USER_ID = 103926903L;
+@@ -77,7 +77,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
+ 	 * 
+ 	 */
+ 	@Test
+-	@Transactional
++	//@Transactional
+ 	public void testLoadingBtsData() throws Exception {
+ 
+ 		List<LoadingResult> loadingResults = new ArrayList<>();
+@@ -153,8 +153,8 @@ public class LoadingBtsDataTest extends RmaControllerTest {
+ 			loadingResults.add(res);
+ 			cnt++;
+ 			// Break for cycle of BtsInfo
+-			if (cnt > 3)
+-				break;
++//			if (cnt > 3)
++//				break;
+ 
+ 		}
+ 
