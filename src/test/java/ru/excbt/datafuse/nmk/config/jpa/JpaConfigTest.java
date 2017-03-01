@@ -5,18 +5,26 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import ru.excbt.datafuse.nmk.config.PropertyConfig;
-import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
+import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-		classes = { PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class })
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { JpaConfigTest.class })
+@ActiveProfiles(value = { Constants.SPRING_PROFILE_TEST, Constants.SPRING_PROFILE_DEVELOPMENT })
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
+@Import(value = { DatabaseConfig.class })
 public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo, TestExcbtRmaIds {
 
 	private final static long TEST_AUDIT_USER = 1;
