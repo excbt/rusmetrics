@@ -150,7 +150,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
 
 	@Transient
-	private DataSourceInfo editDataSourceInfo;
+	private DataSourceInfo editDataSourceInfo = new DataSourceInfo();
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "device_model_id", nullable = false)

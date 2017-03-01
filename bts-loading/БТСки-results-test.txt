@@ -1,0 +1,2542 @@
+LOADING RESULTS
+БТС: LoadingBtsData.BtsInfo(btsNr=1, riserNr=Стояк 1.1, aptNr=Кв. 3,7,11,15,19,23, porchNr=1 Подъезд)
+contObjectId: 128910413
+ContZPointId: 128910450; deviceObjectId: 128910418
+ContZPointId: 128910454; deviceObjectId: 128910422
+ContZPointId: 128910458; deviceObjectId: 128910426
+ContZPointId: 128910462; deviceObjectId: 128910430
+ContZPointId: 128910466; deviceObjectId: 128910434
+ContZPointId: 128910470; deviceObjectId: 128910438
+ContZPointId: 128910474; deviceObjectId: 128910442
+ContZPointId: 128910478; deviceObjectId: 128910446
+БТС: LoadingBtsData.BtsInfo(btsNr=2, riserNr=Стояк 1.1, aptNr=Кв. 3,7,11,15,19,23, porchNr=1 Подъезд)
+contObjectId: 128910482
+ContZPointId: 128910519; deviceObjectId: 128910487
+ContZPointId: 128910523; deviceObjectId: 128910491
+ContZPointId: 128910527; deviceObjectId: 128910495
+ContZPointId: 128910531; deviceObjectId: 128910499
+ContZPointId: 128910535; deviceObjectId: 128910503
+ContZPointId: 128910539; deviceObjectId: 128910507
+ContZPointId: 128910543; deviceObjectId: 128910511
+ContZPointId: 128910547; deviceObjectId: 128910515
+БТС: LoadingBtsData.BtsInfo(btsNr=3, riserNr=Стояк 1.2, aptNr=Кв. 3,7,11,15,19,23, porchNr=1 Подъезд)
+contObjectId: 128910551
+ContZPointId: 128910588; deviceObjectId: 128910556
+ContZPointId: 128910592; deviceObjectId: 128910560
+ContZPointId: 128910596; deviceObjectId: 128910564
+ContZPointId: 128910600; deviceObjectId: 128910568
+ContZPointId: 128910604; deviceObjectId: 128910572
+ContZPointId: 128910608; deviceObjectId: 128910576
+ContZPointId: 128910612; deviceObjectId: 128910580
+ContZPointId: 128910616; deviceObjectId: 128910584
+БТС: LoadingBtsData.BtsInfo(btsNr=4, riserNr=Стояк 1.2, aptNr=Кв. 3,7,11,15,19,23, porchNr=1 Подъезд)
+contObjectId: 128910620
+ContZPointId: 128910657; deviceObjectId: 128910625
+ContZPointId: 128910661; deviceObjectId: 128910629
+ContZPointId: 128910665; deviceObjectId: 128910633
+ContZPointId: 128910669; deviceObjectId: 128910637
+ContZPointId: 128910673; deviceObjectId: 128910641
+ContZPointId: 128910677; deviceObjectId: 128910645
+ContZPointId: 128910681; deviceObjectId: 128910649
+ContZPointId: 128910685; deviceObjectId: 128910653
+БТС: LoadingBtsData.BtsInfo(btsNr=5, riserNr=Стояк 1.4, aptNr=Кв. 5,9,13,17,21, porchNr=1 Подъезд)
+contObjectId: 128910689
+ContZPointId: 128910726; deviceObjectId: 128910694
+ContZPointId: 128910730; deviceObjectId: 128910698
+ContZPointId: 128910734; deviceObjectId: 128910702
+ContZPointId: 128910738; deviceObjectId: 128910706
+ContZPointId: 128910742; deviceObjectId: 128910710
+ContZPointId: 128910746; deviceObjectId: 128910714
+ContZPointId: 128910750; deviceObjectId: 128910718
+ContZPointId: 128910754; deviceObjectId: 128910722
+БТС: LoadingBtsData.BtsInfo(btsNr=6, riserNr=Стояк 1.4, aptNr=Кв. 5,9,13,17,21, porchNr=1 Подъезд)
+contObjectId: 128910758
+ContZPointId: 128910795; deviceObjectId: 128910763
+ContZPointId: 128910799; deviceObjectId: 128910767
+ContZPointId: 128910803; deviceObjectId: 128910771
+ContZPointId: 128910807; deviceObjectId: 128910775
+ContZPointId: 128910811; deviceObjectId: 128910779
+ContZPointId: 128910815; deviceObjectId: 128910783
+ContZPointId: 128910819; deviceObjectId: 128910787
+ContZPointId: 128910823; deviceObjectId: 128910791
+БТС: LoadingBtsData.BtsInfo(btsNr=7, riserNr=Стояк 1.3, aptNr=Кв. 2,6,10,14,18,22, porchNr=1 Подъезд)
+contObjectId: 128910827
+ContZPointId: 128910864; deviceObjectId: 128910832
+ContZPointId: 128910868; deviceObjectId: 128910836
+ContZPointId: 128910872; deviceObjectId: 128910840
+ContZPointId: 128910876; deviceObjectId: 128910844
+ContZPointId: 128910880; deviceObjectId: 128910848
+ContZPointId: 128910884; deviceObjectId: 128910852
+ContZPointId: 128910888; deviceObjectId: 128910856
+ContZPointId: 128910892; deviceObjectId: 128910860
+БТС: LoadingBtsData.BtsInfo(btsNr=8, riserNr=Стояк 1.3, aptNr=Кв. 2,6,10,14,18,22, porchNr=1 Подъезд)
+contObjectId: 128910896
+ContZPointId: 128910933; deviceObjectId: 128910901
+ContZPointId: 128910937; deviceObjectId: 128910905     Async result = null
+
+ContZPointId: 128910941; deviceObjectId: 128910909
+ContZPointId: 128910945; deviceObjectId: 128910913
+ContZPointId: 128910949; deviceObjectId: 128910917
+ContZPointId: 128910953; deviceObjectId: 128910921
+ContZPointId: 128910957; deviceObjectId: 128910925
+ContZPointId: 128910961; deviceObjectId: 128910929
+БТС: LoadingBtsData.BtsInfo(btsNr=9, riserNr=Стояк 1.5, aptNr=Кв. 1,4,8,12,16,20, porchNr=1 Подъезд)
+contObjectId: 128910965
+ContZPointId: 128911002; deviceObjectId: 128910970
+ContZPointId: 128911006; deviceObjectId: 128910974
+ContZPointId: 128911010; deviceObjectId: 128910978
+ContZPointId: 128911014; deviceObjectId: 128910982
+ContZPointId: 128911018; deviceObjectId: 128910986
+ContZPointId: 128911022; deviceObjectId: 128910990
+ContZPointId: 128911026; deviceObjectId: 128910994
+ContZPointId: 128911030; deviceObjectId: 128910998
+БТС: LoadingBtsData.BtsInfo(btsNr=10, riserNr=Стояк 1.5, aptNr=Кв. 1,4,8,12,16,20, porchNr=1 Подъезд)
+contObjectId: 128911034
+ContZPointId: 128911071; deviceObjectId: 128911039
+ContZPointId: 128911075; deviceObjectId: 128911043
+ContZPointId: 128911079; deviceObjectId: 128911047
+ContZPointId: 128911083; deviceObjectId: 128911051
+ContZPointId: 128911087; deviceObjectId: 128911055
+ContZPointId: 128911091; deviceObjectId: 128911059
+ContZPointId: 128911095; deviceObjectId: 128911063
+ContZPointId: 128911099; deviceObjectId: 128911067
+БТС: LoadingBtsData.BtsInfo(btsNr=11, riserNr=Стояк 1.6, aptNr=Кв. 1,4,8,12,16,20, porchNr=1 Подъезд)
+contObjectId: 128911103
+ContZPointId: 128911140; deviceObjectId: 128911108
+ContZPointId: 128911144; deviceObjectId: 128911112
+ContZPointId: 128911148; deviceObjectId: 128911116
+ContZPointId: 128911152; deviceObjectId: 128911120
+ContZPointId: 128911156; deviceObjectId: 128911124
+ContZPointId: 128911160; deviceObjectId: 128911128
+ContZPointId: 128911164; deviceObjectId: 128911132
+ContZPointId: 128911168; deviceObjectId: 128911136
+БТС: LoadingBtsData.BtsInfo(btsNr=12, riserNr=Стояк 1.6, aptNr=Кв. 1,4,8,12,16,20, porchNr=1 Подъезд)
+contObjectId: 128911172
+ContZPointId: 128911209; deviceObjectId: 128911177
+ContZPointId: 128911213; deviceObjectId: 128911181
+ContZPointId: 128911217; deviceObjectId: 128911185
+ContZPointId: 128911221; deviceObjectId: 128911189
+ContZPointId: 128911225; deviceObjectId: 128911193
+ContZPointId: 128911229; deviceObjectId: 128911197
+ContZPointId: 128911233; deviceObjectId: 128911201
+ContZPointId: 128911237; deviceObjectId: 128911205
+БТС: LoadingBtsData.BtsInfo(btsNr=13, riserNr=Стояк 2.1, aptNr=Кв. 26,30,34,38,42,46, porchNr=2 Подъезд)
+contObjectId: 128911241
+ContZPointId: 128911278; deviceObjectId: 128911246
+ContZPointId: 128911282; deviceObjectId: 128911250
+ContZPointId: 128911286; deviceObjectId: 128911254
+ContZPointId: 128911290; deviceObjectId: 128911258
+ContZPointId: 128911294; deviceObjectId: 128911262
+ContZPointId: 128911298; deviceObjectId: 128911266
+ContZPointId: 128911302; deviceObjectId: 128911270
+ContZPointId: 128911306; deviceObjectId: 128911274
+БТС: LoadingBtsData.BtsInfo(btsNr=14, riserNr=Стояк 2.1, aptNr=Кв. 26,30,34,38,42,46, porchNr=2 Подъезд)
+contObjectId: 128911310
+ContZPointId: 128911347; deviceObjectId: 128911315
+ContZPointId: 128911351; deviceObjectId: 128911319
+ContZPointId: 128911355; deviceObjectId: 128911323
+ContZPointId: 128911359; deviceObjectId: 128911327
+ContZPointId: 128911363; deviceObjectId: 128911331
+ContZPointId: 128911367; deviceObjectId: 128911335
+ContZPointId: 128911371; deviceObjectId: 128911339
+ContZPointId: 128911375; deviceObjectId: 128911343
+БТС: LoadingBtsData.BtsInfo(btsNr=15, riserNr=Стояк 2.2, aptNr=Кв. 26,30,34,38,42,46, porchNr=2 Подъезд)
+contObjectId: 128911379
+ContZPointId: 128911416; deviceObjectId: 128911384
+ContZPointId: 128911420; deviceObjectId: 128911388
+ContZPointId: 128911424; deviceObjectId: 128911392
+ContZPointId: 128911428; deviceObjectId: 128911396
+ContZPointId: 128911432; deviceObjectId: 128911400
+ContZPointId: 128911436; deviceObjectId: 128911404
+ContZPointId: 128911440; deviceObjectId: 128911408
+ContZPointId: 128911444; deviceObjectId: 128911412
+БТС: LoadingBtsData.BtsInfo(btsNr=16, riserNr=Стояк 2.2, aptNr=Кв. 26,30,34,38,42,46, porchNr=2 Подъезд)
+contObjectId: 128911448
+ContZPointId: 128911485; deviceObjectId: 128911453
+ContZPointId: 128911489; deviceObjectId: 128911457
+ContZPointId: 128911493; deviceObjectId: 128911461
+ContZPointId: 128911497; deviceObjectId: 128911465
+ContZPointId: 128911501; deviceObjectId: 128911469
+ContZPointId: 128911505; deviceObjectId: 128911473
+ContZPointId: 128911509; deviceObjectId: 128911477
+ContZPointId: 128911513; deviceObjectId: 128911481
+БТС: LoadingBtsData.BtsInfo(btsNr=17, riserNr=Стояк 2.4, aptNr=Кв. 28,32,36,40,44, porchNr=2 Подъезд)
+contObjectId: 128911517
+ContZPointId: 128911554; deviceObjectId: 128911522
+ContZPointId: 128911558; deviceObjectId: 128911526
+ContZPointId: 128911562; deviceObjectId: 128911530
+ContZPointId: 128911566; deviceObjectId: 128911534
+ContZPointId: 128911570; deviceObjectId: 128911538
+ContZPointId: 128911574; deviceObjectId: 128911542
+ContZPointId: 128911578; deviceObjectId: 128911546
+ContZPointId: 128911582; deviceObjectId: 128911550
+БТС: LoadingBtsData.BtsInfo(btsNr=18, riserNr=Стояк 2.4, aptNr=Кв. 28,32,36,40,44, porchNr=2 Подъезд)
+contObjectId: 128911586
+ContZPointId: 128911623; deviceObjectId: 128911591
+ContZPointId: 128911627; deviceObjectId: 128911595
+ContZPointId: 128911631; deviceObjectId: 128911599
+ContZPointId: 128911635; deviceObjectId: 128911603
+ContZPointId: 128911639; deviceObjectId: 128911607
+ContZPointId: 128911643; deviceObjectId: 128911611
+ContZPointId: 128911647; deviceObjectId: 128911615
+ContZPointId: 128911651; deviceObjectId: 128911619
+БТС: LoadingBtsData.BtsInfo(btsNr=19, riserNr=Стояк 2.3, aptNr=Кв. 25,29,33,37,41,45, porchNr=2 Подъезд)
+contObjectId: 128911655
+ContZPointId: 128911692; deviceObjectId: 128911660
+ContZPointId: 128911696; deviceObjectId: 128911664
+ContZPointId: 128911700; deviceObjectId: 128911668
+ContZPointId: 128911704; deviceObjectId: 128911672
+ContZPointId: 128911708; deviceObjectId: 128911676
+ContZPointId: 128911712; deviceObjectId: 128911680
+ContZPointId: 128911716; deviceObjectId: 128911684
+ContZPointId: 128911720; deviceObjectId: 128911688
+БТС: LoadingBtsData.BtsInfo(btsNr=20, riserNr=Стояк 2.3, aptNr=Кв. 25,29,33,37,41,45, porchNr=2 Подъезд)
+contObjectId: 128911724
+ContZPointId: 128911761; deviceObjectId: 128911729
+ContZPointId: 128911765; deviceObjectId: 128911733
+ContZPointId: 128911769; deviceObjectId: 128911737
+ContZPointId: 128911773; deviceObjectId: 128911741
+ContZPointId: 128911777; deviceObjectId: 128911745
+ContZPointId: 128911781; deviceObjectId: 128911749
+ContZPointId: 128911785; deviceObjectId: 128911753
+ContZPointId: 128911789; deviceObjectId: 128911757
+БТС: LoadingBtsData.BtsInfo(btsNr=21, riserNr=Стояк 2.5, aptNr=Кв. 24,27,31,35,39,43, porchNr=2 Подъезд)
+contObjectId: 128911793
+ContZPointId: 128911830; deviceObjectId: 128911798
+ContZPointId: 128911834; deviceObjectId: 128911802
+ContZPointId: 128911838; deviceObjectId: 128911806
+ContZPointId: 128911842; deviceObjectId: 128911810
+ContZPointId: 128911846; deviceObjectId: 128911814
+ContZPointId: 128911850; deviceObjectId: 128911818
+ContZPointId: 128911854; deviceObjectId: 128911822
+ContZPointId: 128911858; deviceObjectId: 128911826
+БТС: LoadingBtsData.BtsInfo(btsNr=22, riserNr=Стояк 2.5, aptNr=Кв. 24,27,31,35,39,43, porchNr=2 Подъезд)
+contObjectId: 128911862
+ContZPointId: 128911899; deviceObjectId: 128911867
+ContZPointId: 128911903; deviceObjectId: 128911871
+ContZPointId: 128911907; deviceObjectId: 128911875
+ContZPointId: 128911911; deviceObjectId: 128911879
+ContZPointId: 128911915; deviceObjectId: 128911883
+ContZPointId: 128911919; deviceObjectId: 128911887
+ContZPointId: 128911923; deviceObjectId: 128911891
+ContZPointId: 128911927; deviceObjectId: 128911895
+БТС: LoadingBtsData.BtsInfo(btsNr=23, riserNr=Стояк 2.6, aptNr=Кв. 24,27,31,35,39,43, porchNr=2 Подъезд)
+contObjectId: 128911931
+ContZPointId: 128911968; deviceObjectId: 128911936
+ContZPointId: 128911972; deviceObjectId: 128911940
+ContZPointId: 128911976; deviceObjectId: 128911944
+ContZPointId: 128911980; deviceObjectId: 128911948
+ContZPointId: 128911984; deviceObjectId: 128911952
+ContZPointId: 128911988; deviceObjectId: 128911956
+ContZPointId: 128911992; deviceObjectId: 128911960
+ContZPointId: 128911996; deviceObjectId: 128911964
+БТС: LoadingBtsData.BtsInfo(btsNr=24, riserNr=Стояк 2.6, aptNr=Кв. 24,27,31,35,39,43, porchNr=2 Подъезд)
+contObjectId: 128912000
+ContZPointId: 128912037; deviceObjectId: 128912005
+ContZPointId: 128912041; deviceObjectId: 128912009
+ContZPointId: 128912045; deviceObjectId: 128912013
+ContZPointId: 128912049; deviceObjectId: 128912017
+ContZPointId: 128912053; deviceObjectId: 128912021
+ContZPointId: 128912057; deviceObjectId: 128912025
+ContZPointId: 128912061; deviceObjectId: 128912029
+ContZPointId: 128912065; deviceObjectId: 128912033
+БТС: LoadingBtsData.BtsInfo(btsNr=25, riserNr=Стояк 3.0, aptNr=Кв. 47,50,53,56,59,62, porchNr=3 Подъезд)
+contObjectId: 128912069
+ContZPointId: 128912106; deviceObjectId: 128912074
+ContZPointId: 128912110; deviceObjectId: 128912078
+ContZPointId: 128912114; deviceObjectId: 128912082
+ContZPointId: 128912118; deviceObjectId: 128912086
+ContZPointId: 128912122; deviceObjectId: 128912090
+ContZPointId: 128912126; deviceObjectId: 128912094
+ContZPointId: 128912130; deviceObjectId: 128912098
+ContZPointId: 128912134; deviceObjectId: 128912102
+БТС: LoadingBtsData.BtsInfo(btsNr=26, riserNr=Стояк 3.0, aptNr=Кв. 47,50,53,56,59,62, porchNr=3 Подъезд)
+contObjectId: 128912138
+ContZPointId: 128912175; deviceObjectId: 128912143
+ContZPointId: 128912179; deviceObjectId: 128912147
+ContZPointId: 128912183; deviceObjectId: 128912151
+ContZPointId: 128912187; deviceObjectId: 128912155
+ContZPointId: 128912191; deviceObjectId: 128912159
+ContZPointId: 128912195; deviceObjectId: 128912163
+ContZPointId: 128912199; deviceObjectId: 128912167
+ContZPointId: 128912203; deviceObjectId: 128912171
+БТС: LoadingBtsData.BtsInfo(btsNr=27, riserNr=Стояк 3.1, aptNr=Кв. 49,52,55,58,61,64, porchNr=3 Подъезд)
+contObjectId: 128912207
+ContZPointId: 128912244; deviceObjectId: 128912212
+ContZPointId: 128912248; deviceObjectId: 128912216
+ContZPointId: 128912252; deviceObjectId: 128912220
+ContZPointId: 128912256; deviceObjectId: 128912224
+ContZPointId: 128912260; deviceObjectId: 128912228
+ContZPointId: 128912264; deviceObjectId: 128912232
+ContZPointId: 128912268; deviceObjectId: 128912236
+ContZPointId: 128912272; deviceObjectId: 128912240
+БТС: LoadingBtsData.BtsInfo(btsNr=28, riserNr=Стояк 3.1, aptNr=Кв. 49,52,55,58,61,64, porchNr=3 Подъезд)
+contObjectId: 128912276
+ContZPointId: 128912313; deviceObjectId: 128912281
+ContZPointId: 128912317; deviceObjectId: 128912285
+ContZPointId: 128912321; deviceObjectId: 128912289
+ContZPointId: 128912325; deviceObjectId: 128912293
+ContZPointId: 128912329; deviceObjectId: 128912297
+ContZPointId: 128912333; deviceObjectId: 128912301
+ContZPointId: 128912337; deviceObjectId: 128912305
+ContZPointId: 128912341; deviceObjectId: 128912309
+БТС: LoadingBtsData.BtsInfo(btsNr=29, riserNr=Стояк 3.2, aptNr=Кв. 52,55,58,61,64, porchNr=3 Подъезд)
+contObjectId: 128912345
+ContZPointId: 128912382; deviceObjectId: 128912350
+ContZPointId: 128912386; deviceObjectId: 128912354
+ContZPointId: 128912390; deviceObjectId: 128912358
+ContZPointId: 128912394; deviceObjectId: 128912362
+ContZPointId: 128912398; deviceObjectId: 128912366
+ContZPointId: 128912402; deviceObjectId: 128912370
+ContZPointId: 128912406; deviceObjectId: 128912374
+ContZPointId: 128912410; deviceObjectId: 128912378
+БТС: LoadingBtsData.BtsInfo(btsNr=30, riserNr=Стояк 3.2, aptNr=Кв. 52,55,58,61,64, porchNr=3 Подъезд)
+contObjectId: 128912414
+ContZPointId: 128912451; deviceObjectId: 128912419
+ContZPointId: 128912455; deviceObjectId: 128912423
+ContZPointId: 128912459; deviceObjectId: 128912427
+ContZPointId: 128912463; deviceObjectId: 128912431
+ContZPointId: 128912467; deviceObjectId: 128912435
+ContZPointId: 128912471; deviceObjectId: 128912439
+ContZPointId: 128912475; deviceObjectId: 128912443
+ContZPointId: 128912479; deviceObjectId: 128912447
+БТС: LoadingBtsData.BtsInfo(btsNr=31, riserNr=Стояк 3.3, aptNr=Кв. 48,51,54,57,60,63, porchNr=3 Подъезд)
+contObjectId: 128912483
+ContZPointId: 128912520; deviceObjectId: 128912488
+ContZPointId: 128912524; deviceObjectId: 128912492
+ContZPointId: 128912528; deviceObjectId: 128912496
+ContZPointId: 128912532; deviceObjectId: 128912500
+ContZPointId: 128912536; deviceObjectId: 128912504
+ContZPointId: 128912540; deviceObjectId: 128912508
+ContZPointId: 128912544; deviceObjectId: 128912512
+ContZPointId: 128912548; deviceObjectId: 128912516
+БТС: LoadingBtsData.BtsInfo(btsNr=32, riserNr=Стояк 3.3, aptNr=Кв. 48,51,54,57,60,63, porchNr=3 Подъезд)
+contObjectId: 128912552
+ContZPointId: 128912589; deviceObjectId: 128912557
+ContZPointId: 128912593; deviceObjectId: 128912561
+ContZPointId: 128912597; deviceObjectId: 128912565
+ContZPointId: 128912601; deviceObjectId: 128912569
+ContZPointId: 128912605; deviceObjectId: 128912573
+ContZPointId: 128912609; deviceObjectId: 128912577
+ContZPointId: 128912613; deviceObjectId: 128912581
+ContZPointId: 128912617; deviceObjectId: 128912585
+БТС: LoadingBtsData.BtsInfo(btsNr=33, riserNr=Стояк 3.4, aptNr=Кв. 47,50,53,56,59,62, porchNr=3 Подъезд)
+contObjectId: 128912621
+ContZPointId: 128912658; deviceObjectId: 128912626
+ContZPointId: 128912662; deviceObjectId: 128912630
+ContZPointId: 128912666; deviceObjectId: 128912634
+ContZPointId: 128912670; deviceObjectId: 128912638
+ContZPointId: 128912674; deviceObjectId: 128912642
+ContZPointId: 128912678; deviceObjectId: 128912646
+ContZPointId: 128912682; deviceObjectId: 128912650
+ContZPointId: 128912686; deviceObjectId: 128912654
+БТС: LoadingBtsData.BtsInfo(btsNr=34, riserNr=Стояк 3.4, aptNr=Кв. 47,50,53,56,59,62, porchNr=3 Подъезд)
+contObjectId: 128912690
+ContZPointId: 128912727; deviceObjectId: 128912695
+ContZPointId: 128912731; deviceObjectId: 128912699
+ContZPointId: 128912735; deviceObjectId: 128912703
+ContZPointId: 128912739; deviceObjectId: 128912707
+ContZPointId: 128912743; deviceObjectId: 128912711
+ContZPointId: 128912747; deviceObjectId: 128912715
+ContZPointId: 128912751; deviceObjectId: 128912719
+ContZPointId: 128912755; deviceObjectId: 128912723
+БТС: LoadingBtsData.BtsInfo(btsNr=35, riserNr=Стояк 3.5, aptNr=Кв. 48,51,54,57,60,63, porchNr=3 Подъезд)
+contObjectId: 128912759
+ContZPointId: 128912796; deviceObjectId: 128912764
+ContZPointId: 128912800; deviceObjectId: 128912768
+ContZPointId: 128912804; deviceObjectId: 128912772
+ContZPointId: 128912808; deviceObjectId: 128912776
+ContZPointId: 128912812; deviceObjectId: 128912780
+ContZPointId: 128912816; deviceObjectId: 128912784
+ContZPointId: 128912820; deviceObjectId: 128912788
+ContZPointId: 128912824; deviceObjectId: 128912792
+БТС: LoadingBtsData.BtsInfo(btsNr=36, riserNr=Стояк 3.5, aptNr=Кв. 48,51,54,57,60,63, porchNr=3 Подъезд)
+contObjectId: 128912828
+ContZPointId: 128912865; deviceObjectId: 128912833
+ContZPointId: 128912869; deviceObjectId: 128912837
+ContZPointId: 128912873; deviceObjectId: 128912841
+ContZPointId: 128912877; deviceObjectId: 128912845
+ContZPointId: 128912881; deviceObjectId: 128912849
+ContZPointId: 128912885; deviceObjectId: 128912853
+ContZPointId: 128912889; deviceObjectId: 128912857
+ContZPointId: 128912893; deviceObjectId: 128912861
+БТС: LoadingBtsData.BtsInfo(btsNr=37, riserNr=Стояк 4.0, aptNr=Кв. 69,75,81,87,93,99, porchNr=4 Подъезд)
+contObjectId: 128912897
+ContZPointId: 128912934; deviceObjectId: 128912902
+ContZPointId: 128912938; deviceObjectId: 128912906
+ContZPointId: 128912942; deviceObjectId: 128912910
+ContZPointId: 128912946; deviceObjectId: 128912914
+ContZPointId: 128912950; deviceObjectId: 128912918
+ContZPointId: 128912954; deviceObjectId: 128912922
+ContZPointId: 128912958; deviceObjectId: 128912926
+ContZPointId: 128912962; deviceObjectId: 128912930
+БТС: LoadingBtsData.BtsInfo(btsNr=38, riserNr=Стояк 4.0, aptNr=Кв. 69,75,81,87,93,99, porchNr=4 Подъезд)
+contObjectId: 128912966
+ContZPointId: 128913003; deviceObjectId: 128912971
+ContZPointId: 128913007; deviceObjectId: 128912975
+ContZPointId: 128913011; deviceObjectId: 128912979
+ContZPointId: 128913015; deviceObjectId: 128912983
+ContZPointId: 128913019; deviceObjectId: 128912987
+ContZPointId: 128913023; deviceObjectId: 128912991
+ContZPointId: 128913027; deviceObjectId: 128912995
+ContZPointId: 128913031; deviceObjectId: 128912999
+БТС: LoadingBtsData.BtsInfo(btsNr=39, riserNr=Стояк 4.1, aptNr=Кв. 69,75,81,87,93,99, porchNr=4 Подъезд)
+contObjectId: 128913035
+ContZPointId: 128913072; deviceObjectId: 128913040
+ContZPointId: 128913076; deviceObjectId: 128913044
+ContZPointId: 128913080; deviceObjectId: 128913048
+ContZPointId: 128913084; deviceObjectId: 128913052
+ContZPointId: 128913088; deviceObjectId: 128913056
+ContZPointId: 128913092; deviceObjectId: 128913060
+ContZPointId: 128913096; deviceObjectId: 128913064
+ContZPointId: 128913100; deviceObjectId: 128913068
+БТС: LoadingBtsData.BtsInfo(btsNr=40, riserNr=Стояк 4.1, aptNr=Кв. 69,75,81,87,93,99, porchNr=4 Подъезд)
+contObjectId: 128913104
+ContZPointId: 128913141; deviceObjectId: 128913109
+ContZPointId: 128913145; deviceObjectId: 128913113
+ContZPointId: 128913149; deviceObjectId: 128913117
+ContZPointId: 128913153; deviceObjectId: 128913121
+ContZPointId: 128913157; deviceObjectId: 128913125
+ContZPointId: 128913161; deviceObjectId: 128913129
+ContZPointId: 128913165; deviceObjectId: 128913133
+ContZPointId: 128913169; deviceObjectId: 128913137
+БТС: LoadingBtsData.BtsInfo(btsNr=93, riserNr=Стояк 4.2, aptNr=Кв. 74,80,86,92,98, porchNr=4 Подъезд)
+contObjectId: 128913173
+ContZPointId: 128913210; deviceObjectId: 128913178
+ContZPointId: 128913214; deviceObjectId: 128913182
+ContZPointId: 128913218; deviceObjectId: 128913186
+ContZPointId: 128913222; deviceObjectId: 128913190
+ContZPointId: 128913226; deviceObjectId: 128913194
+ContZPointId: 128913230; deviceObjectId: 128913198
+ContZPointId: 128913234; deviceObjectId: 128913202
+ContZPointId: 128913238; deviceObjectId: 128913206
+БТС: LoadingBtsData.BtsInfo(btsNr=94, riserNr=Стояк 4.2, aptNr=Кв. 74,80,86,92,98, porchNr=4 Подъезд)
+contObjectId: 128913242
+ContZPointId: 128913279; deviceObjectId: 128913247
+ContZPointId: 128913283; deviceObjectId: 128913251
+ContZPointId: 128913287; deviceObjectId: 128913255
+ContZPointId: 128913291; deviceObjectId: 128913259
+ContZPointId: 128913295; deviceObjectId: 128913263
+ContZPointId: 128913299; deviceObjectId: 128913267
+ContZPointId: 128913303; deviceObjectId: 128913271
+ContZPointId: 128913307; deviceObjectId: 128913275
+БТС: LoadingBtsData.BtsInfo(btsNr=41, riserNr=Стояк 4.3, aptNr=Кв. 68,73,79,85,91,97, porchNr=4 Подъезд)
+contObjectId: 128913311
+ContZPointId: 128913348; deviceObjectId: 128913316
+ContZPointId: 128913352; deviceObjectId: 128913320
+ContZPointId: 128913356; deviceObjectId: 128913324
+ContZPointId: 128913360; deviceObjectId: 128913328
+ContZPointId: 128913364; deviceObjectId: 128913332
+ContZPointId: 128913368; deviceObjectId: 128913336
+ContZPointId: 128913372; deviceObjectId: 128913340
+ContZPointId: 128913376; deviceObjectId: 128913344
+БТС: LoadingBtsData.BtsInfo(btsNr=42, riserNr=Стояк 4.3, aptNr=Кв. 68,73,79,85,91,97, porchNr=4 Подъезд)
+contObjectId: 128913380
+ContZPointId: 128913417; deviceObjectId: 128913385
+ContZPointId: 128913421; deviceObjectId: 128913389
+ContZPointId: 128913425; deviceObjectId: 128913393
+ContZPointId: 128913429; deviceObjectId: 128913397
+ContZPointId: 128913433; deviceObjectId: 128913401
+ContZPointId: 128913437; deviceObjectId: 128913405
+ContZPointId: 128913441; deviceObjectId: 128913409
+ContZPointId: 128913445; deviceObjectId: 128913413
+БТС: LoadingBtsData.BtsInfo(btsNr=43, riserNr=Стояк 4.4, aptNr=Кв. 65,70,76,82,88,94, porchNr=4 Подъезд)
+contObjectId: 128913449
+ContZPointId: 128913486; deviceObjectId: 128913454
+ContZPointId: 128913490; deviceObjectId: 128913458
+ContZPointId: 128913494; deviceObjectId: 128913462
+ContZPointId: 128913498; deviceObjectId: 128913466
+ContZPointId: 128913502; deviceObjectId: 128913470
+ContZPointId: 128913506; deviceObjectId: 128913474
+ContZPointId: 128913510; deviceObjectId: 128913478
+ContZPointId: 128913514; deviceObjectId: 128913482
+БТС: LoadingBtsData.BtsInfo(btsNr=44, riserNr=Стояк 4.4, aptNr=Кв. 65,70,76,82,88,94, porchNr=4 Подъезд)
+contObjectId: 128913518
+ContZPointId: 128913555; deviceObjectId: 128913523
+ContZPointId: 128913559; deviceObjectId: 128913527
+ContZPointId: 128913563; deviceObjectId: 128913531
+ContZPointId: 128913567; deviceObjectId: 128913535
+ContZPointId: 128913571; deviceObjectId: 128913539
+ContZPointId: 128913575; deviceObjectId: 128913543
+ContZPointId: 128913579; deviceObjectId: 128913547
+ContZPointId: 128913583; deviceObjectId: 128913551
+БТС: LoadingBtsData.BtsInfo(btsNr=45, riserNr=Стояк 4.5, aptNr=Кв. 65,70,76,82,88,94, porchNr=4 Подъезд)
+contObjectId: 128913587
+ContZPointId: 128913624; deviceObjectId: 128913592
+ContZPointId: 128913628; deviceObjectId: 128913596
+ContZPointId: 128913632; deviceObjectId: 128913600
+ContZPointId: 128913636; deviceObjectId: 128913604
+ContZPointId: 128913640; deviceObjectId: 128913608
+ContZPointId: 128913644; deviceObjectId: 128913612
+ContZPointId: 128913648; deviceObjectId: 128913616
+ContZPointId: 128913652; deviceObjectId: 128913620
+БТС: LoadingBtsData.BtsInfo(btsNr=46, riserNr=Стояк 4.5, aptNr=Кв. 65,70,76,82,88,94, porchNr=4 Подъезд)
+contObjectId: 128913656
+ContZPointId: 128913693; deviceObjectId: 128913661
+ContZPointId: 128913697; deviceObjectId: 128913665
+ContZPointId: 128913701; deviceObjectId: 128913669
+ContZPointId: 128913705; deviceObjectId: 128913673
+ContZPointId: 128913709; deviceObjectId: 128913677
+ContZPointId: 128913713; deviceObjectId: 128913681
+ContZPointId: 128913717; deviceObjectId: 128913685
+ContZPointId: 128913721; deviceObjectId: 128913689
+БТС: LoadingBtsData.BtsInfo(btsNr=47, riserNr=Стояк 4.6, aptNr=Кв. 67,72,78,84,90,96, porchNr=4 Подъезд)
+contObjectId: 128913725
+ContZPointId: 128913762; deviceObjectId: 128913730
+ContZPointId: 128913766; deviceObjectId: 128913734
+ContZPointId: 128913770; deviceObjectId: 128913738
+ContZPointId: 128913774; deviceObjectId: 128913742
+ContZPointId: 128913778; deviceObjectId: 128913746
+ContZPointId: 128913782; deviceObjectId: 128913750
+ContZPointId: 128913786; deviceObjectId: 128913754
+ContZPointId: 128913790; deviceObjectId: 128913758
+БТС: LoadingBtsData.BtsInfo(btsNr=48, riserNr=Стояк 4.6, aptNr=Кв. 67,72,78,84,90,96, porchNr=4 Подъезд)
+contObjectId: 128913794
+ContZPointId: 128913831; deviceObjectId: 128913799
+ContZPointId: 128913835; deviceObjectId: 128913803
+ContZPointId: 128913839; deviceObjectId: 128913807
+ContZPointId: 128913843; deviceObjectId: 128913811
+ContZPointId: 128913847; deviceObjectId: 128913815
+ContZPointId: 128913851; deviceObjectId: 128913819
+ContZPointId: 128913855; deviceObjectId: 128913823
+ContZPointId: 128913859; deviceObjectId: 128913827
+БТС: LoadingBtsData.BtsInfo(btsNr=49, riserNr=Стояк 4.7, aptNr=Кв. 66,71,77,83,89,95, porchNr=4 Подъезд)
+contObjectId: 128913863
+ContZPointId: 128913900; deviceObjectId: 128913868
+ContZPointId: 128913904; deviceObjectId: 128913872
+ContZPointId: 128913908; deviceObjectId: 128913876
+ContZPointId: 128913912; deviceObjectId: 128913880
+ContZPointId: 128913916; deviceObjectId: 128913884
+ContZPointId: 128913920; deviceObjectId: 128913888
+ContZPointId: 128913924; deviceObjectId: 128913892
+ContZPointId: 128913928; deviceObjectId: 128913896
+БТС: LoadingBtsData.BtsInfo(btsNr=50, riserNr=Стояк 4.7, aptNr=Кв. 66,71,77,83,89,95, porchNr=4 Подъезд)
+contObjectId: 128913932
+ContZPointId: 128913969; deviceObjectId: 128913937
+ContZPointId: 128913973; deviceObjectId: 128913941
+ContZPointId: 128913977; deviceObjectId: 128913945
+ContZPointId: 128913981; deviceObjectId: 128913949
+ContZPointId: 128913985; deviceObjectId: 128913953
+ContZPointId: 128913989; deviceObjectId: 128913957
+ContZPointId: 128913993; deviceObjectId: 128913961
+ContZPointId: 128913997; deviceObjectId: 128913965
+БТС: LoadingBtsData.BtsInfo(btsNr=51, riserNr=Стояк 4.8, aptNr=Кв. 67,72,78,84,90,96, porchNr=4 Подъезд)
+contObjectId: 128914001
+ContZPointId: 128914038; deviceObjectId: 128914006
+ContZPointId: 128914042; deviceObjectId: 128914010
+ContZPointId: 128914046; deviceObjectId: 128914014
+ContZPointId: 128914050; deviceObjectId: 128914018
+ContZPointId: 128914054; deviceObjectId: 128914022
+ContZPointId: 128914058; deviceObjectId: 128914026
+ContZPointId: 128914062; deviceObjectId: 128914030
+ContZPointId: 128914066; deviceObjectId: 128914034
+БТС: LoadingBtsData.BtsInfo(btsNr=52, riserNr=Стояк 4.8, aptNr=Кв. 67,72,78,84,90,96, porchNr=4 Подъезд)
+contObjectId: 128914070
+ContZPointId: 128914107; deviceObjectId: 128914075
+ContZPointId: 128914111; deviceObjectId: 128914079
+ContZPointId: 128914115; deviceObjectId: 128914083
+ContZPointId: 128914119; deviceObjectId: 128914087
+ContZPointId: 128914123; deviceObjectId: 128914091
+ContZPointId: 128914127; deviceObjectId: 128914095
+ContZPointId: 128914131; deviceObjectId: 128914099
+ContZPointId: 128914135; deviceObjectId: 128914103
+БТС: LoadingBtsData.BtsInfo(btsNr=53, riserNr=Стояк 4.9, aptNr=Кв. 66,71,77,83,89,95, porchNr=4 Подъезд)
+contObjectId: 128914139
+ContZPointId: 128914176; deviceObjectId: 128914144
+ContZPointId: 128914180; deviceObjectId: 128914148
+ContZPointId: 128914184; deviceObjectId: 128914152
+ContZPointId: 128914188; deviceObjectId: 128914156
+ContZPointId: 128914192; deviceObjectId: 128914160
+ContZPointId: 128914196; deviceObjectId: 128914164
+ContZPointId: 128914200; deviceObjectId: 128914168
+ContZPointId: 128914204; deviceObjectId: 128914172
+БТС: LoadingBtsData.BtsInfo(btsNr=54, riserNr=Стояк 4.9, aptNr=Кв. 66,71,77,83,89,95, porchNr=4 Подъезд)
+contObjectId: 128914208
+ContZPointId: 128914245; deviceObjectId: 128914213
+ContZPointId: 128914249; deviceObjectId: 128914217
+ContZPointId: 128914253; deviceObjectId: 128914221
+ContZPointId: 128914257; deviceObjectId: 128914225
+ContZPointId: 128914261; deviceObjectId: 128914229
+ContZPointId: 128914265; deviceObjectId: 128914233
+ContZPointId: 128914269; deviceObjectId: 128914237
+ContZPointId: 128914273; deviceObjectId: 128914241
+БТС: LoadingBtsData.BtsInfo(btsNr=55, riserNr=Стояк 5.1, aptNr=Кв. 105,109,113,117,121, porchNr=5 Подъезд)
+contObjectId: 128914277
+ContZPointId: 128914314; deviceObjectId: 128914282
+ContZPointId: 128914318; deviceObjectId: 128914286
+ContZPointId: 128914322; deviceObjectId: 128914290
+ContZPointId: 128914326; deviceObjectId: 128914294
+ContZPointId: 128914330; deviceObjectId: 128914298
+ContZPointId: 128914334; deviceObjectId: 128914302
+ContZPointId: 128914338; deviceObjectId: 128914306
+ContZPointId: 128914342; deviceObjectId: 128914310
+БТС: LoadingBtsData.BtsInfo(btsNr=56, riserNr=Стояк 5.1, aptNr=Кв. 105,109,113,117,121, porchNr=5 Подъезд)
+contObjectId: 128914346
+ContZPointId: 128914383; deviceObjectId: 128914351
+ContZPointId: 128914387; deviceObjectId: 128914355
+ContZPointId: 128914391; deviceObjectId: 128914359
+ContZPointId: 128914395; deviceObjectId: 128914363
+ContZPointId: 128914399; deviceObjectId: 128914367
+ContZPointId: 128914403; deviceObjectId: 128914371
+ContZPointId: 128914407; deviceObjectId: 128914375
+ContZPointId: 128914411; deviceObjectId: 128914379
+БТС: LoadingBtsData.BtsInfo(btsNr=57, riserNr=Стояк 5.2, aptNr=Кв. 101,104,108,112,116,120, porchNr=5 Подъезд)
+contObjectId: 128914415
+ContZPointId: 128914452; deviceObjectId: 128914420
+ContZPointId: 128914456; deviceObjectId: 128914424
+ContZPointId: 128914460; deviceObjectId: 128914428
+ContZPointId: 128914464; deviceObjectId: 128914432
+ContZPointId: 128914468; deviceObjectId: 128914436
+ContZPointId: 128914472; deviceObjectId: 128914440
+ContZPointId: 128914476; deviceObjectId: 128914444
+ContZPointId: 128914480; deviceObjectId: 128914448
+БТС: LoadingBtsData.BtsInfo(btsNr=58, riserNr=Стояк 5.2, aptNr=Кв. 101,104,108,112,116,120, porchNr=5 Подъезд)
+contObjectId: 128914484
+ContZPointId: 128914521; deviceObjectId: 128914489
+ContZPointId: 128914525; deviceObjectId: 128914493
+ContZPointId: 128914529; deviceObjectId: 128914497
+ContZPointId: 128914533; deviceObjectId: 128914501
+ContZPointId: 128914537; deviceObjectId: 128914505
+ContZPointId: 128914541; deviceObjectId: 128914509
+ContZPointId: 128914545; deviceObjectId: 128914513
+ContZPointId: 128914549; deviceObjectId: 128914517
+БТС: LoadingBtsData.BtsInfo(btsNr=59, riserNr=Стояк 5.3, aptNr=Кв. 105,109,113,117,121, porchNr=5 Подъезд)
+contObjectId: 128914553
+ContZPointId: 128914590; deviceObjectId: 128914558
+ContZPointId: 128914594; deviceObjectId: 128914562
+ContZPointId: 128914598; deviceObjectId: 128914566
+ContZPointId: 128914602; deviceObjectId: 128914570
+ContZPointId: 128914606; deviceObjectId: 128914574
+ContZPointId: 128914610; deviceObjectId: 128914578
+ContZPointId: 128914614; deviceObjectId: 128914582
+ContZPointId: 128914618; deviceObjectId: 128914586
+БТС: LoadingBtsData.BtsInfo(btsNr=60, riserNr=Стояк 5.3, aptNr=Кв. 105,109,113,117,121, porchNr=5 Подъезд)
+contObjectId: 128914622
+ContZPointId: 128914659; deviceObjectId: 128914627
+ContZPointId: 128914663; deviceObjectId: 128914631
+ContZPointId: 128914667; deviceObjectId: 128914635
+ContZPointId: 128914671; deviceObjectId: 128914639
+ContZPointId: 128914675; deviceObjectId: 128914643
+ContZPointId: 128914679; deviceObjectId: 128914647
+ContZPointId: 128914683; deviceObjectId: 128914651
+ContZPointId: 128914687; deviceObjectId: 128914655
+БТС: LoadingBtsData.BtsInfo(btsNr=61, riserNr=Стояк 5.4, aptNr=Кв. 100,103,107,111,115,119, porchNr=5 Подъезд)
+contObjectId: 128914691
+ContZPointId: 128914728; deviceObjectId: 128914696
+ContZPointId: 128914732; deviceObjectId: 128914700
+ContZPointId: 128914736; deviceObjectId: 128914704
+ContZPointId: 128914740; deviceObjectId: 128914708
+ContZPointId: 128914744; deviceObjectId: 128914712
+ContZPointId: 128914748; deviceObjectId: 128914716
+ContZPointId: 128914752; deviceObjectId: 128914720
+ContZPointId: 128914756; deviceObjectId: 128914724
+БТС: LoadingBtsData.BtsInfo(btsNr=62, riserNr=Стояк 5.4, aptNr=Кв. 100,103,107,111,115,119, porchNr=5 Подъезд)
+contObjectId: 128914760
+ContZPointId: 128914797; deviceObjectId: 128914765
+ContZPointId: 128914801; deviceObjectId: 128914769
+ContZPointId: 128914805; deviceObjectId: 128914773
+ContZPointId: 128914809; deviceObjectId: 128914777
+ContZPointId: 128914813; deviceObjectId: 128914781
+ContZPointId: 128914817; deviceObjectId: 128914785
+ContZPointId: 128914821; deviceObjectId: 128914789
+ContZPointId: 128914825; deviceObjectId: 128914793
+БТС: LoadingBtsData.BtsInfo(btsNr=63, riserNr=Стояк 5.5, aptNr=Кв. 100,103,107,111,115,119, porchNr=5 Подъезд)
+contObjectId: 128914829
+ContZPointId: 128914866; deviceObjectId: 128914834
+ContZPointId: 128914870; deviceObjectId: 128914838
+ContZPointId: 128914874; deviceObjectId: 128914842
+ContZPointId: 128914878; deviceObjectId: 128914846
+ContZPointId: 128914882; deviceObjectId: 128914850
+ContZPointId: 128914886; deviceObjectId: 128914854
+ContZPointId: 128914890; deviceObjectId: 128914858
+ContZPointId: 128914894; deviceObjectId: 128914862
+БТС: LoadingBtsData.BtsInfo(btsNr=64, riserNr=Стояк 5.5, aptNr=Кв. 100,103,107,111,115,119, porchNr=5 Подъезд)
+contObjectId: 128914898
+ContZPointId: 128914935; deviceObjectId: 128914903
+ContZPointId: 128914939; deviceObjectId: 128914907
+ContZPointId: 128914943; deviceObjectId: 128914911
+ContZPointId: 128914947; deviceObjectId: 128914915
+ContZPointId: 128914951; deviceObjectId: 128914919
+ContZPointId: 128914955; deviceObjectId: 128914923
+ContZPointId: 128914959; deviceObjectId: 128914927
+ContZPointId: 128914963; deviceObjectId: 128914931
+БТС: LoadingBtsData.BtsInfo(btsNr=65, riserNr=Стояк 5.6, aptNr=Кв. 102,106,110,114,118,122, porchNr=5 Подъезд)
+contObjectId: 128914967
+ContZPointId: 128915004; deviceObjectId: 128914972
+ContZPointId: 128915008; deviceObjectId: 128914976
+ContZPointId: 128915012; deviceObjectId: 128914980
+ContZPointId: 128915016; deviceObjectId: 128914984
+ContZPointId: 128915020; deviceObjectId: 128914988
+ContZPointId: 128915024; deviceObjectId: 128914992
+ContZPointId: 128915028; deviceObjectId: 128914996
+ContZPointId: 128915032; deviceObjectId: 128915000
+БТС: LoadingBtsData.BtsInfo(btsNr=66, riserNr=Стояк 5.6, aptNr=Кв. 102,106,110,114,118,122, porchNr=5 Подъезд)
+contObjectId: 128915036
+ContZPointId: 128915073; deviceObjectId: 128915041
+ContZPointId: 128915077; deviceObjectId: 128915045
+ContZPointId: 128915081; deviceObjectId: 128915049
+ContZPointId: 128915085; deviceObjectId: 128915053
+ContZPointId: 128915089; deviceObjectId: 128915057
+ContZPointId: 128915093; deviceObjectId: 128915061
+ContZPointId: 128915097; deviceObjectId: 128915065
+ContZPointId: 128915101; deviceObjectId: 128915069
+БТС: LoadingBtsData.BtsInfo(btsNr=67, riserNr=Стояк 5.7, aptNr=Кв. 102,106,110,114,118,122, porchNr=5 Подъезд)
+contObjectId: 128915105
+ContZPointId: 128915142; deviceObjectId: 128915110
+ContZPointId: 128915146; deviceObjectId: 128915114
+ContZPointId: 128915150; deviceObjectId: 128915118
+ContZPointId: 128915154; deviceObjectId: 128915122
+ContZPointId: 128915158; deviceObjectId: 128915126
+ContZPointId: 128915162; deviceObjectId: 128915130
+ContZPointId: 128915166; deviceObjectId: 128915134
+ContZPointId: 128915170; deviceObjectId: 128915138
+БТС: LoadingBtsData.BtsInfo(btsNr=68, riserNr=Стояк 5.7, aptNr=Кв. 102,106,110,114,118,122, porchNr=5 Подъезд)
+contObjectId: 128915174
+ContZPointId: 128915211; deviceObjectId: 128915179
+ContZPointId: 128915215; deviceObjectId: 128915183
+ContZPointId: 128915219; deviceObjectId: 128915187
+ContZPointId: 128915223; deviceObjectId: 128915191
+ContZPointId: 128915227; deviceObjectId: 128915195
+ContZPointId: 128915231; deviceObjectId: 128915199
+ContZPointId: 128915235; deviceObjectId: 128915203
+ContZPointId: 128915239; deviceObjectId: 128915207
+БТС: LoadingBtsData.BtsInfo(btsNr=69, riserNr=Стояк 6.1, aptNr=Кв. 123,126,130,134,138,142, porchNr=6 Подъезд)
+contObjectId: 128915243
+ContZPointId: 128915280; deviceObjectId: 128915248
+ContZPointId: 128915284; deviceObjectId: 128915252
+ContZPointId: 128915288; deviceObjectId: 128915256
+ContZPointId: 128915292; deviceObjectId: 128915260
+ContZPointId: 128915296; deviceObjectId: 128915264
+ContZPointId: 128915300; deviceObjectId: 128915268
+ContZPointId: 128915304; deviceObjectId: 128915272
+ContZPointId: 128915308; deviceObjectId: 128915276
+БТС: LoadingBtsData.BtsInfo(btsNr=70, riserNr=Стояк 6.1, aptNr=Кв. 123,126,130,134,138,142, porchNr=6 Подъезд)
+contObjectId: 128915312
+ContZPointId: 128915349; deviceObjectId: 128915317
+ContZPointId: 128915353; deviceObjectId: 128915321
+ContZPointId: 128915357; deviceObjectId: 128915325
+ContZPointId: 128915361; deviceObjectId: 128915329
+ContZPointId: 128915365; deviceObjectId: 128915333
+ContZPointId: 128915369; deviceObjectId: 128915337
+ContZPointId: 128915373; deviceObjectId: 128915341
+ContZPointId: 128915377; deviceObjectId: 128915345
+БТС: LoadingBtsData.BtsInfo(btsNr=71, riserNr=Стояк 6.2, aptNr=Кв. 123,126,130,134,138,142, porchNr=6 Подъезд)
+contObjectId: 128915381
+ContZPointId: 128915418; deviceObjectId: 128915386
+ContZPointId: 128915422; deviceObjectId: 128915390
+ContZPointId: 128915426; deviceObjectId: 128915394
+ContZPointId: 128915430; deviceObjectId: 128915398
+ContZPointId: 128915434; deviceObjectId: 128915402
+ContZPointId: 128915438; deviceObjectId: 128915406
+ContZPointId: 128915442; deviceObjectId: 128915410
+ContZPointId: 128915446; deviceObjectId: 128915414
+БТС: LoadingBtsData.BtsInfo(btsNr=72, riserNr=Стояк 6.2, aptNr=Кв. 123,126,130,134,138,142, porchNr=6 Подъезд)
+contObjectId: 128915450
+ContZPointId: 128915487; deviceObjectId: 128915455
+ContZPointId: 128915491; deviceObjectId: 128915459
+ContZPointId: 128915495; deviceObjectId: 128915463
+ContZPointId: 128915499; deviceObjectId: 128915467
+ContZPointId: 128915503; deviceObjectId: 128915471
+ContZPointId: 128915507; deviceObjectId: 128915475
+ContZPointId: 128915511; deviceObjectId: 128915479
+ContZPointId: 128915515; deviceObjectId: 128915483
+БТС: LoadingBtsData.BtsInfo(btsNr=73, riserNr=Стояк 6.3, aptNr=Кв. 125,129,133,137,141,145, porchNr=6 Подъезд)
+contObjectId: 128915519
+ContZPointId: 128915556; deviceObjectId: 128915524
+ContZPointId: 128915560; deviceObjectId: 128915528
+ContZPointId: 128915564; deviceObjectId: 128915532
+ContZPointId: 128915568; deviceObjectId: 128915536
+ContZPointId: 128915572; deviceObjectId: 128915540
+ContZPointId: 128915576; deviceObjectId: 128915544
+ContZPointId: 128915580; deviceObjectId: 128915548
+ContZPointId: 128915584; deviceObjectId: 128915552
+БТС: LoadingBtsData.BtsInfo(btsNr=74, riserNr=Стояк 6.3, aptNr=Кв. 125,129,133,137,141,145, porchNr=6 Подъезд)
+contObjectId: 128915588
+ContZPointId: 128915625; deviceObjectId: 128915593
+ContZPointId: 128915629; deviceObjectId: 128915597
+ContZPointId: 128915633; deviceObjectId: 128915601
+ContZPointId: 128915637; deviceObjectId: 128915605
+ContZPointId: 128915641; deviceObjectId: 128915609
+ContZPointId: 128915645; deviceObjectId: 128915613
+ContZPointId: 128915649; deviceObjectId: 128915617
+ContZPointId: 128915653; deviceObjectId: 128915621
+БТС: LoadingBtsData.BtsInfo(btsNr=75, riserNr=Стояк 6.4, aptNr=Кв. 124,128,132,136,140,144, porchNr=6 Подъезд)
+contObjectId: 128915657
+ContZPointId: 128915694; deviceObjectId: 128915662
+ContZPointId: 128915698; deviceObjectId: 128915666
+ContZPointId: 128915702; deviceObjectId: 128915670
+ContZPointId: 128915706; deviceObjectId: 128915674
+ContZPointId: 128915710; deviceObjectId: 128915678
+ContZPointId: 128915714; deviceObjectId: 128915682
+ContZPointId: 128915718; deviceObjectId: 128915686
+ContZPointId: 128915722; deviceObjectId: 128915690
+БТС: LoadingBtsData.BtsInfo(btsNr=76, riserNr=Стояк 6.4, aptNr=Кв. 124,128,132,136,140,144, porchNr=6 Подъезд)
+contObjectId: 128915726
+ContZPointId: 128915763; deviceObjectId: 128915731
+ContZPointId: 128915767; deviceObjectId: 128915735
+ContZPointId: 128915771; deviceObjectId: 128915739
+ContZPointId: 128915775; deviceObjectId: 128915743
+ContZPointId: 128915779; deviceObjectId: 128915747
+ContZPointId: 128915783; deviceObjectId: 128915751
+ContZPointId: 128915787; deviceObjectId: 128915755
+ContZPointId: 128915791; deviceObjectId: 128915759
+БТС: LoadingBtsData.BtsInfo(btsNr=77, riserNr=Стояк 6.5, aptNr=Кв. 127,131,135,139,143, porchNr=6 Подъезд)
+contObjectId: 128915795
+ContZPointId: 128915832; deviceObjectId: 128915800
+ContZPointId: 128915836; deviceObjectId: 128915804
+ContZPointId: 128915840; deviceObjectId: 128915808
+ContZPointId: 128915844; deviceObjectId: 128915812
+ContZPointId: 128915848; deviceObjectId: 128915816
+ContZPointId: 128915852; deviceObjectId: 128915820
+ContZPointId: 128915856; deviceObjectId: 128915824
+ContZPointId: 128915860; deviceObjectId: 128915828
+БТС: LoadingBtsData.BtsInfo(btsNr=78, riserNr=Стояк 6.5, aptNr=Кв. 127,131,135,139,143, porchNr=6 Подъезд)
+contObjectId: 128915864
+ContZPointId: 128915901; deviceObjectId: 128915869
+ContZPointId: 128915905; deviceObjectId: 128915873
+ContZPointId: 128915909; deviceObjectId: 128915877
+ContZPointId: 128915913; deviceObjectId: 128915881
+ContZPointId: 128915917; deviceObjectId: 128915885
+ContZPointId: 128915921; deviceObjectId: 128915889
+ContZPointId: 128915925; deviceObjectId: 128915893
+ContZPointId: 128915929; deviceObjectId: 128915897
+БТС: LoadingBtsData.BtsInfo(btsNr=79, riserNr=Стояк 6.6, aptNr=Кв. 125,129,133,137,141,145, porchNr=6 Подъезд)
+contObjectId: 128915933
+ContZPointId: 128915970; deviceObjectId: 128915938
+ContZPointId: 128915974; deviceObjectId: 128915942
+ContZPointId: 128915978; deviceObjectId: 128915946
+ContZPointId: 128915982; deviceObjectId: 128915950
+ContZPointId: 128915986; deviceObjectId: 128915954
+ContZPointId: 128915990; deviceObjectId: 128915958
+ContZPointId: 128915994; deviceObjectId: 128915962
+ContZPointId: 128915998; deviceObjectId: 128915966
+БТС: LoadingBtsData.BtsInfo(btsNr=80, riserNr=Стояк 6.6, aptNr=Кв. 125,129,133,137,141,145, porchNr=6 Подъезд)
+contObjectId: 128916002
+ContZPointId: 128916039; deviceObjectId: 128916007
+ContZPointId: 128916043; deviceObjectId: 128916011
+ContZPointId: 128916047; deviceObjectId: 128916015
+ContZPointId: 128916051; deviceObjectId: 128916019
+ContZPointId: 128916055; deviceObjectId: 128916023
+ContZPointId: 128916059; deviceObjectId: 128916027
+ContZPointId: 128916063; deviceObjectId: 128916031
+ContZPointId: 128916067; deviceObjectId: 128916035
+БТС: LoadingBtsData.BtsInfo(btsNr=81, riserNr=Стояк 7.1, aptNr=Кв. 146,149,153,157,161,165, porchNr=7 Подъезд)
+contObjectId: 128916071
+ContZPointId: 128916108; deviceObjectId: 128916076
+ContZPointId: 128916112; deviceObjectId: 128916080
+ContZPointId: 128916116; deviceObjectId: 128916084
+ContZPointId: 128916120; deviceObjectId: 128916088
+ContZPointId: 128916124; deviceObjectId: 128916092
+ContZPointId: 128916128; deviceObjectId: 128916096
+ContZPointId: 128916132; deviceObjectId: 128916100
+ContZPointId: 128916136; deviceObjectId: 128916104
+БТС: LoadingBtsData.BtsInfo(btsNr=82, riserNr=Стояк 7.1, aptNr=Кв. 146,149,153,157,161,165, porchNr=7 Подъезд)
+contObjectId: 128916140
+ContZPointId: 128916177; deviceObjectId: 128916145
+ContZPointId: 128916181; deviceObjectId: 128916149
+ContZPointId: 128916185; deviceObjectId: 128916153
+ContZPointId: 128916189; deviceObjectId: 128916157
+ContZPointId: 128916193; deviceObjectId: 128916161
+ContZPointId: 128916197; deviceObjectId: 128916165
+ContZPointId: 128916201; deviceObjectId: 128916169
+ContZPointId: 128916205; deviceObjectId: 128916173
+БТС: LoadingBtsData.BtsInfo(btsNr=83, riserNr=Стояк 7.2, aptNr=Кв. 146,149,153,157,161,165, porchNr=7 Подъезд)
+contObjectId: 128916209
+ContZPointId: 128916246; deviceObjectId: 128916214
+ContZPointId: 128916250; deviceObjectId: 128916218
+ContZPointId: 128916254; deviceObjectId: 128916222
+ContZPointId: 128916258; deviceObjectId: 128916226
+ContZPointId: 128916262; deviceObjectId: 128916230
+ContZPointId: 128916266; deviceObjectId: 128916234
+ContZPointId: 128916270; deviceObjectId: 128916238
+ContZPointId: 128916274; deviceObjectId: 128916242
+БТС: LoadingBtsData.BtsInfo(btsNr=84, riserNr=Стояк 7.2, aptNr=Кв. 146,149,153,157,161,165, porchNr=7 Подъезд)
+contObjectId: 128916278
+ContZPointId: 128916315; deviceObjectId: 128916283
+ContZPointId: 128916319; deviceObjectId: 128916287
+ContZPointId: 128916323; deviceObjectId: 128916291
+ContZPointId: 128916327; deviceObjectId: 128916295
+ContZPointId: 128916331; deviceObjectId: 128916299
+ContZPointId: 128916335; deviceObjectId: 128916303
+ContZPointId: 128916339; deviceObjectId: 128916307
+ContZPointId: 128916343; deviceObjectId: 128916311
+БТС: LoadingBtsData.BtsInfo(btsNr=85, riserNr=Стояк 7.3, aptNr=Кв. 150,154,158,162,166, porchNr=7 Подъезд)
+contObjectId: 128916347
+ContZPointId: 128916384; deviceObjectId: 128916352
+ContZPointId: 128916388; deviceObjectId: 128916356
+ContZPointId: 128916392; deviceObjectId: 128916360
+ContZPointId: 128916396; deviceObjectId: 128916364
+ContZPointId: 128916400; deviceObjectId: 128916368
+ContZPointId: 128916404; deviceObjectId: 128916372
+ContZPointId: 128916408; deviceObjectId: 128916376
+ContZPointId: 128916412; deviceObjectId: 128916380
+БТС: LoadingBtsData.BtsInfo(btsNr=86, riserNr=Стояк 7.3, aptNr=Кв. 150,154,158,162,166, porchNr=7 Подъезд)
+contObjectId: 128916416
+ContZPointId: 128916453; deviceObjectId: 128916421
+ContZPointId: 128916457; deviceObjectId: 128916425
+ContZPointId: 128916461; deviceObjectId: 128916429
+ContZPointId: 128916465; deviceObjectId: 128916433
+ContZPointId: 128916469; deviceObjectId: 128916437
+ContZPointId: 128916473; deviceObjectId: 128916441
+ContZPointId: 128916477; deviceObjectId: 128916445
+ContZPointId: 128916481; deviceObjectId: 128916449
+БТС: LoadingBtsData.BtsInfo(btsNr=87, riserNr=Стояк 7.4, aptNr=Кв. 147, 151,155, 159,163,167, porchNr=7 Подъезд)
+contObjectId: 128916485
+ContZPointId: 128916522; deviceObjectId: 128916490
+ContZPointId: 128916526; deviceObjectId: 128916494
+ContZPointId: 128916530; deviceObjectId: 128916498
+ContZPointId: 128916534; deviceObjectId: 128916502
+ContZPointId: 128916538; deviceObjectId: 128916506
+ContZPointId: 128916542; deviceObjectId: 128916510
+ContZPointId: 128916546; deviceObjectId: 128916514
+ContZPointId: 128916550; deviceObjectId: 128916518
+БТС: LoadingBtsData.BtsInfo(btsNr=88, riserNr=Стояк 7.4, aptNr=Кв. 147, 151,155, 159,163,167, porchNr=7 Подъезд)
+contObjectId: 128916554
+ContZPointId: 128916591; deviceObjectId: 128916559
+ContZPointId: 128916595; deviceObjectId: 128916563
+ContZPointId: 128916599; deviceObjectId: 128916567
+ContZPointId: 128916603; deviceObjectId: 128916571
+ContZPointId: 128916607; deviceObjectId: 128916575
+ContZPointId: 128916611; deviceObjectId: 128916579
+ContZPointId: 128916615; deviceObjectId: 128916583
+ContZPointId: 128916619; deviceObjectId: 128916587
+БТС: LoadingBtsData.BtsInfo(btsNr=89, riserNr=Стояк 7.5, aptNr=Кв. 148,152,156,160,164,168, porchNr=7 Подъезд)
+contObjectId: 128916623
+ContZPointId: 128916660; deviceObjectId: 128916628
+ContZPointId: 128916664; deviceObjectId: 128916632
+ContZPointId: 128916668; deviceObjectId: 128916636
+ContZPointId: 128916672; deviceObjectId: 128916640
+ContZPointId: 128916676; deviceObjectId: 128916644
+ContZPointId: 128916680; deviceObjectId: 128916648
+ContZPointId: 128916684; deviceObjectId: 128916652
+ContZPointId: 128916688; deviceObjectId: 128916656
+БТС: LoadingBtsData.BtsInfo(btsNr=90, riserNr=Стояк 7.5, aptNr=Кв. 148,152,156,160,164,168, porchNr=7 Подъезд)
+contObjectId: 128916692
+ContZPointId: 128916729; deviceObjectId: 128916697
+ContZPointId: 128916733; deviceObjectId: 128916701
+ContZPointId: 128916737; deviceObjectId: 128916705
+ContZPointId: 128916741; deviceObjectId: 128916709
+ContZPointId: 128916745; deviceObjectId: 128916713
+ContZPointId: 128916749; deviceObjectId: 128916717
+ContZPointId: 128916753; deviceObjectId: 128916721
+ContZPointId: 128916757; deviceObjectId: 128916725
+БТС: LoadingBtsData.BtsInfo(btsNr=91, riserNr=Стояк 7.6, aptNr=Кв. 148,152,156,160,164,168, porchNr=7 Подъезд)
+contObjectId: 128916761
+ContZPointId: 128916798; deviceObjectId: 128916766
+ContZPointId: 128916802; deviceObjectId: 128916770
+ContZPointId: 128916806; deviceObjectId: 128916774
+ContZPointId: 128916810; deviceObjectId: 128916778
+ContZPointId: 128916814; deviceObjectId: 128916782
+ContZPointId: 128916818; deviceObjectId: 128916786
+ContZPointId: 128916822; deviceObjectId: 128916790
+ContZPointId: 128916826; deviceObjectId: 128916794
+БТС: LoadingBtsData.BtsInfo(btsNr=92, riserNr=Стояк 7.6, aptNr=Кв. 148,152,156,160,164,168, porchNr=7 Подъезд)
+contObjectId: 128916830
+ContZPointId: 128916867; deviceObjectId: 128916835
+ContZPointId: 128916871; deviceObjectId: 128916839
+ContZPointId: 128916875; deviceObjectId: 128916843
+ContZPointId: 128916879; deviceObjectId: 128916847
+ContZPointId: 128916883; deviceObjectId: 128916851
+ContZPointId: 128916887; deviceObjectId: 128916855
+ContZPointId: 128916891; deviceObjectId: 128916859
+ContZPointId: 128916895; deviceObjectId: 128916863
+======================================================
+A:128910413
+	B:128910450
+	B:128910454
+	B:128910458
+	B:128910462
+	B:128910466
+	B:128910470
+	B:128910474
+	B:128910478
+		C:128910418
+		C:128910422
+		C:128910426
+		C:128910430
+		C:128910434
+		C:128910438
+		C:128910442
+		C:128910446
+A:128910482
+	B:128910519
+	B:128910523
+	B:128910527
+	B:128910531
+	B:128910535
+	B:128910539
+	B:128910543
+	B:128910547
+		C:128910487
+		C:128910491
+		C:128910495
+		C:128910499
+		C:128910503
+		C:128910507
+		C:128910511
+		C:128910515
+A:128910551
+	B:128910588
+	B:128910592
+	B:128910596
+	B:128910600
+	B:128910604
+	B:128910608
+	B:128910612
+	B:128910616
+		C:128910556
+		C:128910560
+		C:128910564
+		C:128910568
+		C:128910572
+		C:128910576
+		C:128910580
+		C:128910584
+A:128910620
+	B:128910657
+	B:128910661
+	B:128910665
+	B:128910669
+	B:128910673
+	B:128910677
+	B:128910681
+	B:128910685
+		C:128910625
+		C:128910629
+		C:128910633
+		C:128910637
+		C:128910641
+		C:128910645
+		C:128910649
+		C:128910653
+A:128910689
+	B:128910726
+	B:128910730
+	B:128910734
+	B:128910738
+	B:128910742
+	B:128910746
+	B:128910750
+	B:128910754
+		C:128910694
+		C:128910698
+		C:128910702
+		C:128910706
+		C:128910710
+		C:128910714
+		C:128910718
+		C:128910722
+A:128910758
+	B:128910795
+	B:128910799
+	B:128910803
+	B:128910807
+	B:128910811
+	B:128910815
+	B:128910819
+	B:128910823
+		C:128910763
+		C:128910767
+		C:128910771
+		C:128910775
+		C:128910779
+		C:128910783
+		C:128910787
+		C:128910791
+A:128910827
+	B:128910864
+	B:128910868
+	B:128910872
+	B:128910876
+	B:128910880
+	B:128910884
+	B:128910888
+	B:128910892
+		C:128910832
+		C:128910836
+		C:128910840
+		C:128910844
+		C:128910848
+		C:128910852
+		C:128910856
+		C:128910860
+A:128910896
+	B:128910933
+	B:128910937
+	B:128910941
+	B:128910945
+	B:128910949
+	B:128910953
+	B:128910957
+	B:128910961
+		C:128910901
+		C:128910905
+		C:128910909
+		C:128910913
+		C:128910917
+		C:128910921
+		C:128910925
+		C:128910929
+A:128910965
+	B:128911002
+	B:128911006
+	B:128911010
+	B:128911014
+	B:128911018
+	B:128911022
+	B:128911026
+	B:128911030
+		C:128910970
+		C:128910974
+		C:128910978
+		C:128910982
+		C:128910986
+		C:128910990
+		C:128910994
+		C:128910998
+A:128911034
+	B:128911071
+	B:128911075
+	B:128911079
+	B:128911083
+	B:128911087
+	B:128911091
+	B:128911095
+	B:128911099
+		C:128911039
+		C:128911043
+		C:128911047
+		C:128911051
+		C:128911055
+		C:128911059
+		C:128911063
+		C:128911067
+A:128911103
+	B:128911140
+	B:128911144
+	B:128911148
+	B:128911152
+	B:128911156
+	B:128911160
+	B:128911164
+	B:128911168
+		C:128911108
+		C:128911112
+		C:128911116
+		C:128911120
+		C:128911124
+		C:128911128
+		C:128911132
+		C:128911136
+A:128911172
+	B:128911209
+	B:128911213
+	B:128911217
+	B:128911221
+	B:128911225
+	B:128911229
+	B:128911233
+	B:128911237
+		C:128911177
+		C:128911181
+		C:128911185
+		C:128911189
+		C:128911193
+		C:128911197
+		C:128911201
+		C:128911205
+A:128911241
+	B:128911278
+	B:128911282
+	B:128911286
+	B:128911290
+	B:128911294
+	B:128911298
+	B:128911302
+	B:128911306
+		C:128911246
+		C:128911250
+		C:128911254
+		C:128911258
+		C:128911262
+		C:128911266
+		C:128911270
+		C:128911274
+A:128911310
+	B:128911347
+	B:128911351
+	B:128911355
+	B:128911359
+	B:128911363
+	B:128911367
+	B:128911371
+	B:128911375
+		C:128911315
+		C:128911319
+		C:128911323
+		C:128911327
+		C:128911331
+		C:128911335
+		C:128911339
+		C:128911343
+A:128911379
+	B:128911416
+	B:128911420
+	B:128911424
+	B:128911428
+	B:128911432
+	B:128911436
+	B:128911440
+	B:128911444
+		C:128911384
+		C:128911388
+		C:128911392
+		C:128911396
+		C:128911400
+		C:128911404
+		C:128911408
+		C:128911412
+A:128911448
+	B:128911485
+	B:128911489
+	B:128911493
+	B:128911497
+	B:128911501
+	B:128911505
+	B:128911509
+	B:128911513
+		C:128911453
+		C:128911457
+		C:128911461
+		C:128911465
+		C:128911469
+		C:128911473
+		C:128911477
+		C:128911481
+A:128911517
+	B:128911554
+	B:128911558
+	B:128911562
+	B:128911566
+	B:128911570
+	B:128911574
+	B:128911578
+	B:128911582
+		C:128911522
+		C:128911526
+		C:128911530
+		C:128911534
+		C:128911538
+		C:128911542
+		C:128911546
+		C:128911550
+A:128911586
+	B:128911623
+	B:128911627
+	B:128911631
+	B:128911635
+	B:128911639
+	B:128911643
+	B:128911647
+	B:128911651
+		C:128911591
+		C:128911595
+		C:128911599
+		C:128911603
+		C:128911607
+		C:128911611
+		C:128911615
+		C:128911619
+A:128911655
+	B:128911692
+	B:128911696
+	B:128911700
+	B:128911704
+	B:128911708
+	B:128911712
+	B:128911716
+	B:128911720
+		C:128911660
+		C:128911664
+		C:128911668
+		C:128911672
+		C:128911676
+		C:128911680
+		C:128911684
+		C:128911688
+A:128911724
+	B:128911761
+	B:128911765
+	B:128911769
+	B:128911773
+	B:128911777
+	B:128911781
+	B:128911785
+	B:128911789
+		C:128911729
+		C:128911733
+		C:128911737
+		C:128911741
+		C:128911745
+		C:128911749
+		C:128911753
+		C:128911757
+A:128911793
+	B:128911830
+	B:128911834
+	B:128911838
+	B:128911842
+	B:128911846
+	B:128911850
+	B:128911854
+	B:128911858
+		C:128911798
+		C:128911802
+		C:128911806
+		C:128911810
+		C:128911814
+		C:128911818
+		C:128911822
+		C:128911826
+A:128911862
+	B:128911899
+	B:128911903
+	B:128911907
+	B:128911911
+	B:128911915
+	B:128911919
+	B:128911923
+	B:128911927
+		C:128911867
+		C:128911871
+		C:128911875
+		C:128911879
+		C:128911883
+		C:128911887
+		C:128911891
+		C:128911895
+A:128911931
+	B:128911968
+	B:128911972
+	B:128911976
+	B:128911980
+	B:128911984
+	B:128911988
+	B:128911992
+	B:128911996
+		C:128911936
+		C:128911940
+		C:128911944
+		C:128911948
+		C:128911952
+		C:128911956
+		C:128911960
+		C:128911964
+A:128912000
+	B:128912037
+	B:128912041
+	B:128912045
+	B:128912049
+	B:128912053
+	B:128912057
+	B:128912061
+	B:128912065
+		C:128912005
+		C:128912009
+		C:128912013
+		C:128912017
+		C:128912021
+		C:128912025
+		C:128912029
+		C:128912033
+A:128912069
+	B:128912106
+	B:128912110
+	B:128912114
+	B:128912118
+	B:128912122
+	B:128912126
+	B:128912130
+	B:128912134
+		C:128912074
+		C:128912078
+		C:128912082
+		C:128912086
+		C:128912090
+		C:128912094
+		C:128912098
+		C:128912102
+A:128912138
+	B:128912175
+	B:128912179
+	B:128912183
+	B:128912187
+	B:128912191
+	B:128912195
+	B:128912199
+	B:128912203
+		C:128912143
+		C:128912147
+		C:128912151
+		C:128912155
+		C:128912159
+		C:128912163
+		C:128912167
+		C:128912171
+A:128912207
+	B:128912244
+	B:128912248
+	B:128912252
+	B:128912256
+	B:128912260
+	B:128912264
+	B:128912268
+	B:128912272
+		C:128912212
+		C:128912216
+		C:128912220
+		C:128912224
+		C:128912228
+		C:128912232
+		C:128912236
+		C:128912240
+A:128912276
+	B:128912313
+	B:128912317
+	B:128912321
+	B:128912325
+	B:128912329
+	B:128912333
+	B:128912337
+	B:128912341
+		C:128912281
+		C:128912285
+		C:128912289
+		C:128912293
+		C:128912297
+		C:128912301
+		C:128912305
+		C:128912309
+A:128912345
+	B:128912382
+	B:128912386
+	B:128912390
+	B:128912394
+	B:128912398
+	B:128912402
+	B:128912406
+	B:128912410
+		C:128912350
+		C:128912354
+		C:128912358
+		C:128912362
+		C:128912366
+		C:128912370
+		C:128912374
+		C:128912378
+A:128912414
+	B:128912451
+	B:128912455
+	B:128912459
+	B:128912463
+	B:128912467
+	B:128912471
+	B:128912475
+	B:128912479
+		C:128912419
+		C:128912423
+		C:128912427
+		C:128912431
+		C:128912435
+		C:128912439
+		C:128912443
+		C:128912447
+A:128912483
+	B:128912520
+	B:128912524
+	B:128912528
+	B:128912532
+	B:128912536
+	B:128912540
+	B:128912544
+	B:128912548
+		C:128912488
+		C:128912492
+		C:128912496
+		C:128912500
+		C:128912504
+		C:128912508
+		C:128912512
+		C:128912516
+A:128912552
+	B:128912589
+	B:128912593
+	B:128912597
+	B:128912601
+	B:128912605
+	B:128912609
+	B:128912613
+	B:128912617
+		C:128912557
+		C:128912561
+		C:128912565
+		C:128912569
+		C:128912573
+		C:128912577
+		C:128912581
+		C:128912585
+A:128912621
+	B:128912658
+	B:128912662
+	B:128912666
+	B:128912670
+	B:128912674
+	B:128912678
+	B:128912682
+	B:128912686
+		C:128912626
+		C:128912630
+		C:128912634
+		C:128912638
+		C:128912642
+		C:128912646
+		C:128912650
+		C:128912654
+A:128912690
+	B:128912727
+	B:128912731
+	B:128912735
+	B:128912739
+	B:128912743
+	B:128912747
+	B:128912751
+	B:128912755
+		C:128912695
+		C:128912699
+		C:128912703
+		C:128912707
+		C:128912711
+		C:128912715
+		C:128912719
+		C:128912723
+A:128912759
+	B:128912796
+	B:128912800
+	B:128912804
+	B:128912808
+	B:128912812
+	B:128912816
+	B:128912820
+	B:128912824
+		C:128912764
+		C:128912768
+		C:128912772
+		C:128912776
+		C:128912780
+		C:128912784
+		C:128912788
+		C:128912792
+A:128912828
+	B:128912865
+	B:128912869
+	B:128912873
+	B:128912877
+	B:128912881
+	B:128912885
+	B:128912889
+	B:128912893
+		C:128912833
+		C:128912837
+		C:128912841
+		C:128912845
+		C:128912849
+		C:128912853
+		C:128912857
+		C:128912861
+A:128912897
+	B:128912934
+	B:128912938
+	B:128912942
+	B:128912946
+	B:128912950
+	B:128912954
+	B:128912958
+	B:128912962
+		C:128912902
+		C:128912906
+		C:128912910
+		C:128912914
+		C:128912918
+		C:128912922
+		C:128912926
+		C:128912930
+A:128912966
+	B:128913003
+	B:128913007
+	B:128913011
+	B:128913015
+	B:128913019
+	B:128913023
+	B:128913027
+	B:128913031
+		C:128912971
+		C:128912975
+		C:128912979
+		C:128912983
+		C:128912987
+		C:128912991
+		C:128912995
+		C:128912999
+A:128913035
+	B:128913072
+	B:128913076
+	B:128913080
+	B:128913084
+	B:128913088
+	B:128913092
+	B:128913096
+	B:128913100
+		C:128913040
+		C:128913044
+		C:128913048
+		C:128913052
+		C:128913056
+		C:128913060
+		C:128913064
+		C:128913068
+A:128913104
+	B:128913141
+	B:128913145
+	B:128913149
+	B:128913153
+	B:128913157
+	B:128913161
+	B:128913165
+	B:128913169
+		C:128913109
+		C:128913113
+		C:128913117
+		C:128913121
+		C:128913125
+		C:128913129
+		C:128913133
+		C:128913137
+A:128913173
+	B:128913210
+	B:128913214
+	B:128913218
+	B:128913222
+	B:128913226
+	B:128913230
+	B:128913234
+	B:128913238
+		C:128913178
+		C:128913182
+		C:128913186
+		C:128913190
+		C:128913194
+		C:128913198
+		C:128913202
+		C:128913206
+A:128913242
+	B:128913279
+	B:128913283
+	B:128913287
+	B:128913291
+	B:128913295
+	B:128913299
+	B:128913303
+	B:128913307
+		C:128913247
+		C:128913251
+		C:128913255
+		C:128913259
+		C:128913263
+		C:128913267
+		C:128913271
+		C:128913275
+A:128913311
+	B:128913348
+	B:128913352
+	B:128913356
+	B:128913360
+	B:128913364
+	B:128913368
+	B:128913372
+	B:128913376
+		C:128913316
+		C:128913320
+		C:128913324
+		C:128913328
+		C:128913332
+		C:128913336
+		C:128913340
+		C:128913344
+A:128913380
+	B:128913417
+	B:128913421
+	B:128913425
+	B:128913429
+	B:128913433
+	B:128913437
+	B:128913441
+	B:128913445
+		C:128913385
+		C:128913389
+		C:128913393
+		C:128913397
+		C:128913401
+		C:128913405
+		C:128913409
+		C:128913413
+A:128913449
+	B:128913486
+	B:128913490
+	B:128913494
+	B:128913498
+	B:128913502
+	B:128913506
+	B:128913510
+	B:128913514
+		C:128913454
+		C:128913458
+		C:128913462
+		C:128913466
+		C:128913470
+		C:128913474
+		C:128913478
+		C:128913482
+A:128913518
+	B:128913555
+	B:128913559
+	B:128913563
+	B:128913567
+	B:128913571
+	B:128913575
+	B:128913579
+	B:128913583
+		C:128913523
+		C:128913527
+		C:128913531
+		C:128913535
+		C:128913539
+		C:128913543
+		C:128913547
+		C:128913551
+A:128913587
+	B:128913624
+	B:128913628
+	B:128913632
+	B:128913636
+	B:128913640
+	B:128913644
+	B:128913648
+	B:128913652
+		C:128913592
+		C:128913596
+		C:128913600
+		C:128913604
+		C:128913608
+		C:128913612
+		C:128913616
+		C:128913620
+A:128913656
+	B:128913693
+	B:128913697
+	B:128913701
+	B:128913705
+	B:128913709
+	B:128913713
+	B:128913717
+	B:128913721
+		C:128913661
+		C:128913665
+		C:128913669
+		C:128913673
+		C:128913677
+		C:128913681
+		C:128913685
+		C:128913689
+A:128913725
+	B:128913762
+	B:128913766
+	B:128913770
+	B:128913774
+	B:128913778
+	B:128913782
+	B:128913786
+	B:128913790
+		C:128913730
+		C:128913734
+		C:128913738
+		C:128913742
+		C:128913746
+		C:128913750
+		C:128913754
+		C:128913758
+A:128913794
+	B:128913831
+	B:128913835
+	B:128913839
+	B:128913843
+	B:128913847
+	B:128913851
+	B:128913855
+	B:128913859
+		C:128913799
+		C:128913803
+		C:128913807
+		C:128913811
+		C:128913815
+		C:128913819
+		C:128913823
+		C:128913827
+A:128913863
+	B:128913900
+	B:128913904
+	B:128913908
+	B:128913912
+	B:128913916
+	B:128913920
+	B:128913924
+	B:128913928
+		C:128913868
+		C:128913872
+		C:128913876
+		C:128913880
+		C:128913884
+		C:128913888
+		C:128913892
+		C:128913896
+A:128913932
+	B:128913969
+	B:128913973
+	B:128913977
+	B:128913981
+	B:128913985
+	B:128913989
+	B:128913993
+	B:128913997
+		C:128913937
+		C:128913941
+		C:128913945
+		C:128913949
+		C:128913953
+		C:128913957
+		C:128913961
+		C:128913965
+A:128914001
+	B:128914038
+	B:128914042
+	B:128914046
+	B:128914050
+	B:128914054
+	B:128914058
+	B:128914062
+	B:128914066
+		C:128914006
+		C:128914010
+		C:128914014
+		C:128914018
+		C:128914022
+		C:128914026
+		C:128914030
+		C:128914034
+A:128914070
+	B:128914107
+	B:128914111
+	B:128914115
+	B:128914119
+	B:128914123
+	B:128914127
+	B:128914131
+	B:128914135
+		C:128914075
+		C:128914079
+		C:128914083
+		C:128914087
+		C:128914091
+		C:128914095
+		C:128914099
+		C:128914103
+A:128914139
+	B:128914176
+	B:128914180
+	B:128914184
+	B:128914188
+	B:128914192
+	B:128914196
+	B:128914200
+	B:128914204
+		C:128914144
+		C:128914148
+		C:128914152
+		C:128914156
+		C:128914160
+		C:128914164
+		C:128914168
+		C:128914172
+A:128914208
+	B:128914245
+	B:128914249
+	B:128914253
+	B:128914257
+	B:128914261
+	B:128914265
+	B:128914269
+	B:128914273
+		C:128914213
+		C:128914217
+		C:128914221
+		C:128914225
+		C:128914229
+		C:128914233
+		C:128914237
+		C:128914241
+A:128914277
+	B:128914314
+	B:128914318
+	B:128914322
+	B:128914326
+	B:128914330
+	B:128914334
+	B:128914338
+	B:128914342
+		C:128914282
+		C:128914286
+		C:128914290
+		C:128914294
+		C:128914298
+		C:128914302
+		C:128914306
+		C:128914310
+A:128914346
+	B:128914383
+	B:128914387
+	B:128914391
+	B:128914395
+	B:128914399
+	B:128914403
+	B:128914407
+	B:128914411
+		C:128914351
+		C:128914355
+		C:128914359
+		C:128914363
+		C:128914367
+		C:128914371
+		C:128914375
+		C:128914379
+A:128914415
+	B:128914452
+	B:128914456
+	B:128914460
+	B:128914464
+	B:128914468
+	B:128914472
+	B:128914476
+	B:128914480
+		C:128914420
+		C:128914424
+		C:128914428
+		C:128914432
+		C:128914436
+		C:128914440
+		C:128914444
+		C:128914448
+A:128914484
+	B:128914521
+	B:128914525
+	B:128914529
+	B:128914533
+	B:128914537
+	B:128914541
+	B:128914545
+	B:128914549
+		C:128914489
+		C:128914493
+		C:128914497
+		C:128914501
+		C:128914505
+		C:128914509
+		C:128914513
+		C:128914517
+A:128914553
+	B:128914590
+	B:128914594
+	B:128914598
+	B:128914602
+	B:128914606
+	B:128914610
+	B:128914614
+	B:128914618
+		C:128914558
+		C:128914562
+		C:128914566
+		C:128914570
+		C:128914574
+		C:128914578
+		C:128914582
+		C:128914586
+A:128914622
+	B:128914659
+	B:128914663
+	B:128914667
+	B:128914671
+	B:128914675
+	B:128914679
+	B:128914683
+	B:128914687
+		C:128914627
+		C:128914631
+		C:128914635
+		C:128914639
+		C:128914643
+		C:128914647
+		C:128914651
+		C:128914655
+A:128914691
+	B:128914728
+	B:128914732
+	B:128914736
+	B:128914740
+	B:128914744
+	B:128914748
+	B:128914752
+	B:128914756
+		C:128914696
+		C:128914700
+		C:128914704
+		C:128914708
+		C:128914712
+		C:128914716
+		C:128914720
+		C:128914724
+A:128914760
+	B:128914797
+	B:128914801
+	B:128914805
+	B:128914809
+	B:128914813
+	B:128914817
+	B:128914821
+	B:128914825
+		C:128914765
+		C:128914769
+		C:128914773
+		C:128914777
+		C:128914781
+		C:128914785
+		C:128914789
+		C:128914793
+A:128914829
+	B:128914866
+	B:128914870
+	B:128914874
+	B:128914878
+	B:128914882
+	B:128914886
+	B:128914890
+	B:128914894
+		C:128914834
+		C:128914838
+		C:128914842
+		C:128914846
+		C:128914850
+		C:128914854
+		C:128914858
+		C:128914862
+A:128914898
+	B:128914935
+	B:128914939
+	B:128914943
+	B:128914947
+	B:128914951
+	B:128914955
+	B:128914959
+	B:128914963
+		C:128914903
+		C:128914907
+		C:128914911
+		C:128914915
+		C:128914919
+		C:128914923
+		C:128914927
+		C:128914931
+A:128914967
+	B:128915004
+	B:128915008
+	B:128915012
+	B:128915016
+	B:128915020
+	B:128915024
+	B:128915028
+	B:128915032
+		C:128914972
+		C:128914976
+		C:128914980
+		C:128914984
+		C:128914988
+		C:128914992
+		C:128914996
+		C:128915000
+A:128915036
+	B:128915073
+	B:128915077
+	B:128915081
+	B:128915085
+	B:128915089
+	B:128915093
+	B:128915097
+	B:128915101
+		C:128915041
+		C:128915045
+		C:128915049
+		C:128915053
+		C:128915057
+		C:128915061
+		C:128915065
+		C:128915069
+A:128915105
+	B:128915142
+	B:128915146
+	B:128915150
+	B:128915154
+	B:128915158
+	B:128915162
+	B:128915166
+	B:128915170
+		C:128915110
+		C:128915114
+		C:128915118
+		C:128915122
+		C:128915126
+		C:128915130
+		C:128915134
+		C:128915138
+A:128915174
+	B:128915211
+	B:128915215
+	B:128915219
+	B:128915223
+	B:128915227
+	B:128915231
+	B:128915235
+	B:128915239
+		C:128915179
+		C:128915183
+		C:128915187
+		C:128915191
+		C:128915195
+		C:128915199
+		C:128915203
+		C:128915207
+A:128915243
+	B:128915280
+	B:128915284
+	B:128915288
+	B:128915292
+	B:128915296
+	B:128915300
+	B:128915304
+	B:128915308
+		C:128915248
+		C:128915252
+		C:128915256
+		C:128915260
+		C:128915264
+		C:128915268
+		C:128915272
+		C:128915276
+A:128915312
+	B:128915349
+	B:128915353
+	B:128915357
+	B:128915361
+	B:128915365
+	B:128915369
+	B:128915373
+	B:128915377
+		C:128915317
+		C:128915321
+		C:128915325
+		C:128915329
+		C:128915333
+		C:128915337
+		C:128915341
+		C:128915345
+A:128915381
+	B:128915418
+	B:128915422
+	B:128915426
+	B:128915430
+	B:128915434
+	B:128915438
+	B:128915442
+	B:128915446
+		C:128915386
+		C:128915390
+		C:128915394
+		C:128915398
+		C:128915402
+		C:128915406
+		C:128915410
+		C:128915414
+A:128915450
+	B:128915487
+	B:128915491
+	B:128915495
+	B:128915499
+	B:128915503
+	B:128915507
+	B:128915511
+	B:128915515
+		C:128915455
+		C:128915459
+		C:128915463
+		C:128915467
+		C:128915471
+		C:128915475
+		C:128915479
+		C:128915483
+A:128915519
+	B:128915556
+	B:128915560
+	B:128915564
+	B:128915568
+	B:128915572
+	B:128915576
+	B:128915580
+	B:128915584
+		C:128915524
+		C:128915528
+		C:128915532
+		C:128915536
+		C:128915540
+		C:128915544
+		C:128915548
+		C:128915552
+A:128915588
+	B:128915625
+	B:128915629
+	B:128915633
+	B:128915637
+	B:128915641
+	B:128915645
+	B:128915649
+	B:128915653
+		C:128915593
+		C:128915597
+		C:128915601
+		C:128915605
+		C:128915609
+		C:128915613
+		C:128915617
+		C:128915621
+A:128915657
+	B:128915694
+	B:128915698
+	B:128915702
+	B:128915706
+	B:128915710
+	B:128915714
+	B:128915718
+	B:128915722
+		C:128915662
+		C:128915666
+		C:128915670
+		C:128915674
+		C:128915678
+		C:128915682
+		C:128915686
+		C:128915690
+A:128915726
+	B:128915763
+	B:128915767
+	B:128915771
+	B:128915775
+	B:128915779
+	B:128915783
+	B:128915787
+	B:128915791
+		C:128915731
+		C:128915735
+		C:128915739
+		C:128915743
+		C:128915747
+		C:128915751
+		C:128915755
+		C:128915759
+A:128915795
+	B:128915832
+	B:128915836
+	B:128915840
+	B:128915844
+	B:128915848
+	B:128915852
+	B:128915856
+	B:128915860
+		C:128915800
+		C:128915804
+		C:128915808
+		C:128915812
+		C:128915816
+		C:128915820
+		C:128915824
+		C:128915828
+A:128915864
+	B:128915901
+	B:128915905
+	B:128915909
+	B:128915913
+	B:128915917
+	B:128915921
+	B:128915925
+	B:128915929
+		C:128915869
+		C:128915873
+		C:128915877
+		C:128915881
+		C:128915885
+		C:128915889
+		C:128915893
+		C:128915897
+A:128915933
+	B:128915970
+	B:128915974
+	B:128915978
+	B:128915982
+	B:128915986
+	B:128915990
+	B:128915994
+	B:128915998
+		C:128915938
+		C:128915942
+		C:128915946
+		C:128915950
+		C:128915954
+		C:128915958
+		C:128915962
+		C:128915966
+A:128916002
+	B:128916039
+	B:128916043
+	B:128916047
+	B:128916051
+	B:128916055
+	B:128916059
+	B:128916063
+	B:128916067
+		C:128916007
+		C:128916011
+		C:128916015
+		C:128916019
+		C:128916023
+		C:128916027
+		C:128916031
+		C:128916035
+A:128916071
+	B:128916108
+	B:128916112
+	B:128916116
+	B:128916120
+	B:128916124
+	B:128916128
+	B:128916132
+	B:128916136
+		C:128916076
+		C:128916080
+		C:128916084
+		C:128916088
+		C:128916092
+		C:128916096
+		C:128916100
+		C:128916104
+A:128916140
+	B:128916177
+	B:128916181
+	B:128916185
+	B:128916189
+	B:128916193
+	B:128916197
+	B:128916201
+	B:128916205
+		C:128916145
+		C:128916149
+		C:128916153
+		C:128916157
+		C:128916161
+		C:128916165
+		C:128916169
+		C:128916173
+A:128916209
+	B:128916246
+	B:128916250
+	B:128916254
+	B:128916258
+	B:128916262
+	B:128916266
+	B:128916270
+	B:128916274
+		C:128916214
+		C:128916218
+		C:128916222
+		C:128916226
+		C:128916230
+		C:128916234
+		C:128916238
+		C:128916242
+A:128916278
+	B:128916315
+	B:128916319
+	B:128916323
+	B:128916327
+	B:128916331
+	B:128916335
+	B:128916339
+	B:128916343
+		C:128916283
+		C:128916287
+		C:128916291
+		C:128916295
+		C:128916299
+		C:128916303
+		C:128916307
+		C:128916311
+A:128916347
+	B:128916384
+	B:128916388
+	B:128916392
+	B:128916396
+	B:128916400
+	B:128916404
+	B:128916408
+	B:128916412
+		C:128916352
+		C:128916356
+		C:128916360
+		C:128916364
+		C:128916368
+		C:128916372
+		C:128916376
+		C:128916380
+A:128916416
+	B:128916453
+	B:128916457
+	B:128916461
+	B:128916465
+	B:128916469
+	B:128916473
+	B:128916477
+	B:128916481
+		C:128916421
+		C:128916425
+		C:128916429
+		C:128916433
+		C:128916437
+		C:128916441
+		C:128916445
+		C:128916449
+A:128916485
+	B:128916522
+	B:128916526
+	B:128916530
+	B:128916534
+	B:128916538
+	B:128916542
+	B:128916546
+	B:128916550
+		C:128916490
+		C:128916494
+		C:128916498
+		C:128916502
+		C:128916506
+		C:128916510
+		C:128916514
+		C:128916518
+A:128916554
+	B:128916591
+	B:128916595
+	B:128916599
+	B:128916603
+	B:128916607
+	B:128916611
+	B:128916615
+	B:128916619
+		C:128916559
+		C:128916563
+		C:128916567
+		C:128916571
+		C:128916575
+		C:128916579
+		C:128916583
+		C:128916587
+A:128916623
+	B:128916660
+	B:128916664
+	B:128916668
+	B:128916672
+	B:128916676
+	B:128916680
+	B:128916684
+	B:128916688
+		C:128916628
+		C:128916632
+		C:128916636
+		C:128916640
+		C:128916644
+		C:128916648
+		C:128916652
+		C:128916656
+A:128916692
+	B:128916729
+	B:128916733
+	B:128916737
+	B:128916741
+	B:128916745
+	B:128916749
+	B:128916753
+	B:128916757
+		C:128916697
+		C:128916701
+		C:128916705
+		C:128916709
+		C:128916713
+		C:128916717
+		C:128916721
+		C:128916725
+A:128916761
+	B:128916798
+	B:128916802
+	B:128916806
+	B:128916810
+	B:128916814
+	B:128916818
+	B:128916822
+	B:128916826
+		C:128916766
+		C:128916770
+		C:128916774
+		C:128916778
+		C:128916782
+		C:128916786
+		C:128916790
+		C:128916794
+A:128916830
+	B:128916867
+	B:128916871
+	B:128916875
+	B:128916879
+	B:128916883
+	B:128916887
+	B:128916891
+	B:128916895
+		C:128916835
+		C:128916839
+		C:128916843
+		C:128916847
+		C:128916851
+		C:128916855
+		C:128916859
+		C:128916863
+======================================================
