@@ -39,6 +39,8 @@
 
 
 	<!-- 3rdparty Loggers -->
+	<logger name="org.apache.tomcat.util" level="error" />
+	
 	<logger name="org.springframework.core" level="info" />
 	
 	<logger name="org.springframework.beans" level="info" />
