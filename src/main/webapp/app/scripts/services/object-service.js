@@ -1,4 +1,4 @@
-/*jslint node: true, white: true, nomen: true*/
+/*jslint node: true, white: true, nomen: true, eqeq: true*/
 /*global angular*/
 'use strict';
 angular.module('portalNMC')
@@ -42,7 +42,10 @@ angular.module('portalNMC')
             controlTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1',
             subscrTreesUrl = urlSubscr + '/subscrObjectTree/contObjectTreeType1',
             urlBuildingTypes = urlSubscr + '/service/buildingType/list',
-            urlBuildingCategories = urlSubscr + '/service/buildingType/category/list';
+            urlBuildingCategories = urlSubscr + '/service/buildingType/category/list',
+        //meter periods urls
+            meterPeriodSuffix = '/meterPeriodSettings',
+            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;     
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -790,7 +793,7 @@ angular.module('portalNMC')
                     return false;
                 }
                 buildingTypes = angular.copy(resp.data);                
-            }, function () {
+            }, function (e) {
                 console.log(e);
             });
         }
@@ -804,13 +807,33 @@ angular.module('portalNMC')
                     return false;
                 }
                 buildingCategories = angular.copy(resp.data);                
-            }, function () {
+            }, function (e) {
                 console.log(e);
             });
         }
 // **************************************************************
 //      Bulding types
-// **************************************************************                                  
+// **************************************************************
+                 
+//****************************************************************************************
+//Meter periods
+//****************************************************************************************
+        //get meter periods ?
+        //put meter periods 
+        function setMeterPeriods(meterPeriodData) {
+            var url = urlSubscrMeterPeriod;
+            return $http.put(url, meterPeriodData);
+        }
+        // get meter period by contObjectId
+        function getMeterPeriodByObject(contObjectId) {
+            var url = urlSubscrContObjects + '/' + contObjectId + meterPeriodSuffix;
+            return $http.get(url);
+        }
+        // put meter period by contObjectId
+        function setMeterPeriodForObject(meterPeriodData) {
+            var url = urlSubscrContObjects + '/' + meterPeriodData.contObjectId + meterPeriodSuffix;
+            return $http.put(url, meterPeriodData);
+        }                 
                  
         
         //service initialization
@@ -850,6 +873,7 @@ angular.module('portalNMC')
             /*getDeviceModelTypes,*/
             getDeviceSchedulerSettings,
             getImpulseCounterTypes,
+            getMeterPeriodByObject,
             getObject,
             getObjectConsumingData,
             getObjectSettings,
@@ -906,8 +930,9 @@ angular.module('portalNMC')
             rmaPromise,
             saveZpointMetadata,
             sendDeviceToServer,
-            setObjectSettings,
             setCurrentObject,
+            setMeterPeriodForObject,
+            setObjectSettings,            
             sortObjectsByFullName,
             sortObjectsByFullNameEx,            
             sortObjectsByConObjectFullName,

@@ -2,10 +2,10 @@
 /*global angular, $, alert, moment*/
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsMeterPeriodSettingCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+.controller('SettingsMeterPeriodSettingCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window' , 'meterPeriodsSvc', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window, meterPeriodsSvc) {
     $rootScope.ctxId = "management_rma_meter_period_setting_page";
     
-    var METER_PERIOD_SETTING_URl = "../api/rma/meter-period-settings";
+    //var METER_PERIOD_SETTING_URl = "../api/subscr/meter-period-settings";
     
     $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "name", "nameColumnName" : "name"};
     $scope.orderBy = { field: $scope.extraProps.defaultOrderBy, asc: true};
@@ -68,12 +68,12 @@ angular.module('portalNMC')
     function successSaveCallback(resp) {
         console.log(resp);
         var tmpArr = angular.copy($scope.data.meterPeriodSettings);
-        if (resp.status === 201) {            
+        if (resp.status === 201) {//created response            
             tmpArr.push(angular.copy(resp.data));
             mainSvc.sortItemsBy(tmpArr, $scope.extraProps.defaultOrderBy);
             $scope.data.meterPeriodSettings = tmpArr;
         }
-        if (resp.status === 200) {            
+        if (resp.status === 200) {//updated response            
             var changedItem = mainSvc.findItemBy(tmpArr, $scope.extraProps.idColumnName, resp.data.id);
             var index = tmpArr.indexOf(changedItem);
             if (index !== -1) {
@@ -86,8 +86,9 @@ angular.module('portalNMC')
     }    
     
     function loadMeterPeriodSetting() {
-        var url = METER_PERIOD_SETTING_URl;
-        $http.get(url).then(successGetCallback, errorCallback);
+//        var url = METER_PERIOD_SETTING_URl;
+//        $http.get(url).then(successGetCallback, errorCallback);
+        meterPeriodsSvc.loadMeterPeriods().then(successGetCallback, errorCallback);
     }
     
     function successDeleteCallback(resp) {
@@ -138,17 +139,18 @@ angular.module('portalNMC')
         if (checkData($scope.data.currentMeterPeriodSetting) === false){
             return false;
         }        
-        var url = METER_PERIOD_SETTING_URl,
+        var /*url = METER_PERIOD_SETTING_URl,*/
             rmethod = "PUT";
         if (angular.isUndefined($scope.data.currentMeterPeriodSetting.id) || $scope.data.currentMeterPeriodSetting.id === null ) {
             rmethod = "POST";
         }
-        $http(
-            {
-                method: rmethod,
-                url: url, 
-                data: $scope.data.currentMeterPeriodSetting
-            }).then(successSaveCallback, errorCallback);
+        meterPeriodsSvc.saveMeterPeriod(rmethod, $scope.data.currentMeterPeriodSetting).then(successSaveCallback, errorCallback);
+//        $http(
+//            {
+//                method: rmethod,
+//                url: url, 
+//                data: $scope.data.currentMeterPeriodSetting
+//            }).then(successSaveCallback, errorCallback);
     };
     
     $scope.addMeterPeriod = function() {
@@ -161,8 +163,9 @@ angular.module('portalNMC')
         $scope.data.currentMeterPeriodSetting = angular.copy(item);        
     };
     
-    $scope.deleteMeterPeriodSetting = function(mps){
-        $http.delete(METER_PERIOD_SETTING_URl + "/" + mps.id).then(successDeleteCallback, errorCallback);
+    $scope.deleteMeterPeriodSetting = function(mps) {
+        meterPeriodsSvc.deleteMeterPeriod(mps.id).then(successDeleteCallback, errorCallback);
+//        $http.delete(METER_PERIOD_SETTING_URl + "/" + mps.id).then(successDeleteCallback, errorCallback);
     };
     
         // Проверка пользователя - системный/ не системный
@@ -176,7 +179,7 @@ angular.module('portalNMC')
     
     $scope.isSystemViewInfo = function () {
         return mainSvc.getViewSystemInfo();
-    }
+    };
     
     function initCtrl() {
         loadMeterPeriodSetting();

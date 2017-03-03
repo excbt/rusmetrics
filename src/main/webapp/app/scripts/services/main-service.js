@@ -1,10 +1,12 @@
-/*jslint node: true, white: true, nomen: true*/
+/*jslint node: true, white: true, nomen: true, eqeq: true*/
 /*global angular, $, moment*/
 'use strict';
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout) {
+    
+    var RADIX = 10;//for parseInt
     
     //Test special settings
     var isUseTest = true,
@@ -486,7 +488,7 @@ angular.module('portalNMC')
             //if numvalue is not number -> return false
             return result;
         }
-        result = parseInt(numvalue) >= 0 ? true : false;
+        result = parseInt(numvalue, RADIX) >= 0 ? true : false;
         return result;
     };
     
