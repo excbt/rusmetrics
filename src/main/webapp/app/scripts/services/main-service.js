@@ -4,7 +4,7 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout) {
+.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 'monitorSvc', '$q', '$timeout', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout) {
     
     var RADIX = 10;//for parseInt
     
@@ -956,4 +956,4 @@ angular.module('portalNMC')
         sortTreeNodesBy,
         strDateToUTC
     };
-});
+}]);
