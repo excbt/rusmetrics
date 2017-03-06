@@ -433,6 +433,15 @@
 
 	<build>
 		<finalName>${rp.build.warname}</finalName>
+        <defaultGoal>spring-boot:run</defaultGoal>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources/</directory>
+            </testResource>
+            <!--<testResource>-->
+                <!--<directory>src/test/features</directory>-->
+            <!--</testResource>-->
+        </testResources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -461,7 +470,13 @@
 					</compilerArguments>
 				</configuration>
 			</plugin>
-
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ru.excbt.datafuse.nmk.app.PortalApplication</mainClass>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
@@ -472,15 +487,19 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
-<!-- 				<dependency> -->
-<!-- 					<groupId>org.springframework.boot</groupId> -->
-<!-- 					<artifactId>spring-boot-starter-undertow</artifactId> -->
-<!-- 				</dependency> -->
+ 				<dependency>
+ 					<groupId>org.springframework.boot</groupId>
+ 					<artifactId>spring-boot-starter-undertow</artifactId>
+ 				</dependency>
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-devtools</artifactId>
 					<optional>true</optional>
 				</dependency>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </dependency>
 			</dependencies>
 			<build>
 				<plugins>
@@ -498,10 +517,60 @@
 				<logback.loglevel>DEBUG</logback.loglevel>
 				<!-- default Spring profiles -->
 				<spring.profiles.active>dev</spring.profiles.active>
-            	<rp.build.warname>testapp</rp.build.warname>				
+            	<rp.build.warname>testapp</rp.build.warname>
 			</properties>
 		</profile>
-
+        <profile>
+			<id>test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<warSourceDirectory>src/main/webapp/</warSourceDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<!-- log configuration -->
+				<logback.loglevel>INFO</logback.loglevel>
+				<!-- default Spring profiles -->
+				<spring.profiles.active>dev</spring.profiles.active>
+            	<rp.build.warname>testapp</rp.build.warname>
+			</properties>
+		</profile>
+        <profile>
+			<id>prod</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<warSourceDirectory>src/main/webapp/</warSourceDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<!-- log configuration -->
+				<logback.loglevel>WARN</logback.loglevel>
+				<!-- default Spring profiles -->
+				<spring.profiles.active>prod</spring.profiles.active>
+            	<rp.build.warname>testapp</rp.build.warname>
+			</properties>
+		</profile>
+        <profile>
+            <id>standalone</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
 	</profiles>
 
 </project>

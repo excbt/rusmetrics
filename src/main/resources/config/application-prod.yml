@@ -1,5 +1,5 @@
 # ===================================================================
-# Spring Boot configuration for the "prod" profile.
+# Spring Boot configuration for the "dev" profile.
 #
 # This configuration overrides the application.yml file.
 # ===================================================================
@@ -12,83 +12,84 @@
 
 
 spring:
-    devtools:
-        restart:
-            enabled: false
-        livereload:
-            enabled: false
+    application:
+        name: portal
+    profiles:
+        active: prod
+#        include: swagger
+#    devtools:
+#        restart:
+#            enabled: true
+#        livereload:
+#            enabled: false # we use gulp + BrowserSync for livereload
+#    jackson:
+#        serialization.indent_output: true
+#    datasource:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        #driver-class-name: org.postgresql.Driver
+#        jdbcUrl: jdbc:postgresql://192.168.84.26:5432/datafuse
+#        name:
+#        jndi-name:
+#        username: postgres
+#        password: 12345
+#        hikari:
+#            #connection-test-query: SELECT 1 FROM DUAL
+#            minimum-idle: 3
+#            maximum-pool-size: 5
+#            pool-name: master
+
+    jpa:
+        database-platform: ru.excbt.datafuse.hibernate.dialect.ExPostgreSQLDialect
+        database: POSTGRESQL
+        properties:
+            hibernate.hbm2ddl.auto: validate
+            hibernate.format-sql: false
+            hibernate.show_sql: false
+
+#            naming:
+#                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+#        properties:
+#            hibernate.cache.use_second_level_cache: true
+#            hibernate.cache.use_query_cache: false
+#            hibernate.generate_statistics: true
+#            hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
+#            hibernate.javax.cache.uri: ${spring.cache.jcache.config}
+#            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
+portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://192.168.84.26:5432/sampleApp
+        #driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
-        username: ak
-        password: 12345
-    jpa:
-        database-platform: net.akworks.jhipster.sampleapp.domain.util.FixedPostgreSQL82Dialect
-        database: POSTGRESQL
-        show-sql: false
-        properties:
-            hibernate.cache.use_second_level_cache: true
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: false
-            hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
-            hibernate.javax.cache.uri: ${spring.cache.jcache.config}
-            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
-    cache:
-        jcache:
-            config: ehcache.xml
-    mail:
-        host: localhost
-        port: 25
-        username:
-        password:
-    thymeleaf:
-        cache: true
+        jndi-name:
+        username: dbuser1
+        password: Y[Q^1>f{
+        platform: POSTGRESQL
+        hikari:
+            connection-test-query: SELECT 1
+            minimum-idle: 3
+            maximum-pool-size: 5
+            pool-name: master
 
-liquibase:
-    contexts: prod
+raw:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        #dataSourceClassName: org.postgresql.Driver
+        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&amp;characterEncoding=UTF-8
+        #?useUnicode=yes&amp;characterEncoding=UTF-8
+        name:
+        jndi-name:
+        username: dbuser1
+        password: Y[Q^1>f{
+        platform: POSTGRESQL
+        hikari:
+            connection-test-query: SELECT 1
+            minimum-idle: 1
+            maximum-pool-size: 2
+            pool-name: raw
+
 
 server:
     port: 8080
-    compression:
-        enabled: true
-        mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
-        min-response-size: 1024
-
-# ===================================================================
-# JHipster specific properties
-# ===================================================================
-
-jhipster:
-    http:
-        cache: # Used by the CachingHttpHeadersFilter
-            timeToLiveInDays: 1461
-    cache: # Hibernate 2nd level cache, used by CacheConfiguration
-        ehcache:
-            maxBytesLocalHeap: 256M
-    security:
-        rememberMe:
-            # security key (this key should be unique for your application, and kept secret)
-            key: f3ed3e2433f7a3742df3b29a4355ce5ec1ed6c2f
-    mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: sampleApp@localhost
-        baseUrl: http://my-server-url-to-change # Modify according to your server's URL
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        graphite:
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: sampleApp
-        prometheus:
-            enabled: false
-            endpoint: /prometheusMetrics
-        logs: # Reports Dropwizard metrics in the logs
-            enabled: false
-            reportFrequency: 60 # in seconds
-    logging:
-        logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-            enabled: false
-            host: localhost
-            port: 5000
-            queueSize: 512
