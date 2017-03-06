@@ -563,6 +563,7 @@ angular.module('portalNMC')
        var promise = null;//getObjectsData();
        var rmaPromise = null;//getRmaObjectsData();
        var loadData = function(contGroupId, onlySubscrList){
+           console.time("Object loading");
            promise = getObjectsData(contGroupId);
            if (!checkUndefinedNull(onlySubscrList) && onlySubscrList === true) {
                return;

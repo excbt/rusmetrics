@@ -22,6 +22,8 @@ angular.module('portalNMC')
         controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location',
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location) {
                 
+                console.time("crudGridObjects loading");
+                
 //console.log("Objects directive.");
                 
                 var VCOOKIE_URL = "../api/subscr/vcookie",
@@ -138,6 +140,7 @@ angular.module('portalNMC')
 //console.log(objectSvc.promise);
                 
                 var successGetObjectsCallback = function(response) {
+                    console.time("Object perform");
                     $scope.messages.noObjects = "Объектов нет.";
                     var tempArr = response.data;
                     if (mainSvc.checkUndefinedNull(tempArr) || !angular.isArray(tempArr) || tempArr.length === 0) {                        
@@ -198,9 +201,12 @@ angular.module('portalNMC')
                         $cookies.contObject = null;          
                     }
                     $rootScope.$broadcast('objectSvc:loaded');
+                    console.timeEnd("Object loading");
+                    console.timeEnd("Object perform");
                 };
                 
-                var getObjectsData = function(){                  
+                var getObjectsData = function(){
+//                    console.time("Object loading");
                     objectSvc.getPromise().then(successGetObjectsCallback);
                 };
                 
@@ -2390,6 +2396,8 @@ angular.module('portalNMC')
                 }; 
                 
                 initCtrl();
+                
+                console.timeEnd("crudGridObjects loading");
             }]
     };
 });
