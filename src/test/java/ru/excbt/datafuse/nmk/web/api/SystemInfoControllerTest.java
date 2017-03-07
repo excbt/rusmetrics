@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -46,13 +47,13 @@ public class SystemInfoControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testExSystem() throws Exception {
 		String content = _testGetJson("/api/systemInfo/exSystem");
-		List<ExSystemDto> result = fromJSON(new TypeReference<List<ExSystemDto>>() {
+		List<ExSystemDto> result = TestUtils.fromJSON(new TypeReference<List<ExSystemDto>>() {
 		}, content);
 		assertNotNull(result);
 	}

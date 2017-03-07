@@ -19,9 +19,12 @@ import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingsModeServiceTest;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import javax.transaction.Transactional;
 
 public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 
@@ -38,11 +41,11 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 	private ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	//@Transactional
-	public void testPut() {
+	@Transactional
+	public void testPut() throws Exception {
 		List<ContZPointSettingMode> settingModes = settingModeService
 				.findSettingByContZPointId(ContZPointSettingsModeServiceTest.TEST_ZPOINT_ID);
 
@@ -54,7 +57,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 				logger.error("settingMode is null");
 				continue;
 			}
-			
+
 			long contZPointId = settingMode.getContZPoint().getId();
 			long contObjectId = contZPointService.findOne(contZPointId)
 					.getContObject().getId();
@@ -67,46 +70,20 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 			settingMode
 					.setOv_BalanceM_ctrl(settingMode.getOv_BalanceM_ctrl() + 0.1);
 
-			String jsonBody = null;
-			try {
-				jsonBody = OBJECT_MAPPER.writeValueAsString(settingMode);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-				fail(e.toString());
-			}
+			String jsonBody = TestUtils.objectToJson(settingMode);
+            logger.info("Testing JSON: {}", jsonBody);
 
-			try {
-				logger.info("Testing JSON: {}",
-						OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
-								.writeValueAsString(settingMode));
-			} catch (JsonProcessingException e1) {
-				// XXX Auto-generated catch block
-				e1.printStackTrace();
-			}
 
-			ResultActions resultActionsAll;
-			try {
-				resultActionsAll = mockMvc.perform(put(urlStr)
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(jsonBody).with(testSecurityContext())
-						.accept(MediaType.APPLICATION_JSON));
-
-				resultActionsAll.andDo(MockMvcResultHandlers.print());
-
-				resultActionsAll.andExpect(status().isOk());
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				fail(e.toString());
-			}
+            _testPutJson(urlStr, jsonBody);
 
 		}
 	}
 
 	@Test
+    @Transactional
 	public void testAAA() throws Exception {
 		_testGetJson("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
-		
+
 	}
-	
+
 }

@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
@@ -71,7 +72,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	/**
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	@Test
 	public void testCommerceDownloadGet() throws Exception {
@@ -89,7 +90,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	/**
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	@Test
 	public void testEventDownloadGetPreview() throws Exception {
@@ -102,7 +103,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	/**
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	@Test
 	public void testConsT1DownloadGetPreview() throws Exception {
@@ -115,7 +116,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	/**
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	@Test
 	public void testConsT2DownloadGetPreview() throws Exception {
@@ -127,7 +128,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -147,7 +148,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("contObjectIds", arrayToString(Longs.toArray(contObjectIds)));
+				builder.param("contObjectIds", TestUtils.arrayToString(Longs.toArray(contObjectIds)));
 			}
 		};
 
@@ -174,7 +175,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -211,7 +212,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -230,7 +231,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -258,7 +259,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("contObjectIds", arrayToString(Longs.toArray(contObjectIds)));
+				builder.param("contObjectIds", TestUtils.arrayToString(Longs.toArray(contObjectIds)));
 			}
 		};
 
@@ -285,7 +286,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -320,7 +321,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -386,7 +387,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param filename
 	 * @param fileBytes
 	 * @throws FileNotFoundException

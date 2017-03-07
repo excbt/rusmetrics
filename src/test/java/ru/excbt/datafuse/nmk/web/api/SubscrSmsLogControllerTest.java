@@ -10,13 +10,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrSmsLog;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class SubscrSmsLogControllerTest extends AnyControllerSubscriberTest {
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -28,7 +29,7 @@ public class SubscrSmsLogControllerTest extends AnyControllerSubscriberTest {
 		};
 
 		String content = _testGetJson("/api/subscr/smsLog", params);
-		List<SubscrSmsLog> result = fromJSON(new TypeReference<List<SubscrSmsLog>>() {
+		List<SubscrSmsLog> result = TestUtils.fromJSON(new TypeReference<List<SubscrSmsLog>>() {
 		}, content);
 
 		assertNotNull(result);

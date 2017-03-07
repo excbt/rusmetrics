@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -27,7 +28,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	private SubscrPriceItemService subscrPriceItemService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -36,7 +37,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -45,7 +46,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -64,7 +65,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -79,7 +80,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -95,7 +96,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -113,7 +114,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 		Long priceListId = subscrPriceLists.get(0).getId();
 
 		RequestExtraInitializer params = (builder) -> {
-			builder.param("subscriberIds", arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
+			builder.param("subscriberIds", TestUtils.arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
 			// builder.param("activeIds", arrayToString(new long[] {}));
 		};
 		_testPostJson(String.format("/api/rma/%d/priceList/%d/subscr", EXCBT_RMA_SUBSCRIBER_ID, priceListId), params);
@@ -128,7 +129,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -161,7 +162,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */

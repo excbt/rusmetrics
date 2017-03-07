@@ -1,10 +1,11 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api;
 
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 import org.junit.Test;
@@ -20,11 +21,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Test for MeterPeriodSettingController
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 20.02.2017
- * 
+ *
  */
 public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 
@@ -45,7 +46,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 		MeterPeriodSettingDTO setting = MeterPeriodSettingDTO.builder().name("MySetting").build();
 		setting = meterPeriodSettingService.save(setting);
 		String content = _testGetJson("/api/subscr/meter-period-settings/" + setting.getId());
-		MeterPeriodSettingDTO result = fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
+		MeterPeriodSettingDTO result = TestUtils.fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
 		}, content);
 		assertEquals(setting.getId(), result.getId());
 	}
@@ -57,7 +58,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 		setting = meterPeriodSettingService.save(setting);
 		final MeterPeriodSettingDTO checkSetting = new MeterPeriodSettingDTO(setting);
 		_testGetJsonResultActions("/api/subscr/meter-period-settings").andDo((result) -> {
-			List<MeterPeriodSettingDTO> resultDTOs = fromJSON(new TypeReference<List<MeterPeriodSettingDTO>>() {
+			List<MeterPeriodSettingDTO> resultDTOs = TestUtils.fromJSON(new TypeReference<List<MeterPeriodSettingDTO>>() {
 			}, result.getResponse().getContentAsString());
 			assertTrue(resultDTOs.stream().filter(i -> i.getId().equals(checkSetting.getId())).findAny().isPresent());
 
@@ -72,7 +73,7 @@ public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 		MeterPeriodSettingDTO newSetting = new MeterPeriodSettingDTO(setting);
 		newSetting.setName("New Name");
 		_testPutJson("/api/subscr/meter-period-settings", newSetting).andExpect(status().isOk()).andDo((result) -> {
-			MeterPeriodSettingDTO resultDTO = fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
+			MeterPeriodSettingDTO resultDTO = TestUtils.fromJSON(new TypeReference<MeterPeriodSettingDTO>() {
 			}, result.getResponse().getContentAsString());
 			assertEquals(resultDTO.getId(), newSetting.getId());
 			assertEquals(resultDTO.getName(), newSetting.getName());

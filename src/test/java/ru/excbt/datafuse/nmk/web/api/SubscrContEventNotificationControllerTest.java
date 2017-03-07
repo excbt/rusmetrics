@@ -45,6 +45,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -324,14 +325,14 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	@Test
     @Transactional
 	public void testContEventCategories() throws Exception {
-		String url = apiSubscrUrl("/contEvent/categories");
+		String url = UrlUtils.apiSubscrUrl("/contEvent/categories");
 		_testGetJson(url);
 	}
 
 	@Test
     @Transactional
 	public void testContEventDeviation() throws Exception {
-		String url = apiSubscrUrl("/contEvent/deviations");
+		String url = UrlUtils.apiSubscrUrl("/contEvent/deviations");
 		_testGetJson(url);
 	}
 

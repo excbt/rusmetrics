@@ -9,13 +9,14 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 public class SubscrPrefControllerTest extends RmaControllerTest {
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -24,7 +25,7 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -36,14 +37,14 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testSubscrPrefValuesSave() throws Exception {
 		String prefValuesContent = _testGetJson("/api/subscr/subscrPrefValues");
 
-		List<SubscrPrefValue> prefValues = fromJSON(new TypeReference<List<SubscrPrefValue>>() {
+		List<SubscrPrefValue> prefValues = TestUtils.fromJSON(new TypeReference<List<SubscrPrefValue>>() {
 		}, prefValuesContent);
 
 		assertNotNull(prefValues);
@@ -58,7 +59,7 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

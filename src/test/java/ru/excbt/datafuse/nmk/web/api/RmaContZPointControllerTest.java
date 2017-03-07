@@ -22,6 +22,8 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class RmaContZPointControllerTest extends AnyControllerTest {
@@ -50,11 +52,11 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 
 		contZPoint.setRsoId(randomRsoOrganizationId());
 
-		String url = apiRmaUrl(String.format("/contObjects/%d/zpoints", MANUAL_CONT_OBJECT_ID));
+		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints", MANUAL_CONT_OBJECT_ID));
 
 		Long contZPointId = _testCreateJson(url, contZPoint);
 
-		_testGetJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
+		_testGetJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 
 		contZPoint = contZPointService.findOne(contZPointId);
 
@@ -68,21 +70,21 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 		contZPoint.setDeviceObjects(null);
 		contZPoint.set_activeDeviceObjectId(activeDeviceObjectId);
 		contZPoint.setExCode("ex_code111");
-		_testUpdateJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
+		_testUpdateJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
 				contZPoint);
 
-		_testDeleteJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
+		_testDeleteJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 	}
 
 	@Test
 	@Ignore
 	public void testTemporaryGet() throws Exception {
-		_testGetJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, 66183331L)));
+		_testGetJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, 66183331L)));
 	}
 
 	@Test
 	public void testRsoOrganizations() throws Exception {
-		_testGetJson(apiRmaUrl("/contObjects/rsoOrganizations"));
+		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/rsoOrganizations"));
 	}
 
 	private Long randomRsoOrganizationId() {
@@ -124,7 +126,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	public void testContZPointMetadataCRUD() throws Exception {
 		final String content = _testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata");
 
-		List<ContZPointMetadata> metadata = fromJSON(new TypeReference<List<ContZPointMetadata>>() {
+		List<ContZPointMetadata> metadata = TestUtils.fromJSON(new TypeReference<List<ContZPointMetadata>>() {
 		}, content);
 
 		assertNotNull(metadata);

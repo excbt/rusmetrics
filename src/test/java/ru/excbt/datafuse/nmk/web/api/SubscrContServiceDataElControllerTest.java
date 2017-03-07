@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -29,7 +30,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@JsonIgnore
@@ -42,43 +43,43 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 		};
 		;
 
-		String url = apiSubscrUrl(String.format("/%d/serviceElCons/%s/%d/summary", 28063670, "24h", 28063671));
+		String url = UrlUtils.apiSubscrUrl(String.format("/%d/serviceElCons/%s/%d/summary", 28063670, "24h", 28063671));
 
 		_testGet(url, params);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	@Ignore
 	public void testElConsSummary() throws Exception {
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElCons/%s/%d/summary", TEST_OBJECT_ID, CONS_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testElProfileSummary() throws Exception {
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElProfile/%s/%d/summary", TEST_OBJECT_ID, PROFILE_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testElTechSummary() throws Exception {
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElTech/%s/%d/summary", TEST_OBJECT_ID, TECH_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
@@ -86,7 +87,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testElConsData() throws Exception {
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElCons/%s/%d", TEST_OBJECT_ID, CONS_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
@@ -94,14 +95,14 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testElConsDataAbs() throws Exception {
-		String url = apiSubscrUrl(String.format("/%d/serviceElCons/24h_abs/%d", TEST_OBJECT_ID, EL_ZPOINT_ID));
+		String url = UrlUtils.apiSubscrUrl(String.format("/%d/serviceElCons/24h_abs/%d", TEST_OBJECT_ID, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
 	}
 
 	@Test
 	public void testElProfileData() throws Exception {
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElProfile/%s/%d", TEST_OBJECT_ID, PROFILE_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
@@ -109,7 +110,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testElTechData() throws Exception {
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElTech/%s/%d", TEST_OBJECT_ID, TECH_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());

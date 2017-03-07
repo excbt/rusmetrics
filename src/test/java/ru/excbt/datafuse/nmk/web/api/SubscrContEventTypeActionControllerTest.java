@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeActionService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.SubscrControllerTest;
 
 public class SubscrContEventTypeActionControllerTest extends SubscrControllerTest implements TestExcbtRmaIds {
@@ -26,7 +27,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 
 	@Test
 	public void testAvailableContEventTypes() throws Exception {
-		_testGetJson(apiSubscrUrl("/contEventType/actions/available"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/contEventType/actions/available"));
 	}
 
 	@Test
@@ -55,7 +56,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

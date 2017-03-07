@@ -15,36 +15,38 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.ManualControllerTest;
 
 public class RmaDataSourceControllerTest extends ManualControllerTest {
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private SubscrDataSourceService subscrDataSourceService;
+//	@Autowired
+//	private CurrentSubscriberService currentSubscriberService;
+//
+//	@Autowired
+//	private SubscrDataSourceService subscrDataSourceService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testDataSourcesGet() throws Exception {
-		_testGetJson(apiRmaUrl("/dataSources"));
+		_testGetJson(UrlUtils.apiRmaUrl("/dataSources"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testDataSourceTypesGet() throws Exception {
-		_testGetJson(apiRmaUrl("/dataSourceTypes"));
+		_testGetJson(UrlUtils.apiRmaUrl("/dataSourceTypes"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -52,23 +54,23 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	public void testDataSourceCreateUpdateDelete() throws Exception {
 		SubscrDataSource dataSource = new SubscrDataSource();
 		dataSource.setDataSourceTypeKey(ExSystemKey.DEVICE.getKeyname());
-		Long dataSourceId = _testCreateJson(apiRmaUrl("/dataSources"), dataSource);
+		Long dataSourceId = _testCreateJson(UrlUtils.apiRmaUrl("/dataSources"), dataSource);
 		assertNotNull(dataSourceId);
 
-		String dataSourceContent = _testGetJson(apiRmaUrl("/dataSources/" + dataSourceId));
+		String dataSourceContent = _testGetJson(UrlUtils.apiRmaUrl("/dataSources/" + dataSourceId));
 
-		dataSource = fromJSON(new TypeReference<SubscrDataSource>() {
+		dataSource = TestUtils.fromJSON(new TypeReference<SubscrDataSource>() {
 		}, dataSourceContent);
 
 		dataSource.setRawTimeout(10);
 
 		dataSource.setDataSourceComment("DataSource CRUD test at " + System.currentTimeMillis());
-		_testUpdateJson(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
-		_testDeleteJson(apiRmaUrl("/dataSources/" + dataSourceId.toString()));
+		_testUpdateJson(UrlUtils.apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
+		_testDeleteJson(UrlUtils.apiRmaUrl("/dataSources/" + dataSourceId.toString()));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -76,7 +78,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 		String content = _testGetJson("/api/rma/dataSources/rawModemModels");
 
-		List<RawModemModel> result = fromJSON(new TypeReference<List<RawModemModel>>() {
+		List<RawModemModel> result = TestUtils.fromJSON(new TypeReference<List<RawModemModel>>() {
 		}, content);
 
 		assertNotNull(result);
@@ -97,7 +99,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 		String content = _testGetJson("/api/rma/dataSources/rawModemModels/" + id);
 
-		RawModemModel result = fromJSON(new TypeReference<RawModemModel>() {
+		RawModemModel result = TestUtils.fromJSON(new TypeReference<RawModemModel>() {
 		}, content);
 
 		assertNotNull(result);
@@ -109,7 +111,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

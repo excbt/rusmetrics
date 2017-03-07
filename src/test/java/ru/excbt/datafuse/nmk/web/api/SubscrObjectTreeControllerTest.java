@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
 
@@ -21,7 +22,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 	private SubscrObjectTreeService subscrObjectTreeService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -30,7 +31,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -45,7 +46,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 
 		String content = _testGetJson(url);
 
-		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		SubscrObjectTree floor1 = subscrObjectTreeService.addChildObject(tree1, "Этаж 1");
@@ -55,7 +56,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 		_testUpdateJson(url, tree1);
 
 		content = _testGetJson(url);
-		tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		floor2 = subscrObjectTreeService.searchObject(tree1, "Этаж 2");
@@ -79,7 +80,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public long getSubscriberId() {
@@ -87,7 +88,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override

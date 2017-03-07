@@ -8,6 +8,8 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -24,7 +26,7 @@ public class SubscrVCookieControllerTest extends RmaControllerTest {
 		SubscrVCookie vc = new SubscrVCookie();
 		vc.setVcKey("TEST_MU");
 		vc.setVcMode("TEST_MODE");
-		vc.setVcValue(objectToJsonStr(entity));
+		vc.setVcValue(TestUtils.objectToJsonStr(entity));
 
 		_testPutJson("/api/subscr/vcookie/list", Lists.newArrayList(vc));
 
@@ -50,7 +52,7 @@ public class SubscrVCookieControllerTest extends RmaControllerTest {
 		SubscrVCookie vc = new SubscrVCookie();
 		vc.setVcKey("TEST_MU");
 		vc.setVcMode("TEST_MODE");
-		vc.setVcValue(objectToJsonStr(entity));
+		vc.setVcValue(TestUtils.objectToJsonStr(entity));
 
 		_testPutJson("/api/subscr/vcookie/user/list", Lists.newArrayList(vc));
 

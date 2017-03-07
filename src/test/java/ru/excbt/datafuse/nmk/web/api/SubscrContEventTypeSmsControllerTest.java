@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeSmsService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.SubscrControllerTest;
 
@@ -23,13 +24,13 @@ public class SubscrContEventTypeSmsControllerTest extends SubscrControllerTest {
 	@Test
 	@Ignore
 	public void testAvailableContEventTypes() throws Exception {
-		_testGetJson(apiSubscrUrl("/contEventSms/availableContEventTypes"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/contEventSms/availableContEventTypes"));
 	}
 
 	@Test
 	@Ignore
 	public void testGetContEventTypes() throws Exception {
-		_testGetJson(apiSubscrUrl("/contEventSms/contEventTypes"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/contEventSms/contEventTypes"));
 	}
 
 	@Test
@@ -47,6 +48,6 @@ public class SubscrContEventTypeSmsControllerTest extends SubscrControllerTest {
 			builder.param("contEventTypeId", contEventTypeId.toString());
 		};
 
-		_testCreateJson(apiSubscrUrl("/contEventSms/contEventTypes"), Arrays.asList(smsAddr), params);
+		_testCreateJson(UrlUtils.apiSubscrUrl("/contEventSms/contEventTypes"), Arrays.asList(smsAddr), params);
 	}
 }

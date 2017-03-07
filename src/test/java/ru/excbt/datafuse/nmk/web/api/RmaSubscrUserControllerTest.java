@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -19,7 +20,7 @@ public class RmaSubscrUserControllerTest extends RmaControllerTest {
 
 	@Test
 	public void testSubscrUsersGet() throws Exception {
-		_testGetJson(apiRmaUrl(RMA_RSUBSCRIBER_URL));
+		_testGetJson(UrlUtils.apiRmaUrl(RMA_RSUBSCRIBER_URL));
 	}
 
 	@Test
@@ -36,22 +37,22 @@ public class RmaSubscrUserControllerTest extends RmaControllerTest {
 			builder.param("newPassword", "secret");
 		};
 
-		Long subscrUserId = _testCreateJson(apiRmaUrl(RMA_RSUBSCRIBER_URL), subscrUser, paramAdmin);
+		Long subscrUserId = _testCreateJson(UrlUtils.apiRmaUrl(RMA_RSUBSCRIBER_URL), subscrUser, paramAdmin);
 		subscrUser = subscrUserService.findOne(subscrUserId);
 		assertNotNull(subscrUser);
 
 		subscrUser.setUserComment("Modified By REST");
-		_testUpdateJson(apiRmaUrl(RMA_RSUBSCRIBER_URL, subscrUserId), subscrUser);
+		_testUpdateJson(UrlUtils.apiRmaUrl(RMA_RSUBSCRIBER_URL, subscrUserId), subscrUser);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
 
-		_testDeleteJson(apiRmaUrl(RMA_RSUBSCRIBER_URL, subscrUserId), param);
+		_testDeleteJson(UrlUtils.apiRmaUrl(RMA_RSUBSCRIBER_URL, subscrUserId), param);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -61,6 +62,6 @@ public class RmaSubscrUserControllerTest extends RmaControllerTest {
 			builder.param("username", "admin");
 		};
 
-		_testGet(apiRmaUrl("/subscrUsers/checkExists"), param);
+		_testGet(UrlUtils.apiRmaUrl("/subscrUsers/checkExists"), param);
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -17,7 +18,7 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 
 	@Test
 	public void testGetSubscrUsers() throws Exception {
-		_testGetJson(apiSubscrUrl("/subscrUsers"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
 	}
 
 	@Test
@@ -32,7 +33,7 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 			builder.param("newPassword", "secret");
 		};
 
-		Long subscrUserId = _testCreateJson(apiSubscrUrl("/subscrUsers"), subscrUser, paramAdmin);
+		Long subscrUserId = _testCreateJson(UrlUtils.apiSubscrUrl("/subscrUsers"), subscrUser, paramAdmin);
 		subscrUser = subscrUserService.findOne(subscrUserId);
 		assertNotNull(subscrUser);
 
@@ -44,12 +45,12 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 			builder.param("newPassword", "secret2");
 		};
 
-		_testUpdateJson(apiSubscrUrl("/subscrUsers", subscrUserId), subscrUser, paramUpd);
+		_testUpdateJson(UrlUtils.apiSubscrUrl("/subscrUsers", subscrUserId), subscrUser, paramUpd);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
 
-		_testDeleteJson(apiSubscrUrl("/subscrUsers", subscrUserId), param);
+		_testDeleteJson(UrlUtils.apiSubscrUrl("/subscrUsers", subscrUserId), param);
 	}
 }

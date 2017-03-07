@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
@@ -38,7 +39,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -48,7 +49,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void testSubscrObjectTreeListGet() throws Exception {
@@ -56,14 +57,14 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
 	private List<SubscrObjectTreeTemplate> getTemplates() throws Exception {
 		String content = _testGetJson("/api/rma/subscrObjectTreeTemplates");
 
-		List<SubscrObjectTreeTemplate> templates = fromJSON(new TypeReference<List<SubscrObjectTreeTemplate>>() {
+		List<SubscrObjectTreeTemplate> templates = TestUtils.fromJSON(new TypeReference<List<SubscrObjectTreeTemplate>>() {
 		}, content);
 
 		assertNotNull(templates);
@@ -72,7 +73,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -82,7 +83,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -103,7 +104,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -118,7 +119,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		String content = _testGetJson(url);
 
-		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		SubscrObjectTree floor1 = subscrObjectTreeService.addChildObject(tree1, "Этаж 1");
@@ -128,7 +129,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		_testUpdateJson(url, tree1);
 
 		content = _testGetJson(url);
-		tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		floor2 = subscrObjectTreeService.searchObject(tree1, "Этаж 2");
@@ -152,7 +153,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -184,7 +185,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		String content = _testGetJson(url);
 
-		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		SubscrObjectTreeTemplateItem itemlevel1 = items.stream().filter(i -> i.getItemLevel().equals(1)).findFirst()
@@ -202,7 +203,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		_testUpdateJson(url, tree1);
 
 		content = _testGetJson(url);
-		tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		floor2 = subscrObjectTreeService.searchObject(tree1, "Этаж 2");
@@ -228,7 +229,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -246,7 +247,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		String content = _testGetJson(url);
 
-		SubscrObjectTree tree1 = fromJSON(new TypeReference<SubscrObjectTree>() {
+		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
 		SubscrObjectTree floor1 = subscrObjectTreeService.addChildObject(tree1, "Этаж 1");
@@ -263,14 +264,14 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testSubscrObjectTreeContObjects() throws Exception {
 
 		String treeListContent = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
-		List<SubscrObjectTree> treeList = fromJSON(new TypeReference<List<SubscrObjectTree>>() {
+		List<SubscrObjectTree> treeList = TestUtils.fromJSON(new TypeReference<List<SubscrObjectTree>>() {
 		}, treeListContent);
 
 		if (treeList.isEmpty()) {
@@ -284,7 +285,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 			treeId = t.getId();
 			String treeContent = _testGetJson(
 					String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d", treeId));
-			SubscrObjectTree tree = fromJSON(new TypeReference<SubscrObjectTree>() {
+			SubscrObjectTree tree = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 			}, treeContent);
 
 			treeNodeId = tree.getChildObjectList().size() > 0 ? tree.getChildObjectList().get(0).getId() : null;
@@ -300,7 +301,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		String freeContent = _testGetJson(
 				String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/contObjects/free", treeId));
 
-		List<ContObject> freeContObjects = fromJSON(new TypeReference<List<ContObject>>() {
+		List<ContObject> freeContObjects = TestUtils.fromJSON(new TypeReference<List<ContObject>>() {
 		}, freeContent);
 
 		String contObjectsUrl = String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/node/%d/contObjects",
@@ -311,7 +312,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		String content = _testGetJson(contObjectsUrl);
 
-		List<ContObject> linkedContObjects = fromJSON(new TypeReference<List<ContObject>>() {
+		List<ContObject> linkedContObjects = TestUtils.fromJSON(new TypeReference<List<ContObject>>() {
 		}, content);
 
 		assertNotNull(freeContObjects);
@@ -346,7 +347,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore

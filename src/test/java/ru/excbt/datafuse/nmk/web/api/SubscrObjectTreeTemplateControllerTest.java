@@ -7,6 +7,8 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 public class SubscrObjectTreeTemplateControllerTest extends RmaControllerTest {
@@ -15,11 +17,11 @@ public class SubscrObjectTreeTemplateControllerTest extends RmaControllerTest {
 	public void testRmaSubscrObjectTreeTemplates() throws Exception {
 		String content = _testGetJson("/api/subscr/subscrObjectTreeTemplates");
 
-		List<SubscrObjectTreeTemplate> templates = fromJSON(new TypeReference<List<SubscrObjectTreeTemplate>>() {
+		List<SubscrObjectTreeTemplate> templates = TestUtils.fromJSON(new TypeReference<List<SubscrObjectTreeTemplate>>() {
 		}, content);
 
 		for (SubscrObjectTreeTemplate i : templates) {
-			_testGetJson(apiSubscrUrlTemplate("/subscrObjectTreeTemplates/%d/items", i.getId()));
+			_testGetJson(UrlUtils.apiSubscrUrlTemplate("/subscrObjectTreeTemplates/%d/items", i.getId()));
 		}
 
 	}

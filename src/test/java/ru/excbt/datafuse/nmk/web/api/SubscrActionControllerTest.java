@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -36,7 +37,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -45,7 +46,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -55,7 +56,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -79,7 +80,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
 				builder.param("subscrGroupIds",
-						arrayToString(Longs.toArray(groupIds)));
+                    TestUtils.arrayToString(Longs.toArray(groupIds)));
 
 			}
 		};
@@ -93,7 +94,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -111,17 +112,17 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 		grp.setGroupName("Group 111");
 		grp.setGroupComment("created by rest");
 
-		
+
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
-			
+
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("subscrUserIds", arrayToString(Longs.toArray(userIds)));
+				builder.param("subscrUserIds", TestUtils.arrayToString(Longs.toArray(userIds)));
 			}
 		};
-		
+
 		Long createdId = _testCreateJson(urlStr, grp, extraInitializer);
-		
+
 		_testDeleteJson(urlStr + "/" + createdId);
 	}
 
