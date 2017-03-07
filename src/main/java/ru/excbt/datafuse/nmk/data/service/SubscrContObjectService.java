@@ -2,13 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObject_;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrContObject_;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
@@ -34,19 +28,14 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
 
 /**
  * Сервис для работы с привязкой абонентов и объекта учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
@@ -73,7 +62,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 	/**
 	 * TODO delete. // Comment date 11.05.2016
-	 * 
+	 *
 	 * @param objects
 	 */
 	@Deprecated
@@ -93,7 +82,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objects
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -114,7 +103,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContObject
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -130,7 +119,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objects
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -140,7 +129,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContObject
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -150,7 +139,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -159,7 +148,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -174,7 +163,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContObject
 	 * @return
 	 */
@@ -185,8 +174,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
-	 * @param rmaSubscriberId
+	 *
+	 * @param subscriberId
 	 * @return
 	 */
 	@Deprecated
@@ -198,7 +187,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @return
 	 */
@@ -208,7 +197,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param currentDateFilter
 	 * @return
@@ -226,7 +215,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -238,8 +227,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
-	 * @param subscriber
+	 *
+	 * @param subscriberParam
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -250,7 +239,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param contGroupId
 	 * @return
@@ -270,8 +259,50 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return ObjectFilters.deletedFilter(result);
 	}
 
+    /**
+     *
+     * @param subscriberParam
+     * @param contGroupId
+     * @param meterPeriodSettingIds
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam, Long contGroupId, List<Long> meterPeriodSettingIds) {
+        checkNotNull(subscriberParam);
+
+        List<ContObject> result = EMPTY_CONT_OBJECTS_LIST;
+
+        if (contGroupId == null) {
+            result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
+        } else {
+            result = contGroupService.selectContGroupObjects(subscriberParam, contGroupId);
+        }
+        List<ContObject> filteredResult = filterMeterPeriodSettingIds(result, meterPeriodSettingIds);
+
+        return ObjectFilters.deletedFilter(filteredResult);
+    }
+
+    /**
+     *
+     * @param contObjects
+     * @param meterPeriodSettingIds
+     * @return
+     */
+    private List<ContObject> filterMeterPeriodSettingIds(List<ContObject> contObjects, List<Long> meterPeriodSettingIds) {
+        if (contObjects == null)
+            return null;
+        return contObjects.stream().filter(i -> {
+            if (meterPeriodSettingIds == null)
+                return true;
+            List<Long> checkIds = i.getMeterPeriodSettings().values().stream().map(s -> s.getId()).collect(Collectors.toList());
+            List<Long> filerM = new ArrayList<>(meterPeriodSettingIds);
+            filerM.retainAll(checkIds);
+            return !checkIds.isEmpty();
+        }).collect(Collectors.toList());
+    }
+
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @return
@@ -284,7 +315,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param contObjectIds
 	 * @return
@@ -298,7 +329,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -310,7 +341,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -381,7 +412,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -446,7 +477,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -458,7 +489,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @return
@@ -475,11 +506,11 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param rmaSubscriberId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
 		checkNotNull(rmaSubscriberId);
@@ -490,7 +521,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @return
 	 */
@@ -503,12 +534,12 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param contObjectIds
-	 * @return
-	 */
+    /**
+     *
+     * @param rmaSubscriberId
+     * @param contObjectIds
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long rmaSubscriberId, List<Long> contObjectIds) {
 		checkNotNull(rmaSubscriberId);
@@ -520,7 +551,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -532,7 +563,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -544,7 +575,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @return
@@ -558,7 +589,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -575,7 +606,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -587,7 +618,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -619,7 +650,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -630,7 +661,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -641,13 +672,13 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId);
 	}
 
-	/**
-	 * 
-	 * @param contObject
-	 * @param subscriber
-	 * @param rmaSubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param contObject
+     * @param subscriber
+     * @param subscrBeginDate
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public SubscrContObject createSubscrContObject(ContObject contObject, Subscriber subscriber,
@@ -664,7 +695,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param subscriber
 	 * @param subscrBeginDate
@@ -688,7 +719,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param subscrBeginDate
@@ -748,7 +779,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param contObjects
 	 */
@@ -766,7 +797,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param contObjects
 	 */
@@ -790,7 +821,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @return
@@ -803,14 +834,14 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		}
 
 		logger.debug("Checking access for subscriberId:{}", subscriberId);
-		
+
 		List<Long> subscrContObjectIds = selectSubscriberContObjectIds(subscriberId);
 
 		return checkIds(contObjectIds, subscrContObjectIds);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contZPointIds
 	 * @return
@@ -827,7 +858,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param contObjectId
 	 * @return
@@ -838,7 +869,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param deviceObjectNumbers
 	 * @return
