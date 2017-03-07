@@ -34,6 +34,7 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class ReportSheduleControllerTest extends AnyControllerTest {
@@ -95,7 +96,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		rs.setComment("WEB API TEST update " + System.currentTimeMillis());
 
 		ResultActions resultActionsAll;
-		String jsonBody = OBJECT_MAPPER.writeValueAsString(rs);
+		String jsonBody = TestUtils.objectToJson(rs);
 
 		try {
 			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
@@ -144,13 +145,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		rs.setSheduleTimeTemplate("0 11 * * *");
 		String urlStr = "/api/reportShedule/";
 
-		String jsonBody = null;
-		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(rs);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			fail();
-		}
+		String jsonBody = TestUtils.objectToJson(rs);
 
 		ResultActions resultAction = mockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
 				.param("reportTemplateId", sReportTemplate.getId().toString())

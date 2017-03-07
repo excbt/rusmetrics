@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.ManualControllerTest;
 
 public class RmaDataSourceControllerTest extends ManualControllerTest {
@@ -32,7 +33,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 */
 	@Test
 	public void testDataSourcesGet() throws Exception {
-		_testGetJson(apiRmaUrl("/dataSources"));
+		_testGetJson(UrlUtils.apiRmaUrl("/dataSources"));
 	}
 
 	/**
@@ -41,7 +42,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 */
 	@Test
 	public void testDataSourceTypesGet() throws Exception {
-		_testGetJson(apiRmaUrl("/dataSourceTypes"));
+		_testGetJson(UrlUtils.apiRmaUrl("/dataSourceTypes"));
 	}
 
 	/**
@@ -53,10 +54,10 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	public void testDataSourceCreateUpdateDelete() throws Exception {
 		SubscrDataSource dataSource = new SubscrDataSource();
 		dataSource.setDataSourceTypeKey(ExSystemKey.DEVICE.getKeyname());
-		Long dataSourceId = _testCreateJson(apiRmaUrl("/dataSources"), dataSource);
+		Long dataSourceId = _testCreateJson(UrlUtils.apiRmaUrl("/dataSources"), dataSource);
 		assertNotNull(dataSourceId);
 
-		String dataSourceContent = _testGetJson(apiRmaUrl("/dataSources/" + dataSourceId));
+		String dataSourceContent = _testGetJson(UrlUtils.apiRmaUrl("/dataSources/" + dataSourceId));
 
 		dataSource = TestUtils.fromJSON(new TypeReference<SubscrDataSource>() {
 		}, dataSourceContent);
@@ -64,8 +65,8 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 		dataSource.setRawTimeout(10);
 
 		dataSource.setDataSourceComment("DataSource CRUD test at " + System.currentTimeMillis());
-		_testUpdateJson(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
-		_testDeleteJson(apiRmaUrl("/dataSources/" + dataSourceId.toString()));
+		_testUpdateJson(UrlUtils.apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
+		_testDeleteJson(UrlUtils.apiRmaUrl("/dataSources/" + dataSourceId.toString()));
 	}
 
 	/**

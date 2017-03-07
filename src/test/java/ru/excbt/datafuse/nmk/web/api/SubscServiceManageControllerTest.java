@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class SubscServiceManageControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
@@ -35,52 +36,52 @@ public class SubscServiceManageControllerTest extends AnyControllerTest implemen
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testPackGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/manage/service/servicePackList"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/servicePackList"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testItemsGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/manage/service/serviceItemList"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/serviceItemList"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testPricesGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/manage/service/servicePriceList"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/servicePriceList"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testManualSubscriberAccessGet() throws Exception {
-		_testGetJson(apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID)));
+		_testGetJson(UrlUtils.apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID)));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testCurrentSubscriberAccessGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/manage/service/access"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/access"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -111,12 +112,12 @@ public class SubscServiceManageControllerTest extends AnyControllerTest implemen
 			accessList.add(access);
 		}
 
-		String url = apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID));
+		String url = UrlUtils.apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID));
 		_testUpdateJson(url, accessList, null);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -147,23 +148,23 @@ public class SubscServiceManageControllerTest extends AnyControllerTest implemen
 			accessList.add(access);
 		}
 
-		String url = apiSubscrUrl("/manage/service/access");
+		String url = UrlUtils.apiSubscrUrl("/manage/service/access");
 		_testUpdateJson(url, accessList, null);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testManualSubscriberPermissionsGet() throws Exception {
-		_testGetJson(apiSubscrUrl(String.format("/%d/manage/service/permissions", MANUAL_SUBSCRIBER_ID)));
+		_testGetJson(UrlUtils.apiSubscrUrl(String.format("/%d/manage/service/permissions", MANUAL_SUBSCRIBER_ID)));
 	}
 
 	@Test
 	public void testCurrentSubscriberPermissionsGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/manage/service/permissions"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/permissions"));
 	}
 
 }

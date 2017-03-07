@@ -100,7 +100,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 		String urlStr = "/api/reportParamset/commerce";
 
-		String objString = OBJECT_MAPPER.writeValueAsString(reportParamset);
+		String objString = TestUtils.objectToJson(reportParamset);
 		logger.info("objString: {}", objString);
 
 		Long createdId = _testCreateJson(urlStr, reportParamset, extraInializer);

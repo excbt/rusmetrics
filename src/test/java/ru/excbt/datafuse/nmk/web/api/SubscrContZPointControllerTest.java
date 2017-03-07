@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 
 public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest {
@@ -78,7 +79,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	@Test
 	public void testGetZPoint() throws Exception {
 
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
 		_testGetJson(url);
 	}
@@ -86,7 +87,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	@Test
 	public void testUpdateZPoint() throws Exception {
 
-		String url = apiSubscrUrl(
+		String url = UrlUtils.apiSubscrUrl(
 				String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
 
 		ContZPoint contZPoint = contZPointService.findOne(MANUAL_HW_CONT_ZPOINT_ID);
@@ -98,29 +99,29 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testContZPoints() throws Exception {
-		_testGetJson(apiSubscrUrl("/contObjects/zpoints"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/contObjects/zpoints"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testContZPointsShortInfo() throws Exception {
-		_testGetJson(apiSubscrUrl("/contObjects/zpoints/shortInfo"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/contObjects/zpoints/shortInfo"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testServiceTypes() throws Exception {
-		_testGetJson(apiSubscrUrl("/contObjects/contServiceTypes"));
+		_testGetJson(UrlUtils.apiSubscrUrl("/contObjects/contServiceTypes"));
 	}
 }

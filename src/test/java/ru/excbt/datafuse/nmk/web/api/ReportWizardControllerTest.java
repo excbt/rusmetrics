@@ -18,34 +18,35 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.report.ReportWizardParam;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ReportWizardControllerTest extends AnyControllerTest {
 
-	
-	private static final Logger logger = LoggerFactory
+
+	private static final Logger log = LoggerFactory
 			.getLogger(ReportWizardControllerTest.class);
-	
+
 	@Autowired
 	private ReportWizardService reportWizardService;
-	
-	
+
+
 	@Test
 	public void testCommerceReportColumnSettings() throws Exception {
 		_testGetJson("/api/reportWizard/columnSettings/commerce");
 	}
-	
-	
+
+
 	@Test
 	public void testCreateWizard() throws JsonProcessingException {
 
 		///
-		ReportWizardParam reportWizardParam = new ReportWizardParam();		
+		ReportWizardParam reportWizardParam = new ReportWizardParam();
 		reportWizardParam.setReportColumnSettings(reportWizardService
 				.getReportColumnSettings());
-		/// 
+		///
 		ReportTemplate reportTemplate = new ReportTemplate();
 		reportTemplate.setName("Шаблон111");
 		reportTemplate.setComment("Created By Wizard");
@@ -54,7 +55,7 @@ public class ReportWizardControllerTest extends AnyControllerTest {
 		//
 		reportWizardParam.setReportTemplate(reportTemplate);
 
-		String jsonBody = OBJECT_MAPPER.writeValueAsString(reportWizardParam);
+		String jsonBody = TestUtils.objectToJson(reportWizardParam);
 		String urlStr = "/api/reportWizard/commerce";
 
 		ResultActions resultActionsAll;
@@ -73,5 +74,5 @@ public class ReportWizardControllerTest extends AnyControllerTest {
 			fail(e.toString());
 		}
 
-	}	
+	}
 }

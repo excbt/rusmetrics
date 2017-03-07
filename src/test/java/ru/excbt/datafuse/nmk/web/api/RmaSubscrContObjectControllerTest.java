@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 import org.junit.Before;
@@ -29,7 +30,7 @@ import static org.junit.Assert.*;
 public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 
 	private static final Logger log = LoggerFactory.getLogger(RmaSubscrContObjectControllerTest.class);
-	
+
 	@Autowired
 	private ContObjectService contObjectService;
 
@@ -49,7 +50,7 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 	private Long testSubscriberId;
 
 	/**
-	 * 
+	 *
 	 */
 	@Before
 	public void initTestSubscriberId() {
@@ -59,7 +60,7 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private List<Long> findSubscriberContObjectIds() {
@@ -70,13 +71,13 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	@Transactional
 	public void testRmaContObjectGet() throws Exception {
-		_testGetJson(apiRmaUrl("/contObjects"));
+		_testGetJson(UrlUtils.apiRmaUrl("/contObjects"));
 	}
 
 	@Test
@@ -87,27 +88,27 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 		contObject.setTimezoneDefKeyname("MSK");
 		contObject.setName("Cont Object TEST");
 
-		Long contObjectId = _testCreateJson(apiRmaUrl("/contObjects"), contObject);
+		Long contObjectId = _testCreateJson(UrlUtils.apiRmaUrl("/contObjects"), contObject);
 
-		_testGetJson(apiRmaUrl("/contObjects/" + contObjectId));
+		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
 
 		contObject = contObjectService.findContObject(contObjectId);
 		contObject.setCurrentSettingMode("summer");
-		_testUpdateJson(apiRmaUrl("/contObjects/" + contObjectId), contObject);
+		_testUpdateJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId), contObject);
 
-		_testDeleteJson(apiRmaUrl("/contObjects/" + contObjectId));
+		_testDeleteJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
 	}
 
 	@Test
 	@Transactional
 	public void testAvailableContObjects() throws Exception {
-		_testGetJson(apiRmaUrl("/64166467/availableContObjects"));
+		_testGetJson(UrlUtils.apiRmaUrl("/64166467/availableContObjects"));
 	}
 
 	@Test
 	@Transactional
 	public void testSubscrContObjectsGet() throws Exception {
-		_testGetJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)));
+		_testGetJson(UrlUtils.apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)));
 	}
 
 	@Test
@@ -125,12 +126,12 @@ public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 		}
 
 		addContObjects.addAll(currContObjects);
-		_testUpdateJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), addContObjects);
-		_testUpdateJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), currContObjects);
+		_testUpdateJson(UrlUtils.apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), addContObjects);
+		_testUpdateJson(UrlUtils.apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), currContObjects);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
@@ -67,7 +68,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	private SubscrContObjectService subscrContObjectService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -83,7 +84,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -101,7 +102,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -117,7 +118,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -139,7 +140,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		MockMultipartFile firstFile = new MockMultipartFile("file", srcFilename, "text/plain", fileBytes);
 
-		String url = apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
+		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
 				MANUAL_HW_CONT_ZPOINT_ID));
 
 		ResultActions resultActions = mockMvc
@@ -154,17 +155,17 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testGetAvailableFiles() throws Exception {
-		String url = apiSubscrUrl("/service/out/csv");
+		String url = UrlUtils.apiSubscrUrl("/service/out/csv");
 		_testGetJson(url);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -182,13 +183,13 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		assertNotNull(f);
 
-		String url = apiSubscrUrl("/service/out/csv/" + filename);
+		String url = UrlUtils.apiSubscrUrl("/service/out/csv/" + filename);
 
 		_testGetSuccessful(url);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -196,7 +197,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		LocalDatePeriod datePeriod = LocalDatePeriod.lastWeek();
 
-		String url = apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
+		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
 				MANUAL_HW_CONT_ZPOINT_ID));
 
 		logger.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(), datePeriod.getDateToStr());
@@ -211,13 +212,13 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testContObjectServiceTypeInfo() throws Exception {
 
-		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
+		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
@@ -229,13 +230,13 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testOneCityContObjectServiceTypeInfo() throws Exception {
 
-		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/city");
+		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/city");
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01")
@@ -247,7 +248,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -257,7 +258,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		assertTrue(ids.size() > 0);
 
-		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/" + ids.get(0));
+		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/" + ids.get(0));
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
@@ -269,7 +270,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

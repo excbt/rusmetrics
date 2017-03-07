@@ -99,7 +99,7 @@ public final class TestUtils {
      * @param obj
      * @return
      */
-    protected String objectToJsonStr(Object obj) {
+    public static String objectToJsonStr(Object obj) {
         String jsonBody = null;
         try {
             if (obj instanceof String) {

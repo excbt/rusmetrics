@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -23,16 +24,16 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	private DeviceObjectMetadataService deviceObjectMetadataService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testMeasureUnitGet() throws Exception {
-		_testGetJson(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
+		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -41,31 +42,31 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 			builder.param("measureUnit", "p_mpa");
 		};
 
-		_testGet(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"), param);
+		_testGet(UrlUtils.apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"), param);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testContServiceTypesGet() throws Exception {
-		_testGetJson(apiRmaUrl("/contObjects/deviceObjects/metadata/contServiceTypes"));
+        _testGetJson(UrlUtils.apiRmaUrl("/contObjects/deviceObjects/metadata/contServiceTypes"));
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testDeviceObjectMetadataGet() throws Exception {
-		String url = apiRmaUrl(
+		String url = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID));
 		_testGetJson(url);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -77,7 +78,7 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 			i.setMetaComment("Comment by REST :" + System.currentTimeMillis());
 		});
 
-		String url = apiRmaUrl(
+		String url = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID));
 		_testUpdateJson(url, metadata);
 	}

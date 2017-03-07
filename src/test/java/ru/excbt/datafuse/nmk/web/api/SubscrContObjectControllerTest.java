@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -138,7 +139,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         Optional<ContObjectFias> testObjectFias = fiasIds.stream().filter(i -> i.getFiasUUID() != null).findAny();
 
 
-        String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
+        String url = String.format(UrlUtils.apiSubscrUrl("/contObjects/%d/fias"),
             testObjectFias.isPresent() ? testObjectFias.get().getContObjectId() : fiasIds.get(0).getContObjectId());
         _testGetSuccessful(url);
     }
@@ -169,7 +170,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testSettingModeTypeGet() throws Exception {
-        _testGetJson(apiSubscrUrl("/contObjects/settingModeType"));
+        _testGetJson(UrlUtils.apiSubscrUrl("/contObjects/settingModeType"));
     }
 
     /**
@@ -195,7 +196,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
                 builder.param("currentSettingMode", "summer");
             }
         };
-        _testUpdateJson(apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
+        _testUpdateJson(UrlUtils.apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
 
     }
 
@@ -273,7 +274,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         ContObjectMeterPeriodSettingsDTO coSetting = ContObjectMeterPeriodSettingsDTO.builder()
             .contObjectId(contObjectId).build();
         coSetting.putSetting(ContServiceTypeKey.CW.getKeyname(), setting.getId());
-        _testUpdateJson(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId), coSetting);
+        _testUpdateJson(UrlUtils.apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId), coSetting);
 
         ContObject contObject = contObjectService.findContObject(contObjectId);
         assertTrue(contObject.getMeterPeriodSettings() != null);
@@ -296,7 +297,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
         contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
         contObjectRepository.saveAndFlush(contObject);
-        _testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId))
+        _testGetJsonResultActions(UrlUtils.apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId))
             .andDo((result) -> {
             });
     }
@@ -312,7 +313,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
         contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
         contObjectRepository.saveAndFlush(contObject);
-        _testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/meterPeriodSettings")).andDo((result) -> {
+        _testGetJsonResultActions(UrlUtils.apiRmaUrlTemplate("/contObjects/meterPeriodSettings")).andDo((result) -> {
         });
     }
 
@@ -328,7 +329,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         ContObjectMeterPeriodSettingsDTO contObjectSettings = new ContObjectMeterPeriodSettingsDTO()
             .contObjectIds(findSubscriberContObjectIds()).putSetting("cw", setting.getId());
 
-        _testPutJson(apiRmaUrlTemplate("/contObjects/meterPeriodSettings"), contObjectSettings).andDo((result) -> {
+        _testPutJson(UrlUtils.apiRmaUrlTemplate("/contObjects/meterPeriodSettings"), contObjectSettings).andDo((result) -> {
         });
     }
 

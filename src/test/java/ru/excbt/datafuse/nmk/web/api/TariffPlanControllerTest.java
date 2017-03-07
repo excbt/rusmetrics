@@ -85,7 +85,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 			testRec.setTariffPlanValue(BigDecimal.valueOf(0.1));
 		}
 		String urlStr = "/api/subscr/tariff/" + testRec.getId();
-		String jsonBody = OBJECT_MAPPER.writeValueAsString(testRec);
+		String jsonBody = TestUtils.objectToJson(testRec);
 
 		List<ContObject> tariffContObjects = tariffPlanService.selectTariffPlanContObjects(testRec.getId(),
 				currentSubscriberService.getSubscriberId());
@@ -126,7 +126,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		tariffPlan.setStartDate(LocalDate.now().toDate());
 
 		String urlStr = "/api/subscr/tariff";
-		String jsonBody = OBJECT_MAPPER.writeValueAsString(tariffPlan);
+		String jsonBody = TestUtils.objectToJson(tariffPlan);
 
 		Iterable<Organization> orgList = subscriberRepository
 				.selectRsoOrganizations(currentSubscriberService.getSubscriberId());

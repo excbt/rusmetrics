@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class ReportTemplateControllerTest extends AnyControllerTest {
@@ -73,7 +74,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 		ReportTemplate rt = subscriberReportTemplates.get(0);
 
 		rt.setComment("TEST AutoUpdate " + System.currentTimeMillis());
-		String jsonBody = OBJECT_MAPPER.writeValueAsString(rt);
+		String jsonBody = TestUtils.objectToJson(rt);
 		String urlStr = "/api/reportTemplate/commerce/" + rt.getId();
 
 		ResultActions resultActionsAll;
