@@ -4,7 +4,13 @@ public interface KeynameObject {
 
 	String getKeyname();
 
-	String keyName();
+    /**
+     *
+     * @return getKeyname()
+     */
+	default String keyName() {
+	    return getKeyname();
+    }
 
 	/**
 	 *
