@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с объектами учета для РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
@@ -44,7 +44,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrContObjectController.class);
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -82,12 +82,11 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.DELETE,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteContObject(@PathVariable("contObjectId") Long contObjectId) {
@@ -111,12 +110,11 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectIds
+     * @return
+     */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
 
@@ -140,18 +138,19 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
-		List<ContObject> resultList = selectRmaContObjects(contGroupId, false);
+	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
+                                            @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
+		List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);
 		return responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.GET,
@@ -166,7 +165,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
@@ -180,7 +179,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.PUT,
@@ -211,7 +210,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */

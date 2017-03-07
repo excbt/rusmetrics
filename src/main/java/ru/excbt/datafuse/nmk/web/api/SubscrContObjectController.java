@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с объектом учета для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.02.2015
@@ -62,14 +62,14 @@ public class SubscrContObjectController extends SubscrApiController {
 	private OrganizationService organizationService;
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */
-	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered) {
+	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered, List<Long> meterPeriodSettingIds) {
 		List<ContObject> contObjectList = null;
 
-		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId);
+		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
 
 		subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
 
@@ -83,28 +83,29 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */
-	protected List<ContObject> selectSubscrContObjects(Long contGroupId) {
-		return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId);
+	protected List<ContObject> selectSubscrContObjects(Long contGroupId, List<Long> meterPeriodSettingIds) {
+		return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId) {
-
-		List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true)
-				: selectSubscrContObjects(contGroupId);
+	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
+                                            @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
 		ApiAction action = new ApiActionEntityAdapter<Object>() {
 			@Override
 			public Object processAndReturnResult() {
+                List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true, meterPeriodSettingIds)
+                    : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
+
 				return contObjectService.wrapContObjectsMonitorVO(resultList);
 			}
 		};
@@ -116,7 +117,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -136,7 +137,7 @@ public class SubscrContObjectController extends SubscrApiController {
 
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -158,7 +159,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contObject
 	 * @return
@@ -198,7 +199,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.GET,
@@ -210,7 +211,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -255,7 +256,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @return
 	 */
@@ -269,7 +270,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @return
 	 */
@@ -282,7 +283,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -295,12 +296,12 @@ public class SubscrContObjectController extends SubscrApiController {
 		}
 
 		ApiActionProcess<ContObjectMeterPeriodSettingsDTO> process = () -> contObjectService.getContObjectMeterPeriodSettings(contObjectId);
-		
+
 		return responseOK(process);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param settings
 	 * @return
@@ -331,7 +332,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.GET,
@@ -343,7 +344,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.PUT,
@@ -362,6 +363,6 @@ public class SubscrContObjectController extends SubscrApiController {
 			return contObjectService.findMeterPeriodSettings(settings.getContObjectIds());
 		};
 		return responseOK(process);
-	}	
-	
+	}
+
 }

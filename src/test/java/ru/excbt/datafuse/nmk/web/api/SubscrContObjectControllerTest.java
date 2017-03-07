@@ -8,6 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
@@ -29,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,261 +40,295 @@ import static org.junit.Assert.*;
 
 public class SubscrContObjectControllerTest extends AnyControllerTest {
 
-	private static final Logger log = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);
 
-	private final static String contObjectDaDataFilename = "metadata_json/contObjectDaData.json";
+    private final static String contObjectDaDataFilename = "metadata_json/contObjectDaData.json";
 
-	@Autowired
-	private SubscriberService subscriberService;
+    @Autowired
+    private SubscriberService subscriberService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+    @Autowired
+    private CurrentSubscriberService currentSubscriberService;
 
-	@Autowired
-	private ContObjectService contObjectService;
+    @Autowired
+    private ContObjectService contObjectService;
 
-	@Autowired
-	private ContObjectRepository contObjectRepository;
+    @Autowired
+    private ContObjectRepository contObjectRepository;
 
-	
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
 
-	@Autowired
-	private ContObjectFiasRepository contObjectFiasRepository;;
+    @Autowired
+    private SubscrContObjectService subscrContObjectService;
 
-	@Autowired
-	private MeterPeriodSettingService meterPeriodSettingService;
-	
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private List<Long> findSubscriberContObjectIds() {
-		log.debug("Finding objects for subscriberId:{}", getSubscriberId());
-		List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
-		assertFalse(result.isEmpty());
-		return result;
-	}
-	
-	
-	@Test
-	@Transactional
-	public void testContObjectsGet() throws Exception {
-		_testGetJson("/api/subscr/contObjects");
-	}
+    @Autowired
+    private ContObjectFiasRepository contObjectFiasRepository;
+    ;
 
-	@Test
-	@Transactional
-	public void testCmOrganizatoinsGet() throws Exception {
-		_testGetJson("/api/subscr/contObjects/cmOrganizations");
-	}
+    @Autowired
+    private MeterPeriodSettingService meterPeriodSettingService;
 
-	@Test
-	@Transactional
-	public void testOrganizatoinsGet() throws Exception {
-		_testGetJson("/api/subscr/contObjects/organizations");
-	}
+    @Autowired
+    private MeterPeriodSettingRepository meterPeriodSettingRepository;
 
-	@Test
-	@Transactional	
-	public void testContObjectFiasGet() throws Exception {
-		
-		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
-		
-		
-		List<ContObjectFias> fiasIds = contObjectFiasRepository.selectByContObjectIds(ids);
-		
-		Optional<ContObjectFias> testObjectFias = fiasIds.stream().filter(i -> i.getFiasUUID() != null).findAny();
-		
-		
-		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
-				testObjectFias.isPresent() ? testObjectFias.get().getContObjectId() : fiasIds.get(0).getContObjectId());
-		_testGetSuccessful(url);
-	}
 
-	@Test
-	@Transactional
-	public void testUpdate() throws Exception {
+    /**
+     * @return
+     */
+    private List<Long> findSubscriberContObjectIds() {
+        log.debug("Finding objects for subscriberId:{}", getSubscriberId());
+        List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        assertFalse(result.isEmpty());
+        return result;
+    }
 
-		ContObject testCO = findFirstContObject();
-		log.info("Found ContObject (id={})", testCO.getId());
-		testCO.setComment("Updated by REST test at " + DateTime.now().toString());
 
-		String urlStr = "/api/subscr/contObjects/" + testCO.getId();
+    @Test
+    @Transactional
+    public void testContObjectsGet() throws Exception {
+        _testGetJson("/api/subscr/contObjects");
+    }
 
-		RequestExtraInitializer param = (builder) -> {
-			builder.param("cmOrganizationId", testCO.get_activeContManagement().getOrganization().getId().toString());
-		};
 
-		_testUpdateJson(urlStr, testCO, param);
+    @Test
+    @Transactional
+    public void testContObjectsByMeterPeriodGet() throws Exception {
+        List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
+        MeterPeriodSetting meterPeriodSetting = new MeterPeriodSetting();
+        meterPeriodSetting.setName("TEST PERIOD");
+        meterPeriodSetting.setFromDay(1);
+        meterPeriodSetting.setToDay(10);
+        meterPeriodSetting.setSubscriberId(getSubscriberId());
+        meterPeriodSettingRepository.saveAndFlush(meterPeriodSetting);
+        assertNotNull(meterPeriodSetting.getId());
+        contObjects.forEach(i -> {
+            i.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriodSetting);
+        });
+        contObjectRepository.save(contObjects);
+        contObjectRepository.flush();
 
-		// String jsonBody = OBJECT_MAPPER.writeValueAsString(testCO);
-		//
-		//
-		//
-		// ResultActions resultActionsAll;
-		// try {
-		// resultActionsAll =
-		// mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-		// .with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
-		//
-		// resultActionsAll.andDo(MockMvcResultHandlers.print());
-		//
-		// resultActionsAll.andExpect(status().isOk());
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// fail(e.toString());
-		// }
-	}
+        RequestExtraInitializer param = builder -> {
+            builder.param("meterPeriodSettingIds", listToString(Arrays.asList(meterPeriodSetting.getId())));
+        };
 
-	@Test
-	@Transactional
-	public void testSettingModeTypeGet() throws Exception {
-		_testGetJson(apiSubscrUrl("/contObjects/settingModeType"));
-	}
+        _testGetJson("/api/subscr/contObjects", param);
+    }
 
-	@Test
-	@Transactional
-	public void testSettingModeUpdate() throws Exception {
+    @Test
+    @Transactional
+    public void testCmOrganizatoinsGet() throws Exception {
+        _testGetJson("/api/subscr/contObjects/cmOrganizations");
+    }
 
-		List<ContObject> contObjects = subscrContObjectService
-				.selectSubscriberContObjects(currentSubscriberService.getSubscriberParam());
+    @Test
+    @Transactional
+    public void testOrganizatoinsGet() throws Exception {
+        _testGetJson("/api/subscr/contObjects/organizations");
+    }
 
-		assertNotNull(contObjects);
-		assertTrue(contObjects.size() > 0);
+    @Test
+    @Transactional
+    public void testContObjectFiasGet() throws Exception {
 
-		List<Long> contObjectIds = new ArrayList<>();
-		contObjectIds.add(contObjects.get(0).getId());
+        List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 
-		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("contObjectIds", listToString(contObjectIds));
-				builder.param("currentSettingMode", "summer");
-			}
-		};
-		_testUpdateJson(apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
 
-	}
+        List<ContObjectFias> fiasIds = contObjectFiasRepository.selectByContObjectIds(ids);
 
-	/**
-	 * 
-	 * @return
-	 */
-	private ContObject findFirstContObject() {
-		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
-		ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObject(ids.get(0));
-		assertNotNull(testCO);
-		return testCO;
-	}
+        Optional<ContObjectFias> testObjectFias = fiasIds.stream().filter(i -> i.getFiasUUID() != null).findAny();
 
-	@Test
-	@Transactional
-	public void testContObjectDaData() throws Exception {
-		Long id = 725L;
 
-		byte[] encoded = Files.readAllBytes(Paths.get(contObjectDaDataFilename));
-		String daDataJson = new String(encoded, StandardCharsets.UTF_8);
-		assertNotNull(daDataJson);
+        String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
+            testObjectFias.isPresent() ? testObjectFias.get().getContObjectId() : fiasIds.get(0).getContObjectId());
+        _testGetSuccessful(url);
+    }
 
-		ObjectMapper mapper = new ObjectMapper();
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testUpdate() throws Exception {
 
-		Object json = mapper.readValue(daDataJson, Object.class);
+        ContObject testCO = findFirstContObject();
+        log.info("Found ContObject (id={})", testCO.getId());
+        testCO.setComment("Updated by REST test at " + DateTime.now().toString());
 
-		log.info("daDataJson: {}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+        String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 
-		ContObject testCO = contObjectService.findContObject(id);
-		String urlStr = "/api/subscr/contObjects/" + testCO.getId();
+        RequestExtraInitializer param = (builder) -> {
+            builder.param("cmOrganizationId", testCO.get_activeContManagement().getOrganization().getId().toString());
+        };
 
-		testCO.set_daDataSraw(daDataJson);
+        _testUpdateJson(urlStr, testCO, param);
+    }
 
-		_testUpdateJson(urlStr, testCO);
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testSettingModeTypeGet() throws Exception {
+        _testGetJson(apiSubscrUrl("/contObjects/settingModeType"));
+    }
 
-	}
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testSettingModeUpdate() throws Exception {
 
-	@Test
-	@Transactional
-	public void testGetContObjectsGrouped() throws Exception {
-		_testGetJson("/api/subscr/contObjects/?contGroupId=488528511");
-	}
+        List<ContObject> contObjects = subscrContObjectService
+            .selectSubscriberContObjects(currentSubscriberService.getSubscriberParam());
 
-	@Override
-	public long getSubscriberId() {
-		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
-	}
+        assertNotNull(contObjects);
+        assertTrue(contObjects.size() > 0);
 
-	/**
-	 * 
-	 * @return
-	 */
-	@Override
-	public long getSubscrUserId() {
-		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
-	}
+        List<Long> contObjectIds = new ArrayList<>();
+        contObjectIds.add(contObjects.get(0).getId());
 
-	@Test
-	@Transactional
-	public void testUpdateContObjectMeterSettingsDTO() throws Exception {
-		Long contObjectId = findSubscriberContObjectIds().get(0);
-		MeterPeriodSettingDTO setting = meterPeriodSettingService
-				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
-		ContObjectMeterPeriodSettingsDTO coSetting = ContObjectMeterPeriodSettingsDTO.builder()
-				.contObjectId(contObjectId).build();
-		coSetting.putSetting(ContServiceTypeKey.CW.getKeyname(), setting.getId());
-		_testUpdateJson(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId), coSetting);
+        RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
+            @Override
+            public void doInit(MockHttpServletRequestBuilder builder) {
+                builder.param("contObjectIds", listToString(contObjectIds));
+                builder.param("currentSettingMode", "summer");
+            }
+        };
+        _testUpdateJson(apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
 
-		ContObject contObject = contObjectService.findContObject(contObjectId);
-		assertTrue(contObject.getMeterPeriodSettings() != null);
-		MeterPeriodSetting meterPeriod = contObject.getMeterPeriodSettings().get(ContServiceTypeKey.CW.getKeyname());
-		assertTrue(meterPeriod != null);
-		assertTrue(meterPeriod.getId().equals(setting.getId()));
-	}
+    }
 
-	@Test
-	@Transactional
-	public void testGetOneContObjectMeterSettingsDTO() throws Exception {
-		Long contObjectId = findSubscriberContObjectIds().get(0);
-		MeterPeriodSettingDTO setting = meterPeriodSettingService
-				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
-		ContObject contObject = contObjectRepository.findOne(contObjectId);
-		MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
+    /**
+     * @return
+     */
+    private ContObject findFirstContObject() {
+        List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObject(ids.get(0));
+        assertNotNull(testCO);
+        return testCO;
+    }
 
-		contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
-		contObjectRepository.saveAndFlush(contObject);
-		_testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId))
-				.andDo((result) -> {
-				});
-	}
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testContObjectDaData() throws Exception {
+        Long id = 725L;
 
-	@Test
-	@Transactional
-	public void testGetAllContObjectMeterSettingsDTO() throws Exception {
-		Long contObjectId = findSubscriberContObjectIds().get(0);
-		MeterPeriodSettingDTO setting = meterPeriodSettingService
-				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
-		ContObject contObject = contObjectRepository.findOne(contObjectId);
-		MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
+        byte[] encoded = Files.readAllBytes(Paths.get(contObjectDaDataFilename));
+        String daDataJson = new String(encoded, StandardCharsets.UTF_8);
+        assertNotNull(daDataJson);
 
-		contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
-		contObjectRepository.saveAndFlush(contObject);
-		_testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/meterPeriodSettings")).andDo((result) -> {
-		});
-	}
+        ObjectMapper mapper = new ObjectMapper();
 
-	@Test
-	@Transactional	
-	public void testUpdateAllContObjectMeterSettingsDTO() throws Exception {
-		MeterPeriodSettingDTO setting = meterPeriodSettingService
-				.save(MeterPeriodSettingDTO.builder().name("MySetting").build());
-		
-		ContObjectMeterPeriodSettingsDTO contObjectSettings = new ContObjectMeterPeriodSettingsDTO()
-				.contObjectIds(findSubscriberContObjectIds()).putSetting("cw", setting.getId());
-		
-		_testPutJson(apiRmaUrlTemplate("/contObjects/meterPeriodSettings"), contObjectSettings).andDo((result) -> {
-		});
-	}	
-	
+        Object json = mapper.readValue(daDataJson, Object.class);
+
+        log.info("daDataJson: {}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+
+        ContObject testCO = contObjectService.findContObject(id);
+        String urlStr = "/api/subscr/contObjects/" + testCO.getId();
+
+        testCO.set_daDataSraw(daDataJson);
+
+        _testUpdateJson(urlStr, testCO);
+
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testGetContObjectsGrouped() throws Exception {
+        _testGetJson("/api/subscr/contObjects/?contGroupId=488528511");
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public long getSubscriberId() {
+        return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public long getSubscrUserId() {
+        return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testUpdateContObjectMeterSettingsDTO() throws Exception {
+        Long contObjectId = findSubscriberContObjectIds().get(0);
+        MeterPeriodSettingDTO setting = meterPeriodSettingService
+            .save(MeterPeriodSettingDTO.builder().name("MySetting").build());
+        ContObjectMeterPeriodSettingsDTO coSetting = ContObjectMeterPeriodSettingsDTO.builder()
+            .contObjectId(contObjectId).build();
+        coSetting.putSetting(ContServiceTypeKey.CW.getKeyname(), setting.getId());
+        _testUpdateJson(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId), coSetting);
+
+        ContObject contObject = contObjectService.findContObject(contObjectId);
+        assertTrue(contObject.getMeterPeriodSettings() != null);
+        MeterPeriodSetting meterPeriod = contObject.getMeterPeriodSettings().get(ContServiceTypeKey.CW.getKeyname());
+        assertTrue(meterPeriod != null);
+        assertTrue(meterPeriod.getId().equals(setting.getId()));
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testGetOneContObjectMeterSettingsDTO() throws Exception {
+        Long contObjectId = findSubscriberContObjectIds().get(0);
+        MeterPeriodSettingDTO setting = meterPeriodSettingService
+            .save(MeterPeriodSettingDTO.builder().name("MySetting").build());
+        ContObject contObject = contObjectRepository.findOne(contObjectId);
+        MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
+
+        contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
+        contObjectRepository.saveAndFlush(contObject);
+        _testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId))
+            .andDo((result) -> {
+            });
+    }
+
+    @Test
+    @Transactional
+    public void testGetAllContObjectMeterSettingsDTO() throws Exception {
+        Long contObjectId = findSubscriberContObjectIds().get(0);
+        MeterPeriodSettingDTO setting = meterPeriodSettingService
+            .save(MeterPeriodSettingDTO.builder().name("MySetting").build());
+        ContObject contObject = contObjectRepository.findOne(contObjectId);
+        MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
+
+        contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
+        contObjectRepository.saveAndFlush(contObject);
+        _testGetJsonResultActions(apiRmaUrlTemplate("/contObjects/meterPeriodSettings")).andDo((result) -> {
+        });
+    }
+
+    /**
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testUpdateAllContObjectMeterSettingsDTO() throws Exception {
+        MeterPeriodSettingDTO setting = meterPeriodSettingService
+            .save(MeterPeriodSettingDTO.builder().name("MySetting").build());
+
+        ContObjectMeterPeriodSettingsDTO contObjectSettings = new ContObjectMeterPeriodSettingsDTO()
+            .contObjectIds(findSubscriberContObjectIds()).putSetting("cw", setting.getId());
+
+        _testPutJson(apiRmaUrlTemplate("/contObjects/meterPeriodSettings"), contObjectSettings).andDo((result) -> {
+        });
+    }
+
 }
