@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
 /**
  * Сервис для работы с типами событий ContEventType
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 30.06.2015
@@ -28,11 +28,15 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventTypeService {
 
-	@Autowired
-	private ContEventTypeRepository contEventTypeRepository;
+	private final ContEventTypeRepository contEventTypeRepository;
+
+    @Autowired
+	public ContEventTypeService(ContEventTypeRepository contEventTypeRepository) {
+	    this.contEventTypeRepository = contEventTypeRepository;
+    }
 
 	/**
-	 * 
+	 *
 	 * @param contServiceTypeId
 	 * @return
 	 */
@@ -41,7 +45,7 @@ public class ContEventTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ContEventType> selectBaseContEventTypes() {
@@ -51,7 +55,7 @@ public class ContEventTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventTypeIds
 	 * @return
 	 */

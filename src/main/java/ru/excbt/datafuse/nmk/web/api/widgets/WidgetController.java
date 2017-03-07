@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api.widgets;
 
@@ -21,11 +21,11 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.12.2016
- * 
+ *
  */
 @RequestMapping("/{contZpointId}")
 public class WidgetController extends SubscrApiController {
@@ -37,7 +37,7 @@ public class WidgetController extends SubscrApiController {
 	protected ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -62,7 +62,7 @@ public class WidgetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -72,7 +72,7 @@ public class WidgetController extends SubscrApiController {
 			return null;
 		}
 
-		List<ContEventMonitorV2> mon = contEventMonitorV2Service.selectByContZpoint(contObjectId, contZpointId);
+		List<ContEventMonitorV2> mon = contEventMonitorV2Service.selectByContZPoint(contObjectId, contZpointId);
 
 		ContEventLevelColorV2 worseMonitorColor = contEventMonitorV2Service.sortWorseColor(mon);
 		ContEventLevelColorKeyV2 worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);

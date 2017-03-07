@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,13 +16,13 @@ import ru.excbt.datafuse.nmk.data.model.ContEvent;
 
 /**
  * Repository для ContEvent
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.02.2015
  *
  */
-public interface ContEventRepository extends PagingAndSortingRepository<ContEvent, Long> {
+public interface ContEventRepository extends JpaRepository<ContEvent, Long> {
 
 	public List<ContEvent> findByContObjectId(Long contObjectId, Pageable pageable);
 
@@ -32,7 +33,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	public List<ContEvent> selectBySubscriber(@Param("subscriberId") long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param pageable
 	 * @return
@@ -44,7 +45,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	public Page<ContEvent> selectBySubscriberPage(@Param("subscriberId") long subscriberId, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param pageable
 	 * @return
@@ -56,7 +57,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 	public Page<ContEvent> selectBySubscriber(@Param("subscriberId") long subscriberId, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param pageable
 	 * @return
@@ -69,7 +70,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 			@Param("eventStartDate") Date eventStartDate, @Param("eventEndDate") Date eventEndDate, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param pageable
 	 * @return
@@ -83,7 +84,7 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 			@Param("contObjectIds") List<Long> contObjectIds, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param pageable
 	 * @return

@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 
 /**
  * Сервис для работы с монитором событий
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 30.06.2015
@@ -39,20 +39,20 @@ public class ContEventMonitorV2Service {
 	private static final Logger logger = LoggerFactory.getLogger(ContEventMonitorV2Service.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK = (e1, e2) -> Integer.compare(
 			e1.getContEventLevelColor() == null ? -1 : e1.getContEventLevelColor().getColorRank(),
 			e2.getContEventLevelColor() == null ? -1 : e2.getContEventLevelColor().getColorRank());
 
 	/**
-	 * 
+	 *
 	 */
 	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME = (e1, e2) -> e1.getContEventTime()
 			.compareTo(e2.getContEventTime());
 
 	/**
-	 * 		
+	 *
 	 */
 	@Autowired
 	private ContEventMonitorV2Repository contEventMonitorV2Repository;
@@ -61,7 +61,7 @@ public class ContEventMonitorV2Service {
 	private ContEventService contEventService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -90,7 +90,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -107,7 +107,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -118,7 +118,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -129,7 +129,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -141,7 +141,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventMonitor
 	 * @return
 	 */
@@ -164,7 +164,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -184,7 +184,7 @@ public class ContEventMonitorV2Service {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -205,14 +205,9 @@ public class ContEventMonitorV2Service {
 		return resultMap;
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param contZpointId
-	 * @return
-	 */
-	public List<ContEventMonitorV2> selectByContZpoint(Long contObjectId, Long contZpointId) {
-		return contEventMonitorV2Repository.selectByZpointId(contObjectId, contZpointId);
+
+	public List<ContEventMonitorV2> selectByContZPoint(Long contObjectId, Long contZPointId) {
+		return contEventMonitorV2Repository.selectByZPointId(contObjectId, contZPointId);
 	}
 
 }

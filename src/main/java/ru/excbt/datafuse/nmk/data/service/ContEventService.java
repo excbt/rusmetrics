@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventDeviationRepositor
 
 /**
  * Сервис для работы с событиями ContEvent у ContObject
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 01.04.2015
@@ -47,20 +47,31 @@ public class ContEventService {
 	private final static int DEFAULT_MAX_EVENTS = 1000;
 	private final static PageRequest DEFAULT_MAX_EVENTS_PAGE_REQUEST = new PageRequest(0, DEFAULT_MAX_EVENTS);
 
-	@Autowired
-	private ContEventRepository contEventRepository;
+//	@Autowired
+	private final ContEventRepository contEventRepository;
 
-	@Autowired
-	private ContEventTypeRepository contEventTypeRepository;
+//	@Autowired
+	private final ContEventTypeRepository contEventTypeRepository;
 
-	@Autowired
-	private ContEventCategoryRepository contEventCategoryRepository;
+//	@Autowired
+	private final ContEventCategoryRepository contEventCategoryRepository;
 
-	@Autowired
-	private ContEventDeviationRepository contEventDeviationRepository;
+//	@Autowired
+	private final ContEventDeviationRepository contEventDeviationRepository;
+
+    @Autowired
+	public ContEventService(ContEventRepository contEventRepository,
+                            ContEventTypeRepository contEventTypeRepository,
+                            ContEventCategoryRepository contEventCategoryRepository,
+                            ContEventDeviationRepository contEventDeviationRepository) {
+	    this.contEventRepository = contEventRepository;
+	    this.contEventTypeRepository = contEventTypeRepository;
+	    this.contEventCategoryRepository = contEventCategoryRepository;
+	    this.contEventDeviationRepository = contEventDeviationRepository;
+    }
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -69,7 +80,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -79,7 +90,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -88,7 +99,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -97,7 +108,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param startDate
 	 * @param endDate
@@ -108,7 +119,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param startDate
 	 * @param endDate
@@ -125,7 +136,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param startDate
 	 * @param endDate
@@ -139,7 +150,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param startDate
 	 * @param endDate
@@ -163,7 +174,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @return
@@ -173,13 +184,13 @@ public class ContEventService {
 				selectBySubscriberAndContObjectIds(subscriberId, contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param contObjectIds
-	 * @param pageRequest
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param contObjectIds
+     * @param pageable
+     * @return
+     */
 	public Page<ContEvent> selectBySubscriberAndContObjectIds(long subscriberId, List<Long> contObjectIds,
 			Pageable pageable) {
 
@@ -197,7 +208,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -206,7 +217,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -215,7 +226,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventsIds
 	 * @return
 	 */
@@ -228,7 +239,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEvents
 	 * @return
 	 */
@@ -255,7 +266,7 @@ public class ContEventService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventsPage
 	 * @return
 	 */

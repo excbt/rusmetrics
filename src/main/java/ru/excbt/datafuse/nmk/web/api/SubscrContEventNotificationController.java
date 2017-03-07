@@ -55,7 +55,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
  * Контроллер для работы с уведомлениями абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.06.2015
@@ -94,7 +94,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	private SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -108,7 +108,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @param contEventTypeIds
@@ -168,7 +168,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -190,7 +190,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param notificationIds
 	 * @return
 	 */
@@ -223,7 +223,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param notificationIds
 	 * @return
 	 */
@@ -254,7 +254,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param notificationIds
 	 * @return
 	 */
@@ -307,7 +307,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return
@@ -315,9 +315,9 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	//@RequestMapping(value = "/notifications/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 
 	/**
-	 * 
+	 *
 	 * Makred for DELETE
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @param noGreenColor
@@ -356,7 +356,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return
@@ -387,7 +387,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return
@@ -420,7 +420,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return
@@ -453,7 +453,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return
@@ -483,7 +483,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -500,7 +500,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -523,8 +523,30 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		return ResponseEntity.ok(filteredResultList);
 	}
 
+
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationsContObjectMonitorV2EventsByContZPoint(
+			@PathVariable(value = "contObjectId") Long contObjectId,
+            @PathVariable(value = "contZPointId") Long contZPointId) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContZPoint(contObjectId,contZPointId);
+
+		if (resultList.isEmpty()) {
+			return responseOK();
+		}
+
+		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(contEventService.enhanceContEventType(filteredResultList));
+	}
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -560,7 +582,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/categories", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -570,7 +592,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/deviations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

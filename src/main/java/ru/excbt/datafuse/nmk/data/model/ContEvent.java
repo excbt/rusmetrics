@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 
 /**
  * События контейнера
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
@@ -32,14 +32,14 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 public class ContEvent extends AbstractPersistableEntity<Long> implements ContEventTypeModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5865290731548602858L;
 
-	@Column(name = "cont_object_id", insertable = false, updatable = false)
+	@Column(name = "cont_object_id")
 	private Long contObjectId;
 
-	@Column(name = "cont_zpoint_id", insertable = false, updatable = false)
+	@Column(name = "cont_zpoint_id")
 	private Long contZPointId;
 
 	@Transient

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
@@ -7,8 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.Ignore;
@@ -25,18 +28,31 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import ru.excbt.datafuse.nmk.data.model.ContEvent;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
+import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
+import javax.transaction.Transactional;
+
 public class SubscrContEventNotificationControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationControllerTest.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrContEventNotificationControllerTest.class);
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -50,12 +66,28 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
+    @Autowired
+	private ContZPointService contZPointService;
+
+    @Autowired
+    private ContEventRepository contEventRepository;
+
+    @Autowired
+    private ContEventMonitorV2Repository contEventMonitorV2Repository;
+
+    /**
+     * @return
+     */
+    private List<Long> findSubscriberContObjectIds() {
+        log.debug("Finding objects for subscriberId:{}", getSubscriberId());
+        List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        assertFalse(result.isEmpty());
+        return result;
+    }
+
 	@Test
-	public void testNotifiicationsGetPaged() throws Exception {
+    @Transactional
+	public void testNotificationGet() throws Exception {
 
 		List<Long> contObjectList = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
@@ -67,22 +99,19 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 		RequestExtraInitializer params = (b) -> {
 			b.param("fromDate", "2015-06-01").param("toDate", "2015-06-30");
-			b.param("contObjectIds", listToString(contObjectList));
-			b.param("contEventTypeIds", listToString(contEventTypeIdList));
+			b.param("contObjectIds", TestUtils.listToString(contObjectList));
+			b.param("contEventTypeIds", TestUtils.listToString(contEventTypeIdList));
 			b.param("page", "0").param("size", "100");
 			b.param("sortDesc", "false");
-			b.param("contEventCategories", listToString(contEventTypeCategoryList));
+			b.param("contEventCategories", TestUtils.listToString(contEventTypeCategoryList));
 		};
 
 		_testGetJson("/api/subscr/contEvent/notifications/paged", params);
 
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
+    @Transactional
 	public void testNotificationRevisionIsNew() throws Exception {
 
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
@@ -100,7 +129,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("notificationIds", listToString(updateIds));
+				builder.param("notificationIds", TestUtils.listToString(updateIds));
 			}
 		};
 
@@ -112,12 +141,13 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 	/**
 	 * Unused method. // Comment date 11.05.2016
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
 	@Test
-	public void testNotifiicationsContObject() throws Exception {
+    @Transactional
+	public void testNotificationsContObject() throws Exception {
 
 		ResultActions resultActionsAll = mockMvc
 				.perform(get("/api/subscr/contEvent/notifications/contObject").param("fromDate", "2015-06-01")
@@ -131,13 +161,14 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 	/**
 	 * Unused method. // Comment date 11.05.2016
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
 	@Test
-	public void testNotifiicationsContObjectStatusCollapse() throws Exception {
+    @Transactional
+	public void testNotificationsContObjectStatusCollapse() throws Exception {
 
 		ResultActions resultActionsAll = mockMvc.perform(
 				get("/api/subscr/contEvent/notifications/contObject/statusCollapse").param("fromDate", "2015-06-01")
@@ -150,10 +181,11 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testCityMonitorContObjectCityStatusCollapse() throws Exception {
 
 		RequestExtraInitializer params = (builder) -> {
@@ -165,6 +197,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	@Test
+    @Transactional
 	public void testCityMonitorContObjectCityStatusCollapseV2() throws Exception {
 
 		RequestExtraInitializer params = (builder) -> {
@@ -175,11 +208,8 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		_testGetJson("/api/subscr/contEvent/notifications/contObject/cityStatusCollapseV2", params);
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
+    @Transactional
 	public void testCityMonitorContObjectCityStatusCollapseGrouped() throws Exception {
 
 		RequestExtraInitializer params = (builder) -> {
@@ -192,12 +222,9 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Ignore
 	@Test
+    @Transactional
 	public void testNotificationsContObjectEventTypes() throws Exception {
 
 		long contObjectId = 20118695;
@@ -212,11 +239,8 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
+    @Transactional
 	public void testNotificationsContObjectEventTypesStatusCollapse() throws Exception {
 
 		long contObjectId = 20118695;
@@ -231,11 +255,8 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
+    @Transactional
 	public void testNotificationsContObjectMonitor() throws Exception {
 		long contObjectId = 20118695;
 		String url = String.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEvents", contObjectId);
@@ -244,6 +265,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	@Test
+    @Transactional
 	public void testNotificationsContObjectMonitorV2() throws Exception {
 		long contObjectId = 75224930;
 		String url = String.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEventsV2", contObjectId);
@@ -251,11 +273,48 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		_testGetJson(url);
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
+    @Test
+    @Transactional
+    public void testNotificationsContObjectMonitorV2ByContZPoint() throws Exception {
+        List<Long> contObjectIds = findSubscriberContObjectIds();
+        assertFalse(contObjectIds.isEmpty());
+        Long contObjectId = contObjectIds.get(0);
+
+        List<Long> contZPointIds = contZPointService.selectContZPointIds(contObjectId);
+        assertFalse(contZPointIds.isEmpty());
+        Long contZPointId = contZPointIds.get(0);
+
+        List<ContEventType> contEventTypes = contEventTypeService.selectBaseContEventTypes();
+        Optional<ContEventType> testEventType = Optional.of(contEventTypes.get(0));
+            //contEventTypes.stream().filter(i -> i.getId().equals(740)).findFirst();
+        assertTrue(testEventType.isPresent());
+
+        ContEvent contEvent = new ContEvent();
+        contEvent.setContEventTypeId(contEvent.getId());
+        contEvent.setContObjectId(contObjectId);
+        contEvent.setContZPointId(contZPointId);
+        contEvent.setMessage("Test Event");
+        contEvent.setEventTime(LocalDateUtils.asDate(LocalDateTime.now()));
+        contEvent.setRegistrationTimeTZ(LocalDateUtils.asDate(LocalDateTime.now()));
+        contEventRepository.saveAndFlush(contEvent);
+
+        ContEventMonitorV2 contEventMonitorV2 = new ContEventMonitorV2();
+        contEventMonitorV2.setContObjectId(contObjectId);
+        contEventMonitorV2.setContEventTypeId(testEventType.get().getId());
+        contEventMonitorV2.setContEventId(contEvent.getId());
+        contEventMonitorV2.setContEventLevel(1000);
+        contEventMonitorV2.setContEventLevelColor(new ContEventLevelColorV2().keyname(ContEventLevelColorKeyV2.RED.keyName()));
+        contEventMonitorV2.setContEventTime(contEvent.getEventTime());
+        contEventMonitorV2Repository.saveAndFlush(contEventMonitorV2);
+
+
+        String url = String.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEventsV2/byContZPoint/%d", contObjectId, contZPointId);
+
+        _testGetJson(url);
+    }
+
 	@Test
+    @Transactional
 	public void testNotificationsMonitorColor() throws Exception {
 		String url = "/api/subscr/contEvent/notifications/monitorColor";
 
@@ -263,12 +322,14 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	@Test
+    @Transactional
 	public void testContEventCategories() throws Exception {
 		String url = apiSubscrUrl("/contEvent/categories");
 		_testGetJson(url);
 	}
 
 	@Test
+    @Transactional
 	public void testContEventDeviation() throws Exception {
 		String url = apiSubscrUrl("/contEvent/deviations");
 		_testGetJson(url);
@@ -280,7 +341,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override

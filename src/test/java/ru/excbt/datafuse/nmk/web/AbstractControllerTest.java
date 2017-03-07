@@ -64,7 +64,7 @@ public class AbstractControllerTest {
 	protected ServletContext servletContext;
 
 	/**
-	 * 
+	 *
 	 * @param userId
 	 * @param subscriberId
 	 */
@@ -76,7 +76,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @throws Exception
 	 */
@@ -100,29 +100,29 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 * @throws Exception
 	 */
 	protected ResultActions _testGetJsonResultActions(String url) throws Exception {
-		
+
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
 		};
-		
+
 		ResultActionsTester resultActionsTester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
-			
+
 			resultActions.andExpect(status().isOk())
 			.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 		};
-		
+
 		return _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param requestExtraInitializer
 	 * @throws Exception
@@ -147,7 +147,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @throws Exception
 	 */
@@ -167,7 +167,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @throws Exception
 	 */
@@ -186,7 +186,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param resultActionsTester
 	 * @throws Exception
@@ -199,7 +199,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param resultActionsTester
 	 * @throws Exception
@@ -223,7 +223,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param resultActionsTester
 	 * @throws Exception
@@ -238,10 +238,11 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param a
 	 * @return
 	 */
+    @Deprecated
 	protected static String arrayToString(long[] a) {
 		if (a == null)
 			return "null";
@@ -259,10 +260,11 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param a
 	 * @return
 	 */
+	@Deprecated
 	protected static String listToString(List<?> a) {
 		if (a == null)
 			return "null";
@@ -280,7 +282,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type
 	 * @param jsonPacket
 	 * @return
@@ -299,7 +301,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @throws Exception
 	 */
@@ -308,7 +310,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @param sendObject
 	 * @throws Exception
@@ -319,7 +321,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @throws Exception
@@ -331,7 +333,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @param sendObject
@@ -361,7 +363,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sendObject
 	 * @param url
 	 * @param requestExtraInitializer
@@ -381,7 +383,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param sendObject
 	 * @param requestExtraInitializer
@@ -417,7 +419,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sendObject
 	 * @return
 	 * @throws Exception
@@ -428,7 +430,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sendObject
 	 * @param url
 	 * @param requestExtraInitializer
@@ -446,7 +448,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param sendObject
 	 * @param requestExtraInitializer
@@ -479,7 +481,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sendObject
 	 * @param url
 	 * @throws Exception
@@ -489,7 +491,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sendObject
 	 * @param url
 	 * @param requestExtraInitializer
@@ -506,7 +508,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param sendObject
 	 * @param requestExtraInitializer
@@ -525,7 +527,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param sendObject
 	 * @return
@@ -537,7 +539,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param sendObject
 	 * @param requestExtraInitializer
@@ -581,7 +583,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sendObject
 	 * @param url
 	 * @throws Exception
@@ -596,7 +598,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @throws Exception
@@ -630,7 +632,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @param resultActionsTester
@@ -645,7 +647,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @throws Exception
@@ -663,7 +665,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlStr
 	 * @return
 	 * @throws Exception
@@ -681,7 +683,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -691,7 +693,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param args
 	 * @return
@@ -702,7 +704,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param args
 	 * @return
@@ -713,7 +715,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -725,7 +727,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param id
 	 * @return
@@ -737,7 +739,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -747,7 +749,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -757,7 +759,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param args
 	 * @return
@@ -768,7 +770,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param id
 	 * @return
@@ -781,7 +783,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @param id
 	 * @return
@@ -793,7 +795,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param strings
 	 * @return
 	 */
@@ -806,7 +808,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param obj
 	 * @return
 	 */
@@ -836,7 +838,7 @@ public class AbstractControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param obj
 	 * @return
 	 */

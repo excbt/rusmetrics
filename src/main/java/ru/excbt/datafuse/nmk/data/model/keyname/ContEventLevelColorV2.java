@@ -21,7 +21,7 @@ public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
 		StatusColorObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -406404451942425879L;
 
@@ -131,5 +131,10 @@ public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
 	public String getStatusColor() {
 		return this.getKeyname();
 	}
+
+	public ContEventLevelColorV2 keyname(String keyname) {
+	    this.setKeyname(keyname);
+	    return this;
+    }
 
 }
