@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -107,7 +108,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         contObjectRepository.flush();
 
         RequestExtraInitializer param = builder -> {
-            builder.param("meterPeriodSettingIds", listToString(Arrays.asList(meterPeriodSetting.getId())));
+            builder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
         };
 
         _testGetJson("/api/subscr/contObjects", param);
@@ -190,7 +191,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
             @Override
             public void doInit(MockHttpServletRequestBuilder builder) {
-                builder.param("contObjectIds", listToString(contObjectIds));
+                builder.param("contObjectIds", TestUtils.listToString(contObjectIds));
                 builder.param("currentSettingMode", "summer");
             }
         };

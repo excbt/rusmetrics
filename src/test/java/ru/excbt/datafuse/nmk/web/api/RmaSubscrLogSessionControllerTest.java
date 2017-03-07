@@ -14,12 +14,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 /**
- * 
- * 
+ *
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 02.06.2016
@@ -30,7 +31,7 @@ public class RmaSubscrLogSessionControllerTest extends RmaControllerTest {
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrLogSessionControllerTest.class);
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -64,7 +65,7 @@ public class RmaSubscrLogSessionControllerTest extends RmaControllerTest {
 			LocalDatePeriod period = LocalDatePeriod.lastWeek();
 			b.param("fromDate", period.getDateFromStr());
 			b.param("toDate", period.getDateToStr());
-			b.param("contObjectIds", listToString(Arrays.asList(127858526L)));
+			b.param("contObjectIds", TestUtils.listToString(Arrays.asList(127858526L)));
 		};
 
 		String content = _testGetJson("/api/rma/logSessions", params);

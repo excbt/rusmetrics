@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class TariffPlanControllerTest extends AnyControllerTest {
@@ -104,7 +105,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
 					.param("rsoOrganizationId", testRec.getRso().getId().toString())
 					.param("tariffTypeId", testRec.getTariffType().getId().toString())
-					.param("contObjectIds", arrayToString(contObjects)).content(jsonBody).with(testSecurityContext())
+					.param("contObjectIds", TestUtils.arrayToString(contObjects)).content(jsonBody).with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
@@ -147,7 +148,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 		ResultActions resultAction = mockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
 				.param("rsoOrganizationId", org.getId().toString()).param("tariffTypeId", tt.getId().toString())
-				.param("contObjectIds", arrayToString(contObjectIds)).content(jsonBody).with(testSecurityContext())
+				.param("contObjectIds", TestUtils.arrayToString(contObjectIds)).content(jsonBody).with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
@@ -167,7 +168,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override

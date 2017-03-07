@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -127,11 +128,11 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 		long[] objectIds = { 18811504L, 18811505L };
 
-		logger.info("Array of {}", arrayToString(objectIds));
+		logger.info("Array of {}", TestUtils.arrayToString(objectIds));
 
 		ResultActions resultAction = mockMvc
 				.perform(put(String.format("/api/reportParamset/%d/contObjects", TEMPLATE_PARAMSET_ID))
-						.contentType(MediaType.APPLICATION_JSON).param("contObjectIds", arrayToString(objectIds))
+						.contentType(MediaType.APPLICATION_JSON).param("contObjectIds", TestUtils.arrayToString(objectIds))
 						.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
@@ -141,7 +142,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

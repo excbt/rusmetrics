@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -15,7 +16,7 @@ public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectPkeControllerTest.class);
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -25,7 +26,7 @@ public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -37,14 +38,14 @@ public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 
 		RequestExtraInitializer params = (b) -> {
 			b.param("beginDate", "2015-11-26").param("endDate", "2015-11-26");
-			b.param("pkeTypeKeynames", listToString(pkeTypes));
+			b.param("pkeTypeKeynames", TestUtils.listToString(pkeTypes));
 		};
 
 		_testGetJson(url, params);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -56,7 +57,7 @@ public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 
 		RequestExtraInitializer params = (b) -> {
 			b.param("beginDate", "2015-11-26").param("endDate", "2015-11-26");
-			b.param("pkeTypeKeynames", listToString(pkeTypes));
+			b.param("pkeTypeKeynames", TestUtils.listToString(pkeTypes));
 		};
 
 		_testGetJson(url, params);

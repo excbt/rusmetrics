@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -26,7 +27,7 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	private ContGroupService contGroupService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -35,7 +36,7 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -44,7 +45,7 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -56,7 +57,7 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 		long[] objectIds = { 18811504L, 18811505L };
 
 		RequestExtraInitializer params = (builder) -> {
-			builder.param("contObjectIds", arrayToString(objectIds));
+			builder.param("contObjectIds", TestUtils.arrayToString(objectIds));
 		};
 
 		Long id = _testCreateJson("/api/subscr/contGroup", group, params);
@@ -66,7 +67,7 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -88,14 +89,14 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 		String urlStr = "/api/subscr/contGroup/" + cg.getId();
 
 		RequestExtraInitializer params = (builder) -> {
-			builder.param("contObjectIds", arrayToString(objectIds));
+			builder.param("contObjectIds", TestUtils.arrayToString(objectIds));
 		};
 
 		_testUpdateJson(urlStr, cg, params);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @throws Exception
 	 */
