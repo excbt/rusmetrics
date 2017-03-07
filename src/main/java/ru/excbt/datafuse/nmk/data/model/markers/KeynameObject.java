@@ -2,10 +2,12 @@ package ru.excbt.datafuse.nmk.data.model.markers;
 
 public interface KeynameObject {
 
-	public String getKeyname();
+	String getKeyname();
+
+	String keyName();
 
 	/**
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 */
@@ -14,7 +16,7 @@ public interface KeynameObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 */
