@@ -9,21 +9,24 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = { JpaConfigTest.class })
-@ActiveProfiles(value = { Constants.SPRING_PROFILE_TEST, Constants.SPRING_PROFILE_DEVELOPMENT })
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = {JpaConfigTest.class})
+@ActiveProfiles(value = { Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_TEST })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
+		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Import(value = { DatabaseConfig.class })
 public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo, TestExcbtRmaIds {
 
@@ -31,7 +34,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	public static final long DEV_SUBSCR_ORG_ID = 728;
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void entityManagerOK() {
@@ -39,7 +42,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Before
 	public void wireUpAuditor() {
@@ -47,7 +50,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -56,7 +59,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -65,7 +68,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUs
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SubscriberParam getSubscriberParam() {
