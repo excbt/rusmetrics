@@ -17,6 +17,8 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+import javax.transaction.Transactional;
+
 public class ReferencePeriodControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReferencePeriodControllerTest.class);
@@ -37,17 +39,20 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 		return vList.get(0);
 	}
 
+	/*
+
+	 */
 	private Long getZPointId(Long oId) {
 		List<Long> vList2 = contZPointService.selectContZPointIds(oId);
 		assertTrue(vList2.size() > 0);
 		return vList2.get(0);
 	}
 
-	/**
-	 * @throws Exception
-	 * 
+	/*
+
 	 */
 	@Test
+    @Transactional
 	public void testGetLast() throws Exception {
 
 		Long oId = getOId();
@@ -55,7 +60,11 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 		_testGetJson(String.format("/api/subscr/contObjects/%d/zpoints/%d/referencePeriod", oId, zpId));
 	}
 
+	/*
+
+	 */
 	@Test
+    @Transactional
 	public void testCreateUpdateDelete() throws Exception {
 		Long oId = getOId();
 		Long zpId = getZPointId(oId);

@@ -18,8 +18,11 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.ManualControllerTest;
+import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class RmaDataSourceControllerTest extends ManualControllerTest {
+import javax.transaction.Transactional;
+
+public class RmaDataSourceControllerTest extends RmaControllerTest {
 
 //	@Autowired
 //	private CurrentSubscriberService currentSubscriberService;
@@ -32,6 +35,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testDataSourcesGet() throws Exception {
 		_testGetJson(UrlUtils.apiRmaUrl("/dataSources"));
 	}
@@ -41,6 +45,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testDataSourceTypesGet() throws Exception {
 		_testGetJson(UrlUtils.apiRmaUrl("/dataSourceTypes"));
 	}
@@ -74,6 +79,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testRawModelModels() throws Exception {
 
 		String content = _testGetJson("/api/rma/dataSources/rawModemModels");
@@ -85,10 +91,10 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 	}
 
-	/**
-	 * @throws Exception
-	 */
+	// TODO access denied
+	@Ignore
 	@Test
+    @Transactional
 	public void testCreateModel() throws Exception {
 		RawModemModel newModel = new RawModemModel();
 		newModel.setRawModemType("GPRS-MODEM");
@@ -115,6 +121,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testModemModelIdentity() throws Exception {
 		_testGetJson("/api/rma/dataSources/rawModemModels/rawModemModelIdentity");
 

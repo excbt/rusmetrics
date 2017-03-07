@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,9 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
+import javax.transaction.Transactional;
+
+// TODO remove unused reports
 public class ReportServiceControllerTest extends AnyControllerTest {
 
 	public final static String API_REPORT_URL = "/api/reportService";
@@ -70,11 +74,11 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
-	/**
-	 * @throws Exception
-	 *
+	/*
+
 	 */
 	@Test
+    @Transactional
 	public void testCommerceDownloadGet() throws Exception {
 		long reportParamsetId = 28618264;
 		String urlStr = String.format("/api/reportService/commerce/%d/download", reportParamsetId);
@@ -88,11 +92,11 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
-	/**
-	 * @throws Exception
-	 *
+	/*
+
 	 */
 	@Test
+    @Transactional
 	public void testEventDownloadGetPreview() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_EVENT;
 		String urlStr = String.format("/api/reportService/event/%d/preview", reportParamsetId);
@@ -101,11 +105,12 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
-	/**
-	 * @throws Exception
-	 *
+	/*
+
 	 */
+	@Ignore
 	@Test
+    @Transactional
 	public void testConsT1DownloadGetPreview() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_CONS_T1;
 		String urlStr = String.format("/api/reportService/cons_t1/%d/preview", reportParamsetId);
@@ -114,11 +119,12 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
-	/**
-	 * @throws Exception
-	 *
+	/*
+
 	 */
+	@Ignore
 	@Test
+    @Transactional
 	public void testConsT2DownloadGetPreview() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_CONS_T2;
 		String urlStr = String.format("/api/reportService/cons_t2/%d/preview", reportParamsetId);
@@ -127,11 +133,11 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @throws Exception
+	/*
+
 	 */
 	@Test
+    @Transactional
 	public void testCommerceDownloadPut() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_COMMERCE;
 
@@ -152,33 +158,35 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		ResultActionsTester tester = new ResultActionsTester() {
+        ResultActionsTester tester = getResultActionsTester(reportMakerParam);
 
-			@Override
-			public void testResultActions(ResultActions resultActions) throws Exception {
-
-				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
-
-				byte[] resultBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
-
-				logger.info("ResultBytes size:{}", resultBytes.length);
-
-				String filename = "./out/testCommerceDownloadPut" + reportMakerParam.getExt();
-
-				writeResultBytesToFile(filename, resultBytes);
-
-			}
-		};
-
-		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+        _testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
-	/**
-	 *
-	 * @throws Exception
+	/*
+
 	 */
+    private ResultActionsTester getResultActionsTester(final ReportMakerParam reportMakerParam) {
+        return (resultActions) -> {
+
+                    resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
+
+                    byte[] resultBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
+
+                    logger.info("ResultBytes size:{}", resultBytes.length);
+
+                    String filename = "./out/testCommerceDownloadPut" + reportMakerParam.getExt();
+
+                    writeResultBytesToFile(filename, resultBytes);
+            };
+    }
+
+    /*
+
+     */
 	@Test
+    @Transactional
 	public void testCommerceDownloadContext() throws Exception {
 
 		long reportParamsetId = TEST_PARAMSET_COMMERCE;
@@ -189,33 +197,17 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/commerce/%d/context/%d", reportParamsetId,
 				contObjectIds.get(0));
 
-		ResultActionsTester tester = new ResultActionsTester() {
+        ResultActionsTester tester = getResultActionsTester(reportMakerParam);
 
-			@Override
-			public void testResultActions(ResultActions resultActions) throws Exception {
-
-				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
-
-				byte[] resultBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
-
-				logger.info("ResultBytes size:{}", resultBytes.length);
-
-				String filename = "./out/testCommerceDownloadPut" + reportMakerParam.getExt();
-
-				writeResultBytesToFile(filename, resultBytes);
-
-			}
-		};
-
-		_testGet(urlStr, null, tester);
+        _testGet(urlStr, null, tester);
 
 	}
 
-	/**
-	 *
-	 * @throws Exception
+	/*
+
 	 */
 	@Test
+    @Transactional
 	public void testCommerceDownloadContextPreview() throws Exception {
 
 		long reportParamsetId = TEST_PARAMSET_COMMERCE;
@@ -230,11 +222,12 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @throws Exception
+	/*
+
 	 */
+	@Ignore
 	@Test
+    @Transactional
 	public void testCommerceDownload__Html() throws Exception {
 		long srcParamsetId = TEST_PARAMSET_COMMERCE;
 		long modReportParamsetId = TEST_PARAMSET_COMMERCE2;
@@ -263,11 +256,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		ResultActionsTester tester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions) throws Exception {
-
+		ResultActionsTester tester = (resultActions) -> {
 				resultActions.andExpect(content().contentType(ReportOutputFileType.HTML.getMimeType()));
 
 				byte[] resultBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
@@ -278,18 +267,18 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 				writeResultBytesToFile(filename, resultBytes);
 
-			}
 		};
 
 		_testUpdateJson(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
-	/**
-	 *
-	 * @throws Exception
+	/*
+
 	 */
+	@Ignore
 	@Test
+    @Transactional
 	public void testConsT1DownloadPut() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_CONS_T1;
 
@@ -297,34 +286,24 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
 
-		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
+		RequestExtraInitializer extraInitializer = (builder) -> {
 
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				// builder.param("contObjectIds",
-				// arrayToString(Longs.toArray(contObjectIds)));
-			}
-		};
+        } ;
 
-		ResultActionsTester tester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions) throws Exception {
-
+		ResultActionsTester tester = (resultActions) -> {
 				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
-
-			}
 		};
 
 		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
-	/**
-	 *
-	 * @throws Exception
+	/*
+
 	 */
+	@Ignore
 	@Test
+    @Transactional
 	public void testConsT2DownloadPut() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_CONS_T2;
 
@@ -332,23 +311,10 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
 
-		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
+		RequestExtraInitializer extraInitializer = (builder) -> {};
 
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				// builder.param("contObjectIds",
-				// arrayToString(Longs.toArray(contObjectIds)));
-			}
-		};
-
-		ResultActionsTester tester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions) throws Exception {
-
+		ResultActionsTester tester = (resultActions) -> {
 				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
-
-			}
 		};
 
 		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
@@ -356,6 +322,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Transactional
 	public void testEventDownloadPut() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_EVENT;
 
@@ -363,35 +330,18 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
 
-		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
+		RequestExtraInitializer extraInitializer = (builder) -> {};
 
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				// builder.param("contObjectIds",
-				// arrayToString(Longs.toArray(contObjectIds)));
-			}
-		};
-
-		ResultActionsTester tester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions) throws Exception {
-
+		ResultActionsTester tester = (resultActions) ->{
 				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
-
-			}
 		};
 
 		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
-	/**
-	 *
-	 * @param filename
-	 * @param fileBytes
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	/*
+
 	 */
 	private void writeResultBytesToFile(String filename, byte[] fileBytes) throws FileNotFoundException, IOException {
 		logger.info("Writing file: {}", filename);

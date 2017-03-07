@@ -30,7 +30,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с шаблонами отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -57,7 +57,7 @@ public class ReportTemplateService implements SecuredRoles {
 	private ReportTypeService reportTypeService;
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @return
 	 */
@@ -85,7 +85,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @return
 	 */
@@ -109,7 +109,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @return
 	 */
@@ -125,7 +125,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -138,7 +138,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -157,7 +157,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -170,7 +170,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -189,7 +189,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @param currentDate
 	 * @return
@@ -200,7 +200,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @param isActive
 	 * @param subscriberId
@@ -213,11 +213,11 @@ public class ReportTemplateService implements SecuredRoles {
 		List<ReportTemplate> result = reportTemplateRepository.selectSubscriberTemplates(reportType.getKeyname(),
 				isActive, subscriberId);
 
-		return result;
+		return  result;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @param isActive
 	 * @return
@@ -232,7 +232,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @param currentDate
 	 * @return
@@ -252,7 +252,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -262,7 +262,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -273,7 +273,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param body
 	 * @param filename
@@ -299,7 +299,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
@@ -310,7 +310,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
@@ -322,7 +322,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcReportTemplateId
 	 * @return
 	 */
@@ -365,7 +365,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -400,7 +400,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -410,7 +410,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */
@@ -420,7 +420,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @param isActive
 	 * @param isCompiled
@@ -471,7 +471,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */
@@ -517,7 +517,7 @@ public class ReportTemplateService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @param isActive
 	 * @param isCompiled

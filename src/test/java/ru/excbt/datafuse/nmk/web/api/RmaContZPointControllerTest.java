@@ -25,8 +25,11 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class RmaContZPointControllerTest extends AnyControllerTest {
+import javax.transaction.Transactional;
+
+public class RmaContZPointControllerTest extends RmaControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointControllerTest.class);
 
@@ -43,6 +46,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 
 	@Test
 	//@Ignore
+    @Transactional
 	public void testZPointCRUD() throws Exception {
 
 		ContZPoint contZPoint = new ContZPoint();
@@ -83,6 +87,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Transactional
 	public void testRsoOrganizations() throws Exception {
 		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/rsoOrganizations"));
 	}
@@ -98,31 +103,41 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 
 	@Ignore
 	@Test
+    @Transactional
 	public void testContZPointTemperatureChart() throws Exception {
 		_testGetJson("/api/subscr/contObjects/488501788/contZPointsEx");
 	}
 
 	@Test
+    @Transactional
 	public void testContZPointMetadata() throws Exception {
 		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata");
 	}
 
 	@Test
+    @Transactional
 	public void testContZPointMetadataSrcProp() throws Exception {
 		_testGetJson("/api/rma/contObjects/63030238/zpoints/63031662/metadata/srcProp");
 	}
 
+    // TODO access_denied
 	@Test
+    @Transactional
 	public void testContZPointMetadataDestProp() throws Exception {
 		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata/destProp");
 	}
 
+    // TODO access_denied
 	@Test
+    @Transactional
 	public void testContZPointMetadataDestDb() throws Exception {
 		_testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata/destDb");
 	}
 
+	// TODO access_denied
+	@Ignore
 	@Test
+    @Transactional
 	public void testContZPointMetadataCRUD() throws Exception {
 		final String content = _testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata");
 

@@ -2,9 +2,11 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -12,16 +14,16 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 
 /**
  * Repository для ReportParamsetUnit
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.04.2015
  *
  */
-public interface ReportParamsetUnitRepository extends CrudRepository<ReportParamsetUnit, Long> {
+public interface ReportParamsetUnitRepository extends JpaRepository<ReportParamsetUnit, Long> {
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -31,7 +33,7 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	public List<ContObject> selectContObjects(@Param("reportParamsetId") long reportParamsetId);
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param subscriberId
 	 * @return
@@ -45,7 +47,7 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 			@Param("subscriberId") long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param objectId
 	 * @return
@@ -55,7 +57,7 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	public List<Long> selectUnitIds(@Param("reportParamsetId") long reportParamsetId, @Param("objectId") long objectId);
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -63,7 +65,7 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	public List<Long> selectUnitIds(@Param("reportParamsetId") long reportParamsetId);
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -71,7 +73,7 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	public List<Long> selectObjectIds(@Param("reportParamsetId") long reportParamsetId);
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 */
 	@Modifying
@@ -79,6 +81,6 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	public void softDeleteByReportParamset(@Param("reportParamsetId") long reportParamsetId);
 
 	/**
-	 * 
+	 *
 	 */
 }
