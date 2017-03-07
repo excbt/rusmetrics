@@ -4,6 +4,7 @@ import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
 import org.slf4j.Logger;
@@ -121,12 +122,7 @@ public class AbstractControllerTest {
 		return _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param requestExtraInitializer
-	 * @throws Exception
-	 */
+
 	protected String _testGetJson(String url, RequestExtraInitializer params) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
@@ -222,12 +218,7 @@ public class AbstractControllerTest {
 		return resultActions;
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param resultActionsTester
-	 * @throws Exception
-	 */
+
 	protected void _testGet(String url, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
@@ -235,26 +226,6 @@ public class AbstractControllerTest {
 		};
 
 		_testGet(url, requestExtraInitializer, tester);
-	}
-
-
-	/**
-	 *
-	 * @param type
-	 * @param jsonPacket
-	 * @return
-	 */
-	public static <T> T fromJSON(final TypeReference<T> type, final String jsonPacket) {
-		T data = null;
-
-		try {
-			data = new ObjectMapper().readValue(jsonPacket, type);
-		} catch (Exception e) {
-			logger.error("Can't read JSON:");
-			logger.error(jsonPacket);
-			logger.error("exception: ", e);
-		}
-		return data;
 	}
 
 	/**
@@ -305,7 +276,7 @@ public class AbstractControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
-			String jsonBody = objectToJson(sendObject);
+			String jsonBody = TestUtils.objectToJson(sendObject);
 			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
 		}
 
@@ -353,7 +324,7 @@ public class AbstractControllerTest {
 
 		logger.info("Testing CREATE on URL: {}", url);
 
-		String jsonBody = objectToJson(sendObject);
+		String jsonBody = TestUtils.objectToJson(sendObject);
 
 		MockHttpServletRequestBuilder request = post(url).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
@@ -420,7 +391,7 @@ public class AbstractControllerTest {
 		MockHttpServletRequestBuilder request = put(url).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
-			String jsonBody = objectToJson(sendObject);
+			String jsonBody = TestUtils.objectToJson(sendObject);
 
 			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
 		}
@@ -437,22 +408,16 @@ public class AbstractControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @param sendObject
-	 * @param url
-	 * @throws Exception
+	/*
+
 	 */
 	protected void _testUpdateJson(String url, Object sendObject) throws Exception {
 		_testUpdateJson(url, sendObject, null);
 	}
 
-	/**
-	 *
-	 * @param sendObject
-	 * @param url
-	 * @param requestExtraInitializer
-	 * @throws Exception
+
+	/*
+
 	 */
 	protected ResultActions _testPutJson(String url, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
@@ -464,13 +429,8 @@ public class AbstractControllerTest {
 		return _testPutJson(url, null, requestExtraInitializer, tester);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param sendObject
-	 * @param requestExtraInitializer
-	 * @return
-	 * @throws Exception
+	/*
+
 	 */
 	protected ResultActions _testPutJson(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer)
 			throws Exception {
@@ -483,25 +443,16 @@ public class AbstractControllerTest {
 		return _testPutJson(url, sendObject, requestExtraInitializer, tester);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param sendObject
-	 * @return
-	 * @throws Exception
+	/*
+
 	 */
 	protected ResultActions _testPutJson(String url, Object sendObject)
 			throws Exception {
 		return _testPutJson(url, sendObject, null);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param sendObject
-	 * @param requestExtraInitializer
-	 * @param resultActionsTester
-	 * @throws Exception
+	/*
+
 	 */
 	protected ResultActions _testPutJson(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
@@ -539,12 +490,7 @@ public class AbstractControllerTest {
 		return resultActions;
 	}
 
-	/**
-	 *
-	 * @param sendObject
-	 * @param url
-	 * @throws Exception
-	 */
+
 	protected ResultActions _testPutJson(String url) throws Exception {
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
@@ -554,11 +500,9 @@ public class AbstractControllerTest {
 		//_testUpdateJson(url, null, null);
 	}
 
-	/**
-	 *
-	 * @param urlStr
-	 * @param requestExtraInitializer
-	 * @throws Exception
+
+	/*
+
 	 */
 	protected ResultActions _testPostJson(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
@@ -570,7 +514,7 @@ public class AbstractControllerTest {
 				.accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
-			String jsonBody = objectToJson(sendObject);
+			String jsonBody = TestUtils.objectToJson(sendObject);
 			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
 		}
 
@@ -588,14 +532,9 @@ public class AbstractControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @param urlStr
-	 * @param requestExtraInitializer
-	 * @param resultActionsTester
-	 * @return
-	 * @throws Exception
-	 */
+    /*
+
+     */
 	protected ResultActions _testPostJson(String urlStr, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
@@ -603,12 +542,9 @@ public class AbstractControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @param urlStr
-	 * @param requestExtraInitializer
-	 * @throws Exception
-	 */
+    /*
+
+     */
 	protected ResultActions _testPostJson(String urlStr, RequestExtraInitializer requestExtraInitializer)
 			throws Exception {
 
@@ -621,12 +557,9 @@ public class AbstractControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @param urlStr
-	 * @return
-	 * @throws Exception
-	 */
+    /*
+
+     */
 	protected ResultActions _testPostJson(String urlStr, Object sendObject)
 			throws Exception {
 
@@ -639,33 +572,25 @@ public class AbstractControllerTest {
 
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiSubscrUrl(String url) {
 		checkNotNull(url);
 		return "/api/subscr" + url;
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param args
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiSubscrUrl(String url, Object... args) {
 		checkNotNull(url);
 		return "/api/subscr" + String.format(url, args);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param args
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiSubscrUrlTemplate(String url, Object... args) {
 		checkNotNull(url);
 		return "/api/subscr" + String.format(url, args);
@@ -682,56 +607,42 @@ public class AbstractControllerTest {
 		checkNotNull(id);
 		return stringBuilderUtil("/api/subscr", url, "/", id.toString());
 	}
+    /*
 
-	/**
-	 *
-	 * @param url
-	 * @param id
-	 * @return
-	 */
+     */
 	protected String apiSubscrUrl(String url, Integer id) {
 		checkNotNull(url);
 		checkNotNull(id);
 		return stringBuilderUtil("/api/subscr", url, "/", id.toString());
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiRmaUrl(String url) {
 		checkNotNull(url);
 		return "/api/rma" + url;
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiRmaUrl(String url, Object... args) {
 		checkNotNull(url);
 		return "/api/rma" + String.format(url, args);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param args
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiRmaUrlTemplate(String url, Object... args) {
 		checkNotNull(url);
 		return "/api/rma" + String.format(url, args);
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param id
-	 * @return
-	 */
+    /*
+
+     */
 	@Deprecated
 	protected String apiRmaUrl(String url, Long id) {
 		checkNotNull(url);
@@ -739,23 +650,18 @@ public class AbstractControllerTest {
 		return stringBuilderUtil("/api/rma", url, "/", id.toString());
 	}
 
-	/**
-	 *
-	 * @param url
-	 * @param id
-	 * @return
-	 */
+    /*
+
+     */
 	protected String apiRmaUrl(String url, Integer id) {
 		checkNotNull(url);
 		checkNotNull(id);
 		return stringBuilderUtil("/api/rma", url, "/", id.toString());
 	}
 
-	/**
-	 *
-	 * @param strings
-	 * @return
-	 */
+    /*
+
+     */
 	private String stringBuilderUtil(String... strings) {
 		StringBuilder sb = new StringBuilder();
 		for (String s : strings) {
@@ -764,57 +670,5 @@ public class AbstractControllerTest {
 		return sb.toString();
 	}
 
-	/**
-	 *
-	 * @param obj
-	 * @return
-	 */
-	private String objectToJson(Object obj) {
-		String jsonBody = null;
-		String jsonBodyPretty = null;
-		try {
-			if (obj instanceof String) {
-				jsonBody = (String) obj;
-				jsonBodyPretty = (String) obj;
-
-			} else {
-				jsonBody = OBJECT_MAPPER.writeValueAsString(obj);
-				jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
-			}
-
-			logger.info("Request JSON: {}", jsonBody);
-			logger.info("Request Pretty JSON: {}", jsonBodyPretty);
-
-		} catch (JsonProcessingException e) {
-			logger.error("Can't create json: {}", e);
-			e.printStackTrace();
-			fail();
-		}
-
-		return jsonBody;
-	}
-
-	/**
-	 *
-	 * @param obj
-	 * @return
-	 */
-	protected String objectToJsonStr(Object obj) {
-		String jsonBody = null;
-		try {
-			if (obj instanceof String) {
-				jsonBody = (String) obj;
-
-			} else {
-				jsonBody = OBJECT_MAPPER.writeValueAsString(obj);
-			}
-
-		} catch (JsonProcessingException e) {
-			logger.error("Can't create json: {}", e);
-			e.printStackTrace();
-			fail();
-		}
-		return jsonBody;
-	}
 
 }

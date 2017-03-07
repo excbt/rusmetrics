@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 @WithMockUser(username = "ex1-cab-admin", password = "12345", roles = { "SUBSCR_USER", "SUBSCR_ADMIN",
@@ -30,7 +31,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -39,7 +40,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -48,7 +49,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -57,7 +58,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -89,7 +90,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -103,7 +104,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -111,7 +112,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	public void testUpdateSubscrUser() throws Exception {
 		String content = _testGetJson("/api/subscr/subscrCabinet/subscrUser/512157249");
 
-		SubscrUserWrapper subscrUserWrapper = fromJSON(new TypeReference<SubscrUserWrapper>() {
+		SubscrUserWrapper subscrUserWrapper = TestUtils.fromJSON(new TypeReference<SubscrUserWrapper>() {
 		}, content);
 
 		assertNotNull(subscrUserWrapper);
@@ -124,7 +125,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -135,7 +136,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore

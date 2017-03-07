@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.types.DeviceModelType;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -28,8 +29,8 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectControllerTest.class);
 
-	private final static Long DEV_CONT_OBJECT = 733L;
-	private final static Long DEV_DEVICE_OBJECT = 54209288L;
+//	private final static Long DEV_CONT_OBJECT = 733L;
+//	private final static Long DEV_DEVICE_OBJECT = 54209288L;
 
 	private final static long DEV_RMA_DEVICE_OBJECT_ID = 737;
 	private final static long DEV_RMA_CONT_OBJECT_ID = 725;
@@ -44,7 +45,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	private SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -55,7 +56,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 		String deviceObjectContent = _testGetJson(url);
 
-		DeviceObject deviceObject = fromJSON(new TypeReference<DeviceObject>() {
+		DeviceObject deviceObject = TestUtils.fromJSON(new TypeReference<DeviceObject>() {
 		}, deviceObjectContent);
 
 		deviceObject.setContObject(null);
@@ -89,7 +90,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 		String deviceObjectContent = _testGetJson(url);
 
-		DeviceObject deviceObject = fromJSON(new TypeReference<DeviceObject>() {
+		DeviceObject deviceObject = TestUtils.fromJSON(new TypeReference<DeviceObject>() {
 		}, deviceObjectContent);
 
 		assertNotNull(deviceObject);
@@ -105,7 +106,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -146,7 +147,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -175,7 +176,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -184,7 +185,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -193,7 +194,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -202,7 +203,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -217,7 +218,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -241,7 +242,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -251,7 +252,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -271,7 +272,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -279,7 +280,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 		String response = _testGetJson(apiRmaUrl("/deviceObjects/deviceModels"));
 
-		List<DeviceModel> deviceModels = fromJSON(new TypeReference<List<DeviceModel>>() {
+		List<DeviceModel> deviceModels = TestUtils.fromJSON(new TypeReference<List<DeviceModel>>() {
 		}, response);
 
 		if (!deviceModels.isEmpty()) {
@@ -293,7 +294,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore

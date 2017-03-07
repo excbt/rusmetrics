@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
@@ -35,7 +36,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -46,7 +47,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -72,7 +73,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -82,7 +83,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -93,7 +94,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -104,14 +105,14 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testDeviceModelsGet() throws Exception {
 		String response = _testGetJson(apiSubscrUrl("/deviceObjects/deviceModels"));
 
-		List<DeviceModel> deviceModels = fromJSON(new TypeReference<List<DeviceModel>>() {
+		List<DeviceModel> deviceModels = TestUtils.fromJSON(new TypeReference<List<DeviceModel>>() {
 		}, response);
 
 		if (!deviceModels.isEmpty()) {
@@ -121,7 +122,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -130,7 +131,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

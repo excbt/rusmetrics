@@ -43,7 +43,7 @@ public class RmaSubscrLogSessionControllerTest extends RmaControllerTest {
 		};
 
 		String content = _testGetJson("/api/rma/logSessions", params);
-		List<LogSession> result = fromJSON(new TypeReference<List<LogSession>>() {
+		List<LogSession> result = TestUtils.fromJSON(new TypeReference<List<LogSession>>() {
 		}, content);
 
 		assertNotNull(result);
@@ -69,7 +69,7 @@ public class RmaSubscrLogSessionControllerTest extends RmaControllerTest {
 		};
 
 		String content = _testGetJson("/api/rma/logSessions", params);
-		List<LogSession> result = fromJSON(new TypeReference<List<LogSession>>() {
+		List<LogSession> result = TestUtils.fromJSON(new TypeReference<List<LogSession>>() {
 		}, content);
 
 		assertNotNull(result);

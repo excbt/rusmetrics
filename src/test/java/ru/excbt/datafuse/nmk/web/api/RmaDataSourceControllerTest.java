@@ -15,18 +15,19 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.ManualControllerTest;
 
 public class RmaDataSourceControllerTest extends ManualControllerTest {
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private SubscrDataSourceService subscrDataSourceService;
+//	@Autowired
+//	private CurrentSubscriberService currentSubscriberService;
+//
+//	@Autowired
+//	private SubscrDataSourceService subscrDataSourceService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -35,7 +36,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -44,7 +45,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -57,7 +58,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 		String dataSourceContent = _testGetJson(apiRmaUrl("/dataSources/" + dataSourceId));
 
-		dataSource = fromJSON(new TypeReference<SubscrDataSource>() {
+		dataSource = TestUtils.fromJSON(new TypeReference<SubscrDataSource>() {
 		}, dataSourceContent);
 
 		dataSource.setRawTimeout(10);
@@ -68,7 +69,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -76,7 +77,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 		String content = _testGetJson("/api/rma/dataSources/rawModemModels");
 
-		List<RawModemModel> result = fromJSON(new TypeReference<List<RawModemModel>>() {
+		List<RawModemModel> result = TestUtils.fromJSON(new TypeReference<List<RawModemModel>>() {
 		}, content);
 
 		assertNotNull(result);
@@ -97,7 +98,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 		String content = _testGetJson("/api/rma/dataSources/rawModemModels/" + id);
 
-		RawModemModel result = fromJSON(new TypeReference<RawModemModel>() {
+		RawModemModel result = TestUtils.fromJSON(new TypeReference<RawModemModel>() {
 		}, content);
 
 		assertNotNull(result);
@@ -109,7 +110,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

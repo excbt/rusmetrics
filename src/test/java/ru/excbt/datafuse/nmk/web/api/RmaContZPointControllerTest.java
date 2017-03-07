@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class RmaContZPointControllerTest extends AnyControllerTest {
@@ -124,7 +125,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	public void testContZPointMetadataCRUD() throws Exception {
 		final String content = _testGetJson("/api/rma/contObjects/725/zpoints/512084866/metadata");
 
-		List<ContZPointMetadata> metadata = fromJSON(new TypeReference<List<ContZPointMetadata>>() {
+		List<ContZPointMetadata> metadata = TestUtils.fromJSON(new TypeReference<List<ContZPointMetadata>>() {
 		}, content);
 
 		assertNotNull(metadata);
