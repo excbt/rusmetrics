@@ -1,4 +1,4 @@
-/*jslint node: true, white: true, nomen: true, es5: true*/
+/*jslint node: true, white: true, nomen: true, es5: true, eqeq: true*/
 /*global angular, $, moment, alert*/
 'use strict';
 
@@ -25,7 +25,7 @@ angular.module('portalNMC')
                 console.time("crudGridObjects loading");
                 
 //console.log("Objects directive.");
-                
+                var RADIX = 10; //for parse string
                 var VCOOKIE_URL = "../api/subscr/vcookie",
                     USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
                     OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
@@ -176,15 +176,15 @@ angular.module('portalNMC')
 //                    makeObjectTable(tempArr, true);
 //                    $scope.loading = false;  
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                    if (angular.isDefined($cookies.contObject) && $cookies.contObject !== "null"){
+                    if (angular.isDefined($cookies.contObject) && $cookies.contObject !== "null") {
                         var curObj = objectSvc.findObjectById(Number($cookies.contObject), $scope.objects);
                         if (curObj !== null) {
                             var curObjIndex = $scope.objects.indexOf(curObj);                        
                             if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage){
                                 //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
-                                var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, curObjIndex + 1);
+                                var tempArr1 = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, curObjIndex + 1);
                                     //добавляем к выведимому на экран массиву новый блок элементов
-                                Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                                Array.prototype.push.apply($scope.objectsOnPage, tempArr1);
                                 $scope.objectCtrlSettings.objectsOnPage = curObjIndex + 1;
                                 //$scope.objectCtrlSettings.currentObjectSearchFlag = true;                                
                                 $scope.objectCtrlSettings.tmpCurContObj = $cookies.contObject;
@@ -665,7 +665,11 @@ angular.module('portalNMC')
                     if (curObject.showGroupDetails === true) {
                       
                         var mode = "/vo";
-                        objectSvc.getZpointsDataByObject(curObject, mode).then(function(response) {
+                        objectSvc.getZpointsDataByObject(curObject, mode).then(function (response) {
+                            if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
+                                console.log("Zpoint data for contObject " + curObject.id + "is empty!");
+                                return false;
+                            }
                             var tmp = [];
                             if (mode == "Ex") {
                                 tmp = response.data.map(function (el) {
@@ -1431,7 +1435,6 @@ angular.module('portalNMC')
 //                        $scope.loading = true;
                         var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         tempArr.forEach(function(element) {
-//                            .contObjectStats.contEventLevelColor.toLowerCase()
                             if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
                                 monitorSvc.getMonitorEventsForObject(element);
                             } else {
@@ -1722,7 +1725,7 @@ angular.module('portalNMC')
                      if (!(($scope.checkNumericValue(leftBorder))&&( $scope.checkNumericValue(rightBorder)))) {
                          return false;
                      }
-                     if (parseInt(rightBorder) >= parseInt(leftBorder)) {
+                     if (parseInt(rightBorder, RADIX) >= parseInt(leftBorder, RADIX)) {
                          return true;
                      }
                      return false;
@@ -1788,11 +1791,11 @@ angular.module('portalNMC')
                 
                 $scope.isTestMode = function () {                    
                     return mainSvc.isTestMode();
-                }
+                };
                 
                 $scope.isRma = function () {
                     return mainSvc.isRma();
-                }
+                };
                 
 // ********************************************************************************************
 //  TREEVIEW
@@ -1949,25 +1952,27 @@ angular.module('portalNMC')
                     return columnPrefs.split(',');
                 }
                 
-                function IntersecArrays(A,B)
+                function intersecArrays(A, B)
                 {
-                    var m = A.length, n = B.length, c = 0, C = [];
-                    for (var i = 0; i < m; i++)
+                    var m = A.length, n = B.length, c = 0, C = [], 
+                        i;
+                    for (i = 0; i < m; i += 1)
                      { var j = 0, k = 0;
-                       while (B[j] !== A[ i ] && j < n) j++;
-                       while (C[k] !== A[ i ] && k < c) k++;
-                       if (j != n && k == c) C[c++] = A[ i ];
+                       while (B[j] !== A[ i ] && j < n) { j += 1; }
+                       while (C[k] !== A[ i ] && k < c) { k += 1; }
+                       if (j != n && k == c) { C[c++] = A[ i ]; }
                      }
                    return C;
                 }
                 
-                function MultiIntersecArrays(k,A)  // При вызовах всегда полагать k=0. А - это двумерный (!)
+                function multiIntersecArrays(k, A)  // При вызовах всегда полагать k=0. А - это двумерный (!)
                 {                                   //  массив, элементы которого A[ i ] - также массивы,
                     var n = A.length;               //  пересечение которых нужно найти.
-                    if (k == n-2)
-                       return IntersecArrays( A[n-2], A[n-1] );   // Функцию IntersecArrays см. выше.
-                    else
-                       return IntersecArrays( A[k], MultiIntersecArrays(k+1,A) );   
+                    if (k == n - 2) {
+                       return intersecArrays(A[n - 2], A[n - 1]);   // Функцию IntersecArrays см. выше.
+                    } else {
+                       return intersecArrays(A[k], multiIntersecArrays(k + 1,A));
+                    }
                 }
                 
                 $scope.selectAllWaterColumns = function() {
@@ -1996,18 +2001,18 @@ angular.module('portalNMC')
                         if (el.selected === true) {
                             var tmpPrefs = readIndicatorColumnPrefForObject(el, "hw");
                             if (!mainSvc.checkUndefinedNull(tmpPrefs)) {
-                                waterSettings.push(tmpPrefs);//= MultiIntersecArrays(0, tmpPrefs);
+                                waterSettings.push(tmpPrefs);//= multiIntersecArrays(0, tmpPrefs);
                             }
                             tmpPrefs = readIndicatorColumnPrefForObject(el, "el");
                             if (!mainSvc.checkUndefinedNull(tmpPrefs)) {
-                                elecSettings.push(tmpPrefs);//= MultiIntersecArrays(0, tmpPrefs);
+                                elecSettings.push(tmpPrefs);//= multiIntersecArrays(0, tmpPrefs);
                             }
                         }
                     });
                     if (waterSettings.length == 1) {
                         waterSettings = waterSettings[0];
                     } else if (waterSettings.length > 1) {
-                        waterSettings = MultiIntersecArrays(0, waterSettings);
+                        waterSettings = multiIntersecArrays(0, waterSettings);
                     }
                     if (waterSettings.length != 0) {
                         waterSettings.forEach(function(ws) {
@@ -2027,7 +2032,7 @@ angular.module('portalNMC')
                     if (elecSettings.length == 1) {
                         elecSettings = elecSettings[0];
                     } else if (elecSettings.length > 1) { 
-                        elecSettings = MultiIntersecArrays(0, elecSettings);
+                        elecSettings = multiIntersecArrays(0, elecSettings);
                     }
                     if (elecSettings.length != 0) {
                         elecSettings.forEach(function(ws) {
