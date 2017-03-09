@@ -99,5 +99,11 @@ slog:
         #dataSource.pool.size=2
         schema: slog
 
+ldap:
+    url: ldap://109.120.149.52:11389
+    base: dc=nmk,dc=ru
+    user: cn=Directory Manager
+    password: exbt_123456
+
 server:
     port: 8080
