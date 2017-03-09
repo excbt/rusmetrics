@@ -65,6 +65,7 @@ public class ReportConstants {
 		public static final String HW_BAD_PERIODS_FILE_COMPILED = "jasper_reports/nmk_hw_bad_periods_report.prpt";
 		public static final String HW_QUALITY_1_FILE_COMPILED = "jasper_reports/nmk_hw_quality_1_report.prpt";
 		public static final String HW_QUALITY_2_FILE_COMPILED = "jasper_reports/nmk_hw_quality_2_report.prpt";
+		public static final String RMA_ZPOINT_STAT_FILE_COMPILED = "jasper_reports/nmk_rma_zpoint_stat_report.prpt";
 
 		private Files() {
 
