@@ -180,7 +180,7 @@
     <div class="paddingLeftRight15" ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true && objectCtrlSettings.isFullObjectView == true, 'col-xs-9': objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false}">
         <div ng-show="loading" class="marginBottom5 nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка объектов... 
-        </div>
+        </div>        
 <!--
         <div  ng-show="loading" class="nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
@@ -226,6 +226,12 @@
                                         </th>
                                         <th class="nmc-td-for-buttons"></th>
                                         <th>Название объекта
+                                            <span ng-show = "objectCtrlSettings.loadingObjectCount > 0" 
+                                                 class = "marginBottom5 nmc-loading"
+                                                 
+                                                 >
+                                                <i class="fa fa-spinner fa-spin"></i> Загрузка данных для объектов... 
+                                            </span>    
 <!--
                                             <div ng-show="!isCabinet()"
                                                  class="btn-group pull-right" style="vertical-align: initial;">
@@ -255,7 +261,8 @@
                 </thead>
         </table>
 
-        <div id="parentDivWithObjectListTable" ng-controller="ReportsCtrl">
+        <div id="parentDivWithObjectListTable" ng-controller="ReportsCtrl"
+             ng-class = "{'nmc-disabled' : objectCtrlSettings.loadingObjectCount > 0}">
             <div class="" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
                 <h3 class="nmc-h3">{{messages.noObjects}}</h3>
             </div>

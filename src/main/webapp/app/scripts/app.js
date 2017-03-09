@@ -539,7 +539,11 @@ app.run(["$rootScope", "$location", "$q" ,"securityCheck", function($rootScope, 
         		var url = "../login";  
         		window.location.replace(url);
     		}
-    	});
+    	}, function (e) {
+            console.log(e);
+            var url = "../login";  
+            window.location.replace(url);
+        });
 
     });
 

@@ -820,6 +820,10 @@ angular.module('portalNMC')
 //Meter periods
 //****************************************************************************************
         //get meter periods ?
+        function loadObjectMeterPeriods() {
+            var url = urlSubscrMeterPeriod;
+            return $http.get(url);
+        }
         //put meter periods 
         function setMeterPeriods(meterPeriodData) {
             var url = urlSubscrMeterPeriod;
@@ -915,6 +919,7 @@ angular.module('portalNMC')
             loadFreeObjectsByTree,
             loadObjectsByTreeNode,
             loading,
+            loadObjectMeterPeriods,
             loadTree,            
             loadTrees,
             loadTreeTemplateItems,
@@ -933,6 +938,7 @@ angular.module('portalNMC')
             sendDeviceToServer,
             setCurrentObject,
             setMeterPeriodForObject,
+            setMeterPeriods,
             setObjectSettings,            
             sortObjectsByFullName,
             sortObjectsByFullNameEx,            

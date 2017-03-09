@@ -1814,6 +1814,7 @@ tr.nmc-inactive-price > td {
 
 .nmc-button-disabled, .nmc-disabled{
     opacity: 0.4 !important;
+    pointer-events: none;
 }
 
 .nmc-button-in-table-question{
