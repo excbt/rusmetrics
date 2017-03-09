@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.app;
 
@@ -25,23 +25,25 @@ import org.springframework.core.env.Environment;
 
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
-import ru.excbt.datafuse.nmk.config.jpa.DatabaseConfig;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
+import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
+import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.config.mvc.WebConfigurer;
-import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
+import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.01.2017
- * 
+ *
  */
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
-@Import(value = { WebConfigurer.class, SpringMvcConfig.class, WebSecurityConfig.class, DatabaseConfig.class })
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
+@Import(value = {WebConfigurer.class, SpringMvcConfig.class, LocalSecurityConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class})
 @ComponentScan(
-		excludeFilters = { @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*") })
+    excludeFilters = {@ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*")})
 public class PortalApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(PortalApplication.class);
