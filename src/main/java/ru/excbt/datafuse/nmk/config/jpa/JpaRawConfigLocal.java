@@ -4,6 +4,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +49,24 @@ public class JpaRawConfigLocal {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean(name = "dataSourceRaw")
 	@ConfigurationProperties("raw.datasource")
 	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
-		return DataSourceBuilder.create().build();
+        final HikariDataSource ds = new HikariDataSource();
+        ds.setMaximumPoolSize(5);
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setJdbcUrl(rawDBProps.url);
+        ds.setUsername(rawDBProps.username);
+        ds.setPassword(rawDBProps.password);
+        return ds;
+//		return DataSourceBuilder.create().build();
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws NamingException
 	 */
@@ -70,7 +78,7 @@ public class JpaRawConfigLocal {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityManagerFactory
 	 * @return
 	 */

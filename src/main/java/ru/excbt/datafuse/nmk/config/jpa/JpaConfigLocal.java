@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.config.jpa;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,7 +66,14 @@ public class JpaConfigLocal {
 	@Bean(name = "dataSource")
 	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource(PortalDBProps portalDBProps) {
-		return DataSourceBuilder.create().build();
+//		return DataSourceBuilder.create().build();
+        final HikariDataSource ds = new HikariDataSource();
+        ds.setMaximumPoolSize(15);
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setJdbcUrl(portalDBProps.url);
+        ds.setUsername(portalDBProps.username);
+        ds.setPassword(portalDBProps.password);
+        return ds;
 	}
 
 	@Primary
