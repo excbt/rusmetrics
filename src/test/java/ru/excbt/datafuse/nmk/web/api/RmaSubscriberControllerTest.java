@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -23,6 +24,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testGetSubscribers() throws Exception {
 		_testGetJson(UrlUtils.apiRmaUrl("/subscribers"));
 	}
@@ -32,6 +34,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testGetSubscriber() throws Exception {
 		_testGetJson(UrlUtils.apiRmaUrl("/subscribers", 64166467));
 	}
@@ -41,6 +44,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testSubcriberCRUD() throws Exception {
 		Subscriber subscriber = new Subscriber();
 		subscriber.setSubscriberName("TEST_SUBSCRIBER");

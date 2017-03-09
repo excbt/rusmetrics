@@ -39,7 +39,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
  * Контроллер для работы с прайс листами для РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 11.11.2015
@@ -49,7 +49,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 @RequestMapping(value = "/api/rma")
 public class RmaPriceListController extends SubscrPriceListController {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaPriceListController.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaPriceListController.class);
 
 	private final static Long MASTER_PRICE_LIST_SUBSCRIBER_ID = 0L;
 
@@ -60,7 +60,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	private RmaSubscriberService rmaSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -102,7 +102,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/priceList/subscribers", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -129,7 +129,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/priceList/rma", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -137,6 +137,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 		List<PriceListSubscriber> resultList = new ArrayList<>();
 
 		if (!isSystemUser()) {
+            log.warn("BL. User is not system user. ACCESS DENIED");
 			return responseForbidden();
 		}
 
@@ -148,7 +149,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -191,7 +192,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param priceListId
 	 * @param priceList
@@ -234,7 +235,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param priceListId
 	 * @return
@@ -252,7 +253,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return responseBadRequest();
 		}
 
-		logger.info("version:{}", subscrPriceList.getVersion());
+		log.info("version:{}", subscrPriceList.getVersion());
 
 		ApiAction action = new ApiActionAdapter() {
 
@@ -280,7 +281,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param srcPriceListId
 	 * @return
@@ -309,7 +310,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param priceListId
 	 * @param priceList
@@ -356,7 +357,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param priceListId
 	 * @return
@@ -393,7 +394,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrPriceListId
 	 * @return
@@ -422,7 +423,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrPriceListId
 	 * @param subscrPriceItemVOs
@@ -435,7 +436,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			@RequestBody List<SubscrPriceItemVO> subscrPriceItemVOs) {
 
 		checkNotNull(subscrPriceItemVOs);
-		logger.info("Count of VOs: {}", subscrPriceItemVOs.size());
+		log.info("Count of VOs: {}", subscrPriceItemVOs.size());
 
 		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(subscrPriceListId);
 		if (subscrPriceList == null) {
