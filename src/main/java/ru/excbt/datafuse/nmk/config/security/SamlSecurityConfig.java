@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -95,6 +92,7 @@ import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 @PropertySource(value = "classpath:META-INF/saml-idp.properties")
 @ComponentScan(basePackages = { "org.springframework.security.saml" })
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Profile(value = "SAML")
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SamlSecurityConfig.class);
@@ -142,7 +140,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
@@ -169,7 +167,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
@@ -178,7 +176,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
@@ -566,7 +564,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean(name = "sessionRegistry")
@@ -575,7 +573,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
