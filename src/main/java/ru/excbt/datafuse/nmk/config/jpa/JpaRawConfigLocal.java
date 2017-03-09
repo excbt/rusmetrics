@@ -46,6 +46,7 @@ public class JpaRawConfigLocal {
 		private String url;
 		private String username;
 		private String password;
+		private String driverClassName;
 	}
 
 	/**
@@ -55,14 +56,9 @@ public class JpaRawConfigLocal {
 	@Bean(name = "dataSourceRaw")
 	@ConfigurationProperties("raw.datasource")
 	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
-        final HikariDataSource ds = new HikariDataSource();
-        ds.setMaximumPoolSize(5);
-        ds.setDriverClassName("org.postgresql.Driver");
-        ds.setJdbcUrl(rawDBProps.url);
-        ds.setUsername(rawDBProps.username);
-        ds.setPassword(rawDBProps.password);
-        return ds;
-//		return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+            .driverClassName(rawDBProps.driverClassName)
+            .url(rawDBProps.url).username(rawDBProps.username).password(rawDBProps.password).build();
 	}
 
 	/**

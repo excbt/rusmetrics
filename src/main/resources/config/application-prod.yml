@@ -76,7 +76,7 @@ portal:
 raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        #dataSourceClassName: org.postgresql.Driver
+        driverClassName: org.postgresql.Driver
         url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&amp;characterEncoding=UTF-8
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -92,7 +92,8 @@ raw:
 
 slog:
     datasource:
-        type: org.postgresql.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: org.postgresql.Driver
         username: dbuser1
         password: Y[Q^1>f{
         url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&amp;characterEncoding=UTF-8

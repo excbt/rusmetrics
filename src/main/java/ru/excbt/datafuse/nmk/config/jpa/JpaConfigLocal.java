@@ -46,6 +46,7 @@ public class JpaConfigLocal {
 		private String url;
 		private String username;
 		private String password;
+		private String driverClassName;
 	}
 
 	@Data
@@ -66,14 +67,9 @@ public class JpaConfigLocal {
 	@Bean(name = "dataSource")
 	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource(PortalDBProps portalDBProps) {
-//		return DataSourceBuilder.create().build();
-        final HikariDataSource ds = new HikariDataSource();
-        ds.setMaximumPoolSize(15);
-        ds.setDriverClassName("org.postgresql.Driver");
-        ds.setJdbcUrl(portalDBProps.url);
-        ds.setUsername(portalDBProps.username);
-        ds.setPassword(portalDBProps.password);
-        return ds;
+        return DataSourceBuilder.create()
+            .driverClassName(portalDBProps.driverClassName)
+            .url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
 	}
 
 	@Primary
