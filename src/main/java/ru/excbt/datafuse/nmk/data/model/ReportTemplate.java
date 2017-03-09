@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 
 /**
  * Шаблон отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -34,7 +34,7 @@ import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 public class ReportTemplate extends JsonAbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6041687194914761423L;
 
@@ -200,5 +200,10 @@ public class ReportTemplate extends JsonAbstractAuditableModel {
 	public void setReportParamsetDefaultName(String reportParamsetDefaultName) {
 		this.reportParamsetDefaultName = reportParamsetDefaultName;
 	}
+
+	public ReportTemplate id(Long id) {
+	    this.setId(id);
+	    return this;
+    }
 
 }

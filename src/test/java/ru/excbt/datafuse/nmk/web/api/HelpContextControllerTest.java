@@ -9,9 +9,12 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
+import javax.transaction.Transactional;
+
 public class HelpContextControllerTest extends AnyControllerTest {
 
 	@Test
+    @Transactional
 	public void testRedirect() throws Exception {
 		RequestExtraInitializer param = builder -> {
 		};
@@ -22,11 +25,13 @@ public class HelpContextControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Transactional
 	public void testSetup() throws Exception {
 		_testGetSuccessful("/api/help/setup/home01");
 	}
 
 	@Test
+    @Transactional
 	public void testHelpInfo() throws Exception {
 		_testGetJson("/api/help/info/home01");
 	}

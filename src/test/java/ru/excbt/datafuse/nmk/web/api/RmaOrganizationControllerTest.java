@@ -10,6 +10,8 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
+import javax.transaction.Transactional;
+
 public class RmaOrganizationControllerTest extends RmaControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaOrganizationControllerTest.class);
@@ -18,12 +20,14 @@ public class RmaOrganizationControllerTest extends RmaControllerTest {
 	private OrganizationService organizationService;
 
 	@Test
+    @Transactional
 	public void testGetOrganizations() throws Exception {
 		String url = "/api/rma/organizations";
 		_testGetJson(url);
 	}
 
 	@Test
+    @Transactional
 	public void testCRUDOrganization() throws Exception {
 		Organization organization = new Organization();
 		organization.setOrganizationName("Org By AK");
@@ -50,6 +54,7 @@ public class RmaOrganizationControllerTest extends RmaControllerTest {
 
 	@Test
 	@Ignore
+    @Transactional
 	public void testDeleteOrganization() throws Exception {
 		String url = "/api/rma/organizations/489424236";
 		_testDeleteJson(url);

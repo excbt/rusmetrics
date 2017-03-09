@@ -38,7 +38,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
  * Контроллер для работы с приборами для РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
@@ -51,7 +51,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectController.class);
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -82,7 +82,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
@@ -130,7 +130,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @param subscrDataSourceId
@@ -196,7 +196,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param subscrDataSourceId
 	 * @param subscrDataSourceAddr
@@ -213,7 +213,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param subscrDataSourceId
 	 * @param subscrDataSourceAddr
@@ -229,7 +229,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param subscrDataSourceId
 	 * @param subscrDataSourceAddr
@@ -315,7 +315,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @return
@@ -356,7 +356,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -422,7 +422,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @param requestEntity
@@ -468,7 +468,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param deviceObjectId
 	 * @param requestEntity
@@ -518,7 +518,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceModelId
 	 * @param requestEntity
 	 * @return
@@ -536,15 +536,14 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseBadRequest();
 		}
 
-		ApiActionObjectProcess actionProcess = () -> {
-			return deviceModelService.save(requestEntity);
-		};
+		ApiActionObjectProcess actionProcess = () -> deviceModelService.save(requestEntity);
+
 		return responseUpdate(actionProcess);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param requestEntity
 	 * @param request
@@ -566,7 +565,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceModelId
 	 * @return
 	 */

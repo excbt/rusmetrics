@@ -37,6 +37,8 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+import javax.transaction.Transactional;
+
 public class ReportSheduleControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleControllerTest.class);
@@ -54,16 +56,19 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Test
+    @Transactional
 	public void testGetSheduleActive() throws Exception {
 		_testGetJson("/api/reportShedule/active");
 	}
 
 	@Test
+    @Transactional
 	public void testGetShedule() throws Exception {
 		_testGetJson("/api/reportShedule");
 	}
 
 	@Test
+    @Transactional
 	public void testGetSheduleOne() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
 				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now());
@@ -80,6 +85,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Transactional
 	public void testUndateShedule() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
 				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now());
@@ -116,6 +122,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Transactional
 	public void testCreateShedule() throws Exception {
 
 		List<ReportTemplate> reportTemplates = reportTemplateService.selectSubscriberReportTemplates(

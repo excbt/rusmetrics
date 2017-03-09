@@ -23,6 +23,8 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import javax.transaction.Transactional;
+
 public class ReportWizardControllerTest extends AnyControllerTest {
 
 
@@ -40,6 +42,7 @@ public class ReportWizardControllerTest extends AnyControllerTest {
 
 
 	@Test
+    @Transactional
 	public void testCreateWizard() throws JsonProcessingException {
 
 		///

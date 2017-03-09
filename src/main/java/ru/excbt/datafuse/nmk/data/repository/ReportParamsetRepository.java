@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,20 +12,20 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 
 /**
  * Repository для ReportParamset
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
  *
  */
-public interface ReportParamsetRepository extends CrudRepository<ReportParamset, Long> {
+public interface ReportParamsetRepository extends JpaRepository<ReportParamset, Long> {
 
 	public List<ReportParamset> findByReportTemplateId(Long reportTemplateId);
 
 	public List<ReportParamset> findBySubscriberId(Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param isActive
 	 * @return
@@ -35,7 +36,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			@Param("isActive") boolean isActive);
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param activeDate
 	 * @return
@@ -48,7 +49,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			@Param("activeDate") Date activeDate);
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKeyname
 	 * @param isActive
 	 * @return
@@ -60,7 +61,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			@Param("isActive") boolean isActive);
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKeyname
 	 * @param isActive
 	 * @param subscriberId
@@ -73,7 +74,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			@Param("isActive") boolean isActive, @Param("subscriberId") long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @param currentDate
 	 * @return
@@ -82,7 +83,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	public List<Long> selectCommonParamsetIds();
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @return
 	 */
@@ -92,7 +93,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	public List<ReportParamset> selectReportParamsetContextLaunch(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @return
 	 */
