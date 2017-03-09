@@ -1,15 +1,7 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.app;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,29 +11,27 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
-
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
-import ru.excbt.datafuse.nmk.config.jpa.DatabaseConfig;
-import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
-import ru.excbt.datafuse.nmk.config.mvc.WebConfigurer;
-import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.01.2017
- * 
+ *
  */
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
-@Import(value = { WebConfigurer.class, SpringMvcConfig.class, WebSecurityConfig.class, DatabaseConfig.class })
-@ComponentScan(
-		excludeFilters = { @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*") })
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
+@ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"})
 public class PortalApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(PortalApplication.class);

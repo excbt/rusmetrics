@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,7 @@ import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@Profile(value = "!SAML")
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -74,7 +76,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean(name = "sessionRegistry")
@@ -83,7 +85,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean

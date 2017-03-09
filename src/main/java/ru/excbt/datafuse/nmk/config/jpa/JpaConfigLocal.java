@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.config.jpa;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,13 +25,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.Data;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.PortalDBProps;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.SLogDBProps;
 
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository",
 		entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog" })
-@EnableConfigurationProperties(value = { PortalDBProps.class })
+@EnableConfigurationProperties(value = { PortalDBProps.class, SLogDBProps.class })
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfigLocal {
 
@@ -44,17 +46,30 @@ public class JpaConfigLocal {
 		private String url;
 		private String username;
 		private String password;
+		private String driverClassName;
 	}
 
+	@Data
+    @ConfigurationProperties(prefix = "slog.datasource")
+	public static class SLogDBProps {
+        private String type;
+        private String url;
+        private String username;
+        private String password;
+        private String schema;
+    }
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Primary
 	@Bean(name = "dataSource")
 	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource(PortalDBProps portalDBProps) {
-		return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+            .driverClassName(portalDBProps.driverClassName)
+            .url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
 	}
 
 	@Primary
@@ -75,7 +90,7 @@ public class JpaConfigLocal {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
@@ -104,7 +119,7 @@ public class JpaConfigLocal {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean

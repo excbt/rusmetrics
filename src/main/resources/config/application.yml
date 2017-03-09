@@ -26,16 +26,16 @@ spring:
         type: com.zaxxer.hikari.HikariDataSource
 #        #driver-class-name: org.postgresql.Driver
 #        jdbcUrl: jdbc:postgresql://192.168.84.26:5432/datafuse
-#        name: 
+#        name:
 #        jndi-name:
 #        username: postgres
-#        password: 12345  
+#        password: 12345
 #        hikari:
-#            #connection-test-query: SELECT 1 FROM DUAL        
+#            #connection-test-query: SELECT 1 FROM DUAL
 #            minimum-idle: 3
 #            maximum-pool-size: 5
-#            pool-name: master        
-    
+#            pool-name: master
+
     jpa:
         database-platform: ru.excbt.datafuse.hibernate.dialect.ExPostgreSQLDialect
         database: POSTGRESQL
@@ -43,7 +43,7 @@ spring:
             hibernate.hbm2ddl.auto: validate
             hibernate.format-sql: true
             hibernate.show_sql: true
-            
+
 #            naming:
 #                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 #                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -57,24 +57,24 @@ spring:
 portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        #driver-class-name: org.postgresql.Driver
+        driverClassName: org.postgresql.Driver
         jdbcUrl: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
-        name: 
+        name:
         jndi-name:
         username: dbuser1
-        password: exbt_123456  
+        password: exbt_123456
         hikari:
-            connection-test-query: SELECT 1        
+            connection-test-query: SELECT 1
             minimum-idle: 3
             maximum-pool-size: 5
-            pool-name: master   
+            pool-name: master
 
 raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        //driver-class-name: org.postgresql.Driver
+        driverClassName: org.postgresql.Driver
         jdbcUrl: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&amp;characterEncoding=UTF-8
-        name: 
+        name:
         jndi-name:
         username: dbuser1
         password: exbt_123456
@@ -82,8 +82,23 @@ raw:
             connection-test-query: SELECT 1
             minimum-idle: 1
             maximum-pool-size: 2
-            pool-name: raw        
-    
+            pool-name: raw
+
+slog:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: org.postgresql.Driver
+        username: dbuser1
+        password: exbt_123456
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        #dataSource.pool.size=2
+        schema: slog
+
+ldap:
+    url: ldap://otrs.local.excbt.ru:389
+    base: dc=nmk,dc=ru
+    user: cn=Directory Manager
+    password: exbt_123456
 
 server:
     port: 8080

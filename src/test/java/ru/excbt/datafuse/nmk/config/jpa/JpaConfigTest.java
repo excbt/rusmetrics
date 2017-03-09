@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.config.Constants;
+import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
@@ -27,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 @ActiveProfiles(value = { Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_TEST })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Import(value = { DatabaseConfig.class })
+@Import(value = { JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class  })
 public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo, TestExcbtRmaIds {
 
 	private final static long TEST_AUDIT_USER = 1;

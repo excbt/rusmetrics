@@ -4,6 +4,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,20 +46,23 @@ public class JpaRawConfigLocal {
 		private String url;
 		private String username;
 		private String password;
+		private String driverClassName;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean(name = "dataSourceRaw")
 	@ConfigurationProperties("raw.datasource")
 	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
-		return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+            .driverClassName(rawDBProps.driverClassName)
+            .url(rawDBProps.url).username(rawDBProps.username).password(rawDBProps.password).build();
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws NamingException
 	 */
@@ -70,7 +74,7 @@ public class JpaRawConfigLocal {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityManagerFactory
 	 * @return
 	 */
