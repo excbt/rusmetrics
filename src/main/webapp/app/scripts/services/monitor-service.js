@@ -143,17 +143,17 @@ angular.module('portalNMC')
 //        };        
             
         //get monitor events
-       var getMonitorEventsByObject = function(obj){ 
+       var getMonitorEventsByObject = function (obj) {
 //console.log(obj);           
             var url = objectUrl + "/" + obj.contObject.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
            if (isCancelParamsIncorrect() === true)
                 return null;
             $http.get(url, httpOptions)
-                .success(function(data){
+                .success(function (data) {
     //console.log("success");
 //console.log(data);                
                 //if data is not array - exit
-                    if (!data.hasOwnProperty('length') || (data.length == 0)){
+                    if (!data.hasOwnProperty('length') || (data.length == 0)) {
                         if (obj.statusColor === "YELLOW"){
                             obj.monitorEvents = "На объекте нет нештатных ситуаций";
                             $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
@@ -164,7 +164,7 @@ angular.module('portalNMC')
                     var tmpMessage = "";
     //                var tmpMessageEx = "";
                     //make the new array of the types wich formatted to display
-                    data.forEach(function(element){
+                    data.forEach(function (element) {
 //console.log(element);                        
                         var tmpEvent = "";
                         var contEventTime = new Date(element.contEventTime);
@@ -176,46 +176,46 @@ angular.module('portalNMC')
                         tmpMessage += tmpEvent;
                     });
 //console.log(tmpMessage);     
-                    if (obj.statusColor === "YELLOW"){
+                    if (obj.statusColor === "YELLOW") {
                         obj.monitorEvents = "На объекте нет нештатных ситуаций";
-                    }else if ((obj.statusColor === "RED") || (obj.statusColor === "ORANGE")){
+                    } else if ((obj.statusColor === "RED") || (obj.statusColor === "ORANGE")) {
                         obj.monitorEvents = tmpMessage;
                         obj.monitorEventsForMap = data;
-                    };
+                    }
 //console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
                 })
                 .error(errorCallbackConsole);        
         };
         
-        var getMonitorEventsForObject = function(obj){ 
+        var getMonitorEventsForObject = function (obj) {
             var url = objectUrl + "/" + obj.id + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
            if (isCancelParamsIncorrect() === true)
                 return null;
             $http.get(url, httpOptions)
-                .success(function(data){
+                .success(function (data) {
     //console.log("success");
 //console.log(data);                
                 //if data is not array - exit
-                    if (!data.hasOwnProperty('length') || (data.length === 0)){
+                    if (!data.hasOwnProperty('length') || (data.length === 0)) {
 //                        if (obj.contObjectStats.contEventLevelColor === "GREEN"){
 //                            obj.monitorEvents = "На объекте нет нештатных ситуаций";
 //                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
 //                        };
                         return;
-                    };
+                    }
                     //temp array
                     var tmpMessage = "";
     //                var tmpMessageEx = "";
                     //make the new array of the types wich formatted to display
-                    data.forEach(function(element){
+                    data.forEach(function (element) {
 //console.log(element);                        
                         var tmpEvent = "";
                         var contEventTime = new Date(element.contEventTime);
                         var pstyle = "";
-                        if(element.contEventLevelColorKeyname === "RED"){
+                        if (element.contEventLevelColorKeyname === "RED") {
                             pstyle = "color: red;";
-                        };
+                        }
                         tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
                         tmpMessage += tmpEvent;
                     });
@@ -223,10 +223,10 @@ angular.module('portalNMC')
 //                    if (obj.contObjectStats.contEventLevelColor === "GREEN"){
 //                        obj.monitorEvents = "На объекте нет нештатных ситуаций";
 //                    }else 
-                    if ((obj.contObjectStats.contEventLevelColor === "RED") || (obj.contObjectStats.contEventLevelColor === "YELLOW")){
+                    if ((obj.contObjectStats.contEventLevelColor === "RED") || (obj.contObjectStats.contEventLevelColor === "YELLOW")) {
                         obj.monitorEvents = tmpMessage;
                         obj.monitorEventsForMap = data;
-                    };
+                    }
 //console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
                 })

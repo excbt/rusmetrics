@@ -62,6 +62,8 @@ angular.module('portalNMC')
 //                $scope.objectCtrlSettings.objectTopOnPage =0;
 //                $scope.objectCtrlSettings.objectBottomOnPage =34;
                 
+                $scope.objectCtrlSettings.loadingObjectCount = 0; //flag for addMoreObjects
+                
                 //list of system for meta data editor
                 $scope.objectCtrlSettings.vzletSystemList = [];
                 
@@ -149,13 +151,13 @@ angular.module('portalNMC')
                         return false;
                     }
 //console.log(tempArr);                    
-                    tempArr.forEach(function(element){
+                    tempArr.forEach(function (element) {
                         element.imgsrc = 'images/object-mode-' + element.currentSettingMode + '.png';
 //                        $scope.cont_zpoint_setting_mode_check
-                        if (element.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname){
+                        if (element.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname) {
                             element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
 
-                        }else if(element.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname){
+                        } else if(element.currentSettingMode === $scope.cont_zpoint_setting_mode_check[1].keyname) {
                             element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
                         }
                         if (angular.isDefined(element._activeContManagement) && (element._activeContManagement !== null)) {
@@ -168,11 +170,17 @@ angular.module('portalNMC')
 
 //                    $scope.objectsWithoutFilter = $scope.objects;
                     tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
-                    $scope.loading = false;
-                    tempArr.forEach(function(element){
-                        monitorSvc.getMonitorEventsForObject(element);
-                    });
+                   
+                    $scope.loading = false;                    
                     $scope.objectsOnPage = tempArr;
+                    tempArr.forEach(function (element) {
+                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
+                            monitorSvc.getMonitorEventsForObject(element);
+                        } else {
+                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
+                        }                        
+                    });
 //                    makeObjectTable(tempArr, true);
 //                    $scope.loading = false;  
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
@@ -1433,8 +1441,9 @@ angular.module('portalNMC')
                     }
                     if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){
 //                        $scope.loading = true;
-                        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
-                        tempArr.forEach(function(element) {
+                        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);                    
+                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                        tempArr.forEach(function (element) {                            
                             if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
                                 monitorSvc.getMonitorEventsForObject(element);
                             } else {
@@ -1442,7 +1451,6 @@ angular.module('portalNMC')
                                 $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
                             }
                         });
-                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
                         $scope.$apply();
@@ -1476,15 +1484,27 @@ angular.module('portalNMC')
                     }
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
                     var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
-                    tempArr.forEach(function(element) {
-                            monitorSvc.getMonitorEventsForObject(element);
-                    });
+                                        
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                    tempArr.forEach(function (element) {                        
+                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
+                            monitorSvc.getMonitorEventsForObject(element);
+                        } else {                            
+                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});                           
+                        }
+                    });
+                    
                     if (endIndex >= ($scope.objects.length)) {
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
-                    } else {
+                    } else {                        
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
+                        //disable object table
+                        $scope.objectCtrlSettings.loadingObjectCount += 1;
+                        $timeout(function () {
+                            $scope.objectCtrlSettings.loadingObjectCount -= 1;
+                        }, 300);
                     }
                 };                                
                 
@@ -2121,7 +2141,7 @@ angular.module('portalNMC')
 // ***********************************************************************************************                
 //                  Object monitor
 // ***********************************************************************************************
-                $scope.$on('monitorObjects:getObjectEvents', function(event, args){
+                $scope.$on('monitorObjects:getObjectEvents', function(event, args) {                  
                     var obj = args.obj;
                     var imgObj = "#objState" + obj.id;        
                     $(imgObj).qtip({
@@ -2133,6 +2153,46 @@ angular.module('portalNMC')
                         }
                     }); 
                 });
+                
+                function setEventsForObject(objId) {                    
+                    var imgObj = "#objState" + objId;
+console.log($(imgObj));                    
+                    $(imgObj).qtip({
+                        content: {
+                            text: "Загружаются сообытия...",
+                        },
+                        ajax: {
+                            url: "../api/subscr/contEvent/notifications/contObject" + "/" + objId + "/monitorEventsV2",
+                            type: 'GET',
+                            data: {},
+                            success: function (data, status) {
+                                                //if data is not array - exit
+                                if (!data.hasOwnProperty('length') || (data.length === 0)) {
+                                    return;
+                                }
+                                //temp array
+                                var tmpMessage = "";
+                //                var tmpMessageEx = "";
+                                //make the new array of the types wich formatted to display
+                                data.forEach(function (element) {
+            //console.log(element);                        
+                                    var tmpEvent = "";
+                                    var contEventTime = new Date(element.contEventTime);
+                                    var pstyle = "";
+                                    if (element.contEventLevelColorKeyname === "RED") {
+                                        pstyle = "color: red;";
+                                    }
+                                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+                                    tmpMessage += tmpEvent;
+                                });
+                                this.set('content.text', tmpMessage);
+                            }
+                        },
+                        style: {
+                            classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                        }
+                    });
+                }
 // ***********************************************************************************************                
 //                  end Object monitor
 // ***********************************************************************************************
