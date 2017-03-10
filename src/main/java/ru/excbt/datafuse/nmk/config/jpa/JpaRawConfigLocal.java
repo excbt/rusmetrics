@@ -43,10 +43,10 @@ public class JpaRawConfigLocal {
 	@ConfigurationProperties(prefix = "raw.datasource")
 	public static class RawDBProps {
 		private String type;
+        private String driverClassName;
 		private String url;
 		private String username;
 		private String password;
-		private String driverClassName;
 	}
 
 	/**

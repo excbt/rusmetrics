@@ -50,7 +50,7 @@ public class SLogWriterService {
 		Properties props = new Properties();
 		props.put("dataSource.username",sLogDBProps.getUsername());
 		props.put("dataSource.password",sLogDBProps.getPassword());
-		props.put("dataSource.driverClassName",sLogDBProps.getType());
+		props.put("dataSource.driverClassName",sLogDBProps.getDriverClassName());
 		props.put("dataSource.url",sLogDBProps.getUrl());
 		props.put("slog.schema",sLogDBProps.getSchema());
 		this.sLogService = SLogService.newSLogService(props);
