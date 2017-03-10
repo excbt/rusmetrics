@@ -559,7 +559,7 @@
 				<logback.loglevel>WARN</logback.loglevel>
 				<!-- default Spring profiles -->
 				<spring.profiles.active>prod</spring.profiles.active>
-            	<rp.build.warname>testapp</rp.build.warname>
+            	<rp.build.warname>portal</rp.build.warname>
 			</properties>
 		</profile>
         <profile>
