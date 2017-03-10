@@ -43,16 +43,17 @@ public class JpaConfigLocal {
 	@ConfigurationProperties(prefix = "portal.datasource")
 	public static class PortalDBProps {
 		private String type;
+        private String driverClassName;
 		private String url;
 		private String username;
 		private String password;
-		private String driverClassName;
 	}
 
 	@Data
     @ConfigurationProperties(prefix = "slog.datasource")
 	public static class SLogDBProps {
         private String type;
+        private String driverClassName;
         private String url;
         private String username;
         private String password;
