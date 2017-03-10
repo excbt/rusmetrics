@@ -14,11 +14,11 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 
 import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 
-//@Profile(value = "!SAML")
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@Profile(value = "!SAML")
 public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired

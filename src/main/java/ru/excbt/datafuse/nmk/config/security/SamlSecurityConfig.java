@@ -86,14 +86,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.excbt.datafuse.nmk.security.SAMLSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 
-//@Profile("SAML")
-//@Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true)
-//@PropertySource(value = "classpath:META-INF/saml-idp.properties")
-//@ComponentScan(basePackages = { "org.springframework.security.saml" })
-//@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-@Deprecated
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
+@PropertySource(value = "classpath:META-INF/saml-idp.properties")
+@ComponentScan(basePackages = { "org.springframework.security.saml" })
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Profile(value = "SAML")
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SamlSecurityConfig.class);
