@@ -70,7 +70,7 @@ portal:
         hikari:
             connection-test-query: SELECT 1
             minimum-idle: 3
-            maximum-pool-size: 5
+            maximum-pool-size: 20
             pool-name: master
 
 raw:
