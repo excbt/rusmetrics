@@ -7,7 +7,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Типы отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.07.2015
@@ -52,7 +52,7 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_BAD_PERIODS_REPORT(37, "hw_bad_periods", ReportSystem.PENTAHO), //
 	HW_QUALITY_1_REPORT(38, "hw_quality_1", ReportSystem.PENTAHO), //
 	HW_QUALITY_2_REPORT(39, "hw_quality_2", ReportSystem.PENTAHO), //
-	RMA_ZPOINT_STAT_REPORT(39, "rma_zpoint_stat", ReportSystem.PENTAHO); //
+	RMA_ZPOINT_STAT_REPORT(40, "rma_zpoint_stat", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;
@@ -78,7 +78,7 @@ public enum ReportTypeKey implements KeynameObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlName
 	 * @return
 	 */
