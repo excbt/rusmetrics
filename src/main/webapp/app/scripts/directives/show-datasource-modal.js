@@ -1,8 +1,8 @@
-/*jslint node: true, white: true*/
+/*jslint node: true, eqeq: true*/
 /*global angular, $*/
 'use strict';
-angular.module('portalNMC')
-    .directive('showDatasourceModal', function(){
+var app  = angular.module('portalNMC');
+app.directive('showDatasourceModal', function () {
     return {
         restrict: "AE",
         replace: true,
@@ -15,7 +15,7 @@ angular.module('portalNMC')
             
         },
         templateUrl: "scripts/directives/templates/show-datasource-modal.html",
-        controller: ['$scope', '$http', 'mainSvc', function($scope, $http, mainSvc){
+        controller: ['$scope', '$http', 'mainSvc', function ($scope, $http, mainSvc) {
             
                 //default raw data source params
             var TIMEOUT = 25;
@@ -25,14 +25,14 @@ angular.module('portalNMC')
             var RECONNECT_TIMEOUT = 60;
             var MODEM_DIAL_TEL_LENGTH = 10;
             var DATA_SOURCE_TYPE_KEY_DEFAULT = "DEVICE";
-            var RAW_CONNECTION_TYPE_DEFAULT = "SERVER";            
+            var RAW_CONNECTION_TYPE_DEFAULT = "SERVER";
             var rawModemModelsUrl = "../api/rma/dataSources/rawModemModels";
             
             
-            function getRawModemModels(){
-                $http.get(rawModemModelsUrl).then(function(resp){            
+            function getRawModemModels() {
+                $http.get(rawModemModelsUrl).then(function (resp) {
                     $scope.rawModemModels = resp.data;
-                }, function(e){
+                }, function (e) {
                     console.log(e);
                 });
             }
@@ -49,13 +49,13 @@ angular.module('portalNMC')
                 }
             ];
             
-            function findModemIdentity(mmId){
-                if ($scope.rawModemModels.length === 0){
+            function findModemIdentity(mmId) {
+                if ($scope.rawModemModels.length === 0) {
                     return null;
                 }
                 var result = null;
-                $scope.rawModemModels.some(function(model){
-                    if (model.id === mmId){
+                $scope.rawModemModels.some(function (model) {
+                    if (model.id === mmId) {
                         result = model;
                         return true;
                     }
@@ -63,13 +63,13 @@ angular.module('portalNMC')
                 return result;
             }
             
-            $scope.changeModemModel = function(){
+            $scope.changeModemModel = function () {
                 var modemModel = findModemIdentity($scope.currentDatasource.rawModemModelId);
-                $scope.currentDatasource.rawModemIdentity = modemModel.rawModemModelIdentity;        
+                $scope.currentDatasource.rawModemIdentity = modemModel.rawModemModelIdentity;
                 $scope.currentDatasource.rawModemDialupAvailable = modemModel.isDialup;
             };
             
-            $scope.checkPositiveNumberValue = function(num){
+            $scope.checkPositiveNumberValue = function (num) {
                 return mainSvc.checkPositiveNumberValue(num);
             };
             
@@ -77,7 +77,7 @@ angular.module('portalNMC')
                 return $scope.readOnly;
             };
             
-            $('#showDatasourceModal').on('shown.bs.modal', function(){
+            $('#showDatasourceModal').on('shown.bs.modal', function () {
                 $("#inputDataSourceMode").focus();
         //        inputDSTimeout inputDSCheckInterval inputDSRepeatCount inputDSReconnectionCount inputDSReconnectionInterval
                 $("#inputDSTimeout").inputmask();
@@ -86,23 +86,23 @@ angular.module('portalNMC')
                 $("#inputDSReconnectionCount").inputmask();
                 $("#inputDSReconnectionInterval").inputmask();
                 
-                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawTimeout)){
+                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawTimeout)) {
                     $scope.currentDatasource.rawTimeout = TIMEOUT;
                 }
-                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawSleepTime)){
+                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawSleepTime)) {
                     $scope.currentDatasource.rawSleepTime = SLEEPTIME;
                 }
-                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawResendAttempts)){
+                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawResendAttempts)) {
                     $scope.currentDatasource.rawResendAttempts = RESENDS;
                 }
-                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawReconnectAttempts)){
+                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawReconnectAttempts)) {
                     $scope.currentDatasource.rawReconnectAttempts = RECONNECTS;
                 }
-                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawReconnectTimeout)){
+                if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawReconnectTimeout)) {
                     $scope.currentDatasource.rawReconnectTimeout = RECONNECT_TIMEOUT;
                 }
                 if (mainSvc.checkUndefinedNull($scope.currentDatasource.rawModemIdentity) &&
-                    !mainSvc.checkUndefinedNull($scope.currentDatasource.rawModemModelId)){
+                        !mainSvc.checkUndefinedNull($scope.currentDatasource.rawModemModelId)) {
                     var modemModel = findModemIdentity($scope.currentDatasource.rawModemModelId);
                     $scope.currentDatasource.rawModemIdentity = modemModel.rawModemModelIdentity;
                     $scope.currentDatasource.rawModemDialupAvailable = modemModel.isDialup;

@@ -1,10 +1,10 @@
-/*jslint node: true, white: true, nomen: true, eqeq: true*/
+/*jslint node: true, nomen: true, eqeq: true*/
 /*global angular, $, moment*/
 'use strict';
 //Service decides common tasks for all portal
 
-angular.module('portalNMC')
-.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 'monitorSvc', '$q', '$timeout', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout) {
+var app = angular.module('portalNMC');
+app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 'monitorSvc', '$q', '$timeout', function ($cookies, $http, $rootScope, $log, objectSvc, monitorSvc, $q, $timeout) {
     
     var RADIX = 10;//for parseInt
     
@@ -13,15 +13,15 @@ angular.module('portalNMC')
         isUseColorHighlightIndicatorData = true,
         isViewSystemInfo = true;
     
-    function getUseTest () {
+    function getUseTest() {
         return isUseTest;
     }
     
-    function getUseColorHighlightIndicatorData () {
+    function getUseColorHighlightIndicatorData() {
         return isUseColorHighlightIndicatorData;
     }
     
-    function getViewSystemInfo () {
+    function getViewSystemInfo() {
         return isViewSystemInfo;
     }
     
@@ -44,7 +44,7 @@ angular.module('portalNMC')
     
     var contextIds = [];
     
-    function checkUndefinedNull (numvalue) {
+    function checkUndefinedNull(numvalue) {
         var result = false;
         if ((angular.isUndefined(numvalue)) || (numvalue == null)) {
             result = true;
@@ -59,28 +59,28 @@ angular.module('portalNMC')
     function isCancelParamsIncorrect() {
         return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
     }
-    function getRequestCanceler () {
+    function getRequestCanceler() {
         return requestCanceler;
     }
     ////////////////////////////
     
-    function checkEmptyObject (obj) {
+    function checkEmptyObject(obj) {
         return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
     
-    var getContextIds = function(){
+    var getContextIds = function () {
         return contextIds;
     };
     
-    var getLoadingServicePermissionFlag = function(){
+    var getLoadingServicePermissionFlag = function () {
         return mainSvcSettings.loadingServicePermissionFlag;
     };
     
-    var getLoadedServicePermission = function(){
+    var getLoadedServicePermission = function () {
         return mainSvcSettings.loadedServicePermission;
     };
     
-    function getServerTimeZone () {
+    function getServerTimeZone() {
         return mainSvcSettings.serverTimeZone;
     }
     
@@ -98,53 +98,53 @@ angular.module('portalNMC')
     //main menu settings
     
     //setters and getters
-    var getObjectMapSettings = function(){
+    var getObjectMapSettings = function () {
         return objectMapSettings;
     };
     
-    var getMonitorMapSettings = function(){
+    var getMonitorMapSettings = function () {
         return monitorMapSettings;
     };
     
-    var setObjectMapSettings = function(mapSettings){
+    var setObjectMapSettings = function (mapSettings) {
         objectMapSettings = mapSettings;
     };
-    var setMonitorMapSettings = function(mapSettings){
+    var setMonitorMapSettings = function (mapSettings) {
         monitorMapSettings = mapSettings;
     };
     
     // callback for error-respond from server
-    function errorCallbackConsole(e){
+    function errorCallbackConsole(e) {
         console.log(e);
     }
     
     //methods for the work with the dates
-    var dateFormating = function(millisec, dateFormat){
-        var result ="";
-        var serverTimeZoneDifferent = Math.round(mainSvcSettings.serverTimeZone*3600.0*1000.0);
+    var dateFormating = function (millisec, dateFormat) {
+        var result = "";
+        var serverTimeZoneDifferent = Math.round(mainSvcSettings.serverTimeZone * 3600.0 * 1000.0);
         var tmpDate = (new Date(millisec + serverTimeZoneDifferent));
         result = (tmpDate === null) ? "" : moment([tmpDate.getUTCFullYear(), tmpDate.getUTCMonth(), tmpDate.getUTCDate(), tmpDate.getUTCHours(), tmpDate.getUTCMinutes()]).format(dateFormat);
         return result;//
     };
         //get UTC time from the string with date
-    var strDateToUTC = function(strWithDate, strFormat){       
+    var strDateToUTC = function (strWithDate, strFormat) {
         var stDate = (new Date(moment(strWithDate, strFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601      
-        var result = (!isNaN(stDate.getTime()))?Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate()):null;
+        var result = (!isNaN(stDate.getTime())) ? Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate()) : null;
         return result;
     };
         
-    var checkStrForDate = function(strWithDate){
+    var checkStrForDate = function (strWithDate) {
         //check date for format: DD/MM/YYYY
-        if (/(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)\d\d/.test(strWithDate)){
+        if (/(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)\d\d/.test(strWithDate)) {
             return true;
-        }  
+        }
         return false;
     };
     
-    function addTimeOffset (val, label) {
+    function addTimeOffset(val, label) {
         var result = "";
-        if (val > 0){
-            if (val < 10){
+        if (val > 0) {
+            if (val < 10) {
                 result += "0";
             }
             result += val + label;
@@ -152,13 +152,13 @@ angular.module('portalNMC')
         return result;
     }
 
-    function prepareTimeOffset (rawTimeOffset) {
+    function prepareTimeOffset(rawTimeOffset) {
         var result = null;
-        if (!checkUndefinedNull(rawTimeOffset)){
+        if (!checkUndefinedNull(rawTimeOffset)) {
 //console.log(rawTimeOffset);
-            if (rawTimeOffset.timeDeltaSign === 1){
+            if (rawTimeOffset.timeDeltaSign === 1) {
                 result = "+";
-            }else{
+            } else {
                 result = "-";
             }
 
@@ -175,34 +175,34 @@ angular.module('portalNMC')
     
     //date range settings
     var dateRangeOptsRu = {
-        locale : {
-            applyClass : 'btn-green',
-            applyLabel : "Применить",
-            fromLabel : "с",
-            toLabel : "по",
-            cancelLabel : 'Отмена',
-            customRangeLabel : 'Период',
-            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
-            firstDay : 1,
-            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+        locale: {
+            applyClass: 'btn-green',
+            applyLabel: "Применить",
+            fromLabel: "с",
+            toLabel: "по",
+            cancelLabel: 'Отмена',
+            customRangeLabel: 'Период',
+            daysOfWeek: [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay: 1,
+            monthNames: [ 'Январь', 'Февраль', 'Март', 'Апрель',
                     'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
                     'Октябрь', 'Ноябрь', 'Декабрь' ]
         },
-        ranges : {
+        ranges: {
             'Текущий день' : [ moment().startOf('day'),
                     moment().endOf('day') ],
             'Посл 7 дней' : [
-                    moment().subtract(6, 'days').startOf('day'),
-                    moment().endOf('day') ],
+                moment().subtract(6, 'days').startOf('day'),
+                moment().endOf('day') ],
             'Посл 30 дней' : [
-                    moment().subtract(29, 'days').startOf('day'),
-                    moment().endOf('day') ]
+                moment().subtract(29, 'days').startOf('day'),
+                moment().endOf('day') ]
         },
         startDate : moment($cookies.fromDate) || moment().subtract(6, 'days').startOf('day'),
         endDate : moment($cookies.toDate) || moment().endOf('day'),
 
-        format : 'DD.MM.YYYY'
-        ,separator: " по "
+        format : 'DD.MM.YYYY',
+        separator: " по "
     };
     
     var dateRangeMonitorOptsRu = dateRangeOptsRu;
@@ -210,21 +210,25 @@ angular.module('portalNMC')
     dateRangeMonitorOptsRu.endDate = moment().endOf('day');
     dateRangeMonitorOptsRu.maxDate = moment().endOf('day');
     
-    var getDateRangeOptions = function(param, settings){
+    var getDateRangeOptions = function (param, settings) {
         var result = null;
-        switch (param){
-            case "ru": result = dateRangeOptsRu; break;
-            case "monitor-ru": result = dateRangeMonitorOptsRu; break;
-            case "indicator-ru":                 
-                result = angular.copy(dateRangeMonitorOptsRu);
-                result.startDate = (angular.isDefined($cookies.fromDate) && ($cookies.fromDate != null)) ? moment($cookies.fromDate).startOf('day') : moment($rootScope.reportStart).startOf('day');
-                result.endDate = (angular.isDefined($cookies.toDate) && ($cookies.toDate != null)) ? moment($cookies.toDate).startOf('day'): moment($rootScope.reportEnd).startOf('day');
-                if (!checkUndefinedNull(settings)){
-                    if (!checkUndefinedNull(settings.minDate)){
-                        result.minDate = settings.minDate;
-                    }
+        switch (param) {
+        case "ru":
+            result = dateRangeOptsRu;
+            break;
+        case "monitor-ru":
+            result = dateRangeMonitorOptsRu;
+            break;
+        case "indicator-ru":
+            result = angular.copy(dateRangeMonitorOptsRu);
+            result.startDate = (angular.isDefined($cookies.fromDate) && ($cookies.fromDate != null)) ? moment($cookies.fromDate).startOf('day') : moment($rootScope.reportStart).startOf('day');
+            result.endDate = (angular.isDefined($cookies.toDate) && ($cookies.toDate != null)) ? moment($cookies.toDate).startOf('day') : moment($rootScope.reportEnd).startOf('day');
+            if (!checkUndefinedNull(settings)) {
+                if (!checkUndefinedNull(settings.minDate)) {
+                    result.minDate = settings.minDate;
                 }
-                break;
+            }
+            break;
         }
         return result;
     };
@@ -243,30 +247,30 @@ angular.module('portalNMC')
 //        return result;
 //    };
     
-    var hasMapSettings = function(userInfo){
+    var hasMapSettings = function (userInfo) {
         var result = false;
         result = !checkUndefinedNull(userInfo.subscriber);
-        result=result&&!checkUndefinedNull(userInfo.subscriber.mapCenterLat);
+        result = result && !checkUndefinedNull(userInfo.subscriber.mapCenterLat);
     };
     
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl, httpOptions)
-            .success(function (data, satus, headers, config) {        
-                var tmp = angular.copy(data);
+        .success(function (data, satus, headers, config) {
+            var tmp = angular.copy(data);
 //                tmp.userName = "Администратор Всея Руси";
 //                tmp.subscriber.subscriberName = "Большая и Малая, Белая и остальная Русь"
-                if (tmp.userName.length > 10) {
-                    tmp.userNameCaption = tmp.userName.substring(0, 10) + "...";
-                } else {
-                    tmp.userNameCaption = tmp.userName;
-                }
-                if (tmp.subscriber.subscriberName.length > 15) {
-                    tmp.userSubscrCaption = tmp.subscriber.subscriberName.substring(0, 15) + "...";
-                } else {
-                    tmp.userSubscrCaption = tmp.subscriber.subscriberName;
-                }                
-                $rootScope.userInfo = tmp;
+            if (tmp.userName.length > 10) {
+                tmp.userNameCaption = tmp.userName.substring(0, 10) + "...";
+            } else {
+                tmp.userNameCaption = tmp.userName;
+            }
+            if (tmp.subscriber.subscriberName.length > 15) {
+                tmp.userSubscrCaption = tmp.subscriber.subscriberName.substring(0, 15) + "...";
+            } else {
+                tmp.userSubscrCaption = tmp.subscriber.subscriberName;
+            }
+            $rootScope.userInfo = tmp;
 //console.log($rootScope.userInfo);
 //                if (!checkUndefinedNull($rootScope.userInfo.subscriber)){                    
 //                    var mapSettings = {};
@@ -288,47 +292,47 @@ angular.module('portalNMC')
 //                    };
 //                    
 //                };
-            })
-            .error(function(e){
-                console.log(e);
-    });
+        })
+        .error(function (e) {
+            console.log(e);
+        });
     
     // *************** load map settings *********************
     // **********************************************************
-    function loadMapSetting(setting, target, broadcastMsg){
+    function loadMapSetting(setting, target, broadcastMsg) {
         var url = prefUrl +  "?subscrPrefKeyname=" + setting;
-        $http.get(url, httpOptions).then(function(resp){            
-            mainSvcSettings.mapSettings[target] = resp.data.value;           
-            if (!checkUndefinedNull(broadcastMsg)){
+        $http.get(url, httpOptions).then(function (resp) {
+            mainSvcSettings.mapSettings[target] = resp.data.value;
+            if (!checkUndefinedNull(broadcastMsg)) {
                 $rootScope.$broadcast(broadcastMsg);
             }
         }, errorCallbackConsole);
     }
     
-    function loadMapCenterLat(){        
+    function loadMapCenterLat() {
         loadMapSetting(LAT_MAP_PREF, "mapCenterLat", 'mainSvc:loadMapCenterLng');
     }
     
-    function loadMapCenterLng(){        
+    function loadMapCenterLng() {
         loadMapSetting(LNG_MAP_PREF, "mapCenterLng", 'mainSvc:loadMapZoom');
     }
     
-    function loadMapZoom(){       
+    function loadMapZoom() {
         loadMapSetting(ZOOM_MAP_PREF, "mapZoom", 'mainSvc:setMapSettingsInServices');
     }
     //load main map setting. If it is active == true, then load other map prefs
-    function loadMapSettings(){
+    function loadMapSettings() {
         var url = prefUrl + "?subscrPrefKeyname=" + MAP_PREF;
-        $http.get(url, httpOptions).then(function(resp){
+        $http.get(url, httpOptions).then(function (resp) {
             var mapPref = resp.data;
-            if (mapPref.isActive === true){            
-                $rootScope.$broadcast('mainSvc:loadMapCenterLat');                
+            if (mapPref.isActive === true) {
+                $rootScope.$broadcast('mainSvc:loadMapCenterLat');
             }
         }, errorCallbackConsole);
     }
     
-    function setMapSettingsInServices(){      
-        if (!checkEmptyObject(mainSvcSettings.mapSettings)){        
+    function setMapSettingsInServices() {
+        if (!checkEmptyObject(mainSvcSettings.mapSettings)) {
             objectSvc.setObjectSettings(mainSvcSettings.mapSettings);
             monitorSvc.setMonitorSettings(mainSvcSettings.mapSettings);
         }
@@ -340,61 +344,61 @@ angular.module('portalNMC')
     $rootScope.$on('mainSvc:setMapSettingsInServices', setMapSettingsInServices);
     // end of load map settings ****************
     
-    var getProp = function(obj, propName){
+    var getProp = function (obj, propName) {
         var result = false;
-        if (angular.isDefined(obj)){
+        if (angular.isDefined(obj)) {
             result = obj[propName];
         }
         return result;
     };
         //check user: system? - true/false
-    var isSystemuser = function(){
+    var isSystemuser = function () {
         var result = false;
         var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)){
+        if (angular.isDefined(userInfo)) {
             result = userInfo._system;
         }
         return result;
     };
     
             //check user: rma? - true/false
-    var isRma = function(){
+    var isRma = function () {
         var result = false;
         var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)){
+        if (angular.isDefined(userInfo)) {
             result = userInfo.isRma;
         }
         return result;
     };
     
                 //check user: admin? - true/false
-    var isAdmin = function(){
+    var isAdmin = function () {
         var result = false;
         var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)){
+        if (angular.isDefined(userInfo)) {
             result = userInfo.isAdmin;
         }
         return result;
     };
     
-    var isCabinet = function(){
+    var isCabinet = function () {
         return getProp($rootScope.userInfo, "isCabinet");
     };
     
                     //check user rights: read only?:  - true/false
-    var isReadonly = function(){
+    var isReadonly = function () {
         var result = false;
         var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)){
+        if (angular.isDefined(userInfo)) {
             result = userInfo.isReadonly;
         }
         return result;
     };
     
             //check test user
-    function isTestUser () {
+    function isTestUser() {
         var result = true;
-        if (!checkUndefinedNull($rootScope.userInfo)){
+        if (!checkUndefinedNull($rootScope.userInfo)) {
             result = (getProp($rootScope.userInfo, "subscrType") === "TEST_CERTIFICATE");
         }
         return result;
@@ -414,30 +418,30 @@ angular.module('portalNMC')
     ];
     
     //get user permission
-    var getUserServicesPermissions = function(){
+    var getUserServicesPermissions = function () {
         mainSvcSettings.loadingServicePermissionFlag = true;
-        var targetUrl = mainSvcSettings.servicePermissionUrl;    
+        var targetUrl = mainSvcSettings.servicePermissionUrl;
         mainSvcSettings.loadedServicePermission = $http.get(targetUrl, httpOptions)
-        .then(function(response){
-            var tmp = response.data;
-            contextIds = tmp;
-            if (!isCabinet()){
-                contextIds.push(externalAllow[0], externalAllow[1]);
-            }
-//console.log(tmp);            
-            mainSvcSettings.loadingServicePermissionFlag = false;
-            $rootScope.$broadcast('servicePermissions:loaded');
-        },
-              function(e){
-            console.log(e);
-            mainSvcSettings.loadingServicePermissionFlag = false;
-        });
+            .then(function (response) {
+                var tmp = response.data;
+                contextIds = tmp;
+                if (!isCabinet()) {
+                    contextIds.push(externalAllow[0], externalAllow[1]);
+                }
+    //console.log(tmp);            
+                mainSvcSettings.loadingServicePermissionFlag = false;
+                $rootScope.$broadcast('servicePermissions:loaded');
+            },
+                  function (e) {
+                    console.log(e);
+                    mainSvcSettings.loadingServicePermissionFlag = false;
+                });
     };
     
-    var checkContext = function(ctxId){       
-        var result = false;       
-        contextIds.some(function(curCtx){           
-            if (curCtx.permissionTagId.localeCompare(ctxId) === 0){               
+    var checkContext = function (ctxId) {
+        var result = false;
+        contextIds.some(function (curCtx) {
+            if (curCtx.permissionTagId.localeCompare(ctxId) === 0) {
                 result = true;
                 return true;
             }
@@ -448,43 +452,43 @@ angular.module('portalNMC')
     
     //checkers
     
-    var checkEmptyNullValue = function(numvalue){                    
+    var checkEmptyNullValue = function (numvalue) {
         var result = false;
-        if ((numvalue === "") || (numvalue==null)){
+        if ((numvalue === "") || (numvalue == null)) {
             result = true;
             return result;
         }
         return result;
     };
     
-    var checkUndefinedEmptyNullValue = function(numvalue){                    
+    var checkUndefinedEmptyNullValue = function (numvalue) {
         var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue == null) || (numvalue === "")){
+        if ((angular.isUndefined(numvalue)) || (numvalue == null) || (numvalue === "")) {
             result = true;
         }
         return result;
     };
 
     function isNumeric(n) {
-      return !isNaN(parseFloat(n)) && isFinite(n);
+        return !isNaN(parseFloat(n)) && isFinite(n);
     }
     
-    var checkNumericValue = function(numvalue){ 
+    var checkNumericValue = function (numvalue) {
         var result = true;
-        if (checkEmptyNullValue(numvalue)){
+        if (checkEmptyNullValue(numvalue)) {
             return result;
         }
-        if (!isNumeric(numvalue)){
+        if (!isNumeric(numvalue)) {
             result = false;
             return result;
         }
         return result;
     };
     
-    var checkPositiveNumberValue = function(numvalue){        
+    var checkPositiveNumberValue = function (numvalue) {
         var result = true;
         result = checkNumericValue(numvalue);
-        if (!result){          
+        if (!result) {
             //if numvalue is not number -> return false
             return result;
         }
@@ -500,39 +504,39 @@ angular.module('portalNMC')
         }
     }
     
-    var checkHHmm = function(hhmmValue){
-        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
+    var checkHHmm = function (hhmmValue) {
+        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
             return true;
         }
         return false;
     };
     
-    function isTestMode () {
+    function isTestMode() {
         return getUseTest() && isTestUser();
     }
     
     ///////////////// end checkers
     
-    function findItemBy (itemArray, fieldName, value){
+    function findItemBy(itemArray, fieldName, value) {
         var result = null;
-        if (!angular.isArray(itemArray)){
+        if (!angular.isArray(itemArray)) {
             console.log("Input value is no array.");
             return result;
         }
-        if (checkUndefinedNull(value)){
+        if (checkUndefinedNull(value)) {
             console.log("value for search is undefined or null.");
             return result;
         }
-        if (checkUndefinedNull(fieldName)){
-            itemArray.some(function(item){
-                if (item == value){
+        if (checkUndefinedNull(fieldName)) {
+            itemArray.some(function (item) {
+                if (item == value) {
                     result = item;
                     return true;
                 }
             });
-        }else{
-            itemArray.some(function(item){
-                if (item[fieldName] == value){
+        } else {
+            itemArray.some(function (item) {
+                if (item[fieldName] == value) {
                     result = item;
                     return true;
                 }
@@ -542,54 +546,54 @@ angular.module('portalNMC')
     }
     
     // Sort object array by some string field
-    function sortItemsBy (itemArray, sortField) {
-        if (!angular.isArray(itemArray)){
+    function sortItemsBy(itemArray, sortField) {
+        if (!angular.isArray(itemArray)) {
             return "Input value is no array.";
         }
-        if (checkUndefinedNull(sortField)){
+        if (checkUndefinedNull(sortField)) {
             return "Field for sort is undefined or null.";
         }
-        itemArray.sort(function(firstItem, secondItem){
-            if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
+        itemArray.sort(function (firstItem, secondItem) {
+            if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])) {
                 return 0;
             }
-            if (checkUndefinedNull(firstItem[sortField])){
+            if (checkUndefinedNull(firstItem[sortField])) {
                 return -1;
             }
-            if (checkUndefinedNull(secondItem[sortField])){
+            if (checkUndefinedNull(secondItem[sortField])) {
                 return 1;
             }
-            if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
+            if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()) {
                 return 1;
             }
-            if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
+            if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()) {
                 return -1;
             }
             return 0;
         });
     }
     
-    function sortNumericItemsBy (itemArray, sortField) {
-        if (!angular.isArray(itemArray)){
+    function sortNumericItemsBy(itemArray, sortField) {
+        if (!angular.isArray(itemArray)) {
             return "Input value is no array.";
         }
-        if (checkUndefinedNull(sortField)){
+        if (checkUndefinedNull(sortField)) {
             return "Field for sort is undefined or null.";
         }
-        itemArray.sort(function(firstItem, secondItem){
-            if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
+        itemArray.sort(function (firstItem, secondItem) {
+            if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])) {
                 return 0;
             }
-            if (checkUndefinedNull(firstItem[sortField])){
+            if (checkUndefinedNull(firstItem[sortField])) {
                 return -1;
             }
-            if (checkUndefinedNull(secondItem[sortField])){
+            if (checkUndefinedNull(secondItem[sortField])) {
                 return 1;
             }
-            if (firstItem[sortField] > secondItem[sortField]){
+            if (firstItem[sortField] > secondItem[sortField]) {
                 return 1;
             }
-            if (firstItem[sortField] < secondItem[sortField]){
+            if (firstItem[sortField] < secondItem[sortField]) {
                 return -1;
             }
             return 0;
@@ -597,8 +601,8 @@ angular.module('portalNMC')
     }
     
     // Sort organizations by organizationName
-    var sortOrganizationsByName = function(orgArr){
-        if (!angular.isArray(orgArr)){
+    var sortOrganizationsByName = function (orgArr) {
+        if (!angular.isArray(orgArr)) {
             return "Param is no array.";
         }
         sortItemsBy(orgArr, "organizationName");
@@ -617,17 +621,17 @@ angular.module('portalNMC')
     // **************************
 //    var firstNum = Math.round(Math.random()*10);
 //    var secondNum = Math.round(Math.random()*100);
-    var getConfirmCode = function(useImprovedMethodFlag){
+    var getConfirmCode = function (useImprovedMethodFlag) {
 //console.log(useImprovedMethodFlag);        
-        var leftCoef = Math.random()*10;
-        var rightCoef = Math.random()*100;
-        if (!checkUndefinedNull(useImprovedMethodFlag) && useImprovedMethodFlag === true){
-            leftCoef = Math.random()*1000 + 100;
-            rightCoef = Math.random()*1000 + 100;
+        var leftCoef = Math.random() * 10;
+        var rightCoef = Math.random() * 100;
+        if (!checkUndefinedNull(useImprovedMethodFlag) && useImprovedMethodFlag === true) {
+            leftCoef = Math.random() * 1000 + 100;
+            rightCoef = Math.random() * 1000 + 100;
         }
         var tmpFirst = Math.round(leftCoef);
         var tmpSecond = Math.round(rightCoef);
-        var tmpLabel = tmpFirst+" + "+tmpSecond+" = ";
+        var tmpLabel = tmpFirst + " + " + tmpSecond + " = ";
         var result = {
 //            firstNum: tmpFirst,
 //            secondNum: tmpSecond,
@@ -708,13 +712,13 @@ angular.module('portalNMC')
         }
     ];
     
-    function getServerErrorByResultCode (resultCode){
+    function getServerErrorByResultCode(resultCode) {
 //console.log(resultCode);
         var result = DEFAULT_ERROR_MESSAGE;
-        if (checkUndefinedEmptyNullValue(resultCode)){return result;}
-        serverErrors.some(function(serror){
+        if (checkUndefinedEmptyNullValue(resultCode)) { return result; }
+        serverErrors.some(function (serror) {
             if (serror.resultCode == resultCode) {
-                result = serror; 
+                result = serror;
                 return true;
             }
         });
@@ -755,16 +759,16 @@ angular.module('portalNMC')
     //*******************************************************************************
     //  Индиктор загрузки для отчетов
     //*******************************************************************************
-    var htmlLoading = '<head>' 
-                    + '<meta charset="utf-8">' 
+    var htmlLoading = '<head>'
+                    + '<meta charset="utf-8">'
                     + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>'
                     + '</head>'
-                    + '<body>' 
+                    + '<body>'
                     + '<div  ng-show="loading" class="nmc-loading">'
                     + '<i class="fa fa-spinner fa-spin"></i> Загрузка ... '
                     + '</div>'
                     + '</body>';
-    var getHtmlLoading = function(){
+    var getHtmlLoading = function () {
         return htmlLoading;
     };
     //*******************************************************************************
@@ -775,16 +779,16 @@ angular.module('portalNMC')
     //                      Work with trees
     // *********************************************************************************************
             //find node at tree by childObjectList
-    var findNodeInTree = function(node, tree){
+    var findNodeInTree = function (node, tree) {
         var result = null;
-        if (!angular.isArray(tree.childObjectList)){
+        if (!angular.isArray(tree.childObjectList)) {
             return result;
         }
-        tree.childObjectList.some(function(curNode){
-            if (node.id == curNode.id && node.objectName == curNode.objectName){
+        tree.childObjectList.some(function (curNode) {
+            if (node.id == curNode.id && node.objectName == curNode.objectName) {
                 result = curNode;
                 return true;
-            }else{
+            } else {
                 result = findNodeInTree(node, curNode);
                 return result != null;
             }
@@ -792,53 +796,53 @@ angular.module('portalNMC')
         return result;
     };
     
-    var sortTreeNodesBy = function(tree, fieldName){
-        if (checkUndefinedNull(tree.childObjectList) || !angular.isArray(tree.childObjectList)){
+    var sortTreeNodesBy = function (tree, fieldName) {
+        if (checkUndefinedNull(tree.childObjectList) || !angular.isArray(tree.childObjectList)) {
             return;
         }
         sortItemsBy(tree.childObjectList, fieldName);
-        tree.childObjectList.forEach(function(node){
+        tree.childObjectList.forEach(function (node) {
             sortTreeNodesBy(node, fieldName);
-        });                    
+        });
     };
     
     // *********************************************************************************************
     //                     end Work with trees
     // *********************************************************************************************
     
-    var setToolTip_old = function(title, text, elDom, targetDom, delay, width){
+    var setToolTip_old = function (title, text, elDom, targetDom, delay, width) {
         var tDelay = 1;
-        if (!checkUndefinedNull(delay)){
+        if (!checkUndefinedNull(delay)) {
             tDelay = delay;
         }
         var tWidth = 1000;
-        if (!checkUndefinedNull(width)){
+        if (!checkUndefinedNull(width)) {
             tWidth = width;
         }
 //console.log(elDom);                
 //console.log(targetDom);    
 //console.log($(elDom));        
 //console.log($(targetDom));        
-        $timeout(function(){
+        $timeout(function () {
 //console.log($(elDom));            
             $(elDom).qtip({
                 suppress: false,
-                content:{
+                content: {
                     text: text,
                     title: title,
                     button : true
                 },
-                show:{
+                show: {
                     event: 'click'
                 },
-                style:{
+                style: {
                     classes: 'qtip-nmc-indicator-tooltip',
                     width: tWidth
                 },
                 hide: {
                     event: 'unfocus'
                 },
-                position:{
+                position: {
                     my: 'top right',
                     at: 'bottom right',
                     target: $(targetDom)
@@ -847,51 +851,51 @@ angular.module('portalNMC')
         }, tDelay);
     };
     
-    var setToolTip = function(title, text, elDom, targetDom, delay, width, my, at, qtipclass){
+    var setToolTip = function (title, text, elDom, targetDom, delay, width, my, at, qtipclass) {
         var tDelay = 1;
-        if (!checkUndefinedNull(delay)){
+        if (!checkUndefinedNull(delay)) {
             tDelay = delay;
         }
         var tWidth = 1000;
-        if (!checkUndefinedNull(width)){
+        if (!checkUndefinedNull(width)) {
             tWidth = width;
         }
         var tMy = 'top right';
-        if (!checkUndefinedNull(my)){
+        if (!checkUndefinedNull(my)) {
             tMy = my;
         }
         var tAt = 'bottom right';
-        if (!checkUndefinedNull(at)){
+        if (!checkUndefinedNull(at)) {
             tAt = at;
         }
         var tQtipClass = 'qtip-nmc-indicator-tooltip';
-        if (!checkUndefinedNull(qtipclass)){
+        if (!checkUndefinedNull(qtipclass)) {
             tQtipClass = qtipclass;
         }
 //console.log(elDom);                
 //console.log(targetDom);    
 //console.log($(elDom));        
 //console.log($(targetDom));        
-        $timeout(function(){
+        $timeout(function () {
 //console.log($(elDom));            
             $(elDom).qtip({
                 suppress: false,
-                content:{
+                content: {
                     text: text,
                     title: title,
                     button : true
                 },
-                show:{
+                show: {
                     event: 'click'
                 },
-                style:{
+                style: {
                     classes: tQtipClass,
                     width: tWidth
                 },
                 hide: {
                     event: 'unfocus'
                 },
-                position:{
+                position: {
                     my: tMy,
                     at: tAt,
                     target: $(targetDom)
@@ -907,7 +911,7 @@ angular.module('portalNMC')
         };
         
         loadMapSettings();
-    }    
+    }
     initSvc();
     
     return {

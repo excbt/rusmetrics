@@ -1,8 +1,8 @@
-/*jslint node: true, white: true, nomen: true, eqeq: true*/
+/*jslint node: true, nomen: true, eqeq: true*/
 /*global angular*/
 'use strict';
 angular.module('portalNMC')
-    .service('meterPeriodsSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', function($http, $cookies, $interval, $rootScope, $q) {
+    .service('meterPeriodsSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', function ($http, $cookies, $interval, $rootScope, $q) {
         
         var METER_PERIOD_SETTING_URl = "../api/subscr/meter-period-settings";
         
@@ -17,9 +17,10 @@ angular.module('portalNMC')
             return $http(
                 {
                     method: rmethod,
-                    url: METER_PERIOD_SETTING_URl, 
+                    url: METER_PERIOD_SETTING_URl,
                     data: dataRms
-                });
+                }
+            );
         }
         function deleteMeterPeriod(meterPeriodId) {
             $http.delete(METER_PERIOD_SETTING_URl + "/" + meterPeriodId);

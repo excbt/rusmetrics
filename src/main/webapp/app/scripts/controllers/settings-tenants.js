@@ -713,6 +713,15 @@ angular.module('portalNMC')
                 var curObject = angular.copy(item);
                 $scope.currentObject = curObject;
             };
+                
+            var checkGeo = function () {
+                $scope.currentObject.geoState = "red";
+                $scope.currentObject.geoStateText = "Не отображается на карте";
+                if ($scope.currentObject.isValidGeoPos || (!mainSvc.checkUndefinedNull($scope.currentSug) && ($scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null))) {
+                    $scope.currentObject.geoState = "green";
+                    $scope.currentObject.geoStateText = "Отображается на карте";
+                }
+            };
 
             $scope.selectedObject = function (objId, isLightForm) {
                 subscrCabinetsSvc.getRmaObject(objId)
@@ -1066,15 +1075,6 @@ angular.module('portalNMC')
                 return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
             };
 
-            var checkGeo = function () {
-                $scope.currentObject.geoState = "red";
-                $scope.currentObject.geoStateText = "Не отображается на карте";
-                if ($scope.currentObject.isValidGeoPos || (!mainSvc.checkUndefinedNull($scope.currentSug) && ($scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null))) {
-                    $scope.currentObject.geoState = "green";
-                    $scope.currentObject.geoStateText = "Отображается на карте";
-                }
-            };
-
             $(document).ready(function () {
                 $('#inputTSNumber').inputmask();
                 $('#inputEXCode').inputmask();
@@ -1228,6 +1228,37 @@ angular.module('portalNMC')
                 }
                 trueParentRoot.childObjectList.push(newNode);
             };
+                
+            var checkTree = function (tree) {
+                var result = true;
+                if ($scope.emptyString(tree.objectName)) {
+                    notificationFactory.errorInfo("Ошибка", "Не задано наименование!");
+                    result = false;
+                }
+                return result;
+            };
+            
+            var findTemplateItemById = function (templId) {
+                var result = null;
+                $scope.data.currentTreeTemplateItems.some(function (item) {
+                    if (templId == item.id) {
+                        result = item;
+                        return true;
+                    }
+                });
+                return result;
+            };
+                
+            var findTemplateItemByItemLevel = function (level) {
+                var result = null;
+                $scope.data.currentTreeTemplateItems.some(function (item) {
+                    if (level == item.itemLevel) {
+                        result = item;
+                        return true;
+                    }
+                });
+                return result;
+            };
 
             $scope.saveNode = function (newNode, parent, anotherNodeFlag) {
                 var isCheckTree = checkTree(newNode);
@@ -1279,15 +1310,6 @@ angular.module('portalNMC')
                     //update tree in array
                 }, errorProtoCallback);
 
-            };
-
-            var checkTree = function (tree) {
-                var result = true;
-                if ($scope.emptyString(tree.objectName)) {
-                    notificationFactory.errorInfo("Ошибка", "Не задано наименование!");
-                    result = false;
-                }
-                return result;
             };
 
             $scope.saveTree = function (tree) {
@@ -1419,28 +1441,6 @@ angular.module('portalNMC')
                 }, errorProtoCallback);
             };
 
-            var findTemplateItemById = function (templId) {
-                var result = null;
-                $scope.data.currentTreeTemplateItems.some(function (item) {
-                    if (templId == item.id) {
-                        result = item;
-                        return true;
-                    }
-                });
-                return result;
-            };
-
-            var findTemplateItemByItemLevel = function (level) {
-                var result = null;
-                $scope.data.currentTreeTemplateItems.some(function (item) {
-                    if (level == item.itemLevel) {
-                        result = item;
-                        return true;
-                    }
-                });
-                return result;
-            };
-
             $scope.addNodeDisabled = function (curItem) {
                 if (mainSvc.checkUndefinedNull(curItem.templateItemId)) {
                     return false;
@@ -1490,6 +1490,11 @@ angular.module('portalNMC')
 // ********************************************************************************************
             //  Print tenant info
 //*********************************************************************************************               
+            function pageCleaner() {
+                $('body').removeClass('printSelected');
+                $('.printSelection').remove();
+            }
+                
             $scope.printTenant = function () {
                 $('body').addClass('printSelected'); //добавляем класс <body>      
                 $('body').append("<div class='printSelection'></div>"); //создаем "призрачный" блок для печати
@@ -1499,11 +1504,7 @@ angular.module('portalNMC')
                 window.print(); // выводи на печать      
                 window.setTimeout(pageCleaner, 0); // затираем следы 
             };
-
-            function pageCleaner() {
-                $('body').removeClass('printSelected');
-                $('.printSelection').remove();
-            }
+            
 // ********************************************************************************************
             //  end Print tenant info
 //*********************************************************************************************                                                  
@@ -1540,12 +1541,12 @@ angular.module('portalNMC')
                         return true;
                     }
                 });
-            }    
+            }
             
             function setPeriodForObject(omp) {
                 findObjectByIdAndSetPeriod($scope.objects, omp);
-                findObjectByIdAndSetPeriod($scope.objectsOnPage, omp);                
-            }    
+                findObjectByIdAndSetPeriod($scope.objectsOnPage, omp);
+            }
 
             function successLoadMeterPeriodsCallback(resp) {
                 console.log(resp);
@@ -1583,7 +1584,7 @@ angular.module('portalNMC')
 //                    console.log(resp);
                     resp.data.forEach(function (omp) {
                         setPeriodForObject(omp);
-                    });                    
+                    });
                 }, errorCallback);
             }
 
@@ -1622,7 +1623,7 @@ angular.module('portalNMC')
                 if (!angular.isArray(inputData)) {
                     console.log("Meter period data for resource systems is incorrect.");
                     return false;
-                }                
+                }
                 var objectIds = prepareObjectsIdsArray();
                 if (objectIds.length === 0) {
                     return "Cabinet array is empty.";
@@ -1644,7 +1645,7 @@ angular.module('portalNMC')
                     resp.data.forEach(function (omp) {
                         setPeriodForObject(omp);
                     });
-                }, errorCallback)
+                }, errorCallback);
 //                subscrCabinetsSvc.createCabinets(objectIds).then(successCabinetsCallback, errorCallback);
             }
                 
@@ -1678,14 +1679,14 @@ angular.module('portalNMC')
                 if (mainSvc.checkUndefinedNull(result.meterPeriodSettings)) {
                     console.log("Meter period settings is incorrect.");
                     return false;
-                }                
+                }
 
                 objectSvc.setMeterPeriodForObject(result).then(function (resp) {
                     console.log(resp);
                     openMeterPeriodsModalFlag = false;
                     getMeterPeriodByObject(resp.data.id);
                 }, errorCallback);
-            }    
+            }
 
             $scope.saveMeterPeriodSettings = function (inputData) {
                 if (multiPeriodSettingFlag === false) {
@@ -1709,4 +1710,4 @@ angular.module('portalNMC')
             };
             initCtrl();
 //            }]
-}]);
+        }]);

@@ -1,4 +1,4 @@
-/*jslint node: true, es5: true, white: true, nomen: true*/
+/*jslint node: true, es5: true, white: true, nomen: true, eqeq: true*/
 /*global angular, moment, $*/
 'use strict';
 angular.module('portalNMC')
@@ -421,7 +421,7 @@ angular.module('portalNMC')
         if (tmpTDTypeParts.length > 1) {
             $scope.timeType = tmpTDTypeParts[0];
             $scope.detailType = "_" + tmpTDTypeParts[1];
-        } else if (tmpTDTypeParts.length = 1) {
+        } else if (tmpTDTypeParts.length == 1) {
             $scope.timeType = tmpTDTypeParts[0];
             $scope.detailType = "";
         } else {
@@ -542,8 +542,9 @@ angular.module('portalNMC')
             $scope.tableDef.columns.some(function(element) {    
                 var indicatorTd = document.getElementById("indicators_th_" + element.fieldName);
                 var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
+                var indicatorHead1 = null;
                 if (!mainSvc.checkUndefinedNull($scope.deviceMu)) {
-                    var indicatorHead1 = document.getElementById("indicators_head1_" + element.fieldName);
+                    indicatorHead1 = document.getElementById("indicators_head1_" + element.fieldName);
                 }
 //                var indicatorTdh = document.getElementById("indicators_tdh_" + element.fieldName);
 //console.log("indicators_td_"+element.fieldName);                

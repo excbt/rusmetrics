@@ -1,4 +1,4 @@
-/*jslint node: true*/
+/*jslint node: true, eqeq: true*/
 /*global angular, moment, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -229,7 +229,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.saveObjectAsNew = function (tariff) {
         var tmpTariff = angular.copy(tariff);
         tmpTariff.id = null;
-        $scope.saveObject(tmpTariff);        
+        $scope.saveObject(tmpTariff);
     };
     
     var activateMainPropertiesTab = function () {

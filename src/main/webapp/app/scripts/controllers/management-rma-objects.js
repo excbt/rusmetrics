@@ -1,9 +1,8 @@
 /*jslint node: true, white: true, nomen: true, eqeq: true*/
 /*global angular, $, alert, moment*/
 'use strict';
-angular.module('portalNMC')
-.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+var app = angular.module('portalNMC');
+app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
                 $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();

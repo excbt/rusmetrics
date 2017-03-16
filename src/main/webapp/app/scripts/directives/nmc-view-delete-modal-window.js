@@ -1,5 +1,8 @@
-angular.module('portalNMC')
-.directive('nmcViewDeleteModalWindow', function(){
+/*jslint node: true*/
+/*global angular, $*/
+'use strict';
+var app = angular.module('portalNMC');
+app.directive('nmcViewDeleteModalWindow', function () {
     return {
         restrict: "AE",
         replace: false,
@@ -11,14 +14,14 @@ angular.module('portalNMC')
             deleteItemClick: "&",
             isSystemuser: "&"
         },
-        controller: function($scope){
+        controller: ['$scope', function ($scope) {
             $scope.confirmCode = null;
-            $('#deleteWindowModal').on('shown.bs.modal', function(){
+            $('#deleteWindowModal').on('shown.bs.modal', function () {
 //console.log(deleteItemClick);                
             });
-            $('#deleteWindowModal').on('hidden.bs.modal', function(){
-                $scope.confirmCode = null;                              
+            $('#deleteWindowModal').on('hidden.bs.modal', function () {
+                $scope.confirmCode = null;
             });
-        }
-    }
+        }]
+    };
 });

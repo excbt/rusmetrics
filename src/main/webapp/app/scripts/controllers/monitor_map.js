@@ -1,5 +1,8 @@
-angular.module('portalNMC')
-.controller('MonitorMapCtrl', function($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc, mainSvc, $timeout){
+/*jslint node: true, eqeq: true, nomen: true*/
+/*global angular, $, moment*/
+'use strict';
+var app = angular.module('portalNMC');
+app.controller('MonitorMapCtrl', ['$rootScope', '$scope', '$compile', '$cookies', '$http', 'monitorSvc', 'objectSvc', 'mainSvc', '$timeout', function ($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc, mainSvc, $timeout) {
     $rootScope.ctxId = "monitor_map_page";
     $scope.mapSettings = {};
     $scope.mapSettings.zoomBound = 9; //zoom>zoomBound - view objects on map; zoom<zoomBound - view cities on map
@@ -8,13 +11,13 @@ angular.module('portalNMC')
     $scope.mapSettings.ctxId = "monitor_map_page";
     
     var noticesUrl = "#/notices/list/";
-    var notificationsUrl = "../api/subscr/contEvent/notifications"; 
+    var notificationsUrl = "../api/subscr/contEvent/notifications";
     var objectUrl = notificationsUrl + "/contObject";//"resource/objects.json";  
     var monitorUrl = notificationsUrl + "/monitorColor";
     
-    var markers = new Array();
-    var markersForCities = new Array();
-    var markersOnMap = new Array();
+    var markers = [];//new Array();
+    var markersForCities = [];//new Array();
+    var markersOnMap = [];//new Array();
     
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
 //    objectSvc.sortObjectsByFullName($scope.objects);
@@ -22,9 +25,9 @@ angular.module('portalNMC')
     $scope.cities = monitorSvc.getAllMonitorCities();
 //console.log($scope.cities);    
     
-    if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoomDetail)){
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoomDetail)) {
         $scope.mapSettings.zoomDetail = Number(monitorSvc.getMonitorSettings().mapZoomDetail);
-    };
+    }
     
     //cities positions
     $scope.izhevsk = {
@@ -35,21 +38,21 @@ angular.module('portalNMC')
     
     var mapCenter = $scope.izhevsk; //center of map
     //get map settings from user context
-    if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoom)){
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoom)) {
         mapCenter.zoom = Number(monitorSvc.getMonitorSettings().mapZoom);
-    };
-    if (angular.isDefined(monitorSvc.getMonitorSettings().mapCenterLat)){
+    }
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapCenterLat)) {
         mapCenter.lat = Number(monitorSvc.getMonitorSettings().mapCenterLat);
-    };
-    if (angular.isDefined(monitorSvc.getMonitorSettings().mapCenterLng)){
+    }
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapCenterLng)) {
         mapCenter.lng = Number(monitorSvc.getMonitorSettings().mapCenterLng);
-    };
+    }
     
-    angular.extend($scope,{
-       mapCenter 
+    angular.extend($scope, {
+        mapCenter: mapCenter
     });
     
-    var gothicCrossMarker ={
+    var gothicCrossMarker = {
         iconUrl: 'images/gothicCross-512.png',
         iconSize: [30, 30]
     };
@@ -63,7 +66,7 @@ angular.module('portalNMC')
         shape: 'circle'
     };
     
-    var mapbox_wheat= {
+    var mapbox_wheat = {
         name: 'Mapbox Wheat Paste',
         url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
         type: 'xyz',
@@ -81,42 +84,54 @@ angular.module('portalNMC')
     };
     
     $scope.currentTile = openstreetmap; //set curent tile
+    
+        
+    function findObjectById(objId) {
+        var obj = null;
+        $scope.objects.some(function (element) {
+            if (element.contObject.id === objId) {
+                obj = element;
+                return true;
+            }
+        });
+        return obj;
+    }
 
     //get event types by object  - modify version for popup
-    $scope.getEventTypesByObjectModFn = function(objId){
-        var obj = findObjectById(objId);    
+    $scope.getEventTypesByObjectModFn = function (objId) {
+        var obj = findObjectById(objId);
         //if cur object = null => exit function
-        if (obj == null){
+        if (obj == null) {
             return;
-        };
+        }
       
-        var url = objectUrl+"/"+obj.contObject.id+"/eventTypes/statusCollapse"+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
+        var url = objectUrl + "/" + obj.contObject.id + "/eventTypes/statusCollapse" + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
 //console.log(url);          
         return $http.get(url);
     };
     
-    $scope.prepareObjectMarker = function(obj){  
-        var markerMessage = "<div id='"+obj.contObject.id+"'>";
-        markerMessage += ""+obj.contObject.fullName+"<br>";
-        markerMessage+="<hr class='nmc-hr-in-modal'>";
+    $scope.prepareObjectMarker = function (obj) {
+        var markerMessage = "<div id='" + obj.contObject.id + "'>";
+        markerMessage += obj.contObject.fullName + "<br>";
+        markerMessage += "<hr class='nmc-hr-in-modal'>";
 //        "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
-        markerMessage +="Уведомлений: <a title='Всего уведомлений' href='"+noticesUrl+"?objectMonitorId="+obj.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"' ng-mousedown='setNoticeFilterByObject("+obj.contObject.id+")'>"+obj.eventsCount+"</a>, непрочитанных: <a title='Непрочитанные уведомления' href='"+noticesUrl+"?objectMonitorId="+obj.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&isNew=true' ng-mousedown='setNoticeFilterByObjectAndRevision("+obj.contObject.id+")'>"+obj.newEventsCount+"</a><br>";
-        markerMessage+="<hr class='nmc-hr-in-modal'>";
+        markerMessage += "Уведомлений: <a title='Всего уведомлений' href='" + noticesUrl + "?objectMonitorId=" + obj.contObject.id + "&monitorFlag=true&fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd + "' ng-mousedown='setNoticeFilterByObject(" + obj.contObject.id + ")'>" + obj.eventsCount + "</a>, непрочитанных: <a title='Непрочитанные уведомления' href='" + noticesUrl + "?objectMonitorId=" + obj.contObject.id + "&monitorFlag=true&fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd + "&isNew=true' ng-mousedown='setNoticeFilterByObjectAndRevision(" + obj.contObject.id + ")'>" + obj.newEventsCount + "</a><br>";
+        markerMessage += "<hr class='nmc-hr-in-modal'>";
 //        if (obj.eventsCount === 0){
 //            markerMessage+="<div>";
 //            markerMessage+="За указанный период на объекте не было нештатных ситуаций";
 //            markerMessage+="</div>";
 //        };
         
-        marker = {};        
-        marker.focus=false;
+        var marker = {};
+        marker.focus = false;
         marker.lng = obj.contObjectGeo.geoPosX;
         marker.lat = obj.contObjectGeo.geoPosY;
-        marker.getMessageScope= function () { 
-                var newScope = $scope.$new(true);
-                angular.extend(newScope, {setNoticeFilterByObject: $scope.setNoticeFilterByObject});
-                angular.extend(newScope, {setNoticeFilterByObjectAndRevision: $scope.setNoticeFilterByObjectAndRevision});
-                angular.extend(newScope, {setNoticeFilterByObjectAndType: $scope.setNoticeFilterByObjectAndType});
+        marker.getMessageScope = function () {
+            var newScope = $scope.$new(true);
+            angular.extend(newScope, {setNoticeFilterByObject: $scope.setNoticeFilterByObject});
+            angular.extend(newScope, {setNoticeFilterByObjectAndRevision: $scope.setNoticeFilterByObjectAndRevision});
+            angular.extend(newScope, {setNoticeFilterByObjectAndType: $scope.setNoticeFilterByObjectAndType});
                 
 //                var promise = $scope.getEventTypesByObjectModFn(obj.contObject.id);
 //                promise.success(function(data){     
@@ -176,19 +191,20 @@ angular.module('portalNMC')
 //                    .error(function(e){
 //                        console.log(e);
 //                    });               
-                return newScope; };
-        marker.message = ""+markerMessage+"<div ng-repeat='em in eventMessages'> <a href='"+noticesUrl+"?objectMonitorId="+obj.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&typeId=em.id' ng-mousedown='setNoticeFilterByObjectAndType("+obj.contObject.id+",em.id)'><img ng-attr-title='{{em.title}}'ng-src='{{em.imgpath}}'/>{{em.name}} ({{em.count}}) </a></div>"+"</div>",
+            return newScope;
+        };
+        marker.message = markerMessage + "<div ng-repeat='em in eventMessages'> <a href='" + noticesUrl + "?objectMonitorId=" + obj.contObject.id + "&monitorFlag=true&fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd + "&typeId=em.id' ng-mousedown='setNoticeFilterByObjectAndType(" + obj.contObject.id + ",em.id)'><img ng-attr-title='{{em.title}}'ng-src='{{em.imgpath}}'/>{{em.name}} ({{em.count}}) </a></div>" + "</div>";
         marker.compileMessage = true;
         marker.icon = {};
         marker.icon = angular.copy(monitorMarker); //set current marker
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         marker.contObjectId = obj.contObject.id;
         marker.isCityMarker = false;
-        marker.icon.markerColor = obj.statusColor.toLowerCase()==="orange"?"orange":obj.statusColor.toLowerCase();    
+        marker.icon.markerColor = obj.statusColor.toLowerCase() === "orange" ? "orange" : obj.statusColor.toLowerCase();
         return marker;
     };
     
-    var viewObjectsOnMap = function(cityFiasUUID){
+    var viewObjectsOnMap = function (cityFiasUUID) {
 //console.log("viewObjectsOnMap."); 
         //clear popup
         var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
@@ -196,84 +212,94 @@ angular.module('portalNMC')
        
         var mc = {};
         var curCity = null;
-        $scope.cities.some(function(elem){
-            if (elem.cityFiasUUID === cityFiasUUID){
+        $scope.cities.some(function (elem) {
+            if (elem.cityFiasUUID === cityFiasUUID) {
                 mc.lat = elem.cityGeoPosY;
                 mc.lng = elem.cityGeoPosX;
-                curCity = elem;             
+                curCity = elem;
                 return true;
-            };
+            }
         });
       
-        mc.zoom = $scope.mapSettings.zoomDetail || $scope.mapSettings.zoomBound+2;
+        mc.zoom = $scope.mapSettings.zoomDetail || $scope.mapSettings.zoomBound + 2;
 //        $scope.mapCenter.zoom = $scope.mapSettings.zoomBound+1;
         angular.extend($scope, {mapCenter: mc});
         
         var tmpObjects = curCity.contEventNotificationStatuses;
-        markers = new Array();
-        markers = $scope.setObjectsOnMap(tmpObjects);     
-console.log(markers);        
+        markers = [];//new Array();
+        markers = $scope.setObjectsOnMap(tmpObjects);
+//console.log(markers);
 
         $scope.viewCurrentCityObjectsFlag = true;
         $scope.markersOnMap = [];
-        $timeout(function(){
+        $timeout(function () {
             $scope.markersOnMap = markers;
         }, 10);
     //console.log(markersOnMap);    
 //        angular.extend($scope, {markersOnMap});
     };
     
-    var viewObjectDetails = function(cityFiasUUID){        
+    var viewObjectDetails = function (cityFiasUUID) {
+//console.log(cityFiasUUID);        
 //console.log("viewObjectDetails.");     
         $scope.currentCity = {};
-        $scope.cities.some(function(elem){
-            if (elem.cityFiasUUID === cityFiasUUID){
+        $scope.cities.some(function (elem) {
+//console.log(elem.cityFiasUUID);
+//console.log(mainSvc.checkUndefinedNull(elem.cityFiasUUID));
+//console.log(cityFiasUUID == null);
+//console.log(cityFiasUUID == 'null');            
+//console.log(elem.cityFiasUUID === cityFiasUUID || (mainSvc.checkUndefinedNull(elem.cityFiasUUID) && mainSvc.checkUndefinedNull(cityFiasUUID)));
+            if (elem.cityFiasUUID === cityFiasUUID || (mainSvc.checkUndefinedNull(elem.cityFiasUUID) && cityFiasUUID == 'null')) {
                 $scope.currentCity = angular.copy(elem);
                 return true;
-            };
+            }
         });
-console.log($scope.currentCity);        
-        var objectsArr = $scope.currentCity.contEventNotificationStatuses;
-      
-        objectSvc.sortObjectsByConObjectFullName(objectsArr);        
-        objectsArr.forEach(function(obj){
-            if ((obj.statusColor === "RED") ||(obj.statusColor === "YELLOW") ){
-console.log(obj);
-                monitorSvc.getMonitorEventsByObjectForMap(obj);
-            };        });
+//console.log($scope.currentCity);
+        if (!mainSvc.checkEmptyObject($scope.currentCity)) {
+            var objectsArr = $scope.currentCity.contEventNotificationStatuses;
+
+            objectSvc.sortObjectsByConObjectFullName(objectsArr);
+            objectsArr.forEach(function (obj) {
+                if ((obj.statusColor === "RED") || (obj.statusColor === "YELLOW")) {
+    //console.log(obj);
+                    monitorSvc.getMonitorEventsByObjectForMap(obj);
+                }
+            });
+        }
         $('#showObjectsDetailModal').modal();
     };
     
-    $scope.prepareCityMarker = function(city){ 
+    $scope.prepareCityMarker = function (city) {
 //console.log(city) ;        
-        if ((city.cityGeoPosX === null) || (city.cityGeoPosY===null)){
+        if ((city.cityGeoPosX === null) || (city.cityGeoPosY === null)) {
             return;
-        };
-        var markerMessage = "<div id='"+city.cityFiasUUID+"'>";
-        markerMessage += ""+city.cityName+", "+city.contEventNotificationStatuses.length+" объектов <button class='glyphicon glyphicon-search marginLeft5' ng-click='viewObjectsOnMap(\""+city.cityFiasUUID+"\")' title='См. объекты на карте'></button><br>";
-        markerMessage+="<hr class='nmc-hr-in-modal'>";
+        }
+        var markerMessage = "<div id='" + city.cityFiasUUID + "'>";
+        markerMessage += city.cityName + ", " + city.contEventNotificationStatuses.length + " объектов <button class='glyphicon glyphicon-search marginLeft5' ng-click='viewObjectsOnMap(\"" + city.cityFiasUUID + "\")' title='См. объекты на карте'></button><br>";
+        markerMessage += "<hr class='nmc-hr-in-modal'>";
         
-        markerMessage+=""+city.monitorEventCount+" нештатных ситуаций";
-        if(city.monitorEventCount!==0){
-            markerMessage+="<button class='marginLeft5' ng-click='viewObjectDetails(\""+city.cityFiasUUID+"\")'>Подробнее...</button>";
-        };
+        markerMessage += city.monitorEventCount + " нештатных ситуаций";
+        if (city.monitorEventCount !== 0) {
+            markerMessage += "<button class='marginLeft5' ng-click='viewObjectDetails(\"" + city.cityFiasUUID + "\")'>Подробнее...</button>";
+        }
         var marker = {};
-        marker.focus= false;
-        marker.lng= city.cityGeoPosX;
-        marker.lat= city.cityGeoPosY;
-        marker.getMessageScope= function () { 
+        marker.focus = false;
+        marker.lng = city.cityGeoPosX;
+        marker.lat = city.cityGeoPosY;
+        marker.getMessageScope = function () {
             var newScope = $scope.$new(true);
             angular.extend(newScope, {curMarker: marker});
             angular.extend(newScope, {viewObjectsOnMap: viewObjectsOnMap});
             angular.extend(newScope, {viewObjectDetails: viewObjectDetails});
 //console.log(newScope);                
-            return newScope; },
-        marker.message = ""+markerMessage+"";
+            return newScope;
+        };
+        marker.message = markerMessage;
         marker.compileMessage = true;
-        marker.icon= angular.copy(monitorMarker); //set current marker
+        marker.icon = angular.copy(monitorMarker); //set current marker
         
         marker.cityFiasUUID = city.cityFiasUUID;
-        marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase()==="orange" ? "orange" : city.cityContEventLevelColor.toLowerCase(); //city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
+        marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase() === "orange" ? "orange" : city.cityContEventLevelColor.toLowerCase(); //city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
         
         marker.isCityMarker = true;
 //console.log(marker.icon.markerColor);        
@@ -281,93 +307,93 @@ console.log(obj);
         return marker;
     };
     
-    var deleteObjectMarkers = function(objectArray, markerArray){
+    var deleteObjectMarkers = function (objectArray, markerArray) {
         var deletedMarkers = [];
-        if ((angular.isDefined(markerArray.length))&&(markerArray.length!=0)){
-            markerArray.forEach(function(el, index){
-                if (angular.isUndefined(el.contObjectId)){
+        if ((angular.isDefined(markerArray.length)) && (markerArray.length != 0)) {
+            markerArray.forEach(function (el, index) {
+                if (angular.isUndefined(el.contObjectId)) {
                     return;
-                };
+                }
                 var isMarkerDelete = true;
-                objectArray.some(function(elem){
-                    if((elem.contObject.id===el.contObjectId)){
+                objectArray.some(function (elem) {
+                    if (elem.contObject.id === el.contObjectId) {
                         isMarkerDelete = false;
                         return true;
-                    };
+                    }
                 });
-                if (isMarkerDelete===true){
+                if (isMarkerDelete === true) {
                     deletedMarkers.push(index);
-                };
+                }
             });
             //delete markers
 //console.log(deletedMarkers);            
-            deletedMarkers.forEach(function(delIndexEl){
+            deletedMarkers.forEach(function (delIndexEl) {
                 markerArray.splice(delIndexEl, 1);
             });
-        };
+        }
         return markerArray;
     };
     
-    var deleteCityMarkers = function(objectsArray, markerArray){
+    var deleteCityMarkers = function (objectsArray, markerArray) {
         var deletedMarkers = [];
-        if ((angular.isDefined(markerArray.length))&&(markerArray.length!=0)){
-            markerArray.forEach(function(el, index){
-                if (angular.isUndefined(el.cityFiasUUID)){
+        if ((angular.isDefined(markerArray.length)) && (markerArray.length != 0)) {
+            markerArray.forEach(function (el, index) {
+                if (angular.isUndefined(el.cityFiasUUID)) {
                     return;
-                };
+                }
 //console.log(el);                
                 var isMarkerDelete = true;
-                objectsArray.some(function(elem){
-                    if((elem.cityFiasUUID===el.cityFiasUUID)){
+                objectsArray.some(function (elem) {
+                    if (elem.cityFiasUUID === el.cityFiasUUID) {
                         isMarkerDelete = false;
                         return true;
-                    };
+                    }
                 });
-                if (isMarkerDelete===true){
+                if (isMarkerDelete === true) {
                     deletedMarkers.push(index);
-                };
+                }
             });
             //delete markers
-            deletedMarkers.forEach(function(delIndexEl){
+            deletedMarkers.forEach(function (delIndexEl) {
                 markerArray.splice(delIndexEl, 1);
             });
-        };
+        }
         return markerArray;
     };
     
-    $scope.setCitiesOnMap = function(cityArray, markerArray){
+    $scope.setCitiesOnMap = function (cityArray, markerArray) {
 //console.log("4");                
 //console.log(cityArray);          
-        if (!angular.isArray(cityArray)||(cityArray.length === 0)||!angular.isArray(markerArray)){
+        if (!angular.isArray(cityArray) || (cityArray.length === 0) || !angular.isArray(markerArray)) {
             return;
-        };
+        }
 //        markerArray = deleteCityMarkers(cityArray, markerArray);
                 //check cities
-        cityArray.forEach(function(elem){
+        cityArray.forEach(function (elem) {
           
-            if(angular.isUndefined(elem.cityGeoPosX)||angular.isUndefined(elem.cityGeoPosY)||(elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
-console.warn("Warning. City without coordinates.");                
-console.warn(elem);                                
+            if (angular.isUndefined(elem.cityGeoPosX) || angular.isUndefined(elem.cityGeoPosY) || (elem.cityGeoPosX === null) || (elem.cityGeoPosY === null)) {
+                console.warn("Warning. City without coordinates.");
+                console.warn(elem);
                 return;
-            };
+            }
             var marker = {};
             var isMarkerExists = false;
-            if ((angular.isDefined(markerArray.length))&&(markerArray.length!=0)){
-                markerArray.some(function(el){
-                    if(angular.isUndefined(el.cityFiasUUID)){
+            if (angular.isDefined(markerArray.length) && (markerArray.length != 0)) {
+                markerArray.some(function (el) {
+                    if (angular.isUndefined(el.cityFiasUUID)) {
                         return false;
-                    };
-                    if((elem.cityFiasUUID===el.cityFiasUUID)){
+                    }
+                    if (elem.cityFiasUUID === el.cityFiasUUID) {
                         marker = el;
                         isMarkerExists = true;
                         return true;
-                    };
+                    }
                 });
-            };    
-            marker= $scope.prepareCityMarker(elem);  
-            if (isMarkerExists!==true){                
-                markerArray.push(marker);  
-            };  
+            }
+            marker = $scope.prepareCityMarker(elem);
+            if (isMarkerExists !== true) {
+                markerArray.push(marker);
+            }
             
         });
 //        var arrLength = markerArray.length;
@@ -381,27 +407,25 @@ console.warn(elem);
         return markerArray;
     };
     
-    $scope.setObjectsOnMap = function(objectArray){
+    $scope.setObjectsOnMap = function (objectArray) {
 //console.log("3");                
         var markerArray = [];
 //console.log(objectArray, markerArray);        
-        if (!angular.isArray(objectArray)||(objectArray.length === 0)||!angular.isArray(markerArray)){
+        if (!angular.isArray(objectArray) || (objectArray.length === 0) || !angular.isArray(markerArray)) {
             return;
-        };
+        }
         //check markers
 //        markerArray = deleteObjectMarkers(objectArray, markerArray);
 //        markerArray = deleteMarkers(objectArray, markerArray, 'contObject.id', 'contObjectId');
         
         //check objects
-        objectArray.forEach(function(elem){
+        objectArray.forEach(function (elem) {
 //console.log(elem);            
-            if(angular.isUndefined(elem.contObjectGeo) || 
-               angular.isUndefined(elem.contObjectGeo.geoPosX) || 
-               (elem.contObjectGeo  === null) || (elem.contObjectGeo.geoPosX === null)){
-console.warn("Warning. Object without coordinates.");                
-console.warn(elem);                                
+            if (angular.isUndefined(elem.contObjectGeo) || angular.isUndefined(elem.contObjectGeo.geoPosX) || (elem.contObjectGeo  === null) || (elem.contObjectGeo.geoPosX === null)) {
+                console.warn("Warning. Object without coordinates.");
+                console.warn(elem);
                 return;
-            };
+            }
             var marker = {};
 //            var isMarkerExists = false;
 //            if ((angular.isDefined(markerArray.length))&&(markerArray.length!=0)){
@@ -416,10 +440,10 @@ console.warn(elem);
 //                    };
 //                });
 //            };
-            marker=$scope.prepareObjectMarker(elem);
+            marker = $scope.prepareObjectMarker(elem);
     
 //            if (isMarkerExists!==true){
-                markerArray.push(marker);  
+            markerArray.push(marker);
 //            };      
         });
         
@@ -436,20 +460,20 @@ console.warn(elem);
     };
 
     //check zoom and set markers 
-    if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
+    if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound) {
 //console.log("1");        
         //set objects markers
-        markers = new Array();
-        markers = $scope.setObjectsOnMap($scope.objects);     
-    }else{
+        markers = [];//new Array();
+        markers = $scope.setObjectsOnMap($scope.objects);
+    } else {
 //console.log("2");                
         //set cities markers
-        markers= new Array();
-        $scope.setCitiesOnMap($scope.cities, markers);      
-    };
+        markers = [];//new Array();
+        $scope.setCitiesOnMap($scope.cities, markers);
+    }
     markersOnMap = markers;
 //console.log(markersOnMap);    
-    angular.extend($scope, {markersOnMap});
+    angular.extend($scope, {markersOnMap: markersOnMap});
     
     //for debugging
 //    $scope.$watch('markersOnMap',function(){
@@ -460,104 +484,93 @@ console.warn(elem);
 //console.log($scope.mapCenter);        
 //    }, false);
     
-    $scope.$on('monitorObjects:updated',function(){
+    $scope.$on('monitorObjects:updated', function () {
 //console.log('monitorObjects:updated');        
         $scope.objects = monitorSvc.getAllMonitorObjects();
 //        objectSvc.sortObjectsByFullName($scope.objects);
         $scope.cities = monitorSvc.getAllMonitorCities();
         //markers = [];
-        if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
-            markers = new Array();
+        if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound) {
+            markers = [];//new Array();
             markers = $scope.setObjectsOnMap($scope.objects);
-        }else{
-            markers = new Array();
-            $scope.setCitiesOnMap($scope.cities, markers);  
-        };
+        } else {
+            markers = [];//new Array();
+            $scope.setCitiesOnMap($scope.cities, markers);
+        }
         
-        if (angular.isArray($scope.markersOnMap)&&($scope.markersOnMap.length === 0)){
+        if (angular.isArray($scope.markersOnMap) && ($scope.markersOnMap.length === 0)) {
 //console.log(markersOnMap);        
             markersOnMap = markers;
-            angular.extend($scope,{markersOnMap});
-        }else{
+            angular.extend($scope, {markersOnMap: markersOnMap});
+        } else {
 //console.log(markersOnMap);
             $scope.markersOnMap = [];
-            $timeout(function(){
+            $timeout(function () {
                 $scope.markersOnMap = markers;
-            }, 10);    
-        };
+            }, 10);
+        }
         
         $scope.mapSettings.loadingFlag = false;
     });
     
 
-    $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
+    $scope.$watch("mapCenter.zoom", function (newZoom, oldZoom) {
 //console.log(newZoom);
 //console.log(oldZoom); 
-        monitorSvc.setMonitorSettings({mapZoom:newZoom});
+        monitorSvc.setMonitorSettings({mapZoom: newZoom});
 //        $cookies.monitorMapZoom = newZoom;
-        if (newZoom>$scope.mapSettings.zoomBound){
-            if (oldZoom<=$scope.mapSettings.zoomBound)
-            {  
+        var popupPane = null;
+        if (newZoom > $scope.mapSettings.zoomBound) {
+            if (oldZoom <= $scope.mapSettings.zoomBound) {
                 //clear open popup
-                var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+                popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
                 popupPane[0].innerHTML = "";
                 
-                if ($scope.viewCurrentCityObjectsFlag === true){
+                if ($scope.viewCurrentCityObjectsFlag === true) {
                     $scope.viewCurrentCityObjectsFlag = false;
                     return;
-                }else{
-                    markers = new Array();
+                } else {
+                    markers = [];//new Array();
 //console.log(markers);                    
                     markers = $scope.setObjectsOnMap($scope.objects);
-                };
-            };
-        };
-        if (newZoom<=$scope.mapSettings.zoomBound){
-            if (oldZoom>$scope.mapSettings.zoomBound){
+                }
+            }
+        }
+        if (newZoom <= $scope.mapSettings.zoomBound) {
+            if (oldZoom > $scope.mapSettings.zoomBound) {
                 //clear open popup
-                var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+                popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
                 popupPane[0].innerHTML = "";
-                markers = new Array();
+                markers = [];//new Array();
                 $scope.setCitiesOnMap($scope.cities, markers);
-            };    
-        };
+            }
+        }
         
-        if (angular.isArray($scope.markersOnMap) && ($scope.markersOnMap.length === 0)){
+        if (angular.isArray($scope.markersOnMap) && ($scope.markersOnMap.length === 0)) {
             markersOnMap = markers;
-            angular.extend($scope,{markersOnMap});
-        }else{
+            angular.extend($scope, {markersOnMap: markersOnMap});
+        } else {
             $scope.markersOnMap = [];
-            $timeout(function(){
+            $timeout(function () {
                 $scope.markersOnMap = markers;
-            }, 10);    
-        };
+            }, 10);
+        }
         
 //        angular.extend($scope,{markersOnMap});
         ///////////////////////////////////////
     }, false);
     
-    $scope.$watch('mapCenter.lat',function(newLat){
+    $scope.$watch('mapCenter.lat', function (newLat) {
 //        $cookies.monitorMapLat = newLat;
-        monitorSvc.setMonitorSettings({mapCenterLat:newLat});
+        monitorSvc.setMonitorSettings({mapCenterLat: newLat});
     });
-    $scope.$watch('mapCenter.lng',function(newLng){
+    $scope.$watch('mapCenter.lng', function (newLng) {
 //        $cookies.monitorMapLng = newLng;
-        monitorSvc.setMonitorSettings({mapCenterLng:newLng});
+        monitorSvc.setMonitorSettings({mapCenterLng: newLng});
     });
-    
-    function findObjectById(objId){
-        var obj = null;
-        $scope.objects.some(function(element){
-            if (element.contObject.id === objId){
-                obj = element;
-                return true;
-            }
-        });        
-        return obj;
-    };
         
     //Set filters for notice window
-    $scope.setNoticeFilterByObject = function(objId){
+    $scope.setNoticeFilterByObject = function (objId) {
 //console.log("setNoticeFilterByObject");        
 //        $rootScope.monitor = {};
 //        $cookies.monitorFlag = true;
@@ -571,78 +584,78 @@ console.warn(elem);
 //console.log($cookies);        
     };
     
-    $scope.setNoticeFilterByObjectAndRevision = function(objId){
+    $scope.setNoticeFilterByObjectAndRevision = function (objId) {
 //console.log("setNoticeFilterByObjectAndRevision");                
-        $scope.setNoticeFilterByObject(objId);        
+        $scope.setNoticeFilterByObject(objId);
 //        $cookies.isNew = true;        
 
     };
     
-    $scope.setNoticeFilterByObjectAndType = function(objId, typeId){
+    $scope.setNoticeFilterByObjectAndType = function (objId, typeId) {
 //console.log("setNoticeFilterByObjectAndType");                        
         $scope.setNoticeFilterByObject(objId);
 //        $cookies.typeIds = [typeId];
     };
     
-    $scope.isSystemuser = function(){       
+    $scope.isSystemuser = function () {
         return mainSvc.isSystemuser();
     };
     
     //listeners
-    $rootScope.$on('monitor:updateObjectsRequest', function(){
+    $rootScope.$on('monitor:updateObjectsRequest', function () {
         $scope.mapSettings.loadingFlag = true;
     });
     
         //key down listener
-    window.onkeydown = function(e){ 
-        if ((e.keyCode == 27)){
+    window.onkeydown = function (e) {
+        if (e.keyCode == 27) {
             var openedPopup = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
-            if (angular.isDefined(openedPopup)){
-                openedPopup[0].innerHTML= "";
-            };
+            if (angular.isDefined(openedPopup)) {
+                openedPopup[0].innerHTML = "";
+            }
             $scope.mapSettings.abortCompareFlag = true;
-        };
+        }
     };
     
         //off keydown listener, when go away from page
-    $scope.$on('$destroy', function() {       
+    $scope.$on('$destroy', function () {
         window.onkeydown = undefined;
     });
     
     //control visibles
-    var setVisibles = function(ctxId){
+    var setVisibles = function (ctxId) {
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
-        tmp.forEach(function(element){
-            if(element.permissionTagId.localeCompare(ctxId)==0){
+        tmp.forEach(function (element) {
+            if (element.permissionTagId.localeCompare(ctxId) == 0) {
                 ctxFlag = true;
-            };
+            }
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-            if (angular.isUndefined(elDOM)||(elDOM==null)){
+            if (angular.isUndefined(elDOM) || (elDOM == null)) {
                 return;
-            };              
-            $('#'+element.permissionTagId).removeClass('nmc-hide');
+            }
+            $('#' + element.permissionTagId).removeClass('nmc-hide');
         });
-        if (ctxFlag == false){
+        if (ctxFlag == false) {
             window.location.assign('#/');
-        };
+        }
     };
     setVisibles($scope.mapSettings.ctxId);
     //listen change of service list
-    $rootScope.$on('servicePermissions:loaded', function(){
+    $rootScope.$on('servicePermissions:loaded', function () {
         setVisibles($scope.mapSettings.ctxId);
-    });   
+    });
     
-    window.setTimeout(function(){
+    window.setTimeout(function () {
 //console.log("3");            
         setVisibles($scope.mapSettings.ctxId);
     }, 500);
     
-    function initCtrl(){
+    function initCtrl() {
         $scope.data.currentTree = monitorSvc.getMonitorSettings().currentTree;
         $scope.data.currentTreeNode = monitorSvc.getMonitorSettings().currentTreeNode;
-    };
+    }
     
     initCtrl();
     
-});
+}]);

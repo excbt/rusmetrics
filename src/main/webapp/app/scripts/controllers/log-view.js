@@ -1,4 +1,4 @@
-/*jslint node: true*/
+/*jslint node: true, eqeq: true*/
 /*global angular, moment, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -111,7 +111,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
             name: "endDate",
             caption: "Время завершения",
             headerClass: "col-xs-1 noPadding"
-        },*/ {
+        },*/
+        {
             name: "author",
             caption: "Инициатор",
             headerClass: "col-xs-1"

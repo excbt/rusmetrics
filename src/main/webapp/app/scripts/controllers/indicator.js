@@ -708,8 +708,8 @@ angular.module('portalNMC')
         $scope.deviceModel =indicatorSvc.getDeviceModel();
         $scope.deviceSN =indicatorSvc.getDeviceSN();
         
-        if (angular.isDefined(pathParams.isManualLoading)&&(pathParams.isManualLoading !== "null")){
-            $scope.isManualLoading = pathParams.isManualLoading === "true" ? true : false;;
+        if (angular.isDefined(pathParams.isManualLoading)&&(pathParams.isManualLoading !== "null")) {
+            $scope.isManualLoading = pathParams.isManualLoading === "true" ? true : false;
          }
         
         //clear cookies
@@ -784,7 +784,7 @@ angular.module('portalNMC')
                 var tmp = data.objects.map(function(el, ind){                                        
 //                    var result  = {};
                     var i;
-                    for(i in $scope.columns) {
+                    for (i in $scope.columns) {
                         if ($scope.columns[i].fieldName === "dataDate") {
 //console.log("Indicator id = "+el.id);                            
 //console.log("Indicator timestamp in millisec, which get from server = "+el.dataDate);
@@ -800,7 +800,7 @@ angular.module('portalNMC')
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         }
                         if ((el[$scope.columns[i].fieldName] === null) && ($scope.columns[i].fieldName === "m_delta")) {
-                            if ((el.m_out !== null) && (el.m_in !== null)){
+                            if ((el.m_out !== null) && (el.m_in !== null)) {
                                 el[$scope.columns[i].fieldName] = (el.m_in - el.m_out).toFixed(3);
                             }
                         }
@@ -822,7 +822,7 @@ angular.module('portalNMC')
         })
         .error(errorCallback);
          
-        $scope.setScoreStyles = function(){
+        $scope.setScoreStyles = function () {
             //ровняем таблицу, если появляются полосы прокрутки
             var tableHeader = document.getElementById("indicatorTableHeader");
             var tableDiv = document.getElementById("divIndicatorTable");
@@ -878,7 +878,7 @@ angular.module('portalNMC')
             
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
 //            $scope.intotalColumns.forEach(function(element){
-            $scope.intotalColumns.some(function(element) {    
+            $scope.intotalColumns.some(function (element) {    
                 var indicatorTh = document.getElementById("indicators_th_" + element.fieldName);
                 var indicatorHead = document.getElementById("indicators_head_" + element.fieldName);
                 if ((angular.isDefined(indicatorTh)) && (indicatorTh != null)) {

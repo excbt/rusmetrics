@@ -1,5 +1,8 @@
-angular.module('portalNMC')
-.controller('ElectricitySpecCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope){
+/*jslint node: true*/
+/*global angular*/
+'use strict';
+var app = angular.module('portalNMC');
+app.controller('ElectricitySpecCtrl', ['$scope', '$http', 'indicatorSvc', 'mainSvc', '$location', '$cookies', '$rootScope', function ($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope) {
 //console.log("Run ElectricitySpecCtrl.");
     $scope.electroKind = "Spec";
     ///api/subscr/66948436/serviceElProfile/30min/159919982
@@ -16,7 +19,7 @@ angular.module('portalNMC')
             fieldName: "dataDateString",
             type: "string",
             date: true
-        }, 
+        },
         {
             header : "Ua, V",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
@@ -82,6 +85,6 @@ angular.module('portalNMC')
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "deviceTemp"
-        },
+        }
     ];
-});
+}]);

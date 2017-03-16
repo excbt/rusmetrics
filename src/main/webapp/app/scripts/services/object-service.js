@@ -1,13 +1,14 @@
-/*jslint node: true, white: true, nomen: true, eqeq: true*/
+/*jslint node: true, nomen: true, eqeq: true, es5: true*/
 /*global angular*/
 'use strict';
-angular.module('portalNMC')
-    .service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
-             function($http, $cookies, $interval, $rootScope, $q){
+var app = angular.module('portalNMC');
+app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
+             function ($http, $cookies, $interval, $rootScope, $q) {
 //console.log("Object Service. Run."); 
                  
         var svcObjects = [
-            {fullName: "Ошибка. Объекты не были загружены."
+            {
+                fullName: "Ошибка. Объекты не были загружены."
             }
         ];
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
@@ -24,9 +25,9 @@ angular.module('portalNMC')
             urlRmaContObjects = urlRma + '/contObjects',
             urlRefRange = urlSubscr + '/contObjects/',
             urlDeviceObjects = '/deviceObjects',
-            urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels',
-            urlDeviceModelTypes = urlRma+urlDeviceObjects + '/deviceModelTypes',
-            urlImpulseCounterTypes = urlRma+urlDeviceObjects + '/impulseCounterTypes',
+            urlDeviceModels = urlRma + urlDeviceObjects + '/deviceModels',
+            urlDeviceModelTypes = urlRma + urlDeviceObjects + '/deviceModelTypes',
+            urlImpulseCounterTypes = urlRma + urlDeviceObjects + '/impulseCounterTypes',
             urlDeviceMetaDataVzlet = '/metaVzlet',
             urlDeviceMetaDataSuffix = '/metadata',
             urlZpointMetaDataSuffix = '/metadata',
@@ -45,7 +46,7 @@ angular.module('portalNMC')
             urlBuildingCategories = urlSubscr + '/service/buildingType/category/list',
         //meter periods urls
             meterPeriodSuffix = '/meterPeriodSettings',
-            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;     
+            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -64,81 +65,81 @@ angular.module('portalNMC')
         var requestCanceler = null;
         var httpOptions = null;
                  
-        var checkUndefinedNull = function(numvalue){
+        var checkUndefinedNull = function (numvalue) {
             var result = false;
-            if ((angular.isUndefined(numvalue)) || (numvalue === null)){
+            if ((angular.isUndefined(numvalue)) || (numvalue === null)) {
                 result = true;
             }
             return result;
         };
         
-        function isCancelParamsIncorrect(){
+        function isCancelParamsIncorrect() {
             return checkUndefinedNull(requestCanceler) || checkUndefinedNull(httpOptions);
         }
-        function getRequestCanceler () {
+        function getRequestCanceler() {
             return requestCanceler;
         }
         //////////////////////////////  
 
                 //check user: system? - true/false
-        var isSystemuser = function(){
+        var isSystemuser = function () {
             var result = false;
             var userInfo = $rootScope.userInfo;
-            if (angular.isDefined(userInfo)){
+            if (angular.isDefined(userInfo)) {
                 result = userInfo._system;
             }
             return result;
-        };         
+        };
                  
-        var getCurrentObject = function(){
+        var getCurrentObject = function () {
             return currentObject;
         };
-        var setCurrentObject = function(obj){
+        var setCurrentObject = function (obj) {
             currentObject = obj;
         };
                  
-        var getObjectSettings = function(){
+        var getObjectSettings = function () {
             return objectSvcSettings;
         };
                  
-        var getDeviceMetadataMeasures = function(){
+        var getDeviceMetadataMeasures = function () {
             return deviceMetadataMeasures;
         };
                  
-        var getZpointMetadataMeasures = function(){
+        var getZpointMetadataMeasures = function () {
             return zpointMetadataMeasures;
         };
                  
-        var getRmaTreeTemplates = function(){
+        var getRmaTreeTemplates = function () {
             return rmaTreeTemplates;
         };
         
-        var setObjectSettings = function(objectSettings){
+        var setObjectSettings = function (objectSettings) {
             var key;
-            for (key in objectSettings){
+            for (key in objectSettings) {
                 objectSvcSettings[key] = objectSettings[key];
             }
         };
         
-        var getObjectsUrl = function(){
+        var getObjectsUrl = function () {
             return urlSubscrContObjects;
         };
                  
-        var getRmaObjectsUrl = function(){
+        var getRmaObjectsUrl = function () {
             return urlRmaContObjects;
         };
-        var getSubscrUrl = function(){
+        var getSubscrUrl = function () {
             return urlSubscr;
         };
-        var getRmaUrl = function(){
+        var getRmaUrl = function () {
             return urlRma;
         };
         
-        var getDatasourcesUrl = function(){
+        var getDatasourcesUrl = function () {
             return urlDatasources;
         };
         
-        var getLoadingStatus = function(){
+        var getLoadingStatus = function () {
             return loading;
         };
                                   
@@ -149,96 +150,96 @@ angular.module('portalNMC')
             return buildingTypes;
         }
         
-        var getRsoOrganizations = function(){
+        var getRsoOrganizations = function () {
             var url = urlRsoOrganizations;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
-        var getCmOrganizations = function(){
+        var getCmOrganizations = function () {
             var url = urlCmOrganizations;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
-        var getRsoOrganizationsWithId = function(orgId){
-            if (checkUndefinedNull(orgId)){
+        var getRsoOrganizationsWithId = function (orgId) {
+            if (checkUndefinedNull(orgId)) {
                 return getRsoOrganizations();
             }
             var url = urlRsoOrganizations + "?organizationId=" + orgId;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
-        var getCmOrganizationsWithId = function(orgId){
-            if (checkUndefinedNull(orgId)){
+        var getCmOrganizationsWithId = function (orgId) {
+            if (checkUndefinedNull(orgId)) {
                 return getCmOrganizations();
             }
             var url = urlCmOrganizations + "?organizationId=" + orgId;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
-        var getServiceTypes = function(){
+        var getServiceTypes = function () {
             var url = urlServiceTypes;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
         //universal function
-        var getData = function(url){
-            if (isCancelParamsIncorrect() === true){
+        var getData = function (url) {
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
-        var getRefRangeByObjectAndZpoint = function(object, zpoint){
-            var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
-            if (isCancelParamsIncorrect() === true){
+        var getRefRangeByObjectAndZpoint = function (object, zpoint) {
+            var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
         var zPointsByObject = [];
-        var getZpointsDataByObject = function(obj, mode){ 
+        var getZpointsDataByObject = function (obj, mode) {
             obj.zpoints = [];
             var table = urlSubscrContObjects + "/" + obj.id + "/contZPoints" + mode;//Ex";
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(table, httpOptions);
-        };         
+        };
         
-        var getDevicesByObject = function(obj){
+        var getDevicesByObject = function (obj) {
             var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
-        var getAllDevices = function(){
+        var getAllDevices = function () {
             var url = urlRmaContObjects + urlDeviceObjects;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
-        var getDeviceModels = function(){
+        var getDeviceModels = function () {
             var url = urlDeviceModels;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
@@ -254,141 +255,141 @@ angular.module('portalNMC')
                  
         function getImpulseCounterTypes() {
             var url = urlImpulseCounterTypes;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         }
                  
-        var getRmaObjectSubscribers = function(objId){
+        var getRmaObjectSubscribers = function (objId) {
             var url = urlRmaContObjects + "/" + objId + "/subscribers";
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
-        var getDeviceSchedulerSettings = function(objId, devId){
+        var getDeviceSchedulerSettings = function (objId, devId) {
 //            /contObjects/%d/deviceObjects/%d/loadingSettings
             var url = urlSubscrContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
-            return $http.get(url, httpOptions);            
+            return $http.get(url, httpOptions);
         };
                  
-        var putDeviceSchedulerSettings = function(objId, devId, scheduler){
+        var putDeviceSchedulerSettings = function (objId, devId, scheduler) {
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource/loadingSettings";
-            return $http.put(url, scheduler);            
+            return $http.put(url, scheduler);
         };
                  
-        var getDeviceDatasources = function(objId, devId){
+        var getDeviceDatasources = function (objId, devId) {
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource";
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
-            return $http.get(url, httpOptions);            
+            return $http.get(url, httpOptions);
         };
                  
-        var getDeviceMetaDataVzlet = function(obj, device){                     
+        var getDeviceMetaDataVzlet = function (obj, device) {
             var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
-        var getRmaDeviceMetaDataVzlet = function(objId, device){                     
+        var getRmaDeviceMetaDataVzlet = function (objId, device) {
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
-        var putDeviceMetaDataVzlet = function(device){                     
+        var putDeviceMetaDataVzlet = function (device) {
             var url = urlSubscrContObjects + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
-            var result = $http.put(url, device.metaData);        
+            var result = $http.put(url, device.metaData);
             return result;
         };
         
                  //get device measures
-        var getRmaMetadataMeasureUnit = function(murl, measU, dmm){
+        var getRmaMetadataMeasureUnit = function (murl, measU, dmm) {
 //console.log(url);            
 //console.log(measU);
 //console.log(dmm);            
             var url = murl + "?measureUnit=" + dmm.all[measU].keyname;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             $http.get(url, httpOptions)
-            .then(function(resp){
-                dmm[dmm.all[measU].keyname] = resp.data;
-            }, 
-                 function(error){
-                console.log(error);
-            });
-        };         
+                .then(function (resp) {
+                    dmm[dmm.all[measU].keyname] = resp.data;
+                },
+                     function (error) {
+                        console.log(error);
+                    });
+        };
         
-        var getRmaDeviceMetadataMeasures = function(){            
+        var getRmaDeviceMetadataMeasures = function () {
             var url = urlDeviceMetadataMeasures;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             $http.get(url, httpOptions)
-                .then(function(resp){                
-                deviceMetadataMeasures.all = resp.data;                              
+                .then(function (resp) {
+                    deviceMetadataMeasures.all = resp.data;
 //                for (var measU in deviceMetadataMeasures.all){
 //                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, measU, deviceMetadataMeasures);
 //                };
-                deviceMetadataMeasures.all.forEach(function(elem, ind){
-                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, ind, deviceMetadataMeasures);
-                });
+                    deviceMetadataMeasures.all.forEach(function (elem, ind) {
+                        getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, ind, deviceMetadataMeasures);
+                    });
 //console.log(deviceMetadataMeasures);                
-                $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
-            },
-                     function(err){
-                console.log(err);
-            });
-        };        
+                    $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
+                },
+                    function (err) {
+                        console.log(err);
+                    });
+        };
                  
-        var getRmaDeviceMetadata = function(objId, devId){
+        var getRmaDeviceMetadata = function (objId, devId) {
             var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
                  
         //get time zones
-        var getTimezones = function(){
+        var getTimezones = function () {
             return getData(urlTimezones);
         };
                  
-        var getDeviceMetaDataVzletSystemList = function(){                     
+        var getDeviceMetaDataVzletSystemList = function () {
 //            return $http.get(urlDeviceMetaDataVzletSystemList);
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(urlDeviceMetaDataVzletSystemList, httpOptions);
         };
         var vzletSystemList = [];
-        var getVzletSystemListFromServer = function(){
+        var getVzletSystemListFromServer = function () {
             getDeviceMetaDataVzletSystemList()
-            .then(
-                function(response){
-                    vzletSystemList = response.data;
-                },
-                function(e){
-                    console.log(e);
-                }
-            );
-        };         
+                .then(
+                    function (response) {
+                        vzletSystemList = response.data;
+                    },
+                    function (e) {
+                        console.log(e);
+                    }
+                );
+        };
         
-        var getVzletSystemList = function() {
+        var getVzletSystemList = function () {
             return vzletSystemList;
         };
 
         //get objects
-        var getObjectsData = function(contGroupId) {                    
+        var getObjectsData = function (contGroupId) {
             var url = urlSubscrContObjects;
             if (!checkUndefinedNull(contGroupId)) {
                 url += "?contGroupId=" + contGroupId;
@@ -404,72 +405,73 @@ angular.module('portalNMC')
                 url += "?contGroupId=" + contGroupId;
             }
             if (isCancelParamsIncorrect() === true) {
-                return null;            
+                return null;
             }
             return $http.get(url, httpOptions);
         };
 
                 //get object
         var getObject = function (objId) {
-            if (angular.isUndefined(objId) || (objId === null)) {return "Object id is null or undefined";}
-            if (isCancelParamsIncorrect() === true){
+            if (angular.isUndefined(objId) || (objId === null)) { return "Object id is null or undefined"; }
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
-            return $http.get(urlSubscrContObjects + "/" +objId, httpOptions);
+            return $http.get(urlSubscrContObjects + "/" + objId, httpOptions);
         };
         var getRmaObject = function (objId) {
-            if (angular.isUndefined(objId) || (objId === null)) {return "Object id is null or undefined";}
-            if (isCancelParamsIncorrect() === true){
-                return null;            
+            if (angular.isUndefined(objId) || (objId === null)) { return "Object id is null or undefined"; }
+            if (isCancelParamsIncorrect() === true) {
+                return null;
             }
             return $http.get(getRmaObjectsUrl() + "/" + objId, httpOptions);
-        }; 
+        };
                  //Get data for the setting period for the city by objectId
-        var getObjectConsumingData = function(settings, objId){
+        var getObjectConsumingData = function (settings, objId) {
             var url = urlCitiesData + "/" + objId + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
-        };                 
+        };
                 //get data for the setting period for one city
-        var getCityConsumingData = function(cityFias, settings){
-            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;   if (isCancelParamsIncorrect() === true){
+        var getCityConsumingData = function (cityFias, settings) {
+            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
-        };         
+        };
                  //get data for the setting period for all cities
-        var getCitiesConsumingData = function(settings){
-            var url = urlCitiesData + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;          
-            if (isCancelParamsIncorrect() === true){
+        var getCitiesConsumingData = function (settings) {
+            var url = urlCitiesData + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
-        };                 
+        };
         
             // Sort object array by some string field
-        var sortItemsBy = function(itemArray, sortField){
-            if (!angular.isArray(itemArray)){
+        var sortItemsBy = function (itemArray, sortField) {
+            if (!angular.isArray(itemArray)) {
                 return "Input value is no array.";
             }
-            if (checkUndefinedNull(sortField)){
+            if (checkUndefinedNull(sortField)) {
                 return "Field for sort is undefined or null.";
             }
-            itemArray.sort(function(firstItem, secondItem){
-                if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])){
+            itemArray.sort(function (firstItem, secondItem) {
+                if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])) {
                     return 0;
                 }
-                if (checkUndefinedNull(firstItem[sortField])){
+                if (checkUndefinedNull(firstItem[sortField])) {
                     return -1;
                 }
-                if (checkUndefinedNull(secondItem[sortField])){
+                if (checkUndefinedNull(secondItem[sortField])) {
                     return 1;
                 }
-                if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()){
+                if (firstItem[sortField].toUpperCase() > secondItem[sortField].toUpperCase()) {
                     return 1;
                 }
-                if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()){
+                if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()) {
                     return -1;
                 }
                 return 0;
@@ -477,7 +479,7 @@ angular.module('portalNMC')
         };
                  
             // sort the object array by the fullname
-        function sortObjectsByFullName(array){
+        function sortObjectsByFullName(array) {
             sortItemsBy(array, "fullName");
 //            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
 //                return false;
@@ -494,50 +496,50 @@ angular.module('portalNMC')
 //                };
 //                return 0;
 //            });
-        }                 
+        }
                     // sort the object array by the fullname, where some objects do not have field "fullName"
-        function sortObjectsByFullNameEx(array){
-            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)){
+        function sortObjectsByFullNameEx(array) {
+            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)) {
                 return false;
             }
             var tmpArr = [];
             var tmpBadArr = [];
-            array.forEach(function(elem){
-                if (!checkUndefinedNull(elem.fullName)){
+            array.forEach(function (elem) {
+                if (!checkUndefinedNull(elem.fullName)) {
                     tmpArr.push(elem);
-                }else{
+                } else {
                     tmpBadArr.push(elem);
                 }
             });
-            if (tmpArr.length === 0) {return "No objects with fullName";}
+            if (tmpArr.length === 0) { return "No objects with fullName"; }
             sortObjectsByFullName(tmpArr);
             Array.prototype.push.apply(tmpBadArr, tmpArr);
             return tmpBadArr;
         }
                  
-        function sortObjectsByConObjectFullName(array){
-            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)){
+        function sortObjectsByConObjectFullName(array) {
+            if (angular.isUndefined(array) || (array === null) || !angular.isArray(array)) {
                 return false;
-            }           
-            array.sort(function(a, b){
-                if ((checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)) && 
-                    (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName))){         
+            }
+            array.sort(function (a, b) {
+                if ((checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)) &&
+                        (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName))) {
                     return 0;
                 }
-                if (checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)){         
+                if (checkUndefinedNull(a.contObject) || checkUndefinedNull(a.contObject.fullName)) {
                     return -1;
                 }
-                if (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName)){         
+                if (checkUndefinedNull(b.contObject) || checkUndefinedNull(b.contObject.fullName)) {
                     return 1;
                 }
-                if (a.contObject.fullName.toUpperCase() > b.contObject.fullName.toUpperCase()){
+                if (a.contObject.fullName.toUpperCase() > b.contObject.fullName.toUpperCase()) {
                     return 1;
                 }
-                if (a.contObject.fullName.toUpperCase() < b.contObject.fullName.toUpperCase()){
+                if (a.contObject.fullName.toUpperCase() < b.contObject.fullName.toUpperCase()) {
                     return -1;
                 }
                 return 0;
-            }); 
+            });
         }
                  
 //        function sortZpointsInObject (object) {
@@ -545,77 +547,77 @@ angular.module('portalNMC')
 //            zpointOrder = "" + zpoint.contServiceType.serviceOrder + zpoint.customServiceName; 
 //        }
                  
-        function findObjectById(objId, objectArr){
+        function findObjectById(objId, objectArr) {
             var obj = null;
-            if (!angular.isArray(objectArr) || !angular.isNumber(objId)){
+            if (!angular.isArray(objectArr) || !angular.isNumber(objId)) {
 //                console.log("findObjectById: Incorrect input params.");
                 return obj;
             }
-            objectArr.some(function(element){
-                if (element.id === objId){
+            objectArr.some(function (element) {
+                if (element.id === objId) {
                     obj = element;
                     return true;
                 }
-            });        
+            });
             return obj;
         }
 
-       var promise = null;//getObjectsData();
-       var rmaPromise = null;//getRmaObjectsData();
-       var loadData = function(contGroupId, onlySubscrList){
-           console.time("Object loading");
-           promise = getObjectsData(contGroupId);
-           if (!checkUndefinedNull(onlySubscrList) && onlySubscrList === true) {
-               return;
-           }
-           rmaPromise = getRmaObjectsData(contGroupId);
-       };
+        var promise = null,//getObjectsData();
+            rmaPromise = null;//getRmaObjectsData();
+        var loadData = function (contGroupId, onlySubscrList) {
+            console.time("Object loading");
+            promise = getObjectsData(contGroupId);
+            if (!checkUndefinedNull(onlySubscrList) && onlySubscrList === true) {
+                return;
+            }
+            rmaPromise = getRmaObjectsData(contGroupId);
+        };
                  
-       $rootScope.$on('objectSvc:requestReloadData', function(event, args){
+        $rootScope.$on('objectSvc:requestReloadData', function (event, args) {
 //console.log("Reload objects data.");
             var contGroupId = null,
                 onlySubscrList = false;
-            if (!checkUndefinedNull(args) && !checkUndefinedNull(args.contGroupId)){
+            if (!checkUndefinedNull(args) && !checkUndefinedNull(args.contGroupId)) {
                 contGroupId = args.contGroupId;
-            }                           
-            if (!checkUndefinedNull(args) && !checkUndefinedNull(args.onlySubscrList)){
+            }
+            if (!checkUndefinedNull(args) && !checkUndefinedNull(args.onlySubscrList)) {
                 onlySubscrList = Boolean(args.onlySubscrList);
             }
             loadData(contGroupId, onlySubscrList);
-       });
-        var getPromise = function(){
+        });
+        var getPromise = function () {
             return promise;
         };
-        var getRmaPromise = function(){
+        var getRmaPromise = function () {
             return rmaPromise;
         };
                  
-        var sendDeviceToServer = function(device){
+        var sendDeviceToServer = function (device) {
             //send to server
                 //create param string
             var params = {};
-            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr !== null)){
+            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr !== null)) {
                 params.subscrDataSourceAddr = device.subscrDataSourceAddr;
             }
-            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable !== null)){
+            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable !== null)) {
                 params.dataSourceTable = device.dataSourceTable;
             }
-            if (angular.isDefined(device.dataSourceTable1h) && (device.dataSourceTable1h !== null)){
+            if (angular.isDefined(device.dataSourceTable1h) && (device.dataSourceTable1h !== null)) {
                 params.dataSourceTable1h = device.dataSourceTable1h;
             }
-            if (angular.isDefined(device.dataSourceTable24h) && (device.dataSourceTable24h !== null)){
+            if (angular.isDefined(device.dataSourceTable24h) && (device.dataSourceTable24h !== null)) {
                 params.dataSourceTable24h = device.dataSourceTable24h;
             }
             var targetUrl = getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects";
-            if (angular.isDefined(device.id) && (device.id !== null)){
+            if (angular.isDefined(device.id) && (device.id !== null)) {
                 targetUrl = targetUrl + "/" + device.id;
             }
                 //add url params
-            params.subscrDataSourceId=device.subscrDataSourceId;
+            params.subscrDataSourceId = device.subscrDataSourceId;
             device.editDataSourceInfo = params;
-            if (angular.isDefined(device.id) && (device.id !== null)){
+            if (angular.isDefined(device.id) && (device.id !== null)) {
                 return $http.put(targetUrl, device);//.then(successCallback,errorCallback);
-            }else{
+            } else {
                 return $http.post(targetUrl, device);//.then(successCallback,errorCallback);
             }
 //            return null;
@@ -623,155 +625,155 @@ angular.module('portalNMC')
 //*******************************************************************************************************         
 //zpoint metadata
 //********************************************************************************************************
-        var getZpointMetaSrcProp = function(objId, zpId){
+        var getZpointMetaSrcProp = function (objId, zpId) {
             var url = urlSubscrContObjects;
 //            if (isSystemuser()){
 //                url = urlRmaContObjects;
 //            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/srcProp';
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
-        };                 
-        var getZpointMetaDestProp = function(objId, zpId){
+        };
+        var getZpointMetaDestProp = function (objId, zpId) {
             var url = urlSubscrContObjects;
 //            if (isSystemuser()){
 //                url = urlRmaContObjects;
 //            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/destDb';
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
-        };        
-        var getZpointMetadata = function(objId, zpId){
+        };
+        var getZpointMetadata = function (objId, zpId) {
             var url = urlSubscrContObjects;
 //            if (isSystemuser()){
 //                url = urlRmaContObjects;
 //            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions);
         };
-        var getZpointMetaMeasureUnits = function(objId, zpId){
+        var getZpointMetaMeasureUnits = function (objId, zpId) {
 //console.log("getZpointMetaMeasureUnits");            
             var url = urlSubscrContObjects;
 //            if (isSystemuser()){
 //                url = urlRmaContObjects;
 //            }
             url += '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix + '/measureUnits';
-            if (isCancelParamsIncorrect() === true){
+            if (isCancelParamsIncorrect() === true) {
                 return null;
             }
             return $http.get(url, httpOptions)
-            .then(
-                function(resp){
-                    zpointMetadataMeasures = {};
-                    zpointMetadataMeasures.all = resp.data;
-//                    for (var measU in zpointMetadataMeasures.all){
-//                        getRmaMetadataMeasureUnit(url, measU, zpointMetadataMeasures);
-//                    };
-                    zpointMetadataMeasures.all.forEach(function(elem, ind){
-                        getRmaMetadataMeasureUnit(url, ind, zpointMetadataMeasures);
-                    });
-                    $rootScope.$broadcast('objectSvc:zpointMetadataMeasuresLoaded');
-                }, 
-                function(e){
-                    console.log(e);
-                }
-            );
+                .then(
+                    function (resp) {
+                        zpointMetadataMeasures = {};
+                        zpointMetadataMeasures.all = resp.data;
+    //                    for (var measU in zpointMetadataMeasures.all){
+    //                        getRmaMetadataMeasureUnit(url, measU, zpointMetadataMeasures);
+    //                    };
+                        zpointMetadataMeasures.all.forEach(function (elem, ind) {
+                            getRmaMetadataMeasureUnit(url, ind, zpointMetadataMeasures);
+                        });
+                        $rootScope.$broadcast('objectSvc:zpointMetadataMeasuresLoaded');
+                    },
+                    function (e) {
+                        console.log(e);
+                    }
+                );
         };
                  
-        var saveZpointMetadata = function(objId, zpId, metadata){
+        var saveZpointMetadata = function (objId, zpId, metadata) {
             var url = urlRmaContObjects + '/' + objId + '/zpoints/' + zpId + urlZpointMetaDataSuffix;
             return $http.put(url, metadata);
         };
 //****************************************************************************************         
 //Objects tree
 //****************************************************************************************
-        var loadTreeTemplates = function(url){
-            $http.get(url).then(function(resp){
+        var loadTreeTemplates = function (url) {
+            $http.get(url).then(function (resp) {
                 rmaTreeTemplates = angular.copy(resp.data);
-            }, function(e){
+            }, function (e) {
                 console.log(e);
             });
         };
                  
-        var loadTreeTemplateItems = function(templateId){
-            return $http.get(rmaTreeTemplatesUrl + '/' +templateId + '/items');
+        var loadTreeTemplateItems = function (templateId) {
+            return $http.get(rmaTreeTemplatesUrl + '/' + templateId + '/items');
         };
                  
-        var createTree = function(tree){
+        var createTree = function (tree) {
             return $http.post(controlTreesUrl, tree);
         };
         
-        var loadTrees = function(){
+        var loadTrees = function () {
             return $http.get(controlTreesUrl);
         };
         
-        var loadTree = function(treeId){
+        var loadTree = function (treeId) {
             return $http.get(controlTreesUrl + '/' + treeId);
         };
                  
-        var updateTree = function(tree){
+        var updateTree = function (tree) {
             return $http.put(controlTreesUrl + '/' + tree.id, tree);
         };
                  
-        var deleteTree = function(treeId){
+        var deleteTree = function (treeId) {
             return $http.delete(controlTreesUrl + '/' + treeId);
         };
                  
-        var deleteTreeNode = function(treeId, nodeId){
+        var deleteTreeNode = function (treeId, nodeId) {
             return $http.delete(controlTreesUrl + '/' + treeId + '/node/' + nodeId);
         };
                  
-        var loadObjectsByTreeNode = function(treeId, nodeId){            
+        var loadObjectsByTreeNode = function (treeId, nodeId) {
             return $http.get(controlTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
         };
                  
-        var putObjectsToTreeNode = function(treeId, nodeId, objIds){            
+        var putObjectsToTreeNode = function (treeId, nodeId, objIds) {
             return $http.put(controlTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/add', objIds);
         };
         
-        var releaseObjectsFromTreeNode = function(treeId, nodeId, objIds){            
+        var releaseObjectsFromTreeNode = function (treeId, nodeId, objIds) {
             return $http.put(controlTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/remove', objIds);
         };
                  
-        var loadFreeObjectsByTree = function(treeId){            
+        var loadFreeObjectsByTree = function (treeId) {
             return $http.get(controlTreesUrl + '/' + treeId + '/contObjects/free');
         };
                  
-        var loadSubscrTrees = function(){
+        var loadSubscrTrees = function () {
             return $http.get(subscrTreesUrl);
         };
         
-        var loadSubscrTree = function(treeId){
+        var loadSubscrTree = function (treeId) {
             return $http.get(subscrTreesUrl + '/' + treeId);
         };
         
-        var loadSubscrFreeObjectsByTree = function(treeId){            
+        var loadSubscrFreeObjectsByTree = function (treeId) {
             return $http.get(subscrTreesUrl + '/' + treeId + '/contObjects/free');
         };
                  
-        var loadSubscrObjectsByTreeNode = function(treeId, nodeId){            
+        var loadSubscrObjectsByTreeNode = function (treeId, nodeId) {
             return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects');
         };
                  
-        var loadDefaultTreeSetting = function(){
+        var loadDefaultTreeSetting = function () {
             return $http.get(defaultTreeUrl);
         };
 
 // **************************************************************
 //      Device methods
 // **************************************************************
-        function isDirectDevice (device){
+        function isDirectDevice(device) {
             var result = false;
-            if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
-                if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
-                    if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
+            if (angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)) {
+                if (angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)) {
+                    if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE") {
                         result = true;
                     }
                 }
@@ -793,7 +795,7 @@ angular.module('portalNMC')
                     console.log("Building type list is empty!");
                     return false;
                 }
-                buildingTypes = angular.copy(resp.data);                
+                buildingTypes = angular.copy(resp.data);
             }, function (e) {
                 console.log(e);
             });
@@ -807,7 +809,7 @@ angular.module('portalNMC')
                     console.log("Building category list is empty!");
                     return false;
                 }
-                buildingCategories = angular.copy(resp.data);                
+                buildingCategories = angular.copy(resp.data);
             }, function (e) {
                 console.log(e);
             });
@@ -838,11 +840,11 @@ angular.module('portalNMC')
         function setMeterPeriodForObject(meterPeriodData) {
             var url = urlSubscrContObjects + '/' + meterPeriodData.contObjectId + meterPeriodSuffix;
             return $http.put(url, meterPeriodData);
-        }                 
+        }
                  
         
         //service initialization
-        var initSvc = function(){
+        var initSvc = function () {
             
             requestCanceler = $q.defer();
             httpOptions = {
@@ -906,7 +908,7 @@ angular.module('portalNMC')
             getSubscrUrl,
             getTimezones,
             getRmaTreeTemplates,
-            getVzletSystemList,            
+            getVzletSystemList,
             getZpointMetaDestProp,
             getZpointMetadataMeasures,
             getZpointMetaMeasureUnits,
@@ -944,6 +946,6 @@ angular.module('portalNMC')
             sortObjectsByFullNameEx,            
             sortObjectsByConObjectFullName,
             updateTree
-        }
+        };
     
 }]);

@@ -1,7 +1,9 @@
+/*jslint node: true*/
+/*global angular*/
 'use strict';
 
-angular.module('portalNMC')
-.controller('ObjectsCtrl', ['$scope', '$rootScope', '$cookies', '$http', 'mainSvc', function($scope, $rootScope, $cookies, $http, mainSvc){
+var app = angular.module('portalNMC');
+app.controller('ObjectsCtrl', ['$scope', '$rootScope', '$cookies', '$http', 'mainSvc', function ($scope, $rootScope, $cookies, $http, mainSvc) {
 //console.log("Objects ctrl.");
     
     $scope.ctrlSettings = {};

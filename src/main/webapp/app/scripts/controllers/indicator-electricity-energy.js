@@ -1,5 +1,8 @@
-angular.module('portalNMC')
-.controller('ElectricityEnergyCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, notificationFactory){
+/*jslint node: true*/
+/*global angular*/
+'use strict';
+var app = angular.module('portalNMC');
+app.controller('ElectricityEnergyCtrl', ['$scope', '$http', 'indicatorSvc', 'mainSvc', '$location', '$cookies', '$rootScope', 'notificationFactory', function ($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, notificationFactory) {
 //console.log("Run ElectricityEnergyCtrl.");
 
     $scope.electroKind = "Energy";
@@ -17,7 +20,7 @@ angular.module('portalNMC')
             fieldName: "dataDateString",
             type: "string",
             date: true
-        }, 
+        },
         {
             header : "Интервал, мин",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
@@ -52,7 +55,7 @@ angular.module('portalNMC')
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
             fieldName: "q_Rn",
             graph: true
-        },
+        }
     ];
     
-});
+}]);

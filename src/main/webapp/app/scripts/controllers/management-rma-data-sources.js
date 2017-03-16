@@ -1,8 +1,8 @@
-/*jslint node: true, white: true*/
-/*global angular*/
+/*jslint node: true, eqeq: true*/
+/*global angular, $*/
 'use strict';
-angular.module('portalNMC')
-.controller('MngmtDatasourcesCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', function ($rootScope, $scope, $http, mainSvc, notificationFactory) {
+var app = angular.module('portalNMC');
+app.controller('MngmtDatasourcesCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', function ($rootScope, $scope, $http, mainSvc, notificationFactory) {
 //console.log('Run data sources management controller.');
         //default raw data source params
     var TIMEOUT = 25;
@@ -46,13 +46,13 @@ angular.module('portalNMC')
     var getDatasourceTypes = function (url) {
         var targetUrl = url;
         $http.get(targetUrl)
-        .then(function (response) {
-            var tmp = response.data;
-            $scope.data.dataSourcesTypes = tmp;
-        },
-              function (e) {
-            console.log(e);
-        });
+            .then(function (response) {
+                var tmp = response.data;
+                $scope.data.dataSourcesTypes = tmp;
+            },
+                  function (e) {
+                    console.log(e);
+                });
     };
     getDatasourceTypes($scope.ctrlSettings.datasourceTypesUrl);
     
@@ -60,37 +60,38 @@ angular.module('portalNMC')
     var getDatasources = function (url) {
         var targetUrl = url;
         $http.get(targetUrl)
-        .then(function (response) {
-            var tmp = response.data;
-//console.log(tmp);
-            $scope.data.dataSources = tmp;
-            mainSvc.sortItemsBy($scope.data.dataSources, 'dataSourceName');
-        },
-              function(e){
-            console.log(e);
-        });
+            .then(function (response) {
+                var tmp = response.data;
+    //console.log(tmp);
+                $scope.data.dataSources = tmp;
+                mainSvc.sortItemsBy($scope.data.dataSources, 'dataSourceName');
+            },
+                  function (e) {
+                    console.log(e);
+                });
     };
     
     getDatasources($scope.ctrlSettings.datasourcesUrl);
     
     function findModemIdentity(mmId) {
-        if ($scope.data.rawModemModels.length == 0)
+        if ($scope.data.rawModemModels.length == 0) {
             return null;
+        }
         var result = null;
         $scope.data.rawModemModels.some(function (model) {
             if (model.id == mmId) {
                 result = model;
                 return true;
             }
-        })
+        });
         return result;
     }
     
     $scope.changeModemModel = function () {
         var modemModel = findModemIdentity($scope.data.currentObject.rawModemModelId);
-        $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;        
+        $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;
         $scope.data.currentObject.rawModemDialupAvailable = modemModel.isDialup;
-    }
+    };
     
     $scope.selectedItem = function (item) {
         $scope.data.currentObject = angular.copy(item);
@@ -109,18 +110,22 @@ angular.module('portalNMC')
         if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawReconnectTimeout)) {
             $scope.data.currentObject.rawReconnectTimeout = RECONNECT_TIMEOUT;
         }
-        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemIdentity) &&
-            !mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemModelId)) {
+        if (mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemIdentity) && !mainSvc.checkUndefinedNull($scope.data.currentObject.rawModemModelId)) {
             var modemModel = findModemIdentity($scope.data.currentObject.rawModemModelId);
             $scope.data.currentObject.rawModemIdentity = modemModel.rawModemModelIdentity;
             $scope.data.currentObject.rawModemDialupAvailable = modemModel.isDialup;
         }
     };
     
+    var errorCallback = function (e) {
+        var errorObj = mainSvc.errorCallbackHandler(e);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+    };
+    
     function getRawModemModels() {
-        $http.get($scope.ctrlSettings.rawModemModelsUrl).then(function (resp) {            
+        $http.get($scope.ctrlSettings.rawModemModelsUrl).then(function (resp) {
             $scope.data.rawModemModels = resp.data;
-        }, errorCallback)
+        }, errorCallback);
     }
     getRawModemModels();
     
@@ -152,178 +157,164 @@ angular.module('portalNMC')
         $scope.data.currentObject.rawConnectionType = RAW_CONNECTION_TYPE_DEFAULT;
     };
     
-    var errorCallback = function (e) {
-//        notificationFactory.errorInfo(e.statusText,e.data.description);       
-        console.log(e);
-        var errorCode = "-1";
-        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)) {
-            errorCode = "ERR_CONNECTION";
-        };
-        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
-            errorCode = e.resultCode || e.data.resultCode;
-        };
-        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
-        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
-    };
-    
     function checkDatasource(dsource) {
         var checkDsourceFlag = true;
         if (angular.isUndefined(dsource.dataSourceName) || (dsource.dataSourceName === null) || (dsource.dataSourceName === "")) {
-            notificationFactory.errorInfo("Ошибка","Не задано имя источника данных.");
+            notificationFactory.errorInfo("Ошибка", "Не задано имя источника данных.");
             checkDsourceFlag = false;
-        };
+        }
         
         if (dsource.dataSourceTypeKey === 'MANUAL') {
             return checkDsourceFlag;
         }
         
         if ((dsource.rawConnectionType != 'CLIENT') && (!$scope.checkPositiveNumberValue(dsource.dataSourcePort))) {
-            notificationFactory.errorInfo("Ошибка","Не корректно задан порт источника данных.");
+            notificationFactory.errorInfo("Ошибка", "Не корректно задан порт источника данных.");
             checkDsourceFlag = false;
-        };        
+        }
         
 //        if (!$("#inputIP").inputmask("isComplete")){
         if ((dsource.rawConnectionType != 'CLIENT') && (angular.isUndefined(dsource.dataSourceIp) || (dsource.dataSourceIp === null) || (dsource.dataSourceIp === ""))) {
-            notificationFactory.errorInfo("Ошибка","Не заполнен ip \\ hostname источника данных.");
+            notificationFactory.errorInfo("Ошибка", "Не заполнен ip \\ hostname источника данных.");
             checkDsourceFlag = false;
-        };        
+        }
         
         if (dsource.dataSourceTypeKey == 'DEVICE') {
-            if (dsource.rawTimeout == ""){
-                notificationFactory.errorInfo("Ошибка","Не корректно задано время ожидания ответа.");
+            if (dsource.rawTimeout == "") {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задано время ожидания ответа.");
                 checkDsourceFlag = false;
             } else {
                 dsource.rawTimeout = Number(dsource.rawTimeout);
                 if (!$scope.checkPositiveNumberValue(dsource.rawTimeout)) {
-                    notificationFactory.errorInfo("Ошибка","Не корректно задано время ожидания ответа.");
+                    notificationFactory.errorInfo("Ошибка", "Не корректно задано время ожидания ответа.");
                     checkDsourceFlag = false;
                 }
-            };
-            if (dsource.rawSleepTime == ""){
-                notificationFactory.errorInfo("Ошибка","Не корректно задан интервал проверки получения ответа.");
+            }
+            if (dsource.rawSleepTime == "") {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задан интервал проверки получения ответа.");
                 checkDsourceFlag = false;
-            }else{
+            } else {
                 dsource.rawSleepTime = Number(dsource.rawSleepTime);
-                if (!$scope.checkPositiveNumberValue(dsource.rawSleepTime)){
-                    notificationFactory.errorInfo("Ошибка","Не корректно задан интервал проверки получения ответа.");
+                if (!$scope.checkPositiveNumberValue(dsource.rawSleepTime)) {
+                    notificationFactory.errorInfo("Ошибка", "Не корректно задан интервал проверки получения ответа.");
                     checkDsourceFlag = false;
                 }
-            };
-            if (dsource.rawResendAttempts == ""){
-                notificationFactory.errorInfo("Ошибка","Не корректно задано количество попыток переотправки пакета.");
+            }
+            if (dsource.rawResendAttempts == "") {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задано количество попыток переотправки пакета.");
                 checkDsourceFlag = false;
-            }else{
+            } else {
                 dsource.rawResendAttempts = Number(dsource.rawResendAttempts);
-                if (!$scope.checkPositiveNumberValue(dsource.rawResendAttempts)){
-                    notificationFactory.errorInfo("Ошибка","Не корректно задано количество попыток переотправки пакета.");
+                if (!$scope.checkPositiveNumberValue(dsource.rawResendAttempts)) {
+                    notificationFactory.errorInfo("Ошибка", "Не корректно задано количество попыток переотправки пакета.");
                     checkDsourceFlag = false;
                 }
-            };
-            if (dsource.rawReconnectAttempts == ""){
-                notificationFactory.errorInfo("Ошибка","Не корректно задано количество переподключений в случае ошибки.");
+            }
+            if (dsource.rawReconnectAttempts == "") {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задано количество переподключений в случае ошибки.");
                 checkDsourceFlag = false;
-            }else{
+            } else {
                 dsource.rawReconnectAttempts = Number(dsource.rawReconnectAttempts);
-                if (!$scope.checkPositiveNumberValue(dsource.rawReconnectAttempts)){
-                    notificationFactory.errorInfo("Ошибка","Не корректно задано количество переподключений в случае ошибки.");
+                if (!$scope.checkPositiveNumberValue(dsource.rawReconnectAttempts)) {
+                    notificationFactory.errorInfo("Ошибка", "Не корректно задано количество переподключений в случае ошибки.");
                     checkDsourceFlag = false;
                 }
-            };
-            if (dsource.rawReconnectTimeout == ""){
-                notificationFactory.errorInfo("Ошибка","Не корректно задана пауза между переподключениями.");
+            }
+            if (dsource.rawReconnectTimeout == "") {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задана пауза между переподключениями.");
                 checkDsourceFlag = false;
-            }else{
+            } else {
                 dsource.rawReconnectTimeout = Number(dsource.rawReconnectTimeout);
-                if (!$scope.checkPositiveNumberValue(dsource.rawReconnectTimeout)){
-                    notificationFactory.errorInfo("Ошибка","Не корректно задана пауза между переподключениями.");
+                if (!$scope.checkPositiveNumberValue(dsource.rawReconnectTimeout)) {
+                    notificationFactory.errorInfo("Ошибка", "Не корректно задана пауза между переподключениями.");
                     checkDsourceFlag = false;
                 }
-            };            
-        };
+            }
+        }
         
         
-        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT'){           
-            if (mainSvc.checkUndefinedNull(dsource.rawModemModelId)){
-                notificationFactory.errorInfo("Ошибка","Не задана модель модема");
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT') {
+            if (mainSvc.checkUndefinedNull(dsource.rawModemModelId)) {
+                notificationFactory.errorInfo("Ошибка", "Не задана модель модема");
                 checkDsourceFlag = false;
-            };
-        };
-        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemDialEnable == true){           
-            if (mainSvc.checkUndefinedNull(dsource.rawModemDialTel) || dsource.rawModemDialTel.length < MODEM_DIAL_TEL_LENGTH){
-                notificationFactory.errorInfo("Ошибка","Не корректно задан телефонный номер модема");
+            }
+        }
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemDialEnable == true) {
+            if (mainSvc.checkUndefinedNull(dsource.rawModemDialTel) || dsource.rawModemDialTel.length < MODEM_DIAL_TEL_LENGTH) {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задан телефонный номер модема");
                 checkDsourceFlag = false;
-            };
-        };
-        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'SERIAL_NR'){
-            if (mainSvc.checkUndefinedNull(dsource.rawModemSerial) || dsource.rawModemSerial.length == 0){
-                notificationFactory.errorInfo("Ошибка","Не корректно задан серийный номер модема");
+            }
+        }
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'SERIAL_NR') {
+            if (mainSvc.checkUndefinedNull(dsource.rawModemSerial) || dsource.rawModemSerial.length == 0) {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задан серийный номер модема");
                 checkDsourceFlag = false;
-            };
-        };
-        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'MAC_ADDR'){
-            if (mainSvc.checkUndefinedNull(dsource.rawModemMacAddr) || dsource.rawModemMacAddr.length == 0){
-                notificationFactory.errorInfo("Ошибка","Не корректно задан MAC-адрес модема");
+            }
+        }
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'MAC_ADDR') {
+            if (mainSvc.checkUndefinedNull(dsource.rawModemMacAddr) || dsource.rawModemMacAddr.length == 0) {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задан MAC-адрес модема");
                 checkDsourceFlag = false;
-            };
-        };
-        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'IMEI'){
-            if (mainSvc.checkUndefinedNull(dsource.rawModemImei) || dsource.rawModemImei.length == 0){
-                notificationFactory.errorInfo("Ошибка","Не корректно задан IMEI модема");
+            }
+        }
+        if (dsource.dataSourceTypeKey == 'DEVICE' && dsource.rawConnectionType == 'CLIENT' && dsource.rawModemIdentity == 'IMEI') {
+            if (mainSvc.checkUndefinedNull(dsource.rawModemImei) || dsource.rawModemImei.length == 0) {
+                notificationFactory.errorInfo("Ошибка", "Не корректно задан IMEI модема");
                 checkDsourceFlag = false;
-            };
-        };
+            }
+        }
         return checkDsourceFlag;
     }
     
-    $scope.saveDatasource = function(dsource){ 
+    $scope.saveDatasource = function (dsource) {
         var checkDsourceFlag = checkDatasource(dsource);
 
-        if (checkDsourceFlag === false){
+        if (checkDsourceFlag === false) {
             return;
-        };
+        }
         var targetUrl = $scope.ctrlSettings.datasourcesUrl;
-        if (angular.isDefined(dsource.id)&&(dsource.id !=null)){
-            targetUrl = targetUrl+"/"+dsource.id;
-            $http.put(targetUrl, dsource).then(successCallback,errorCallback);
-        }else{
-            $http.post(targetUrl, dsource).then(successCallback,errorCallback);
-        };
+        if (angular.isDefined(dsource.id) && (dsource.id != null)) {
+            targetUrl = targetUrl + "/" + dsource.id;
+            $http.put(targetUrl, dsource).then(successCallback, errorCallback);
+        } else {
+            $http.post(targetUrl, dsource).then(successCallback, errorCallback);
+        }
     };
     
-    var setConfirmCode = function(){
+    var setConfirmCode = function () {
         $scope.confirmCode = null;
         var tmpCode = mainSvc.getConfirmCode();
         $scope.confirmLabel = tmpCode.label;
-        $scope.sumNums = tmpCode.result;                    
+        $scope.sumNums = tmpCode.result;
     };
     
-    $scope.deleteObjectInit = function(dsourse){
+    $scope.deleteObjectInit = function (dsourse) {
         $scope.selectedItem(dsourse);
         setConfirmCode();
     };
     
-    $scope.deleteObject = function(dsource){
-        var targetUrl = $scope.ctrlSettings.datasourcesUrl+"/"+dsource.id;
-        $http.delete(targetUrl).then(successCallback,errorCallback);
+    $scope.deleteObject = function (dsource) {
+        var targetUrl = $scope.ctrlSettings.datasourcesUrl + "/" + dsource.id;
+        $http.delete(targetUrl).then(successCallback, errorCallback);
     };
     
-    $scope.isSystemuser = function(){
+    $scope.isSystemuser = function () {
         return mainSvc.isSystemuser();
     };
     
     $scope.isTestMode = function () {
         return mainSvc.isTestMode();
-    }
+    };
     
     //checkers
-    $scope.checkNumericValue = function(num){
+    $scope.checkNumericValue = function (num) {
         return mainSvc.checkNumericValue(num);
     };
-    $scope.checkPositiveNumberValue = function(num){
+    $scope.checkPositiveNumberValue = function (num) {
         return mainSvc.checkPositiveNumberValue(num);
     };
     
-    $("#showDatasourceModal").on("shown.bs.modal", function(){
+    $("#showDatasourceModal").on("shown.bs.modal", function () {
         $("#inputDataSourceMode").focus();
 //        inputDSTimeout inputDSCheckInterval inputDSRepeatCount inputDSReconnectionCount inputDSReconnectionInterval
         $("#inputDSTimeout").inputmask();

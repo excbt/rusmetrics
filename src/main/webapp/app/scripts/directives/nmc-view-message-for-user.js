@@ -1,11 +1,11 @@
-/*jslint white: true, node: true */
+/*jslint eqeq: true, node: true */
 /*global angular, $ */
 'use strict';
-angular.module('portalNMC')
-.directive("nmcViewMessageForUser", function(){
+var app = angular.module('portalNMC');
+app.directive("nmcViewMessageForUser", function () {
     return {
         restrict: "AE",
-        replace: true, 
+        replace: true,
         templateUrl: "scripts/directives/templates/nmc-view-message-for-user.html",
         scope: {
             messageForUser: "@",
@@ -15,8 +15,8 @@ angular.module('portalNMC')
             btnCancelCaption: "@",
             showCancelButton: "@"
         },
-        controller: function($scope){
-            $('#messageForUserModal').on('shown.bs.modal', function(){
+        controller: ['$scope', function ($scope) {
+            $('#messageForUserModal').on('shown.bs.modal', function () {
 //                console.log($scope.showOkButton);
 //                console.log($scope.messageForUser);
 //                console.log($scope.btnClick);
@@ -24,6 +24,6 @@ angular.module('portalNMC')
 //                console.log($scope.btnCancelCaption);
 //                console.log($scope.showCancelButton);
             });
-        }
+        }]
     };
 });

@@ -1,7 +1,9 @@
+/*jslint node: true, eqeq: true*/
+/*global angular, $*/
 //ManagementServicesCtrl
 'use strict';
-angular.module('portalNMC')
-.controller('ManagementServicesCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', function($rootScope, $scope, $http, mainSvc, notificationFactory){
+var app = angular.module('portalNMC');
+app.controller('ManagementServicesCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', function ($rootScope, $scope, $http, mainSvc, notificationFactory) {
 //    console.log("ManagementServicesCtrl run.");
     $rootScope.ctxId = "management_services_page";
     //ctrl settings
@@ -9,12 +11,12 @@ angular.module('portalNMC')
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     
     $scope.ctrlSettings.subscrUrl = "../api/subscr";
-    $scope.ctrlSettings.servicesUrl = $scope.ctrlSettings.subscrUrl+"/manage/service";
+    $scope.ctrlSettings.servicesUrl = $scope.ctrlSettings.subscrUrl + "/manage/service";
     $scope.ctrlSettings.packagesUrl = $scope.ctrlSettings.servicesUrl + "/servicePackList";
-    $scope.ctrlSettings.itemsUrl = $scope.ctrlSettings.servicesUrl+ "/serviceItemList";
-    $scope.ctrlSettings.priceUrl = $scope.ctrlSettings.servicesUrl+ "/servicePriceList";
-    $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl+ "/access";
-    $scope.ctrlSettings.subscriberContObjectCountUrl = $scope.ctrlSettings.subscrUrl+ "/info/subscriberContObjectCount";
+    $scope.ctrlSettings.itemsUrl = $scope.ctrlSettings.servicesUrl + "/serviceItemList";
+    $scope.ctrlSettings.priceUrl = $scope.ctrlSettings.servicesUrl + "/servicePriceList";
+    $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl + "/access";
+    $scope.ctrlSettings.subscriberContObjectCountUrl = $scope.ctrlSettings.subscrUrl + "/info/subscriberContObjectCount";
     
     $scope.ctrlSettings.subscriberContObjectCount = null;
     
@@ -34,56 +36,56 @@ angular.module('portalNMC')
 //        ,{"name":"cost", "header" : "Стоимость, руб.", "class":"col-md-1"}
 //    ];
     //The packages, wich selected by the subscriber
-    $scope.packages =[];
+    $scope.packages = [];
     //The packages, which available for the subscriber
     $scope.availablePackages = [];
     
     //get subscriber contObject count
-    $scope.getSubscriberContObjectCount = function(url){
+    $scope.getSubscriberContObjectCount = function (url) {
         var targetUrl = url;
         $http.get(targetUrl)
-        .then(function(response){
-            $scope.ctrlSettings.subscriberContObjectCount = response.data;
-        },
-              function(e){
-            console.log(e);
-        });
+            .then(function (response) {
+                $scope.ctrlSettings.subscriberContObjectCount = response.data;
+            },
+                function (e) {
+                    console.log(e);
+                });
     };
     $scope.getSubscriberContObjectCount($scope.ctrlSettings.subscriberContObjectCountUrl);
     //get price list
-    $scope.getPriceList = function(url){
+    $scope.getPriceList = function (url) {
         var targetUrl = url;
-        $http.get(targetUrl).then(function(response){
+        $http.get(targetUrl).then(function (response) {
             var tmpPrices = response.data;
 //console.log(response.data);            
-            $scope.availablePackages.forEach(function(pack){
-                tmpPrices.forEach(function(price){
-                    if ((price.packId === pack.id) && (angular.isUndefined(price.itemId)||(price.itemId === null))){
+            $scope.availablePackages.forEach(function (pack) {
+                tmpPrices.forEach(function (price) {
+                    if ((price.packId === pack.id) && (angular.isUndefined(price.itemId) || (price.itemId === null))) {
                         pack.price = price;
                         $scope.ctrlSettings.currency = price.currency;
-                    };
+                    }
                 });
-                pack.serviceItems.forEach(function(svitem){
-                     tmpPrices.forEach(function(price){
-                        if ((angular.isUndefined(price.packId)||(price.packId === null)) && (price.itemId === svitem.id)){
+                pack.serviceItems.forEach(function (svitem) {
+                    tmpPrices.forEach(function (price) {
+                        if ((angular.isUndefined(price.packId) || (price.packId === null)) && (price.itemId === svitem.id)) {
                             svitem.price = price;
                             $scope.ctrlSettings.currency = price.currency;
-                        };
-                     });
+                        }
+                    });
                 });
             });
             $scope.ctrlSettings.currency = "";
 //console.log($scope.availablePackages);            
         },
-                                 function(e){
-            console.log(e);
-        });
+                                 function (e) {
+                console.log(e);
+            });
     };
     
     //get packages
-    $scope.getPackages = function(url){
+    $scope.getPackages = function (url) {
         var targetUrl = url;
-        $http.get(targetUrl).then(function(response){
+        $http.get(targetUrl).then(function (response) {
             var tmp = response.data;
 //console.log(tmp)            
             $scope.availablePackages = tmp;// [tmp, angular.copy(tmp)];
@@ -94,30 +96,30 @@ angular.module('portalNMC')
             $scope.getPriceList($scope.ctrlSettings.priceUrl);
             $scope.getSelectedPackages($scope.ctrlSettings.accountServicesUrl);
         },
-                                 function(e){
-            console.log(e);
-        });
+                                 function (e) {
+                console.log(e);
+            });
     };
     
     //set popup with defined params
-    var setQtip = function(elem, text){
+    var setQtip = function (elem, text) {
         $(elem).qtip({
             suppress: false,
-            content:{
+            content: {
                 text: text,
                 button : true
             },
-            show:{
+            show: {
                 event: 'click'
             },
-            style:{
+            style: {
                 classes: 'qtip-nmc-indicator-tooltip',
                 width: 1000
             },
             hide: {
                 event: 'unfocus'
             },
-            position:{
+            position: {
                 my: 'top left',
                 at: 'bottom left'
             }
@@ -125,89 +127,89 @@ angular.module('portalNMC')
     };
     
     //get account services list
-    $scope.getSelectedPackages = function(url){
+    $scope.getSelectedPackages = function (url) {
         var targetUrl = url;
-        $http.get(targetUrl).then(function(response){
-            var tmp = response.data;            
-            tmp.forEach(function(elem){
-                $scope.availablePackages.forEach(function(pack){
-                    if ((pack.id === elem.packId)&&(!elem.hasOwnProperty("itemId"))){
+        $http.get(targetUrl).then(function (response) {
+            var tmp = response.data;
+            tmp.forEach(function (elem) {
+                $scope.availablePackages.forEach(function (pack) {
+                    if ((pack.id === elem.packId) && (!elem.hasOwnProperty("itemId"))) {
                         pack.selected = true;
-                    };
-                    pack.serviceItems.forEach(function(serv){
-                        if ((pack.id === elem.packId)&&(elem.hasOwnProperty("itemId"))&&(serv.id === elem.itemId)){
+                    }
+                    pack.serviceItems.forEach(function (serv) {
+                        if ((pack.id === elem.packId) && (elem.hasOwnProperty("itemId")) && (serv.id === elem.itemId)) {
                             serv.selected = true;
-                        };  
+                        }
                     });
                 });
             });
             //add popup for packages and services
-            $scope.availablePackages.forEach(function(pack){
-                var elDOM = "#package"+pack.id;
+            $scope.availablePackages.forEach(function (pack) {
+                var elDOM = "#package" + pack.id;
 //    console.log($(elDOM));
                 setQtip(elDOM, pack.packDescription);
-                pack.serviceItems.forEach(function(serv){
-                    var servDOM = "#service"+serv.id;
+                pack.serviceItems.forEach(function (serv) {
+                    var servDOM = "#service" + serv.id;
                     setQtip(servDOM, serv.itemDescription);
                 });
 
             });
         },
-                                 function(e){
-            console.log(e);
-        });
+                                 function (e) {
+                console.log(e);
+            });
     };
     
     $scope.getPackages($scope.ctrlSettings.packagesUrl);
 
     //control changes: 
     //control change list, when user click service list
-    var serviceSetFlag = function(serv){
-        if (serv.selected === true){
-            serv.changedFlag +=1; 
-        }else{
+    var serviceSetFlag = function (serv) {
+        if (serv.selected === true) {
+            serv.changedFlag += 1;
+        } else {
             //remove service from change list
-            serv.changedFlag -=1;
-        };       
+            serv.changedFlag -= 1;
+        }
     };
     //listener on service check box click
-    $scope.serviceClick = function(pack, serv){
+    $scope.serviceClick = function (pack, serv) {
         serviceSetFlag(serv);
         //check package services, if user select all -> set pack.selected = true
         var tmpPackFlag = false;
-        pack.serviceItems.some(function(serv){
-            if (serv.selected!=true){
+        pack.serviceItems.some(function (serv) {
+            if (serv.selected != true) {
                 tmpPackFlag = true;
                 return true;
-            };
+            }
         });
-        if (tmpPackFlag === false){pack.selected = true;};
+        if (tmpPackFlag === false) { pack.selected = true; }
     };
     
     //get list with user service changes - "selector" = -1 -> get removed services, 1 -> get adding services
-    var getAddingRemovedList = function(originalArr, selector){
+    var getAddingRemovedList = function (originalArr, selector) {
         var result = [];
-        if (angular.isArray(originalArr)){
-            originalArr.forEach(function(pack){
+        if (angular.isArray(originalArr)) {
+            originalArr.forEach(function (pack) {
                 var tmpPack = angular.copy(pack);
                 var addPackFlag = false;
                 tmpPack.serviceItems = [];
     //            $scope.serviceAddedList.push(tmpPack);
-                pack.serviceItems.forEach(function(serv){
-                    if (serv.changedFlag == selector){
+                pack.serviceItems.forEach(function (serv) {
+                    if (serv.changedFlag == selector) {
                         var tmpServ = angular.copy(serv);
                         tmpPack.serviceItems.push(tmpServ);
                         addPackFlag = true;
-                    };
+                    }
                 });
-                if (addPackFlag == true){result.push(tmpPack);};
+                if (addPackFlag == true) { result.push(tmpPack); }
             });
-        };
+        }
         return result;
     };
     
     //save changes
-    $scope.checkPackages = function(){
+    $scope.checkPackages = function () {
         //Получить лист изменений
         
         $scope.serviceAddedList = [];
@@ -235,17 +237,17 @@ angular.module('portalNMC')
     //create struct:
     //  {"packId":<packId>,
     //   "itemId":<itemId>}
-    var prepareData = function(packageList){
+    var prepareData = function (packageList) {
         var result = null;
         var tmp = [];
-        $scope.serviceListEdition.forEach(function(pack){
-            if (pack.selected === true){
-                tmp.push({"packId":pack.id});
-            };
-            pack.serviceItems.forEach(function(serv){
-                if (serv.selected === true){
-                    tmp.push({"packId":pack.id, "itemId":serv.id});
-                };
+        $scope.serviceListEdition.forEach(function (pack) {
+            if (pack.selected === true) {
+                tmp.push({"packId": pack.id});
+            }
+            pack.serviceItems.forEach(function (serv) {
+                if (serv.selected === true) {
+                    tmp.push({"packId": pack.id, "itemId": serv.id});
+                }
             });
         });
         result = tmp;
@@ -253,45 +255,33 @@ angular.module('portalNMC')
     };
     
     var errorCallback = function (e) {
-        console.log(e);
-        var errorCode = "-1";
-        if (mainSvc.checkUndefinedNull(e) || mainSvc.checkUndefinedNull(e.data)){
-            errorCode = "ERR_CONNECTION";
-        };
-        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
-            errorCode = e.resultCode || e.data.resultCode;
-        };
-        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        var errorObj = mainSvc.errorCallbackHandler(e);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
-//        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
-    $scope.savePackages = function(){
+    $scope.savePackages = function () {
         var targetUrl = $scope.ctrlSettings.accountServicesUrl;
         var data = null;
         data = prepareData($scope.serviceListEdition);
 //console.log(data);        
 //return;        
         $http.put(targetUrl, data)
-        .then(function(response){
+            .then(function (response) {
                 location.reload();
-        },
-             errorCallback/*function(e){
-                notificationFactory.errorInfo(e.statusText,e.data.description);
-                console.log(e);
-        }*/);
+            },
+                errorCallback);
     };
     
     //toggle show/hide package consist
-    $scope.toggleShowGroupDetails = function(pack){
+    $scope.toggleShowGroupDetails = function (pack) {
         pack.showDetailsFlag = !pack.showDetailsFlag;
     };
     
-    var initChangdFlags = function(plist){
+    var initChangdFlags = function (plist) {
 //        plist.changeFlag = 0;
-        plist.forEach(function(pack){
+        plist.forEach(function (pack) {
             pack.changedFlag = 0;
-            pack.serviceItems.forEach(function(serv){
+            pack.serviceItems.forEach(function (serv) {
                 serv.changedFlag = 0;
             });
         });
@@ -299,22 +289,22 @@ angular.module('portalNMC')
     };
     
     //Edit button onClick listener
-    $scope.editPackages = function(){
+    $scope.editPackages = function () {
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
         initChangdFlags($scope.serviceListEdition);
         $('#editServiceListModal').modal();
     };
     
     //listener on edit service modal window show
-    $('#editServiceListModal').on('show.bs.modal',function(e){
-        window.setTimeout(function(){
+    $('#editServiceListModal').on('show.bs.modal', function (e) {
+        window.setTimeout(function () {
                 //add popup for editable packages and services
-            $scope.serviceListEdition.forEach(function(pack){
-                var elDOM = "#editpackage"+pack.id;
+            $scope.serviceListEdition.forEach(function (pack) {
+                var elDOM = "#editpackage" + pack.id;
 //console.log($(elDOM));
                 setQtip(elDOM, pack.packDescription);
-                pack.serviceItems.forEach(function(serv){
-                    var servDOM = "#editservice"+serv.id;
+                pack.serviceItems.forEach(function (serv) {
+                    var servDOM = "#editservice" + serv.id;
                     setQtip(servDOM, serv.itemDescription);
                 });
 
@@ -323,38 +313,38 @@ angular.module('portalNMC')
     });
     
     //listener on package checkbox click
-    $scope.packClick = function(pack){
-        if (pack.selected === true){
-            pack.changedFlag +=1; 
-        }else{
+    $scope.packClick = function (pack) {
+        if (pack.selected === true) {
+            pack.changedFlag += 1;
+        } else {
             //remove service from change list
-            pack.changedFlag -=1;
-        };
+            pack.changedFlag -= 1;
+        }
 //        if (pack.selected == true){
-            if (angular.isArray(pack.serviceItems)){
-                pack.serviceItems.forEach(function(serv){
+        if (angular.isArray(pack.serviceItems)) {
+            pack.serviceItems.forEach(function (serv) {
 //console.log(serv);                    
-                    if (serv.selected !== pack.selected){
-                        serv.selected = pack.selected;
-                        serviceSetFlag(serv);
-                    };
-                    
-                });
-            };
+                if (serv.selected !== pack.selected) {
+                    serv.selected = pack.selected;
+                    serviceSetFlag(serv);
+                }
+
+            });
+        }
 //        };
     };
     
     //check user
-    $scope.isSystemuser = function(){
+    $scope.isSystemuser = function () {
         return mainSvc.isSystemuser();
     };
     
-    $scope.isAdmin = function(){
+    $scope.isAdmin = function () {
         return mainSvc.isAdmin();
     };
     
     $scope.isSystemViewInfo = function () {
         return mainSvc.getViewSystemInfo();
-    }
+    };
     
 }]);

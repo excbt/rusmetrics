@@ -1,11 +1,11 @@
-/*jslint white: true, node: true */
+/*jslint eqeq: true, node: true */
 /*global angular, $ */
 'use strict';
-angular.module('portalNMC')
-.directive("nmcViewMeterPeriodsModal", function () {
+var app = angular.module('portalNMC');
+app.directive("nmcViewMeterPeriodsModal", function () {
     return {
         restrict: "AE",
-        replace: true, 
+        replace: true,
         templateUrl: "scripts/directives/templates/nmc-view-meter-periods-modal.html",
         scope: {
             contObjectName: "@",
@@ -29,5 +29,6 @@ angular.module('portalNMC')
 //                console.log($scope.showCancelButton);
             });
         }
-    ]};
+            ]
+    };
 });

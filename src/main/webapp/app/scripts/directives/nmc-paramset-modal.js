@@ -1,25 +1,25 @@
-/*jslint node: true, white: true*/
+/*jslint node: true, eqeq: true*/
 /*global angular, $*/
 'use strict';
-angular.module('portalNMC')
-.directive('nmcParamsetModal', function () {
+var app = angular.module('portalNMC');
+app.directive('nmcParamsetModal', function () {
     return {
         replace: true,
         templateUrl: "scripts/directives/templates/nmc-paramset-modal.html",
-        controller: function ($scope, mainSvc) {
+        controller: ['$scope', 'mainSvc', function ($scope, mainSvc) {
             
             function setPropForSpecDate() {
 //console.log($scope.currentParamSpecialList);                
-                $scope.currentParamSpecialList.forEach( function (cps) {
+                $scope.currentParamSpecialList.forEach(function (cps) {
                     if (cps.paramSpecialTypeKeyname !== "SPECIAL_DATE") {
                         return true;
                     }
                     $('#inputSpecialDate' + cps.reportMetaParamSpecialId).datepicker({
                     //$('.nmc-spec-date').datepicker({
-                      dateFormat: "dd.mm.yy",
-                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                        dateFormat: "dd.mm.yy",
+                        firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                        dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                        monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
                         beforeShow: function () {
                             setTimeout(function () {
                                 $('.ui-datepicker-calendar').css("display", "table");
@@ -36,17 +36,17 @@ angular.module('portalNMC')
             
             var setPropForSettlementMonth = function () {
                 $('#inputReportSettlementMonth').datepicker({
-                  dateFormat: "MM, yy",
-                  firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-                  dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                  monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                    dateFormat: "MM, yy",
+                    firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                    dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                    monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
                     monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
                     changeMonth: true,
                     changeYear: true,
                     showButtonPanel: true,
                     closeText: "Ок",
                     currentText: "",
-                    onClose: function(dateText, inst) {
+                    onClose: function (dateText, inst) {
                         $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
                         $scope.currentObject.settlementMonth = inst.selectedMonth + 1;
                         $scope.currentObject.settlementYear = inst.selectedYear;
@@ -69,37 +69,37 @@ angular.module('portalNMC')
                 });
 
                 $('#inputReportSettlementMonth').datepicker('setDate', new Date($scope.currentObject.settlementYear, $scope.currentObject.settlementMonth - 1, 1));
-            }; 
+            };
             var setPropForStartDate = function () {
                 $('#inputSingleDateStart').datepicker({
-                      dateFormat: "dd.mm.yy",
-                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
-                        beforeShow: function () {
-                            setTimeout(function () {
-                                $('.ui-datepicker-calendar').css("display", "table");
-                            }, 1);
-                        },
-                      onChangeMonthYear: function () {
-                            setTimeout(function () {
-                                $('.ui-datepicker-calendar').css("display", "table");
-                            }, 1);
-                        }
-                  });
-            };
-            var setPropForEndDate = function () {
-                $('#inputSingleDateEnd').datepicker({
-                  dateFormat: "dd.mm.yy",
-                  firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-                  dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                  monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                    dateFormat: "dd.mm.yy",
+                    firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                    dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                    monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
                     beforeShow: function () {
                         setTimeout(function () {
                             $('.ui-datepicker-calendar').css("display", "table");
                         }, 1);
                     },
-                  onChangeMonthYear: function () {
+                    onChangeMonthYear: function () {
+                        setTimeout(function () {
+                            $('.ui-datepicker-calendar').css("display", "table");
+                        }, 1);
+                    }
+                });
+            };
+            var setPropForEndDate = function () {
+                $('#inputSingleDateEnd').datepicker({
+                    dateFormat: "dd.mm.yy",
+                    firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                    dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                    monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                    beforeShow: function () {
+                        setTimeout(function () {
+                            $('.ui-datepicker-calendar').css("display", "table");
+                        }, 1);
+                    },
+                    onChangeMonthYear: function () {
                         setTimeout(function () {
                             $('.ui-datepicker-calendar').css("display", "table");
                         }, 1);
@@ -107,30 +107,30 @@ angular.module('portalNMC')
                 });
             };
             var setPropForSingleDate = function () {
-              $('#inputStartDate').datepicker({
-                  dateFormat: "dd.mm.yy",
-                  firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-                  dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                  monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                $('#inputStartDate').datepicker({
+                    dateFormat: "dd.mm.yy",
+                    firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                    dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                    monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
                     beforeShow: function () {
                         setTimeout(function () {
                             $('.ui-datepicker-calendar').css("display", "table");
                         }, 1);
                     },
-                  onChangeMonthYear: function () {
+                    onChangeMonthYear: function () {
                         setTimeout(function () {
                             $('.ui-datepicker-calendar').css("display", "table");
                         }, 1);
                     }
-              });
+                });
             };
             
-            $('#editParamsetModal').on('shown.bs.modal', function () {                
-                if (Number($scope.currentObject.settlementDay) > 3 && Number($scope.currentObject.settlementDay) <= 9){
+            $('#editParamsetModal').on('shown.bs.modal', function () {
+                if (Number($scope.currentObject.settlementDay) > 3 && Number($scope.currentObject.settlementDay) <= 9) {
                     $scope.currentObject.settlementDay = "0" + $scope.currentObject.settlementDay;
                     $scope.$apply();
                 }
-                $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"} );
+                $("#inputFileTemplate").inputmask('Regex', { regex: "[a-zA-Z0-9]+"});
                 $("#inputReportSettlementDay").inputmask("d", {placeholder: ""});
                 setPropForSettlementMonth();
                 setPropForStartDate();
@@ -171,12 +171,12 @@ angular.module('portalNMC')
             //Creation report window
             //**********************************************************
                         
-            $('#creationReportWindow').on('hidden.bs.modal', function(){
+            $('#creationReportWindow').on('hidden.bs.modal', function () {
                 $scope.createReportWithParamsRequestCancel();
 //                $scope.createReportCancel();
                 $scope.createReportWithParamsInProgress = false;
             	
             });
-        }
+        }]
     };
 });

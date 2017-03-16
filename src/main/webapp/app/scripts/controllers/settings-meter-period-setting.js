@@ -191,7 +191,7 @@ angular.module('portalNMC')
         $('#inputMeterPeriodName').focus();
         $('#inputMeterPeriodFromDay').inputmask('integer', {mask: '9[9]', min: 1, max: 31});
         $('#inputMeterPeriodToDay').inputmask('integer', {mask: '9[9]', min: 1, max: 31});
-        $('#inputMeterPeriodValueCount').inputmask('integer');        
+        $('#inputMeterPeriodValueCount').inputmask('integer', {max: 5});        
     });
 
 }]);

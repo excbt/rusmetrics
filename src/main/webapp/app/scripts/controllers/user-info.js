@@ -1,5 +1,8 @@
+/*jslint node: true*/
+/*global angular*/
+'use strict';
 angular.module('portalNMC')
-    .controller('UserinfoCtrl', function($rootScope, $http){
+    .controller('UserinfoCtrl', function ($rootScope, $http) {
 //        var url = "../api/systemInfo/fullUserInfo";
 //        $http.get(url)
 //                .success(function(data, satus, headers, config){
@@ -8,4 +11,4 @@ angular.module('portalNMC')
 //                })
 //                .error();
     
-});
+    });
