@@ -349,7 +349,7 @@ app.controller('MngmtClientsCtrl', ['$rootScope', '$scope', '$http', 'objectSvc'
             i;
         for (j = 0; j < arrFrom.length; j += 1) {
             var uniqueFlag = true;
-            for (i = 0; i < arrTo.length; i + 1) {
+            for (i = 0; i < arrTo.length; i += 1) {
                 if (arrFrom[j].fullName === arrTo[i].fullName) {
                     uniqueFlag = false;
                     break;

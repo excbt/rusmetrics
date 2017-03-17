@@ -560,7 +560,9 @@ app.controller('TempSchCtrl', ['$scope', '$rootScope', '$cookies', '$window', '$
     };
         //set mask for price value
     $(document).ready(function () {
-        $(':input').inputmask();
+        $timeout(function () {
+            $(':input').inputmask();
+        }, 10);        
         $('#inputSSTDate').datepicker({
             dateFormat: "MM, yy",
             firstDay: $scope.dateOptsParamsetRu.locale.firstDay,

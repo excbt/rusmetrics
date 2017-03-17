@@ -535,8 +535,10 @@ app.controller('MngmtPriceCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'n
     
     //set mask for price value
     $(document).ready(function () {
-//        console.log($(':input'));
-        $(':input').inputmask();
+//        console.log($(':input'));        
+        setTimeout(function () {
+            $(':input').inputmask();
+        }, 10);
     });
     
     //set setting for history toggle

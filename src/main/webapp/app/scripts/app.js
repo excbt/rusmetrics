@@ -33,7 +33,7 @@ var app = angular
     ]);
 
 //routing config
-app.config(function ($routeProvider) {
+app.config(['$routeProvider', function ($routeProvider) {
 //console.log("Run routeProviderConfig");    
     $routeProvider
         .when('/', {
@@ -295,7 +295,7 @@ app.config(function ($routeProvider) {
         .otherwise({
             redirectTo: '/'
         });
-});
+}]);
 
 //app.config(['dateRangePickerConfig', function(dateRangePickerConfig) {
 //    dateRangePickerConfig.separator = ' по ';

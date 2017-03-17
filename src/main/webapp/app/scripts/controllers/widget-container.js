@@ -2,7 +2,7 @@
 /*global angular*/
 'use strict';
 angular.module('portalNMC')
-    .controller('widgetContainer', function ($scope) {
+    .controller('widgetContainer', ['$scope', function ($scope) {
         $scope.isLoading = true;
 
         $scope.$on('exportPropertiesUpdated', function (event, props) {
@@ -45,4 +45,4 @@ angular.module('portalNMC')
             $scope.isError = false;
             $scope.$broadcast('reloadWidget');
         };
-    });
+    }]);
