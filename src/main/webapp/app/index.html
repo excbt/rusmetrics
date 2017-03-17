@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" href="fv_1.png" />  
     <link rel="stylesheet" href="/public/bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
     <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/public/bower_components/bootstrap-toggle/css/bootstrap-toggle.css"/>
+    <link rel="stylesheet" href="/public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css"/>
       
     <!-- endbower -->
     <!-- endbuild -->
@@ -580,7 +580,7 @@
       <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
       <script src="/public/bower_components/angular-file-upload/angular-file-upload.min.js"></script>
       <script src="/public/bower_components/angular-ui-select/dist/select.min.js"></script>
-      <script src="/public/bower_components/bootstrap-toggle/js/bootstrap-toggle.js"></script>
+      <script src="/public/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
       <script src="/public/bower_components/angular-ui-mask/dist/mask.min.js"></script>
       <script src="/public/bower_components/angular-widget/angular-widget.js"></script>
       <script src="/public/bower_components/chart.js/dist/Chart.min.js"></script>
@@ -642,15 +642,21 @@
       <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>     
  		        
         <script src="scripts/app.js"></script>
-<!--      <script src="scripts_min/app.min.js"></script>-->
-    
-         <script src="scripts/controllers/main.js"></script> 
- <!--      <script src="scripts_min/controllers/main.min.js"></script> -->
+<!--      <script src="scripts.min/app.min.js"></script>-->
+<!--       <script src="scripts.min/controllers/main.min.js"></script> -->    
+<!--      <script src="scripts.min/controllers/notice.min.js"></script>-->      
+<!--      <script src="scripts_min/controllers/objects.min.js"></script>-->
+      
+<!--      Min controllers-->
+        <script src="scripts.min/controllers.min.js"></script>          
+      
+<!--      <script src="scripts/controllers/main.js"></script> 
+
        <script src="scripts/controllers/notice.js"></script> 
-<!--      <script src="scripts_min/controllers/notice.min.js"></script>-->
+
      <script src="scripts/controllers/directory.js"></script> 
      <script src="scripts/controllers/objects.js"></script> 
-<!--      <script src="scripts_min/controllers/objects.min.js"></script>-->
+
      <script src="scripts/controllers/reports_use_svc.js"></script> 
      <script src="scripts/controllers/indicator.js"></script> 
        <script src="scripts/controllers/tariffs.js"></script> 
@@ -694,6 +700,7 @@
       <script src="scripts/controllers/about-program.js"></script>
       <script src="scripts/controllers/impulse-indicator.js"></script>
       <script src="scripts/controllers/widget-container.js"></script>
+-->
 <!--      test-->
 <!--
        <script src="scripts/controllers/test.js"></script>
@@ -702,6 +709,9 @@
 <!--      <script src="widgets/test/test.js"></script> -->
       
 <!--       Directives -->
+      <!--      Min directives-->
+        <script src="scripts.min/directives.min.js"></script>
+<!--      
      <script src="scripts/directives/crud-grid-data-factory.js"></script> 
      <script src="scripts/directives/crud-grid-directive-directories.js"></script> 
        <script src="scripts/directives/crud-grid-directive-objects.js"></script> 
@@ -717,8 +727,12 @@
       <script src="scripts/directives/show-datasource-modal.js"></script>
       <script src="scripts/directives/nmc-upload-files.js"></script>
       <script src="scripts/directives/nmc-view-meter-periods-modal.js"></script>
+-->
       
 <!--       Services -->
+      <!--      Min services-->
+        <script src="scripts.min/services.min.js"></script>
+<!--      
        <script src="scripts/services/notification-factory.js"></script> 
        <script src="scripts/services/object-service.js"></script> 
        <script src="scripts/services/monitor-service.js"></script> 
@@ -729,9 +743,10 @@
        <script src="scripts/services/log-service.js"></script> 
        <script src="scripts/services/security-check-service.js"></script>
       <script src="scripts/services/meter-periods-service.js"></script>
+-->
 <!--         endbuild -->
     
-       <script src="scripts/controllers/data-range-settings.js"></script> 
+<!--       <script src="scripts/controllers/data-range-settings.js"></script> -->
       
       <!-- Metrics -->
       <script src="scripts/metrics.js"></script>

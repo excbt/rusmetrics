@@ -2,7 +2,7 @@
 /*global angular, moment*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('indicatorSvc', function (mainSvc) {
+app.service('indicatorSvc', ['mainSvc', function (mainSvc) {
     var contObjectId = null,
         contZpointId = null,
         contObjectName = null,
@@ -640,4 +640,4 @@ app.service('indicatorSvc', function (mainSvc) {
         setZpointId: setZpointId,
         setZpointName: setZpointName
     };
-});
+}]);
