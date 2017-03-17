@@ -13,6 +13,4 @@ app.controller('ObjectsCtrl', ['$scope', '$rootScope', '$cookies', '$http', 'mai
     
     $scope.ctrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
     $scope.ctrlSettings.pageAccess = mainSvc.checkContext($scope.ctrlSettings.pageCtxId) || mainSvc.isCabinet();
-    
-    
 }]);

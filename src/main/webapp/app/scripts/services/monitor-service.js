@@ -191,7 +191,25 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
             })
             .error(errorCallbackConsole);
     };
-        
+    function prepareEventMessage(inputData) {
+                        //temp array
+        var tmpMessage = "";
+//                var tmpMessageEx = "";
+        //make the new array of the types wich formatted to display
+        inputData.forEach(function (element) {
+//console.log(element);                        
+            var tmpEvent = "";
+            var contEventTime = new Date(element.contEventTime);
+            var pstyle = "";
+            if (element.contEventLevelColorKeyname === "RED") {
+                pstyle = "color: red;";
+            }
+            tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+            tmpMessage += tmpEvent;
+        });
+        return tmpMessage;
+    }
+    
     var getMonitorEventsForObject = function (obj) {
         var url = objectUrl + "/" + obj.id + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
         if (isCancelParamsIncorrect() === true) {
@@ -210,26 +228,26 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
                     return;
                 }
                 //temp array
-                var tmpMessage = "";
+//                var tmpMessage = "";
 //                var tmpMessageEx = "";
                 //make the new array of the types wich formatted to display
-                data.forEach(function (element) {
+//                data.forEach(function (element) {
 //console.log(element);                        
-                    var tmpEvent = "";
-                    var contEventTime = new Date(element.contEventTime);
-                    var pstyle = "";
-                    if (element.contEventLevelColorKeyname === "RED") {
-                        pstyle = "color: red;";
-                    }
-                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
-                    tmpMessage += tmpEvent;
-                });
+//                    var tmpEvent = "";
+//                    var contEventTime = new Date(element.contEventTime);
+//                    var pstyle = "";
+//                    if (element.contEventLevelColorKeyname === "RED") {
+//                        pstyle = "color: red;";
+//                    }
+//                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+//                    tmpMessage += tmpEvent;
+//                });
 //console.log(tmpMessage);     
 //                    if (obj.contObjectStats.contEventLevelColor === "GREEN"){
 //                        obj.monitorEvents = "На объекте нет нештатных ситуаций";
 //                    }else 
                 if ((obj.contObjectStats.contEventLevelColor === "RED") || (obj.contObjectStats.contEventLevelColor === "YELLOW")) {
-                    obj.monitorEvents = tmpMessage;
+                    obj.monitorEvents = prepareEventMessage(data);
                     obj.monitorEventsForMap = data;
                 }
 //console.log(obj);                
@@ -254,6 +272,14 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
                 }
             })
             .error(errorCallbackConsole);
+    }
+    
+    function loadMonitorEventsForObject(objId) {
+        var url = objectUrl + "/" + objId + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
+        if (isCancelParamsIncorrect() === true) {
+            return null;
+        }
+        return $http.get(url, httpOptions);            
     }
         
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)
@@ -286,6 +312,14 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         
             //Вызвываем с заданным периодом обновление монитора
     interval = $interval(startRefreshing, Number(monitorSvcSettings.refreshPeriod) * 1000);
+    
+    
+    var loadDefaultMonitorTreeSetting = function () {
+        if (isCancelParamsIncorrect() === true) {
+            return null;
+        }
+        return $http.get(defaultTreeUrl, httpOptions);
+    };
         
     var getMonitorData = function () {
 //console.log("getMonitorData start111");            
@@ -374,13 +408,6 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         }
         return $http.get(subscrTreesUrl + '/' + treeId + '/node/' + nodeId + '/contObjects/cityStatusCollapseV2', httpOptions);
     };
-
-    var loadDefaultMonitorTreeSetting = function () {
-        if (isCancelParamsIncorrect() === true) {
-            return null;
-        }
-        return $http.get(defaultTreeUrl, httpOptions);
-    };
 //******************************************************************
 //******************************************************************
         
@@ -397,23 +424,24 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
     initSvc();
 
     return {
-        checkUndefinedNull,
-            getAllMonitorObjects,
-        getAllMonitorCities,
-            getLoadingStatus,
-        getMonitorEventsByObject,
-            getMonitorEventsByObjectForMap,
-        getMonitorEventsForObject,
-            getMonitorSettings,
-        getRequestCanceler,
+        checkUndefinedNull: checkUndefinedNull,
+        getAllMonitorObjects: getAllMonitorObjects,
+        getAllMonitorCities: getAllMonitorCities,
+        getLoadingStatus: getLoadingStatus,
+        getMonitorEventsByObject: getMonitorEventsByObject,
+        getMonitorEventsByObjectForMap: getMonitorEventsByObjectForMap,
+        getMonitorEventsForObject: getMonitorEventsForObject,
+        getMonitorSettings: getMonitorSettings,
+        getRequestCanceler: getRequestCanceler,
 
 //            loadSubscrTree,
 //            loadSubscrTrees,
 //            loadSubscrObjectsByTreeNode,
 
-            loadDefaultMonitorTreeSetting,
-
-        setMonitorSettings
-            };
+        loadDefaultMonitorTreeSetting: loadDefaultMonitorTreeSetting,
+        loadMonitorEventsForObject: loadMonitorEventsForObject,
+        prepareEventMessage: prepareEventMessage,
+        setMonitorSettings: setMonitorSettings
+    };
         
 }]);

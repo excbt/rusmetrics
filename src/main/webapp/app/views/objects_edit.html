@@ -7,37 +7,27 @@
     </ul>
 </div> 
 -->
-<div id="object_list_view_page_access_denided" ng-class="{'nmc-show':!ctrlSettings.pageAccess, 'nmc-hide':ctrlSettings.pageAccess}">
+<div id="object_list_view_page_access_denided" 
+     ng-class="{'nmc-show': !ctrlSettings.pageAccess, 'nmc-hide': ctrlSettings.pageAccess}">
     Нет доступа
 </div>
-<div id="object_list_view_page" ng-class="{'nmc-show':ctrlSettings.pageAccess, 'nmc-hide':!ctrlSettings.pageAccess}" crud-grid-objects table="'../api/subscr/contObjects'"
-	columns='[
-
-	          {"name":"fullName", "header" : "Название", "class":"col-xs-10 col-md-10"}
+<div id="object_list_view_page" 
+     ng-class="{'nmc-show': ctrlSettings.pageAccess, 'nmc-hide': !ctrlSettings.pageAccess}" 
+     crud-grid-objects 
+     table="'../api/subscr/contObjects'"
+     columns='[
+                {"name": "fullName", "header": "Название", "class": "col-xs-10 col-md-10"}
            
-            ]'
-
-	captions='{"loading":"loading...", "totalElements":"totalElements"}'
-	exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"}'
-     
-     blist = 'false'
-     
-     bgroup='true'
-     
+              ]'
+     captions='{"loading": "loading...", "totalElements": "totalElements"}'
+     exprops='{"idColumnName": "id", "defaultOrderBy": "fullName", "nameColumnName": "fullName"}'     
+     blist = 'false'     
+     bgroup='true'     
      bextramenu='true'
-     
      bobject='true'
-
-    
-     
-     
-        zpointcolumns='[
-            
-           
-	          {"name":"zpointName", "header" : "Наименование", "class":"col-xs-4"},             
-           {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-xs-2"},
-            {"name":"empty", "header" : " ", "class":"col-xs-6"}
-            ]'     
-    
-
-     ></div>
+     zpointcolumns='[                  
+                        {"name": "zpointName", "header" : "Наименование", "class": "col-xs-4"},             
+                        {"name": "zpointLastDataDate", "header": "Последние данные", "class": "col-xs-2"},
+                        {"name": "empty", "header": " ", "class": "col-xs-6"}
+                    ]'     
+    ></div>
