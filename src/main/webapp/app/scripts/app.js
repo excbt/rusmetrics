@@ -314,16 +314,16 @@ app.config(['KeepaliveProvider', 'IdleProvider', function (KeepaliveProvider, Id
 //}]);
 
 //configure $log service
-app.config(function ($logProvider) {
+app.config(['$logProvider', function ($logProvider) {
     $logProvider.debugEnabled(true);
-});
+}]);
 
 app.config(['uiMask.ConfigProvider', function (uiMaskConfigProvider) {
     uiMaskConfigProvider.maskDefinitions({'a': /[a-z]/, 'A': /[A-Z]/, '*': /[a-zA-Z0-9]/, '9': /\d/, 'M': /[A-F0-9]/});
 }]);
 
 //config widget
-app.config(function initializemanifestGenerator(widgetsProvider) {
+app.config(['widgetsProvider', function initializemanifestGenerator(widgetsProvider) {
     widgetsProvider.setManifestGenerator(function () {
         return function (name) {
             return {
@@ -336,7 +336,7 @@ app.config(function initializemanifestGenerator(widgetsProvider) {
             };
         };
     });
-});
+}]);
 
 //app.run(['objectSvc', 'mainSvc', function(objectSvc, mainSvc){
 //console.log("Run main, object and monitor services.");  
