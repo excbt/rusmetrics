@@ -10,7 +10,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
             responsive: true
         });
     }])
-    .controller('zpointHw_v1WidgetCtrl', function ($scope, $http, $rootScope, widgetConfig) {
+    .controller('zpointHw_v1WidgetCtrl', ['$scope', '$http', '$rootScope', 'widgetConfig', function ($scope, $http, $rootScope, widgetConfig) {
     //data generator - use for widget preview
         var timeDetailTypes = {
             month: {
@@ -143,7 +143,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
 
         $scope.lineChart = {};
         $scope.lineChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-        $scope.lineChart.series = ['t макс, ' + '\u2103', 't норм верх, ' + '\u2103', 't норм низ, ' + '\u2103', 't факт, ' + '\u2103', 't хвс, ' + '\u2103'];
+        $scope.lineChart.series = ['t макс, ' + '\u2103', 't норм. верхн., ' + '\u2103', 't норм. нижн., ' + '\u2103', 't факт, ' + '\u2103', 't хвс, ' + '\u2103'];
         $scope.lineChart.data = [[], [], [], [], []];
         $scope.lineChart.dataTitle = [];
 
@@ -197,7 +197,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
             }
             if (!angular.isArray(tmpData) || tmpData.length === 0) {
                 $scope.presentDataFlag = false;
-                console.log("zpointHw_v1Widget: response data is empty!");
+//                console.log("zpointHw_v1Widget: response data is empty!");
                 return false;
             }
             $scope.presentDataFlag = true;
@@ -210,8 +210,8 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
                 var curDateFormatted = moment(elm.dataDateString, SERVER_DATE_FORMAT).format(SERVER_DATE_FORMAT_SHORT);
 //console.log(curDateFormatted);
                 
-                if (moment(elm.dataDateString, SERVER_DATE_FORMAT) >= moment(curDateFormatted + " " + NIGHT_DEVIATION.startPeriod, SERVER_DATE_FORMAT) 
-                    && moment(elm.dataDateString, SERVER_DATE_FORMAT) <= moment(curDateFormatted + " " + NIGHT_DEVIATION.endPeriod, SERVER_DATE_FORMAT)) {
+                if (moment(elm.dataDateString, SERVER_DATE_FORMAT) >= moment(curDateFormatted + " " + NIGHT_DEVIATION.startPeriod, SERVER_DATE_FORMAT)
+                        && moment(elm.dataDateString, SERVER_DATE_FORMAT) <= moment(curDateFormatted + " " + NIGHT_DEVIATION.endPeriod, SERVER_DATE_FORMAT)) {
                     
                     $scope.lineChart.data[1].push(T_NORM + NIGHT_DEVIATION.deviation);
                     $scope.lineChart.data[2].push(T_NORM - NIGHT_DEVIATION.deviation);
@@ -239,18 +239,18 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
                 return true;
             }
             if (angular.isUndefined(resp) || resp === null) {
-                console.log("zpointHw_v1Widget: status response is empty.");
+//                console.log("zpointHw_v1Widget: status response is empty.");
                 return false;
             }
             if (angular.isUndefined(resp.data) || resp.data === null) {
-                console.log("zpointHw_v1Widget: status response data is empty.");
+//                console.log("zpointHw_v1Widget: status response data is empty.");
                 return false;
             }
             if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
                 $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
-            } else {
+            }/* else {
                 console.log("zpointHw_v1Widget: zpoint status color is empty or not string.");
-            }
+            }*/
             if (angular.isDefined(resp.data.lastHwData) && resp.data.lastHwData !== null) {
                 $scope.data.currentHwTemp = resp.data.lastHwData.t_in;
 //                ['#ef473a', '#FDB45C', '#803690', '#00ADF9'],
@@ -261,9 +261,9 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
                 } else {
                     $scope.data.currentHwTempColor = "#FDB45C";
                 }
-            } else {
+            }/* else {
                 console.log("zpointHw_v1Widget: current hw temperature is empty.");
-            }
+            }*/
             //$scope.data.forecastTemp = -88;//для теста
         }
     
@@ -277,6 +277,10 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
             //get data
             if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
                 console.log("zpointHw_v1Widget: contZpoint or mode is null!");
+                console.log("data:");
+                console.log($scope.data);
+                console.log("mode:");
+                console.log(mode);
                 return false;
             }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
@@ -320,4 +324,4 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
         
         initWidget();
         
-    });
+    }]);

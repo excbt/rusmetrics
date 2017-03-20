@@ -14,41 +14,41 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
 //            showLines: false
 //        });
     }])
-    .controller('zpointCwWidgetCtrl', function ($scope, $http, $rootScope, widgetConfig) {
+    .controller('zpointCwWidgetCtrl', ['$scope', '$http', '$rootScope', 'widgetConfig', function ($scope, $http, $rootScope, widgetConfig) {
     //data generator
-        var timeDetailTypes = {            
+        var timeDetailTypes = {
             month: {
                 timeDetailType: "24h",
                 count: 30,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
                 }
             },
             day: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             },
             week: {
                 timeDetailType: "24h",
                 count: 7,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
                 }
             },
             today: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             },
             yesterday: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             }
@@ -60,7 +60,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
             for (i = 1; i <= timeDetailType.count; i += 1) {
                 node = {};
                 node.timeDetailType = timeDetailType.timeDetailType;
-                node.v_in = Math.random()*10 + 1;
+                node.v_in = Math.random() * 10 + 1;
                 var v_delta = Math.random();
                 node.v_out = node.v_in - v_delta;
                 node.dataDateString = timeDetailType.dateFormatter(i);
@@ -241,7 +241,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
         };
         $scope.barChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
         $scope.barChart.options = {
-            /*responsive: false,*/            
+            /*responsive: false,*/
             legend: {
                 display: true
             },
@@ -275,7 +275,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
             }
             if (!angular.isArray(tmpData) || tmpData.length === 0) {
                 $scope.presentDataFlag = false;
-                console.log("zpointCwWidget: response data is empty!");
+//                console.log("zpointCwWidget: response data is empty!");
                 return false;
             }
             $scope.presentDataFlag = true;
@@ -284,7 +284,7 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
             $scope.barChart.dataTitle = [];
             var dataTitleElem = {};
             tmpData.forEach(function (elm) {
-                $scope.barChart.labels.push(moment(elm.dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.dateFormat));                
+                $scope.barChart.labels.push(moment(elm.dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.dateFormat));
                 $scope.barChart.data[0].push((elm.v_in - elm.v_out).toFixed(3));
                 dataTitleElem = {
                     dataDateString : elm.dataDateString
@@ -302,18 +302,18 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
                 return true;
             }
             if (angular.isUndefined(resp) || resp === null) {
-                console.log("zpointCwWidget: status response is empty.");
+//                console.log("zpointCwWidget: status response is empty.");
                 return false;
             }
             if (angular.isUndefined(resp.data) || resp.data === null) {
-                console.log("zpointCwWidget: status response data is empty.");
+//                console.log("zpointCwWidget: status response data is empty.");
                 return false;
             }
             if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
                 $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
-            } else {
+            }/* else {
                 console.log("zpointCwWidget: zpoint status color is empty or not string.");
-            }            
+            }*/
         }
     
         $scope.modeClick = function (mode) {
@@ -326,6 +326,10 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
             //get data
             if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
                 console.log("zpointCwWidget: contZpoint or mode is null!");
+                console.log("data:");
+                console.log($scope.data);
+                console.log("mode:");
+                console.log(mode);
                 return false;
             }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
@@ -364,4 +368,4 @@ angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])
         
         initWidget();
         
-    });
+    }]);

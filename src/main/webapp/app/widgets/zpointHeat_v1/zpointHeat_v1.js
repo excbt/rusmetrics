@@ -10,7 +10,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             responsive: true
         });
     }])
-    .controller('zpointHeat_v1WidgetCtrl', function ($scope, $http, $rootScope, widgetConfig) {
+    .controller('zpointHeat_v1WidgetCtrl', ['$scope', '$http', '$rootScope', 'widgetConfig', function ($scope, $http, $rootScope, widgetConfig) {
     //data generator
         var timeDetailTypes = {
             month: {
@@ -186,7 +186,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             }
             if (!angular.isArray(tmpData) || tmpData.length === 0) {
                 $scope.presentDataFlag = false;
-                console.log("zpointHeatWidget: response data is empty!");
+//                console.log("zpointHeatWidget: response data is empty!");
                 return false;
             }
             $scope.presentDataFlag = true;
@@ -212,18 +212,18 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
     
         function getStatusSuccessCallback(resp) {
             if (angular.isUndefined(resp) || resp === null) {
-                console.log("zpointHeatWidget: status response is empty.");
+//                console.log("zpointHeatWidget: status response is empty.");
                 return false;
             }
             if (angular.isUndefined(resp.data) || resp.data === null) {
-                console.log("zpointHeatWidget: status response data is empty.");
+//                console.log("zpointHeatWidget: status response data is empty.");
                 return false;
             }
             if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
                 $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
-            } else {
+            }/* else {
                 console.log("zpointHeatWidget: zpoint status color is empty or not string.");
-            }
+            }*/
             if (angular.isDefined(resp.data.forecastTemp) && resp.data.forecastTemp !== null) {
                 $scope.data.forecastTemp = resp.data.forecastTemp;
                 if ($scope.data.forecastTemp <= 0) {
@@ -231,9 +231,9 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                 } else {
                     $scope.data.forecastTempColor = "#ef473a";
                 }
-            } else {
+            }/* else {
                 console.log("zpointHeatWidget: forecast temperature is empty.");
-            }
+            }*/
         }
     
         $scope.modeChange = function () {
@@ -245,6 +245,10 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             //get data
             if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || $scope.data.currentMode === null || $scope.data.currentMode.keyname === null) {
                 console.log("zpointHeatWidget: contZpoint or mode is null!");
+                console.log("data:");
+                console.log($scope.data);
+                console.log("mode:");
+                console.log(mode);
                 return false;
             }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent($scope.data.currentMode.keyname);
@@ -288,4 +292,4 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
         
         initWidget();
         
-    });
+    }]);

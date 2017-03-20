@@ -14,41 +14,41 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 //            showLines: false
 //        });
     }])
-    .controller('zpointHeatWidgetCtrl', function ($scope, $http, $cookies, $rootScope, widgetConfig) {
+    .controller('zpointHeatWidgetCtrl', ['$scope', '$http', '$cookies', '$rootScope', 'widgetConfig', function ($scope, $http, $cookies, $rootScope, widgetConfig) {
         //data generator
-        var timeDetailTypes = {            
+        var timeDetailTypes = {
             month: {
                 timeDetailType: "24h",
                 count: 30,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
                 }
             },
             day: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             },
             week: {
                 timeDetailType: "24h",
                 count: 7,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
                 }
             },
             today: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             },
             yesterday: {
                 timeDetailType: "1h",
                 count: 24,
-                dateFormatter: function(param) {                    
+                dateFormatter: function (param) {
                     return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
                 }
             }
@@ -135,7 +135,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
             legend: {
                 display: true
             },
-            tooltips: {                
+            tooltips: {
                 callbacks: {
                     beforeTitle: function (arr, data) {
                         var result = "";
@@ -164,7 +164,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
             }
             if (!angular.isArray(tmpData) || tmpData.length === 0) {
                 $scope.presentDataFlag = false;
-                console.log("zpointHeatWidget: response data is empty!");
+//                console.log("zpointHeatWidget: response data is empty!");
                 return false;
             }
             $scope.presentDataFlag = true;
@@ -190,17 +190,17 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
     
         function getStatusSuccessCallback(resp) {
             if (angular.isUndefined(resp) || resp === null) {
-                console.log("zpointHeatWidget: status response is empty.");
+//                console.log("zpointHeatWidget: status response is empty.");
                 return false;
             }
             if (angular.isUndefined(resp.data) || resp.data === null) {
-                console.log("zpointHeatWidget: status response data is empty.");
+//                console.log("zpointHeatWidget: status response data is empty.");
                 return false;
             }
             if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
                 $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
             } else {
-                console.log("zpointHeatWidget: zpoint status color is empty or not string.");
+//                console.log("zpointHeatWidget: zpoint status color is empty or not string.");
             }
             if (angular.isDefined(resp.data.forecastTemp) && resp.data.forecastTemp !== null) {
                 $scope.data.forecastTemp = resp.data.forecastTemp;
@@ -209,9 +209,9 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
                 } else {
                     $scope.data.forecastTempColor = "#ef473a";
                 }
-            } else {
+            }/* else {
                 console.log("zpointHeatWidget: forecast temperature is empty.");
-            }
+            }*/
             //$scope.data.forecastTemp = -88;//для теста
         }
     
@@ -225,6 +225,10 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
             //get data
             if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
                 console.log("zpointHeatWidget: contZpoint or mode is null!");
+                console.log("data:");
+                console.log($scope.data);
+                console.log("mode:");
+                console.log(mode);
                 return false;
             }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
@@ -263,4 +267,4 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
         
         initWidget();
         
-    });
+    }]);
