@@ -1,19 +1,22 @@
-<div class = "zpoint-el-widget-v1" ng-controller = "zpointEl_v1WidgetCtrl">
+<div class = "zpoint-el-widget-v1" 
+     ng-controller = "zpointEl_v1WidgetCtrl">
     <div class = "container-fluid">
-        <div class="row">
+        <div class = "row">
             <div class = "col-xs-6">
                 <div class = "row">
                     <div class = "col-xs-1">
-                        <img height="16" width="16" ng-src="{{data.imgPath}}">
+                        <img height = "16" width = "16" 
+                             ng-src = "{{data.imgPath}}">
                     </div>
                     <div class = "col-xs-10">                        
-                        <div class = "nmc-el-widget-zpname" ng-bind="widgetOptions.zpointName"></div>
+                        <div class = "nmc-el-widget-zpname" 
+                             ng-bind = "widgetOptions.zpointName"></div>
                     </div>
                 </div>
                 <div class = "row">
                     <div class = "col-xs-12">
                         <label class = "nmc-el-widget-label">Период:</label>
-                        <select class="form-control nmc-select-form nmc-el-widget-modes"
+                        <select class = "form-control nmc-select-form nmc-el-widget-modes"
                                 ng-model = "data.currentMode"
                                 ng-options = "mode as mode.caption for mode in data.MODES"
                                 ng-change = "modeChange()">
@@ -27,7 +30,8 @@
                         <a href="" class = "nmc-el-widget-btn"
                            ng-click = "openNotices()">
                             <img class = "nmc-el-widget-statusimg"                              
-                             height = "40" width = "40" 
+                             height = "40" width = "40"
+                                 ng-attr-id = "{{'zpStatusImg' + widgetOptions.contZpointId}}"
                              ng-src = "{{data.zpointStatus}}" 
                              ng-attr-title = {{data.zpointStatusTitle}}>        
 <!--                            <i class = "glyphicon glyphicon-envelope nmc-el-widget-btn" title = "Открыть уведомления"></i>-->

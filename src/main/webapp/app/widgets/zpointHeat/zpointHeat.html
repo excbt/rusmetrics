@@ -1,13 +1,15 @@
-<div class="zpoint-heat-widget" ng-controller="zpointHeatWidgetCtrl">
-    <div class="container-fluid">
-        <div class="row">
+<div class = "zpoint-heat-widget" 
+     ng-controller = "zpointHeatWidgetCtrl">
+    <div class = "container-fluid">
+        <div class = "row">
             <div class = "col-xs-8">
-                <img class='' height="16" width="16" ng-src="{{data.imgPath}}">
+                <img height = "16" width = "16" 
+                     ng-src = "{{data.imgPath}}">
                 <span ng-bind="widgetOptions.zpointName"></span>
             </div>
             <div class = "col-xs-4"
                  style = "text-align: right">                
-                <span ng-style="{'color': data.forecastTempColor}">
+                <span ng-style = "{'color': data.forecastTempColor}">
                     t <sub>наруж.</sub>, &deg;C = 
                 </span>                
                 <img ng-show = "data.forecastTemp === null"
@@ -26,10 +28,14 @@
         </div>
         <div class="row">            
             <div class = "col-xs-offset-3 col-xs-5">
-                <ul class="nav nav-pills" style="float: right;">
-                    <li role="presentation" ng-repeat="mode in data.MODES"
+                <ul class="nav nav-pills" 
+                    style="float: right;">
+                    <li role="presentation" 
+                        ng-repeat="mode in data.MODES"
                         ng-class="mode.modeClass">
-                        <a href="" class = "nmc-period-toogle" ng-click="modeClick(mode)">
+                        <a href="" 
+                           class = "nmc-period-toogle" 
+                           ng-click="modeClick(mode)">
                             <span ng-bind="mode.caption"></span>
                         </a>
                     </li>
@@ -37,7 +43,7 @@
             </div>                        
             <div class = "col-xs-4"
                  style = "">
-                <a href="" style="font-size: 12px; float: right; margin-bottom: 5px;"
+                <a href="" style = "font-size: 12px; float: right; margin-bottom: 5px;"
                    ng-click = "openNotices()">
                     <img class = 'marginLeft5' 
                      style = ""
@@ -59,13 +65,13 @@
                         <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.
                 </div>
                 <div ng-show = "presentDataFlag ===  true">
-                    <canvas id="line" 
-                            class="chart chart-line" 
-                            chart-data="lineChart.data"
-                            chart-labels="lineChart.labels" 
-                            chart-series="lineChart.series" 
-                            chart-options="lineChart.options"
-                            chart-dataset-override="lineChart.datasetOverride">
+                    <canvas id = "line" 
+                            class = "chart chart-line" 
+                            chart-data = "lineChart.data"
+                            chart-labels = "lineChart.labels" 
+                            chart-series = "lineChart.series" 
+                            chart-options = "lineChart.options"
+                            chart-dataset-override = "lineChart.datasetOverride">
                     </canvas>
                 </div>
             </div>            

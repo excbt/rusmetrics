@@ -199,9 +199,9 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
             }
             if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
                 $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
-            } else {
-//                console.log("zpointHeatWidget: zpoint status color is empty or not string.");
-            }
+            }/* else {
+                console.log("zpointHeatWidget: zpoint status color is empty or not string.");
+            }*/
             if (angular.isDefined(resp.data.forecastTemp) && resp.data.forecastTemp !== null) {
                 $scope.data.forecastTemp = resp.data.forecastTemp;
                 if ($scope.data.forecastTemp <= 0) {

@@ -27,7 +27,8 @@
                         <a href="" class = "nmc-cw-widget-btn"
                            ng-click = "openNotices()">
                             <img class = "nmc-cw-widget-statusimg"                              
-                             height = "40" width = "40" 
+                             height = "40" width = "40"
+                                 ng-attr-id = "{{'zpStatusImg' + widgetOptions.contZpointId}}"
                              ng-src = "{{data.zpointStatus}}" 
                              ng-attr-title = {{data.zpointStatusTitle}}>        
 <!--                            <i class = "glyphicon glyphicon-envelope nmc-cw-widget-btn" title = "Открыть уведомления"></i>-->

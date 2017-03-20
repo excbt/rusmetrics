@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true*/
-/*global angular, moment*/
+/*global angular, moment, $*/
 'use strict';
 
 angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
@@ -73,9 +73,14 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
         $scope.widgetPath = "widgets/zpointHeat_v1";
         var DATA_URL = "../api/subscr/widgets/heat",/*//chart/heatTemp";*/
             ZPOINT_STATUS_TEMPLATE = $scope.widgetPath + "/zpoint-state-",
-            SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm";
+            SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
+            ZPOINT_EVENTS_URL = null;
         
         $scope.widgetOptions = widgetConfig.getOptions();
+        var contObjectId = $scope.widgetOptions.contObjectId;
+        if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
+            ZPOINT_EVENTS_URL = "../api/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + $scope.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
+        }
         //console.log($scope.widgetOptions);
 //        var zpstatus = $scope.widgetOptions.zpointStatus;
         $scope.data = {};
@@ -178,6 +183,25 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                 }
             }
         };
+        
+        function prepareEventMessage(inputData) {
+                        //temp array
+            var tmpMessage = "";
+    //                var tmpMessageEx = "";
+            //make the new array of the types wich formatted to display
+            inputData.forEach(function (element) {
+    //console.log(element);                        
+                var tmpEvent = "";
+                var contEventTime = new Date(element.contEventTime);
+                var pstyle = "";
+                if (element.contEventLevelColorKeyname === "RED") {
+                    pstyle = "color: red;";
+                }
+                tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+                tmpMessage += tmpEvent;
+            });
+            return tmpMessage;
+        }
     
         function getDataSuccessCallback(rsp) {
             var tmpData = rsp.data;
@@ -209,6 +233,47 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
         function errorCallback(e) {
             console.log(e);
         }
+        
+        function setEventsForZpoint(url, zpointId) {
+            var imgObj = "#zpStatusImg" + zpointId;
+            $(imgObj).qtip({
+                content: {
+                    text: function (event, api) {
+                        $http.get(url)
+                            .then(function (resp) {
+                                var message = "";
+                                if (angular.isDefined(resp) && angular.isDefined(resp.data) && angular.isArray(resp.data)) {
+                                    message = prepareEventMessage(resp.data);
+                                } else {
+                                    message = "Непонятный ответ от сервера. Смотри консоль браузера.";
+                                    console.log(resp);
+                                }
+                                api.set('content.text', message);
+                            },
+                                 function (error) {
+                                    var message = "";
+                                    switch (error.status) {
+                                    case 404:
+                                        message = "Для данной точки учета событий не найдено.";
+                                        break;
+                                    case 500:
+                                        message = "Ошибка сервера. Закройте виджет и повторите попытку. Если ситуация не исправится, то обратитесь к разработчику.";
+                                        break;
+                                    default:
+                                        message = "При загрузке событий произошла непредвиденная ситуация. Закройте виджет и повторите попытку. Если ситуация не исправится, то обратитесь к разработчику.";
+                                        break;
+                                    }
+                                    api.set('content.text', error.status + ': ' + message);
+                                });
+                        return "Загружаются сообытия...";
+                    }
+                },
+
+                style: {
+                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                }
+            });
+        }
     
         function getStatusSuccessCallback(resp) {
             if (angular.isUndefined(resp) || resp === null) {
@@ -221,6 +286,11 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             }
             if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
                 $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
+//                if state is no GREEN and contObjectId is present
+                if (resp.data.color.toLowerCase() !== 'green' && ZPOINT_EVENTS_URL !== null) {
+                    //load zpoint events
+                    setEventsForZpoint(ZPOINT_EVENTS_URL, $scope.data.contZpointId);
+                }
             }/* else {
                 console.log("zpointHeatWidget: zpoint status color is empty or not string.");
             }*/
@@ -247,8 +317,6 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                 console.log("zpointHeatWidget: contZpoint or mode is null!");
                 console.log("data:");
                 console.log($scope.data);
-                console.log("mode:");
-                console.log(mode);
                 return false;
             }
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent($scope.data.currentMode.keyname);
