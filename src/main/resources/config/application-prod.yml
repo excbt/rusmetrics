@@ -60,35 +60,43 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         #driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=Portal
+        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:
         username: dbuser1
         password: Y[Q^1>f{
         platform: POSTGRESQL
-        hikari:
-            connection-test-query: SELECT 1
-            minimum-idle: 3
-            maximum-pool-size: 20
-            pool-name: master
+        connectionTestQuery: SELECT 1
+        minimumIdle: 3
+        maximumPoolSize: 20
+        poolName: MasterPool
+#        hikari:
+#            connection-test-query: SELECT 1
+#            minimum-idle: 3
+#            maximum-pool-size: 20
+#            pool-name: master
 
 raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=Portal
+        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:
         username: dbuser1
         password: Y[Q^1>f{
         platform: POSTGRESQL
-        hikari:
-            connection-test-query: SELECT 1
-            minimum-idle: 1
-            maximum-pool-size: 2
-            pool-name: raw
+        connectionTestQuery: SELECT 1
+        minimumIdle: 1
+        maximumPoolSize: 2
+        poolName: RawPool
+#        hikari:
+#            connection-test-query: SELECT 1
+#            minimum-idle: 1
+#            maximum-pool-size: 2
+#            pool-name: raw
 
 slog:
     datasource:
@@ -96,7 +104,7 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: Y[Q^1>f{
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8ApplicationName=PortalSlog
         #dataSource.pool.size=2
         schema: slog
 

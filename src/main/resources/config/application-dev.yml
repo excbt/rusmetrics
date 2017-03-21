@@ -60,35 +60,41 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse
-        #?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster
         name:
         jndi-name:
         username: dbuser1
         password: exbt_123456
         platform: POSTGRESQL
-        hikari:
-            connection-test-query: SELECT 1
-            minimum-idle: 3
-            maximum-pool-size: 5
-            pool-name: master
+        connectionTestQuery: SELECT 1
+        minimumIdle: 3
+        maximumPoolSize: 5
+        poolName: MasterPool
+#        hikari:
+#            connection-test-query: SELECT 1
+#            minimum-idle: 3
+#            maximum-pool-size: 5
+#            pool-name: master
 
 raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.201:5432/dataraw
-        #?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw
         name:
         jndi-name:
         username: dbuser1
         password: exbt_123456
         platform: POSTGRESQL
-        hikari:
-            connection-test-query: SELECT 1
-            minimum-idle: 1
-            maximum-pool-size: 2
-            pool-name: raw
+        connectionTestQuery: SELECT 1
+        minimumIdle: 1
+        maximumPoolSize: 2
+        poolName: RawPool
+#        hikari:
+#            connection-test-query: SELECT 1
+#            minimum-idle: 1
+#            maximum-pool-size: 2
+#            pool-name: raw
 
 
 slog:
@@ -97,7 +103,7 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: exbt_123456
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=Portal
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalSlog
         #dataSource.pool.size=2
         schema: slog
 
