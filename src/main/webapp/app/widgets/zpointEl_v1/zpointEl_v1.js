@@ -94,7 +94,7 @@ angular.module('zpointEl_v1Widget', ['angularWidget', 'chart.js'])
 //        var zpstatus = $scope.widgetOptions.zpointStatus;
         var contObjectId = $scope.widgetOptions.contObjectId;
         if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
-            ZPOINT_EVENTS_URL = "../api/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + $scope.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
+            ZPOINT_EVENTS_URL = "../api/subscr/contEvent/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + $scope.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
         }
         $scope.data = {};
         $scope.data.zpointName = $scope.widgetOptions.zpointName;// + " Ну о-о-о-чень длинное название для точки учета";        

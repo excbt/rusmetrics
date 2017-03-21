@@ -40,6 +40,11 @@
     display: inline-block;
 }
 
+.nmc-cw-widget-a-status {
+    display: inline-block;
+    cursor: default;
+}
+
 .nmc-cw-widget-temppanel {
     padding: 20px 15px 0 0;
 }

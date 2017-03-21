@@ -36,6 +36,11 @@
     display: inline-block;
 }
 
+.nmc-heat-widget-a-status {
+    display: inline-block;
+    cursor: default;
+}
+
 .nmc-heat-widget-statusimg {
 /*    vertical-align: baseline; */
     margin-right: 10px;

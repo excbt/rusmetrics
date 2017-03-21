@@ -41,6 +41,11 @@
     display: inline-block;
 }
 
+.nmc-el-widget-a-status {
+    display: inline-block;
+    cursor: default;
+}
+
 .nmc-el-widget-temppanel {
     padding: 20px 15px 0 0;
 }

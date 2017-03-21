@@ -93,7 +93,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
         $scope.widgetOptions = widgetConfig.getOptions();
         var contObjectId = $scope.widgetOptions.contObjectId;
         if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
-            ZPOINT_EVENTS_URL = "../api/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + $scope.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
+            ZPOINT_EVENTS_URL = "../api/subscr/contEvent/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + $scope.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
         }
         $scope.data = {};
         $scope.data.currentHwTemp = null;

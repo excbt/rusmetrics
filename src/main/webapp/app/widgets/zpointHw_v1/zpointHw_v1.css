@@ -34,6 +34,11 @@
     display: inline-block;
 }
 
+.nmc-hw-widget-a-status {
+    display: inline-block;
+    cursor: default;
+}
+
 .nmc-hw-widget-statusimg {
 /*    vertical-align: baseline; */
     margin-right: 10px;
