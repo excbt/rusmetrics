@@ -60,7 +60,7 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         #driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=Portal
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:
@@ -77,7 +77,7 @@ raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=Portal
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:

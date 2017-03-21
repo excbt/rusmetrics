@@ -54,8 +54,8 @@ public class JpaRawConfigLocal {
 	 * @return
 	 */
 	@Bean(name = "dataSourceRaw")
-	@ConfigurationProperties("raw.datasource")
 	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
+        log.info("dataraw jdbcURL: {}", rawDBProps.url);
         return DataSourceBuilder.create()
             .driverClassName(rawDBProps.driverClassName)
             .url(rawDBProps.url).username(rawDBProps.username).password(rawDBProps.password).build();

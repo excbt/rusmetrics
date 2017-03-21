@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
@@ -36,6 +38,8 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.SLogDBProps;
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfigLocal {
 
+    private static final Logger log = LoggerFactory.getLogger(JpaConfigLocal.class);
+
 	@Autowired
 	private Environment env;
 
@@ -66,8 +70,8 @@ public class JpaConfigLocal {
 	 */
 	@Primary
 	@Bean(name = "dataSource")
-	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource(PortalDBProps portalDBProps) {
+        log.info("nmk-p jdbcURL: {}", portalDBProps.url);
         return DataSourceBuilder.create()
             .driverClassName(portalDBProps.driverClassName)
             .url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
