@@ -23,11 +23,17 @@ BEGIN
     LOOP
         -- first try to update
         --EXECUTE sql_update;
-
-	update slog.log_session_step 
+        WITH lss AS (
+                SELECT session_id,step_type,is_incremental
+                FROM   slog.log_session_step 
+                WHERE  session_id = par_session_id and step_type = par_step_type and is_incremental = true
+                FOR UPDATE SKIP LOCKED
+        )
+	update slog.log_session_step s
 	set 	sum_rows = sum_rows + 1, 
 		last_increment_date = GREATEST(last_increment_date, par_step_date)
-	where session_id = par_session_id and step_type = par_step_type and is_incremental = true;
+	FROM   lss
+	where s.session_id = par_session_id and s.step_type = par_step_type and s.is_incremental = true;
         
         -- check if the row is found
         IF FOUND THEN
@@ -54,6 +60,7 @@ BEGIN
             RETURN;
             EXCEPTION WHEN unique_violation THEN
                 -- do nothing and loop
+                PERFORM pg_sleep(0.01);
         END;
     END LOOP;
 END;
