@@ -19,8 +19,8 @@ app.directive('crudGridObjects', function () {
 //scope.crudTableName = scope.$eval($attrs.table);  
 //console.log(scope.crudTableName);
 //        },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location', '$interval',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location, $interval) {
                 
                 console.time("crudGridObjects loading");
                 
@@ -56,8 +56,8 @@ app.directive('crudGridObjects', function () {
                 $scope.objectCtrlSettings = {};
                 $scope.objectCtrlSettings.isCtrlEnd = false;
                 $scope.objectCtrlSettings.allSelected = false;
-//                $scope.objectCtrlSettings.beginObjectsOnPage = objectSvc.OBJECT_PER_SCROLL;
-                $scope.objectCtrlSettings.objectsPerScroll = objectSvc.OBJECT_PER_SCROLL;//the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.beginObjectsOnPage = objectSvc.OBJECT_PER_SCROLL;
+                $scope.objectCtrlSettings.objectsPerScroll = 2;//Math.round(objectSvc.OBJECT_PER_SCROLL / 5);//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = objectSvc.OBJECT_PER_SCROLL;//$scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
 //                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
 //                $scope.objectCtrlSettings.objectTopOnPage =0;
@@ -431,7 +431,7 @@ app.directive('crudGridObjects', function () {
                     objectSvc.sortObjectsByFullName($scope.objects);
 
 //                    $scope.objectsWithoutFilter = $scope.objects;
-                    tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                    tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.beginObjectsOnPage);//objectsPerScroll
                    
                     $scope.loading = false;
                     $scope.objectsOnPage = tempArr;
@@ -510,7 +510,7 @@ app.directive('crudGridObjects', function () {
                 $scope.objectsDataFilteredByGroup = function (group) {
 //console.log("objectsDataFilteredByGroup : " + group);                    
                     closeAllObjectsInArr($scope.objectsOnPage);
-                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.beginObjectsOnPage;//objectsPerScroll
                     if (mainSvc.checkUndefinedNull(group)) {
                         $scope.messages.groupMenuHeader = "Полный список объектов";
                         $scope.data.currentGroupId = null;
@@ -526,7 +526,7 @@ app.directive('crudGridObjects', function () {
                 
                 $scope.viewFullObjectList = function () {
 //console.log("viewFullObjectList");
-                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.beginObjectsOnPage;//objectsPerScroll
                     $scope.objectCtrlSettings.isFullObjectView = true;
                     $scope.messages.treeMenuHeader = 'Полный список объектов';
                     //set monitor settings and load monitor data
@@ -1653,8 +1653,8 @@ app.directive('crudGridObjects', function () {
                     var tempArr = [];
                     if (angular.isUndefined(searchString) || (searchString === '')) {
                         //                        
-                        $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
-                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.beginObjectsOnPage;//objectsPerScroll
+                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.beginObjectsOnPage);//objectsPerScroll
                     } else {
                         $scope.objects.forEach(function (elem) {
                             if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
@@ -1715,9 +1715,17 @@ app.directive('crudGridObjects', function () {
 //                        $scope.loading = true;                                                
                         if ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length) {
                             $scope.objectCtrlSettings.loadingObjectCount += 1;
-                            $timeout(function () {
-                                $scope.objectCtrlSettings.loadingObjectCount -= 1;
-                            }, 1500);
+                            $scope.$digest();
+//                            $timeout(function () {
+//                                $scope.objectCtrlSettings.loadingObjectCount -= 1;
+//                            }, 1500);
+                            $scope.objectCtrlSettings.counter = 0;
+                            $interval(function() {
+                                $scope.objectCtrlSettings.counter++;
+                                if ($scope.objectCtrlSettings.counter === 10) {
+                                    $scope.objectCtrlSettings.loadingObjectCount -= 1;
+                                }
+                            }, 150, 10);
 //                            $scope.$apply();
                         }
                         var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
@@ -1762,7 +1770,7 @@ app.directive('crudGridObjects', function () {
                     }
                     
                     //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
-                    var endIndex = $scope.objectCtrlSettings.objectsOnPage + Math.round($scope.objectCtrlSettings.objectsPerScroll / 5);
+                    var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
                     if ((endIndex >= $scope.objects.length)) {
                         endIndex = $scope.objects.length;
                     }
@@ -1786,7 +1794,7 @@ app.directive('crudGridObjects', function () {
                     if (endIndex >= ($scope.objects.length)) {
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
                     } else {
-                        $scope.objectCtrlSettings.objectsOnPage += Math.round($scope.objectCtrlSettings.objectsPerScroll / 5);
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
                         //disable object table
                         $scope.objectCtrlSettings.loadingObjectCount += 0;
                         $timeout(function () {
@@ -1936,6 +1944,15 @@ app.directive('crudGridObjects', function () {
                     singleDatePicker: true,
                     format: "dd.mm.yy"
                 };
+                
+                function objectScrolling(eventObject) {
+//                    console.log(eventObject);
+                    if (angular.isUndefined($scope.filter) || ($scope.filter == '')) {
+                        $scope.addMoreObjects();
+                        $scope.$apply();
+                    }
+                }
+                
                 $(document).ready(function () {
                     $('#inp_ref_range_start').datepicker({
                         dateFormat: $scope.dateOptsParamsetRu.format,
@@ -1950,12 +1967,7 @@ app.directive('crudGridObjects', function () {
                         monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                     });
                     
-                    $("#divWithObjectListTable").scroll(function () {
-                        if (angular.isUndefined($scope.filter) || ($scope.filter == '')) {
-                            $scope.addMoreObjects();
-                            $scope.$apply();
-                        }
-                    });
+                    $("#divWithObjectListTable").scroll(objectScrolling);
 
                     $("#inputAddress").suggestions({
                         serviceUrl: "https://dadata.ru/api/v2",

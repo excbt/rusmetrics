@@ -226,12 +226,41 @@
                                         </th>
                                         <th class="nmc-td-for-buttons"></th>
                                         <th>Название объекта
+<!--
                                             <span ng-show = "objectCtrlSettings.loadingObjectCount > 0" 
                                                  class = "marginBottom5 nmc-loading"
                                                  
                                                  >
                                                 <i class="fa fa-spinner fa-spin"></i> Загрузка данных для объектов... 
-                                            </span>    
+                                            </span>
+-->
+<!--                                            <div ng-show = "objectCtrlSettings.loadingObjectCount > 0" -->
+                                            
+<!--
+                                            <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="{{progressbar(countdown)}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (progressbar(countdown*3.33)+'%')}">
+                              </div>
+-->
+                                            
+                                            <div ng-show = "objectCtrlSettings.loadingObjectCount > 0"                                                 
+                                                 style = "display: inline-block; width: 90%;">
+                                                <span>
+                                                    <i class="fa fa-spinner fa-spin"></i><b>Прорисовка объектов...</b>
+                                                </span>
+                                                <div class = "progress progress-striped"
+                                                     style = "display: inline-block; width: 40%; margin: 0 0 -5px 0">
+                                                    <div class = "progress-bar progress-bar-info" 
+                                                         role = "progressbar" 
+                                                         aria-valuenow = "{{objectCtrlSettings.counter}}" 
+                                                         aria-valuemin = "0" 
+                                                         aria-valuemax = "100" 
+                                                         ng-style = "{width: objectCtrlSettings.counter * 10 + '%'}"
+                                                         >
+                                                        <span>
+                                                            <b>{{objectCtrlSettings.counter * 10}} %</b>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
 <!--
                                             <div ng-show="!isCabinet()"
                                                  class="btn-group pull-right" style="vertical-align: initial;">
