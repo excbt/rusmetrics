@@ -1,0 +1,1 @@
+mvnw -Pprod,standalone -Drun.profiles=prod
