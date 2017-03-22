@@ -4,7 +4,6 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,33 +44,22 @@ public class JpaRawConfigLocal {
 	public static class RawDBProps {
 		private String type;
         private String driverClassName;
-		private String url;
+		private String jdbcUrl;
 		private String username;
 		private String password;
-        private String connectionTestQuery;
-        private Integer minimumIdle;
-        private Integer maximumPoolSize;
-        private String poolName;
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	@Bean(name = "dataSourceRaw", destroyMethod = "close")
+	@Bean(name = "dataSourceRaw")
+	@ConfigurationProperties("raw.datasource")
 	public DataSource dataSourceRaw(RawDBProps rawDBProps) {
-        log.info("dataraw jdbcURL: {}", rawDBProps.url);
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setDriverClassName(rawDBProps.driverClassName);
-        hikariConfig.setJdbcUrl(rawDBProps.url);
-        hikariConfig.setUsername(rawDBProps.username);
-        hikariConfig.setPassword(rawDBProps.password);
-        hikariConfig.setMaximumPoolSize(rawDBProps.maximumPoolSize);
-        hikariConfig.setMinimumIdle(rawDBProps.minimumIdle);
-        hikariConfig.setConnectionTestQuery(rawDBProps.connectionTestQuery);
-        hikariConfig.setPoolName(rawDBProps.poolName);
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        return dataSource;
+        log.info("dataraw jdbcURL: {}", rawDBProps.jdbcUrl);
+        return DataSourceBuilder.create().build();
+//            .driverClassName(rawDBProps.driverClassName)
+//            .url(rawDBProps.url).username(rawDBProps.username).password(rawDBProps.password).build();
 	}
 
 	/**

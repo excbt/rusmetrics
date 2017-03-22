@@ -90,7 +90,7 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: exbt_123456
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        jdbcUrl: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
         #dataSource.pool.size=2
         schema: slog
 
