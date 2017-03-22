@@ -104,7 +104,7 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: Y[Q^1>f{
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8ApplicationName=PortalSlog
+        jdbcUrl: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8ApplicationName=PortalSlog
         #dataSource.pool.size=2
         schema: slog
 
