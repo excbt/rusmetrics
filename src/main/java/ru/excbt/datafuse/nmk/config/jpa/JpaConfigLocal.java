@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.config.jpa;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -30,8 +29,6 @@ import lombok.Data;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.PortalDBProps;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.SLogDBProps;
 
-import java.util.Properties;
-
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository",
@@ -54,11 +51,6 @@ public class JpaConfigLocal {
 		private String url;
 		private String username;
 		private String password;
-		private String connectionTestQuery;
-		private Integer minimumIdle;
-		private Integer maximumPoolSize;
-		private String poolName;
-
 	}
 
 	@Data
@@ -77,21 +69,13 @@ public class JpaConfigLocal {
 	 * @return
 	 */
 	@Primary
-	@Bean(name = "dataSource",destroyMethod = "close")
-	public DataSource dataSource(PortalDBProps portalDBProps) {
-
-        log.info("nmk-p jdbcURL: {}", portalDBProps.url);
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setDriverClassName(portalDBProps.driverClassName);
-        hikariConfig.setJdbcUrl(portalDBProps.url);
-        hikariConfig.setUsername(portalDBProps.username);
-        hikariConfig.setPassword(portalDBProps.password);
-        hikariConfig.setMaximumPoolSize(portalDBProps.maximumPoolSize);
-        hikariConfig.setMinimumIdle(portalDBProps.minimumIdle);
-        hikariConfig.setConnectionTestQuery(portalDBProps.connectionTestQuery);
-        hikariConfig.setPoolName(portalDBProps.poolName);
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        return dataSource;
+	@Bean(name = "dataSource")
+	@ConfigurationProperties("portal.datasource")
+	public DataSource dataSource() {
+//        log.info("nmk-p jdbcURL: {}", portalDBProps.url);
+        return DataSourceBuilder.create().build();
+//            .driverClassName(portalDBProps.driverClassName)
+//            .url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
 	}
 
 	@Primary
