@@ -20,7 +20,12 @@ node {
         sh "./mvnw package -Dmaven.test.skip=true -Pprod"
     } 
 
-    stage('archive') {
+    stage('archive-WAR') {
         archive includes:'**/target/*.war', excludes:'**/target/*-sources.jar' 
     }    
+
+    stage('archive-Original') {
+        archive includes:'**/target/*.original', excludes:'**/target/*-sources.jar' 
+    }    
+
 }
