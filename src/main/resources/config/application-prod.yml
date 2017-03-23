@@ -60,7 +60,7 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         #driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster
+        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -70,8 +70,12 @@ portal:
         platform: POSTGRESQL
         connectionTestQuery: SELECT 1
         minimumIdle: 3
-        maximumPoolSize: 20
+        maximumPoolSize: 40
         poolName: MasterPool
+        #---tomcat:
+        maxActive: 40
+        initialSize: 10
+
 #        hikari:
 #            connection-test-query: SELECT 1
 #            minimum-idle: 3
@@ -82,7 +86,7 @@ raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw
+        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -91,9 +95,13 @@ raw:
         password: Y[Q^1>f{
         platform: POSTGRESQL
         connectionTestQuery: SELECT 1
-        minimumIdle: 1
-        maximumPoolSize: 2
+        minimumIdle: 3
+        maximumPoolSize: 5
         poolName: RawPool
+        #---tomcat:
+        maxActive: 5
+        initialSize: 2
+
 #        hikari:
 #            connection-test-query: SELECT 1
 #            minimum-idle: 1
