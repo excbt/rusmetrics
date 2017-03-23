@@ -47,7 +47,7 @@ public class JpaConfigLocal {
 	public static class PortalDBProps {
 		private String type;
         private String driverClassName;
-		private String jdbcUrl;
+		private String url;
 		private String username;
 		private String password;
 	}
@@ -57,7 +57,7 @@ public class JpaConfigLocal {
 	public static class SLogDBProps {
         private String type;
         private String driverClassName;
-        private String jdbcUrl;
+        private String url;
         private String username;
         private String password;
         private String schema;
@@ -71,10 +71,11 @@ public class JpaConfigLocal {
 	@Bean(name = "dataSource")
 	@ConfigurationProperties("portal.datasource")
 	public DataSource dataSource(PortalDBProps portalDBProps) {
-        log.info("nmk-p jdbcURL: {}", portalDBProps.jdbcUrl);
-        return DataSourceBuilder.create().build();
-//            .driverClassName(portalDBProps.driverClassName)
-//            .url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
+        log.info("nmk-p url: {}", portalDBProps.url);
+        return //DataSourceBuilder.create().build();
+            DataSourceBuilder.create().driverClassName(portalDBProps.driverClassName)
+                .url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
+            //.url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
 	}
 
 	@Primary
@@ -102,7 +103,7 @@ public class JpaConfigLocal {
 	public JasperDatabaseConnectionSettings jasperDatabaseConnectionSettings(PortalDBProps portalDBProps) {
 		return new JasperDatabaseConnectionSettings() {
 
-			private final String url = portalDBProps.jdbcUrl;
+			private final String url = portalDBProps.url;
 			private final String username = portalDBProps.username;
 			private final String password = portalDBProps.password;
 

@@ -32,22 +32,22 @@
 <!-- 	</jsp-config> -->
 
 
-	<resource-ref>
-	    <description>DB Connection</description>
-	    <res-ref-name>jdbc/nmkDBctx</res-ref-name>
-	    <res-type>javax.sql.DataSource</res-type>
-	    <res-auth>Container</res-auth>
-	</resource-ref>
+	<!--<resource-ref>-->
+	    <!--<description>DB Connection</description>-->
+	    <!--<res-ref-name>jdbc/nmkDBctx</res-ref-name>-->
+	    <!--<res-type>javax.sql.DataSource</res-type>-->
+	    <!--<res-auth>Container</res-auth>-->
+	<!--</resource-ref>-->
 
-	<resource-ref>
-	    <description>DB Raw Connection</description>
-	    <res-ref-name>jdbc/datarawDBctx</res-ref-name>
-	    <res-type>javax.sql.DataSource</res-type>
-	    <res-auth>Container</res-auth>
-	</resource-ref>
+	<!--<resource-ref>-->
+	    <!--<description>DB Raw Connection</description>-->
+	    <!--<res-ref-name>jdbc/datarawDBctx</res-ref-name>-->
+	    <!--<res-type>javax.sql.DataSource</res-type>-->
+	    <!--<res-auth>Container</res-auth>-->
+	<!--</resource-ref>-->
 
-<!-- 
-Example Resource 
+<!--
+Example Resource
 <Resource
    name="jdbc/nmkDBctx"
    auth="Container"
@@ -68,7 +68,7 @@ Example Resource
    password="xxxxx"
    driverClassName="org.postgresql.Driver"
    url="jdbc:postgresql://192.168.84.248:5432/datafuse?useUnicode=yes&amp;characterEncoding=UTF-8"
-/>  
+/>
 
  -->
 

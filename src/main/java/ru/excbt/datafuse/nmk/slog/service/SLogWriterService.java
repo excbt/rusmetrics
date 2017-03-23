@@ -45,13 +45,13 @@ public class SLogWriterService {
 	@Autowired
 	public SLogWriterService(JpaConfigLocal.SLogDBProps sLogDBProps) throws IOException {
 	    log.info("SLogWriterService");
-	    log.info("URL: {}", sLogDBProps.getJdbcUrl());
+	    log.info("URL: {}", sLogDBProps.getUrl());
 	    log.info("SCHEMA: {}", sLogDBProps.getSchema());
 		Properties props = new Properties();
 		props.put("dataSource.username",sLogDBProps.getUsername());
 		props.put("dataSource.password",sLogDBProps.getPassword());
 		props.put("dataSource.driverClassName",sLogDBProps.getDriverClassName());
-		props.put("dataSource.url",sLogDBProps.getJdbcUrl());
+		props.put("dataSource.url",sLogDBProps.getUrl());
 		props.put("slog.schema",sLogDBProps.getSchema());
 		this.sLogService = SLogService.newSLogService(props);
 	}
@@ -64,13 +64,14 @@ public class SLogWriterService {
 		sLogService.shutdown();
 	}
 
-	/**
-	 *
-	 * @param dataSourceId
-	 * @param deviceId
-	 * @param sessionMessage
-	 * @return
-	 */
+    /**
+     *
+     * @param dataSourceId
+     * @param deviceObjectId
+     * @param sessionMessage
+     * @param authorId
+     * @return
+     */
 	public SLogSessionT1 newSessionWebT1(Long dataSourceId, Long deviceObjectId, String sessionMessage, Long authorId) {
 		return sLogService.newWebSessionT1(dataSourceId, deviceObjectId, sessionMessage, authorId);
 	}

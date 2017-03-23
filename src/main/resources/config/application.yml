@@ -58,7 +58,7 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        jdbcUrl: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:
         username: dbuser1
@@ -73,7 +73,7 @@ raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        jdbcUrl: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster_WARN
         name:
         jndi-name:
         username: dbuser1
@@ -90,7 +90,7 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: exbt_123456
-        jdbcUrl: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw_WARN
         #dataSource.pool.size=2
         schema: slog
 
