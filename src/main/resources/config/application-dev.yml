@@ -74,6 +74,8 @@ portal:
         #---tomcat:
         maxActive: 5
         initialSize: 2
+        minIdle: 2
+        maxIdle: 3
 #        hikari:
 #            connection-test-query: SELECT 1
 #            minimum-idle: 3
@@ -98,6 +100,8 @@ raw:
         #---tomcat:
         maxActive: 5
         initialSize: 1
+        minIdle: 1
+        maxIdle: 3
 #        hikari:
 #            connection-test-query: SELECT 1
 #            minimum-idle: 1
