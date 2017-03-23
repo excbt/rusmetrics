@@ -12,24 +12,13 @@ node {
 
 
     stage('clean') {
-        withMaven(maven: 'M3') {
-
-        // Run the maven build
-        sh "mvn clean"
-        }
+        sh "chmod +x ./mvnw"
+        sh "./mvnw clean"
     }
 
     stage('packaging') {
-        withMaven(maven: 'M3') {
-            sh "mvn package -DskipTests"
-        }    
-    }
-
-    stage('install') {
-        withMaven(maven: 'M3') {
-            sh "mvn install -DskipTests"
-        }    
-    }
+        sh "./mvnw package -Dmaven.test.skip=true -Pprod"
+    } 
 
     stage('archive') {
         archive includes:'**/target/*.war', excludes:'**/target/*-sources.jar' 
