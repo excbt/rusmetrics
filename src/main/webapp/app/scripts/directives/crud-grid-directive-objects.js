@@ -25,17 +25,20 @@ app.directive('crudGridObjects', function () {
                 console.time("crudGridObjects loading");
                 
 //console.log("Objects directive.");
-                var RADIX = 10; //for parse string
-                var VCOOKIE_URL = "../api/subscr/vcookie",
+                var RADIX = 10, //for parse string
+                    VCOOKIE_URL = "../api/subscr/vcookie",
                     USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
                     OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
-                    WIDGETS_URL = "../api/subscr/vcookie/widgets/list";
+                    WIDGETS_URL = "../api/subscr/vcookie/widgets/list",
+                    IMG_PATH_TEMPLATE = "/public/images/object-mode-",
+                    IMG_EXT = ".png",
+                    SERVER_DATE_FORMAT = 'YYYY-MM-DD';
                 
                 var measureUnits = null;
                 
                 //default date interval settings for monitor
-                $rootScope.monitorStart = $location.search().fromDate || monitorSvc.getMonitorSettings().fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-                $rootScope.monitorEnd =  $location.search().toDate || monitorSvc.getMonitorSettings().toDate || moment().endOf('day').format('YYYY-MM-DD');
+                $rootScope.monitorStart = $location.search().fromDate || monitorSvc.getMonitorSettings().fromDate || moment().subtract(6, 'days').startOf('day').format(SERVER_DATE_FORMAT);
+                $rootScope.monitorEnd = $location.search().toDate || monitorSvc.getMonitorSettings().toDate || moment().endOf('day').format(SERVER_DATE_FORMAT);
                 
                     //messages for user
                 $scope.messages = {};
@@ -414,7 +417,7 @@ app.directive('crudGridObjects', function () {
                     }
 //console.log(tempArr);                    
                     tempArr.forEach(function (element) {
-                        element.imgsrc = 'images/object-mode-' + element.currentSettingMode + '.png';
+                        element.imgsrc = IMG_PATH_TEMPLATE + element.currentSettingMode + IMG_EXT;
 //                        $scope.cont_zpoint_setting_mode_check
                         if (element.currentSettingMode === $scope.cont_zpoint_setting_mode_check[0].keyname) {
                             element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
@@ -663,14 +666,14 @@ app.directive('crudGridObjects', function () {
                     $scope.objects.forEach(function (el) {
                         if (el.selected === true) {
                             el.currentSettingMode = $scope.settedMode;
-                            el.imgsrc = 'images/object-mode-' + el.currentSettingMode + '.png';
+                            el.imgsrc = IMG_PATH_TEMPLATE + el.currentSettingMode + IMG_EXT;
                         }
                         el.selected = false;
                     });
                     $scope.objectsOnPage.forEach(function (el) {
                         if (el.selected === true) {
                             el.currentSettingMode = $scope.settedMode;
-                            el.imgsrc = 'images/object-mode-' + el.currentSettingMode + '.png';
+                            el.imgsrc = IMG_PATH_TEMPLATE + el.currentSettingMode + IMG_EXT;
                         }
                         el.selected = false;
                     });
@@ -690,9 +693,9 @@ app.directive('crudGridObjects', function () {
                         });
                         if (elIndex != -1) {
                             $scope.objects[elIndex] = $scope.currentObject;
-                            $scope.objects[elIndex].imgsrc = 'images/object-mode-' + $scope.currentObject.currentSettingMode + '.png';
+                            $scope.objects[elIndex].imgsrc = IMG_PATH_TEMPLATE + $scope.currentObject.currentSettingMode + IMG_EXT;
                             $scope.objectsOnPage[elIndex] = $scope.currentObject;
-                            $scope.objectsOnPage[elIndex].imgsrc = 'images/object-mode-' + $scope.currentObject.currentSettingMode + '.png';
+                            $scope.objectsOnPage[elIndex].imgsrc = IMG_PATH_TEMPLATE + $scope.currentObject.currentSettingMode + IMG_EXT;
                         }
                         $scope.currentObject = {};
                     }
@@ -1431,8 +1434,8 @@ app.directive('crudGridObjects', function () {
                     
                     $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading === null ? false : $scope.currentZpoint.isManualLoading) || false;
 //console.log($scope.currentZpoint);                    
-                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
+                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format(SERVER_DATE_FORMAT);
+                    $rootScope.reportEnd = moment().endOf('day').format(SERVER_DATE_FORMAT);
                                       
 //                    window.location.assign("#/objects/indicators/");
                 };
@@ -1568,11 +1571,11 @@ app.directive('crudGridObjects', function () {
 //                    $scope.refRange.periodBeginDate = $scope.beginDate.getTime();
 //                    scope.refRange.periodEndDate = $scope.endDate.getTime();
                     //Приводим установленный период к UTC
-                    var startDate = (new Date(moment($scope.beginDate, $scope.objectCtrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
+                    var startDate = (new Date(moment($scope.beginDate, $scope.objectCtrlSettings.dateFormat).format(SERVER_DATE_FORMAT))); //reformat date string to ISO 8601                        
                     var UTCstdt = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
                     $scope.refRange.periodBeginDate = (!isNaN(UTCstdt)) ? (new Date(UTCstdt)).getTime() : null;
                     
-                    var endDate = (new Date(moment($scope.endDate, $scope.objectCtrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
+                    var endDate = (new Date(moment($scope.endDate, $scope.objectCtrlSettings.dateFormat).format(SERVER_DATE_FORMAT))); //reformat date string to ISO 8601                        
                     var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
                     $scope.refRange.periodEndDate = (!isNaN(UTCenddt)) ? (new Date(UTCenddt)).getTime() : null;
                     $http.post(url, $scope.refRange)
@@ -1720,8 +1723,8 @@ app.directive('crudGridObjects', function () {
 //                                $scope.objectCtrlSettings.loadingObjectCount -= 1;
 //                            }, 1500);
                             $scope.objectCtrlSettings.counter = 0;
-                            $interval(function() {
-                                $scope.objectCtrlSettings.counter++;
+                            $interval(function () {
+                                $scope.objectCtrlSettings.counter += 1;
                                 if ($scope.objectCtrlSettings.counter === 10) {
                                     $scope.objectCtrlSettings.loadingObjectCount -= 1;
                                 }
@@ -2417,8 +2420,8 @@ app.directive('crudGridObjects', function () {
 //console.log("setNoticeFilterByObject");
                     $rootScope.monitor = {};
 //                    $rootScope.monitorStart = moment().substract(6, 'days').format(SYSTEM_DATE_FORMAT);
-                    $scope.monitorStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-                    $scope.monitorEnd = moment().endOf('day').format('YYYY-MM-DD');
+                    $scope.monitorStart = moment().subtract(6, 'days').startOf('day').format(SERVER_DATE_FORMAT);
+                    $scope.monitorEnd = moment().endOf('day').format(SERVER_DATE_FORMAT);
 //                    $rootScope.monitorEnd = moment().substract(6, 'days').format(SYSTEM_DATE_FORMAT);
                         
                     monitorSvc.setMonitorSettings({objectMonitorId: objId});
