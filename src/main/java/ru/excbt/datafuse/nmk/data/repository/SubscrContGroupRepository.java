@@ -8,8 +8,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 
 /**
  * Repository для ContGroup
- * 
- * @author S.Kuzovoy
+ *
+ * @author STA.Kuzovoy
  * @version 1.0
  * @since 27.05.2015
  *

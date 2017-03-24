@@ -11,8 +11,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem;
 
 /**
  * Repository для ContGroupItem
- * 
- * @author S. Kuzovoy
+ *
+ * @author STA. Kuzovoy
  * @version 1.0
  * @since 25.05.2015
  *
@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem;
 public interface SubscrContGroupItemRepository extends CrudRepository<SubscrContGroupItem, Long> {
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contGroupId
 	 * @return
@@ -33,7 +33,7 @@ public interface SubscrContGroupItemRepository extends CrudRepository<SubscrCont
 			@Param("contGroupId") long contGroupId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contGroupId
 	 * @return
@@ -47,7 +47,7 @@ public interface SubscrContGroupItemRepository extends CrudRepository<SubscrCont
 			@Param("contGroupId") long contGroupId);
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */
@@ -55,7 +55,7 @@ public interface SubscrContGroupItemRepository extends CrudRepository<SubscrCont
 	public List<Long> selectObjectIds(@Param("contGroupId") long contGroupId);
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @param objectId
 	 * @return
@@ -65,7 +65,7 @@ public interface SubscrContGroupItemRepository extends CrudRepository<SubscrCont
 	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId, @Param("objectId") long objectId);
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */

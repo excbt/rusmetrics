@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.excbt.datafuse.nmk.passdoc.PDHeaderElement;
-import ru.excbt.datafuse.nmk.passdoc.PDTable;
+import ru.excbt.datafuse.nmk.passdoc.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,22 +60,49 @@ public class PassDocTemplateCli {
 
         PDTable pdTable = new PDTable();
 
-        pdTable.createPDHeaderElement().caption("№ п/п").width(10);
-        pdTable.createPDHeaderElement().caption("Наименование показателя").width(40);
-        PDHeaderElement amount = pdTable.createPDHeaderElement().caption("Количество, шт");
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
+        partHeader.createElement().caption("№ п/п").width(10);
+        partHeader.createElement().caption("Наименование показателя").width(40);
+        PDTableCell amount = partHeader.createElement().caption("Количество, шт");
+
+        int keyValueIdx = 1;
         amount.createChild().caption("Электрической энергии")
-            .createChild().caption("Всего").width(10)
-            .createSubling().caption("В том числе в составе АИИС").width(10);
+            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createSubling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
         amount.createChild().caption("Тепловой энергии")
-            .createChild().caption("Всего").width(10)
-            .createSubling().caption("В том числе в составе АИИС").width(10);
+            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createSubling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
         amount.createChild().caption("Газа")
-            .createChild().caption("Всего").width(10)
-            .createSubling().caption("В том числе в составе АИИС").width(10);
+            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createSubling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
+
+        pdTable.createPart(PDPartType.ROW).key("P_1").createElement("1")
+            .and().createElement("Сведения об оснащенности приборами коммерческого учета").merged();
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.1").createElement("1.1")
+            .and().createElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
+            "в том числе:\n")
+            .and().createValElements(6);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createElement("1.1.1")
+            .and().createElement("полученной от стороннего источника")
+            .and().createValElements(6);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.2").createElement("1.1.2")
+            .and().createElement("собственного производства")
+            .and().createValElements(6);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.3").createElement("1.1.3")
+            .and().createElement("потребленной на собственные нужды")
+            .and().createValElements(6);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.4").createElement("1.1.4")
+            .and().createElement("отданной субабонентам (сторонним потребителям)")
+            .and().createValElements(6);
 
         String json = objectToJson(pdTable);
 

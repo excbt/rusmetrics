@@ -14,20 +14,30 @@ import java.util.List;
 public class PDTable {
     private String caption;
 
-    @JsonProperty("headers")
-    private final List<PDHeaderElement> headerElements = new ArrayList<>();
 
-    public PDHeaderElement createPDHeaderElement() {
-        PDHeaderElement result = new PDHeaderElement();
-        headerElements.add(result);
-        return result;
-    }
+    private final List<PDTablePart> parts = new ArrayList<>();
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public Integer getHeaderWidth() {
-        int headerWidth = headerElements.size() == 0 ? 0 :
-            headerElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
-        return headerWidth;
+//    @JsonProperty("headers")
+//    private final List<PDTableCell> headerElements = new ArrayList<>();
+
+//    public PDTableCell createPDHeaderElement() {
+//        PDTableCell result = new PDTableCell();
+//        headerElements.add(result);
+//        return result;
+//    }
+//
+//    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+//    public Integer getHeaderWidth() {
+//        int headerWidth = headerElements.size() == 0 ? 0 :
+//            headerElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
+//        return headerWidth;
+//    }
+
+    public PDTablePart createPart(PDPartType partType){
+        PDTablePart newPart = new PDTablePart();
+        newPart.setPartType(partType);
+        parts.add(newPart);
+        return newPart;
     }
 
 }
