@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,13 @@ import java.util.List;
  */
 
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown =  true)
 public class PDTablePart {
 
+
+    @Getter
+    @Setter
+    @JsonIgnore
     private PDTable pdTable;
 
     @Getter
@@ -97,9 +104,14 @@ public class PDTablePart {
         return this;
     }
 
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     public List<Double> getColumnWidths() {
         List<Double> result = new ArrayList<>();
         List<Double> headerWidths = new ArrayList<>();
+
+        if (pdTable == null) {
+            return result;
+        }
 
         PDTablePart header = PDPartType.HEADER.equals(partType) ? this : pdTable.findHeader();
 
@@ -168,5 +180,13 @@ public class PDTablePart {
         }
         return result;
     };
+
+    public void linkInternalRefs() {
+        for (PDTableCell<?> cell: elements) {
+            cell.tablePart(this);
+            cell.linkInternalRefs();
+        }
+    }
+
 
 }

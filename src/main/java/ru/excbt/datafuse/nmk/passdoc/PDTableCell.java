@@ -101,5 +101,14 @@ public abstract class PDTableCell<T extends PDTableCell<T>> {
         return result;
     }
 
+
+    public void linkInternalRefs() {
+        childElements.forEach(i -> {
+            i.tablePart(this.tablePart);
+            i.parent = this;
+            i.linkInternalRefs();
+        });
+    }
+
 }
 

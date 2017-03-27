@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -14,6 +16,7 @@ import java.util.Optional;
  * Created by kovtonyk on 24.03.2017.
  */
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown =  true)
 public class PDTable {
     private String caption;
 
@@ -46,6 +49,13 @@ public class PDTable {
     public PDTablePart findHeader() {
         Optional<PDTablePart> result = parts.stream().filter(i -> PDPartType.HEADER.equals(i.getPartType())).findFirst();
         return result.isPresent() ? result.get() : null;
+    }
+
+    public void linkInternalRefs() {
+        for (PDTablePart part: parts) {
+            part.setPdTable(this);
+            part.linkInternalRefs();
+        }
     }
 
 }

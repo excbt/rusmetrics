@@ -39,8 +39,7 @@ public class PassDocTemplateCli {
                 jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
             }
 
-            log.info("Request JSON: {}", jsonBody);
-            log.info("Request Pretty JSON: {}", jsonBodyPretty);
+            log.info("Pretty JSON: \n{}", jsonBodyPretty);
 
         } catch (JsonProcessingException e) {
             log.error("Can't create json: {}", e);
@@ -128,6 +127,18 @@ public class PassDocTemplateCli {
 //            }
 //        }
 //        parser.close();
+
+
+        PDTable pdTable1 = OBJECT_MAPPER.readValue(json,PDTable.class);
+
+        pdTable1.linkInternalRefs();
+
+        System.out.println("======================================");
+        String json1 = objectToJson(pdTable1);
+
+        if (!json.equals(json1)) {
+            System.out.println("DESERIALIZATION IS NOT EQUALS");
+        }
 
     }
 }

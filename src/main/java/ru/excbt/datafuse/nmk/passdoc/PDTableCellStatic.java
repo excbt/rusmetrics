@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Created by kovtonyk on 27.03.2017.
  */
+@JsonIgnoreProperties(ignoreUnknown =  true)
 public class PDTableCellStatic extends PDTableCell<PDTableCellStatic> {
 
 
