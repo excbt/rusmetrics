@@ -1,10 +1,6 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,6 +53,17 @@ public class PDTable implements PDReferable {
             part.setPdTable(this);
             part.linkInternalRefs();
         }
+    }
+
+    public List<PDTableCell> extractCellValues() {
+        List<PDTableCell> result = new ArrayList<>();
+        parts.forEach(i -> {
+            List<PDTableCell> partValues = i.extractCellValues();
+            if (!partValues.isEmpty()) {
+                result.addAll(partValues);
+            }
+        });
+        return result;
     }
 
 }

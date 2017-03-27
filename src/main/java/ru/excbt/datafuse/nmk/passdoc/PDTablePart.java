@@ -190,4 +190,14 @@ public class PDTablePart implements PDReferable {
     }
 
 
+    public List<PDTableCell> extractCellValues() {
+        final List<PDTableCell> result = new ArrayList<>();
+        elements.forEach(i -> {
+            if (i.getCellType() == PDCellType.VALUE) {
+                result.add(i);
+            }
+        });
+        return result;
+    }
+
 }

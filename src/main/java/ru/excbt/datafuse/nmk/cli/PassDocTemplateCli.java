@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -139,6 +140,17 @@ public class PassDocTemplateCli {
         if (!json.equals(json1)) {
             System.out.println("DESERIALIZATION IS NOT EQUALS");
         }
+
+        System.out.println("======================================");
+        List<PDTableCell> valueCells = pdTable1.extractCellValues();
+
+        OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(valueCells);
+
+        valueCells.forEach(i -> {
+            log.info("Class: {}",i.getClass().getSimpleName());
+        });
+
+        objectToJson(valueCells);
 
     }
 }

@@ -111,5 +111,9 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         });
     }
 
+    public String getPartKey() {
+        return tablePart != null ? tablePart.getKey() : null;
+    }
+
 }
 
