@@ -87,7 +87,8 @@ public class PassDocTemplateCli {
             .and().createStaticElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
             "в том числе:\n")
             .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
-                i.setFunction("sum(P_1.1.*)");
+                i.setFunction("sum()");
+                i.setGroup("P_1.1.*");
         });
 
         pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createStaticElement("1.1.1")
