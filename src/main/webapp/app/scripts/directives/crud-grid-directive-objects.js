@@ -30,7 +30,7 @@ app.directive('crudGridObjects', function () {
                     USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
                     OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
                     WIDGETS_URL = "../api/subscr/vcookie/widgets/list",
-                    IMG_PATH_TEMPLATE = "/public/images/object-mode-",
+                    IMG_PATH_TEMPLATE = "images/object-mode-",
                     IMG_EXT = ".png",
                     SERVER_DATE_FORMAT = 'YYYY-MM-DD';
                 
