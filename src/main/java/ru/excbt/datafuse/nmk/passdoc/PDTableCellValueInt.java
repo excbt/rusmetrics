@@ -6,14 +6,14 @@ import lombok.Setter;
 /**
  * Created by kovtonyk on 24.03.2017.
  */
-public class PDTableCellStringValue extends PDTableCell<PDTableCellStringValue> {
+public class PDTableCellValueInt extends PDTableCell<PDTableCellValueInt> {
 
     @Getter
     @Setter
-    private String value;
+    private Integer value;
 
-    public PDTableCellStringValue(){
+    public PDTableCellValueInt(){
         super();
-        setCellType(PDCellType.VAL);
+        setCellType(PDCellType.VALUE);
     }
 }

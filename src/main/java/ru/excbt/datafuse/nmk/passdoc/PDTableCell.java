@@ -1,25 +1,26 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
-
 /**
  * Created by kovtonyk on 24.03.2017.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
+    include=JsonTypeInfo.As.PROPERTY, property="@type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
+    @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
+    @JsonSubTypes.Type(value=PDTableCellValueInt.class, name="Integer"),
+    @JsonSubTypes.Type(value=PDTableCellValueDouble.class, name="Double"),
+    @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg")
+})
 @NoArgsConstructor
-public class PDTableCell {
+public abstract class PDTableCell<T extends PDTableCell<T>> {
 
-    @Getter
-    @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private String caption;
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
@@ -28,18 +29,18 @@ public class PDTableCell {
     @Getter
     @JsonProperty("elements")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    private final List<PDTableCell> childElements = new ArrayList<>();
+    protected final List<PDTableCell> childElements = new ArrayList<>();
 
-    private PDTableCell parent = null;
+    protected PDTableCell parent;
 
     @Getter
     @JsonIgnore
-    private PDTablePart tablePart = null;
+    protected PDTablePart tablePart;
 
     @Getter
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private PDCellType cellType = PDCellType.STA;
+    private PDCellType cellType;
 
     @Getter
     @Setter
@@ -51,53 +52,33 @@ public class PDTableCell {
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
-    public PDTableCell caption(String value) {
-        this.caption = value;
-        return this;
-    }
-
-    public PDTableCell width(int value) {
+    public T width(int value) {
         this.width = value;
-        return this;
+        return (T) this;
     }
 
-    public PDTableCell merged(Boolean value) {
+    public T merged(Boolean value) {
         this.merged = value;
-        return this;
+        return (T) this;
     }
 
-    public PDTableCell merged() {
+    public T merged() {
         this.merged = true;
-        return this;
+        return (T) this;
     }
 
-    public PDTableCell keyValueIdx(int value) {
+    public T keyValueIdx(int value) {
         this.keyValueIdx = value;
-        return this;
+        return (T) this;
     }
 
-    public PDTableCell tablePart(PDTablePart value) {
+    public T tablePart(PDTablePart value) {
         this.tablePart = value;
-        return this;
+        return (T) this;
     }
 
     public PDTablePart and() {
         return this.tablePart;
-    }
-
-    public PDTableCell createChild() {
-        PDTableCell child = new PDTableCell();
-        childElements.add(child);
-        child.parent = this;
-        return child;
-    }
-
-    public PDTableCell createSubling() {
-        checkState(parent != null);
-        PDTableCell sibling = new PDTableCell();
-        parent.childElements.add(sibling);
-        sibling.parent = parent;
-        return sibling;
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -105,6 +86,19 @@ public class PDTableCell {
         int childSum = childElements.size() == 0 ? 0 :
                         childElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
         return this.width + childSum > 0 ? this.width + childSum : null;
+    }
+
+
+    protected List<Integer> getColumnWidths() {
+        List<Integer> result = new ArrayList<>();
+        if (childElements.size() == 0) {
+            result.add(width);
+        } else {
+            for (PDTableCell cell: childElements) {
+                result.addAll(cell.getColumnWidths());
+            }
+        }
+        return result;
     }
 
 }

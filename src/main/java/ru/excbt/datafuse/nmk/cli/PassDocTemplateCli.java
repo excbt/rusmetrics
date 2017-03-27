@@ -62,47 +62,49 @@ public class PassDocTemplateCli {
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-        partHeader.createElement().caption("№ п/п").width(10);
-        partHeader.createElement().caption("Наименование показателя").width(40);
-        PDTableCell amount = partHeader.createElement().caption("Количество, шт");
+        partHeader.createStaticElement().caption("№ п/п").width(10);
+        partHeader.createStaticElement().caption("Наименование показателя").width(40);
+        PDTableCellStatic amount = partHeader.createStaticElement().caption("Количество, шт");
 
         int keyValueIdx = 1;
         amount.createChild().caption("Электрической энергии")
             .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSubling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
         amount.createChild().caption("Тепловой энергии")
             .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSubling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
         amount.createChild().caption("Газа")
             .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSubling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
 
-        pdTable.createPart(PDPartType.ROW).key("P_1").createElement("1")
-            .and().createElement("Сведения об оснащенности приборами коммерческого учета").merged();
+        pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1")
+            .and().createStaticElement("Сведения об оснащенности приборами коммерческого учета").merged();
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1").createElement("1.1")
-            .and().createElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
+        pdTable.createPart(PDPartType.ROW).key("P_1.1").createStaticElement("1.1")
+            .and().createStaticElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
             "в том числе:\n")
-            .and().createValElements(6);
+            .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
+                i.setFunction("sum(P_1.1.*)");
+        });
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createElement("1.1.1")
-            .and().createElement("полученной от стороннего источника")
-            .and().createValElements(6);
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createStaticElement("1.1.1")
+            .and().createStaticElement("полученной от стороннего источника")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.2").createElement("1.1.2")
-            .and().createElement("собственного производства")
-            .and().createValElements(6);
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.2").createStaticElement("1.1.2")
+            .and().createStaticElement("собственного производства")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.3").createElement("1.1.3")
-            .and().createElement("потребленной на собственные нужды")
-            .and().createValElements(6);
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.3").createStaticElement("1.1.3")
+            .and().createStaticElement("потребленной на собственные нужды")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.4").createElement("1.1.4")
-            .and().createElement("отданной субабонентам (сторонним потребителям)")
-            .and().createValElements(6);
+        pdTable.createPart(PDPartType.ROW).key("P_1.1.4").createStaticElement("1.1.4")
+            .and().createStaticElement("отданной субабонентам (сторонним потребителям)")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
 
         String json = objectToJson(pdTable);
 

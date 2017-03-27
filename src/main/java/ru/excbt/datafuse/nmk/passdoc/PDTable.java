@@ -3,18 +3,21 @@ package ru.excbt.datafuse.nmk.passdoc;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kovtonyk on 24.03.2017.
  */
-@Data
+@NoArgsConstructor
 public class PDTable {
     private String caption;
 
-
+    @Getter
     private final List<PDTablePart> parts = new ArrayList<>();
 
 //    @JsonProperty("headers")
@@ -34,10 +37,15 @@ public class PDTable {
 //    }
 
     public PDTablePart createPart(PDPartType partType){
-        PDTablePart newPart = new PDTablePart();
+        PDTablePart newPart = new PDTablePart(this);
         newPart.setPartType(partType);
         parts.add(newPart);
         return newPart;
+    }
+
+    public PDTablePart findHeader() {
+        Optional<PDTablePart> result = parts.stream().filter(i -> PDPartType.HEADER.equals(i.getPartType())).findFirst();
+        return result.isPresent() ? result.get() : null;
     }
 
 }

@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem;
 /**
  * Repository для ContGroupItem
  *
- * @author STA. Kuzovoy
+ * @author STATIC. Kuzovoy
  * @version 1.0
  * @since 25.05.2015
  *

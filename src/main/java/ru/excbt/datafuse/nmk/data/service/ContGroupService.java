@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 /**
  * Сервис для работы с группами ContGroup объектов ContObject
  *
- * @author STA.Kuzovoy
+ * @author STATIC.Kuzovoy
  * @version 1.0
  * @since 27.05.2015
  *

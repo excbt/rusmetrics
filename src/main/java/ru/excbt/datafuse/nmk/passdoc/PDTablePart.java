@@ -15,13 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 public class PDTablePart {
 
-    @Getter
-    @Setter
-    private PDPartType partType;
+    private PDTable pdTable;
 
     @Getter
     @Setter
     private String key;
+
+    @Getter
+    @Setter
+    private PDPartType partType;
 
     @Getter
     @Setter
@@ -31,29 +33,51 @@ public class PDTablePart {
     @Getter
     private final List<PDTableCell> elements = new ArrayList<>();
 
-    public PDTableCell createElement() {
-        PDTableCell result = new PDTableCell().tablePart(this);
+
+    public PDTablePart(PDTable pdTable){
+        this.pdTable = pdTable;
+    }
+
+    public PDTableCellStatic createStaticElement() {
+        PDTableCellStatic result = new PDTableCellStatic().tablePart(this);
         elements.add(result);
         return result;
     }
 
-    public PDTableCell createElement(String caption) {
-        PDTableCell result = new PDTableCell().tablePart(this);
+    public PDTableCellStatic createStaticElement(String caption) {
+        PDTableCellStatic result = new PDTableCellStatic().tablePart(this);
         elements.add(result);
         return result.caption(caption);
     }
 
-    public PDTableCell createValElement() {
-        PDTableCell result = new PDTableCellValue().tablePart(this);
+//    public PDTableCell createValElement() {
+//        PDTableCell result = new PDTableCellValueString().tablePart(this);
+//        elements.add(result);
+//        return result;
+//    }
+
+    public PDTableCellValueDoubleAggregation createIntValueAggrElement() {
+        PDTableCellValueDoubleAggregation result = new PDTableCellValueDoubleAggregation().tablePart(this);
         elements.add(result);
         return result;
     }
 
     public void createValElements(int count) {
         for (int i = 0; i < count ; i++) {
-            PDTableCell result = new PDTableCellValue().tablePart(this).keyValueIdx(i + 1); // keyValueIdx starts with 1
+            PDTableCell result = new PDTableCellValueString().tablePart(this).keyValueIdx(i + 1); // keyValueIdx starts with 1
             elements.add(result);
         }
+    }
+
+    public void createIntValueElements(int startWith, int count) {
+        for (int i = startWith; i <= count ; i++) {
+            PDTableCell result = new PDTableCellValueInt().tablePart(this).keyValueIdx(i); // keyValueIdx starts with 1
+            elements.add(result);
+        }
+    }
+
+    public void createIntValueElements(int count) {
+        createIntValueElements(1,count);
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
@@ -72,5 +96,77 @@ public class PDTablePart {
         this.key = value;
         return this;
     }
+
+    public List<Integer> getColumnWidths() {
+        List<Integer> result = new ArrayList<>();
+        List<Integer> headerWidths = new ArrayList<>();
+
+        PDTablePart header = PDPartType.HEADER.equals(partType) ? this : pdTable.findHeader();
+
+        if (header == null) {
+            return result;
+        }
+
+        for (PDTableCell cell: header.elements) {
+            headerWidths.addAll(cell.getColumnWidths());
+        }
+
+        for (int i = 0; i < Math.min(elements.size(), headerWidths.size()) ; i++) {
+            if (elements.get(i).isMerged() == false) {
+                Integer v = headerWidths.get(i);
+                if (v != null && v != 0) result.add(v);
+            } else {
+                Integer mergedWidth = 0;
+                for (int j = i; j < headerWidths.size(); j++) {
+                    Integer v = headerWidths.get(j);
+                    if (v != null && v != 0) mergedWidth = mergedWidth + v;
+                }
+                if (mergedWidth != null && mergedWidth != 0) result.add(mergedWidth);
+            }
+        }
+
+
+        return result;
+    }
+
+
+    public <T extends PDTableCell> T createValueElement(final Class<T> valueType) {
+        T result = null;
+        if (PDTableCellValueInt.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueInt().tablePart(this);
+        } else if (PDTableCellValueDouble.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueDouble().tablePart(this);
+        } else if (PDTableCellValueString.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueString().tablePart(this);
+        } else if (PDTableCellValueDoubleAggregation.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueDoubleAggregation().tablePart(this);
+        }
+
+        if (result == null) {
+            throw new UnsupportedOperationException();
+        }
+
+        elements.add(result);
+//
+//        switch (valueType) {
+//            case "valueInt" : result = (T) new PDTableCellValueInt().tablePart(this);
+//                break;
+//            case "valueString" : result = (T) new PDTableCellValueString().tablePart(this);
+//                break;
+//            default : result = null;
+//        }
+        return result;
+    }
+
+
+    public <T extends PDTableCell> List<T> createValueElements(int count, final Class<T> valueType) {
+        List<T> result = new ArrayList<T>();
+        for (int i = 1; i <= count ; i++) {
+            T element = createValueElement(valueType);
+            element.keyValueIdx(i);
+            result.add(element);
+        }
+        return result;
+    };
 
 }
