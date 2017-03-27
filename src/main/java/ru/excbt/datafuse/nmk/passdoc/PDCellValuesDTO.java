@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import lombok.Getter;
 import lombok.Setter;
 
