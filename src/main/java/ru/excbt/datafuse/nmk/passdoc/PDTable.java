@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
-public class PDTable {
+public class PDTable implements PDReferable {
     private String caption;
 
     @Getter
@@ -51,6 +51,7 @@ public class PDTable {
         return result.isPresent() ? result.get() : null;
     }
 
+    @Override
     public void linkInternalRefs() {
         for (PDTablePart part: parts) {
             part.setPdTable(this);

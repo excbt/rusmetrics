@@ -16,7 +16,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
-public class PDTablePart {
+public class PDTablePart implements PDReferable {
 
 
     @Getter
@@ -181,6 +181,7 @@ public class PDTablePart {
         return result;
     };
 
+    @Override
     public void linkInternalRefs() {
         for (PDTableCell<?> cell: elements) {
             cell.tablePart(this);

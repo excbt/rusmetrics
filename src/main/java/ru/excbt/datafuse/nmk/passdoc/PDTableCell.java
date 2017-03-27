@@ -19,7 +19,7 @@ import java.util.List;
     @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg")
 })
 @NoArgsConstructor
-public abstract class PDTableCell<T extends PDTableCell<T>> {
+public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable {
 
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
@@ -102,6 +102,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> {
     }
 
 
+    @Override
     public void linkInternalRefs() {
         childElements.forEach(i -> {
             i.tablePart(this.tablePart);
