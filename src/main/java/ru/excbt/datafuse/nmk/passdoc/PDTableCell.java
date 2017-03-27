@@ -24,7 +24,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> {
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
-    private int width;
+    private double width;
 
     @Getter
     @JsonProperty("elements")
@@ -82,15 +82,15 @@ public abstract class PDTableCell<T extends PDTableCell<T>> {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public Integer getTotalWidth() {
-        int childSum = childElements.size() == 0 ? 0 :
-                        childElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
+    public Double getTotalWidth() {
+        double childSum = childElements.size() == 0 ? 0 :
+                        childElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return this.width + childSum > 0 ? this.width + childSum : null;
     }
 
 
-    protected List<Integer> getColumnWidths() {
-        List<Integer> result = new ArrayList<>();
+    protected List<Double> getColumnWidths() {
+        List<Double> result = new ArrayList<>();
         if (childElements.size() == 0) {
             result.add(width);
         } else {

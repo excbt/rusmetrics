@@ -81,9 +81,9 @@ public class PDTablePart {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public int getTotalWidth() {
-        int headerWidth = elements.size() == 0 ? 0 :
-            elements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
+    public Double getTotalWidth() {
+        double headerWidth = elements.size() == 0 ? 0 :
+            elements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return headerWidth;
     }
 
@@ -97,9 +97,9 @@ public class PDTablePart {
         return this;
     }
 
-    public List<Integer> getColumnWidths() {
-        List<Integer> result = new ArrayList<>();
-        List<Integer> headerWidths = new ArrayList<>();
+    public List<Double> getColumnWidths() {
+        List<Double> result = new ArrayList<>();
+        List<Double> headerWidths = new ArrayList<>();
 
         PDTablePart header = PDPartType.HEADER.equals(partType) ? this : pdTable.findHeader();
 
@@ -113,12 +113,12 @@ public class PDTablePart {
 
         for (int i = 0; i < Math.min(elements.size(), headerWidths.size()) ; i++) {
             if (elements.get(i).isMerged() == false) {
-                Integer v = headerWidths.get(i);
+                Double v = headerWidths.get(i);
                 if (v != null && v != 0) result.add(v);
             } else {
-                Integer mergedWidth = 0;
+                Double mergedWidth = 0.0;
                 for (int j = i; j < headerWidths.size(); j++) {
-                    Integer v = headerWidths.get(j);
+                    Double v = headerWidths.get(j);
                     if (v != null && v != 0) mergedWidth = mergedWidth + v;
                 }
                 if (mergedWidth != null && mergedWidth != 0) result.add(mergedWidth);
