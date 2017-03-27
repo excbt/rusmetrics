@@ -52,6 +52,9 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
+    @Setter
+    private String partKey;
+
     public T width(int value) {
         this.width = value;
         return (T) this;
@@ -74,6 +77,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     public T tablePart(PDTablePart value) {
         this.tablePart = value;
+        if (value != null) partKey = value.getKey();
         return (T) this;
     }
 
@@ -112,7 +116,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     public String getPartKey() {
-        return tablePart != null ? tablePart.getKey() : null;
+        return tablePart != null ? tablePart.getKey() : partKey;
     }
 
 }

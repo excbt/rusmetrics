@@ -28,6 +28,10 @@ public class PassDocTemplateCli {
 
 
     private static String objectToJson(Object obj) {
+        return objectToJson(obj, false);
+    }
+
+    private static String objectToJson(Object obj, boolean debug) {
         String jsonBody = null;
         String jsonBodyPretty = null;
         try {
@@ -40,7 +44,9 @@ public class PassDocTemplateCli {
                 jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
             }
 
-            log.info("Pretty JSON: \n{}", jsonBodyPretty);
+            if (debug) {
+                log.info("Pretty JSON: \n{}", jsonBodyPretty);
+            }
 
         } catch (JsonProcessingException e) {
             log.error("Can't create json: {}", e);
@@ -144,13 +150,21 @@ public class PassDocTemplateCli {
         System.out.println("======================================");
         List<PDTableCell> valueCells = pdTable1.extractCellValues();
 
-        OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(valueCells);
+        PDCellValuesDTO cellValuesDTO = new PDCellValuesDTO();
+        cellValuesDTO.addTableCellValues(valueCells);
 
-        valueCells.forEach(i -> {
-            log.info("Class: {}",i.getClass().getSimpleName());
-        });
+        String jsonValues = objectToJson(cellValuesDTO, true);
 
-        objectToJson(valueCells);
+        PDCellValuesDTO cellValuesDTO2 = OBJECT_MAPPER.readValue(jsonValues, PDCellValuesDTO.class);
+
+        String jsonValues2 = objectToJson(cellValuesDTO2, true);
+
+        System.out.println("======================================");
+
+        if (!jsonValues.equals(jsonValues2)) {
+            System.out.println("jsonValues2: DESERIALIZATION IS NOT EQUALS");
+        }
+
 
     }
 }
