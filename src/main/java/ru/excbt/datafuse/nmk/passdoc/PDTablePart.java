@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -92,9 +93,9 @@ public class PDTablePart implements PDReferable {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public Double getTotalWidth() {
+    public Double get_totalWidth() {
         double headerWidth = elements.size() == 0 ? 0 :
-            elements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
+            elements.stream().map(i -> i.get_totalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return headerWidth;
     }
 
@@ -114,23 +115,29 @@ public class PDTablePart implements PDReferable {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    public List<Double> getColumnWidths() {
-        List<Double> result = new ArrayList<>();
+    public List<Double> get_columnWidths() {
+
         List<Double> headerWidths = new ArrayList<>();
 
         if (pdTable == null) {
-            return result;
+            return headerWidths;
         }
 
         PDTablePart header = PDPartType.HEADER.equals(partType) ? this : pdTable.findHeader();
 
         if (header == null) {
-            return result;
+            return headerWidths;
         }
 
         for (PDTableCell cell: header.elements) {
-            headerWidths.addAll(cell.getColumnWidths());
+            headerWidths.addAll(cell.get_columnWidths());
         }
+
+        if (PDPartType.HEADER.equals(partType)) {
+            return headerWidths;
+        }
+
+        List<Double> result = new ArrayList<>();
 
         for (int i = 0; i < Math.min(elements.size(), headerWidths.size()) ; i++) {
             if (elements.get(i).isMerged() == false) {
@@ -199,6 +206,11 @@ public class PDTablePart implements PDReferable {
             }
         });
         return result;
+    }
+
+    public int maxRowSpan() {
+        OptionalInt size = elements.stream().map(i -> i.childElementsLevel()).mapToInt(Integer::intValue).max();
+        return size.isPresent() ? size.getAsInt() + 1 : 1;
     }
 
 }

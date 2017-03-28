@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -86,25 +87,55 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public Double getTotalWidth() {
+    public Double get_totalWidth() {
         double childSum = childElements.size() == 0 ? 0 :
-                        childElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
+                        childElements.stream().map(i -> i.get_totalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return this.width + childSum > 0 ? this.width + childSum : null;
     }
 
 
-    protected List<Double> getColumnWidths() {
+    protected List<Double> get_columnWidths() {
         List<Double> result = new ArrayList<>();
         if (childElements.size() == 0) {
             result.add(width);
         } else {
             for (PDTableCell cell: childElements) {
-                result.addAll(cell.getColumnWidths());
+                result.addAll(cell.get_columnWidths());
             }
         }
         return result;
     }
 
+    protected int topLevel() {
+        int currentLevel = 0;
+        PDTableCell<?> top = parent;
+        while (top != null) {
+            top = top.parent;
+            currentLevel ++;
+        }
+
+        return currentLevel;
+
+    }
+
+    protected int childElementsLevel() {
+
+        if (childElements.size() == 0) {
+            return 0;
+        }
+        OptionalInt size = childElements.stream().map(i -> i.childElementsLevel()).mapToInt(Integer::intValue).max();
+        return size.isPresent() ? size.getAsInt() + 1 : 0;
+    }
+
+    public int get_rowSpan() {
+        int level = childElementsLevel();
+        int maxSpan = tablePart != null ? tablePart.maxRowSpan() : 0;
+        return  maxSpan - level - topLevel();
+    }
+
+    public int get_colSpan() {
+        return childElements.isEmpty() ? 1 : childElements.size();
+    }
 
     @Override
     public void linkInternalRefs() {
