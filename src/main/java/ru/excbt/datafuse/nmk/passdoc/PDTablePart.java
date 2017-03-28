@@ -40,6 +40,10 @@ public class PDTablePart implements PDReferable {
     @Getter
     private final List<PDTableCell> elements = new ArrayList<>();
 
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private boolean dynamic;
 
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
@@ -78,7 +82,7 @@ public class PDTablePart implements PDReferable {
 
     public void createIntValueElements(int startWith, int count) {
         for (int i = startWith; i <= count ; i++) {
-            PDTableCell result = new PDTableCellValueInt().tablePart(this).keyValueIdx(i); // keyValueIdx starts with 1
+            PDTableCell result = new PDTableCellValueInteger().tablePart(this).keyValueIdx(i); // keyValueIdx starts with 1
             elements.add(result);
         }
     }
@@ -101,6 +105,11 @@ public class PDTablePart implements PDReferable {
 
     public PDTablePart key(String value){
         this.key = value;
+        return this;
+    }
+
+    public PDTablePart dynamic() {
+        this.dynamic = true;
         return this;
     }
 
@@ -142,10 +151,10 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public <T extends PDTableCell> T createValueElement(final Class<T> valueType) {
+    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
         T result = null;
-        if (PDTableCellValueInt.class.isAssignableFrom(valueType)) {
-            result = (T) new PDTableCellValueInt().tablePart(this);
+        if (PDTableCellValueInteger.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueInteger().tablePart(this);
         } else if (PDTableCellValueDouble.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueDouble().tablePart(this);
         } else if (PDTableCellValueString.class.isAssignableFrom(valueType)) {
@@ -159,20 +168,12 @@ public class PDTablePart implements PDReferable {
         }
 
         elements.add(result);
-//
-//        switch (valueType) {
-//            case "valueInt" : result = (T) new PDTableCellValueInt().tablePart(this);
-//                break;
-//            case "valueString" : result = (T) new PDTableCellValueString().tablePart(this);
-//                break;
-//            default : result = null;
-//        }
         return result;
     }
 
 
-    public <T extends PDTableCell> List<T> createValueElements(int count, final Class<T> valueType) {
-        List<T> result = new ArrayList<T>();
+    public <T extends PDTableCell<T>> List<T> createValueElements(int count, final Class<T> valueType) {
+        List<T> result = new ArrayList<>();
         for (int i = 1; i <= count ; i++) {
             T element = createValueElement(valueType);
             element.keyValueIdx(i);
@@ -190,8 +191,8 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public List<PDTableCell> extractCellValues() {
-        final List<PDTableCell> result = new ArrayList<>();
+    public List<PDTableCell<?>> extractCellValues() {
+        final List<PDTableCell<?>> result = new ArrayList<>();
         elements.forEach(i -> {
             if (i.getCellType() == PDCellType.VALUE) {
                 result.add(i);

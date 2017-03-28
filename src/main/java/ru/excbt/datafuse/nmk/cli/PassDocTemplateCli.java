@@ -6,6 +6,7 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
+import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,8 +94,8 @@ public class PassDocTemplateCli {
             .and().createStaticElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
             "в том числе:\n")
             .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
-                i.setFunction("sum()");
-                i.setGroup("P_1.1.*");
+                i.setValueFunction("sum()");
+                i.setValueGroup("P_1.1.*");
         });
 
         pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createStaticElement("1.1.1")
@@ -148,14 +149,14 @@ public class PassDocTemplateCli {
         }
 
         System.out.println("======================================");
-        List<PDTableCell> valueCells = pdTable1.extractCellValues();
+        List<PDTableCell<?>> valueCells = pdTable1.extractCellValues();
 
-        PDCellValuesDTO cellValuesDTO = new PDCellValuesDTO();
-        cellValuesDTO.addTableCellValues(valueCells);
+        PDTableValueCellsDTO cellValuesDTO = new PDTableValueCellsDTO();
+        cellValuesDTO.addValueCells(valueCells);
 
         String jsonValues = objectToJson(cellValuesDTO, true);
 
-        PDCellValuesDTO cellValuesDTO2 = OBJECT_MAPPER.readValue(jsonValues, PDCellValuesDTO.class);
+        PDTableValueCellsDTO cellValuesDTO2 = OBJECT_MAPPER.readValue(jsonValues, PDTableValueCellsDTO.class);
 
         String jsonValues2 = objectToJson(cellValuesDTO2, true);
 

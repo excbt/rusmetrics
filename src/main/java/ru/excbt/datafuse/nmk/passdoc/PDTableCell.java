@@ -14,7 +14,7 @@ import java.util.List;
 @JsonSubTypes({
     @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
     @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
-    @JsonSubTypes.Type(value=PDTableCellValueInt.class, name="Integer"),
+    @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
     @JsonSubTypes.Type(value=PDTableCellValueDouble.class, name="Double"),
     @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg")
 })

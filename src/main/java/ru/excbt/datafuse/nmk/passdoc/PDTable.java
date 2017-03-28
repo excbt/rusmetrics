@@ -55,10 +55,10 @@ public class PDTable implements PDReferable {
         }
     }
 
-    public List<PDTableCell> extractCellValues() {
-        List<PDTableCell> result = new ArrayList<>();
+    public List<PDTableCell<?>> extractCellValues() {
+        List<PDTableCell<?>> result = new ArrayList<>();
         parts.forEach(i -> {
-            List<PDTableCell> partValues = i.extractCellValues();
+            List<PDTableCell<?>> partValues = i.extractCellValues();
             if (!partValues.isEmpty()) {
                 result.addAll(partValues);
             }
