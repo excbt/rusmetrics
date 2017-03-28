@@ -129,15 +129,13 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		//		return ResponseEntity.ok(deviceObject);
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param deviceObjectId
-	 * @param subscrDataSourceId
-	 * @param subscrDataSourceAddr
-	 * @param deviceObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param deviceObjectId
+     * @param deviceObject
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,

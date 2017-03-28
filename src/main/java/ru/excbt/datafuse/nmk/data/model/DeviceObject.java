@@ -87,6 +87,8 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	 * @since dd.02.2016
 	 *
 	 */
+	@Getter
+    @Setter
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public class DeviceLoginInfo implements Serializable {
 
@@ -99,12 +101,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 		private String devicePassword;
 
-		/**
-		 *
-		 */
-		public DeviceLoginInfo() {
-
-		}
 
 		/**
 		 *
@@ -115,37 +111,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 			this.devicePassword = deviceObject.devicePassword;
 		}
 
-		/**
-		 *
-		 * @return
-		 */
-		public String getDeviceLogin() {
-			return deviceLogin;
-		}
-
-		/**
-		 *
-		 * @param deviceLogin
-		 */
-		public void setDeviceLogin(String deviceLogin) {
-			this.deviceLogin = deviceLogin;
-		}
-
-		/**
-		 *
-		 * @return
-		 */
-		public String getDevicePassword() {
-			return devicePassword;
-		}
-
-		/**
-		 *
-		 * @param devicePassword
-		 */
-		public void setDevicePassword(String devicePassword) {
-			this.devicePassword = devicePassword;
-		}
 	}
 
 	@Transient
