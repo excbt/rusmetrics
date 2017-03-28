@@ -88,7 +88,7 @@ public class PassDocTemplateCli {
 
 
         pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1")
-            .and().createStaticElement("Сведения об оснащенности приборами коммерческого учета").merged();
+            .and().createStaticElement("Сведения об оснащенности приборами коммерческого учета").mergedCells(7);
 
         /// 1.1
         pdTable.createPart(PDPartType.ROW).key("P_1.1").createStaticElement("1.1")
@@ -155,7 +155,7 @@ public class PassDocTemplateCli {
 
         // 2
         pdTable.createPart(PDPartType.ROW).key("P_2").createStaticElement("2")
-            .and().createStaticElement("Сведения об оснащенности узлами (приборами) технического учета").merged();
+            .and().createStaticElement("Сведения об оснащенности узлами (приборами) технического учета").mergedCells(7);
 
         // 2.1
         pdTable.createPart(PDPartType.ROW).key("P_2.1").createStaticElement("2.1")

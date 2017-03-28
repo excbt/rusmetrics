@@ -140,12 +140,12 @@ public class PDTablePart implements PDReferable {
         List<Double> result = new ArrayList<>();
 
         for (int i = 0; i < Math.min(elements.size(), headerWidths.size()) ; i++) {
-            if (elements.get(i).isMerged() == false) {
+            if (elements.get(i).getMergedCells() == 0) {
                 Double v = headerWidths.get(i);
                 if (v != null && v != 0) result.add(v);
             } else {
                 Double mergedWidth = 0.0;
-                for (int j = i; j < headerWidths.size(); j++) {
+                for (int j = i; j < i + elements.get(i).getMergedCells(); j++) {
                     Double v = headerWidths.get(j);
                     if (v != null && v != 0) mergedWidth = mergedWidth + v;
                 }

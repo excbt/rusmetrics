@@ -43,10 +43,15 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private PDCellType cellType;
 
+//    @Getter
+//    @Setter
+//    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+//    private boolean merged;
+
     @Getter
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private boolean merged;
+    private int mergedCells;
 
     @Getter
     @Setter
@@ -61,13 +66,21 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return (T) this;
     }
 
-    public T merged(Boolean value) {
-        this.merged = value;
-        return (T) this;
-    }
+//    public T merged(Boolean value) {
+//        this.merged = value;
+//        return (T) this;
+//    }
+//
+//    public T merged() {
+//        this.merged = true;
+//        return (T) this;
+//    }
 
-    public T merged() {
-        this.merged = true;
+    public T mergedCells(int value) {
+        if (value < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.mergedCells = value;
         return (T) this;
     }
 
@@ -134,7 +147,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     public int get_colSpan() {
-        return childElements.isEmpty() ? 1 : childElements.size();
+        return mergedCells == 0 ? 1 : mergedCells;
     }
 
     @Override
