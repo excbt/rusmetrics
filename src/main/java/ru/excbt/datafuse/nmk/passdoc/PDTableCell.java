@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -14,7 +15,7 @@ import java.util.List;
 @JsonSubTypes({
     @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
     @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
-    @JsonSubTypes.Type(value=PDTableCellValueInt.class, name="Integer"),
+    @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
     @JsonSubTypes.Type(value=PDTableCellValueDouble.class, name="Double"),
     @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg")
 })
@@ -42,10 +43,15 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private PDCellType cellType;
 
+//    @Getter
+//    @Setter
+//    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+//    private boolean merged;
+
     @Getter
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private boolean merged;
+    private int mergedCells;
 
     @Getter
     @Setter
@@ -60,13 +66,21 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return (T) this;
     }
 
-    public T merged(Boolean value) {
-        this.merged = value;
-        return (T) this;
-    }
+//    public T merged(Boolean value) {
+//        this.merged = value;
+//        return (T) this;
+//    }
+//
+//    public T merged() {
+//        this.merged = true;
+//        return (T) this;
+//    }
 
-    public T merged() {
-        this.merged = true;
+    public T mergedCells(int value) {
+        if (value < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.mergedCells = value;
         return (T) this;
     }
 
@@ -86,25 +100,55 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public Double getTotalWidth() {
+    public Double get_totalWidth() {
         double childSum = childElements.size() == 0 ? 0 :
-                        childElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
+                        childElements.stream().map(i -> i.get_totalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return this.width + childSum > 0 ? this.width + childSum : null;
     }
 
 
-    protected List<Double> getColumnWidths() {
+    protected List<Double> get_columnWidths() {
         List<Double> result = new ArrayList<>();
         if (childElements.size() == 0) {
             result.add(width);
         } else {
             for (PDTableCell cell: childElements) {
-                result.addAll(cell.getColumnWidths());
+                result.addAll(cell.get_columnWidths());
             }
         }
         return result;
     }
 
+    protected int topLevel() {
+        int currentLevel = 0;
+        PDTableCell<?> top = parent;
+        while (top != null) {
+            top = top.parent;
+            currentLevel ++;
+        }
+
+        return currentLevel;
+
+    }
+
+    protected int childElementsLevel() {
+
+        if (childElements.size() == 0) {
+            return 0;
+        }
+        OptionalInt size = childElements.stream().map(i -> i.childElementsLevel()).mapToInt(Integer::intValue).max();
+        return size.isPresent() ? size.getAsInt() + 1 : 0;
+    }
+
+    public int get_rowSpan() {
+        int level = childElementsLevel();
+        int maxSpan = tablePart != null ? tablePart.maxRowSpan() : 0;
+        return  maxSpan - level - topLevel();
+    }
+
+    public int get_colSpan() {
+        return mergedCells == 0 ? 1 : mergedCells;
+    }
 
     @Override
     public void linkInternalRefs() {

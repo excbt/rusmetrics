@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -40,6 +41,10 @@ public class PDTablePart implements PDReferable {
     @Getter
     private final List<PDTableCell> elements = new ArrayList<>();
 
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private boolean dynamic;
 
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
@@ -78,7 +83,7 @@ public class PDTablePart implements PDReferable {
 
     public void createIntValueElements(int startWith, int count) {
         for (int i = startWith; i <= count ; i++) {
-            PDTableCell result = new PDTableCellValueInt().tablePart(this).keyValueIdx(i); // keyValueIdx starts with 1
+            PDTableCell result = new PDTableCellValueInteger().tablePart(this).keyValueIdx(i); // keyValueIdx starts with 1
             elements.add(result);
         }
     }
@@ -88,9 +93,9 @@ public class PDTablePart implements PDReferable {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public Double getTotalWidth() {
+    public Double get_totalWidth() {
         double headerWidth = elements.size() == 0 ? 0 :
-            elements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
+            elements.stream().map(i -> i.get_totalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return headerWidth;
     }
 
@@ -104,32 +109,43 @@ public class PDTablePart implements PDReferable {
         return this;
     }
 
+    public PDTablePart dynamic() {
+        this.dynamic = true;
+        return this;
+    }
+
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    public List<Double> getColumnWidths() {
-        List<Double> result = new ArrayList<>();
+    public List<Double> get_columnWidths() {
+
         List<Double> headerWidths = new ArrayList<>();
 
         if (pdTable == null) {
-            return result;
+            return headerWidths;
         }
 
         PDTablePart header = PDPartType.HEADER.equals(partType) ? this : pdTable.findHeader();
 
         if (header == null) {
-            return result;
+            return headerWidths;
         }
 
         for (PDTableCell cell: header.elements) {
-            headerWidths.addAll(cell.getColumnWidths());
+            headerWidths.addAll(cell.get_columnWidths());
         }
 
+        if (PDPartType.HEADER.equals(partType)) {
+            return headerWidths;
+        }
+
+        List<Double> result = new ArrayList<>();
+
         for (int i = 0; i < Math.min(elements.size(), headerWidths.size()) ; i++) {
-            if (elements.get(i).isMerged() == false) {
+            if (elements.get(i).getMergedCells() == 0) {
                 Double v = headerWidths.get(i);
                 if (v != null && v != 0) result.add(v);
             } else {
                 Double mergedWidth = 0.0;
-                for (int j = i; j < headerWidths.size(); j++) {
+                for (int j = i; j < i + elements.get(i).getMergedCells(); j++) {
                     Double v = headerWidths.get(j);
                     if (v != null && v != 0) mergedWidth = mergedWidth + v;
                 }
@@ -142,10 +158,10 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public <T extends PDTableCell> T createValueElement(final Class<T> valueType) {
+    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
         T result = null;
-        if (PDTableCellValueInt.class.isAssignableFrom(valueType)) {
-            result = (T) new PDTableCellValueInt().tablePart(this);
+        if (PDTableCellValueInteger.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueInteger().tablePart(this);
         } else if (PDTableCellValueDouble.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueDouble().tablePart(this);
         } else if (PDTableCellValueString.class.isAssignableFrom(valueType)) {
@@ -159,20 +175,12 @@ public class PDTablePart implements PDReferable {
         }
 
         elements.add(result);
-//
-//        switch (valueType) {
-//            case "valueInt" : result = (T) new PDTableCellValueInt().tablePart(this);
-//                break;
-//            case "valueString" : result = (T) new PDTableCellValueString().tablePart(this);
-//                break;
-//            default : result = null;
-//        }
         return result;
     }
 
 
-    public <T extends PDTableCell> List<T> createValueElements(int count, final Class<T> valueType) {
-        List<T> result = new ArrayList<T>();
+    public <T extends PDTableCell<T>> List<T> createValueElements(int count, final Class<T> valueType) {
+        List<T> result = new ArrayList<>();
         for (int i = 1; i <= count ; i++) {
             T element = createValueElement(valueType);
             element.keyValueIdx(i);
@@ -190,14 +198,19 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public List<PDTableCell> extractCellValues() {
-        final List<PDTableCell> result = new ArrayList<>();
+    public List<PDTableCell<?>> extractCellValues() {
+        final List<PDTableCell<?>> result = new ArrayList<>();
         elements.forEach(i -> {
             if (i.getCellType() == PDCellType.VALUE) {
                 result.add(i);
             }
         });
         return result;
+    }
+
+    public int maxRowSpan() {
+        OptionalInt size = elements.stream().map(i -> i.childElementsLevel()).mapToInt(Integer::intValue).max();
+        return size.isPresent() ? size.getAsInt() + 1 : 1;
     }
 
 }

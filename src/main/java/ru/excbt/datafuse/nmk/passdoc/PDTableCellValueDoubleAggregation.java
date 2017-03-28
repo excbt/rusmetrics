@@ -16,11 +16,11 @@ public class PDTableCellValueDoubleAggregation extends PDTableCell<PDTableCellVa
 
     @Getter
     @Setter
-    private String function;
+    private String valueFunction;
 
     @Getter
     @Setter
-    private String group;
+    private String valueGroup;
 
     public PDTableCellValueDoubleAggregation(){
         super();

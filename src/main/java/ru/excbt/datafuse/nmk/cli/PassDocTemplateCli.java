@@ -6,6 +6,7 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
+import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,14 +88,15 @@ public class PassDocTemplateCli {
 
 
         pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1")
-            .and().createStaticElement("Сведения об оснащенности приборами коммерческого учета").merged();
+            .and().createStaticElement("Сведения об оснащенности приборами коммерческого учета").mergedCells(7);
 
+        /// 1.1
         pdTable.createPart(PDPartType.ROW).key("P_1.1").createStaticElement("1.1")
             .and().createStaticElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
             "в том числе:\n")
             .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
-                i.setFunction("sum()");
-                i.setGroup("P_1.1.*");
+                i.setValueFunction("sum()");
+                i.setValueGroup("P_1.1.*");
         });
 
         pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createStaticElement("1.1.1")
@@ -113,7 +115,53 @@ public class PassDocTemplateCli {
             .and().createStaticElement("отданной субабонентам (сторонним потребителям)")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        String json = objectToJson(pdTable);
+        /// 1.2
+        pdTable.createPart(PDPartType.ROW).key("P_1.2").createStaticElement("1.2")
+            .and().createStaticElement("Количество необорудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
+            "в том числе:\n")
+            .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
+            i.setValueFunction("sum()");
+            i.setValueGroup("P_2.1.*");
+        });
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.2.1").createStaticElement("1.2.1")
+            .and().createStaticElement("полученной от стороннего источника")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.2.2").createStaticElement("1.2.2")
+            .and().createStaticElement("собственного производства")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.2.3").createStaticElement("1.2.3")
+            .and().createStaticElement("потребленной на собственные нужды")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
+        pdTable.createPart(PDPartType.ROW).key("P_1.2.4").createStaticElement("1.2.4")
+            .and().createStaticElement("отданной субабонентам (сторонним потребителям)")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
+
+        // 1.3
+        pdTable.createPart(PDPartType.ROW).key("P_1.3").createStaticElement("1.3")
+            .and().createStaticElement("Количество узлов (приборов) учета с нарушенными сроками поверки")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
+        // 1.4
+        pdTable.createPart(PDPartType.ROW).key("P_1.4").createStaticElement("1.4")
+            .and().createStaticElement("Количество узлов (приборов) учета с нарушением требований к классу точности " +
+            "(относительной погрешности) узла (прибора) учета")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
+
+        // 2
+        pdTable.createPart(PDPartType.ROW).key("P_2").createStaticElement("2")
+            .and().createStaticElement("Сведения об оснащенности узлами (приборами) технического учета").mergedCells(7);
+
+        // 2.1
+        pdTable.createPart(PDPartType.ROW).key("P_2.1").createStaticElement("2.1")
+            .and().createStaticElement("Суммарное количество узлов (приборов) учета")
+            .and().createValueElements(6, PDTableCellValueDouble.class);
+
 
 //        JsonFactory factory = new JsonFactory();
 //        /**
@@ -136,6 +184,8 @@ public class PassDocTemplateCli {
 //        parser.close();
 
 
+        String json = objectToJson(pdTable, true);
+
         PDTable pdTable1 = OBJECT_MAPPER.readValue(json,PDTable.class);
 
         pdTable1.linkInternalRefs();
@@ -148,14 +198,14 @@ public class PassDocTemplateCli {
         }
 
         System.out.println("======================================");
-        List<PDTableCell> valueCells = pdTable1.extractCellValues();
+        List<PDTableCell<?>> valueCells = pdTable1.extractCellValues();
 
-        PDCellValuesDTO cellValuesDTO = new PDCellValuesDTO();
-        cellValuesDTO.addTableCellValues(valueCells);
+        PDTableValueCellsDTO cellValuesDTO = new PDTableValueCellsDTO();
+        cellValuesDTO.addValueCells(valueCells);
 
-        String jsonValues = objectToJson(cellValuesDTO, true);
+        String jsonValues = objectToJson(cellValuesDTO);
 
-        PDCellValuesDTO cellValuesDTO2 = OBJECT_MAPPER.readValue(jsonValues, PDCellValuesDTO.class);
+        PDTableValueCellsDTO cellValuesDTO2 = OBJECT_MAPPER.readValue(jsonValues, PDTableValueCellsDTO.class);
 
         String jsonValues2 = objectToJson(cellValuesDTO2, true);
 
