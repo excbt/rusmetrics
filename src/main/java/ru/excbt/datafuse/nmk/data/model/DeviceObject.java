@@ -257,6 +257,11 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
     @Getter
     @Setter
+    @Column(name = "is_time_sync_enabled")
+    private Boolean isTimeSyncEnabled;
+
+    @Getter
+    @Setter
 	@Transient
 	private DeviceLoginInfo deviceLoginInfo;
 
