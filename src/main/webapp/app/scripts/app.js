@@ -63,6 +63,10 @@ app.config(['$routeProvider', function ($routeProvider) {
                 }]
             }
         })
+        .when('/documents/energo-passports', {
+            templateUrl: 'views/documents-energo-passports.html',
+            controller: 'documentsEnergoPassportsCtrl'            
+        })
         .when('/notices/list', {
             templateUrl: 'views/notice.html',
             controller: 'NoticeCtrl',
