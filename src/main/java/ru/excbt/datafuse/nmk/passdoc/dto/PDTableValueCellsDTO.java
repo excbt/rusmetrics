@@ -19,7 +19,7 @@ public class PDTableValueCellsDTO {
 
     private int version;
 
-    private String tableKey;
+    private String sectionKey;
 
     public void addValueCells(List<PDTableCell<?>> tableCells) {
         Optional<?> check = tableCells.stream().filter(i -> i.getCellType() == PDCellType.STATIC).findAny();

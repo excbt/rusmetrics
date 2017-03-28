@@ -65,7 +65,7 @@ public class PassDocTemplateCli {
 //        doc.props.put("value","value1");
 
 
-        PDTable pdTable = new PDTable();
+        PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.3");
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
