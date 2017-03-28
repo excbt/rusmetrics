@@ -87,10 +87,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 *
 	 * @throws Exception
 	 */
-	@Ignore
 	@Test
-	public void testDeviceObjects725Get() throws Exception {
-		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", 725));
+	public void testDeviceObjects733Get() throws Exception {
+		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", 733));
 		_testGetJson(url);
 	}
 
@@ -98,10 +97,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 *
 	 * @throws Exception
 	 */
-	@Ignore
 	@Test
-	public void testDeviceObjects725_737Get() throws Exception {
-		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", 725, 737));
+	public void testDeviceObjects733_128729223Get() throws Exception {
+		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", 733, 128729223));
 		_testGetJson(url);
 	}
 
