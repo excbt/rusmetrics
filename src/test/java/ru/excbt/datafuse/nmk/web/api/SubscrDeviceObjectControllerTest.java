@@ -52,6 +52,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
     public void testDeviceObjectUpdate() throws Exception {
         final long id = 128729223L;
         DeviceObjectDTO deviceObjectDTO = deviceObjectService.findDeviceObjectDTO(id);
+        deviceObjectDTO.setDeviceLoginInfo(new DeviceObjectDTO.DeviceLoginInfoDTO());
+        deviceObjectDTO.getDeviceLoginInfo().setDeviceLogin("user");
+        deviceObjectDTO.getDeviceLoginInfo().setDevicePassword("pass");
 	    deviceObjectDTO.setIsTimeSyncEnabled(true);
         String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", DEV_CONT_OBJECT,id));
         _testPutJson(url,deviceObjectDTO);

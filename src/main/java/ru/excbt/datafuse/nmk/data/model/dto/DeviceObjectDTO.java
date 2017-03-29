@@ -21,8 +21,7 @@ public class DeviceObjectDTO {
     @Getter
     @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class DeviceLoginInfoDTO  {
-
+    public static class DeviceLoginInfoDTO  {
         private String deviceLogin;
         private String devicePassword;
     }

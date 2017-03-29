@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
@@ -92,7 +93,8 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@Getter
     @Setter
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public class DeviceLoginInfo implements Serializable {
+    @NoArgsConstructor
+	public static class DeviceLoginInfo implements Serializable {
 
 		/**
 		 *
