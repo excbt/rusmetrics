@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
@@ -31,10 +33,11 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.V_DeviceObjectTimeOffsetRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
 
 /**
  * Сервис для работы с приборами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 28.05.2015
@@ -73,8 +76,12 @@ public class DeviceObjectService implements SecuredRoles {
 	@Autowired
 	private V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -91,7 +98,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObject
 	 * @return
 	 */
@@ -106,7 +113,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -122,7 +129,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -136,7 +143,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -154,7 +161,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectMetaVzlet
 	 * @return
 	 */
@@ -171,11 +178,10 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectMetaVzletRepository.save(deviceObjectMetaVzlet);
 	}
 
-	/**
-	 * 
-	 * @param deviceObjectMetaVzlet
-	 * @return
-	 */
+    /**
+     *
+     * @param deviceObjectId
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteDeviceObjectMetaVzlet(Long deviceObjectId) {
@@ -188,7 +194,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -198,7 +204,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -212,7 +218,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObject
 	 * @return
 	 */
@@ -223,7 +229,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObject
 	 * @param deviceObjectDataSource
 	 * @return
@@ -266,7 +272,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 		DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
 
-		// TODO Metadata form Impulse Devices 
+		// TODO Metadata form Impulse Devices
 		// Проверяем источник данных для прямой загрузки, за исключением импульсных приборов
 		if (!Boolean.TRUE.equals(deviceModel.getIsImpulse()) && deviceObjectDataSource != null
 				&& deviceObjectDataSource.getSubscrDataSource() != null && DataSourceTypeKey.DEVICE
@@ -318,8 +324,44 @@ public class DeviceObjectService implements SecuredRoles {
 		return result;
 	}
 
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	public DeviceObject saveDeviceObjectShort(DeviceObjectDTO deviceObjectDTO) {
+		// Checking
+		checkNotNull(deviceObjectDTO, "Argument DeviceObject is NULL");
+		//checkNotNull(deviceObjectDTO.getDeviceModelId(), "Device Model is NULL");
+
+		DeviceObject deviceObject = deviceObjectDTO.isNew() ? null
+				: selectDeviceObject(deviceObjectDTO.getId());
+
+		checkNotNull(deviceObject);
+
+		modelMapper.map(deviceObjectDTO, deviceObject);
+
+		if (deviceObjectDTO.getDeviceLoginInfo() != null && SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+		    deviceObject.setDevicePassword(deviceObjectDTO.getDeviceLoginInfo().getDevicePassword());
+		    deviceObject.setDeviceLogin(deviceObjectDTO.getDeviceLoginInfo().getDeviceLogin());
+        }
+
+		deviceObjectRepository.save(deviceObject);
+        DeviceObject result = selectDeviceObject(deviceObject.getId());
+
+        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+            result.shareDeviceLoginInfo();
+        }
+
+
+        return result;
+	}
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectDTO findDeviceObjectDTO(Long id) {
+        DeviceObject deviceObject = selectDeviceObject(id);
+        return deviceObject != null ? modelMapper.map(deviceObject, DeviceObjectDTO.class) : null;
+    }
+
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -335,7 +377,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -354,11 +396,11 @@ public class DeviceObjectService implements SecuredRoles {
 		deviceObjectRepository.delete(deviceObject);
 	}
 
-	/**
-	 * 
-	 * @param subscriderId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsBySubscriber(Long subscriberId) {
 		List<DeviceObject> result = subscrContObjectService.selectDeviceObjects(subscriberId);
@@ -369,7 +411,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -397,7 +439,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ids
 	 * @return
 	 */
@@ -407,7 +449,7 @@ public class DeviceObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -416,11 +458,11 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectTimeOffsetRepository.findOne(deviceObjectId);
 	}
 
-	/**
-	 * 
-	 * @param deviceObjectId
-	 * @return
-	 */
+    /**
+     *
+     * @param deviceObjectIds
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<V_DeviceObjectTimeOffset> selectDeviceObjsetTimeOffset(List<Long> deviceObjectIds) {
 		return deviceObjectIds.isEmpty() ? new ArrayList<>()
