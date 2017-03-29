@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
-import ru.excbt.datafuse.nmk.data.model.DeviceModel;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
-import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
-import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
-import ru.excbt.datafuse.nmk.data.model.VzletSystem;
+import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
@@ -39,6 +35,9 @@ import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.web.api.support.*;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с приборами для абонента
@@ -81,6 +80,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	@Autowired
 	protected SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
 	/**
 	 *
 	 * @param contObjectId
@@ -98,6 +100,71 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
+
+    /**
+     * TODO
+     * @param contObjectId
+     * @param deviceObjectId
+     * @return
+     */
+    @RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+                                                         @PathVariable("deviceObjectId") Long deviceObjectId) {
+
+
+        if (!canAccessContObject(contObjectId)) {
+            return responseForbidden();
+        }
+
+        ApiActionProcess<DeviceObject> actionProcess = () -> {
+
+            DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
+
+            if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+                deviceObject.shareDeviceLoginInfo();
+            }
+            return deviceObject;
+        };
+
+        Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
+            if (x == null) {
+                return responseNoContent();
+            }
+            if (x.getContObject() == null || !x.getContObject().getId().equals(contObjectId)) {
+                return responseBadRequest();
+            }
+            return null;
+        };
+
+        return responseOK(actionProcess, extraCheck);
+
+    }
+
+    @RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> saveDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+                                              @PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
+
+        checkNotNull(deviceObject);
+        checkArgument(!deviceObject.isNew());
+        checkNotNull(deviceObject.getDeviceModelId());
+        checkArgument(deviceObject.getId().equals(deviceObjectId));
+
+        if (!canAccessContObject(contObjectId)) {
+            return responseForbidden();
+        }
+
+        /////////////////////////////////////////////
+        ApiActionObjectProcess actionProcess = () -> {
+            final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
+            DeviceObject result =  deviceObjectService.saveDeviceObjectShort(deviceObjectDTO);
+
+            return result;
+        };
+        return responseUpdate(actionProcess);
+
+    }
 
 	/**
 	 *
@@ -304,62 +371,6 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		return responseOK(() -> deviceModelService.findImpulseCounterTypes());
 	}
 
-	/**
-	 * TODO
-	 * @param contObjectId
-	 * @param deviceObjectId
-	 * @return
-	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceObjectByContObjectGet(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("deviceObjectId") Long deviceObjectId) {
-
-
-        if (!canAccessContObject(contObjectId)) {
-            return responseForbidden();
-        }
-
-        ApiActionProcess<DeviceObject> actionProcess = () -> {
-
-            DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
-
-            if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-                deviceObject.shareDeviceLoginInfo();
-            }
-//            getCurrentSubscriber().get
-            return deviceObject;
-        };
-
-        Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
-            if (x == null) {
-                return responseNoContent();
-            }
-            if (x.getContObject() == null || !x.getContObject().getId().equals(contObjectId)) {
-                return responseBadRequest();
-            }
-            return null;
-        };
-
-        return responseOK(actionProcess, extraCheck);
-//
-//
-//		if (!canAccessContObject(contObjectId)) {
-//			return responseForbidden();
-//		}
-//
-//		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
-//
-//		if (deviceObject == null) {
-//			return responseNoContent();
-//		}
-//
-//		if (deviceObject.getContObject() == null || !contObjectId.equals(deviceObject.getContObject().getId())) {
-//			return responseBadRequest();
-//		}
-//
-//		return ResponseEntity.ok(deviceObject);
-	}
 
 	/**
 	 *

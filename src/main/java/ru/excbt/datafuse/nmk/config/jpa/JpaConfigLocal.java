@@ -124,13 +124,5 @@ public class JpaConfigLocal {
 		};
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
 
 }

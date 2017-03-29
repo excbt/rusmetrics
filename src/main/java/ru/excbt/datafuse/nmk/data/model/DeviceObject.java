@@ -47,7 +47,9 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 @Table(name = "device_object")
 public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId {
 
-	/**
+
+
+    /**
 	 *
 	 */
 	private static final long serialVersionUID = -199459403017867220L;
@@ -312,7 +314,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	 *
 	 */
 	@JsonIgnore
-	public void saveDeviceObjectInfo() {
+	public void saveDeviceObjectCredentials() {
 		if (deviceLoginInfo != null
 		//&& deviceLoginInfo.deviceLogin != null && deviceLoginInfo.devicePassword != null
 		) {
@@ -331,4 +333,31 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		this.deviceObjectLastInfo = deviceObjectLastInfo;
 	}
 
+    @Override
+    public String toString() {
+        return "DeviceObject{" +
+            "number='" + number + '\'' +
+            ", exCode='" + exCode + '\'' +
+            ", exLabel='" + exLabel + '\'' +
+            ", exSystemKeyname='" + exSystemKeyname + '\'' +
+            ", version=" + version +
+            ", deleted=" + deleted +
+            ", isDeviceObjectMetadata=" + isDeviceObjectMetadata +
+            ", isManual=" + isManual +
+            ", verificationInterval=" + verificationInterval +
+            ", verificationDate=" + verificationDate +
+            ", metaVersion=" + metaVersion +
+            ", deviceLogin='" + deviceLogin + '\'' +
+            ", devicePassword='" + devicePassword + '\'' +
+            ", isHexPassword=" + isHexPassword +
+            ", isTimeSyncEnabled=" + isTimeSyncEnabled +
+            ", deviceLoginInfo=" + deviceLoginInfo +
+            ", isImpulse=" + isImpulse +
+            ", impulseK=" + impulseK +
+            ", impulseMu='" + impulseMu + '\'' +
+            ", impulseCounterAddr='" + impulseCounterAddr + '\'' +
+            ", impulseCounterSlotAddr='" + impulseCounterSlotAddr + '\'' +
+            ", impulseCounterType='" + impulseCounterType + '\'' +
+            '}';
+    }
 }

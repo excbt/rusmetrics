@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.Date;
  * Created by kovtonyk on 28.03.2017.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class DeviceObjectDTO {
 
     @Getter

@@ -73,12 +73,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		};
 		return responseOK(actionProcess);
 
-		//		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
-		//		for (DeviceObject deviceObject : deviceObjects) {
-		//			deviceObject.shareDeviceLoginInfo();
-		//		}
-		//
-		//		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 
 	/**
@@ -87,7 +81,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceObjectByContObjectGet(@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> getDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
@@ -114,19 +108,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		return responseOK(actionProcess, extraCheck);
 
-		//		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
-		//
-		//		if (deviceObject == null) {
-		//			return responseNoContent();
-		//		}
-		//
-		//		if (deviceObject.getContObject() == null || !contObjectId.equals(deviceObject.getContObject().getId())) {
-		//			return responseBadRequest();
-		//		}
-		//
-		//		deviceObject.shareDeviceLoginInfo();
-		//
-		//		return ResponseEntity.ok(deviceObject);
 	}
 
     /**
@@ -138,7 +119,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> saveDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
 
 		checkNotNull(deviceObject);
@@ -173,7 +154,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 				deviceObjectDataSource.setIsActive(true);
 			}
 
-			deviceObject.saveDeviceObjectInfo();
+			deviceObject.saveDeviceObjectCredentials();
 
 			DeviceObject result = deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
 			result.shareDeviceLoginInfo();
@@ -181,26 +162,15 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		};
 		return responseUpdate(actionProcess);
 
-		//		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
-		//			@Override
-		//			public void process() {
-		//				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
-		//				result.shareDeviceLoginInfo();
-		//				setResultEntity(result);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param subscrDataSourceId
-	 * @param subscrDataSourceAddr
-	 * @param deviceObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param deviceObject
+     * @param request
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
@@ -210,14 +180,13 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param subscrDataSourceId
-	 * @param subscrDataSourceAddr
-	 * @param deviceObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param deviceObject
+     * @param request
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceObject(
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
@@ -226,15 +195,13 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		return createDeviceObjectInternal(contObjectId, deviceObject, request);
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param subscrDataSourceId
-	 * @param subscrDataSourceAddr
-	 * @param deviceObject
-	 * @param request
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param deviceObject
+     * @param request
+     * @return
+     */
 	private ResponseEntity<?> createDeviceObjectInternal(Long contObjectId, DeviceObject deviceObject,
 			HttpServletRequest request) {
 		checkNotNull(deviceObject);
@@ -244,28 +211,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		if (!canAccessContObject(contObjectId)) {
 			return responseForbidden();
 		}
-
-		//		ContObject contObject = contObjectService.findContObject(contObjectId);
-		//		deviceObject.setContObject(contObject);
-		//		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
-		//		deviceObject.setDeviceModel(deviceModel);
-		//
-		//		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
-		//
-		//		DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-		//				: new DeviceObjectDataSource();
-		//
-		//		if (deviceObjectDataSource != null && dsi != null) {
-		//			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
-		//			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-		//			deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
-		//			deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
-		//			deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
-		//			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-		//			deviceObjectDataSource.setIsActive(true);
-		//		}
-		//
-		//		deviceObject.saveDeviceObjectInfo();
 
 		ApiActionProcess<DeviceObject> actionProcess = () -> {
 
@@ -289,27 +234,13 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 				deviceObjectDataSource.setIsActive(true);
 			}
 
-			deviceObject.saveDeviceObjectInfo();
+			deviceObject.saveDeviceObjectCredentials();
 
 			return deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
 		};
 
 		return responseCreate(actionProcess, () -> request.getRequestURI());
 
-		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
-		//
-		//			@Override
-		//			protected Long getLocationId() {
-		//				return getResultEntity().getId();
-		//			}
-		//
-		//			@Override
-		//			public DeviceObject processAndReturnResult() {
-		//				return deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -337,20 +268,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		};
 		return responseDelete(actionProcess);
 
-		//		ApiAction action = new ApiActionAdapter() {
-		//
-		//			@Override
-		//			public void process() {
-		//				if (isPermanent) {
-		//					deviceObjectService.deleteDeviceObjectPermanent(deviceObjectId);
-		//				} else {
-		//					deviceObjectService.deleteDeviceObject(deviceObjectId);
-		//				}
-		//
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -392,31 +309,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		return responseOK(actionProcess);
 
-		//		List<DeviceObject> deviceObjects = deviceObjectService
-		//				.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
-		//
-		//		for (DeviceObject deviceObject : deviceObjects) {
-		//			deviceObject.shareDeviceLoginInfo();
-		//		}
-		//
-		//		List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-		//				.map(i -> new DeviceObjectVO(i)).collect(Collectors.toList());
-		//
-		//		List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
-		//				.collect(Collectors.toList());
-		//
-		//		List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService.selectDeviceObjsetTimeOffset(deviceObjectIds);
-		//
-		//		Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
-		//				.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObjectId, Function.identity()));
-		//
-		//		deviceObjectVOs.forEach(i -> {
-		//
-		//			V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
-		//			i.setDeviceObjectTimeOffset(timeOffset);
-		//		});
-		//
-		//		return responseOK(deviceObjectVOs);
 	}
 
 	/**
