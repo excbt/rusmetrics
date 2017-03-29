@@ -92,7 +92,7 @@
                                                        id="inputSn" 
                                                        placeholder="Серийный номер"  
                                                        ng-model="currentDevice.number" 
-                                                       ng-disabled="!isAdminCanEdit(currentDevice);">
+                                                       ng-disabled="isDeviceDisabled(currentDevice);">
                                             </td>
                                         </tr>
                                         <tr>
@@ -140,6 +140,7 @@
                                                 </div>                                    
                                             </td>
                                         </tr>
+<!--
                                         <tr>
                                             <td colspan="2" class="col-sm-6"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                             </td>
@@ -149,7 +150,7 @@
                                                        id="inputVerificationInterval"  
                                                        ng-model="currentDevice.verificationInterval" 
                                                        data-inputmask="'alias': 'numeric', 'greedy': false" 
-                                                       ng-disabled="!isAdminCanEdit(currentDevice)"
+                                                       ng-disabled="isDeviceDisabled(currentDevice)"
                                                        />
                                             </td>
                                         </tr>
@@ -164,9 +165,10 @@
                                                        type="text" 
                                                        id="inputVerificationDate" 
                                                        ng-model="currentDevice.verificationDateString" 
-                                                       ng-disabled="!isAdminCanEdit(currentDevice)"/>
+                                                       ng-disabled="isDeviceDisabled(currentDevice)"/>
                                             </td>
                                         </tr>
+-->
                                         <tr>
                                             <td colspan="3" >
                                                 <input type="checkbox" 

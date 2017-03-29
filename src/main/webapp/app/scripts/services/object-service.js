@@ -221,6 +221,14 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             }
             return $http.get(table, httpOptions);
         };
+                 
+        function loadDeviceById(objId, devId) {
+            var url = urlSubscrContObjects + "/" + objId + urlDeviceObjects + "/" + devId;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        }
         
         var getDevicesByObject = function (obj) {
             var url = urlSubscrContObjects + "/" + obj.id + urlDeviceObjects;
@@ -949,8 +957,9 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             getZpointMetadata,
             getZpointsDataByObject,
             findObjectById,
-            isDirectDevice,
+            isDirectDevice,            
             loadDefaultTreeSetting,
+            loadDeviceById,
             loadFreeObjectsByTree,
             loadObjectsByTreeNode,
             loading,
