@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true, nomen: true*/
+/*jslint node: true, eqeq: true, nomen: true, es5: true*/
 /*global angular, $, moment, alert*/
 'use strict';
 
@@ -860,7 +860,7 @@ angular.module('portalNMC')
                             i;
                         for (i = 0; i < zPointsByObject.length; i += 1) {
                             var zpoint = {};
-//console.log(zPointsByObject[i]);                                
+console.log(zPointsByObject[i]);
                             zpoint.id = zPointsByObject[i].id;
                             zpoint.zpointOrder = zPointsByObject[i].contServiceType.serviceOrder + zPointsByObject[i].customServiceName;
 //                                zpoint.zpointOrder = zPointsByObject[i].zpointOrder;
@@ -1723,6 +1723,9 @@ angular.module('portalNMC')
                 if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.deviceModel)) {
                     $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
                 }
+                if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.verificationDate)) {
+                    $scope.data.currentDevice.verificationDateString = mainSvc.dateFormating($scope.data.currentDevice.verificationDate, $scope.objectCtrlSettings.dateFormat);
+                }
                 $('#showDeviceModal').modal();
             };
 
@@ -1746,6 +1749,23 @@ angular.module('portalNMC')
                 }
                 var curDevice = curZpoint.deviceObject;
                 return objectSvc.isDirectDevice(curDevice);
+            };
+                
+            function successSaveDeviceCallback(resp) {
+console.log(resp);
+            }
+                
+            $scope.saveDevice = function (device) {
+console.log(device);
+            if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString !== "")) {
+                device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.objectCtrlSettings.dateFormat);
+            }
+                //check device
+//                if (checkDevice(device) === false) {
+//                    return false;
+//                }
+                //send to server
+                objectSvc.subscrSendDeviceToServer(device).then(successSaveDeviceCallback, errorCallback);
             };
 // **************************************************************************
 //                  end Work with devices

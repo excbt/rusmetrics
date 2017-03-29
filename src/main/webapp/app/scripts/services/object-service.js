@@ -592,6 +592,39 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             return rmaPromise;
         };
                  
+        var subscrSendDeviceToServer = function (device) {
+            //send to server
+                //create param string
+//            var params = {};
+//            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr !== null)) {
+//                params.subscrDataSourceAddr = device.subscrDataSourceAddr;
+//            }
+//            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable !== null)) {
+//                params.dataSourceTable = device.dataSourceTable;
+//            }
+//            if (angular.isDefined(device.dataSourceTable1h) && (device.dataSourceTable1h !== null)) {
+//                params.dataSourceTable1h = device.dataSourceTable1h;
+//            }
+//            if (angular.isDefined(device.dataSourceTable24h) && (device.dataSourceTable24h !== null)) {
+//                params.dataSourceTable24h = device.dataSourceTable24h;
+//            }
+            var targetUrl = getObjectsUrl() + "/" + device.contObjectId + "/deviceObjects";
+            if (angular.isDefined(device.id) && (device.id !== null)) {
+                targetUrl = targetUrl + "/" + device.id;
+            }
+                //add url params
+//            params.subscrDataSourceId = device.subscrDataSourceId;
+//            device.editDataSourceInfo = params;
+            
+            if (angular.isDefined(device.id) && (device.id !== null)) {
+                return $http.put(targetUrl, device);//.then(successCallback,errorCallback);
+            }
+//            else {
+//                return $http.post(targetUrl, device);//.then(successCallback,errorCallback);
+//            }
+//            return null;
+        };
+                 
         var sendDeviceToServer = function (device) {
             //send to server
                 //create param string
@@ -945,6 +978,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             sortObjectsByFullName,
             sortObjectsByFullNameEx,            
             sortObjectsByConObjectFullName,
+            subscrSendDeviceToServer,
             updateTree
         };
     

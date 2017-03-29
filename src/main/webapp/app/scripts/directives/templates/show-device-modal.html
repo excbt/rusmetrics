@@ -92,7 +92,7 @@
                                                        id="inputSn" 
                                                        placeholder="Серийный номер"  
                                                        ng-model="currentDevice.number" 
-                                                       ng-disabled="isDeviceDisabled(currentDevice);">
+                                                       ng-disabled="!isAdminCanEdit(currentDevice);">
                                             </td>
                                         </tr>
                                         <tr>
@@ -149,7 +149,7 @@
                                                        id="inputVerificationInterval"  
                                                        ng-model="currentDevice.verificationInterval" 
                                                        data-inputmask="'alias': 'numeric', 'greedy': false" 
-                                                       ng-disabled="isDeviceDisabled(currentDevice)"
+                                                       ng-disabled="!isAdminCanEdit(currentDevice)"
                                                        />
                                             </td>
                                         </tr>
@@ -164,8 +164,20 @@
                                                        type="text" 
                                                        id="inputVerificationDate" 
                                                        ng-model="currentDevice.verificationDateString" 
-                                                       ng-disabled="isDeviceDisabled(currentDevice)"/>
+                                                       ng-disabled="!isAdminCanEdit(currentDevice)"/>
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" >
+                                                <input type="checkbox" 
+                                                       class="nmc-checkbox-form" 
+                                                       ng-model="currentDevice.isTimeSyncEnabled"
+                                                       ng-disabled="!isAdminCanEdit(currentDevice)"
+                                                       />
+                                                <label for="inputIsTymeSyncEnabled">
+                                                    Включить автоматическую корректировку даты и времени
+                                                </label>
+                                            </td>                                
                                         </tr>
                                     </table>
                                 </div>    
@@ -189,7 +201,7 @@
                                                        id="inputNetAddr"                                            
                                                        placeholder="" 
                                                        ng-model="currentDevice.subscrDataSourceAddr" 
-                                                       ng-disabled="isDeviceDisabled(currentDevice)"
+                                                       ng-disabled="!isAdminCanEdit(currentDevice)"
                                                        />
                                             </td>
                                         </tr>
@@ -203,7 +215,7 @@
                                                        id="inputDeviceLogin"                                            
                                                        placeholder="" 
                                                        ng-model="currentDevice.deviceLoginInfo.deviceLogin" 
-                                                       ng-disabled="isDeviceDisabled(currentDevice)"
+                                                       ng-disabled="!isAdminCanEdit(currentDevice)"
                                                        />
                                             </td>
                                         </tr>
@@ -217,7 +229,7 @@
                                                        id="inputDevicePassword"                                            
                                                        placeholder="" 
                                                        ng-model="currentDevice.deviceLoginInfo.devicePassword" 
-                                                       ng-disabled="isDeviceDisabled(currentDevice);"
+                                                       ng-disabled="!isAdminCanEdit(currentDevice);"
                                                        />
                                             </td>
                                         </tr>
@@ -226,7 +238,7 @@
                                                 <input type="checkbox" 
                                                        class="nmc-checkbox-form" 
                                                        ng-model="currentDevice.isHexPassword"
-                                                       ng-disabled="isDeviceDisabled(currentDevice)"
+                                                       ng-disabled="!isAdminCanEdit(currentDevice)"
                                                        />
                                                 <label for="inputHexPassword">
                                                     Признак пароля в шестнадцатеричном виде <small> (для электросчетчиков Меркурий)
@@ -341,10 +353,10 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input ng-show="showOkButton==='true'"
+							<input ng-show="showOkButton==='true' || isAdminCanEdit(currentDevice)"
                                    type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="btnClick()"
-                                ng-disabled="isDeviceDisabled(currentDevice);"
+                                ng-disabled="!isAdminCanEdit(currentDevice);"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-xs-3 col-md-3 noMargin noPadding">

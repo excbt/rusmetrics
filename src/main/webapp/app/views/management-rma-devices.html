@@ -407,6 +407,18 @@
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td colspan="3" >
+                                                <input type="checkbox" 
+                                                       class="nmc-checkbox-form" 
+                                                       ng-model="data.currentObject.isTimeSyncEnabled"
+                                                       ng-disabled="isDeviceDisabled(data.currentObject)"
+                                                       />
+                                                <label for="inputIsTymeSyncEnabled">
+                                                    Включить автоматическую корректировку даты и времени
+                                                </label>
+                                            </td>                                
+                                        </tr>
                                     </table>
                                 </div>    
                             </div>  
