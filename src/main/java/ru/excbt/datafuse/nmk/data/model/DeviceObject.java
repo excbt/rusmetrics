@@ -28,11 +28,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.dto.DataSourceInfoDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
@@ -96,6 +97,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Setter
 	@JsonIgnoreProperties(ignoreUnknown = true)
     @NoArgsConstructor
+    @ToString
 	public static class DeviceLoginInfo implements Serializable {
 
 		/**
@@ -124,7 +126,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
 
 	@Transient
-	private DataSourceInfoDTO editDataSourceInfo = new DataSourceInfoDTO();
+	private ActiveDataSourceInfoDTO editDataSourceInfo = new ActiveDataSourceInfoDTO();
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "device_model_id", nullable = false)
@@ -293,16 +295,15 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		}
 	}
 
-	public DataSourceInfoDTO getEditDataSourceInfo() {
-        log.warn("Fire getEditDataSourceInfo");
+	public ActiveDataSourceInfoDTO getEditDataSourceInfo() {
 		if (editDataSourceInfo == null || editDataSourceInfo.getSubscrDataSourceId() == null) {
 			DeviceObjectDataSource activeDS = getActiveDataSource();
-			editDataSourceInfo = activeDS != null ? new DataSourceInfoDTO(activeDS) : new DataSourceInfoDTO();
+			editDataSourceInfo = activeDS != null ? new ActiveDataSourceInfoDTO(activeDS) : new ActiveDataSourceInfoDTO();
 		}
 		return editDataSourceInfo;
 	}
 
-	public void setEditDataSourceInfo(DataSourceInfoDTO dataSourceInfo) {
+	public void setEditDataSourceInfo(ActiveDataSourceInfoDTO dataSourceInfo) {
 		this.editDataSourceInfo = dataSourceInfo;
 	}
 
@@ -341,7 +342,8 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Override
     public String toString() {
         return "DeviceObject{" +
-            "number='" + number + '\'' +
+            "id=" + getId() +
+            ", number='" + number + '\'' +
             ", exCode='" + exCode + '\'' +
             ", exLabel='" + exLabel + '\'' +
             ", exSystemKeyname='" + exSystemKeyname + '\'' +
@@ -363,6 +365,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
             ", impulseCounterAddr='" + impulseCounterAddr + '\'' +
             ", impulseCounterSlotAddr='" + impulseCounterSlotAddr + '\'' +
             ", impulseCounterType='" + impulseCounterType + '\'' +
+            ", activeDataSourceInfo=" + getActiveDataSource() +
             '}';
     }
 }

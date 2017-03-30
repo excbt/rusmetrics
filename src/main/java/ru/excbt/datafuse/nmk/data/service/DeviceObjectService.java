@@ -391,7 +391,7 @@ public class DeviceObjectService implements SecuredRoles {
 		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
 
         if (deviceObjectDataSource != null && deviceObjectDMO.getEditDataSourceInfo() != null &&
-                deviceObjectDataSource.getId().equals(deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceId())) {
+                deviceObjectDataSource.getId().equals(deviceObjectDMO.getEditDataSourceInfo().getId())) {
             if (deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
                 deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceAddr());
 

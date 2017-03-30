@@ -112,7 +112,7 @@ public class DeviceObjectDTO {
 
     @Getter
     @Setter
-    private DataSourceInfoDTO editDataSourceInfo;
+    private ActiveDataSourceInfoDTO editDataSourceInfo;
 
     @JsonIgnore
     public boolean isNew() {

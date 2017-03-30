@@ -11,7 +11,9 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 @Getter
 @Setter
 @ToString
-public class DataSourceInfoDTO {
+public class ActiveDataSourceInfoDTO {
+
+    private Long id;
 
 	private Long subscrDataSourceId;
 
@@ -23,11 +25,12 @@ public class DataSourceInfoDTO {
 
 	private String dataSourceTable24h;
 
-	public DataSourceInfoDTO() {
+	public ActiveDataSourceInfoDTO() {
 
 	}
 
-	public DataSourceInfoDTO(DeviceObjectDataSource deviceObjectDataSource) {
+	public ActiveDataSourceInfoDTO(DeviceObjectDataSource deviceObjectDataSource) {
+		this.id = deviceObjectDataSource.getId();
 		this.subscrDataSourceId = deviceObjectDataSource.getId();
 		this.subscrDataSourceAddr = deviceObjectDataSource.getSubscrDataSourceAddr();
 		this.dataSourceTable = deviceObjectDataSource.getDataSourceTable();
