@@ -603,10 +603,10 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         var subscrSendDeviceToServer = function (device) {
             //send to server
                 //create param string
-//            var params = {};
-//            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr !== null)) {
-//                params.subscrDataSourceAddr = device.subscrDataSourceAddr;
-//            }
+            var params = {};
+            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr !== null)) {
+                params.subscrDataSourceAddr = device.subscrDataSourceAddr;
+            }
 //            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable !== null)) {
 //                params.dataSourceTable = device.dataSourceTable;
 //            }
@@ -621,8 +621,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
                 targetUrl = targetUrl + "/" + device.id;
             }
                 //add url params
-//            params.subscrDataSourceId = device.subscrDataSourceId;
-//            device.editDataSourceInfo = params;
+            params.subscrDataSourceId = device.subscrDataSourceId;
+            device.editDataSourceInfo = params;
             
             if (angular.isDefined(device.id) && (device.id !== null)) {
                 return $http.put(targetUrl, device);//.then(successCallback,errorCallback);

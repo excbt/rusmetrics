@@ -1762,11 +1762,12 @@ angular.module('portalNMC')
             };
                 
             function successSaveDeviceCallback(resp) {
-console.log(resp);
+                $('#showDeviceModal').modal('hide');
+//console.log(resp);
             }
                 
             $scope.saveDevice = function (device) {
-console.log(device);
+//console.log(device);
             if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString !== "")) {
                 device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.objectCtrlSettings.dateFormat);
             }

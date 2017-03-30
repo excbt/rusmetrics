@@ -169,7 +169,7 @@
                                             </td>
                                         </tr>
 -->
-                                        <tr>
+                                        <tr ng-if = "currentDevice.curDatasource.dataSourceType.isRaw == true">
                                             <td colspan="3" >
                                                 <input type="checkbox" 
                                                        class="nmc-checkbox-form" 
@@ -192,7 +192,99 @@
                       <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                    <table ng-if="currentDevice.deviceModel.isImpulse === true && currentDevice.curDatasource.dataSourceType.isRaw === true"
+                                           class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputDevMark" >Тип счетчика импульсов</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <select class="form-control nmc-text-input-form nmc-input-data pull-right"
+                                                        id="inputDevModelType"
+                                                        ng-disabled="isDeviceDisabled(currentDevice);"
+                                                        ng-model="currentDevice.impulseCounterType"
+                                                        ng-options="impulseCounterType.keyname as impulseCounterType.caption for impulseCounterType in data.impulseCounterTypes"
+                                                        >
+                                                </select>                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <div id="divInputNetDevAddr"
+                                                     class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':currentDevice.impulseCounterSlotAddr == null || currentDevice.impulseCounterSlotAddr == ''}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type="text" 
+                                                           id="inputNetDevAddr"                                            
+                                                           placeholder="" 
+                                                           ng-model="currentDevice.impulseCounterSlotAddr"
+                                                           ng-disabled="isDeviceDisabled(currentDevice);"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <div id="divInputNetAddrImpDev"
+                                                     class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':currentDevice.impulseCounterAddr==null || currentDevice.impulseCounterAddr == ''}">
+                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type="text" 
+                                                           id="inputNetAddrImpDev"                                            
+                                                           placeholder="" 
+                                                           ng-model="currentDevice.impulseCounterAddr"
+                                                           ng-disabled="isDeviceDisabled(currentDevice);"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputTikCost" >Число импульсов в <span ng-bind="(data.deviceMetadataMeasures.all | filter: currentDevice.impulseMu)[0].caption"></span>
+                                                </label>                                               
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <div id="divInputTikCost"
+                                                     class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':currentDevice.impulseK == null || currentDevice.impulseK == 0}">
+                                                    {{setInputTikCostMask()}}
+                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type="text" 
+                                                           id="inputTikCost"                                                           
+                                                           data-inputmask="'alias':'numeric', 'greedy': false"
+                                                           ng-model="currentDevice.impulseK"
+                                                           ng-disabled="isDeviceDisabled(currentDevice);"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputDevMeasure" >Единицы измерения</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <div id="divInputDevMeasure"
+                                                     class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':currentDevice.impulseMu == null}">
+                                                    <select class="form-control nmc-text-input-form nmc-input-data pull-right"
+                                                            id="inputDevMeasure"
+                                                            ng-model="currentDevice.impulseMu"                                                            
+                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                            disabled
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table ng-if = "currentDevice.deviceModel.isImpulse !== true"
+                                           class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr ng-if="currentDevice.curDatasource.dataSourceType.isRaw==true">
                                             <td colspan="2" class="col-sm-6">
                                                 <label for="inputNetAddr" >Сетевой адрес прибора</label>

@@ -407,7 +407,7 @@
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr ng-if = "data.currentObject.curDatasource.dataSourceType.isRaw == true">
                                             <td colspan="3" >
                                                 <input type="checkbox" 
                                                        class="nmc-checkbox-form" 
