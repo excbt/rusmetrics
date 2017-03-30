@@ -18,7 +18,7 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
-import ru.excbt.datafuse.nmk.data.service.dto.DeviceObjectToDTOMapping;
+import ru.excbt.datafuse.nmk.data.model.modelmapper.DeviceObjectToDTOMapping;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 import javax.transaction.Transactional;

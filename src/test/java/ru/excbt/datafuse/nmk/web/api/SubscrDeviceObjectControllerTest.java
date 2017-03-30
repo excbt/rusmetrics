@@ -25,6 +25,8 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import javax.transaction.Transactional;
 
+import static org.junit.Assert.assertTrue;
+
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
@@ -52,10 +54,16 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
     public void testDeviceObjectUpdate() throws Exception {
         final long id = 128729223L;
         DeviceObjectDTO deviceObjectDTO = deviceObjectService.findDeviceObjectDTO(id);
-        deviceObjectDTO.setDeviceLoginInfo(new DeviceObjectDTO.DeviceLoginInfoDTO());
+        TestUtils.objectToJson(deviceObjectDTO);
+        deviceObjectDTO.createDeviceLoginIngo();
         deviceObjectDTO.getDeviceLoginInfo().setDeviceLogin("user");
         deviceObjectDTO.getDeviceLoginInfo().setDevicePassword("pass");
 	    deviceObjectDTO.setIsTimeSyncEnabled(true);
+	    assertTrue(deviceObjectDTO.getEditDataSourceInfo() != null);
+	    assertTrue(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId() != null);
+	    if (deviceObjectDTO.getEditDataSourceInfo() != null) {
+            deviceObjectDTO.getEditDataSourceInfo().setSubscrDataSourceAddr("123");
+        }
         String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", DEV_CONT_OBJECT,id));
         _testPutJson(url,deviceObjectDTO);
     }

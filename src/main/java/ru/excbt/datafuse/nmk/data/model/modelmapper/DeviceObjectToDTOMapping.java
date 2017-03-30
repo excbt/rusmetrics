@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.dto;
+package ru.excbt.datafuse.nmk.data.model.modelmapper;
 
 import com.github.jmnarloch.spring.boot.modelmapper.PropertyMapConfigurerSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +21,8 @@ public class DeviceObjectToDTOMapping extends PropertyMapConfigurerSupport<Devic
         return new PropertyMap<DeviceObject, DeviceObjectDTO>() {
             @Override
             protected void configure() {
-                log.debug("ADDING custom prop");
                 map().setDeviceModelId(source.getDeviceModelId());
+                map().setEditDataSourceInfo(source.getEditDataSourceInfo());
             }
         };
     }

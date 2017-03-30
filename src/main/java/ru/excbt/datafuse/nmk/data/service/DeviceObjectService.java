@@ -344,6 +344,18 @@ public class DeviceObjectService implements SecuredRoles {
         }
 
 		deviceObjectRepository.save(deviceObject);
+
+		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
+
+        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
+                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId())) {
+            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+
+            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+        }
+
+
         DeviceObject result = selectDeviceObject(deviceObject.getId());
 
         if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
