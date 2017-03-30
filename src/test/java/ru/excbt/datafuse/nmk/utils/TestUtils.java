@@ -82,11 +82,11 @@ public final class TestUtils {
                 jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
             }
 
-            log.info("Request JSON: {}", jsonBody);
-            log.info("Request Pretty JSON: {}", jsonBodyPretty);
+            log.info("Request JSON:\n{}", jsonBody);
+            log.info("Request Pretty JSON:\n{}", jsonBodyPretty);
 
         } catch (JsonProcessingException e) {
-            log.error("Can't create json: {}", e);
+            log.error("Can't create json:\n{}", e);
             e.printStackTrace();
             fail();
         }
