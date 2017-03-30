@@ -1,12 +1,11 @@
-package ru.excbt.datafuse.nmk.data.service.dto;
+package ru.excbt.datafuse.nmk.data.model.modelmapper;
 
 import com.github.jmnarloch.spring.boot.modelmapper.PropertyMapConfigurerSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.PropertyMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 
 /**
@@ -14,15 +13,15 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
  */
 @Component
 @Slf4j
-public class DeviceObjectToDTOMapping extends PropertyMapConfigurerSupport<DeviceObject, DeviceObjectDTO> {
+public class DeviceObjectFromDMOMapping extends PropertyMapConfigurerSupport<DeviceObjectDMO, DeviceObject> {
 
     @Override
-    public PropertyMap<DeviceObject, DeviceObjectDTO> mapping() {
-        return new PropertyMap<DeviceObject, DeviceObjectDTO>() {
+    public PropertyMap<DeviceObjectDMO, DeviceObject> mapping() {
+        return new PropertyMap<DeviceObjectDMO, DeviceObject>() {
             @Override
             protected void configure() {
-                log.debug("ADDING custom prop");
-                map().setDeviceModelId(source.getDeviceModelId());
+                skip(destination.getDeviceLogin());
+                skip(destination.getDevicePassword());
             }
         };
     }

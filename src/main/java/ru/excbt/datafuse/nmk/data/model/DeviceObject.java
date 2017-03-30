@@ -28,12 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.dto.DataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
-import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
 /**
@@ -48,12 +50,12 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 @Table(name = "device_object")
 public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId {
 
-
-
     /**
 	 *
 	 */
 	private static final long serialVersionUID = -199459403017867220L;
+
+	private static final Logger log = LoggerFactory.getLogger(DeviceObject.class);
 
 	@JsonIgnoreProperties(ignoreUnknown = true, allowSetters = false)
 	public class ContObjectInfo implements Serializable, ContObjectShortInfo {
@@ -122,7 +124,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
 
 	@Transient
-	private DataSourceInfo editDataSourceInfo = new DataSourceInfo();
+	private DataSourceInfoDTO editDataSourceInfo = new DataSourceInfoDTO();
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "device_model_id", nullable = false)
@@ -291,15 +293,16 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		}
 	}
 
-	public DataSourceInfo getEditDataSourceInfo() {
-		if (editDataSourceInfo == null) {
-			DeviceObjectDataSource dods = getActiveDataSource();
-			editDataSourceInfo = dods != null ? new DataSourceInfo(dods) : new DataSourceInfo();
+	public DataSourceInfoDTO getEditDataSourceInfo() {
+        log.warn("Fire getEditDataSourceInfo");
+		if (editDataSourceInfo == null || editDataSourceInfo.getSubscrDataSourceId() == null) {
+			DeviceObjectDataSource activeDS = getActiveDataSource();
+			editDataSourceInfo = activeDS != null ? new DataSourceInfoDTO(activeDS) : new DataSourceInfoDTO();
 		}
 		return editDataSourceInfo;
 	}
 
-	public void setEditDataSourceInfo(DataSourceInfo dataSourceInfo) {
+	public void setEditDataSourceInfo(DataSourceInfoDTO dataSourceInfo) {
 		this.editDataSourceInfo = dataSourceInfo;
 	}
 

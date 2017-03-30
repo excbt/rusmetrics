@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
-import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
@@ -158,7 +157,8 @@ public class SubscrDeviceObjectController extends SubscrApiController {
         /////////////////////////////////////////////
         ApiActionObjectProcess actionProcess = () -> {
             final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
-            DeviceObject result =  deviceObjectService.saveDeviceObjectShort(deviceObjectDTO);
+            final DeviceObjectDMO deviceObjectDMO = deviceObjectService.convert(deviceObjectDTO);
+            DeviceObject result =  deviceObjectService.saveDeviceObjectDMO(deviceObjectDMO);
 
             return result;
         };

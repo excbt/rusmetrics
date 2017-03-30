@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
-import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
+import ru.excbt.datafuse.nmk.data.model.dto.DataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -139,7 +139,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
 			deviceObject.setDeviceModel(deviceModel);
 
-			DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+			DataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
 
 			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
 					: new DeviceObjectDataSource();
@@ -219,7 +219,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
 			deviceObject.setDeviceModel(deviceModel);
 
-			DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+			DataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
 
 			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
 					: new DeviceObjectDataSource();

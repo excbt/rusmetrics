@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
+import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
@@ -344,6 +345,18 @@ public class DeviceObjectService implements SecuredRoles {
         }
 
 		deviceObjectRepository.save(deviceObject);
+
+		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
+
+        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
+                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId())) {
+            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+
+            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+        }
+
+
         DeviceObject result = selectDeviceObject(deviceObject.getId());
 
         if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
@@ -354,10 +367,55 @@ public class DeviceObjectService implements SecuredRoles {
         return result;
 	}
 
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	public DeviceObject saveDeviceObjectDMO(DeviceObjectDMO deviceObjectDMO) {
+		// Checking
+		checkNotNull(deviceObjectDMO, "Argument DeviceObject is NULL");
+
+		DeviceObject deviceObject = deviceObjectDMO.isNew() ? null
+				: selectDeviceObject(deviceObjectDMO.getId());
+
+		checkNotNull(deviceObject);
+
+		modelMapper.map(deviceObjectDMO, deviceObject);
+
+		if (deviceObjectDMO.getDeviceLoginInfo() != null && SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+		    deviceObject.setDevicePassword(deviceObjectDMO.getDeviceLoginInfo().getDevicePassword());
+		    deviceObject.setDeviceLogin(deviceObjectDMO.getDeviceLoginInfo().getDeviceLogin());
+        }
+
+		deviceObjectRepository.save(deviceObject);
+
+		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
+
+        if (deviceObjectDataSource != null && deviceObjectDMO.getEditDataSourceInfo() != null &&
+                deviceObjectDataSource.getId().equals(deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceId())) {
+            if (deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+
+            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+        }
+
+
+        DeviceObject result = selectDeviceObject(deviceObject.getId());
+
+        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+            result.shareDeviceLoginInfo();
+        }
+
+        return result;
+	}
+
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObjectDTO findDeviceObjectDTO(Long id) {
         DeviceObject deviceObject = selectDeviceObject(id);
         return deviceObject != null ? modelMapper.map(deviceObject, DeviceObjectDTO.class) : null;
+    }
+
+    public DeviceObjectDMO convert (DeviceObjectDTO deviceObjectDTO) {
+	    return modelMapper.map(deviceObjectDTO, DeviceObjectDMO.class);
     }
 
 	/**

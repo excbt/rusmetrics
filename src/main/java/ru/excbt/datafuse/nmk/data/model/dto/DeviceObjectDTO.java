@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -25,6 +23,7 @@ public class DeviceObjectDTO {
         private String deviceLogin;
         private String devicePassword;
     }
+
 
 
     @Getter
@@ -111,9 +110,18 @@ public class DeviceObjectDTO {
     @Setter
     private DeviceLoginInfoDTO deviceLoginInfo;
 
+    @Getter
+    @Setter
+    private DataSourceInfoDTO editDataSourceInfo;
+
     @JsonIgnore
     public boolean isNew() {
         return id == null;
     }
+
+    public void createDeviceLoginIngo() {
+        this.deviceLoginInfo = new DeviceLoginInfoDTO();
+    }
+
 
 }
