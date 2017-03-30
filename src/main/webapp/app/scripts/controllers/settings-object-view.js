@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true, nomen: true*/
+/*jslint node: true, eqeq: true, nomen: true, es5: true*/
 /*global angular, $, moment, alert*/
 'use strict';
 
@@ -842,6 +842,7 @@ angular.module('portalNMC')
 
                     var mode = "/vo";
                     objectSvc.getZpointsDataByObject(curObject, mode).then(function (response) {
+                        
                         var tmp = [];
                         if (mode === "Ex") {
                             tmp = response.data.map(function (el) {
@@ -860,7 +861,7 @@ angular.module('portalNMC')
                             i;
                         for (i = 0; i < zPointsByObject.length; i += 1) {
                             var zpoint = {};
-//console.log(zPointsByObject[i]);                                
+//console.log(zPointsByObject[i]);
                             zpoint.id = zPointsByObject[i].id;
                             zpoint.zpointOrder = zPointsByObject[i].contServiceType.serviceOrder + zPointsByObject[i].customServiceName;
 //                                zpoint.zpointOrder = zPointsByObject[i].zpointOrder;
@@ -1714,16 +1715,28 @@ angular.module('portalNMC')
                 if (mainSvc.checkUndefinedNull($scope.currentZpoint)) {
                     return false;
                 }
-                $scope.selectedDevice($scope.currentZpoint.deviceObject);
-//console.log($scope.data.currentDevice);
-                if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.activeDataSource)) {
-                    var tmpDataSource = angular.copy($scope.data.currentDevice.activeDataSource.subscrDataSource);
-                    $scope.data.dataSourcesForCurDevice = [tmpDataSource];
-                }
-                if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.deviceModel)) {
-                    $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
-                }
-                $('#showDeviceModal').modal();
+                
+                objectSvc.loadDeviceById(objId, $scope.currentZpoint.deviceObject.id)
+                    .then(function (resp) {
+                    if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+                        console.log("loadDeviceById: Некорректный ответ от сервера.");
+                        return false;
+                    }
+                    $scope.selectedDevice(resp.data);
+    //console.log($scope.data.currentDevice);
+                    if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.activeDataSource)) {
+                        var tmpDataSource = angular.copy($scope.data.currentDevice.activeDataSource.subscrDataSource);
+                        $scope.data.dataSourcesForCurDevice = [tmpDataSource];
+                    }
+                    if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.deviceModel)) {
+                        $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
+                    }
+                    if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.verificationDate)) {
+                        $scope.data.currentDevice.verificationDateString = mainSvc.dateFormating($scope.data.currentDevice.verificationDate, $scope.objectCtrlSettings.dateFormat);
+                    }
+                    $('#showDeviceModal').modal();    
+                }, errorCallback);
+                
             };
 
             $scope.isDirectDevice = function (objId, zpointId) {
@@ -1746,6 +1759,24 @@ angular.module('portalNMC')
                 }
                 var curDevice = curZpoint.deviceObject;
                 return objectSvc.isDirectDevice(curDevice);
+            };
+                
+            function successSaveDeviceCallback(resp) {
+                $('#showDeviceModal').modal('hide');
+//console.log(resp);
+            }
+                
+            $scope.saveDevice = function (device) {
+//console.log(device);
+            if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString !== "")) {
+                device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.objectCtrlSettings.dateFormat);
+            }
+                //check device
+//                if (checkDevice(device) === false) {
+//                    return false;
+//                }
+                //send to server
+                objectSvc.subscrSendDeviceToServer(device).then(successSaveDeviceCallback, errorCallback);
             };
 // **************************************************************************
 //                  end Work with devices
