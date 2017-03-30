@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
@@ -55,6 +56,8 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
         final long id = 128729223L;
         DeviceObjectDTO deviceObjectDTO = deviceObjectService.findDeviceObjectDTO(id);
         TestUtils.objectToJson(deviceObjectDTO);
+        DeviceObjectDMO dmo = deviceObjectService.convert(deviceObjectDTO);
+        TestUtils.objectToJson(dmo);
         deviceObjectDTO.createDeviceLoginIngo();
         deviceObjectDTO.getDeviceLoginInfo().setDeviceLogin("user");
         deviceObjectDTO.getDeviceLoginInfo().setDevicePassword("pass");

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 
 /**
@@ -12,11 +13,11 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
  */
 @Component
 @Slf4j
-public class DeviceObjectFromDTOMapping extends PropertyMapConfigurerSupport<DeviceObjectDTO, DeviceObject> {
+public class DeviceObjectFromDMOMapping extends PropertyMapConfigurerSupport<DeviceObjectDMO, DeviceObject> {
 
     @Override
-    public PropertyMap<DeviceObjectDTO, DeviceObject> mapping() {
-        return new PropertyMap<DeviceObjectDTO, DeviceObject>() {
+    public PropertyMap<DeviceObjectDMO, DeviceObject> mapping() {
+        return new PropertyMap<DeviceObjectDMO, DeviceObject>() {
             @Override
             protected void configure() {
                 skip(destination.getDeviceLogin());
