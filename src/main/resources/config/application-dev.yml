@@ -44,7 +44,7 @@ spring:
         properties:
             hibernate.hbm2ddl.auto: validate
             hibernate.format-sql: true
-            hibernate.show_sql: true
+            hibernate.show_sql: false
 
 #            naming:
 #                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
