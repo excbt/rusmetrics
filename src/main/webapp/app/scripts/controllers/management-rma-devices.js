@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, es5: true*/
 /*global angular, moment, $, confirm*/
 'use strict';
 var app = angular.module('portalNMC');

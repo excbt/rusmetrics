@@ -1700,7 +1700,7 @@ angular.module('portalNMC')
                     curDevice.contObjectId = curDevice.contObjectInfo.contObjectId;
                 }
                 if (angular.isDefined(curDevice.activeDataSource) && (curDevice.activeDataSource != null)) {
-                    curDevice.subscrDataSourceId = Number(curDevice.activeDataSource.subscrDataSource.id);
+                    curDevice.subscrDataSourceId = Number(curDevice.activeDataSource.id);
                     curDevice.curDatasource = curDevice.activeDataSource.subscrDataSource;
                     curDevice.subscrDataSourceAddr = curDevice.activeDataSource.subscrDataSourceAddr;
                     curDevice.dataSourceTable1h = curDevice.activeDataSource.dataSourceTable1h;
