@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.config.jpa;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -30,8 +32,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.SLogDBProps;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository",
-		entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager")
+@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog" })
 @EnableConfigurationProperties(value = { PortalDBProps.class, SLogDBProps.class })
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
@@ -82,7 +83,7 @@ public class JpaConfigLocal {
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource") DataSource dataSource) {
-
+        //package with spring data jpa converters "org.springframework.data.jpa.convert.threeten"
 		return builder.dataSource(dataSource).packages("ru.excbt.datafuse.nmk.data.model").persistenceUnit("nmk-p")
 				.build();
 	}
@@ -123,6 +124,11 @@ public class JpaConfigLocal {
 			}
 		};
 	}
+
+    @Bean
+    public Hibernate5Module hibernate5Module() {
+        return new Hibernate5Module();
+    }
 
 
 }

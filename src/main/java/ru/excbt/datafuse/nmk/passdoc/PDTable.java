@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.passdoc;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,14 @@ public class PDTable implements PDReferable {
     @Getter
     private final List<PDTablePart> parts = new ArrayList<>();
 
+    @Getter
+    @Setter
+    private PDViewType viewType;
+
+    @Getter
+    @Setter
+    private String sectionKey;
+
 //    @JsonProperty("headers")
 //    private final List<PDTableCell> headerElements = new ArrayList<>();
 
@@ -34,6 +43,16 @@ public class PDTable implements PDReferable {
 //            headerElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
 //        return headerWidth;
 //    }
+
+    public PDTable viewType(PDViewType value) {
+        this.viewType = value;
+        return this;
+    }
+
+    public PDTable sectionKey(String value) {
+        this.sectionKey = value;
+        return this;
+    }
 
     public PDTablePart createPart(PDPartType partType){
         PDTablePart newPart = new PDTablePart(this);

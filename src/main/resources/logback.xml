@@ -62,11 +62,19 @@
 
 	<logger name="ru.excbt.datafuse.slogwriter" level="error" />
 
+
+    <!--Tracing SQL parameters-->
+    <!--<logger name="org.hibernate.SQL" level="debug" />-->
+    <!--<logger name="org.hibernate.type" level="trace" />-->
+
+    <logger name="org.hibernate" level="info" />
+
+    <logger name="org.springframework" level="info" />
     <!--<logger name="org.apache.tomcat.jdbc.pool" level="debug" />-->
 
     <!--<logger name="ru.excbt.datafuse.nmk" level="debug" />-->
 
-	<root level="info">
+	<root level="debug">
 <!-- 		<appender-ref ref="console" /> -->
 		<appender-ref ref="FILE" />
 	</root>

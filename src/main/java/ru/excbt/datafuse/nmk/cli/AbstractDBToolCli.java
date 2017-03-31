@@ -9,7 +9,6 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
 import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
@@ -35,7 +34,7 @@ public abstract class AbstractDBToolCli {
 
 	public AbstractDBToolCli() {
 		appContext = new AnnotationConfigApplicationContext(
-				PropertyConfig.class, JpaConfigLocal.class, LdapConfig.class,
+				JpaConfigLocal.class, LdapConfig.class,
 				JpaRawConfigLocal.class);
 	}
 
