@@ -39,6 +39,7 @@ public class EnergyPassportDTOTest {
         assertEquals(entity.getId(), energyPassportTemplateDTO.getId());
         TestUtils.objectToJson(energyPassportTemplateDTO);
         TestUtils.objectToJson(LocalDateTime.now());
+        TestUtils.objectToJson(LocalDate.now());
     }
 
 }

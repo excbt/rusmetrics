@@ -27,10 +27,6 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
     @Autowired
     private EnergyPassportTemplateRepository energyPassportTemplateRepository;
 
-    @Autowired
-    private Environment env;
-
-
     private EnergyPassportTemplate energyPassportTemplate;
 
     public static EnergyPassportTemplate createEnergyPassportTemplate() {
@@ -48,28 +44,28 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testGetAll() throws Exception {
-        energyPassportTemplateRepository.saveAndFlush(energyPassportTemplate);
+        EnergyPassportTemplate entity = createEnergyPassportTemplate();
+        String checkDate = TestUtils.objectToJson(entity.getDocumentDate());
+
+        energyPassportTemplateRepository.saveAndFlush(entity);
+
         ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates");
-        resultActions.andExpect(jsonPath("$.[*].id").exists());
-//            .andExpect(jsonPath("$.[*].contObjectFullName").exists())
-//            .andExpect(jsonPath("$.[*].deviceObjects").exists())
-//            .andExpect(jsonPath("$.[*].deviceObjects.[*].id").exists());
+        resultActions.andExpect(jsonPath("$.[?(@.id==%d)].id", entity.getId()).exists());
+        resultActions.andExpect(jsonPath("$.[?(@.id==%d)].documentDate",entity.getId()).value(TestUtils.removeQuotes(checkDate)));
 
     }
 
     @Test
     @Transactional
     public void testGetOne() throws Exception {
+        EnergyPassportTemplate entity = createEnergyPassportTemplate();
 
-        String json = TestUtils.objectToJson(energyPassportTemplate);
+        String json = TestUtils.objectToJson(entity);
+        String checkDate = TestUtils.objectToJson(entity.getDocumentDate());
 
-        energyPassportTemplateRepository.saveAndFlush(energyPassportTemplate);
+        energyPassportTemplateRepository.saveAndFlush(entity);
         ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/" + energyPassportTemplate.getId());
-        resultActions.andExpect(jsonPath("$.id").value(energyPassportTemplate.getId()));
-
-//            .andExpect(jsonPath("$.[*].contObjectFullName").exists())
-//            .andExpect(jsonPath("$.[*].deviceObjects").exists())
-//            .andExpect(jsonPath("$.[*].deviceObjects.[*].id").exists());
-        log.info("env:{}", env.getProperty("spring.jackson.serialization.write_dates_as_timestamps"));
+        resultActions.andExpect(jsonPath("$.id").value(entity.getId()));
+        resultActions.andExpect(jsonPath("$.documentDate").value(TestUtils.removeQuotes(checkDate)));
     }
 }

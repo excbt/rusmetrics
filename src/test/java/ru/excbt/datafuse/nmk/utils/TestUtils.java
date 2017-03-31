@@ -146,5 +146,13 @@ public final class TestUtils {
         return jsonBody;
     }
 
+    /**
+     *
+     * @param arg
+     * @return
+     */
+    public static String removeQuotes(String arg) {
+        return arg.substring(1,arg.length()-1);
+    }
 
 }
