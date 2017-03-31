@@ -36,6 +36,9 @@ spring:
 #            maximum-pool-size: 5
 #            pool-name: master
 
+    jackson:
+        serialization.write_dates_as_timestamps: false
+
     jpa:
         database-platform: ru.excbt.datafuse.hibernate.dialect.ExPostgreSQLDialect
         database: POSTGRESQL
