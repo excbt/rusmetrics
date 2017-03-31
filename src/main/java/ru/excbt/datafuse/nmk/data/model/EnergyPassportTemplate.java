@@ -7,10 +7,12 @@ package ru.excbt.datafuse.nmk.data.model;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.time.LocalDate;
 
 
@@ -18,7 +20,7 @@ import java.time.LocalDate;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport_template")
 @Getter
 @Setter
-public class EnergyPassportTemplate extends AbstractAuditableModel {
+public class EnergyPassportTemplate extends AbstractAuditableModel implements DeletedMarker {
 
     @Column(name = "keyname")
     private String keyname;
@@ -35,4 +37,9 @@ public class EnergyPassportTemplate extends AbstractAuditableModel {
     @Column(name = "document_date")
     private LocalDate documentDate;
 
+    @Column(name = "deleted")
+    private int deleted;
+
+    @Version
+    private int version;
 }
