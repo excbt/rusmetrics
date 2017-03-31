@@ -27,7 +27,7 @@ public class EnergyPassportTemplateDTO {
 
     private String documentName;
 
-    private Integer documentVersion;
+    private String documentVersion;
 
     private LocalDate documentDate;
 

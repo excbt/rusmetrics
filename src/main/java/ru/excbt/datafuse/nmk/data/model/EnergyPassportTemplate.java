@@ -34,7 +34,7 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
     private String documentName;
 
     @Column(name = "document_version")
-    private Integer documentVersion;
+    private String documentVersion;
 
     @Column(name = "document_date")
     private LocalDate documentDate;
