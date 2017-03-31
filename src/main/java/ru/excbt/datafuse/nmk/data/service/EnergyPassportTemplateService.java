@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
+import ru.excbt.datafuse.nmk.data.repository.EnergyPassportSectionTemplateRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 
 import java.util.List;
@@ -19,11 +21,15 @@ public class EnergyPassportTemplateService {
 
     private final EnergyPassportTemplateRepository energyPassportTemplateRepository;
 
+    private final EnergyPassportSectionTemplateRepository energyPassportSectionTemplateRepository;
+
     private final ModelMapper modelMapper;
 
     public EnergyPassportTemplateService(EnergyPassportTemplateRepository energyPassportTemplateRepository,
+                                         EnergyPassportSectionTemplateRepository energyPassportSectionTemplateRepository,
                                          ModelMapper modelMapper) {
         this.energyPassportTemplateRepository = energyPassportTemplateRepository;
+        this.energyPassportSectionTemplateRepository = energyPassportSectionTemplateRepository;
         this.modelMapper = modelMapper;
 
     }
@@ -37,8 +43,14 @@ public class EnergyPassportTemplateService {
     @Transactional(readOnly = true)
     public EnergyPassportTemplateDTO findOneTemplate(Long id) {
         EnergyPassportTemplate energyPassportTemplate = energyPassportTemplateRepository.findOne(id);
-        return energyPassportTemplate != null ?
+        EnergyPassportTemplateDTO result = energyPassportTemplate != null ?
             modelMapper.map(energyPassportTemplate, EnergyPassportTemplateDTO.class) : null;
+        if (energyPassportTemplate.getSectionTemplates() != null)
+            energyPassportTemplate.getSectionTemplates()
+                .forEach(section ->
+                    result.addSection(modelMapper.map(section, EnergyPassportSectionTemplateDTO.class)));
+
+        return result;
     }
 
 }

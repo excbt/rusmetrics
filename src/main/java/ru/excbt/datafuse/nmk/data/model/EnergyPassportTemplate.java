@@ -6,14 +6,16 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate.BuilderInitializer;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -42,4 +44,21 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
 
     @Version
     private int version;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "passportTemplate", cascade = CascadeType.ALL)
+    private List<EnergyPassportSectionTemplate> sectionTemplates = new ArrayList<>();
+
+    /**
+     *
+     * @param builderInitializer
+     * @return
+     */
+    public EnergyPassportSectionTemplate createSection(BuilderInitializer builderInitializer) {
+        EnergyPassportSectionTemplate.EnergyPassportSectionTemplateBuilder builder = EnergyPassportSectionTemplate.builder().passportTemplate(this);
+        builderInitializer.init(builder);
+        EnergyPassportSectionTemplate result = builder.build();
+        sectionTemplates.add(result);
+        return result;
+    }
+
 }

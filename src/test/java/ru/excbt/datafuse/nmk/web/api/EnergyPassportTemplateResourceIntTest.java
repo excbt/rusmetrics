@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
+import ru.excbt.datafuse.nmk.data.repository.EnergyPassportSectionTemplateRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -27,7 +29,10 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
     @Autowired
     private EnergyPassportTemplateRepository energyPassportTemplateRepository;
 
-    private EnergyPassportTemplate energyPassportTemplate;
+    @Autowired
+    private EnergyPassportSectionTemplateRepository energyPassportSectionTemplateRepository;
+
+//    private EnergyPassportTemplate energyPassportTemplate;
 
     public static EnergyPassportTemplate createEnergyPassportTemplate() {
         EnergyPassportTemplate result = new EnergyPassportTemplate();
@@ -36,15 +41,25 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
         return result;
     }
 
+    public static EnergyPassportSectionTemplate createEnergyPassportSectionTemplate() {
+        EnergyPassportSectionTemplate result = new EnergyPassportSectionTemplate();
+        result.setSectionKey("P_1.1");
+        result.setSectionOrder(1);
+        return result;
+    }
+
     @Before
     public void setUp() throws Exception {
-        energyPassportTemplate = createEnergyPassportTemplate();
+//        energyPassportTemplate = createEnergyPassportTemplate();
     }
 
     @Test
     @Transactional
     public void testGetAll() throws Exception {
         EnergyPassportTemplate entity = createEnergyPassportTemplate();
+
+
+
         String checkDate = TestUtils.objectToJson(entity.getDocumentDate());
 
         energyPassportTemplateRepository.saveAndFlush(entity);
@@ -60,11 +75,13 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
     public void testGetOne() throws Exception {
         EnergyPassportTemplate entity = createEnergyPassportTemplate();
 
+        EnergyPassportSectionTemplate s1 = entity.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1));
         String json = TestUtils.objectToJson(entity);
         String checkDate = TestUtils.objectToJson(entity.getDocumentDate());
 
         energyPassportTemplateRepository.saveAndFlush(entity);
-        ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/" + energyPassportTemplate.getId());
+        //energyPassportSectionTemplateRepository.saveAndFlush(s1);
+        ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/" + entity.getId());
         resultActions.andExpect(jsonPath("$.id").value(entity.getId()));
         resultActions.andExpect(jsonPath("$.documentDate").value(TestUtils.removeQuotes(checkDate)));
     }

@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kovtonyk on 30.03.2017.
@@ -28,5 +30,11 @@ public class EnergyPassportTemplateDTO {
     private Integer documentVersion;
 
     private LocalDate documentDate;
+
+    private List<EnergyPassportSectionTemplateDTO> sectionTemplates = new ArrayList<>();
+
+    public void addSection(EnergyPassportSectionTemplateDTO section) {
+
+    }
 
 }
