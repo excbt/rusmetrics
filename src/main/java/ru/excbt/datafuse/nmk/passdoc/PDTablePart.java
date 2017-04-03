@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.passdoc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +41,12 @@ public class PDTablePart implements PDReferable {
 
     @Getter
     private final List<PDTableCell> elements = new ArrayList<>();
+
+
+    @Getter
+    @Setter
+    @JsonInclude(value = Include.NON_NULL)
+    private PDTable innerPdTable;
 
     @Getter
     @Setter
@@ -95,6 +102,14 @@ public class PDTablePart implements PDReferable {
 
     public PDTableCell<PDTableCellValueString> createStringValueElement() {
         return createValueElement(PDTableCellValueString.class);
+    }
+
+    public PDTableCell<PDTableCellValueDouble> createDoubleValueElement() {
+        return createValueElement(PDTableCellValueDouble.class);
+    }
+
+    public PDTableCell<PDTableCellValueBoolean> createBooleanValueElement() {
+        return createValueElement(PDTableCellValueBoolean.class);
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
@@ -173,6 +188,8 @@ public class PDTablePart implements PDReferable {
             result = (T) new PDTableCellValueString().tablePart(this);
         } else if (PDTableCellValueDoubleAggregation.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueDoubleAggregation().tablePart(this);
+        } else if (PDTableCellValueBoolean.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueBoolean().tablePart(this);
         }
 
         if (result == null) {
@@ -216,6 +233,15 @@ public class PDTablePart implements PDReferable {
     public int maxRowSpan() {
         OptionalInt size = elements.stream().map(i -> i.childElementsLevel()).mapToInt(Integer::intValue).max();
         return size.isPresent() ? size.getAsInt() + 1 : 1;
+    }
+
+    public PDTable createInnerTable() {
+        if (this.partType != PDPartType.INNER_TABLE) {
+            throw new IllegalStateException("Invalid part type for inner table");
+        }
+        PDTable innerTable = new PDTable();
+        this.innerPdTable = innerTable;
+        return innerTable;
     }
 
 }

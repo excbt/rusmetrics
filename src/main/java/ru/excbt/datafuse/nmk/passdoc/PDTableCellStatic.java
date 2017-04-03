@@ -26,6 +26,7 @@ public class PDTableCellStatic extends PDTableCell<PDTableCellStatic> {
 
     public PDTableCellStatic() {
         super();
+        setCellType(PDCellType.STATIC);
     }
 
 

@@ -17,7 +17,8 @@ import java.util.OptionalInt;
     @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
     @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
     @JsonSubTypes.Type(value=PDTableCellValueDouble.class, name="Double"),
-    @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg")
+    @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg"),
+    @JsonSubTypes.Type(value=PDTableCellValueBoolean.class, name="Boolean")
 })
 @NoArgsConstructor
 public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable {
@@ -40,7 +41,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    //@JsonInclude(value = JsonInclude.Include.NON_NULL)
     private PDCellType cellType;
 
 //    @Getter

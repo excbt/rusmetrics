@@ -17,7 +17,8 @@ import ru.excbt.datafuse.nmk.passdoc.*;
     @JsonSubTypes.Type(value=PDValueStringDTO.class, name="String"),
     @JsonSubTypes.Type(value=PDValueIntegerDTO.class, name="Integer"),
     @JsonSubTypes.Type(value=PDValueDoubleDTO.class, name="Double"),
-    @JsonSubTypes.Type(value=PDValueDoubleAggregationDTO.class, name="DoubleAgg")
+    @JsonSubTypes.Type(value=PDValueDoubleAggregationDTO.class, name="DoubleAgg"),
+    @JsonSubTypes.Type(value=PDValueBooleanDTO.class, name="Boolean")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class PDValueDTO {
