@@ -114,6 +114,10 @@ public class PDTablePart implements PDReferable {
         return createValueElement(PDTableCellValueBoolean.class);
     }
 
+    public PDTableCell<PDTableCellValueInteger> createIntegerValueElement() {
+        return createValueElement(PDTableCellValueInteger.class);
+    }
+
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     public Double get_totalWidth() {
         double headerWidth = elements.size() == 0 ? 0 :

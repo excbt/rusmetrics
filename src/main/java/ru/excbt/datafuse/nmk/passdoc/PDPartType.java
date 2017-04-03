@@ -7,6 +7,6 @@ public enum PDPartType {
     HEADER,
     BODY,
     ROW,
-    SIMPLE_STRING,
+    SIMPLE_LINE,
     INNER_TABLE
 }
