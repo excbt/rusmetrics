@@ -192,5 +192,56 @@ public class EnergyPassportOrder401_2014 {
     }
 
 
+    public EnergyPassportSectionTemplateFactory createSection_S_M2() {
+
+        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_M2")
+            .caption("Общие сведения о потреблении энергетических ресурсов в отчетном году");
+
+        pdTable.createPart(PDPartType.ROW).key("P_2.1")
+            .createStaticElement("Тепловая энергия").and()
+            .createStaticElement("(Гкал/год)").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
+            .and()
+            .createStaticElement("Тепловая энергия").and()
+            .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2);
+
+        pdTable.createPart(PDPartType.ROW).key("P_2.2")
+            .createStaticElement("Электрическая энергия").and()
+            .createStaticElement("(кВт·ч/год)").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
+            .and()
+            .createStaticElement("Электрическая энергия").and()
+            .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2);
+
+        pdTable.createPart(PDPartType.ROW).key("P_2.3")
+            .createStaticElement("Газ").and()
+            .createStaticElement("(тыс. куб. м/год)").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
+            .and()
+            .createStaticElement("Газ").and()
+            .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2);
+
+        pdTable.createPart(PDPartType.ROW).key("P_2.4")
+            .createStaticElement("Жидкое топливо").and()
+            .createStaticElement("(т/год)").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
+            .and()
+            .createStaticElement("Жидкое топливо").and()
+            .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2);
+
+        pdTable.createPart(PDPartType.ROW).key("P_2.5")
+            .createStaticElement("Твердое топливо").and()
+            .createStaticElement("(т/год)").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
+            .and()
+            .createStaticElement("Твердое топливо").and()
+            .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2);
+
+        pdTable.createPart(PDPartType.ROW).key("P_2.6")
+            .createStaticElement("Моторное топливо").and()
+            .createStaticElement("(т/год)").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
+            .and()
+            .createStaticElement("Моторное топливо").and()
+            .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2);
+
+
+        return getEnergyPassportSectionTemplateFactory(pdTable);
+    }
+
 
 }
