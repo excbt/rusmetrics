@@ -15,6 +15,9 @@ import java.util.Optional;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
 public class PDTable implements PDReferable {
+
+    @Getter
+    @Setter
     private String caption;
 
     @Getter
@@ -43,6 +46,11 @@ public class PDTable implements PDReferable {
 //            headerElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
 //        return headerWidth;
 //    }
+
+    public PDTable caption(String value) {
+        this.caption = value;
+        return this;
+    }
 
     public PDTable viewType(PDViewType value) {
         this.viewType = value;
