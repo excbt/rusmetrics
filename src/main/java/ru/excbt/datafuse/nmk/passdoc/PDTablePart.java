@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.OptionalInt;
 
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonPropertyOrder({ "key", "partType", "caption", "elements", "dynamic", "innerPdTable" })
 public class PDTablePart implements PDReferable {
 
 
@@ -40,8 +42,8 @@ public class PDTablePart implements PDReferable {
     private String caption;
 
     @Getter
+    @JsonInclude(value = Include.NON_EMPTY)
     private final List<PDTableCell> elements = new ArrayList<>();
-
 
     @Getter
     @Setter
@@ -235,11 +237,11 @@ public class PDTablePart implements PDReferable {
         return size.isPresent() ? size.getAsInt() + 1 : 1;
     }
 
-    public PDTable createInnerTable() {
+    public PDInnerTable createInnerTable() {
         if (this.partType != PDPartType.INNER_TABLE) {
             throw new IllegalStateException("Invalid part type for inner table");
         }
-        PDTable innerTable = new PDTable();
+        PDInnerTable innerTable = new PDInnerTable(this);
         this.innerPdTable = innerTable;
         return innerTable;
     }

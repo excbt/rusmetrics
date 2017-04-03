@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Optional;
  */
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonPropertyOrder({ "caption", "viewType", "sectionKey", "parts"})
 public class PDTable implements PDReferable {
 
     @Getter
