@@ -405,7 +405,7 @@
 		<dependency>
 			<groupId>ru.excbt.jasper</groupId>
 			<artifactId>fonts_rus</artifactId>
-			<version>1.0</version>
+			<version>2.0</version>
 		</dependency>
 
 		<dependency>
