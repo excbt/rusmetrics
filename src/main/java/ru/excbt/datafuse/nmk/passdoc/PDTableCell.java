@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
+import static com.google.common.base.Preconditions.checkState;
+
 /**
  * Created by kovtonyk on 24.03.2017.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
     include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
+    @JsonSubTypes.Type(value=PDTableCellValuePack.class, name="Pack"),
     @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
     @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
     @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
@@ -59,6 +62,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private int valuePackIdx;
+
     @Setter
     private String partKey;
 
@@ -87,6 +95,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     public T keyValueIdx(int value) {
         this.keyValueIdx = value;
+        return (T) this;
+    }
+
+    public T valuePackIdx(int value) {
+        this.valuePackIdx = value;
         return (T) this;
     }
 
@@ -163,6 +176,54 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     public String getPartKey() {
         return tablePart != null ? tablePart.getKey() : partKey;
     }
+
+    public PDTableCellStatic createChild() {
+        PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
+        childElements.add(child);
+        child.parent = this;
+        return child;
+    }
+
+    public PDTableCellStatic createChild(String caption) {
+        PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
+        childElements.add(child);
+        child.setCaption(caption);
+        child.parent = this;
+        return child;
+    }
+
+    public PDTableCellStatic createSibling() {
+        checkState(parent != null);
+        PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
+        parent.childElements.add(sibling);
+        sibling.parent = parent;
+        return sibling;
+    }
+
+    public PDTableCellStatic createSibling(String caption) {
+        checkState(parent != null);
+        PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
+        parent.childElements.add(sibling);
+        sibling.setCaption(caption);
+        sibling.parent = parent;
+        return sibling;
+    }
+
+    public <T extends PDTableCell<T>> T createChildValue(final Class<T> valueType) {
+        T child = this.getTablePart().createValueElement(valueType);
+        childElements.add(child);
+        child.parent = this;
+        return child;
+    }
+
+    public <T extends PDTableCell<T>> T createSiblingValue(final Class<T> valueType) {
+        checkState(parent != null);
+        T sibling = this.getTablePart().createValueElement(valueType);
+        parent.childElements.add(sibling);
+        sibling.parent = parent;
+        return sibling;
+    }
+
 
 }
 

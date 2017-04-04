@@ -526,19 +526,33 @@ public class EnergyPassportOrder401_2014 {
             .caption("Краткая характеристика зданий (строений, сооружений)");
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
-        partHeader.createStaticElement("№ п/п").and().createStaticElement("Наименование здания, строения, сооружения")
-            .and().createStaticElement("Год ввода в эксплуатацию")
-            .and().createStaticElement("Ограждающие конструкции")
-                .createChild().caption("наименование конструкции").createSibling().caption("краткая характеристика");
+        partHeader
+            .createStaticElement("№ п/п").keyValueIdx(1)
+            .and().createStaticElement("Наименование здания, строения, сооружения").keyValueIdx(2)
+            .and().createStaticElement("Год ввода в эксплуатацию").keyValueIdx(3)
+            .and().createStaticElement("Ограждающие конструкции").keyValueIdx(4)
+                .createChild().caption("наименование конструкции")
+                .createSibling().caption("краткая характеристика")
+            .and().createStaticElement("Общая площадь, здания, строения, сооружения, кв. м").keyValueIdx(5)
+            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м").keyValueIdx(6)
+            .and().createStaticElement("Отапливаемый объем здания, строения, сооружения, куб. м").keyValueIdx(7)
+            .and().createStaticElement("Износ здания, строения, сооружения, %").keyValueIdx(8);
 
-        partHeader.createStaticElement("Общая площадь, здания, строения, сооружения, кв. м")
-            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м")
-            .and().createStaticElement("Износ здания, строения, сооружения, %");
-
-        pdTable.createPart(PDPartType.ROW).dynamic().createIntegerValueElement().keyValueIdx(1)
-            .and().createStringValueElement().keyValueIdx(2)
-            .and().createStringValueElement().keyValueIdx(3)
-            .and().createStringValueElement().keyValueIdx(4);
+        pdTable.createPart(PDPartType.ROW).dynamic()
+            .createIntegerValueElement().keyValueIdx(1)// #
+            .and().createStringValueElement().keyValueIdx(2) // name
+            .and().createStringValueElement().keyValueIdx(3) // year
+            .and().createStaticElement().keyValueIdx(4)
+                .createChild("Стены").valuePackIdx(1)
+                .createSibling("Окна").valuePackIdx(2)
+                .createSibling("Крыша").valuePackIdx(3)
+            .and().createPackValueElement().keyValueIdx(5)
+                .createChildValue(PDTableCellValueDouble.class).valuePackIdx(1)
+                .createSiblingValue(PDTableCellValueDouble.class).valuePackIdx(2)
+                .createSiblingValue(PDTableCellValueDouble.class).valuePackIdx(3)
+            .and().createDoubleValueElement().keyValueIdx(6)
+            .and().createDoubleValueElement().keyValueIdx(7)
+            .and().createDoubleValueElement().keyValueIdx(8);
 
         return getEnergyPassportSectionTemplateFactory(pdTable);
     }

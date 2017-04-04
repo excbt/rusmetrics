@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.passdoc.*;
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
     include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
+    @JsonSubTypes.Type(value=PDValuePackDTO.class, name="Pack"),
     @JsonSubTypes.Type(value=PDValueStringDTO.class, name="String"),
     @JsonSubTypes.Type(value=PDValueIntegerDTO.class, name="Integer"),
     @JsonSubTypes.Type(value=PDValueDoubleDTO.class, name="Double"),

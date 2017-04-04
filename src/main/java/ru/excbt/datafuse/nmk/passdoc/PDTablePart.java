@@ -59,6 +59,13 @@ public class PDTablePart implements PDReferable {
         this.pdTable = pdTable;
     }
 
+
+    public PDTableCellValuePack createPackValueElement() {
+        PDTableCellValuePack result = new PDTableCellValuePack().tablePart(this);
+        elements.add(result);
+        return result;
+    }
+
     public PDTableCellStatic createStaticElement() {
         PDTableCellStatic result = new PDTableCellStatic().tablePart(this);
         elements.add(result);
@@ -114,7 +121,8 @@ public class PDTablePart implements PDReferable {
         return createValueElement(PDTableCellValueBoolean.class);
     }
 
-    public PDTableCell<PDTableCellValueInteger> createIntegerValueElement() {
+
+    public PDTableCell<?> createIntegerValueElement() {
         return createValueElement(PDTableCellValueInteger.class);
     }
 
@@ -250,4 +258,22 @@ public class PDTablePart implements PDReferable {
         return innerTable;
     }
 
+
+//    public static <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
+//        T result = null;
+//        if (PDTableCellValueInteger.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueInteger().tablePart(this);
+//        } else if (PDTableCellValueDouble.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueDouble().tablePart(this);
+//        } else if (PDTableCellValueString.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueString().tablePart(this);
+//        } else if (PDTableCellValueDoubleAggregation.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueDoubleAggregation().tablePart(this);
+//        } else if (PDTableCellValueBoolean.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueBoolean().tablePart(this);
+//        }
+//
+//        if (result == null) {
+//            throw new UnsupportedOperationException();
+//        }
 }
