@@ -32,7 +32,7 @@ public class EnergyPassportOrder401_2014 {
      * page 26 of Order
      * @return
      */
-    public EnergyPassportSectionTemplateFactory createSection_S_2_3() {
+    public EnergyPassportSectionTemplateFactory createSection_2_3() {
 
         final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.3");
 
@@ -518,6 +518,29 @@ public class EnergyPassportOrder401_2014 {
 
         return getEnergyPassportSectionTemplateFactory(pdTable);
 
+    }
+
+
+    public EnergyPassportSectionTemplateFactory createSection_2_10(){
+        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_M")
+            .caption("Краткая характеристика зданий (строений, сооружений)");
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+        partHeader.createStaticElement("№ п/п").and().createStaticElement("Наименование здания, строения, сооружения")
+            .and().createStaticElement("Год ввода в эксплуатацию")
+            .and().createStaticElement("Ограждающие конструкции")
+                .createChild().caption("наименование конструкции").createSibling().caption("краткая характеристика");
+
+        partHeader.createStaticElement("Общая площадь, здания, строения, сооружения, кв. м")
+            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м")
+            .and().createStaticElement("Износ здания, строения, сооружения, %");
+
+        pdTable.createPart(PDPartType.ROW).dynamic().createIntegerValueElement().keyValueIdx(1)
+            .and().createStringValueElement().keyValueIdx(2)
+            .and().createStringValueElement().keyValueIdx(3)
+            .and().createStringValueElement().keyValueIdx(4);
+
+        return getEnergyPassportSectionTemplateFactory(pdTable);
     }
 
 

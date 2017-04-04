@@ -52,4 +52,14 @@ public class EnergyPassportOrder401_2014Test {
 
         log.info("Json:\n{}", template.getSectionJson());
     }
+
+    @Test
+    public void test_S_2_10() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_2_10();
+        EnergyPassportSectionTemplate template = factory.createSection();
+
+        log.info("Json:\n{}", template.getSectionJson());
+
+
+    }
 }
