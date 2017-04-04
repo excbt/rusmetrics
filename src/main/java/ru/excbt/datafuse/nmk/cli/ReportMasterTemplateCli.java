@@ -1,17 +1,19 @@
 package ru.excbt.datafuse.nmk.cli;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.io.IOException;
-
-import javax.naming.OperationNotSupportedException;
-
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.env.Environment;
+import ru.excbt.datafuse.nmk.config.Constants;
+import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.service.ReportMasterTemplateBodyService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
@@ -19,9 +21,24 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportSystem;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
-public class ReportMasterTemplateCli extends AbstractDBToolCli {
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.naming.OperationNotSupportedException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
-	private static final Logger logger = LoggerFactory
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
+
+@EnableAutoConfiguration(exclude = {WebMvcAutoConfiguration.class, DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
+@ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config.jpa", "ru.excbt.datafuse.nmk.config.ldap"},
+               basePackageClasses = {ReportMasterTemplateCli.class})
+public class ReportMasterTemplateCli {
+
+	private static final Logger log = LoggerFactory
 			.getLogger(ReportMasterTemplateCli.class);
 
 	@Autowired
@@ -30,29 +47,58 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	@Autowired
 	private ReportTemplateService reportTemplateService;
 
+    @Inject
+    private Environment env;
+
 	/**
-	 * 
+	 *
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
+        SpringApplication app = new SpringApplication(ReportMasterTemplateCli.class);
+        DefaultProfileUtil.addDefaultProfile(app);
+        app.setWebEnvironment(false);
+        Environment env = app.run(args).getEnvironment();
 
-		ReportMasterTemplateCli app = new ReportMasterTemplateCli();
 
-		app.autowireBeans();
-		app.showAppStatus();
-		app.loadAllReportMasterTemplates(ReportConstants.IS_COMPILED);
-		app.loadAllReportMasterTemplates(ReportConstants.IS_NOT_COMPILED);
-		app.updateAllCommonReportTemplate();
+//		ReportMasterTemplateCli app = new ReportMasterTemplateCli();
 
-		logger.info("All Reports was loaded successfully");
-		System.out.println();
-		System.out.println("All Reports was loaded successfully");
-		System.out.println();
+
+//		log.info("All Reports was loaded successfully");
+//		System.out.println();
+//		System.out.println("All Reports was loaded successfully");
+//		System.out.println();
 	}
 
+    @PostConstruct
+    public void initApplication() throws  IOException {
+
+        log.info("Running with Spring profile(s) : {}", Arrays.toString(env.getActiveProfiles()));
+        Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
+        if (activeProfiles.contains(Constants.SPRING_PROFILE_DEVELOPMENT)
+            && activeProfiles.contains(Constants.SPRING_PROFILE_PRODUCTION)) {
+            log.error("You have misconfigured your application! It should not run "
+                + "with both the 'dev' and 'prod' profiles at the same time.");
+        }
+        if (activeProfiles.contains(Constants.SPRING_PROFILE_DEVELOPMENT)
+            && activeProfiles.contains(Constants.SPRING_PROFILE_CLOUD)) {
+            log.error("You have misconfigured your application! It should not"
+                + "run with both the 'dev' and 'cloud' profiles at the same time.");
+        }
+
+        log.info("======================================================================");
+        log.info("====== UPDATE TEMPLATES ==============================================");
+        loadAllReportMasterTemplates(ReportConstants.IS_COMPILED);
+        loadAllReportMasterTemplates(ReportConstants.IS_NOT_COMPILED);
+        updateAllCommonReportTemplate();
+        log.info("====== TEMPLATES UPDATED =============================================");
+        log.info("======================================================================");
+
+    }
+
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @param fileResourceString
 	 * @param isCompiled
@@ -66,7 +112,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				+ (isCompiled ? ReportConstants.EXT_JASPER
 						: ReportConstants.EXT_JRXML);
 
-		logger.info("Loading {} from file:{}...", reportTypeKey.name(),
+		log.info("Loading {} from file:{}...", reportTypeKey.name(),
 				correctedFilename);
 
 		ReportMasterTemplateBody templateBody = reportMasterTemplateBodyService
@@ -94,7 +140,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		}
 		checkState(res);
 
-		logger.info("Report {} was successfully loaded from fils '{}'",
+		log.info("Report {} was successfully loaded from fils '{}'",
 				reportTypeKey.name(), correctedFilename);
 
 		System.out.println();
@@ -105,7 +151,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private void loadAllReportMasterTemplates(boolean isCompiled)
@@ -249,7 +295,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void updateAllCommonReportTemplate() {
 		updateAnyCommonReportTemplate(ReportTypeKey.LOG_JOURNAL_REPORT);
@@ -295,7 +341,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 */
 	private void updateAnyCommonReportTemplate(ReportTypeKey reportTypeKey) {
@@ -304,7 +350,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				ReportConstants.IS_COMPILED);
 
 		if (result == 0) {
-			logger.info(
+			log.info(
 					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					reportTypeKey);
 			reportTemplateService.createCommonReportTemplate(reportTypeKey);
