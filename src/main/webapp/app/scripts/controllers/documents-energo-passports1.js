@@ -2,13 +2,12 @@
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval) {
+app.controller('documentsEnergoPassportsCtrl1', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval) {
     
     $scope.showContents_flag = true;
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.loading = true;
-    $scope.ctrlSettings.cssMeasureUnit = "rem";
     
     $timeout(function () {
         $scope.ctrlSettings.loading = false;
@@ -1353,7 +1352,6 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
       ]
     };
     
-console.log(inputTableDef);    
     function getHeader(inputData) {
         var headerPart = null;
         //TODO: check inputData
@@ -1362,7 +1360,8 @@ console.log(inputTableDef);
                 headerPart = part;
                 return true;
             }            
-        });        
+        });
+console.log(inputData);        
 console.log(headerPart);        
         return headerPart;
     }
@@ -1372,14 +1371,14 @@ console.log(headerPart);
         inputData.parts.some(function (part, ind) {
             if (part.partType === 'ROW') {
                 var dataRow = {};
-                dataRow = angular.copy(part);
+                dataRow = angular.copy(part.elements);
                 dataRows.push(dataRow);
 console.log(dataRow);                
             }
             
-//            if (ind === 3) {
-//                return true;
-//            }
+            if (ind === 3) {
+                return true;
+            }
         });
         return dataRows;
     }

@@ -2,7 +2,7 @@
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval) {
+app.controller('documentsEnergoPassportsCtrl2', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval) {
     
     $scope.showContents_flag = true;
     
@@ -1354,7 +1354,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     };
     
 console.log(inputTableDef);    
-    function getHeader(inputData) {
+    function getHeaderPart(inputData) {
         var headerPart = null;
         //TODO: check inputData
         inputData.parts.some(function (part) {
@@ -1367,6 +1367,10 @@ console.log(headerPart);
         return headerPart;
     }
     
+    function prepareHeader(headerPart) {
+        
+    }
+    
     function getRows(inputData) {
         var dataRows = [];
         inputData.parts.some(function (part, ind) {
@@ -1377,14 +1381,14 @@ console.log(headerPart);
 console.log(dataRow);                
             }
             
-//            if (ind === 3) {
-//                return true;
-//            }
+            if (ind === 3) {
+                return true;
+            }
         });
         return dataRows;
     }
     
-    $scope.header = getHeader(inputTableDef);
+    $scope.header = getHeaderPart(inputTableDef);
     $scope.data.rows = getRows(inputTableDef);
     
     $scope.data.data = [

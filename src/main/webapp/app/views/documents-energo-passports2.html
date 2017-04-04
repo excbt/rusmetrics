@@ -300,55 +300,12 @@
                                      class = "grid ">
                                 </div>
 -->
-<!--                                Table-->
-                            <div>
-<!--                                Header-->
-                            
-                                <div class = "nmc-energo-passport-row"
-                                     ng-style = "{'max-width': header._totalWidth + ctrlSettings.cssMeasureUnit, 'width': header._totalWidth + ctrlSettings.cssMeasureUnit}">
-                                <div class = "nmc-energo-passport-th"
-                                     ng-repeat = "col in header.elements"
-                                     
-                                     ng-style = "{'max-width': col._totalWidth + ctrlSettings.cssMeasureUnit, 'width': col._totalWidth + ctrlSettings.cssMeasureUnit}">
-                                    <div>
-                                        {{col.caption}}
-                                    </div>
-                                    
-                                    <div class = "nmc-energo-passport-child-th"
-                                         ng-repeat = "ccol in col.elements"
-                                         
-                                         ng-style = "{'max-width': ccol._totalWidth + ctrlSettings.cssMeasureUnit, 'width': ccol._totalWidth + ctrlSettings.cssMeasureUnit}">
-                                        <div>
-                                        {{ccol.caption}}
-                                        </div>
-                                        <div class = "nmc-energo-passport-child-th "
-                                             ng-repeat = "cccol in ccol.elements"
-                                             
-                                             ng-style = "{'max-width': cccol._totalWidth + ctrlSettings.cssMeasureUnit, 'width': cccol._totalWidth + ctrlSettings.cssMeasureUnit}">
-                                            <div>
-                                            {{cccol.caption}}
-                                                </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                                
-<!--                                Rows-->                                
-                                <div class = "nmc-energo-passport-row"
-                                     ng-repeat = "row in data.rows"
-                                     style = ""
-                                     ng-style = "{'max-width': header._totalWidth + ctrlSettings.cssMeasureUnit, 'width': header._totalWidth + ctrlSettings.cssMeasureUnit}">
-                                    <div class = "nmc-energo-passport-cell"
-                                         ng-repeat = "elem in row.elements"
-                                         
-                                         ng-style = "{'max-width': row._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'width': row._columnWidths[$index] + ctrlSettings.cssMeasureUnit}">
-                                        <div>
-                                            {{elem.caption}}
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div><!-- End table -->
+                                <table class = "table">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div> 
                         </div>
 

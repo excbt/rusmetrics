@@ -2847,3 +2847,53 @@ input[type="checkbox"] {
     display: none;
 }
 /*---  ---*/
+
+
+/* Редактор энергопаспорта*/
+.nmc-energo-passport-row {
+    display: table-row;    
+}
+
+.nmc-energo-passport-th {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+}
+
+.nmc-energo-passport-child-th {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+
+/*    border-bottom: 1px solid #d4d4d4;*/
+    border-right: 1px solid #d4d4d4;
+
+}
+
+.nmc-energo-passport-cell {
+    display: table-cell;
+/*
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+*/
+    border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+}
+
+.nmc-energo-passport-child-cell {
+    display: table-cell;
+/*
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+*/
+/*
+    border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+*/
+}

@@ -29,7 +29,8 @@ var app = angular
         'ui.select',
         'ui.mask',
         'angularWidget',
-        'chart.js'
+        'chart.js',
+        'ui.grid'
     ]);
 
 //routing config
@@ -63,10 +64,20 @@ app.config(['$routeProvider', function ($routeProvider) {
                 }]
             }
         })
+    
         .when('/documents/energo-passports', {
             templateUrl: 'views/documents-energo-passports.html',
             controller: 'documentsEnergoPassportsCtrl'            
         })
+        .when('/documents/energo-passports1', {
+            templateUrl: 'views/documents-energo-passports1.html',
+            controller: 'documentsEnergoPassportsCtrl1'            
+        })
+        .when('/documents/energo-passports2', {
+            templateUrl: 'views/documents-energo-passports2.html',
+            controller: 'documentsEnergoPassportsCtrl2'            
+        })
+    
         .when('/notices/list', {
             templateUrl: 'views/notice.html',
             controller: 'NoticeCtrl',
