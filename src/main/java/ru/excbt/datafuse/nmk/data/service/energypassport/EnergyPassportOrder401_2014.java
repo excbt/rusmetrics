@@ -539,7 +539,7 @@ public class EnergyPassportOrder401_2014 {
             .and().createStaticElement("Износ здания, строения, сооружения, %").keyValueIdx(8);
 
         pdTable.createPart(PDPartType.ROW).dynamic()
-            .createIntegerValueElement().keyValueIdx(1)// #
+            .createValueElement(PDTableCellValueCounter.class).keyValueIdx(1)// #
             .and().createStringValueElement().keyValueIdx(2) // name
             .and().createStringValueElement().keyValueIdx(3) // year
             .and().createStaticElement().keyValueIdx(4)

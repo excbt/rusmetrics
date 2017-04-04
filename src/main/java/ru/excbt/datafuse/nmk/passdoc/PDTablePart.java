@@ -204,6 +204,8 @@ public class PDTablePart implements PDReferable {
             result = (T) new PDTableCellValueDoubleAggregation().tablePart(this);
         } else if (PDTableCellValueBoolean.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueBoolean().tablePart(this);
+        } else if (PDTableCellValueCounter.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueCounter().tablePart(this);
         }
 
         if (result == null) {

@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkState;
     include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value=PDTableCellValuePack.class, name="Pack"),
+    @JsonSubTypes.Type(value=PDTableCellValueCounter.class, name="Counter"),
     @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
     @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
     @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
