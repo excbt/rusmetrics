@@ -43,10 +43,13 @@ public class PDTableValueCellsDTO {
 
         } else if (PDTableCellValueDoubleAggregation.class.isAssignableFrom(pdTableCell.getClass())) {
             result = PDValueDoubleAggregationDTO.newInstance(pdTableCell);
+
+        } else if (PDTableCellValueCounter.class.isAssignableFrom(pdTableCell.getClass())) {
+            result = PDValueCounterDTO.newInstance(pdTableCell);
         }
 
         if (result == null) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Class " + pdTableCell.getClass().getSimpleName() + " is not supported yet");
         }
 
         return result;

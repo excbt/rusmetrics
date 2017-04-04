@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.passdoc.*;
     include=JsonTypeInfo.As.PROPERTY, property="@type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value=PDValuePackDTO.class, name="Pack"),
+    @JsonSubTypes.Type(value=PDValueCounterDTO.class, name="Counter"),
     @JsonSubTypes.Type(value=PDValueStringDTO.class, name="String"),
     @JsonSubTypes.Type(value=PDValueIntegerDTO.class, name="Integer"),
     @JsonSubTypes.Type(value=PDValueDoubleDTO.class, name="Double"),
@@ -34,6 +35,26 @@ public abstract class PDValueDTO {
 
     @Getter
     @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private int packValueIdx;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private boolean packed;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private boolean dynamic;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private int dynamicIdx;
+
+    @Getter
+    @Setter
     private String partKey;
 
     @Getter
@@ -43,7 +64,11 @@ public abstract class PDValueDTO {
 
     protected void setCommonProperties(PDTableCell<?> tableCell) {
         this.keyValueIdx = tableCell.getKeyValueIdx();
+        this.packValueIdx = tableCell.getPackValueIdx();
         this.partKey = tableCell.getPartKey();
+        this.packed = tableCell.isPacked();
+        this.dynamic = tableCell.isDynamic();
+        this.dynamicIdx = tableCell.getDynamicIdx();
     }
 
     protected static <T extends PDTableCell> void checkValueTypeClass (Class<T> clazz, PDTableCell<?> tableCell) {

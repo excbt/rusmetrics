@@ -238,11 +238,16 @@ public class PDTablePart implements PDReferable {
 
     public List<PDTableCell<?>> extractCellValues() {
         final List<PDTableCell<?>> result = new ArrayList<>();
-        elements.forEach(i -> {
-            if (i.getCellType() == PDCellType.VALUE) {
-                result.add(i);
+        for (PDTableCell<?> cell : elements) {
+            if (cell.getCellType() == PDCellType.VALUE) {
+                result.add(cell);
+            } else if (cell.getCellType() == PDCellType.VALUE_PACK) {
+                for (PDTableCell<?> child : cell.getChildElements()) {
+                    if (child.getCellType() == PDCellType.VALUE)
+                        result.add(child);
+                }
             }
-        });
+        }
         return result;
     }
 

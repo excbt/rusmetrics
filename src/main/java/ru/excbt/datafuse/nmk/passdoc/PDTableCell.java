@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -35,7 +36,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Getter
     @JsonProperty("elements")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    protected final List<PDTableCell> childElements = new ArrayList<>();
+    protected final List<PDTableCell<?>> childElements = new ArrayList<>();
 
     protected PDTableCell parent;
 
@@ -66,7 +67,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Getter
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private int valuePackIdx;
+    private int packValueIdx;
 
     @Setter
     private String partKey;
@@ -99,8 +100,8 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return (T) this;
     }
 
-    public T valuePackIdx(int value) {
-        this.valuePackIdx = value;
+    public T packValueIdx(int value) {
+        this.packValueIdx = value;
         return (T) this;
     }
 
@@ -225,6 +226,26 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return sibling;
     }
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public boolean isPacked(){
+        return parent != null && packValueIdx != 0;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public boolean isDynamic(){
+        return tablePart != null && tablePart.isDynamic();
+    }
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public int getDynamicIdx(){
+        return isDynamic() ? getRowIndex() + 1 : 0;
+    }
+
+    protected int getRowIndex() {
+        List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
+            .stream().filter(i -> PDPartType.ROW.equals(i.getPartType())).collect(Collectors.toList());
+        return rows.indexOf(this.tablePart);
+    }
 
 }
 

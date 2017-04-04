@@ -6,6 +6,7 @@ import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.data.util.JsonMapperUtils;
 import ru.excbt.datafuse.nmk.passdoc.*;
+import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
 /**
  * Created by kovtonyk on 03.04.2017.
@@ -14,17 +15,33 @@ import ru.excbt.datafuse.nmk.passdoc.*;
 public class EnergyPassportOrder401_2014 {
 
 
-    protected EnergyPassportSectionTemplateFactory getEnergyPassportSectionTemplateFactory(PDTable pdTable) {
-        return () -> {
-            EnergyPassportSectionTemplate result = new EnergyPassportSectionTemplate();
-            result.setSectionKey(pdTable.getSectionKey());
-            try {
-                result.setSectionJson(JsonMapperUtils.objectToJson(pdTable));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+    protected EnergyPassportSectionTemplateFactory getEnergyPassportSectionTemplateFactory(final PDTable pdTable) {
+
+        return new EnergyPassportSectionTemplateFactory () {
+
+            private final PDTable savedPDTable = pdTable;
+
+            @Override
+            public EnergyPassportSectionTemplate createSectionTemplate() {
+                EnergyPassportSectionTemplate result = new EnergyPassportSectionTemplate();
+                result.setSectionKey(pdTable.getSectionKey());
+                result.setSectionJson(JsonMapperUtils.objectToJson(pdTable, true));
+                return result;
             }
-            return result;
-        };
+
+            @Override
+            public PDTable getPDTable() {
+                return pdTable;
+            }
+
+            @Override
+            public String createValuesJson() {
+                PDTableValueCellsDTO valueCellsDTO = new PDTableValueCellsDTO();
+                valueCellsDTO.addValueCells(savedPDTable.extractCellValues());
+                return JsonMapperUtils.objectToJson(valueCellsDTO);
+            }
+        } ;
+
     }
 
 
@@ -538,18 +555,18 @@ public class EnergyPassportOrder401_2014 {
             .and().createStaticElement("Отапливаемый объем здания, строения, сооружения, куб. м").keyValueIdx(7)
             .and().createStaticElement("Износ здания, строения, сооружения, %").keyValueIdx(8);
 
-        pdTable.createPart(PDPartType.ROW).dynamic()
+        pdTable.createPart(PDPartType.ROW).key("MAIN_D").dynamic()
             .createValueElement(PDTableCellValueCounter.class).keyValueIdx(1)// #
             .and().createStringValueElement().keyValueIdx(2) // name
             .and().createStringValueElement().keyValueIdx(3) // year
             .and().createStaticElement().keyValueIdx(4)
-                .createChild("Стены").valuePackIdx(1)
-                .createSibling("Окна").valuePackIdx(2)
-                .createSibling("Крыша").valuePackIdx(3)
+                .createChild("Стены").keyValueIdx(4).packValueIdx(1)
+                .createSibling("Окна").keyValueIdx(4).packValueIdx(2)
+                .createSibling("Крыша").keyValueIdx(4).packValueIdx(3)
             .and().createPackValueElement().keyValueIdx(5)
-                .createChildValue(PDTableCellValueDouble.class).valuePackIdx(1)
-                .createSiblingValue(PDTableCellValueDouble.class).valuePackIdx(2)
-                .createSiblingValue(PDTableCellValueDouble.class).valuePackIdx(3)
+                .createChildValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(1)
+                .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(2)
+                .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(3)
             .and().createDoubleValueElement().keyValueIdx(6)
             .and().createDoubleValueElement().keyValueIdx(7)
             .and().createDoubleValueElement().keyValueIdx(8);

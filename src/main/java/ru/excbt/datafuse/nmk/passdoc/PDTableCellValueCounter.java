@@ -19,12 +19,7 @@ public class PDTableCellValueCounter extends PDTableCell<PDTableCellValueCounter
     }
 
     public Integer getValue() {
-        List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
-            .stream().filter(i -> PDPartType.ROW.equals(i.getPartType())).collect(Collectors.toList());
-
-        int i = rows.indexOf(this.tablePart);
-
-        return i + 1;
+        return 1 + getRowIndex();
     }
 
 }
