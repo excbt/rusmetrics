@@ -58,15 +58,11 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
     public void testGetAll() throws Exception {
         EnergyPassportTemplate entity = createEnergyPassportTemplate();
 
-
-
-        String checkDate = TestUtils.objectToJson(entity.getDocumentDate());
-
         energyPassportTemplateRepository.saveAndFlush(entity);
 
         ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates");
         resultActions.andExpect(jsonPath("$.[?(@.id==%d)].id", entity.getId()).exists());
-        resultActions.andExpect(jsonPath("$.[?(@.id==%d)].documentDate",entity.getId()).value(TestUtils.removeQuotes(checkDate)));
+        resultActions.andExpect(jsonPath("$.[?(@.id==%d)].documentDate",entity.getId()).value(entity.getDocumentDate().toString()));
 
     }
 
@@ -77,12 +73,17 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
 
         EnergyPassportSectionTemplate s1 = entity.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1));
         String json = TestUtils.objectToJson(entity);
-        String checkDate = TestUtils.objectToJson(entity.getDocumentDate());
 
         energyPassportTemplateRepository.saveAndFlush(entity);
-        //energyPassportSectionTemplateRepository.saveAndFlush(s1);
         ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/" + entity.getId());
         resultActions.andExpect(jsonPath("$.id").value(entity.getId()));
-        resultActions.andExpect(jsonPath("$.documentDate").value(TestUtils.removeQuotes(checkDate)));
+        resultActions.andExpect(jsonPath("$.documentDate").value(entity.getDocumentDate().toString()));
+    }
+
+    @Test
+    @Transactional
+    public void testGetNew() throws Exception {
+        ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/new");
+        resultActions.andExpect(jsonPath("$.documentDate").value(LocalDate.of(2014,6,30).toString()));
     }
 }

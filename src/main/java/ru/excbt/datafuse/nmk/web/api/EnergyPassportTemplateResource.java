@@ -40,5 +40,12 @@ public class EnergyPassportTemplateResource extends SubscrApiController {
     	return result != null ? responseOK(result) : responseNoContent();
     }
 
+    @RequestMapping(value = "/new", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getEnergyPassportTemplateNew() {
+        EnergyPassportTemplateDTO templateDTO = energyPassportTemplateService.createNew();
+        return responseOK(templateDTO);
+    }
+
 
 }

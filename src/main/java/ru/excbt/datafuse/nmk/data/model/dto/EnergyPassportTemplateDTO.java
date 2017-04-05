@@ -34,7 +34,7 @@ public class EnergyPassportTemplateDTO {
     private List<EnergyPassportSectionTemplateDTO> sectionTemplates = new ArrayList<>();
 
     public void addSection(EnergyPassportSectionTemplateDTO section) {
-
+        this.sectionTemplates.add(section);
     }
 
 }

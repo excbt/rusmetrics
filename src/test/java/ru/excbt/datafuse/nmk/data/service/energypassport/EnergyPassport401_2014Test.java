@@ -42,20 +42,20 @@ public class EnergyPassport401_2014Test {
 
     @Test
     public void test_Main() throws Exception {
-        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014.createSection_Main();
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014.sectionMainFactory();
         checkFactory(factory);
     }
 
     @Test
     public void test_Add_2_3() throws Exception {
-        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.createSection_2_3();
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_3();
         checkFactory(factory);
     }
 
 
     @Test
     public void test_Add_2_10() throws Exception {
-        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.createSection_2_10();
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_10();
 
         checkFactory(factory);
         //EnergyPassportSectionTemplate template = factory.createSectionTemplate();

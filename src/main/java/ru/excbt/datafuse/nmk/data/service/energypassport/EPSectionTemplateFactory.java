@@ -18,6 +18,11 @@ public class EPSectionTemplateFactory implements EnergyPassportSectionTemplateFa
     }
 
     @Override
+    public String getSectionKey() {
+        return pdTable.getSectionKey();
+    }
+
+    @Override
     public String createSectionTemplateJson(Boolean pretty) {
         return JsonMapperUtils.objectToJson(pdTable, pretty);
     }

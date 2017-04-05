@@ -15,7 +15,7 @@ public class EnergyPassport401_2014_Add {
      * page 26 of Order
      * @return
      */
-    public EnergyPassportSectionTemplateFactory createSection_2_3() {
+    public EnergyPassportSectionTemplateFactory section_2_3() {
 
         final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.3")
             .caption("2.3. Сведения об оснащенности приборами учета")
@@ -128,8 +128,8 @@ public class EnergyPassport401_2014_Add {
      *
      * @return
      */
-    public EnergyPassportSectionTemplateFactory createSection_2_10(){
-        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_M")
+    public EnergyPassportSectionTemplateFactory section_2_10(){
+        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.10")
             .caption("Краткая характеристика зданий (строений, сооружений)");
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);

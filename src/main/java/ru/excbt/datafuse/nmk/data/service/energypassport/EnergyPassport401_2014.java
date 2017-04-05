@@ -17,7 +17,7 @@ public class EnergyPassport401_2014 {
     /*
 
      */
-    public EnergyPassportSectionTemplateFactory createSection_Main() {
+    public EnergyPassportSectionTemplateFactory sectionMainFactory() {
 
 
         final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_M")

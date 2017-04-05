@@ -6,6 +6,8 @@ package ru.excbt.datafuse.nmk.data.model.energypassport;
  */
 public interface EnergyPassportSectionTemplateFactory {
 
+    String getSectionKey();
+
     String createSectionTemplateJson(Boolean pretty);
 
     default String createSectionTemplateJson() {
