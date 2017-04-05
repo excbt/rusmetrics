@@ -1,7 +1,9 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,8 @@ import static com.google.common.base.Preconditions.checkState;
     @JsonSubTypes.Type(value=PDTableCellValueBoolean.class, name="Boolean")
 })
 @NoArgsConstructor
+@JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
 public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable {
-
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
@@ -179,6 +181,28 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return tablePart != null ? tablePart.getKey() : partKey;
     }
 
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public boolean is_packed(){
+        return parent != null && packValueIdx != 0;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public boolean is_dynamic(){
+        return tablePart != null && tablePart.isDynamic();
+    }
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public int get_dynamicIdx(){
+        return is_dynamic() ? getRowIndex() + 1 : 0;
+    }
+
+    protected int getRowIndex() {
+        List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
+            .stream().filter(i -> PDPartType.ROW.equals(i.getPartType())).collect(Collectors.toList());
+        return rows.indexOf(this.tablePart);
+    }
+
     public PDTableCellStatic createChild() {
         PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
         childElements.add(child);
@@ -226,26 +250,6 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return sibling;
     }
 
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public boolean isPacked(){
-        return parent != null && packValueIdx != 0;
-    }
-
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public boolean isDynamic(){
-        return tablePart != null && tablePart.isDynamic();
-    }
-
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public int getDynamicIdx(){
-        return isDynamic() ? getRowIndex() + 1 : 0;
-    }
-
-    protected int getRowIndex() {
-        List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
-            .stream().filter(i -> PDPartType.ROW.equals(i.getPartType())).collect(Collectors.toList());
-        return rows.indexOf(this.tablePart);
-    }
 
 }
 

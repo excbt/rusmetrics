@@ -1,12 +1,10 @@
 package ru.excbt.datafuse.nmk.passdoc.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.excbt.datafuse.nmk.passdoc.*;
+import ru.excbt.datafuse.nmk.passdoc.PDCellType;
+import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 
 /**
  * Created by kovtonyk on 28.03.2017.
@@ -23,6 +21,7 @@ import ru.excbt.datafuse.nmk.passdoc.*;
     @JsonSubTypes.Type(value=PDValueBooleanDTO.class, name="Boolean")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
 public abstract class PDValueDTO {
 
     @Getter
@@ -40,22 +39,23 @@ public abstract class PDValueDTO {
 
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private boolean packed;
-
-    @Getter
-    @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private boolean dynamic;
-
-    @Getter
-    @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private int dynamicIdx;
-
-    @Getter
-    @Setter
     private String partKey;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private boolean _packed;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private boolean _dynamic;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private int _dynamicIdx;
+
 
     @Getter
     @Setter
@@ -66,9 +66,9 @@ public abstract class PDValueDTO {
         this.keyValueIdx = tableCell.getKeyValueIdx();
         this.packValueIdx = tableCell.getPackValueIdx();
         this.partKey = tableCell.getPartKey();
-        this.packed = tableCell.isPacked();
-        this.dynamic = tableCell.isDynamic();
-        this.dynamicIdx = tableCell.getDynamicIdx();
+        this._packed = tableCell.is_packed();
+        this._dynamic = tableCell.is_dynamic();
+        this._dynamicIdx = tableCell.get_dynamicIdx();
     }
 
     protected static <T extends PDTableCell> void checkValueTypeClass (Class<T> clazz, PDTableCell<?> tableCell) {
