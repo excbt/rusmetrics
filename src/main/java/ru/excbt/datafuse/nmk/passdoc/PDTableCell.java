@@ -1,27 +1,36 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Created by kovtonyk on 24.03.2017.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-    include=JsonTypeInfo.As.PROPERTY, property="@type")
+    include=JsonTypeInfo.As.PROPERTY, property="__type")
 @JsonSubTypes({
+    @JsonSubTypes.Type(value=PDTableCellValuePack.class, name="Pack"),
+    @JsonSubTypes.Type(value=PDTableCellValueCounter.class, name="Counter"),
     @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
     @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
     @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
     @JsonSubTypes.Type(value=PDTableCellValueDouble.class, name="Double"),
-    @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg")
+    @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg"),
+    @JsonSubTypes.Type(value=PDTableCellValueBoolean.class, name="Boolean")
 })
 @NoArgsConstructor
+@JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
 public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable {
-
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
@@ -30,7 +39,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Getter
     @JsonProperty("elements")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    protected final List<PDTableCell> childElements = new ArrayList<>();
+    protected final List<PDTableCell<?>> childElements = new ArrayList<>();
 
     protected PDTableCell parent;
 
@@ -40,7 +49,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    //@JsonInclude(value = JsonInclude.Include.NON_NULL)
     private PDCellType cellType;
 
 //    @Getter
@@ -57,6 +66,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
+
+    @Getter
+    @Setter
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    private int packValueIdx;
 
     @Setter
     private String partKey;
@@ -86,6 +100,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     public T keyValueIdx(int value) {
         this.keyValueIdx = value;
+        return (T) this;
+    }
+
+    public T packValueIdx(int value) {
+        this.packValueIdx = value;
         return (T) this;
     }
 
@@ -162,6 +181,98 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     public String getPartKey() {
         return tablePart != null ? tablePart.getKey() : partKey;
     }
+
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public boolean is_packed(){
+        return parent != null && packValueIdx != 0;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public boolean is_dynamic(){
+        return tablePart != null && tablePart.isDynamic();
+    }
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    public int get_dynamicIdx(){
+        return is_dynamic() ? getRowIndex() + 1 : 0;
+    }
+
+    @JsonInclude(value = Include.NON_NULL)
+    public String get_complexIdx() {
+        if (!(cellType == PDCellType.VALUE || cellType == PDCellType.VALUE_PACK)) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(partKey);
+        if (is_dynamic()) {
+            sb.append("_dr");
+            sb.append(get_dynamicIdx());
+        }
+        sb.append("_i" + keyValueIdx);
+        if (is_packed()) {
+            sb.append("[");
+            sb.append(packValueIdx);
+            sb.append("]");
+        }
+        return sb.toString();
+    }
+
+
+    protected int getRowIndex() {
+        List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
+            .stream().filter(i -> PDPartType.ROW.equals(i.getPartType())).collect(Collectors.toList());
+        return rows.indexOf(this.tablePart);
+    }
+
+    public PDTableCellStatic createStaticChild() {
+        PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
+        childElements.add(child);
+        child.parent = this;
+        return child;
+    }
+
+    public PDTableCellStatic createStaticChild(String caption) {
+        PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
+        childElements.add(child);
+        child.setCaption(caption);
+        child.parent = this;
+        return child;
+    }
+
+    public PDTableCellStatic createStaticSibling() {
+        checkState(parent != null);
+        PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
+        parent.childElements.add(sibling);
+        sibling.parent = parent;
+        return sibling;
+    }
+
+    public PDTableCellStatic createStaticSibling(String caption) {
+        checkState(parent != null);
+        PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
+        parent.childElements.add(sibling);
+        sibling.setCaption(caption);
+        sibling.parent = parent;
+        return sibling;
+    }
+
+    public <T extends PDTableCell<T>> T createChildValue(final Class<T> valueType) {
+        T child = this.getTablePart().createValueElement(valueType);
+        childElements.add(child);
+        child.parent = this;
+        return child;
+    }
+
+    public <T extends PDTableCell<T>> T createSiblingValue(final Class<T> valueType) {
+        checkState(parent != null);
+        T sibling = this.getTablePart().createValueElement(valueType);
+        parent.childElements.add(sibling);
+        sibling.parent = parent;
+        return sibling;
+    }
+
 
 }
 

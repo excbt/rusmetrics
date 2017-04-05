@@ -5,5 +5,6 @@ package ru.excbt.datafuse.nmk.passdoc;
  */
 public enum PDCellType {
     STATIC,
-    VALUE
+    VALUE,
+    VALUE_PACK
 }

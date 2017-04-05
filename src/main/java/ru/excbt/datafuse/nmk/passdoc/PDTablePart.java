@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.passdoc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +19,7 @@ import java.util.OptionalInt;
 
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonPropertyOrder({ "key", "partType", "caption", "elements", "dynamic", "innerPdTable" })
 public class PDTablePart implements PDReferable {
 
 
@@ -39,7 +42,13 @@ public class PDTablePart implements PDReferable {
     private String caption;
 
     @Getter
+    @JsonInclude(value = Include.NON_EMPTY)
     private final List<PDTableCell> elements = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @JsonInclude(value = Include.NON_NULL)
+    private PDTable innerPdTable;
 
     @Getter
     @Setter
@@ -48,6 +57,13 @@ public class PDTablePart implements PDReferable {
 
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
+    }
+
+
+    public PDTableCellValuePack createPackValueElement() {
+        PDTableCellValuePack result = new PDTableCellValuePack().tablePart(this);
+        elements.add(result);
+        return result;
     }
 
     public PDTableCellStatic createStaticElement() {
@@ -90,6 +106,24 @@ public class PDTablePart implements PDReferable {
 
     public void createIntValueElements(int count) {
         createIntValueElements(1,count);
+    }
+
+
+    public PDTableCell<PDTableCellValueString> createStringValueElement() {
+        return createValueElement(PDTableCellValueString.class);
+    }
+
+    public PDTableCell<PDTableCellValueDouble> createDoubleValueElement() {
+        return createValueElement(PDTableCellValueDouble.class);
+    }
+
+    public PDTableCell<PDTableCellValueBoolean> createBooleanValueElement() {
+        return createValueElement(PDTableCellValueBoolean.class);
+    }
+
+
+    public PDTableCell<?> createIntegerValueElement() {
+        return createValueElement(PDTableCellValueInteger.class);
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
@@ -168,6 +202,10 @@ public class PDTablePart implements PDReferable {
             result = (T) new PDTableCellValueString().tablePart(this);
         } else if (PDTableCellValueDoubleAggregation.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueDoubleAggregation().tablePart(this);
+        } else if (PDTableCellValueBoolean.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueBoolean().tablePart(this);
+        } else if (PDTableCellValueCounter.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueCounter().tablePart(this);
         }
 
         if (result == null) {
@@ -200,11 +238,11 @@ public class PDTablePart implements PDReferable {
 
     public List<PDTableCell<?>> extractCellValues() {
         final List<PDTableCell<?>> result = new ArrayList<>();
-        elements.forEach(i -> {
-            if (i.getCellType() == PDCellType.VALUE) {
-                result.add(i);
+        for (PDTableCell<?> cell : elements) {
+            if (cell.getCellType() == PDCellType.VALUE) {
+                result.add(cell);
             }
-        });
+        }
         return result;
     }
 
@@ -213,4 +251,31 @@ public class PDTablePart implements PDReferable {
         return size.isPresent() ? size.getAsInt() + 1 : 1;
     }
 
+    public PDInnerTable createInnerTable() {
+        if (this.partType != PDPartType.INNER_TABLE) {
+            throw new IllegalStateException("Invalid part type for inner table");
+        }
+        PDInnerTable innerTable = new PDInnerTable(this);
+        this.innerPdTable = innerTable;
+        return innerTable;
+    }
+
+
+//    public static <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
+//        T result = null;
+//        if (PDTableCellValueInteger.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueInteger().tablePart(this);
+//        } else if (PDTableCellValueDouble.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueDouble().tablePart(this);
+//        } else if (PDTableCellValueString.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueString().tablePart(this);
+//        } else if (PDTableCellValueDoubleAggregation.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueDoubleAggregation().tablePart(this);
+//        } else if (PDTableCellValueBoolean.class.isAssignableFrom(valueType)) {
+//            result = (T) new PDTableCellValueBoolean().tablePart(this);
+//        }
+//
+//        if (result == null) {
+//            throw new UnsupportedOperationException();
+//        }
 }

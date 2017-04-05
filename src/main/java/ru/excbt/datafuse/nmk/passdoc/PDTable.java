@@ -1,9 +1,12 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +17,26 @@ import java.util.Optional;
  */
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonPropertyOrder({ "caption", "shortCaption", "viewType", "sectionKey", "parts"})
 public class PDTable implements PDReferable {
+
+    private static final Logger log = LoggerFactory.getLogger(PDTable.class);
+
+    @Getter
+    @Setter
     private String caption;
+
+    @Getter
+    @Setter
+    private String shortCaption;
+
+    @Getter
+    @Setter
+    private String sectionHeader;
+
+    @Getter
+    @Setter
+    private String sectionNr;
 
     @Getter
     private final List<PDTablePart> parts = new ArrayList<>();
@@ -28,21 +49,16 @@ public class PDTable implements PDReferable {
     @Setter
     private String sectionKey;
 
-//    @JsonProperty("headers")
-//    private final List<PDTableCell> headerElements = new ArrayList<>();
 
-//    public PDTableCell createPDHeaderElement() {
-//        PDTableCell result = new PDTableCell();
-//        headerElements.add(result);
-//        return result;
-//    }
-//
-//    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-//    public Integer getHeaderWidth() {
-//        int headerWidth = headerElements.size() == 0 ? 0 :
-//            headerElements.stream().map(i -> i.getTotalWidth()).filter(i -> i != null).mapToInt(Integer::intValue).sum();
-//        return headerWidth;
-//    }
+    public PDTable caption(String value) {
+        this.caption = value;
+        return this;
+    }
+
+    public PDTable shortCaption(String value) {
+        this.shortCaption = value;
+        return this;
+    }
 
     public PDTable viewType(PDViewType value) {
         this.viewType = value;
@@ -51,6 +67,16 @@ public class PDTable implements PDReferable {
 
     public PDTable sectionKey(String value) {
         this.sectionKey = value;
+        return this;
+    }
+
+    public PDTable sectionHeader(String value) {
+        this.sectionHeader = value;
+        return this;
+    }
+
+    public PDTable sectionNr(String value) {
+        this.sectionNr = value;
         return this;
     }
 
@@ -76,12 +102,13 @@ public class PDTable implements PDReferable {
 
     public List<PDTableCell<?>> extractCellValues() {
         List<PDTableCell<?>> result = new ArrayList<>();
-        parts.forEach(i -> {
-            List<PDTableCell<?>> partValues = i.extractCellValues();
+        for (PDTablePart part : parts) {
+            List<PDTableCell<?>> partValues = part.extractCellValues();
             if (!partValues.isEmpty()) {
                 result.addAll(partValues);
             }
-        });
+        }
+        log.info("Size of values: {}", result.size());
         return result;
     }
 

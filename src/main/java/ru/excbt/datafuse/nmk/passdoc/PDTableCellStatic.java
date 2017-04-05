@@ -26,27 +26,13 @@ public class PDTableCellStatic extends PDTableCell<PDTableCellStatic> {
 
     public PDTableCellStatic() {
         super();
+        setCellType(PDCellType.STATIC);
     }
 
 
     public PDTableCellStatic caption(String value) {
         this.caption = value;
         return this;
-    }
-
-    public PDTableCellStatic createChild() {
-        PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
-        childElements.add(child);
-        child.parent = this;
-        return child;
-    }
-
-    public PDTableCellStatic createSibling() {
-        checkState(parent != null);
-        PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
-        parent.childElements.add(sibling);
-        sibling.parent = parent;
-        return sibling;
     }
 
 }

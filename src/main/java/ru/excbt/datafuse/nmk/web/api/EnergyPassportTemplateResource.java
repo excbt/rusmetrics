@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportTemplateService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -38,6 +39,20 @@ public class EnergyPassportTemplateResource extends SubscrApiController {
     public ResponseEntity<?> getEnergyPassportTemplate(@PathVariable("id") Long id) {
     	EnergyPassportTemplateDTO result = energyPassportTemplateService.findOneTemplate(id);
     	return result != null ? responseOK(result) : responseNoContent();
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getEnergyPassportTemplateNew() {
+        EnergyPassportTemplateDTO templateDTO = energyPassportTemplateService.createNew();
+        return responseOK(templateDTO);
+    }
+
+    @RequestMapping(value = "/newData", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getEnergyPassportTemplateValues() {
+        List<EnergyPassportSectionDataDTO> dataDTOs = energyPassportTemplateService.createNewData();
+        return responseOK(dataDTOs);
     }
 
 
