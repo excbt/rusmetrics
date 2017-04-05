@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service.energypassport;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
@@ -35,10 +34,16 @@ public class EnergyPassportOrder401_2014 {
             }
 
             @Override
-            public String createValuesJson() {
+            public String createSectionTemplateJson(Boolean pretty) {
+                return JsonMapperUtils.objectToJson(pdTable, pretty);
+            }
+
+            @Override
+            public String createValuesJson(boolean pretty) {
                 PDTableValueCellsDTO valueCellsDTO = new PDTableValueCellsDTO();
                 valueCellsDTO.addValueCells(savedPDTable.extractCellValues());
-                return JsonMapperUtils.objectToJson(valueCellsDTO);
+                valueCellsDTO.sortElements();
+                return JsonMapperUtils.objectToJson(valueCellsDTO, pretty);
             }
         } ;
 
@@ -60,17 +65,17 @@ public class EnergyPassportOrder401_2014 {
         PDTableCellStatic amount = partHeader.createStaticElement().caption("Количество, шт");
 
         int keyValueIdx = 1;
-        amount.createChild().caption("Электрической энергии")
-            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+        amount.createStaticChild().caption("Электрической энергии")
+            .createStaticChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
-        amount.createChild().caption("Тепловой энергии")
-            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+        amount.createStaticChild().caption("Тепловой энергии")
+            .createStaticChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
-        amount.createChild().caption("Газа")
-            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+        amount.createStaticChild().caption("Газа")
+            .createStaticChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
 
         pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1")
@@ -547,24 +552,24 @@ public class EnergyPassportOrder401_2014 {
             .createStaticElement("№ п/п").keyValueIdx(1)
             .and().createStaticElement("Наименование здания, строения, сооружения").keyValueIdx(2)
             .and().createStaticElement("Год ввода в эксплуатацию").keyValueIdx(3)
-            .and().createStaticElement("Ограждающие конструкции").keyValueIdx(4)
-                .createChild().caption("наименование конструкции")
-                .createSibling().caption("краткая характеристика")
-            .and().createStaticElement("Общая площадь, здания, строения, сооружения, кв. м").keyValueIdx(5)
-            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м").keyValueIdx(6)
-            .and().createStaticElement("Отапливаемый объем здания, строения, сооружения, куб. м").keyValueIdx(7)
-            .and().createStaticElement("Износ здания, строения, сооружения, %").keyValueIdx(8);
+            .and().createStaticElement("Ограждающие конструкции")
+                .createStaticChild().caption("наименование конструкции").keyValueIdx(4)
+                .createStaticSibling().caption("краткая характеристика").keyValueIdx(5)
+            .and().createStaticElement("Общая площадь, здания, строения, сооружения, кв. м").keyValueIdx(6)
+            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м").keyValueIdx(7)
+            .and().createStaticElement("Отапливаемый объем здания, строения, сооружения, куб. м").keyValueIdx(8)
+            .and().createStaticElement("Износ здания, строения, сооружения, %").keyValueIdx(9);
 
-        pdTable.createPart(PDPartType.ROW).key("MAIN_D").dynamic()
+        pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
             .createValueElement(PDTableCellValueCounter.class).keyValueIdx(1)// #
             .and().createStringValueElement().keyValueIdx(2) // name
             .and().createStringValueElement().keyValueIdx(3) // year
             .and().createStaticElement().keyValueIdx(4)
-                .createChild("Стены").keyValueIdx(4).packValueIdx(1)
-                .createSibling("Окна").keyValueIdx(4).packValueIdx(2)
-                .createSibling("Крыша").keyValueIdx(4).packValueIdx(3)
+                .createStaticChild("Стены").keyValueIdx(4).packValueIdx(1)
+                .createStaticSibling("Окна").keyValueIdx(4).packValueIdx(2)
+                .createStaticSibling("Крыша").keyValueIdx(4).packValueIdx(3)
             .and().createPackValueElement().keyValueIdx(5)
-                .createChildValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(1)
+                .createChildValue(PDTableCellValueBoolean.class).keyValueIdx(5).packValueIdx(1)
                 .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(2)
                 .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(3)
             .and().createDoubleValueElement().keyValueIdx(6)

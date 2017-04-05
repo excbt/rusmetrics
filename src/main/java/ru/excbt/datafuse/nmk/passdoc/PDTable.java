@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.Optional;
 @JsonIgnoreProperties(ignoreUnknown =  true)
 @JsonPropertyOrder({ "caption", "viewType", "sectionKey", "parts"})
 public class PDTable implements PDReferable {
+
+    private static final Logger log = LoggerFactory.getLogger(PDTable.class);
 
     @Getter
     @Setter
@@ -86,12 +90,13 @@ public class PDTable implements PDReferable {
 
     public List<PDTableCell<?>> extractCellValues() {
         List<PDTableCell<?>> result = new ArrayList<>();
-        parts.forEach(i -> {
-            List<PDTableCell<?>> partValues = i.extractCellValues();
+        for (PDTablePart part : parts) {
+            List<PDTableCell<?>> partValues = part.extractCellValues();
             if (!partValues.isEmpty()) {
                 result.addAll(partValues);
             }
-        });
+        }
+        log.info("Size of values: {}", result.size());
         return result;
     }
 

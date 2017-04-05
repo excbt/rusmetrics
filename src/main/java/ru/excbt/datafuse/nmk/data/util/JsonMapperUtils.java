@@ -47,7 +47,7 @@ public class JsonMapperUtils {
             return null;
         }
 
-        return pretty ? jsonBody : jsonBodyPretty;
+        return pretty ? jsonBodyPretty : jsonBody;
     }
 
 

@@ -25,7 +25,8 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 public abstract class PDValueDTO {
 
     @Getter
-    private final PDCellType cellType = PDCellType.VALUE;
+    @Setter
+    private PDCellType cellType;
 
     @Getter
     @Setter
@@ -56,13 +57,13 @@ public abstract class PDValueDTO {
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int _dynamicIdx;
 
-
-    @Getter
-    @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private Integer dynPartIdx;
+//    @Getter
+//    @Setter
+//    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+//    private Integer _dynPartIdx;
 
     protected void setCommonProperties(PDTableCell<?> tableCell) {
+        this.cellType = tableCell.getCellType();
         this.keyValueIdx = tableCell.getKeyValueIdx();
         this.packValueIdx = tableCell.getPackValueIdx();
         this.partKey = tableCell.getPartKey();
@@ -75,6 +76,22 @@ public abstract class PDValueDTO {
         if (!clazz.isAssignableFrom(tableCell.getClass())) {
             throw new IllegalArgumentException("tableCell is not of " + clazz.getSimpleName() + " class");
         }
+    }
+
+    public String get_complexIdx() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(partKey);
+        if (_dynamic) {
+            sb.append("_dr");
+            sb.append(_dynamicIdx);
+        }
+        sb.append("_i" + keyValueIdx);
+        if (_packed) {
+            sb.append("[");
+            sb.append(packValueIdx);
+            sb.append("]");
+        }
+        return sb.toString();
     }
 
 }

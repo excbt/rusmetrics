@@ -241,11 +241,6 @@ public class PDTablePart implements PDReferable {
         for (PDTableCell<?> cell : elements) {
             if (cell.getCellType() == PDCellType.VALUE) {
                 result.add(cell);
-            } else if (cell.getCellType() == PDCellType.VALUE_PACK) {
-                for (PDTableCell<?> child : cell.getChildElements()) {
-                    if (child.getCellType() == PDCellType.VALUE)
-                        result.add(child);
-                }
             }
         }
         return result;

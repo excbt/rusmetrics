@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -197,20 +198,42 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return is_dynamic() ? getRowIndex() + 1 : 0;
     }
 
+    @JsonInclude(value = Include.NON_NULL)
+    public String get_complexIdx() {
+        if (!(cellType == PDCellType.VALUE || cellType == PDCellType.VALUE_PACK)) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(partKey);
+        if (is_dynamic()) {
+            sb.append("_dr");
+            sb.append(get_dynamicIdx());
+        }
+        sb.append("_i" + keyValueIdx);
+        if (is_packed()) {
+            sb.append("[");
+            sb.append(packValueIdx);
+            sb.append("]");
+        }
+        return sb.toString();
+    }
+
+
     protected int getRowIndex() {
         List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
             .stream().filter(i -> PDPartType.ROW.equals(i.getPartType())).collect(Collectors.toList());
         return rows.indexOf(this.tablePart);
     }
 
-    public PDTableCellStatic createChild() {
+    public PDTableCellStatic createStaticChild() {
         PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
         childElements.add(child);
         child.parent = this;
         return child;
     }
 
-    public PDTableCellStatic createChild(String caption) {
+    public PDTableCellStatic createStaticChild(String caption) {
         PDTableCellStatic child = new PDTableCellStatic().tablePart(this.tablePart);
         childElements.add(child);
         child.setCaption(caption);
@@ -218,7 +241,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return child;
     }
 
-    public PDTableCellStatic createSibling() {
+    public PDTableCellStatic createStaticSibling() {
         checkState(parent != null);
         PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
         parent.childElements.add(sibling);
@@ -226,7 +249,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return sibling;
     }
 
-    public PDTableCellStatic createSibling(String caption) {
+    public PDTableCellStatic createStaticSibling(String caption) {
         checkState(parent != null);
         PDTableCellStatic sibling = new PDTableCellStatic().tablePart(this.tablePart);
         parent.childElements.add(sibling);

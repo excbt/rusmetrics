@@ -9,5 +9,16 @@ import ru.excbt.datafuse.nmk.passdoc.PDTable;
 public interface EnergyPassportSectionTemplateFactory {
     EnergyPassportSectionTemplate createSectionTemplate();
     PDTable getPDTable();
-    String createValuesJson();
+
+    String createSectionTemplateJson(Boolean pretty);
+
+    default String createSectionTemplateJson() {
+        return createSectionTemplateJson(false);
+    }
+
+    String createValuesJson(boolean pretty);
+
+    default String createValuesJson() {
+        return createValuesJson(false);
+    }
 }

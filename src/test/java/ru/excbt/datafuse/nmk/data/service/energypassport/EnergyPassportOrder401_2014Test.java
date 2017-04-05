@@ -72,12 +72,15 @@ public class EnergyPassportOrder401_2014Test {
     @Test
     public void test_S_2_10() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_2_10();
-        EnergyPassportSectionTemplate template = factory.createSectionTemplate();
-
-        log.info("Json:\n{}", template.getSectionJson());
+        //EnergyPassportSectionTemplate template = factory.createSectionTemplate();
 
 
-        String valuesJson = factory.createValuesJson();
+        String tempalteJson = factory.createSectionTemplateJson(true);
+
+        log.info("Json:\n{}", tempalteJson);
+
+
+        String valuesJson = factory.createValuesJson(true);
 
         log.info("ValuesJson:\n{}", valuesJson);
 

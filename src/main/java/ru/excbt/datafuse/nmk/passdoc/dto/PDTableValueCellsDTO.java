@@ -5,6 +5,7 @@ import lombok.Setter;
 import ru.excbt.datafuse.nmk.passdoc.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,22 @@ public class PDTableValueCellsDTO {
     private String sectionKey;
 
     public void addValueCells(List<PDTableCell<?>> tableCells) {
+        addValueCells(tableCells, false);
+    }
+
+    public void addValueCells(List<PDTableCell<?>> tableCells, boolean sortAfter) {
         Optional<?> check = tableCells.stream().filter(i -> i.getCellType() == PDCellType.STATIC).findAny();
         if (check.isPresent()) {
             throw new IllegalArgumentException();
         }
         tableCells.forEach(i -> elements.add(createValueDTO(i)));
+        if (sortAfter) {
+            sortElements();
+        }
+    }
+
+    public void sortElements() {
+        elements.sort(Comparator.comparing(PDValueDTO::get_complexIdx, String.CASE_INSENSITIVE_ORDER));
     }
 
 
@@ -46,6 +58,9 @@ public class PDTableValueCellsDTO {
 
         } else if (PDTableCellValueCounter.class.isAssignableFrom(pdTableCell.getClass())) {
             result = PDValueCounterDTO.newInstance(pdTableCell);
+
+        } else if (PDTableCellValueBoolean.class.isAssignableFrom(pdTableCell.getClass())) {
+            result = PDValueBooleanDTO.newInstance(pdTableCell);
         }
 
         if (result == null) {

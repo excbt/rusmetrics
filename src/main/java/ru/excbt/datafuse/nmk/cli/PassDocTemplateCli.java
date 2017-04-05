@@ -74,17 +74,17 @@ public class PassDocTemplateCli {
         PDTableCellStatic amount = partHeader.createStaticElement().caption("Количество, шт");
 
         int keyValueIdx = 1;
-        amount.createChild().caption("Электрической энергии")
-            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+        amount.createStaticChild().caption("Электрической энергии")
+            .createStaticChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
-        amount.createChild().caption("Тепловой энергии")
-            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+        amount.createStaticChild().caption("Тепловой энергии")
+            .createStaticChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
-        amount.createChild().caption("Газа")
-            .createChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
-            .createSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
+        amount.createStaticChild().caption("Газа")
+            .createStaticChild().caption("Всего").width(10).keyValueIdx(keyValueIdx++)
+            .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
 
         pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1")
