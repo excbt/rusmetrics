@@ -14,6 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemp
 import ru.excbt.datafuse.nmk.data.util.JsonMapperUtils;
 import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
+import static org.junit.Assert.fail;
+
 /**
  * Created by kovtonyk on 03.04.2017.
  */
@@ -41,65 +43,70 @@ public class EnergyPassportOrder401_2014Test {
     @Test
     public void testS_M1() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_S_M1();
-        EnergyPassportSectionTemplate template = factory.createSectionTemplate();
-        log.info("Json:\n{}", template.getSectionJson());
+        checkFactory(factory);
+//        EnergyPassportSectionTemplate template = factory.createSectionTemplate();
+//        log.info("Json:\n{}", template.getSectionJson());
 
     }
 
     @Test
     public void testS_M2() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_S_M2();
-        EnergyPassportSectionTemplate template = factory.createSectionTemplate();
-        log.info("Json:\n{}", template.getSectionJson());
+        checkFactory(factory);
     }
 
     @Test
     public void testS_M3() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_S_M3();
-        EnergyPassportSectionTemplate template = factory.createSectionTemplate();
-
-        log.info("Json:\n{}", template.getSectionJson());
+        checkFactory(factory);
     }
 
     @Test
     public void testS_Main() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_Main();
-        EnergyPassportSectionTemplate template = factory.createSectionTemplate();
-
-        log.info("Json:\n{}", template.getSectionJson());
+        checkFactory(factory);
     }
 
     @Test
     public void test_S_2_10() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_2_10();
+
+        checkFactory(factory);
         //EnergyPassportSectionTemplate template = factory.createSectionTemplate();
 
-
-        String tempalteJson = factory.createSectionTemplateJson(true);
-
-        log.info("Json:\n{}", tempalteJson);
-
-
-        String valuesJson = factory.createValuesJson(true);
-
-        log.info("ValuesJson:\n{}", valuesJson);
-
-
-        PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
+//        String tempalteJson = factory.createSectionTemplateJson(true);
+//
+//        log.info("Json:\n{}", tempalteJson);
+//
+//
+//        String valuesJson = factory.createValuesJson(true);
+//
+//        log.info("ValuesJson:\n{}", valuesJson);
+//
+//
+//        PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
     }
 
     @Test
     public void test_S_2_3() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_2_3();
         //EnergyPassportSectionTemplate template = factory.createSectionTemplate();
+        checkFactory(factory);
+    }
 
+
+    private void checkFactory(EnergyPassportSectionTemplateFactory factory) {
         String tempalteJson = factory.createSectionTemplateJson(true);
         log.info("Json:\n{}", tempalteJson);
         String valuesJson = factory.createValuesJson(true);
         log.info("ValuesJson:\n{}", valuesJson);
-        PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
-    }
+        try {
+            PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
+        } catch (Exception e) {
+            fail();
+        }
 
+    }
 
 
 }

@@ -14,42 +14,6 @@ import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 public class EnergyPassportOrder401_2014 {
 
 
-    protected EnergyPassportSectionTemplateFactory getEnergyPassportSectionTemplateFactory(final PDTable pdTable) {
-
-        return new EnergyPassportSectionTemplateFactory () {
-
-            private final PDTable savedPDTable = pdTable;
-
-            @Override
-            public EnergyPassportSectionTemplate createSectionTemplate() {
-                EnergyPassportSectionTemplate result = new EnergyPassportSectionTemplate();
-                result.setSectionKey(pdTable.getSectionKey());
-                result.setSectionJson(JsonMapperUtils.objectToJson(pdTable, true));
-                return result;
-            }
-
-            @Override
-            public PDTable getPDTable() {
-                return pdTable;
-            }
-
-            @Override
-            public String createSectionTemplateJson(Boolean pretty) {
-                return JsonMapperUtils.objectToJson(pdTable, pretty);
-            }
-
-            @Override
-            public String createValuesJson(boolean pretty) {
-                PDTableValueCellsDTO valueCellsDTO = new PDTableValueCellsDTO();
-                valueCellsDTO.addValueCells(savedPDTable.extractCellValues());
-                valueCellsDTO.sortElements();
-                return JsonMapperUtils.objectToJson(valueCellsDTO, pretty);
-            }
-        } ;
-
-    }
-
-
     /**
      * page 26 of Order
      * @return
@@ -160,7 +124,7 @@ public class EnergyPassportOrder401_2014 {
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
 
-        return getEnergyPassportSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(pdTable);
     }
 
     /**
@@ -216,7 +180,7 @@ public class EnergyPassportOrder401_2014 {
                 "      ответственного     за    энергетическое\n" +
                 "      хозяйство\n").and().createStringValueElement();
 
-        return getEnergyPassportSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(pdTable);
     }
 
 
@@ -272,7 +236,7 @@ public class EnergyPassportOrder401_2014 {
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
 
-        return getEnergyPassportSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(pdTable);
     }
 
 
@@ -320,7 +284,7 @@ public class EnergyPassportOrder401_2014 {
             "(автоматический/ручное управление) \n")
             .and().createBooleanValueElement();
 
-        return getEnergyPassportSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(pdTable);
     }
 
 
@@ -544,7 +508,7 @@ public class EnergyPassportOrder401_2014 {
 
         pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_7_build").createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
 
-        return getEnergyPassportSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(pdTable);
 
     }
 
@@ -582,7 +546,7 @@ public class EnergyPassportOrder401_2014 {
             .and().createDoubleValueElement().keyValueIdx(7)
             .and().createDoubleValueElement().keyValueIdx(8);
 
-        return getEnergyPassportSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(pdTable);
     }
 
 
