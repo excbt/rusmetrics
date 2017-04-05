@@ -1,32 +1,75 @@
 package ru.excbt.datafuse.nmk.data.service.energypassport;
 
 import org.springframework.stereotype.Service;
-import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
-import ru.excbt.datafuse.nmk.data.util.JsonMapperUtils;
-import ru.excbt.datafuse.nmk.passdoc.*;
-import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
+import ru.excbt.datafuse.nmk.passdoc.PDInnerTable;
+import ru.excbt.datafuse.nmk.passdoc.PDPartType;
+import ru.excbt.datafuse.nmk.passdoc.PDTable;
+import ru.excbt.datafuse.nmk.passdoc.PDViewType;
 
 /**
- * Created by kovtonyk on 03.04.2017.
+ * Created by kovtonyk on 05.04.2017.
  */
 @Service
-@Deprecated
-public class EnergyPassportOrder401_2014 {
+public class EnergyPassport401_2014 {
 
 
+    /*
 
-
-    /**
-     * Main Section S_M1
-     * @return
      */
-    public EnergyPassportSectionTemplateFactory createSection_S_M1() {
+    public EnergyPassportSectionTemplateFactory createSection_Main() {
 
-        final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_M1")
+
+        final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_M")
             .caption("ИНФОРМАЦИЯ\nо потреблении энергетических ресурсов организации\n" +
                 "за 20__ год");
 
+        createSectionPartsM1(pdTable);
+
+        /// Inner 2
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_2").createStaticElement("Общие сведения о потреблении энергетических ресурсов в отчетном году");
+        createSectionPartInnerM2(pdTable);
+
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3").createStaticElement("Наличие собственного источника выработки энергии (есть/нет)")
+            .and()
+            .createBooleanValueElement();
+
+        // Inner 3
+        createSectionPartInnerM31(pdTable);
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).createStaticElement("Вид вырабатываемой энергии:");
+
+        createSectionPartInnerM32(pdTable);
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3_comb").createStaticElement("Комбинированная выработка (да/нет):")
+            .and().createBooleanValueElement();
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3_mode").createStaticElement("Режим управления работой котлов\n" +
+            "(автоматический/ручное управление) \n")
+            .and().createBooleanValueElement();
+
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_4").createStaticElement("Общие сведения об оплате за энергоресурсы");
+
+
+        createSectionPartInnerM4(pdTable);
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_5").createStaticElement("Среднесписочная численность (чел.)\n" +
+            "Всех работников").and().createIntegerValueElement();
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_6").createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n" +
+            "Наличие утвержденной программы энергосбережения\n" +
+            "(есть/нет)").and().createBooleanValueElement();
+
+        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_7_build").createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
+
+        return new EPSectionTemplateFactory(pdTable);
+
+    }
+
+
+    private PDTable createSectionPartsM1(PDTable pdTable) {
         pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_1").createStaticElement("1.").and()
             .createStaticElement("Наименование организации").and().createStringValueElement();
 
@@ -70,115 +113,138 @@ public class EnergyPassportOrder401_2014 {
                 "      ответственного     за    энергетическое\n" +
                 "      хозяйство\n").and().createStringValueElement();
 
-        return new EPSectionTemplateFactory(pdTable);
+        return pdTable;
     }
 
+    /*
 
-    /**
-     * Main Section S_M2
-     * @return
      */
-    public EnergyPassportSectionTemplateFactory createSection_S_M2() {
+    private PDTable createSectionPartInnerM2(PDTable pdTable){
 
-        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_M2")
-            .caption("Общие сведения о потреблении энергетических ресурсов в отчетном году");
+        PDInnerTable innerTable = pdTable.createPart(PDPartType.INNER_TABLE).key("P_2_T").createInnerTable();
 
-        pdTable.createPart(PDPartType.ROW).key("P_2.1")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + ".heat")
             .createStaticElement("Тепловая энергия").and()
             .createStaticElement("(Гкал/год)").keyValueIdx(1).and().createDoubleValueElement().keyValueIdx(1)
             .and()
             .createStaticElement("Тепловая энергия").and()
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_2.2")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + ".electricity")
             .createStaticElement("Электрическая энергия").and()
             .createStaticElement("(кВт·ч/год)").keyValueIdx(1).and().createDoubleValueElement().keyValueIdx(1)
             .and()
             .createStaticElement("Электрическая энергия").and()
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_2.3")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + ".gas")
             .createStaticElement("Газ").and()
             .createStaticElement("(тыс. куб. м/год)").keyValueIdx(1).and().createDoubleValueElement().keyValueIdx(1)
             .and()
             .createStaticElement("Газ").and()
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_2.4")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + ".liquid")
             .createStaticElement("Жидкое топливо").and()
             .createStaticElement("(т/год)").keyValueIdx(1).and().createDoubleValueElement().keyValueIdx(1)
             .and()
             .createStaticElement("Жидкое топливо").and()
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_2.5")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + ".solid")
             .createStaticElement("Твердое топливо").and()
             .createStaticElement("(т/год)").keyValueIdx(1).and().createDoubleValueElement().keyValueIdx(1)
             .and()
             .createStaticElement("Твердое топливо").and()
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_2.6")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + ".motor")
             .createStaticElement("Моторное топливо").and()
             .createStaticElement("(т/год)").keyValueIdx(1).and().createDoubleValueElement().keyValueIdx(1)
             .and()
             .createStaticElement("Моторное топливо").and()
             .createStaticElement("(т у.т./год)").keyValueIdx(2).and().createDoubleValueElement().keyValueIdx(2);
 
+        return innerTable;
 
-        return new EPSectionTemplateFactory(pdTable);
     }
 
 
     /**
-     * Main Section S_M3
+     *
+     * @param pdTable
      * @return
      */
-    public EnergyPassportSectionTemplateFactory createSection_S_M3() {
-        final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_M3");
+    private PDTable createSectionPartInnerM31(PDTable pdTable) {
+        PDInnerTable innerTable = pdTable.createPart(PDPartType.INNER_TABLE).key("P_3_prod").createInnerTable();
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3").createStaticElement("Наличие собственного источника выработки энергии (есть/нет")
-            .and().createBooleanValueElement();
-
-        pdTable.createPart(PDPartType.ROW).key("P_3_gas").createStaticElement("Газ")
-            .and().createBooleanValueElement().and().createStaticElement("годовой расход")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_gas").createStaticElement("Газ").keyValueIdx(1)
+            .and().createBooleanValueElement().keyValueIdx(1).and().createStaticElement("годовой расход").keyValueIdx(2)
             .and().createStaticElement("(тыс. куб. м/год)")
-            .and().createDoubleValueElement();
+            .and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_3_liquid").createStaticElement("Жидкое топливо")
-            .and().createBooleanValueElement().and().createStaticElement("годовой расход")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_liquid").createStaticElement("Жидкое топливо").keyValueIdx(1)
+            .and().createBooleanValueElement().keyValueIdx(1).and().createStaticElement("годовой расход").keyValueIdx(2)
             .and().createStaticElement("(т/год)")
-            .and().createDoubleValueElement();
+            .and().createDoubleValueElement().keyValueIdx(2);
 
-        pdTable.createPart(PDPartType.ROW).key("P_3_solid").createStaticElement("Твердое топливо")
-            .and().createBooleanValueElement().and().createStaticElement("годовой расход")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_solid").createStaticElement("Твердое топливо").keyValueIdx(1)
+            .and().createBooleanValueElement().keyValueIdx(1).and().createStaticElement("годовой расход").keyValueIdx(2)
             .and().createStaticElement("(т/год)")
-            .and().createDoubleValueElement();
+            .and().createDoubleValueElement().keyValueIdx(2);
+        return innerTable;
+    }
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).createStaticElement("Вид вырабатываемой энергии:");
+    /**
+     *
+     * @param pdTable
+     * @return
+     */
+    private PDTable createSectionPartInnerM32(PDTable pdTable) {
+        PDInnerTable innerTable = pdTable.createPart(PDPartType.INNER_TABLE).key("P_3_prod").createInnerTable();
 
-        pdTable.createPart(PDPartType.ROW).key("P_3_type")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_row")
             .createStaticElement("Электрическая").keyValueIdx(1).and().createStringValueElement().keyValueIdx(1)
             .and().createStaticElement("Тепловая: пар").keyValueIdx(2).and().createStringValueElement().keyValueIdx(2)
             .and().createStaticElement("Тепловая:").keyValueIdx(3).and().createStringValueElement().keyValueIdx(3);
 
-        pdTable.createPart(PDPartType.ROW).key("P_3_type_yn")
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_row_yn")
             .createStaticElement("(да/нет)").keyValueIdx(1).and().createBooleanValueElement().keyValueIdx(1)
             .and().createStaticElement("(да/нет)").keyValueIdx(2).and().createBooleanValueElement().keyValueIdx(2)
             .and().createStaticElement("(да/нет)").keyValueIdx(3).and().createBooleanValueElement().keyValueIdx(3);
-
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3_comb").createStaticElement("Комбинированная выработка (да/нет):")
-            .and().createBooleanValueElement();
-
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3_comb").createStaticElement("Режим управления работой котлов\n" +
-            "(автоматический/ручное управление) \n")
-            .and().createBooleanValueElement();
-
-        return new EPSectionTemplateFactory(pdTable);
+        return innerTable;
     }
 
+    /**
+     *
+     * @param pdTable
+     * @return
+     */
+    private PDTable createSectionPartInnerM4(PDTable pdTable) {
+        PDInnerTable innerTable = pdTable.createPart(PDPartType.INNER_TABLE).key("P_4").createInnerTable();
 
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_heat")
+            .createStaticElement("Тепловая энергия").keyValueIdx(1).and().createStaticElement("(руб./год)")
+            .and().createDoubleValueElement().keyValueIdx(1);
 
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_electricity")
+            .createStaticElement("Электрическая энергия").keyValueIdx(1).and().createStaticElement("(руб./год)")
+            .and().createDoubleValueElement().keyValueIdx(1);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_gas")
+            .createStaticElement("Газ").keyValueIdx(1).and().createStaticElement("(руб./год)")
+            .and().createDoubleValueElement().keyValueIdx(1);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_liquid")
+            .createStaticElement("Жидкое топливо").keyValueIdx(1).and().createStaticElement("(руб./год)")
+            .and().createDoubleValueElement().keyValueIdx(1);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_solid")
+            .createStaticElement("Твердое топливо").keyValueIdx(1).and().createStaticElement("(руб./год)")
+            .and().createDoubleValueElement().keyValueIdx(1);
+
+        return innerTable;
+    }
 
 
 }
