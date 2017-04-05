@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.passdoc.*;
  * Created by kovtonyk on 28.03.2017.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-    include=JsonTypeInfo.As.PROPERTY, property="@type")
+    include=JsonTypeInfo.As.PROPERTY, property="__type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value=PDValuePackDTO.class, name="Pack"),
     @JsonSubTypes.Type(value=PDValueCounterDTO.class, name="Counter"),
