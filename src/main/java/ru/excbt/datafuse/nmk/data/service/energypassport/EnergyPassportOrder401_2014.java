@@ -56,7 +56,13 @@ public class EnergyPassportOrder401_2014 {
      */
     public EnergyPassportSectionTemplateFactory createSection_2_3() {
 
-        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.3");
+        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.3")
+            .caption("2.3. Сведения об оснащенности приборами учета")
+            .shortCaption("2.3")
+            .sectionNr("2.3")
+            .sectionHeader("Сведения об оснащенности приборами учета")
+            ;
+
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 

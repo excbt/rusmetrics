@@ -86,9 +86,20 @@ public class EnergyPassportOrder401_2014Test {
 
 
         PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
-
-
-
-
     }
+
+    @Test
+    public void test_S_2_3() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassportOrder401_2014.createSection_2_3();
+        //EnergyPassportSectionTemplate template = factory.createSectionTemplate();
+
+        String tempalteJson = factory.createSectionTemplateJson(true);
+        log.info("Json:\n{}", tempalteJson);
+        String valuesJson = factory.createValuesJson(true);
+        log.info("ValuesJson:\n{}", valuesJson);
+        PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
+    }
+
+
+
 }
