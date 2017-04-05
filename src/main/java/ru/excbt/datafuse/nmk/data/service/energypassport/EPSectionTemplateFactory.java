@@ -28,7 +28,7 @@ public class EPSectionTemplateFactory implements EnergyPassportSectionTemplateFa
     }
 
     @Override
-    public String createValuesJson(boolean pretty) {
+    public String createSectionValuesJson(boolean pretty) {
         PDTableValueCellsDTO valueCellsDTO = new PDTableValueCellsDTO();
         valueCellsDTO.addValueCells(pdTable.extractCellValues());
         valueCellsDTO.sortElements();

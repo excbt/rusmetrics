@@ -86,4 +86,10 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
         ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/new");
         resultActions.andExpect(jsonPath("$.documentDate").value(LocalDate.of(2014,6,30).toString()));
     }
+
+    @Test
+    @Transactional
+    public void testGetNewData() throws Exception {
+        ResultActions resultActions = _testGetJsonResultActions("/api/energy-passport-templates/newData");
+    }
 }

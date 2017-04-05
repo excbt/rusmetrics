@@ -14,10 +14,10 @@ public interface EnergyPassportSectionTemplateFactory {
         return createSectionTemplateJson(false);
     }
 
-    String createValuesJson(boolean pretty);
+    String createSectionValuesJson(boolean pretty);
 
-    default String createValuesJson() {
-        return createValuesJson(false);
+    default String createSectionValuesJson() {
+        return createSectionValuesJson(false);
     }
 
 }

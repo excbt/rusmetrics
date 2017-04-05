@@ -65,7 +65,7 @@ public class EnergyPassport401_2014Test {
 //        log.info("Json:\n{}", tempalteJson);
 //
 //
-//        String valuesJson = factory.createValuesJson(true);
+//        String valuesJson = factory.createSectionValuesJson(true);
 //
 //        log.info("ValuesJson:\n{}", valuesJson);
 //
@@ -78,7 +78,7 @@ public class EnergyPassport401_2014Test {
     private void checkFactory(EnergyPassportSectionTemplateFactory factory) {
         String tempalteJson = factory.createSectionTemplateJson(true);
         log.info("Json:\n{}", tempalteJson);
-        String valuesJson = factory.createValuesJson(true);
+        String valuesJson = factory.createSectionValuesJson(true);
         log.info("ValuesJson:\n{}", valuesJson);
         try {
             PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
