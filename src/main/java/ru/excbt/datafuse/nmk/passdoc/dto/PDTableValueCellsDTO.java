@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by kovtonyk on 27.03.2017.
@@ -68,6 +69,14 @@ public class PDTableValueCellsDTO {
         }
 
         return result;
+    }
+
+    public boolean checkComplexIdxs() {
+        return CellChecker.checkComplexIdx(elements);
+    }
+
+    public List<String> complexIdxs() {
+        return elements.stream().map(ComplexIdx::get_complexIdx).collect(Collectors.toList());
     }
 
 }

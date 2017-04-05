@@ -16,37 +16,33 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Created by kovtonyk on 24.03.2017.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-    include=JsonTypeInfo.As.PROPERTY, property="__type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY, property = "__type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value=PDTableCellValuePack.class, name="Pack"),
-    @JsonSubTypes.Type(value=PDTableCellValueCounter.class, name="Counter"),
-    @JsonSubTypes.Type(value=PDTableCellStatic.class, name="Static"),
-    @JsonSubTypes.Type(value=PDTableCellValueString.class, name="String"),
-    @JsonSubTypes.Type(value=PDTableCellValueInteger.class, name="Integer"),
-    @JsonSubTypes.Type(value=PDTableCellValueDouble.class, name="Double"),
-    @JsonSubTypes.Type(value=PDTableCellValueDoubleAggregation.class, name="DoubleAgg"),
-    @JsonSubTypes.Type(value=PDTableCellValueBoolean.class, name="Boolean")
+    @JsonSubTypes.Type(value = PDTableCellValuePack.class, name = "Pack"),
+    @JsonSubTypes.Type(value = PDTableCellValueCounter.class, name = "Counter"),
+    @JsonSubTypes.Type(value = PDTableCellStatic.class, name = "Static"),
+    @JsonSubTypes.Type(value = PDTableCellValueString.class, name = "String"),
+    @JsonSubTypes.Type(value = PDTableCellValueInteger.class, name = "Integer"),
+    @JsonSubTypes.Type(value = PDTableCellValueDouble.class, name = "Double"),
+    @JsonSubTypes.Type(value = PDTableCellValueDoubleAggregation.class, name = "DoubleAgg"),
+    @JsonSubTypes.Type(value = PDTableCellValueBoolean.class, name = "Boolean")
 })
 @NoArgsConstructor
 @JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
-public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable {
-
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    @Getter
-    private double width;
+public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable, ComplexIdx {
 
     @Getter
     @JsonProperty("elements")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     protected final List<PDTableCell<?>> childElements = new ArrayList<>();
-
     protected PDTableCell parent;
-
     @Getter
     @JsonIgnore
     protected PDTablePart tablePart;
-
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    @Getter
+    private double width;
     @Getter
     @Setter
     //@JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -64,7 +60,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    //@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
     @Getter
@@ -121,7 +117,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public Double get_totalWidth() {
         double childSum = childElements.size() == 0 ? 0 :
-                        childElements.stream().map(i -> i.get_totalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
+            childElements.stream().map(i -> i.get_totalWidth()).filter(i -> i != null).mapToDouble(Double::doubleValue).sum();
         return this.width + childSum > 0 ? this.width + childSum : null;
     }
 
@@ -131,7 +127,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         if (childElements.size() == 0) {
             result.add(width);
         } else {
-            for (PDTableCell cell: childElements) {
+            for (PDTableCell cell : childElements) {
                 result.addAll(cell.get_columnWidths());
             }
         }
@@ -143,7 +139,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         PDTableCell<?> top = parent;
         while (top != null) {
             top = top.parent;
-            currentLevel ++;
+            currentLevel++;
         }
 
         return currentLevel;
@@ -162,7 +158,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     public int get_rowSpan() {
         int level = childElementsLevel();
         int maxSpan = tablePart != null ? tablePart.maxRowSpan() : 0;
-        return  maxSpan - level - topLevel();
+        return maxSpan - level - topLevel();
     }
 
     public int get_colSpan() {
@@ -184,20 +180,21 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public boolean is_packed(){
+    public boolean is_packed() {
         return parent != null && packValueIdx != 0;
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public boolean is_dynamic(){
+    public boolean is_dynamic() {
         return tablePart != null && tablePart.isDynamic();
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    public int get_dynamicIdx(){
+    public int get_dynamicIdx() {
         return is_dynamic() ? getRowIndex() + 1 : 0;
     }
 
+    @Override
     @JsonInclude(value = Include.NON_NULL)
     public String get_complexIdx() {
         if (!(cellType == PDCellType.VALUE || cellType == PDCellType.VALUE_PACK)) {
