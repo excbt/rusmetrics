@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -76,15 +77,19 @@ public class EnergyPassport401_2014Test {
 
 
     private void checkFactory(EnergyPassportSectionTemplateFactory factory) {
-        String tempalteJson = factory.createSectionTemplateJson(true);
-        log.info("Json:\n{}", tempalteJson);
+        String templateJson = factory.createSectionTemplateJson(true);
+        log.info("Json:\n{}", templateJson);
         String valuesJson = factory.createSectionValuesJson(true);
         log.info("ValuesJson:\n{}", valuesJson);
         try {
             PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
+            assertTrue(tableValueCellsDTO.checkComplexIdxs());
+            log.info("complexIdx:\n{}",tableValueCellsDTO.complexIdxs());
         } catch (Exception e) {
             fail();
         }
+
+
 
     }
 

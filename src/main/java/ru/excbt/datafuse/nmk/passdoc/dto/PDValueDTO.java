@@ -3,26 +3,27 @@ package ru.excbt.datafuse.nmk.passdoc.dto;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.passdoc.ComplexIdx;
 import ru.excbt.datafuse.nmk.passdoc.PDCellType;
 import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 
 /**
  * Created by kovtonyk on 28.03.2017.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-    include=JsonTypeInfo.As.PROPERTY, property="__type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY, property = "__type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value=PDValuePackDTO.class, name="Pack"),
-    @JsonSubTypes.Type(value=PDValueCounterDTO.class, name="Counter"),
-    @JsonSubTypes.Type(value=PDValueStringDTO.class, name="String"),
-    @JsonSubTypes.Type(value=PDValueIntegerDTO.class, name="Integer"),
-    @JsonSubTypes.Type(value=PDValueDoubleDTO.class, name="Double"),
-    @JsonSubTypes.Type(value=PDValueDoubleAggregationDTO.class, name="DoubleAgg"),
-    @JsonSubTypes.Type(value=PDValueBooleanDTO.class, name="Boolean")
+    @JsonSubTypes.Type(value = PDValuePackDTO.class, name = "Pack"),
+    @JsonSubTypes.Type(value = PDValueCounterDTO.class, name = "Counter"),
+    @JsonSubTypes.Type(value = PDValueStringDTO.class, name = "String"),
+    @JsonSubTypes.Type(value = PDValueIntegerDTO.class, name = "Integer"),
+    @JsonSubTypes.Type(value = PDValueDoubleDTO.class, name = "Double"),
+    @JsonSubTypes.Type(value = PDValueDoubleAggregationDTO.class, name = "DoubleAgg"),
+    @JsonSubTypes.Type(value = PDValueBooleanDTO.class, name = "Boolean")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
-public abstract class PDValueDTO {
+public abstract class PDValueDTO implements ComplexIdx {
 
     @Getter
     @Setter
@@ -30,7 +31,7 @@ public abstract class PDValueDTO {
 
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    //@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
     @Getter
@@ -62,6 +63,12 @@ public abstract class PDValueDTO {
 //    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 //    private Integer _dynPartIdx;
 
+    protected static <T extends PDTableCell> void checkValueTypeClass(Class<T> clazz, PDTableCell<?> tableCell) {
+        if (!clazz.isAssignableFrom(tableCell.getClass())) {
+            throw new IllegalArgumentException("tableCell is not of " + clazz.getSimpleName() + " class");
+        }
+    }
+
     protected void setCommonProperties(PDTableCell<?> tableCell) {
         this.cellType = tableCell.getCellType();
         this.keyValueIdx = tableCell.getKeyValueIdx();
@@ -72,12 +79,7 @@ public abstract class PDValueDTO {
         this._dynamicIdx = tableCell.get_dynamicIdx();
     }
 
-    protected static <T extends PDTableCell> void checkValueTypeClass (Class<T> clazz, PDTableCell<?> tableCell) {
-        if (!clazz.isAssignableFrom(tableCell.getClass())) {
-            throw new IllegalArgumentException("tableCell is not of " + clazz.getSimpleName() + " class");
-        }
-    }
-
+    @Override
     public String get_complexIdx() {
         StringBuilder sb = new StringBuilder();
         sb.append(partKey);

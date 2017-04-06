@@ -17,13 +17,14 @@ public class EnergyPassport401_2014_Add {
      */
     public EnergyPassportSectionTemplateFactory section_2_3() {
 
-        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.3")
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.3")
             .caption("2.3. Сведения об оснащенности приборами учета")
             .shortCaption("2.3")
             .sectionNr("2.3")
-            .sectionHeader("Сведения об оснащенности приборами учета")
-            ;
+            .sectionHeader("Сведения об оснащенности приборами учета");
 
+
+        final PDTable pdTable = topTable.createPartInnerTable().key("S_2.3").createInnerTable();
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
@@ -121,7 +122,7 @@ public class EnergyPassport401_2014_Add {
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
 
-        return new EPSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(topTable);
     }
 
     /**
@@ -129,8 +130,12 @@ public class EnergyPassport401_2014_Add {
      * @return
      */
     public EnergyPassportSectionTemplateFactory section_2_10(){
-        final PDTable pdTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.10")
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.10")
             .caption("Краткая характеристика зданий (строений, сооружений)");
+
+
+        final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
         partHeader
@@ -161,7 +166,7 @@ public class EnergyPassport401_2014_Add {
             .and().createDoubleValueElement().keyValueIdx(7)
             .and().createDoubleValueElement().keyValueIdx(8);
 
-        return new EPSectionTemplateFactory(pdTable);
+        return new EPSectionTemplateFactory(topTable);
     }
 
 

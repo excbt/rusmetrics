@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
@@ -10,6 +12,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueString;
  */
 public class PDValueStringDTO extends PDValueDTO {
 
+    @JsonInclude(value = Include.ALWAYS)
     @Getter
     @Setter
     private String value;

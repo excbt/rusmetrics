@@ -87,6 +87,13 @@ public class PDTable implements PDReferable {
         return newPart;
     }
 
+    public PDTablePart createPartInnerTable(){
+        PDTablePart newPart = new PDTablePart(this);
+        newPart.setPartType(PDPartType.INNER_TABLE);
+        parts.add(newPart);
+        return newPart;
+    }
+
     public PDTablePart findHeader() {
         Optional<PDTablePart> result = parts.stream().filter(i -> PDPartType.HEADER.equals(i.getPartType())).findFirst();
         return result.isPresent() ? result.get() : null;
