@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.passdoc.ComplexIdx;
 import ru.excbt.datafuse.nmk.passdoc.PDCellType;
+import ru.excbt.datafuse.nmk.passdoc.PDConstants;
 import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 
 /**
@@ -22,7 +23,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
     @JsonSubTypes.Type(value = PDValueBooleanDTO.class, name = "Boolean")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
+@JsonPropertyOrder({"__type", "cellType", "partKey", "keyValueIdx", "valuePackIdx"})
 public abstract class PDValueDTO implements ComplexIdx {
 
     @Getter
@@ -34,28 +35,28 @@ public abstract class PDValueDTO implements ComplexIdx {
     //@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private int packValueIdx;
+    private int valuePackIdx;
 
     @Getter
     @Setter
     private String partKey;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private boolean _packed;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private boolean _dynamic;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int _dynamicIdx;
 
 //    @Getter
@@ -72,7 +73,7 @@ public abstract class PDValueDTO implements ComplexIdx {
     protected void setCommonProperties(PDTableCell<?> tableCell) {
         this.cellType = tableCell.getCellType();
         this.keyValueIdx = tableCell.getKeyValueIdx();
-        this.packValueIdx = tableCell.getPackValueIdx();
+        this.valuePackIdx = tableCell.getValuePackIdx();
         this.partKey = tableCell.getPartKey();
         this._packed = tableCell.is_packed();
         this._dynamic = tableCell.is_dynamic();
@@ -84,14 +85,15 @@ public abstract class PDValueDTO implements ComplexIdx {
         StringBuilder sb = new StringBuilder();
         sb.append(partKey);
         if (_dynamic) {
-            sb.append("_dr");
+            sb.append(PDConstants.COMPLEX_IDX_DYNAMIC_SUFFIX);
             sb.append(_dynamicIdx);
         }
-        sb.append("_i" + keyValueIdx);
+        sb.append(PDConstants.COMPLEX_IDX_VALUE_IDX_SUFFIX + keyValueIdx);
         if (_packed) {
-            sb.append("[");
-            sb.append(packValueIdx);
-            sb.append("]");
+            sb.append(String.format(PDConstants.COMPLEX_IDX_VALUE_PACK_FORMAT, valuePackIdx));
+//            sb.append("[");
+//            sb.append(packValueIdx);
+//            sb.append("]");
         }
         return sb.toString();
     }

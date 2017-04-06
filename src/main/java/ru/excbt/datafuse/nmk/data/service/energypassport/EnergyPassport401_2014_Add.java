@@ -155,13 +155,13 @@ public class EnergyPassport401_2014_Add {
             .and().createStringValueElement().keyValueIdx(2) // name
             .and().createStringValueElement().keyValueIdx(3) // year
             .and().createStaticElement().keyValueIdx(4)
-            .createStaticChild("Стены").keyValueIdx(4).packValueIdx(1)
-            .createStaticSibling("Окна").keyValueIdx(4).packValueIdx(2)
-            .createStaticSibling("Крыша").keyValueIdx(4).packValueIdx(3)
-            .and().createPackValueElement().keyValueIdx(5)
-            .createChildValue(PDTableCellValueBoolean.class).keyValueIdx(5).packValueIdx(1)
-            .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(2)
-            .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).packValueIdx(3)
+            .createStaticChild("Стены").keyValueIdx(4).valuePackIdx(1)
+            .createStaticSibling("Окна").keyValueIdx(4).valuePackIdx(2)
+            .createStaticSibling("Крыша").keyValueIdx(4).valuePackIdx(3)
+            .and().createValuePackElement().keyValueIdx(5)
+            .createChildValue(PDTableCellValueBoolean.class).keyValueIdx(5).valuePackIdx(1)
+            .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).valuePackIdx(2)
+            .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).valuePackIdx(3)
             .and().createDoubleValueElement().keyValueIdx(6)
             .and().createDoubleValueElement().keyValueIdx(7)
             .and().createDoubleValueElement().keyValueIdx(8);

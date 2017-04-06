@@ -19,13 +19,13 @@ import java.util.OptionalInt;
 
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
-@JsonPropertyOrder({ "key", "partType", "caption", "elements", "dynamic", "innerPdTable" })
+@JsonPropertyOrder({ "key", "partType", "caption", "dynamic", "dynamicSuffix", "valueIdxSuffix", "elements", "innerPdTable" })
 public class PDTablePart implements PDReferable {
 
 
+    @JsonIgnore
     @Getter
     @Setter
-    @JsonIgnore
     private PDTable pdTable;
 
     @Getter
@@ -36,31 +36,40 @@ public class PDTablePart implements PDReferable {
     @Setter
     private PDPartType partType;
 
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private String caption;
 
-    @Getter
     @JsonInclude(value = Include.NON_EMPTY)
+    @Getter
     private final List<PDTableCell> elements = new ArrayList<>();
 
+    @JsonInclude(value = Include.NON_NULL)
     @Getter
     @Setter
-    @JsonInclude(value = Include.NON_NULL)
     private PDTable innerPdTable;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+
     private boolean dynamic;
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    @Getter
+    @Setter
+    private String dynamicSuffix;
+
+    @Getter
+    private String valueIdxSuffix = PDConstants.COMPLEX_IDX_VALUE_IDX_SUFFIX;
 
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
     }
 
 
-    public PDTableCellValuePack createPackValueElement() {
+    public PDTableCellValuePack createValuePackElement() {
         PDTableCellValuePack result = new PDTableCellValuePack().tablePart(this);
         elements.add(result);
         return result;
@@ -145,6 +154,7 @@ public class PDTablePart implements PDReferable {
 
     public PDTablePart dynamic() {
         this.dynamic = true;
+        this.dynamicSuffix = PDConstants.COMPLEX_IDX_DYNAMIC_SUFFIX;
         return this;
     }
 

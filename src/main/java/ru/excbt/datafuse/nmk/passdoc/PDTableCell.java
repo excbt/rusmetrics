@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkState;
     @JsonSubTypes.Type(value = PDTableCellValueBoolean.class, name = "Boolean")
 })
 @NoArgsConstructor
-@JsonPropertyOrder({"__type", "cellType", "keyValueIdx", "packValueIdx", "partKey"})
+@JsonPropertyOrder({"__type", "cellType", "partKey", "keyValueIdx", "packValueIdx"})
 public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferable, ComplexIdx {
 
     @Getter
@@ -66,7 +66,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Getter
     @Setter
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
-    private int packValueIdx;
+    private int valuePackIdx;
 
     @Setter
     private String partKey;
@@ -99,8 +99,8 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return (T) this;
     }
 
-    public T packValueIdx(int value) {
-        this.packValueIdx = value;
+    public T valuePackIdx(int value) {
+        this.valuePackIdx = value;
         return (T) this;
     }
 
@@ -195,7 +195,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     public boolean is_packed() {
-        return parent != null && packValueIdx != 0;
+        return parent != null && valuePackIdx != 0;
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
@@ -218,14 +218,15 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         StringBuilder sb = new StringBuilder();
         sb.append(partKey);
         if (is_dynamic()) {
-            sb.append("_dr");
+            sb.append(PDConstants.COMPLEX_IDX_DYNAMIC_SUFFIX);
             sb.append(get_dynamicIdx());
         }
-        sb.append("_i" + keyValueIdx);
+        sb.append(PDConstants.COMPLEX_IDX_VALUE_IDX_SUFFIX + keyValueIdx);
         if (is_packed()) {
-            sb.append("[");
-            sb.append(packValueIdx);
-            sb.append("]");
+            sb.append(String.format(PDConstants.COMPLEX_IDX_VALUE_PACK_FORMAT, valuePackIdx));
+//            sb.append("[");
+//            sb.append(packValueIdx);
+//            sb.append("]");
         }
         return sb.toString();
     }
