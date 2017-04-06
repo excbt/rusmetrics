@@ -243,6 +243,11 @@ public class PDTablePart implements PDReferable {
                 result.add(cell);
             }
         }
+
+        if (innerPdTable != null) {
+            result.addAll(innerPdTable.extractCellValues());
+        }
+
         return result;
     }
 
