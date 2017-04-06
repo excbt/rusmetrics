@@ -8,20 +8,23 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.loading = true;
-    $scope.ctrlSettings.cssMeasureUnit = "rem";
+    $scope.ctrlSettings.cssMeasureUnit = "em";
+    $scope.ctrlSettings.passportLoading = true;
+    $scope.ctrlSettings.emptyString = " ";
     
     $timeout(function () {
         $scope.ctrlSettings.loading = false;
     }, 1500);
     
     $scope.addPassport = function () {
+//        $scope.ctrlSettings.passportLoading = true;
         $('#editEnergoPassportModal').modal();
     };
     
     $scope.data = {};
     $scope.data.passportList = [
         
-    ];
+    ];    
     
     $scope.data.contents = [
         {
@@ -201,7 +204,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
               "partKey": "P_1",
               "caption": "Сведения об оснащенности приборами коммерческого учета",
               "_rowSpan": 1,
-              "_colSpan": 1
+              "_colSpan": 7
             }
           ],
           "_columnWidths": [
@@ -1258,7 +1261,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
               "partKey": "P_2",
               "caption": "Сведения об оснащенности узлами (приборами) технического учета",
               "_rowSpan": 1,
-              "_colSpan": 1
+              "_colSpan": 7
             }
           ],
           "_columnWidths": [
@@ -1353,8 +1356,49 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
       ]
     };
     
-console.log(inputTableDef);    
-    function getHeader(inputData) {
+//console.log(inputTableDef);
+    
+    $scope.passDocStructure = null;
+    $scope.currentPassDocPart = null;
+    function loadPassDoc(url) {
+        $http.get(url)
+            .then(function (resp) {
+            if ($scope.passDocStructure === null) {
+                $scope.passDocStructure = [];
+            }
+            $scope.passDocStructure.push(angular.copy(resp.data));
+            if ($scope.passDocStructure.length === 1) {
+                $scope.currentPassDocPart = $scope.passDocStructure[0];
+                $scope.currentPassDocPart.isSelected = true;
+                $timeout(function () {
+                    $(':input').inputmask();
+                }, 0);
+            }
+//console.log($scope.passDocStructure);
+            $scope.ctrlSettings.passportLoading = false;
+        }, function (res) {
+            console.error(res);
+        });
+    }
+    loadPassDoc('../app/resource/passDocP0.json');
+    loadPassDoc('../app/resource/passDocP1.json');
+    
+    $scope.contentsPartSelect = function(part) {
+//console.log(part);
+        $scope.currentPassDocPart.isSelected = false;
+        $scope.currentPassDocPart = part;
+        $scope.currentPassDocPart.isSelected = true;
+        $timeout(function () {
+            $(':input').inputmask();
+        }, 0);
+        
+    }
+    
+    $scope.tdBlur = function (cell) {
+console.log(cell);        
+    }
+    
+    function getHeaderPart(inputData) {
         var headerPart = null;
         //TODO: check inputData
         inputData.parts.some(function (part) {
@@ -1363,8 +1407,16 @@ console.log(inputTableDef);
                 return true;
             }            
         });        
-console.log(headerPart);        
+//console.log(headerPart);        
         return headerPart;
+    }
+    
+    function prepareHeader(headerPart) {
+        var preparedHeader = angular.copy(headerPart._columnWidths);//[];
+//        headerPart._columnWidths.forEach(function (col) {
+//            
+//        });
+        return preparedHeader;
     }
     
     function getRows(inputData) {
@@ -1374,7 +1426,7 @@ console.log(headerPart);
                 var dataRow = {};
                 dataRow = angular.copy(part);
                 dataRows.push(dataRow);
-console.log(dataRow);                
+//console.log(dataRow);                
             }
             
 //            if (ind === 3) {
@@ -1383,9 +1435,18 @@ console.log(dataRow);
         });
         return dataRows;
     }
-    
-    $scope.header = getHeader(inputTableDef);
+    var headerPart = getHeaderPart(inputTableDef);
+    $scope.table = {};
+    $scope.table.width = headerPart._totalWidth;
+    $scope.table.maxWidth = headerPart._totalWidth;
+    $scope.header = prepareHeader(getHeaderPart(inputTableDef));
     $scope.data.rows = getRows(inputTableDef);
+    
+    $('#editEnergoPassportModal').on('shown.bs.modal', function () {
+        $timeout(function () {
+            $(':input').inputmask();
+        }, 0);
+    });
     
     $scope.data.data = [
         {
@@ -1460,4 +1521,35 @@ console.log(dataRow);
           }, 500, 10);
         }
   };
-}]);
+}])
+.directive('contenteditable', ['$sce', function($sce) {
+  return {
+    restrict: 'A', // only activate on element attribute
+    require: '?ngModel', // get a hold of NgModelController
+    link: function(scope, element, attrs, ngModel) {
+      if (!ngModel) return; // do nothing if no ng-model
+
+      // Specify how UI should be updated
+      ngModel.$render = function() {
+        element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+      };
+
+      // Listen for change events to enable binding
+      element.on('blur keyup change', function() {
+        scope.$evalAsync(read);
+      });
+      read(); // initialize
+
+      // Write data to the model
+      function read() {
+        var html = element.html();
+        // When we clear the content editable the browser leaves a <br> behind
+        // If strip-br attribute is provided then we strip this out
+        if (attrs.stripBr && html === '<br>') {
+          html = '';
+        }
+        ngModel.$setViewValue(html);
+      }
+    }
+  };
+}]);;

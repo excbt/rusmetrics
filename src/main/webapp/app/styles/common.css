@@ -2897,3 +2897,24 @@ input[type="checkbox"] {
     border-right: 1px solid #d4d4d4;
 */
 }
+
+/*Энергопасспорт - самописный вариант*/
+
+.nmc-energo-table {
+}
+
+.nmc-energo-table > tbody > tr > td {
+    border: 1px solid #646263;
+}
+
+.nmc-td-no-edit {
+    background-color: #f5f5f5;
+}
+
+.nmc-td-edit {
+    background-color: #fff;
+}
+
+.nmc-empty-div {
+    height: 1.5em;
+}
