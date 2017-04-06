@@ -161,8 +161,22 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return maxSpan - level - topLevel();
     }
 
+
+    private static int getLowestChildCnt(PDTableCell<?> cell) {
+        int cnt = 0;
+        if (cell.childElements.size() == 0) {
+            return 1;
+        } else {
+            for (PDTableCell<?> child: cell.childElements) {
+                cnt = cnt + getLowestChildCnt(child);
+            }
+        }
+        return cnt;
+    }
+
     public int get_colSpan() {
-        return mergedCells == 0 ? 1 : mergedCells;
+        int lowestCnt = getLowestChildCnt(this);
+        return Math.max(mergedCells == 0 ? 1 : mergedCells, lowestCnt);
     }
 
     @Override
