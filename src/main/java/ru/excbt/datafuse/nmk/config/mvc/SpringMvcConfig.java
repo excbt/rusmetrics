@@ -124,7 +124,7 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter jsonMessageConverter  = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper  = jsonMessageConverter.getObjectMapper();
-                objectMapper.disable(
+                objectMapper.enable(
                     SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
                 );
                 break;
