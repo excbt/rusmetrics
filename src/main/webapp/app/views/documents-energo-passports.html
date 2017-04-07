@@ -72,7 +72,7 @@
                 <div ng-show="!ctrlSettings.loading">
                 <div class="row nmc-main-workspace-header">
                     <div class="col-xs-3 marginBottom10">
-                        <button class="btn nmc-main-add-button" ng-click="addPassport()">Создать паспорт</button>
+                        <button class="btn nmc-main-add-button" ng-click = "addPassport()">Создать паспорт</button>
                     </div>
                     <div class="col-xs-7"></div>
                     <div class="input-group col-xs-4 filter marginBottom10 pull-left nmc-search-form">   
@@ -311,95 +311,143 @@
                                     <h4>
                                         {{currentPassDocPart.caption}}
                                     </h4>
-                                    <div ng-repeat = "part in currentPassDocPart.parts">
-                                        <div ng-switch = "part.partType">
-                                            <div ng-switch-when = "SIMPLE_LINE"
-                                                 style = "padding: 5px 0;">
-                                                <div ng-repeat = "elm in part.elements"
-                                                     style = "display: inline-block; padding: 0 10px;">
-                                                    <span ng-if = "elm.cellType !== 'VALUE'"> 
-                                                        {{elm.caption}}
-                                                    </span>
-                                                    <input ng-if = "elm.cellType === 'VALUE' && elm.type !== 'Boolean'" 
-                                                           type = "text"
-                                                           style = "width: 100%; border: 0; border-bottom: 1px solid;"/>
-                                                    <input ng-if = "elm.cellType === 'VALUE' && elm.type === 'Boolean'" 
-                                                           type = "checkbox"
-                                                           style = ""/>
-                                                </div>
-                                            </div>
-                                            <div ng-switch-when = "INNER_TABLE"
-                                                 style = "padding: 10px 0px;">
-                                                <table border = "1"
-                                                       class = "nmc-energo-table"
-                                                       style = "border: 1px; background-color: #fff;"
-                                                       ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
-<!--
-                                                    <tr>
-                                                        <th ng-repeat = "thead in header track by $index"
-                                                            ng-style = "{'width': thead + ctrlSettings.cssMeasureUnit, 'max-width': thead + ctrlSettings.cssMeasureUnit}"
-                                                            style = "text-align: center">
-                                                            {{thead}}{{ctrlSettings.cssMeasureUnit}}
-                                                        </th>
-                                                    </tr>
--->
-                                                    <tr ng-repeat = "trow in part.innerPdTable.parts track by $index"
-                                                        ng-if = "trow.partType === 'ROW'">
-                                                        <td ng-repeat = "td in trow.elements track by $index"
-                                                            ng-attr-colspan = "{{td._colSpan}}"
-                                                            
-                                                            ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
-                                                            ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
-                                                            
-                                                            ng-model = "td.valueDev1"                                                            
-                                                            >                                                            
-                                                            <div ng-if = "td.cellType !== 'VALUE'">
-                                                                {{td.caption}}
-                                                            </div>
-                                                            <div ng-if = "td.cellType === 'VALUE' && td.type === 'String'"
-                                                                 contenteditable
-                                                                 strip-br
-                                                                 ng-blur = "tdBlur(td)"
-                                                                 ng-model = "td.valueDev"
-                                                                 >
-                                                            </div>
-                                                            <input ng-if = "td.cellType === 'VALUE' && td.type === 'Boolean'" 
-                                                                   type = "checkbox"
-                                                                   ng-blur = "tdBlur(td)"
-                                                                   ng-model = "td.valueDev"
-                                                                   style = ""/>
-                                                            <input ng-if = "td.cellType === 'VALUE' && (td.type !== 'String' && td.type !== 'Boolean')" 
+                                    <div ng-switch = "currentPassDocPart.viewType">
+                                        <div ng-switch-when = "FORM">
+                                            <div ng-repeat = "part in currentPassDocPart.parts">
+                                                <div ng-switch = "part.partType">
+                                                    <div ng-switch-when = "SIMPLE_LINE"
+                                                         style = "padding: 5px 0;">
+                                                        <div ng-repeat = "elm in part.elements"
+                                                             style = "display: inline-block; padding: 0 10px;">
+                                                            <span ng-if = "elm.cellType !== 'VALUE'"> 
+                                                                {{elm.caption}}
+                                                            </span>
+                                                            <input ng-if = "elm.cellType === 'VALUE' && elm.type !== 'Boolean'" 
                                                                    type = "text"
-                                                                   data-inputmask = "'alias':'numeric', 'greedy': false"
-                                                                   style = "width: 100%; border: 0"
-                                                                   ng-blur = "tdBlur(td)"
-                                                                   ng-model = "td.valueDev"
-                                                                   />
-                                                                                                                        
-                                                        </td>
-<!--
-                                                        <td ng-repeat = "td in trow.elements track by $index"
-                                                            ng-attr-colspan = "{{td._colSpan}}"
-                                                            ng-if = "td.cellType === 'VALUE'"
-                                                            ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
-                                                            ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
-                                                            ng-attr-contenteditable = "{{td.cellType === 'VALUE'}}"
-                                                            ng-model = "td.valueDev1"
-                                                            ng-blur = "tdBlur(td)"
-                                                            >                                                            
-                                                                
-                                                                                                                        
-                                                        </td>
--->
-                                                    </tr>
-                                                </table>
-                                                
-                                            </div>
-                                            <div ng-switch-default>
-                                                {{part | json}}
+                                                                   style = "width: 100%; border: 0; border-bottom: 1px solid;"/>
+                                                            <input ng-if = "elm.cellType === 'VALUE' && elm.type === 'Boolean'" 
+                                                                   type = "checkbox"
+                                                                   style = ""/>
+                                                        </div>
+                                                    </div>
+                                                    <div ng-switch-when = "INNER_TABLE"
+                                                         style = "padding: 10px 0px;">
+                                                        <table border = "1"
+                                                               class = "nmc-energo-table"
+                                                               style = "border: 1px; background-color: #fff;"
+                                                               ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
+                                                            <thead ng-repeat = "thead in part.innerPdTable.parts track by $index"
+                                                                   ng-if = "thead.partType === 'HEADER'">
+                                                                <tr ng-repeat = "throw in thead.headerRows track by $index">
+                                                                    <th ng-repeat = "th in throw"
+                                                                        ng-attr-rowspan = "{{th._rowSpan}}"
+                                                                        ng-attr-colspan = "{{th._colSpan}}">
+                                                                        {{th.caption}}
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>    
+
+                                                            <tr ng-repeat = "trow in part.innerPdTable.parts track by $index"
+                                                                ng-if = "trow.partType === 'ROW'">
+                                                                <td ng-repeat = "td in trow.elements track by $index"
+                                                                    ng-attr-colspan = "{{td._colSpan}}"
+
+                                                                    ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
+                                                                    ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
+
+                                                                    ng-model = "td.valueDev1"                                                            
+                                                                    >                                                            
+                                                                    <div ng-if = "td.cellType !== 'VALUE'">
+                                                                        {{td.caption}}
+                                                                    </div>
+                                                                    <div ng-if = "td.cellType === 'VALUE' && (td.type === 'String' || td.type === 'DoubleAgg')"
+                                                                         contenteditable
+                                                                         strip-br
+                                                                         ng-blur = "tdBlur(td)"
+                                                                         ng-model = "td.valueDev"
+                                                                         >
+                                                                    </div>
+                                                                    <input ng-if = "td.cellType === 'VALUE' && td.type === 'Boolean'" 
+                                                                           type = "checkbox"
+                                                                           ng-blur = "tdBlur(td)"
+                                                                           ng-model = "td.valueDev"
+                                                                           style = ""/>
+                                                                    <input ng-if = "td.cellType === 'VALUE' && (td.type !== 'String' && td.type !== 'Boolean' && td.type !== 'DoubleAgg')" 
+                                                                           type = "text"
+                                                                           data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                                           style = "width: 100%; border: 0"
+                                                                           ng-blur = "tdBlur(td)"
+                                                                           ng-model = "td.valueDev"
+                                                                           />
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                    </div>
+                                                    <div ng-switch-default>
+                                                        {{part | json}}
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
+                                        <div ng-switch-when = "TABLE">
+                                            <table border = "1"
+                                                   class = "nmc-energo-table"
+                                                   style = "border: 1px; background-color: #fff;"
+                                                   ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
+                                                <thead ng-repeat = "thead in currentPassDocPart.parts track by $index"
+                                                       ng-if = "thead.partType === 'HEADER'">
+                                                    <tr ng-repeat = "throw in thead.headerRows track by $index">
+                                                        <th ng-repeat = "th in throw"
+                                                            ng-attr-rowspan = "{{th._rowSpan}}"
+                                                            ng-attr-colspan = "{{th._colSpan}}">
+                                                            {{th.caption}}
+                                                        </th>
+                                                    </tr>
+                                                </thead>    
 
+                                                <tr ng-repeat = "trow in currentPassDocPart.parts track by $index"
+                                                    ng-if = "trow.partType === 'ROW'">
+                                                    <td ng-repeat = "td in trow.elements track by $index"
+                                                        ng-attr-colspan = "{{td._colSpan}}"
+
+                                                        ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
+                                                        ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
+
+                                                        ng-model = "td.valueDev1"                                                            
+                                                        >                                                            
+                                                        <div ng-if = "td.cellType !== 'VALUE'">
+                                                            {{td.caption}}
+                                                        </div>
+                                                        <div ng-if = "td.cellType === 'VALUE' && (td.type === 'String' || td.type === 'DoubleAgg')"
+                                                             contenteditable
+                                                             strip-br
+                                                             ng-blur = "tdBlur(td)"
+                                                             ng-model = "td.valueDev"
+                                                             >
+                                                        </div>
+                                                        <input ng-if = "td.cellType === 'VALUE' && td.type === 'Boolean'" 
+                                                               type = "checkbox"
+                                                               ng-blur = "tdBlur(td)"
+                                                               ng-model = "td.valueDev"
+                                                               style = ""/>
+                                                        <input ng-if = "td.cellType === 'VALUE' && (td.type !== 'String' && td.type !== 'Boolean' && td.type !== 'DoubleAgg')" 
+                                                               type = "text"
+                                                               data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                               style = "width: 100%; border: 0"
+                                                               ng-blur = "tdBlur(td)"
+                                                               ng-model = "td.valueDev"
+                                                               />
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div ng-switch-default>
+                                            {{currentPassDocPart | json}}
+                                        </div>
                                     </div>
                                 </div>
 <!--                                <table class = "table table-bordered">-->

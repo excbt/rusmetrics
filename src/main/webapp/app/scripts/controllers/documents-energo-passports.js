@@ -1,8 +1,8 @@
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, white: true, nomen: true*/
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval) {
+app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', 'energoPassportSvc', '$location', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval, energoPassportSvc, $location) {
     
     $scope.showContents_flag = true;
     
@@ -18,13 +18,14 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     
     $scope.addPassport = function () {
 //        $scope.ctrlSettings.passportLoading = true;
-        $('#editEnergoPassportModal').modal();
+        $location.path("/documents/energo-passport/new");
+        //$('#editEnergoPassportModal').modal();
     };
     
     $scope.data = {};
     $scope.data.passportList = [
         
-    ];    
+    ];
     
     $scope.data.contents = [
         {
@@ -1356,32 +1357,161 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
       ]
     };
     
+    function errorCallback(e) {
+        var errorObj = mainSvc.errorCallbackHandler(e);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+    }
+    
 //console.log(inputTableDef);
+    function performElementsRecursion(elements, level, headerRows) {
+        if (angular.isUndefined(elements) || elements === null) {
+            return;
+        }
+        elements.forEach(function (elm) {
+            if (headerRows.length <= level) {
+                headerRows.push([]);
+            }
+            headerRows[level].push(angular.copy(elm));
+            performElementsRecursion(elm.elements, level + 1, headerRows);
+        });
+    }
+    
+    function prepareTableHeaderRecursion(tablePart) {
+        var headerRows = [];
+        performElementsRecursion(tablePart.elements, 0, headerRows);        
+        tablePart.headerRows = headerRows;
+        return tablePart;
+    }
+    
+//    function prepareTableHeader(tablePart) {
+//        var headerRows = [];
+//        var headerRow1 = [];
+//        var headerRow2 = [];
+//        var headerRow3 = [];
+//        tablePart.elements.forEach(function (headerElem) {            
+//            headerRow1.push(angular.copy(headerElem));
+//            if (!headerElem.hasOwnProperty("elements") || !angular.isArray(headerElem.elements)) {
+//                return;
+//            }
+//            headerElem.elements.forEach(function (cheaderElem) {
+//                headerRow2.push(angular.copy(cheaderElem));
+//                if (!cheaderElem.hasOwnProperty("elements") || !angular.isArray(cheaderElem.elements)) {
+//                    return;
+//                }
+//                cheaderElem.elements.forEach(function (ccheaderElem) {
+//                    headerRow3.push(angular.copy(ccheaderElem));
+//                });
+//            });
+//        });
+//        if (headerRow1.length > 0) {
+//            headerRows.push(headerRow1);
+//        }
+//        if (headerRow2.length > 0) {
+//            headerRows.push(headerRow2);
+//        }
+//        if (headerRow3.length > 0) {
+//            headerRows.push(headerRow3);
+//        }
+//        tablePart.headerRows1 = headerRows;
+//        return tablePart;
+//    }
+    
+    function performTablePart(tablePart) {
+        if (tablePart.partType === "HEADER") {
+//console.log("Found header");
+//console.log(tablePart);                    
+//                    tablePart = prepareTableHeader(tablePart);
+            tablePart = prepareTableHeaderRecursion(tablePart);
+            return true;
+        }
+
+    }
+    
+    function preparePassDoc(passDoc) {
+        //Prepare headers for inner tables
+        switch (passDoc.viewType) {
+        case "FORM":
+            passDoc.parts.forEach(function (passDocPart) {
+                if (passDocPart.partType !== "INNER_TABLE") {
+                    return;
+                }
+    //console.log("Found Inner table");
+    //console.log(passDocPart);            
+                passDocPart.innerPdTable.parts.forEach(performTablePart);
+            });
+            break;
+        case "TABLE":
+            passDoc.parts.forEach(performTablePart);
+            break;
+        }
+        return passDoc;
+    }    
     
     $scope.passDocStructure = null;
+    $scope.passDocStructureFromServer = null;
     $scope.currentPassDocPart = null;
-    function loadPassDoc(url) {
+    
+    function successCreatePassportCallback(response) {
+        console.log(response);
+        if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
+            return false;
+        }
+        var result = [],
+            tmp = angular.copy(response.data);
+        tmp.sectionTemplates.forEach(function (secTempl) {
+            result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
+        });
+//        result = preparePassDoc(result);
+console.log(result);        
+return;        
+        $scope.passDocStructure = result;
+        if ($scope.passDocStructure.length >= 1) {
+            $scope.currentPassDocPart = $scope.passDocStructure[0];
+            $scope.currentPassDocPart.isSelected = true;
+            $timeout(function () {
+                $(':input').inputmask();
+//                    $(':input').focus();
+            }, 0);
+        }        
+        $scope.ctrlSettings.passportLoading = false;
+    }
+    
+    function createPassDocInit() {
+        energoPassportSvc.createPassport()
+            .then(successCreatePassportCallback, errorCallback);
+    }
+    
+    createPassDocInit();
+    
+    function loadPassDoc_v1(url) {
         $http.get(url)
             .then(function (resp) {
             if ($scope.passDocStructure === null) {
                 $scope.passDocStructure = [];
             }
-            $scope.passDocStructure.push(angular.copy(resp.data));
+            var tmpPassDoc = angular.copy(resp.data);
+            
+            //prepare passDoc
+            // - transform table headers
+            tmpPassDoc = preparePassDoc(tmpPassDoc);
+            
+            $scope.passDocStructure.push(tmpPassDoc);
             if ($scope.passDocStructure.length === 1) {
                 $scope.currentPassDocPart = $scope.passDocStructure[0];
                 $scope.currentPassDocPart.isSelected = true;
                 $timeout(function () {
                     $(':input').inputmask();
+//                    $(':input').focus();
                 }, 0);
             }
-//console.log($scope.passDocStructure);
+console.log($scope.passDocStructure);
             $scope.ctrlSettings.passportLoading = false;
         }, function (res) {
             console.error(res);
         });
     }
-    loadPassDoc('../app/resource/passDocP0.json');
-    loadPassDoc('../app/resource/passDocP1.json');
+    loadPassDoc_v1('../app/resource/passDocP0.json');
+    loadPassDoc_v1('../app/resource/passDocP1.json');
     
     $scope.contentsPartSelect = function(part) {
 //console.log(part);
@@ -1390,13 +1520,14 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         $scope.currentPassDocPart.isSelected = true;
         $timeout(function () {
             $(':input').inputmask();
+//            $(':input').focus();
         }, 0);
         
-    }
+    };
     
     $scope.tdBlur = function (cell) {
 console.log(cell);        
-    }
+    };
     
     function getHeaderPart(inputData) {
         var headerPart = null;
@@ -1445,111 +1576,8 @@ console.log(cell);
     $('#editEnergoPassportModal').on('shown.bs.modal', function () {
         $timeout(function () {
             $(':input').inputmask();
+//            $(':input').focus();
         }, 0);
     });
     
-    $scope.data.data = [
-        {
-            name: 'Bob',
-            title: 'CEO',
-            age: '31'
-        }, {
-            name: 'Frank',
-            title: 'Lowly Developer',
-            age: '33'
-        }
-    ];
-  
-  $scope.gridOptions1 = {
-      headerTemplate: 'header-template.html',
-      headerDef: $scope.header,
-      superColDefs: [
-      {
-          name: 'group1',
-          displayName: 'Group 1'
-      }, {
-          name: 'group2',
-          displayName: 'Group 2'
-      }],
-      columnDefs: [{
-          name: 'name',
-          displayName: 'Name',
-          superCol: 'group1'
-      }, {
-          name: 'title',
-          displayName: 'Title',
-          superCol: 'group1'
-      }, {
-          name: 'age',
-          displayName: 'Age',
-          superCol: 'group2'
-      }],
-      data: $scope.data.rows,
-        onRegisterApi: function (gridApi) {
-          $scope.gridApi = gridApi;
-
-          // call resize every 500 ms for 5 s after modal finishes opening - usually only necessary on a bootstrap modal
-          $interval( function() {
-            $scope.gridApi.core.handleWindowResize();
-          }, 500, 10);
-        }
-  };
-    
-    $scope.gridOptions = {
-      headerTemplate: 'header-template.html',
-      headerDef: $scope.header,
-      columnDefs: [{
-          name: 'name',
-          displayName: 'Name',
-          superCol: 'group1'
-      }, {
-          name: 'title',
-          displayName: 'Title',
-          superCol: 'group1'
-      }, {
-          name: 'age',
-          displayName: 'Age',
-          superCol: 'group2'
-      }],
-      data: $scope.data.rows,
-        onRegisterApi: function (gridApi) {
-          $scope.gridApi = gridApi;
-
-          // call resize every 500 ms for 5 s after modal finishes opening - usually only necessary on a bootstrap modal
-          $interval( function() {
-            $scope.gridApi.core.handleWindowResize();
-          }, 500, 10);
-        }
-  };
-}])
-.directive('contenteditable', ['$sce', function($sce) {
-  return {
-    restrict: 'A', // only activate on element attribute
-    require: '?ngModel', // get a hold of NgModelController
-    link: function(scope, element, attrs, ngModel) {
-      if (!ngModel) return; // do nothing if no ng-model
-
-      // Specify how UI should be updated
-      ngModel.$render = function() {
-        element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
-      };
-
-      // Listen for change events to enable binding
-      element.on('blur keyup change', function() {
-        scope.$evalAsync(read);
-      });
-      read(); // initialize
-
-      // Write data to the model
-      function read() {
-        var html = element.html();
-        // When we clear the content editable the browser leaves a <br> behind
-        // If strip-br attribute is provided then we strip this out
-        if (attrs.stripBr && html === '<br>') {
-          html = '';
-        }
-        ngModel.$setViewValue(html);
-      }
-    }
-  };
-}]);;
+}]);

@@ -1,0 +1,210 @@
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="object_list_2nd_menu_item" role="presentation" class=""><a id="monitorTab" class="nmc-main-tab-button" href="#/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Список объектов</a></li>
+        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
+        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
+        
+        <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/objects/demo-map/" 
+               aria-controls="objects_map" 
+               role="tab" 
+               data-target="#objects_map" 
+               data-toggle="tab"
+               >
+                Демо-карта
+            </a>
+        </li>
+<!--
+        <li ng-hide="isTestMode() || !isRma() || objects.length <= 0" role="presentation" class="pull-right">
+            <i               
+               title="Загрузка показаний из файлов"               
+               class="btn btn-sm glyphicon glyphicon-download-alt gly-rotate-180"
+               aria-controls="upload_files" 
+               role="tab"
+               data-target="#upLoadFilesModal" 
+               data-toggle="modal">                
+            </i>
+        </li>
+-->
+        <li id="document_list_2nd_menu_item" role="presentation" class="active"><a id="documentTab" class="nmc-main-tab-button" href="" aria-controls="documents" data-target="#documents" role="tab" data-toggle="tab">Документы</a></li>
+    </ul> 
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="documents">
+      </div>
+    </div>
+</div>
+<div id="divWithEnergoPassport" class="nmc-energo-passport-main-div">
+    <div class = "container-fluid">
+        <div class = "row">
+            <div class = "col-xs-2">
+                <table id="table_objects_in_window" 
+                       class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                    <tr ng-repeat="part in passDocStructure"
+                        ng-click = "contentsPartSelect(part)"
+                        ng-class = "{'nmc-bg-distinguish': part.isSelected === true}">
+                        <td>
+                            {{part.caption}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class = "col-xs-10">
+                <h3 class="nmc-h3">
+                    Энергетический паспорт
+                </h3>
+                <div  ng-show="ctrlSettings.passportLoading" class="nmc-loading">
+                    <i class="fa fa-spinner fa-spin"></i> Загрузка паспорта... 
+                </div>
+<!--                                PassDoc-->
+                <div id = "passDoc"
+                     ng-show = "!ctrlSettings.passportLoading">
+                    <h4>
+                        {{currentPassDocPart.caption}}
+                    </h4>
+                    <div ng-switch = "currentPassDocPart.viewType">
+                        <div ng-switch-when = "FORM">
+                            <div ng-repeat = "part in currentPassDocPart.parts">
+                                <div ng-switch = "part.partType">
+                                    <div ng-switch-when = "SIMPLE_LINE"
+                                         style = "padding: 5px 0;">
+                                        <div ng-repeat = "elm in part.elements"
+                                             style = "display: inline-block; padding: 0 10px;">
+                                            <span ng-if = "elm.cellType !== 'VALUE'"> 
+                                                {{elm.caption}}
+                                            </span>
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.type !== 'Boolean'" 
+                                                   type = "text"
+                                                   style = "width: 100%; border: 0; border-bottom: 1px solid;"/>
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.type === 'Boolean'" 
+                                                   type = "checkbox"
+                                                   style = ""/>
+                                        </div>
+                                    </div>
+                                    <div ng-switch-when = "INNER_TABLE"
+                                         style = "padding: 10px 0px;">
+                                        <table border = "1"
+                                               class = "nmc-energo-table"
+                                               style = "border: 1px; background-color: #fff;"
+                                               ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
+                                            <thead ng-repeat = "thead in part.innerPdTable.parts track by $index"
+                                                   ng-if = "thead.partType === 'HEADER'">
+                                                <tr ng-repeat = "throw in thead.headerRows track by $index">
+                                                    <th ng-repeat = "th in throw"
+                                                        ng-attr-rowspan = "{{th._rowSpan}}"
+                                                        ng-attr-colspan = "{{th._colSpan}}">
+                                                        {{th.caption}}
+                                                    </th>
+                                                </tr>
+                                            </thead>    
+
+                                            <tr ng-repeat = "trow in part.innerPdTable.parts track by $index"
+                                                ng-if = "trow.partType === 'ROW'">
+                                                <td ng-repeat = "td in trow.elements track by $index"
+                                                    ng-attr-colspan = "{{td._colSpan}}"
+
+                                                    ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
+                                                    ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
+
+                                                    ng-model = "td.valueDev1"                                                            
+                                                    >                                                            
+                                                    <div ng-if = "td.cellType !== 'VALUE'">
+                                                        {{td.caption}}
+                                                    </div>
+                                                    <div ng-if = "td.cellType === 'VALUE' && (td.type === 'String' || td.type === 'DoubleAgg')"
+                                                         contenteditable
+                                                         strip-br
+                                                         ng-blur = "tdBlur(td)"
+                                                         ng-model = "td.valueDev"
+                                                         >
+                                                    </div>
+                                                    <input ng-if = "td.cellType === 'VALUE' && td.type === 'Boolean'" 
+                                                           type = "checkbox"
+                                                           ng-blur = "tdBlur(td)"
+                                                           ng-model = "td.valueDev"
+                                                           style = ""/>
+                                                    <input ng-if = "td.cellType === 'VALUE' && (td.type !== 'String' && td.type !== 'Boolean' && td.type !== 'DoubleAgg')" 
+                                                           type = "text"
+                                                           data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                           style = "width: 100%; border: 0"
+                                                           ng-blur = "tdBlur(td)"
+                                                           ng-model = "td.valueDev"
+                                                           />
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div ng-switch-default>
+                                        {{part | json}}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div ng-switch-when = "TABLE">
+                            <table border = "1"
+                                   class = "nmc-energo-table"
+                                   style = "border: 1px; background-color: #fff;"
+                                   ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
+                                <thead ng-repeat = "thead in currentPassDocPart.parts track by $index"
+                                       ng-if = "thead.partType === 'HEADER'">
+                                    <tr ng-repeat = "throw in thead.headerRows track by $index">
+                                        <th ng-repeat = "th in throw"
+                                            ng-attr-rowspan = "{{th._rowSpan}}"
+                                            ng-attr-colspan = "{{th._colSpan}}">
+                                            {{th.caption}}
+                                        </th>
+                                    </tr>
+                                </thead>    
+
+                                <tr ng-repeat = "trow in currentPassDocPart.parts track by $index"
+                                    ng-if = "trow.partType === 'ROW'">
+                                    <td ng-repeat = "td in trow.elements track by $index"
+                                        ng-attr-colspan = "{{td._colSpan}}"
+
+                                        ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
+                                        ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
+
+                                        ng-model = "td.valueDev1"                                                            
+                                        >                                                            
+                                        <div ng-if = "td.cellType !== 'VALUE'">
+                                            {{td.caption}}
+                                        </div>
+                                        <div ng-if = "td.cellType === 'VALUE' && (td.type === 'String' || td.type === 'DoubleAgg')"
+                                             contenteditable
+                                             strip-br
+                                             ng-blur = "tdBlur(td)"
+                                             ng-model = "td.valueDev"
+                                             >
+                                        </div>
+                                        <input ng-if = "td.cellType === 'VALUE' && td.type === 'Boolean'" 
+                                               type = "checkbox"
+                                               ng-blur = "tdBlur(td)"
+                                               ng-model = "td.valueDev"
+                                               style = ""/>
+                                        <input ng-if = "td.cellType === 'VALUE' && (td.type !== 'String' && td.type !== 'Boolean' && td.type !== 'DoubleAgg')" 
+                                               type = "text"
+                                               data-inputmask = "'alias':'numeric', 'greedy': false"
+                                               style = "width: 100%; border: 0"
+                                               ng-blur = "tdBlur(td)"
+                                               ng-model = "td.valueDev"
+                                               />
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div ng-switch-default>
+                            {{currentPassDocPart | json}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
