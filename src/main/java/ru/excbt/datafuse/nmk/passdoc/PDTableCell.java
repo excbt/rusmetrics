@@ -36,13 +36,17 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonProperty("elements")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     protected final List<PDTableCell<?>> childElements = new ArrayList<>();
+
     protected PDTableCell parent;
+
     @Getter
     @JsonIgnore
     protected PDTablePart tablePart;
+
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     private double width;
+
     @Getter
     @Setter
     //@JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -53,9 +57,9 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 //    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 //    private boolean merged;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int mergedCells;
 
     @Getter
@@ -63,13 +67,18 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     //@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int valuePackIdx;
 
     @Setter
     private String partKey;
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    @Getter
+    @Setter
+    private boolean vertical;
 
     public T width(int value) {
         this.width = value;
@@ -107,6 +116,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     public T tablePart(PDTablePart value) {
         this.tablePart = value;
         if (value != null) partKey = value.getKey();
+        return (T) this;
+    }
+
+    public T vertical(){
+        this.vertical = true;
         return (T) this;
     }
 

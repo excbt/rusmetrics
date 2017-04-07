@@ -44,6 +44,10 @@ public abstract class PDValueDTO implements ComplexIdx {
     @Setter
     private String partKey;
 
+    @Getter
+    @Setter
+    private boolean vertical;
+
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
