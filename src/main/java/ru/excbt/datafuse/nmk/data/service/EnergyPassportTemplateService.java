@@ -6,8 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
-import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDataDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
@@ -109,16 +108,16 @@ public class EnergyPassportTemplateService {
     }
 
 
-    public List<EnergyPassportSectionDataDTO> createNewData() {
-        List<EnergyPassportSectionDataDTO> result = new ArrayList<>();
+    public List<EnergyPassportDataDTO> createNewData() {
+        List<EnergyPassportDataDTO> result = new ArrayList<>();
         result.add(createSectionData(energyPassport401_2014.sectionMainFactory()));
         result.add(createSectionData(energyPassport401_2014_add.section_2_3()));
         result.add(createSectionData(energyPassport401_2014_add.section_2_10()));
         return result;
     }
 
-    private EnergyPassportSectionDataDTO createSectionData(EnergyPassportSectionTemplateFactory factory) {
-        EnergyPassportSectionDataDTO dataDTO = new EnergyPassportSectionDataDTO();
+    private EnergyPassportDataDTO createSectionData(EnergyPassportSectionTemplateFactory factory) {
+        EnergyPassportDataDTO dataDTO = new EnergyPassportDataDTO();
         dataDTO.setSectionKey(factory.getSectionKey());
         dataDTO.setSectionDataJson(factory.createSectionValuesJson());
         return dataDTO;

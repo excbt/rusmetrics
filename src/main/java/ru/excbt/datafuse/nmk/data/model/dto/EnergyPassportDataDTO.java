@@ -8,7 +8,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class EnergyPassportSectionDataDTO {
+public class EnergyPassportDataDTO {
 
     private Long id;
 
