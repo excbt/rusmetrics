@@ -10,4 +10,6 @@ import java.util.Optional;
  */
 public interface EnergyPassportTemplateRepository extends JpaRepository<EnergyPassportTemplate, Long> {
 
+    Optional<EnergyPassportTemplate> findByKeyname(String keyname);
+
 }

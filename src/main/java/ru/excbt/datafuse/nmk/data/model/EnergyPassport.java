@@ -31,6 +31,9 @@ public class EnergyPassport extends JsonAbstractAuditableModel {
     @JoinColumn(name = "passport_template_id")
     private EnergyPassportTemplate passportTemplate;
 
+    @Column(name = "passport_name")
+    private String passportName;
+
     @Column(name = "passport_date")
     private LocalDate passportDate;
 
@@ -51,5 +54,10 @@ public class EnergyPassport extends JsonAbstractAuditableModel {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "passport", cascade = CascadeType.ALL)
     private List<EnergyPassportSection> sections = new ArrayList<>();
+
+    public void addSection(EnergyPassportSection energyPassportSection) {
+        energyPassportSection.setPassport(this);
+        this.sections.add(energyPassportSection);
+    }
 
 }
