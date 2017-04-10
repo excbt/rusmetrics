@@ -35,6 +35,7 @@ public class EnergyPassportTemplateDTO {
 
     public void addSection(EnergyPassportSectionTemplateDTO section) {
         this.sectionTemplates.add(section);
+        section.setSectionOrder(sectionTemplates.size());
     }
 
 }

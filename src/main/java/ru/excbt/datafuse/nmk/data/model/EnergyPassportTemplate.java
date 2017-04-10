@@ -61,4 +61,10 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
         return result;
     }
 
+    public EnergyPassportSectionTemplate addSection(EnergyPassportSectionTemplate sectionTemplate) {
+        sectionTemplates.add(sectionTemplate);
+        sectionTemplate.setSectionOrder(sectionTemplates.size());
+        return sectionTemplate;
+    }
+
 }

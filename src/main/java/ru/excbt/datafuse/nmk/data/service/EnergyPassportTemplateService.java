@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
@@ -69,20 +71,41 @@ public class EnergyPassportTemplateService {
 
     public EnergyPassportTemplateDTO createNew() {
         EnergyPassportTemplateDTO templateDTO = new EnergyPassportTemplateDTO();
-        templateDTO.addSection(createSection(energyPassport401_2014.sectionMainFactory()));
-        templateDTO.addSection(createSection(energyPassport401_2014_add.section_2_3()));
-        templateDTO.addSection(createSection(energyPassport401_2014_add.section_2_10()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014.sectionMainFactory()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_3()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_10()));
         templateDTO.setDocumentDate(LocalDate.of(2014,6,30));
         templateDTO.setDocumentName("ПРИКАЗ 401");
         templateDTO.setDescription("ОБ УТВЕРЖДЕНИИ ПОРЯДКА ПРЕДСТАВЛЕНИЯ ИНФОРМАЦИИ ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ");
         return templateDTO;
     }
 
-    private EnergyPassportSectionTemplateDTO createSection(EnergyPassportSectionTemplateFactory factory){
+    @Transactional()
+    public EnergyPassportTemplateDTO createNew401() {
+        EnergyPassportTemplate passportTemplate = new EnergyPassportTemplate();
+        passportTemplate.setKeyname("PASS_401");
+        passportTemplate.addSection(createSection(energyPassport401_2014.sectionMainFactory()));
+        passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_3()));
+        passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_10()));
+        passportTemplate.setDocumentDate(LocalDate.of(2014,6,30));
+        passportTemplate.setDocumentName("ПРИКАЗ 401");
+        passportTemplate.setDescription("ОБ УТВЕРЖДЕНИИ ПОРЯДКА ПРЕДСТАВЛЕНИЯ ИНФОРМАЦИИ ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ");
+        energyPassportTemplateRepository.save(passportTemplate);
+        return modelMapper.map(passportTemplate, EnergyPassportTemplateDTO.class);
+    }
+
+    private EnergyPassportSectionTemplateDTO createSectionDTO(EnergyPassportSectionTemplateFactory factory){
         EnergyPassportSectionTemplateDTO sectionTemplateDTO = new EnergyPassportSectionTemplateDTO();
         sectionTemplateDTO.setSectionKey(factory.getSectionKey());
         sectionTemplateDTO.setSectionJson(factory.createSectionTemplateJson());
         return sectionTemplateDTO;
+    }
+
+    private EnergyPassportSectionTemplate createSection(EnergyPassportSectionTemplateFactory factory){
+        EnergyPassportSectionTemplate sectionTemplate = new EnergyPassportSectionTemplate();
+        sectionTemplate.setSectionKey(factory.getSectionKey());
+        sectionTemplate.setSectionJson(factory.createSectionTemplateJson());
+        return sectionTemplate;
     }
 
 
