@@ -44,6 +44,10 @@ public abstract class PDValueDTO implements ComplexIdx {
     @Setter
     private String partKey;
 
+    @Getter
+    @Setter
+    private String columnKey;
+
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
@@ -75,6 +79,7 @@ public abstract class PDValueDTO implements ComplexIdx {
         this.keyValueIdx = tableCell.getKeyValueIdx();
         this.valuePackIdx = tableCell.getValuePackIdx();
         this.partKey = tableCell.getPartKey();
+        this.columnKey = tableCell.getColumnKey();
         this._packed = tableCell.is_packed();
         this._dynamic = tableCell.is_dynamic();
         this._dynamicIdx = tableCell.get_dynamicIdx();

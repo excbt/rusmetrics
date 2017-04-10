@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -36,13 +37,17 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonProperty("elements")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     protected final List<PDTableCell<?>> childElements = new ArrayList<>();
+
     protected PDTableCell parent;
+
     @Getter
     @JsonIgnore
     protected PDTablePart tablePart;
+
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     private double width;
+
     @Getter
     @Setter
     //@JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -53,9 +58,9 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 //    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
 //    private boolean merged;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int mergedCells;
 
     @Getter
@@ -63,13 +68,23 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     //@JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int keyValueIdx;
 
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     private int valuePackIdx;
 
     @Setter
     private String partKey;
+
+    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
+    @Getter
+    @Setter
+    private boolean vertical;
+
+    @Getter
+    @Setter
+    private String columnKey;
+
 
     public T width(int value) {
         this.width = value;
@@ -107,6 +122,16 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     public T tablePart(PDTablePart value) {
         this.tablePart = value;
         if (value != null) partKey = value.getKey();
+        return (T) this;
+    }
+
+    public T vertical(){
+        this.vertical = true;
+        return (T) this;
+    }
+
+    public T columnKey(String value){
+        this.columnKey = value;
         return (T) this;
     }
 
@@ -156,6 +181,17 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     public int get_rowSpan() {
+        if (vertical) {
+           return this.childElements.size();
+        }
+        if ((parent == null && tablePart.hasVerticalElements())
+            //|| (parent != null && !this.parent.vertical)
+            ) {
+            OptionalInt maxColspan = tablePart.getElements().stream().map(i -> i.get_colSpan()).mapToInt(Integer::intValue).max();
+            if (maxColspan.isPresent()) {
+                return  maxColspan.getAsInt();
+            }
+        }
         int level = childElementsLevel();
         int maxSpan = tablePart != null ? tablePart.maxRowSpan() : 0;
         return maxSpan - level - topLevel();
