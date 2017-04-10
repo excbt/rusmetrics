@@ -1481,7 +1481,7 @@ return;
             .then(successCreatePassportCallback, errorCallback);
     }
     
-    createPassDocInit();
+//    createPassDocInit();
     
     function loadPassDoc_v1(url) {
         $http.get(url)
@@ -1510,8 +1510,8 @@ console.log($scope.passDocStructure);
             console.error(res);
         });
     }
-    loadPassDoc_v1('../app/resource/passDocP0.json');
-    loadPassDoc_v1('../app/resource/passDocP1.json');
+//    loadPassDoc_v1('../app/resource/passDocP0.json');
+//    loadPassDoc_v1('../app/resource/passDocP1.json');
     
     $scope.contentsPartSelect = function(part) {
 //console.log(part);

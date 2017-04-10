@@ -291,7 +291,8 @@
                         </nav>                      
             <span class="pull-right"
                   ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
-                <i title="Свернуть / распахнуть меню" 
+                <i style = "position: fixed; top: 50%; margin-left: -9px;"
+                   title="Свернуть / распахнуть меню" 
                    class="btn btn-lg glyphicon glyphicon-menu-left noPadding" 
                    ng-click="mainCtrlSettings.showFullMenuFlag = !mainCtrlSettings.showFullMenuFlag" 
                    ng-class="{'glyphicon-menu-left': mainCtrlSettings.showFullMenuFlag, 'glyphicon-menu-right': !mainCtrlSettings.showFullMenuFlag}">

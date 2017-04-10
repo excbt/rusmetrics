@@ -30,29 +30,82 @@
         </li>
 -->
         <li id="document_list_2nd_menu_item" role="presentation" class="active"><a id="documentTab" class="nmc-main-tab-button" href="" aria-controls="documents" data-target="#documents" role="tab" data-toggle="tab">Документы</a></li>
-    </ul> 
-
+<!--
+        <li>
+            <input ng-disabled="true" 
+               type="submit" 
+               class="btn btn-primary btn-block btn-xs nmc-save-button" 
+               ng-click="" 
+               value="Сохранить" 
+            />
+        </li>
+        <li>
+            <button class="btn btn-default btn-block btn-xs nmc-cancel-button"             
+                    ng-click="cancelEnergoPassportEdit()">
+                Отменить
+            </button>
+        </li>
+-->        
+        <li style = "padding: 0 10px;">
+            <button disabled class="btn nmc-main-add-button">Сохранить</button>
+        </li>        
+        <li>
+            <button class="btn btn-default nmc-cancel-button"
+                    style = "padding: 3px 10px;"
+                    ng-click="cancelEnergoPassportEdit()">
+                Отменить
+            </button>
+        </li>
+    </ul>
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="documents">
       </div>
     </div>
 </div>
-<div id="divWithEnergoPassport" class="nmc-energo-passport-main-div">
+<div id = "divWithEnergoPassport" class="" ng-cloak>
     <div class = "container-fluid">
         <div class = "row">
-            <div class = "col-xs-2">
+            <div class = "col-xs-2 noPadding nmc-energo-passport-main-div nmc-div-bordered"
+                 ng-class = "{'nmc-energo-contents-minimize': !showContentsFlag}"
+                 style = "">
+                <h3 class="nmc-h3"
+                    style = "height: 1.5rem;">
+                    <span ng-show = "showContentsFlag">Содержание</span>
+                </h3>
                 <table id="table_objects_in_window" 
                        class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                     <tr ng-repeat="part in passDocStructure"
                         ng-click = "contentsPartSelect(part)"
                         ng-class = "{'nmc-bg-distinguish': part.isSelected === true}">
-                        <td>
+                        <td style = "padding-right: 5px !important;">
+                            {{part.shortCaption}}
+                        </td>
+                        <td ng-show = "showContentsFlag">
                             {{part.caption}}
                         </td>
                     </tr>
                 </table>
             </div>
-            <div class = "col-xs-10">
+            <div class = "">
+                <span class="">
+                    <div class = "nmc-div-delimiter"                         
+                       title="Скрыть / показать содержание энергетического паспорта" 
+                        
+                       ng-click="showContentsFlag = !showContentsFlag" 
+                       >
+                    </div>
+                    
+                    <i style = "position: fixed; top: 40%; z-index: 1; margin-left: -5px; opacity: 0;"
+                       title="Скрыть / показать содержание энергетического паспорта" 
+                       class="btn btn-lg glyphicon glyphicon-menu-left noPadding" 
+                       ng-click="showContentsFlag = !showContentsFlag" 
+                       ng-class="{'glyphicon-menu-left': showContentsFlag, 'glyphicon-menu-right': !showContentsFlag}">
+                    </i>
+                </span>
+            </div>
+            <div class = "col-xs-10 nmc-energo-passport-main-div"
+                 ng-class = "{'nmc-energo-passport-maximize': !showContentsFlag}">
+                
                 <h3 class="nmc-h3">
                     Энергетический паспорт
                 </h3>
@@ -66,7 +119,7 @@
                         {{currentPassDocPart.caption}}
                     </h4>
                     <div ng-switch = "currentPassDocPart.viewType">
-                        <div ng-switch-when = "FORM">
+                        <div ng-switch-default>
                             <div ng-repeat = "part in currentPassDocPart.parts">
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"
@@ -76,10 +129,10 @@
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
-                                            <input ng-if = "elm.cellType === 'VALUE' && elm.type !== 'Boolean'" 
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type !== 'Boolean'" 
                                                    type = "text"
                                                    style = "width: 100%; border: 0; border-bottom: 1px solid;"/>
-                                            <input ng-if = "elm.cellType === 'VALUE' && elm.type === 'Boolean'" 
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'Boolean'" 
                                                    type = "checkbox"
                                                    style = ""/>
                                         </div>
@@ -106,7 +159,7 @@
                                                 <td ng-repeat = "td in trow.elements track by $index"
                                                     ng-attr-colspan = "{{td._colSpan}}"
 
-                                                    ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE'}"
+                                                    ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
                                                     ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
 
                                                     ng-model = "td.valueDev1"                                                            
@@ -114,19 +167,22 @@
                                                     <div ng-if = "td.cellType !== 'VALUE'">
                                                         {{td.caption}}
                                                     </div>
-                                                    <div ng-if = "td.cellType === 'VALUE' && (td.type === 'String' || td.type === 'DoubleAgg')"
+                                                    <div ng-if = "td.cellType === 'VALUE' && td.__type === 'Counter'">
+                                                        {{td.value}}
+                                                    </div>
+                                                    <div ng-if = "td.cellType === 'VALUE' && (td.__type === 'String' || td.__type === 'DoubleAgg')"
                                                          contenteditable
                                                          strip-br
                                                          ng-blur = "tdBlur(td)"
                                                          ng-model = "td.valueDev"
                                                          >
                                                     </div>
-                                                    <input ng-if = "td.cellType === 'VALUE' && td.type === 'Boolean'" 
+                                                    <input ng-if = "td.cellType === 'VALUE' && td.__type === 'Boolean'" 
                                                            type = "checkbox"
                                                            ng-blur = "tdBlur(td)"
                                                            ng-model = "td.valueDev"
                                                            style = ""/>
-                                                    <input ng-if = "td.cellType === 'VALUE' && (td.type !== 'String' && td.type !== 'Boolean' && td.type !== 'DoubleAgg')" 
+                                                    <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'DoubleAgg' && td.__type !== 'Counter')" 
                                                            type = "text"
                                                            data-inputmask = "'alias':'numeric', 'greedy': false"
                                                            style = "width: 100%; border: 0"
@@ -135,9 +191,22 @@
                                                            />
 
                                                 </td>
+                                                <td ng-if = "trow.dynamic === true">
+                                                    <i ng-if = "$last"
+                                                       class = "btn btn-xs btn-primary btn-xs"
+                                                       ng-click = "addRowToTable(part)">
+                                                        Добавить
+                                                    </i>
+                                                    <i class = "btn btn-xs btn-default btn-xs"
+                                                       ng-click = "deleteRowFromTable(part, $index)">
+                                                        Удалить
+                                                    </i>
+                                                </td>
                                             </tr>
                                         </table>
-
+                                        <div ng-if = "part.innerPdTable.parts[1].dynamic === true">
+                                            <button ng-click = "addRowToTable(part);"> Добавить строку</button>
+                                        </div>
                                     </div>
                                     <div ng-switch-default>
                                         {{part | json}}
@@ -146,6 +215,7 @@
 
                             </div>
                         </div>
+<!--
                         <div ng-switch-when = "TABLE">
                             <table border = "1"
                                    class = "nmc-energo-table"
@@ -199,9 +269,12 @@
                                 </tr>
                             </table>
                         </div>
+-->
+<!--
                         <div ng-switch-default>
                             {{currentPassDocPart | json}}
                         </div>
+-->
                     </div>
                 </div>
             </div>

@@ -2923,3 +2923,44 @@ input[type="checkbox"] {
 .nmc-empty-div {
     height: 1.5em;
 }
+
+.nmc-energo-passport-maximize {
+    width: 97%;
+    margin-left: 0;
+}
+.nmc-energo-contents-minimize {
+/*    min-width: 45px;*/
+    width: 3%;    
+}
+
+.nmc-div-bordered {
+    border-right: 1px solid #646263;
+}
+
+/*
+.nmc-div-bordered:after {
+    position: fixed;
+    top: 45%;
+    content: "a"
+}
+
+.nmc-div-bordered:before {
+    position: fixed;
+    top: 50%;
+    content: "b"
+}
+*/
+
+.nmc-div-delimiter {
+    position: fixed;
+    top: 50%;
+    z-index: 1;
+    margin-left: -3px;
+    border: 1px solid #646263;
+    background-color: #646263;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    transform: rotate(45deg);
+    cursor: pointer;
+}

@@ -6,9 +6,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
 //    console.log('documentsEnergoPassportCtrl is run');
 //    console.log($location.path);
-    console.log($routeParams);
-    
-    $scope.showContents_flag = true;
+//    console.log($routeParams);
+    var INDEX_OF_DEFAULT_PART = 2;
+    $scope.showContentsFlag = true;
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.loading = true;
@@ -62,7 +62,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     function preparePassDoc(passDoc) {
         //Prepare headers for inner tables
         switch (passDoc.viewType) {
-        case "FORM":
+        default:
             passDoc.parts.forEach(function (passDocPart) {
                 if (passDocPart.partType !== "INNER_TABLE") {
                     return;
@@ -70,15 +70,15 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                 passDocPart.innerPdTable.parts.forEach(performTablePart);
             });
             break;
-        case "TABLE":
-            passDoc.parts.forEach(performTablePart);
-            break;
+//        case "TABLE":
+//            passDoc.parts.forEach(performTablePart);
+//            break;
         }
         return passDoc;
     }    
     
     $scope.passDocStructure = null;
-    $scope.passDocStructureFromServer = null;
+    //$scope.passDocStructureFromServer = null;
     $scope.currentPassDocPart = null;
     
     function successCreatePassportCallback(response) {
@@ -96,7 +96,7 @@ console.log(result);
 //return;        
         $scope.passDocStructure = result;
         if ($scope.passDocStructure.length >= 1) {
-            $scope.currentPassDocPart = $scope.passDocStructure[0];
+            $scope.currentPassDocPart = $scope.passDocStructure[INDEX_OF_DEFAULT_PART];
             $scope.currentPassDocPart.isSelected = true;
             $timeout(function () {
                 $(':input').inputmask();
@@ -111,7 +111,7 @@ console.log(result);
             .then(successCreatePassportCallback, errorCallback);
     }
     
-        $scope.contentsPartSelect = function(part) {
+    $scope.contentsPartSelect = function(part) {
 //console.log(part);
         $scope.currentPassDocPart.isSelected = false;
         $scope.currentPassDocPart = part;
@@ -126,7 +126,35 @@ console.log(result);
     $scope.tdBlur = function (cell) {
 console.log(cell);        
     };
-        
+    
+    $scope.cancelEnergoPassportEdit = function () {
+        $location.path("/documents/energo-passports");
+    }
+    
+    $scope.addRowToTable = function (part) {
+        var addingRow = angular.copy(part.innerPdTable.parts[1]);
+        addingRow.elements.some(function (rowElem) {
+            if (rowElem.__type === 'Counter') {
+                rowElem.value = part.innerPdTable.parts.length;
+            }
+        });
+        //if need - clear row values;
+        part.innerPdTable.parts.push(addingRow);
+    }
+    
+    $scope.deleteRowFromTable = function (part, ind) {
+        part.innerPdTable.parts.splice(ind, 1);
+        part.innerPdTable.parts.forEach(function (row, rowInd) {
+            if (row.partType === 'HEADER' || angular.isUndefined(row.dynamic) || (row.dynamic !== true)) {
+                return false;
+            }
+            row.elements.some(function (rowElem) {
+                if (rowElem.__type === 'Counter') {
+                    rowElem.value = rowInd;
+                }
+            })
+        });
+    }
     
     function initCtrl() {
         var routeParams = $routeParams;
