@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -80,6 +81,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Setter
     private boolean vertical;
 
+    @Getter
+    @Setter
+    private String columnKey;
+
+
     public T width(int value) {
         this.width = value;
         return (T) this;
@@ -121,6 +127,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     public T vertical(){
         this.vertical = true;
+        return (T) this;
+    }
+
+    public T columnKey(String value){
+        this.columnKey = value;
         return (T) this;
     }
 
@@ -170,6 +181,17 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     public int get_rowSpan() {
+        if (vertical) {
+           return this.childElements.size();
+        }
+        if ((parent == null && tablePart.hasVerticalElements())
+            //|| (parent != null && !this.parent.vertical)
+            ) {
+            OptionalInt maxColspan = tablePart.getElements().stream().map(i -> i.get_colSpan()).mapToInt(Integer::intValue).max();
+            if (maxColspan.isPresent()) {
+                return  maxColspan.getAsInt();
+            }
+        }
         int level = childElementsLevel();
         int maxSpan = tablePart != null ? tablePart.maxRowSpan() : 0;
         return maxSpan - level - topLevel();

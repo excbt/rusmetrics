@@ -53,7 +53,6 @@ public class PDTablePart implements PDReferable {
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
     @Setter
-
     private boolean dynamic;
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -199,6 +198,11 @@ public class PDTablePart implements PDReferable {
 
 
         return result;
+    }
+
+
+    public boolean hasVerticalElements() {
+        return elements.stream().filter(i -> i.isVertical()).findAny().isPresent();
     }
 
 

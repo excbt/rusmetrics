@@ -140,31 +140,32 @@ public class EnergyPassport401_2014_Add {
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
         partHeader
             .createStaticElement("№ п/п").keyValueIdx(1)
-            .and().createStaticElement("Наименование здания, строения, сооружения").keyValueIdx(2)
-            .and().createStaticElement("Год ввода в эксплуатацию").keyValueIdx(3)
-            .and().createStaticElement("Ограждающие конструкции")
-            .createStaticChild().caption("наименование конструкции").keyValueIdx(4)
-            .createStaticSibling().caption("краткая характеристика").keyValueIdx(5)
-            .and().createStaticElement("Общая площадь, здания, строения, сооружения, кв. м").keyValueIdx(6)
-            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м").keyValueIdx(7)
-            .and().createStaticElement("Отапливаемый объем здания, строения, сооружения, куб. м").keyValueIdx(8)
-            .and().createStaticElement("Износ здания, строения, сооружения, %").keyValueIdx(9);
+            .and().createStaticElement("Наименование здания, строения, сооружения").columnKey("nr").keyValueIdx(2)
+            .and().createStaticElement("Год ввода в эксплуатацию").columnKey("year").keyValueIdx(3)
+            .and().createStaticElement("Ограждающие конструкции").columnKey("walling")
+            .createStaticChild().caption("наименование конструкции").columnKey("walling_construction").keyValueIdx(4)
+            .createStaticSibling().caption("краткая характеристика").columnKey("walling_description").keyValueIdx(5)
+            .and().createStaticElement("Общая площадь, здания, строения, сооружения, кв. м").columnKey("total_area").keyValueIdx(6)
+            .and().createStaticElement("Отапливаемая площадь, здания, строения, сооружения, кв. м").columnKey("heat_area").keyValueIdx(7)
+            .and().createStaticElement("Отапливаемый объем здания, строения, сооружения, куб. м").columnKey("heat_volume").keyValueIdx(8)
+            .and().createStaticElement("Износ здания, строения, сооружения, %").columnKey("wear").keyValueIdx(9);
 
         pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
-            .createValueElement(PDTableCellValueCounter.class).keyValueIdx(1)// #
-            .and().createStringValueElement().keyValueIdx(2) // name
-            .and().createStringValueElement().keyValueIdx(3) // year
-            .and().createStaticElement().keyValueIdx(4)
-            .createStaticChild("Стены").keyValueIdx(4).valuePackIdx(1)
-            .createStaticSibling("Окна").keyValueIdx(4).valuePackIdx(2)
-            .createStaticSibling("Крыша").keyValueIdx(4).valuePackIdx(3)
-            .and().createValuePackElement().keyValueIdx(5)
-            .createChildValue(PDTableCellValueBoolean.class).keyValueIdx(5).valuePackIdx(1)
-            .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).valuePackIdx(2)
-            .createSiblingValue(PDTableCellValueDouble.class).keyValueIdx(5).valuePackIdx(3)
-            .and().createDoubleValueElement().keyValueIdx(6)
-            .and().createDoubleValueElement().keyValueIdx(7)
-            .and().createDoubleValueElement().keyValueIdx(8);
+            .createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)// #
+            .and().createStringValueElement().columnKey("name").keyValueIdx(2) // name
+            .and().createStringValueElement().columnKey("year").keyValueIdx(3) // year
+            .and().createStaticElement().vertical().columnKey("walling_construction").keyValueIdx(4)
+            .createStaticChild("Стены").columnKey("walls").keyValueIdx(4).valuePackIdx(1)
+            .createStaticSibling("Окна").columnKey("windows").keyValueIdx(4).valuePackIdx(2)
+            .createStaticSibling("Крыша").columnKey("roof").keyValueIdx(4).valuePackIdx(3)
+            .and().createValuePackElement().vertical().columnKey("walling_description").keyValueIdx(5)
+            .createChildValue(PDTableCellValueBoolean.class).columnKey("walls").keyValueIdx(5).valuePackIdx(1)
+            .createSiblingValue(PDTableCellValueDouble.class).columnKey("windows").keyValueIdx(5).valuePackIdx(2)
+            .createSiblingValue(PDTableCellValueDouble.class).columnKey("roof").keyValueIdx(5).valuePackIdx(3)
+            .and().createDoubleValueElement().columnKey("total_area").keyValueIdx(6)
+            .and().createDoubleValueElement().columnKey("heat_area").keyValueIdx(7)
+            .and().createDoubleValueElement().columnKey("heat_volume").keyValueIdx(8)
+            .and().createDoubleValueElement().columnKey("wear").keyValueIdx(9);
 
         return new EPSectionTemplateFactory(topTable);
     }
