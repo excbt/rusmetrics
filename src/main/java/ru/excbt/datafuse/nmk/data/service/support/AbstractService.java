@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Базовый класс для сервисов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.10.2015
@@ -33,7 +33,7 @@ public abstract class AbstractService {
 	protected EntityManager em;
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -44,7 +44,7 @@ public abstract class AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entities
 	 * @return
 	 */
@@ -57,7 +57,7 @@ public abstract class AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param specs
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public abstract class AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param checkIds
 	 * @param availableIds
 	 * @return
@@ -96,7 +96,7 @@ public abstract class AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param checkIds
 	 * @param availableIds
 	 * @return
@@ -114,14 +114,14 @@ public abstract class AbstractService {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param clazz
-	 * @param id
-	 * @return
-	 */
-	public static <T extends Persistable<?>> PersistenceException entityNotFoundException (Class<T> clazz, Object id) {
-		throw new PersistenceException("Entity " + clazz.getSimpleName() + " with ID=" + id + " is not found");
-	}
-	
+//	/**
+//	 *
+//	 * @param clazz
+//	 * @param id
+//	 * @return
+//	 */
+//	public static <T extends Persistable<?>> PersistenceException entityNotFoundException (Class<T> clazz, Object id) {
+//		throw new PersistenceException("Entity " + clazz.getSimpleName() + " with ID=" + id + " is not found");
+//	}
+
 }
