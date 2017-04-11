@@ -31,10 +31,13 @@ public class EnergyPassportTemplateDTO {
 
     private LocalDate documentDate;
 
+    private Integer version;
+
     private List<EnergyPassportSectionTemplateDTO> sectionTemplates = new ArrayList<>();
 
     public void addSection(EnergyPassportSectionTemplateDTO section) {
         this.sectionTemplates.add(section);
+        section.setSectionOrder(sectionTemplates.size());
     }
 
 }

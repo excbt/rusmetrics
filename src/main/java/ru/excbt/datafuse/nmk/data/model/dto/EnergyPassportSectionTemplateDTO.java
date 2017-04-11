@@ -20,6 +20,6 @@ public class EnergyPassportSectionTemplateDTO {
 
     private Integer sectionOrder;
 
-    private int version;
+    private Integer version;
 
 }

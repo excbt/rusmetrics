@@ -14,7 +14,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
  * Пользователь для аудита
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.03.2015
@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 public class V_AuditUser implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3252857396837049517L;
 
@@ -87,6 +87,11 @@ public class V_AuditUser implements Serializable {
 		this.id = srcObject.getId();
 		this.isSystem = srcObject.getIsSystem();
 	}
+
+	public V_AuditUser id(Long id) {
+	    this.setId(id);
+	    return this;
+    }
 
 	public Boolean getIsSystem() {
 		return isSystem;

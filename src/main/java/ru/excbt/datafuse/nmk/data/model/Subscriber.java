@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 /**
  * Абонент
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.03.2015
@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -112,6 +112,11 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	@JsonIgnore
 	@Column(name = "parent_subscriber_id", updatable = false)
 	private Long parentSubscriberId;
+
+	public Subscriber id(Long id) {
+	    this.setId(id);
+	    return this;
+    }
 
 	public String getInfo() {
 		return info;
