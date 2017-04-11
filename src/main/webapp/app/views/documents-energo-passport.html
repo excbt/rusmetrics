@@ -143,22 +143,29 @@
                                                class = "nmc-energo-table"
                                                style = "border: 1px; background-color: #fff;"
                                                ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
-                                            <thead ng-repeat = "thead in part.innerPdTable.parts track by $index"
+<!--
+                                            <thead ng-repeat = "thead in part.innerPdTable.theads track by $index"
                                                    ng-if = "thead.partType === 'HEADER'">
-                                                <tr ng-repeat = "throw in thead.headerRows track by $index">
+-->
+<!--                                                <tr ng-repeat = "throw in thead.headerRows track by $index">-->
+                                            <thead>
+                                                <tr ng-repeat = "throw in part.innerPdTable.theads track by $index">    
                                                     <th ng-repeat = "th in throw"
                                                         ng-attr-rowspan = "{{th._rowSpan}}"
-                                                        ng-attr-colspan = "{{th._colSpan}}">
+                                                        ng-attr-colspan = "{{th._colSpan}}"
+                                                        ng-style = "{'width': th.width + ctrlSettings.cssMeasureUnit, 'max-width': th.width + ctrlSettings.cssMeasureUnit}">
                                                         {{th.caption}}
                                                     </th>
                                                 </tr>
-                                            </thead>    
+                                            </thead>
+<!--                                            </thead>    -->
 
-                                            <tr ng-repeat = "trow in part.innerPdTable.parts track by $index"
-                                                ng-if = "trow.partType === 'ROW'">
-                                                <td ng-repeat = "td in trow.elements track by $index"
+                                            <tr ng-repeat = "trow in part.innerPdTable.tbodies track by $index">
+<!--                                                ng-if = "trow.partType === 'ROW'">-->
+<!--                                                <td ng-repeat = "td in trow.elements track by $index"-->
+                                                <td ng-repeat = "td in trow track by $index"    
                                                     ng-attr-colspan = "{{td._colSpan}}"
-
+                                                    ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
                                                     ng-style = "{'width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'max-width': trow._columnWidths[$index] + ctrlSettings.cssMeasureUnit}"
 
@@ -191,16 +198,22 @@
                                                            />
 
                                                 </td>
-                                                <td ng-if = "trow.dynamic === true">
-                                                    <i ng-if = "$last"
-                                                       class = "btn btn-xs btn-primary btn-xs"
-                                                       ng-click = "addRowToTable(part)">
-                                                        Добавить
-                                                    </i>
+                                                <td ng-if = "part.innerPdTable.parts[1].dynamic === true"
+                                                    style = "border-right: 0; border-top: 0; border-bottom: 0"
+                                                    ng-attr-rowspan = "3">                                                    
                                                     <i class = "btn btn-xs btn-default btn-xs"
                                                        ng-click = "deleteRowFromTable(part, $index)">
                                                         Удалить
                                                     </i>
+                                                </td>
+                                                <td ng-if = "part.innerPdTable.parts[1].dynamic === true && $last"
+                                                    style = "border: 0"
+                                                    ng-attr-rowspan = "3">
+                                                    <i 
+                                                       class = "btn btn-xs btn-primary btn-xs"
+                                                       ng-click = "addRowToTable(part)">
+                                                        Добавить
+                                                    </i>                                                    
                                                 </td>
                                             </tr>
                                         </table>
