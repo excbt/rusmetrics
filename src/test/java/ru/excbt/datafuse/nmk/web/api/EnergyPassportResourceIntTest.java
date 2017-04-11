@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
@@ -15,6 +16,8 @@ import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
+
+import java.util.List;
 
 /**
  * Created by kovtonyk on 10.04.2017.
@@ -45,7 +48,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
             b.param("templateKeyname", energyPassportTemplate.getKeyname());
         };
 
-        ResultActions resultActions = _testPostJson("/api/subscr/energy-passport", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
     }
 
     @Test
@@ -56,9 +59,8 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
         RequestExtraInitializer param = (b) -> {
             b.param("templateKeyname", EnergyPassport401_2014.ENERGY_PASSPORT);
-            b.param("passportName", "New Passport");
         };
-        ResultActions resultActions = _testPostJson("/api/subscr/energy-passport", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
     }
 
     @Test
@@ -68,8 +70,39 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
-        _testGetJson("/api/subscr/energy-passport/" + passportDTO.getId());
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId());
     }
+
+    @Test
+    @Transactional
+    public void testGetPassports() throws Exception {
+
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT,
+            EnergyPassportVM.builder().passportName("passport # 1").build(), new Subscriber().id(getSubscriberId()));
+
+        EnergyPassportDTO passportDTOs = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT,
+            EnergyPassportVM.builder().passportName("passport # 2").build(), new Subscriber().id(getSubscriberId()));
+
+        energyPassportRepository.flush();
+
+        List<?> checkList = energyPassportService.findBySubscriberId(getSubscriberId());
+        Assert.assertTrue(checkList.size() > 0);
+
+        _testGetJson("/api/subscr/energy-passports");
+    }
+
+
+    @Test
+    @Transactional
+    public void testDeletePassport() throws Exception {
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        _testDeleteJson("/api/subscr/energy-passports/" + passportDTO.getId());
+
+    }
+
+
 
 
 }

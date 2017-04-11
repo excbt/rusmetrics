@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
@@ -13,7 +14,9 @@ import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by kovtonyk on 10.04.2017.
@@ -55,7 +58,9 @@ public class EnergyPassportService {
         if (energyPassportVM != null) {
             energyPassport.setPassportName(energyPassportVM.getPassportName());
             energyPassport.setDescription(energyPassportVM.getDescription());
-            energyPassport.setOrganization(new Organization().id(energyPassportVM.getOrganizationId()));
+            if (energyPassportVM.getOrganizationId() != null) {
+                energyPassport.setOrganization(new Organization().id(energyPassportVM.getOrganizationId()));
+            }
         }
 
         for (EnergyPassportSectionTemplate sectionTemplate : energyPassportTemplate.get().getSectionTemplates()) {
@@ -76,6 +81,27 @@ public class EnergyPassportService {
     public EnergyPassportDTO find(Long id) {
         EnergyPassport energyPassport = energyPassportRepository.findOne(id);
         return energyPassport != null ? energyPassport.getDTO() : null;
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<EnergyPassportDTO> findBySubscriberId(Long subscriberId) {
+        return energyPassportRepository.findBySubscriberId(subscriberId).stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public void delete(Long id, Subscriber subscriber) {
+        EnergyPassport energyPassport = energyPassportRepository.findOne(id);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, id);
+        }
+
+        if (!energyPassport.getSubscriber().equals(subscriber)) {
+            DBExceptionUtils.accessDeniedException(Subscriber.class, subscriber.getId());
+        }
+
+        energyPassport.setDeleted(1);
+        energyPassportRepository.save(energyPassport);
     }
 
 }

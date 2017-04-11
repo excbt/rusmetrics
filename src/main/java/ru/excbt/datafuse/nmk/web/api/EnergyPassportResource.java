@@ -8,13 +8,16 @@ import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import java.util.List;
 
 /**
  * Created by kovtonyk on 10.04.2017.
  */
 @Controller
-@RequestMapping(value = "/api/subscr/energy-passport")
+@RequestMapping(value = "/api/subscr/energy-passports")
 public class EnergyPassportResource extends SubscrApiController {
 
     private final EnergyPassportService energyPassportService;
@@ -35,8 +38,25 @@ public class EnergyPassportResource extends SubscrApiController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> createEnergyPassport(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getEnergyPassport(@PathVariable("id") Long id) {
         EnergyPassportDTO result = energyPassportService.find(id);
         return responseOK(result);
     }
+
+    @RequestMapping(value = "", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getEnergyPassports() {
+        List<EnergyPassportDTO> result = energyPassportService.findBySubscriberId(getSubscriberId());
+        return responseOK(result);
+    }
+
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> deleteEnergyPassport(@PathVariable("id") Long id) {
+        ApiActionVoidProcess process = () -> energyPassportService.delete(id, getCurrentSubscriber());
+        return responseOK(process);
+    }
+
+
 }

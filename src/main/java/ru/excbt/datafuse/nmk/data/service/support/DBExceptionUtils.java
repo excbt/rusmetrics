@@ -5,6 +5,7 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import org.postgresql.util.PSQLException;
 import org.springframework.data.domain.Persistable;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.persistence.PersistenceException;
 
@@ -64,5 +65,15 @@ public class DBExceptionUtils {
     }
 
 
+    /**
+     *
+     * @param clazz
+     * @param id
+     * @param <T>
+     * @return
+     */
+    public static <T extends Persistable<?>> AccessDeniedException accessDeniedException (Class<T> clazz, Object id) {
+        throw new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
+    }
 
 }

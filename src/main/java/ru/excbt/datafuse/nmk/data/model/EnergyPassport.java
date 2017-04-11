@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
@@ -23,7 +24,7 @@ import java.util.List;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport")
 @Getter
 @Setter
-public class EnergyPassport extends JsonAbstractAuditableModel {
+public class EnergyPassport extends JsonAbstractAuditableModel implements DeletedMarker {
 
 
     @JsonIgnore
