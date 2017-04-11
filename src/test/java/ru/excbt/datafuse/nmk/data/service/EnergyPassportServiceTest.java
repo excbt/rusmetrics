@@ -40,6 +40,5 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
         Assert.assertNotNull(energyPassportDTO);
         Assert.assertTrue(energyPassportDTO.getSections().size() == 1);
     }
-
 }
 

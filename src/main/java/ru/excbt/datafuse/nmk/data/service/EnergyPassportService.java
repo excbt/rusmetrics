@@ -36,6 +36,12 @@ public class EnergyPassportService {
 
 
     @Transactional(value = TxConst.TX_DEFAULT)
+    public EnergyPassportDTO createPassport(String templateKeyname, Subscriber subscriber) {
+        return createPassport(templateKeyname, null, subscriber);
+    }
+
+
+    @Transactional(value = TxConst.TX_DEFAULT)
     public EnergyPassportDTO createPassport(String templateKeyname, EnergyPassportVM energyPassportVM, Subscriber subscriber) {
         Optional<EnergyPassportTemplate> energyPassportTemplate = energyPassportTemplateRepository.findByKeyname(templateKeyname);
         if (!energyPassportTemplate.isPresent()) {
@@ -45,6 +51,12 @@ public class EnergyPassportService {
         energyPassport.setPassportTemplate(energyPassportTemplate.get());
         energyPassport.setPassportDate(LocalDate.now());
         energyPassport.setSubscriber(subscriber);
+
+        if (energyPassportVM != null) {
+            energyPassport.setPassportName(energyPassportVM.getPassportName());
+            energyPassport.setDescription(energyPassportVM.getDescription());
+            energyPassport.setOrganization(new Organization().id(energyPassportVM.getOrganizationId()));
+        }
 
         for (EnergyPassportSectionTemplate sectionTemplate : energyPassportTemplate.get().getSectionTemplates()) {
             EnergyPassportSection energyPassportSection = new EnergyPassportSection();

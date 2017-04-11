@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Организация
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 26.02.2015
@@ -49,7 +49,7 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2192600082628553203L;
 
@@ -104,6 +104,11 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	@Column(name = "flag_serv")
 	private Boolean flagServ;
+
+	public Organization id(Long id) {
+	    this.setId(id);
+	    return this;
+    }
 
 	public Boolean getFlagServ() {
 		return flagServ;

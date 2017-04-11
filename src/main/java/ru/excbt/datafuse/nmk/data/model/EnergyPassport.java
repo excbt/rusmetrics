@@ -48,8 +48,10 @@ public class EnergyPassport extends JsonAbstractAuditableModel {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "organization_id")
-    private Long organizationId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     @Version
     private int version;
