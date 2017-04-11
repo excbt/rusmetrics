@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
+import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
@@ -22,6 +25,9 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     private EnergyPassportService energyPassportService;
 
     @Autowired
+    private EnergyPassportRepository energyPassportRepository;
+
+    @Autowired
     private EnergyPassportTemplateRepository energyPassportTemplateRepository;
 
 
@@ -36,11 +42,11 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").build();
 
         RequestExtraInitializer param = (b) -> {
-            b.param("templateKeyname",energyPassportTemplate.getKeyname());
+            b.param("templateKeyname", energyPassportTemplate.getKeyname());
         };
 
         ResultActions resultActions = _testPostJson("/api/subscr/energy-passport", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
-   }
+    }
 
     @Test
     @Transactional
@@ -53,6 +59,16 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
             b.param("passportName", "New Passport");
         };
         ResultActions resultActions = _testPostJson("/api/subscr/energy-passport", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+    }
+
+    @Test
+    @Transactional
+    public void testGetPassport() throws Exception {
+
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        _testGetJson("/api/subscr/energy-passport/" + passportDTO.getId());
     }
 
 

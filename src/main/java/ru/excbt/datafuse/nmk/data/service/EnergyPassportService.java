@@ -71,4 +71,11 @@ public class EnergyPassportService {
         return energyPassportDTO;
     }
 
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public EnergyPassportDTO find(Long id) {
+        EnergyPassport energyPassport = energyPassportRepository.findOne(id);
+        return energyPassport != null ? energyPassport.getDTO() : null;
+    }
+
 }
