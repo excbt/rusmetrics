@@ -50,9 +50,12 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     function performVerticalElement(subElements, rows) {
         subElements.forEach(function (se, ind) {
             if (rows.length <= ind) {
-                rows.push([]);
+                var row = {};
+                row.tds = [];
+//                rows.push([]);
+                rows.push(row);
             }
-            rows[ind].push(angular.copy(se));
+            rows[ind].tds.push(angular.copy(se));
         });
     }
     
@@ -62,7 +65,10 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         elements.forEach(function (elm) {
             if (rows.length <= level) {
-                rows.push([]);
+                var row = {};
+                row.tds = [];
+//                rows.push([]);
+                rows.push(row);
             }
             if (elm.vertical === true) {
                 performVerticalElement(elm.elements, rows);                
@@ -73,7 +79,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //if (level === 0) {                
 //    console.log(tmp);                
 //}
-                rows[level].push(tmp);
+                rows[level].tds.push(tmp);
                 performElementsRecursion(elm.elements, level + 1, rows);
             }
         });
@@ -88,6 +94,12 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     function prepareTableRowRecursion(tablePart) {
         var preparedRows = [];
         performElementsRecursion(tablePart.elements, 0, preparedRows);
+        if (tablePart.dynamic === true && preparedRows.length > 0) {
+            preparedRows[0].dynamic = true;
+            preparedRows[0].startPartRow = true;
+            preparedRows[preparedRows.length - 1].canDelete = true;
+            preparedRows[preparedRows.length - 1].endPartRow = true;
+        }
         tablePart.tbody = preparedRows;
         return tablePart;
     }
@@ -147,7 +159,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         var result = [],
             tmp = angular.copy(response.data);
-        tmp.sectionTemplates.forEach(function (secTempl) {
+        tmp.sections.forEach(function (secTempl) {
             result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
         });
 //        result = preparePassDoc(result);
@@ -167,6 +179,11 @@ console.log(result);
     
     function createPassDocInit() {
         energoPassportSvc.createPassport()
+            .then(successCreatePassportCallback, errorCallback);
+    }
+    
+    function loadPassDoc(id) {
+        energoPassportSvc.loadPassports(id)
             .then(successCreatePassportCallback, errorCallback);
     }
     
@@ -194,25 +211,36 @@ console.log(result);
         var addingRow = angular.copy(part.innerPdTable.parts[1]);
         addingRow.elements.some(function (rowElem) {
             if (rowElem.__type === 'Counter') {
-                rowElem.value = part.innerPdTable.parts.length;
+                if (angular.isUndefined(part.innerPdTable.counterValue)) {
+                    part.innerPdTable.counterValue = 1;
+                }
+                part.innerPdTable.counterValue += 1;
+                rowElem.value = part.innerPdTable.counterValue;
             }
         });
+        prepareTableRowRecursion(addingRow);
+        part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);
         //if need - clear row values;
-        part.innerPdTable.parts.push(addingRow);
+//        part.innerPdTable.parts.push(addingRow);
     };
     
     $scope.deleteRowFromTable = function (part, ind) {
-        part.innerPdTable.parts.splice(ind, 1);
-        part.innerPdTable.parts.forEach(function (row, rowInd) {
-            if (row.partType === 'HEADER' || angular.isUndefined(row.dynamic) || row.dynamic !== true) {
-                return false;
-            }
-            row.elements.some(function (rowElem) {
-                if (rowElem.__type === 'Counter') {
-                    rowElem.value = rowInd;
-                }
-            });
+        var partLength = part.innerPdTable.parts[1].tbody.length;
+        part.innerPdTable.tbodies.splice(ind - partLength + 1, partLength);
+        var counter = 0;
+        part.innerPdTable.tbodies.forEach(function (row) {
+            if (row.startPartRow === true) {
+                row.tds.some(function (td) {
+                    if (td.__type === 'Counter') {
+                        counter += 1;
+                        td.value = counter;                        
+                        return true;
+                    }
+                });
+                
+            }            
         });
+        part.innerPdTable.counterValue = counter;
     };
     
     function initCtrl() {
@@ -220,6 +248,8 @@ console.log(result);
         if (routeParams.param === "new") {
             createPassDocInit();
         } else {
+            var passDocId = Number(routeParams.param);
+            loadPassDoc(passDocId);
             console.log("Don't understand request!");
         }
     }

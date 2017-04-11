@@ -428,7 +428,7 @@ body{
     min-height: 290px;
 }
 @media (max-height: 800px) {
-    .nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div {
+    .nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div, .nmc-energo-passport-main-div {
         overflow: auto;
         height: 72vh;
     /*    height:61vh;*/
@@ -2952,9 +2952,9 @@ input[type="checkbox"] {
 */
 
 .nmc-div-delimiter {
-    position: fixed;
-    top: 50%;
-    z-index: 1;
+    position: absolute;
+    top: 51.5%;
+/*    z-index: 1;*/
     margin-left: -6px;
     border: 1px solid #337ab7;/*#646263;*/
     background-color: #337ab7;/*#646263;*/
@@ -2962,5 +2962,49 @@ input[type="checkbox"] {
     width: 10px;
     height: 10px;
     transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-left {
+    position: absolute;
+    top: 48%;
+    margin-left: -6px;
+    border: 1px solid #646263;
+    background-color: #646263;
+    display: inline-block;
+    width: 10px;
+    height: 50px;
+    border-radius: 5px;
+    padding-top: 19px;
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-inner-left {
+    border: 5px solid transparent; 
+    border-right: 5px solid  lightblue;/*#337ab7;*/
+    position: relative;
+    left: -4px;
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-right {
+    position: absolute;
+    top: 48%;
+    margin-left: -6px;
+    border: 1px solid #646263;
+    background-color: #646263;
+    display: inline-block;
+    width: 10px;
+    height: 50px;
+    border-radius: 5px;
+    padding-top: 19px;
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-inner-right {
+    border: 5px solid transparent; 
+    border-left: 5px solid lightblue;/*#337ab7;*/
+    position: relative;
+    right: -2px;
     cursor: pointer;
 }

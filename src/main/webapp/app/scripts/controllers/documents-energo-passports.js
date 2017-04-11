@@ -12,14 +12,48 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.ctrlSettings.passportLoading = true;
     $scope.ctrlSettings.emptyString = " ";
     
-    $timeout(function () {
-        $scope.ctrlSettings.loading = false;
-    }, 1500);
+        //model columns
+    $scope.ctrlSettings.passportColumns = [
+        {
+            "name": "id",
+            "caption": "id",
+            "class": "col-xs-1",
+            "type": "id"
+        },
+        {
+            "name": "passportName",
+            "caption": "Название",
+            "class": "col-xs-3",
+            "type": "name"
+        },
+        {
+            "name": "description",
+            "caption": "Описание",
+            "class": "col-xs-3"
+        },
+        {
+            "name": "passportDate2",
+            "caption": "Дата создания",
+            "class": "col-xs-1",
+            "type": "date"
+        }
+        
+
+    ];
+        
+    
+//    $timeout(function () {
+//        $scope.ctrlSettings.loading = false;
+//    }, 1500);
     
     $scope.addPassport = function () {
 //        $scope.ctrlSettings.passportLoading = true;
         $location.path("/documents/energo-passport/new");
         //$('#editEnergoPassportModal').modal();
+    };
+    
+    $scope.editPassport = function (passport) {
+        $location.path("/documents/energo-passport/" + passport.id);
     };
     
     $scope.data = {};
@@ -1358,8 +1392,15 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     };
     
     function errorCallback(e) {
+        $scope.ctrlSettings.loading = false;
         var errorObj = mainSvc.errorCallbackHandler(e);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+    }
+    
+    function successLoadPassportsCallback(resp) {
+console.log(resp);        
+        $scope.data.passports = angular.copy(resp.data);
+        $scope.ctrlSettings.loading = false;
     }
     
 //console.log(inputTableDef);
@@ -1451,83 +1492,78 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.passDocStructureFromServer = null;
     $scope.currentPassDocPart = null;
     
-    function successCreatePassportCallback(response) {
-        console.log(response);
-        if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
-            return false;
-        }
-        var result = [],
-            tmp = angular.copy(response.data);
-        tmp.sectionTemplates.forEach(function (secTempl) {
-            result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
-        });
-//        result = preparePassDoc(result);
-console.log(result);        
-return;        
-        $scope.passDocStructure = result;
-        if ($scope.passDocStructure.length >= 1) {
-            $scope.currentPassDocPart = $scope.passDocStructure[0];
-            $scope.currentPassDocPart.isSelected = true;
-            $timeout(function () {
-                $(':input').inputmask();
-//                    $(':input').focus();
-            }, 0);
-        }        
-        $scope.ctrlSettings.passportLoading = false;
-    }
-    
-    function createPassDocInit() {
-        energoPassportSvc.createPassport()
-            .then(successCreatePassportCallback, errorCallback);
-    }
+//    function successCreatePassportCallback(response) {
+//        console.log(response);
+//        if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
+//            return false;
+//        }
+//        var result = [],
+//            tmp = angular.copy(response.data);
+//        tmp.sectionTemplates.forEach(function (secTempl) {
+//            result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
+//        });
+//console.log(result);        
+//return;        
+//        $scope.passDocStructure = result;
+//        if ($scope.passDocStructure.length >= 1) {
+//            $scope.currentPassDocPart = $scope.passDocStructure[0];
+//            $scope.currentPassDocPart.isSelected = true;
+//            $timeout(function () {
+//                $(':input').inputmask();
+//            }, 0);
+//        }        
+//        $scope.ctrlSettings.passportLoading = false;
+//    }
+//    
+//    function createPassDocInit() {
+//        energoPassportSvc.createPassport()
+//            .then(successCreatePassportCallback, errorCallback);
+//    }
     
 //    createPassDocInit();
     
-    function loadPassDoc_v1(url) {
-        $http.get(url)
-            .then(function (resp) {
-            if ($scope.passDocStructure === null) {
-                $scope.passDocStructure = [];
-            }
-            var tmpPassDoc = angular.copy(resp.data);
-            
-            //prepare passDoc
-            // - transform table headers
-            tmpPassDoc = preparePassDoc(tmpPassDoc);
-            
-            $scope.passDocStructure.push(tmpPassDoc);
-            if ($scope.passDocStructure.length === 1) {
-                $scope.currentPassDocPart = $scope.passDocStructure[0];
-                $scope.currentPassDocPart.isSelected = true;
-                $timeout(function () {
-                    $(':input').inputmask();
-//                    $(':input').focus();
-                }, 0);
-            }
-console.log($scope.passDocStructure);
-            $scope.ctrlSettings.passportLoading = false;
-        }, function (res) {
-            console.error(res);
-        });
-    }
+//    function loadPassDoc_v1(url) {
+//        $http.get(url)
+//            .then(function (resp) {
+//            if ($scope.passDocStructure === null) {
+//                $scope.passDocStructure = [];
+//            }
+//            var tmpPassDoc = angular.copy(resp.data);
+//            
+//            //prepare passDoc
+//            // - transform table headers
+//            tmpPassDoc = preparePassDoc(tmpPassDoc);
+//            
+//            $scope.passDocStructure.push(tmpPassDoc);
+//            if ($scope.passDocStructure.length === 1) {
+//                $scope.currentPassDocPart = $scope.passDocStructure[0];
+//                $scope.currentPassDocPart.isSelected = true;
+//                $timeout(function () {
+//                    $(':input').inputmask();
+//                }, 0);
+//            }
+//console.log($scope.passDocStructure);
+//            $scope.ctrlSettings.passportLoading = false;
+//        }, function (res) {
+//            console.error(res);
+//        });
+//    }
 //    loadPassDoc_v1('../app/resource/passDocP0.json');
 //    loadPassDoc_v1('../app/resource/passDocP1.json');
     
-    $scope.contentsPartSelect = function(part) {
-//console.log(part);
-        $scope.currentPassDocPart.isSelected = false;
-        $scope.currentPassDocPart = part;
-        $scope.currentPassDocPart.isSelected = true;
-        $timeout(function () {
-            $(':input').inputmask();
-//            $(':input').focus();
-        }, 0);
-        
-    };
-    
-    $scope.tdBlur = function (cell) {
-console.log(cell);        
-    };
+//    $scope.contentsPartSelect = function(part) {
+//        $scope.currentPassDocPart.isSelected = false;
+//        $scope.currentPassDocPart = part;
+//        $scope.currentPassDocPart.isSelected = true;
+//        $timeout(function () {
+//            $(':input').inputmask();
+//        }, 0);
+//        
+//    };
+//    
+//    $scope.tdBlur = function (cell) {
+//console.log(cell);        
+//    };
     
     function getHeaderPart(inputData) {
         var headerPart = null;
@@ -1580,4 +1616,15 @@ console.log(cell);
         }, 0);
     });
     
+    
+    function loadPassports() {
+        energoPassportSvc.loadPassports()
+            .then(successLoadPassportsCallback, errorCallback);
+    }
+    
+    function initCtrl() {
+        loadPassports();
+    }
+    
+    initCtrl();
 }]);

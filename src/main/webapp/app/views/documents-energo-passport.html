@@ -88,19 +88,32 @@
             </div>
             <div class = "">
                 <span class="">
+                    <div title="Скрыть / показать содержание энергетического паспорта"
+                         class = ""
+                         ng-click="showContentsFlag = !showContentsFlag"
+                         ng-class = "{'nmc-div-delimiter-left': showContentsFlag, 'nmc-div-delimiter-right': !showContentsFlag}">
+                        <div class = ""
+                             ng-class = "{'nmc-div-delimiter-inner-left': showContentsFlag, 'nmc-div-delimiter-inner-right': !showContentsFlag}">
+                            
+                        </div>
+                    </div>
+<!--
                     <div class = "nmc-div-delimiter"                         
                        title="Скрыть / показать содержание энергетического паспорта" 
                         
                        ng-click="showContentsFlag = !showContentsFlag" 
                        >
                     </div>
+-->
                     
+<!--
                     <i style = "position: fixed; top: 40%; z-index: 1; margin-left: -5px; opacity: 0;"
                        title="Скрыть / показать содержание энергетического паспорта" 
                        class="btn btn-lg glyphicon glyphicon-menu-left noPadding" 
                        ng-click="showContentsFlag = !showContentsFlag" 
                        ng-class="{'glyphicon-menu-left': showContentsFlag, 'glyphicon-menu-right': !showContentsFlag}">
                     </i>
+-->
                 </span>
             </div>
             <div class = "col-xs-10 nmc-energo-passport-main-div"
@@ -163,7 +176,7 @@
                                             <tr ng-repeat = "trow in part.innerPdTable.tbodies track by $index">
 <!--                                                ng-if = "trow.partType === 'ROW'">-->
 <!--                                                <td ng-repeat = "td in trow.elements track by $index"-->
-                                                <td ng-repeat = "td in trow track by $index"    
+                                                <td ng-repeat = "td in trow.tds track by $index"    
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
@@ -198,17 +211,18 @@
                                                            />
 
                                                 </td>
-                                                <td ng-if = "part.innerPdTable.parts[1].dynamic === true"
-                                                    style = "border-right: 0; border-top: 0; border-bottom: 0"
-                                                    ng-attr-rowspan = "3">                                                    
+                                                <td ng-if = "part.innerPdTable.parts[1].dynamic === true && trow.canDelete === true"
+                                                    style = "border-right: 0; border-top: 0; border-bottom: 0; padding: 0 5px;">
+<!--                                                    ng-attr-rowspan = "{{part.innerPdTable.parts[1].tbody.length}}">                                                    -->
                                                     <i class = "btn btn-xs btn-default btn-xs"
-                                                       ng-click = "deleteRowFromTable(part, $index)">
+                                                       ng-click = "deleteRowFromTable(part, $index)"
+                                                       >
                                                         Удалить
                                                     </i>
                                                 </td>
                                                 <td ng-if = "part.innerPdTable.parts[1].dynamic === true && $last"
-                                                    style = "border: 0"
-                                                    ng-attr-rowspan = "3">
+                                                    style = "border: 0">
+<!--                                                    ng-attr-rowspan = "{{part.innerPdTable.parts[1].tbody.length}}">-->
                                                     <i 
                                                        class = "btn btn-xs btn-primary btn-xs"
                                                        ng-click = "addRowToTable(part)">

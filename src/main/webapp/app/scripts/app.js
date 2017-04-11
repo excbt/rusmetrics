@@ -29,8 +29,7 @@ var app = angular
         'ui.select',
         'ui.mask',
         'angularWidget',
-        'chart.js',
-        'ui.grid'
+        'chart.js'
     ]);
 
 //routing config
