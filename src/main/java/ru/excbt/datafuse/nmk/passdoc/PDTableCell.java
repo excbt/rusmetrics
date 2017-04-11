@@ -307,7 +307,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     public <T extends PDTableCell<T>> T createChildValue(final Class<T> valueType) {
-        T child = this.getTablePart().createValueElement(valueType);
+        T child = this.getTablePart().createValueElement(valueType, true);
         childElements.add(child);
         child.parent = this;
         return child;
@@ -315,7 +315,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     public <T extends PDTableCell<T>> T createSiblingValue(final Class<T> valueType) {
         checkState(parent != null);
-        T sibling = this.getTablePart().createValueElement(valueType);
+        T sibling = this.getTablePart().createValueElement(valueType, true);
         parent.childElements.add(sibling);
         sibling.parent = parent;
         return sibling;

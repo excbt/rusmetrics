@@ -15,19 +15,19 @@ public class PDTableCellValuePack extends PDTableCell<PDTableCellValuePack> {
         setCellType(PDCellType.VALUE_PACK);
     }
 
-    public <T extends PDTableCell<T>> T createChildValue(final Class<T> valueType) {
-        T child = this.getTablePart().createValueElement(valueType);
-        childElements.add(child);
-        child.parent = this;
-        return child;
-    }
-
-    public <T extends PDTableCell<T>> T createSiblingValue(final Class<T> valueType) {
-        checkState(parent != null);
-        T sibling = this.getTablePart().createValueElement(valueType);
-        parent.childElements.add(sibling);
-        sibling.parent = parent;
-        return sibling;
-    }
+//    public <T extends PDTableCell<T>> T createChildValue(final Class<T> valueType) {
+//        T child = this.getTablePart().createValueElement(valueType, true);
+//        childElements.add(child);
+//        child.parent = this;
+//        return child;
+//    }
+//
+//    public <T extends PDTableCell<T>> T createSiblingValue(final Class<T> valueType) {
+//        checkState(parent != null);
+//        T sibling = this.getTablePart().createValueElement(valueType, true);
+//        parent.childElements.add(sibling);
+//        sibling.parent = parent;
+//        return sibling;
+//    }
 
 }

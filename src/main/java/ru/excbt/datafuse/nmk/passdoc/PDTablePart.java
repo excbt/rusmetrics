@@ -200,7 +200,7 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
+    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType, boolean noElementsAdd) {
         T result = null;
         if (PDTableCellValueInteger.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueInteger().tablePart(this);
@@ -219,8 +219,12 @@ public class PDTablePart implements PDReferable {
         if (result == null) {
             throw new UnsupportedOperationException();
         }
-        if (result.parent == null) elements.add(result);
+        if (!noElementsAdd) elements.add(result);
         return result;
+    }
+
+    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
+        return createValueElement(valueType, false);
     }
 
 
@@ -243,13 +247,24 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public List<PDTableCell<?>> extractCellValues() {
+    private List<PDTableCell<?>> extractCellValues (List<PDTableCell<?>> elements) {
         final List<PDTableCell<?>> result = new ArrayList<>();
         for (PDTableCell<?> cell : elements) {
             if (cell.getCellType() == PDCellType.VALUE) {
                 result.add(cell);
             }
+            if (cell.getCellType() == PDCellType.VALUE_PACK) {
+                result.addAll(extractCellValues(cell.getChildElements()));
+            }
         }
+        return result;
+    }
+
+
+    public List<PDTableCell<?>> extractCellValues() {
+        final List<PDTableCell<?>> result = new ArrayList<>();
+
+        result.addAll(extractCellValues(elements));
 
         if (innerPdTable != null) {
             result.addAll(innerPdTable.extractCellValues());
