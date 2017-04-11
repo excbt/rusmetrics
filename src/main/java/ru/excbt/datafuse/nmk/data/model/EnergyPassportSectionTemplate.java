@@ -64,7 +64,7 @@ public class EnergyPassportSectionTemplate extends AbstractAuditableModel implem
         this.sectionKey = dto.getSectionKey();
         this.sectionJson = dto.getSectionJson();
         this.sectionOrder = dto.getSectionOrder();
-        this.version = dto.getVersion() != null ? dto.getVersion() : 0;
+        //this.version = dto.getVersion() != null ? dto.getVersion() : 0;
     }
 
 }

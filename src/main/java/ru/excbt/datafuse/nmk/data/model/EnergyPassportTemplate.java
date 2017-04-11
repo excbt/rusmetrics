@@ -87,13 +87,15 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
         this.documentDate = dto.getDocumentDate();
         this.documentName = dto.getDocumentName();
         this.documentVersion = dto.getDocumentVersion();
-        this.version = dto.getVersion() != null ? dto.getVersion() : 0;
+        //this.version = dto.getVersion() != null ? dto.getVersion() : 0;
         dto.getSectionTemplates().forEach(i -> addOrUpdateSection(i));
     }
 
     public void addOrUpdateSection(EnergyPassportSectionTemplateDTO sectionDTO) {
         Optional<EnergyPassportSectionTemplate> checkSection =
-            sectionTemplates.stream().filter(i -> i.getId() != null && i.getId().equals(sectionDTO.getId())).findAny();
+            sectionTemplates.stream()
+                .filter(i -> i.getSectionKey() != null && i.getSectionKey().equals(sectionDTO.getSectionKey()))
+                .findFirst();
 
         if (checkSection.isPresent()) {
             checkSection.get().updateFromDTO(sectionDTO);
