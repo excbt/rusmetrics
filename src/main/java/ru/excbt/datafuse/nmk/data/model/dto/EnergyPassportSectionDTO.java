@@ -18,5 +18,7 @@ public class EnergyPassportSectionDTO {
 
     private String sectionJson;
 
+    private Integer sectionOrder;
+
     private int version;
 }

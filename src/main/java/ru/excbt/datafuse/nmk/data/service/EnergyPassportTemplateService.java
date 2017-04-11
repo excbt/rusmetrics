@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import org.modelmapper.ModelMapper;
+import org.opensaml.xml.signature.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
@@ -18,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014_
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -60,15 +62,15 @@ public class EnergyPassportTemplateService {
         EnergyPassportTemplate energyPassportTemplate = energyPassportTemplateRepository.findOne(id);
         EnergyPassportTemplateDTO result = energyPassportTemplate != null ?
             modelMapper.map(energyPassportTemplate, EnergyPassportTemplateDTO.class) : null;
-        if (energyPassportTemplate.getSectionTemplates() != null)
-            energyPassportTemplate.getSectionTemplates()
-                .forEach(section ->
-                    result.addSection(modelMapper.map(section, EnergyPassportSectionTemplateDTO.class)));
+//        if (energyPassportTemplate.getSectionTemplates() != null)
+//            energyPassportTemplate.getSectionTemplates()
+//                .forEach(section ->
+//                    result.addSection(modelMapper.map(section, EnergyPassportSectionTemplateDTO.class)));
 
         return result;
     }
 
-    public EnergyPassportTemplateDTO createNew() {
+    public EnergyPassportTemplateDTO createNewDTO_401() {
         EnergyPassportTemplateDTO templateDTO = new EnergyPassportTemplateDTO();
         templateDTO.addSection(createSectionDTO(energyPassport401_2014.sectionMainFactory()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_3()));
@@ -79,7 +81,7 @@ public class EnergyPassportTemplateService {
         return templateDTO;
     }
 
-    @Transactional()
+    @Transactional
     public EnergyPassportTemplateDTO createNew401() {
         EnergyPassportTemplate passportTemplate = new EnergyPassportTemplate();
         passportTemplate.setKeyname("PASS_401");
@@ -121,6 +123,21 @@ public class EnergyPassportTemplateService {
         dataDTO.setSectionKey(factory.getSectionKey());
         dataDTO.setSectionDataJson(factory.createSectionValuesJson());
         return dataDTO;
+    }
+
+    @Transactional
+    public EnergyPassportTemplateDTO saveEnergyPassportTemplate(EnergyPassportTemplateDTO energyPassportTemplateDTO) {
+        Optional<EnergyPassportTemplate> checkTemplate = energyPassportTemplateRepository.findByKeyname(energyPassportTemplateDTO.getKeyname());
+        EnergyPassportTemplate template;
+        if (checkTemplate.isPresent()) {
+            template = checkTemplate.get();
+        } else {
+            template = new EnergyPassportTemplate();
+        }
+        template.updateFromDTO(energyPassportTemplateDTO);
+        energyPassportTemplateRepository.save(template);
+        EnergyPassportTemplateDTO result = modelMapper.map(template, EnergyPassportTemplateDTO.class);
+        return result;
     }
 
 }

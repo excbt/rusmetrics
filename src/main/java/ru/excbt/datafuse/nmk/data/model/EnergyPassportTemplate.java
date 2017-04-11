@@ -8,14 +8,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.opensaml.xml.signature.P;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate.BuilderInitializer;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -65,6 +69,40 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
         sectionTemplates.add(sectionTemplate);
         sectionTemplate.setSectionOrder(sectionTemplates.size());
         return sectionTemplate;
+    }
+
+
+    public void updateFromDTO(EnergyPassportTemplateDTO dto) {
+        if (this.keyname != null && !this.keyname.equals(dto.getKeyname())) {
+            throw new IllegalArgumentException();
+        }
+        if (this.documentVersion != null && !this.documentVersion.equals(dto.getDocumentVersion())) {
+            throw new IllegalArgumentException();
+        }
+        if (this.deleted == 1) {
+            throw new IllegalStateException();
+        }
+        this.keyname = dto.getKeyname();
+        this.description = dto.getDescription();
+        this.documentDate = dto.getDocumentDate();
+        this.documentName = dto.getDocumentName();
+        this.documentVersion = dto.getDocumentVersion();
+        this.version = dto.getVersion() != null ? dto.getVersion() : 0;
+        dto.getSectionTemplates().forEach(i -> addOrUpdateSection(i));
+    }
+
+    public void addOrUpdateSection(EnergyPassportSectionTemplateDTO sectionDTO) {
+        Optional<EnergyPassportSectionTemplate> checkSection =
+            sectionTemplates.stream().filter(i -> i.getId() != null && i.getId().equals(sectionDTO.getId())).findAny();
+
+        if (checkSection.isPresent()) {
+            checkSection.get().updateFromDTO(sectionDTO);
+        } else {
+            EnergyPassportSectionTemplate sectionTemplate = new EnergyPassportSectionTemplate();
+            sectionTemplate.updateFromDTO(sectionDTO);
+            sectionTemplate.setPassportTemplate(this);
+            sectionTemplates.add(sectionTemplate);
+        }
     }
 
 }

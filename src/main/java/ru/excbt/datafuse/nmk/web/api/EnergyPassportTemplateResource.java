@@ -42,7 +42,7 @@ public class EnergyPassportTemplateResource extends SubscrApiController {
     @RequestMapping(value = "/new", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassportTemplateNew() {
-        EnergyPassportTemplateDTO templateDTO = energyPassportTemplateService.createNew();
+        EnergyPassportTemplateDTO templateDTO = energyPassportTemplateService.createNewDTO_401();
         return responseOK(templateDTO);
     }
 
