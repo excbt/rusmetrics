@@ -2,11 +2,14 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
+import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -25,11 +28,11 @@ public class EnergyPassportResource extends SubscrApiController {
 
     @RequestMapping(value = "", method = RequestMethod.POST,
         produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> createEnergyPassport(@RequestParam(name = "templateKeyname", required = false) String templateKeyname) {
+    public ResponseEntity<?> createEnergyPassport(@RequestParam(name = "templateKeyname", required = false) String templateKeyname,
+                                                  @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
 
-        String keyname = templateKeyname != null ? templateKeyname : "PASS_401";
-        ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createPassport(keyname, getCurrentSubscriber());
-
+        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014.ENERGY_PASSPORT;
+        ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createPassport(keyname, energyPassportVM, getCurrentSubscriber());
         return responseOK(action);
     }
 }

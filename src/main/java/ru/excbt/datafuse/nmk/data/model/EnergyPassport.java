@@ -4,7 +4,11 @@ package ru.excbt.datafuse.nmk.data.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
+import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,6 +24,7 @@ import java.util.List;
 @Getter
 @Setter
 public class EnergyPassport extends JsonAbstractAuditableModel {
+
 
     @JsonIgnore
     @ManyToOne
@@ -58,6 +63,11 @@ public class EnergyPassport extends JsonAbstractAuditableModel {
     public void addSection(EnergyPassportSection energyPassportSection) {
         energyPassportSection.setPassport(this);
         this.sections.add(energyPassportSection);
+    }
+
+    @JsonIgnore
+    public EnergyPassportDTO getDTO() {
+        return ModelMapperUtil.map(this, EnergyPassportDTO.class);
     }
 
 }

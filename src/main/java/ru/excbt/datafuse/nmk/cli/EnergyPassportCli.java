@@ -61,7 +61,7 @@ public class EnergyPassportCli extends PortalToolCli {
     protected void doWork(){
         mockUserService.setMockUserId(1000L); // User "SYSTEM"
         EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
-        energyPassportTemplateDTO.setKeyname("ENERGY_PASSPORT");
+        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014.ENERGY_PASSPORT);
         energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
     }
 

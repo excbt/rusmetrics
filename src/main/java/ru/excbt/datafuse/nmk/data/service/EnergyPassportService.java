@@ -7,6 +7,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
+import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
@@ -35,7 +36,7 @@ public class EnergyPassportService {
 
 
     @Transactional(value = TxConst.TX_DEFAULT)
-    public EnergyPassportDTO createPassport(String templateKeyname, Subscriber subscriber) {
+    public EnergyPassportDTO createPassport(String templateKeyname, EnergyPassportVM energyPassportVM, Subscriber subscriber) {
         Optional<EnergyPassportTemplate> energyPassportTemplate = energyPassportTemplateRepository.findByKeyname(templateKeyname);
         if (!energyPassportTemplate.isPresent()) {
             DBExceptionUtils.entityNotFoundException(EnergyPassportTemplate.class, templateKeyname, true);
@@ -53,7 +54,7 @@ public class EnergyPassportService {
         }
         energyPassportRepository.save(energyPassport);
 
-        EnergyPassportDTO energyPassportDTO = modelMapper.map(energyPassport, EnergyPassportDTO.class);
+        EnergyPassportDTO energyPassportDTO = energyPassport.getDTO();
 
         return energyPassportDTO;
     }

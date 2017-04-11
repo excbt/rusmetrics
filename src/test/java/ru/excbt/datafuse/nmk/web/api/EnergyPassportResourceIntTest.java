@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
+import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -35,6 +36,17 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         };
 
         ResultActions resultActions = _testPostJson("/api/subscr/energy-passport", param);
+   }
 
+    @Test
+    @Transactional
+    public void testCreatePassportExisting() throws Exception {
+        RequestExtraInitializer param = (b) -> {
+            b.param("templateKeyname", EnergyPassport401_2014.ENERGY_PASSPORT);
+            b.param("passportName", "New Passport");
+        };
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passport", param);
     }
+
+
 }

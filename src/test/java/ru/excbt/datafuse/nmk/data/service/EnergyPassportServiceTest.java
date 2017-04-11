@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
+import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
 
 /**
@@ -31,7 +32,7 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
 
     @Test
     @Transactional
-    public void testCreatePassport() throws Exception {
+    public void testCreatePassportNew() throws Exception {
         EnergyPassportTemplate energyPassportTemplate = EnergyPassportTemplateResourceIntTest.createEnergyPassportTemplate();
         energyPassportTemplate.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1));
         energyPassportTemplateRepository.saveAndFlush(energyPassportTemplate);
@@ -39,5 +40,6 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
         Assert.assertNotNull(energyPassportDTO);
         Assert.assertTrue(energyPassportDTO.getSections().size() == 1);
     }
+
 }
 

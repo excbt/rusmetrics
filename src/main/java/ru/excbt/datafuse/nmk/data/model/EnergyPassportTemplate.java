@@ -4,16 +4,16 @@ package ru.excbt.datafuse.nmk.data.model;
  * Created by kovtonyk on 29.03.2017.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.opensaml.xml.signature.P;
+import org.modelmapper.ModelMapper;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate.BuilderInitializer;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
+import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,6 +27,7 @@ import java.util.Optional;
 @Getter
 @Setter
 public class EnergyPassportTemplate extends AbstractAuditableModel implements DeletedMarker {
+
 
     @Column(name = "keyname")
     private String keyname;
@@ -105,6 +106,11 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
             sectionTemplate.setPassportTemplate(this);
             sectionTemplates.add(sectionTemplate);
         }
+    }
+
+    @JsonIgnore
+    public EnergyPassportTemplateDTO getDTO() {
+        return ModelMapperUtil.map(this, EnergyPassportTemplateDTO.class);
     }
 
 }
