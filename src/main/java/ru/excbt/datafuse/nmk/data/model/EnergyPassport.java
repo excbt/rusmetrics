@@ -4,10 +4,9 @@ package ru.excbt.datafuse.nmk.data.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.modelmapper.ModelMapper;
+import ru.excbt.datafuse.nmk.data.domain.DTOModel;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
@@ -15,6 +14,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -24,7 +24,7 @@ import java.util.List;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport")
 @Getter
 @Setter
-public class EnergyPassport extends JsonAbstractAuditableModel implements DeletedMarker {
+public class EnergyPassport extends JsonAbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportDTO> {
 
 
     @JsonIgnore
@@ -68,9 +68,17 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
         this.sections.add(energyPassportSection);
     }
 
-    @JsonIgnore
+    @Override
     public EnergyPassportDTO getDTO() {
         return ModelMapperUtil.map(this, EnergyPassportDTO.class);
+    }
+
+    @JsonIgnore
+    public Optional<EnergyPassportSection> getSection(String sectionKey) {
+        if (sectionKey == null) {
+            return Optional.empty();
+        }
+        return sections.stream().filter(i -> sectionKey.equals(i.getSectionKey())).findFirst();
     }
 
 }

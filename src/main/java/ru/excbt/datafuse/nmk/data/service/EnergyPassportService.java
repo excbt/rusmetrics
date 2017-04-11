@@ -7,8 +7,10 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
+import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
@@ -26,15 +28,15 @@ public class EnergyPassportService {
 
     private final EnergyPassportTemplateRepository energyPassportTemplateRepository;
     private final EnergyPassportRepository energyPassportRepository;
-    private final ModelMapper modelMapper;
+    private final EnergyPassportDataRepository energyPassportDataRepository;
 
 
-    public EnergyPassportService(ModelMapper modelMapper,
+    public EnergyPassportService(EnergyPassportTemplateRepository energyPassportTemplateRepository,
                                  EnergyPassportRepository energyPassportRepository,
-                                 EnergyPassportTemplateRepository energyPassportTemplateRepository) {
-        this.modelMapper = modelMapper;
-        this.energyPassportRepository = energyPassportRepository;
+                                 EnergyPassportDataRepository energyPassportDataRepository) {
         this.energyPassportTemplateRepository = energyPassportTemplateRepository;
+        this.energyPassportRepository = energyPassportRepository;
+        this.energyPassportDataRepository = energyPassportDataRepository;
     }
 
 
@@ -102,6 +104,55 @@ public class EnergyPassportService {
 
         energyPassport.setDeleted(1);
         energyPassportRepository.save(energyPassport);
+    }
+
+    @Transactional
+    public EnergyPassportDataDTO savePassportData(EnergyPassportDataDTO energyPassportDataDTO) {
+        EnergyPassport passport = energyPassportRepository.findOne(energyPassportDataDTO.getPassportId());
+        if (passport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class,energyPassportDataDTO.getPassportId());
+        }
+
+        Optional<EnergyPassportSection> section = passport.getSection(energyPassportDataDTO.getSectionKey());
+        if (!section.isPresent()) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, energyPassportDataDTO.getSectionKey(), "sectionKey");
+        }
+
+        EnergyPassportData passportData;
+        if (energyPassportDataDTO.getId() != null) {
+            passportData = energyPassportDataRepository.findOne(energyPassportDataDTO.getId());
+        } else {
+            passportData = new EnergyPassportData();
+            passportData.setPassport(passport);
+        }
+
+        passportData.updateFromDTO(energyPassportDataDTO);
+        passportData.setSectionId(section.get().getId());
+        energyPassportDataRepository.save(passportData);
+
+        return passportData.getDTO();
+    }
+
+    @Transactional(readOnly = true)
+    public List<EnergyPassportDataDTO> findPassportData(Long passportId) {
+        List<EnergyPassportData> passportDataList = energyPassportDataRepository.findByPassportId(passportId);
+
+        return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EnergyPassportDataDTO> findPassportData(Long passportId, Long sectionId) {
+        EnergyPassport energyPassport = energyPassportRepository.findOne(passportId);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, passportId);
+        }
+        Optional<EnergyPassportSection> section = energyPassport.getSections().stream().filter(i -> i.getId().equals(sectionId)).findFirst();
+        if (!section.isPresent()) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, sectionId);
+        }
+        List<EnergyPassportData> passportDataList = energyPassportDataRepository.findByPassportIdAndSectionKey(passportId, section.get().getSectionKey());
+
+        return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
     }
 
 }

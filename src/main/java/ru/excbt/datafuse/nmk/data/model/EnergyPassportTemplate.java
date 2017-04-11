@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.DTOModel;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate.BuilderInitializer;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport_template")
 @Getter
 @Setter
-public class EnergyPassportTemplate extends AbstractAuditableModel implements DeletedMarker {
+public class EnergyPassportTemplate extends AbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportTemplateDTO> {
 
 
     @Column(name = "keyname")
@@ -108,7 +109,7 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
         }
     }
 
-    @JsonIgnore
+    @Override
     public EnergyPassportTemplateDTO getDTO() {
         return ModelMapperUtil.map(this, EnergyPassportTemplateDTO.class);
     }

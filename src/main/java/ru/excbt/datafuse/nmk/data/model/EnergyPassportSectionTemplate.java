@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.DTOUpdatableModel;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionTemplateDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
@@ -22,7 +23,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EnergyPassportSectionTemplate extends AbstractAuditableModel implements DeletedMarker {
+public class EnergyPassportSectionTemplate extends AbstractAuditableModel implements DeletedMarker, DTOUpdatableModel<EnergyPassportSectionTemplateDTO> {
 
     public interface BuilderInitializer {
         void init(EnergyPassportSectionTemplateBuilder sectionBuilder);
@@ -53,6 +54,7 @@ public class EnergyPassportSectionTemplate extends AbstractAuditableModel implem
     @Column(name = "deleted")
     private int deleted;
 
+    @Override
     public void updateFromDTO(EnergyPassportSectionTemplateDTO dto) {
         if (this.sectionKey != null && !this.sectionKey.equals(dto.getSectionKey())) {
             throw new IllegalArgumentException();
