@@ -43,7 +43,7 @@ public class PDTablePart implements PDReferable {
 
     @JsonInclude(value = Include.NON_EMPTY)
     @Getter
-    private final List<PDTableCell> elements = new ArrayList<>();
+    private final List<PDTableCell<?>> elements = new ArrayList<>();
 
     @JsonInclude(value = Include.NON_NULL)
     @Getter
@@ -85,12 +85,6 @@ public class PDTablePart implements PDReferable {
         elements.add(result);
         return result.caption(caption);
     }
-
-//    public PDTableCell createValElement() {
-//        PDTableCell result = new PDTableCellValueString().tablePart(this);
-//        elements.add(result);
-//        return result;
-//    }
 
     public PDTableCellValueDoubleAggregation createIntValueAggrElement() {
         PDTableCellValueDoubleAggregation result = new PDTableCellValueDoubleAggregation().tablePart(this);
@@ -225,8 +219,7 @@ public class PDTablePart implements PDReferable {
         if (result == null) {
             throw new UnsupportedOperationException();
         }
-
-        elements.add(result);
+        if (result.parent == null) elements.add(result);
         return result;
     }
 
