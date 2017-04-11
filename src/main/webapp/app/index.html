@@ -50,6 +50,11 @@
 <!--      <script src="/public/bower_components/angular-1.4.1/angular.min.js"></script>-->
       <script src="/public/bower_components/angular-1.4.1/angular.js"></script>
       
+<!--    <link rel="stylesheet" href="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.20/ui-grid.min.css">-->
+<!--    <script data-require="jquery@2.1.3" data-semver="2.1.3" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>-->
+<!--    <script src="https://code.angularjs.org/1.4.0/angular.js"></script>-->
+<!--    <script src="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.21/ui-grid.min.js"></script>-->
+      
   </head>
   <body class="nmc-main-window-background" ng-app="portalNMC">
 <!--
@@ -286,7 +291,8 @@
                         </nav>                      
             <span class="pull-right"
                   ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
-                <i title="Свернуть / распахнуть меню" 
+                <i style = "position: absolute; top: 50%; margin-left: -9px;"
+                   title="Свернуть / распахнуть меню" 
                    class="btn btn-lg glyphicon glyphicon-menu-left noPadding" 
                    ng-click="mainCtrlSettings.showFullMenuFlag = !mainCtrlSettings.showFullMenuFlag" 
                    ng-class="{'glyphicon-menu-left': mainCtrlSettings.showFullMenuFlag, 'glyphicon-menu-right': !mainCtrlSettings.showFullMenuFlag}">
@@ -732,6 +738,10 @@
       <script src="scripts/controllers/about-program.js"></script>
       <script src="scripts/controllers/impulse-indicator.js"></script>
       <script src="scripts/controllers/widget-container.js"></script>
+      <script src="scripts/controllers/documents-energo-passports.js"></script>
+      <script src="scripts/controllers/documents-energo-passport.js"></script>
+      <script src="scripts/controllers/documents-energo-passports1.js"></script>
+      <script src="scripts/controllers/documents-energo-passports2.js"></script>
 <!---->
 <!--      test-->
 <!--
@@ -759,6 +769,7 @@
       <script src="scripts/directives/show-datasource-modal.js"></script>
       <script src="scripts/directives/nmc-upload-files.js"></script>
       <script src="scripts/directives/nmc-view-meter-periods-modal.js"></script>
+      <script src="scripts/directives/contenteditable.js"></script>
 <!---->
       
 <!--       Services -->
@@ -775,6 +786,7 @@
        <script src="scripts/services/log-service.js"></script> 
        <script src="scripts/services/security-check-service.js"></script>
       <script src="scripts/services/meter-periods-service.js"></script>
+      <script src="scripts/services/energo-passport-service.js"></script>
 <!---->
 <!--         endbuild -->
     
