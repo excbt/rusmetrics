@@ -200,7 +200,7 @@ public class PDTablePart implements PDReferable {
     }
 
 
-    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType, boolean noElementsAdd) {
+    public <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType, boolean childElements) {
         T result = null;
         if (PDTableCellValueInteger.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueInteger().tablePart(this);
@@ -219,7 +219,7 @@ public class PDTablePart implements PDReferable {
         if (result == null) {
             throw new UnsupportedOperationException();
         }
-        if (!noElementsAdd) elements.add(result);
+        if (!childElements) elements.add(result);
         return result;
     }
 
