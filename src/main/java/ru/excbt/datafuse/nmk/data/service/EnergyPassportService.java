@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.energypassport.EPSectionValueUtil;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -135,13 +136,22 @@ public class EnergyPassportService {
 
     @Transactional(readOnly = true)
     public List<EnergyPassportDataDTO> findPassportData(Long passportId) {
-        List<EnergyPassportData> passportDataList = energyPassportDataRepository.findByPassportId(passportId);
 
-        if (passportDataList.isEmpty()) {
-            return extractEnergyPassportData(passportId);
+        EnergyPassport energyPassport = energyPassportRepository.findOne(passportId);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, passportId);
         }
 
-        return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+        List<EnergyPassportData> passportDataList = energyPassportDataRepository.findByPassportId(passportId);
+
+        List<EnergyPassportDataDTO> passportDataDTOList = passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+
+        if (passportDataDTOList.isEmpty()) {
+            return extractEnergyPassportData(passportId);
+        } else if (passportDataDTOList.size() != energyPassport.getSections().size()) {
+            return enhanceEnergyPassportData(passportDataDTOList);
+        }
+        return passportDataDTOList;
     }
 
     @Transactional(readOnly = true)
@@ -204,6 +214,30 @@ public class EnergyPassportService {
         dto.setSectionKey(energyPassportSection.getSectionKey());
         EPSectionValueUtil.extractValues(energyPassportSection.getSectionJson()).ifPresent((json) -> dto.setSectionDataJson(json));
         return dto;
+    }
+
+    /**
+     *
+     * @param src existing list of passport data
+     * @return existing list of passport data + data of unsaved sections
+     */
+    private List<EnergyPassportDataDTO> enhanceEnergyPassportData(List<EnergyPassportDataDTO> src){
+        List<EnergyPassportDataDTO> result = new ArrayList<>(src);
+
+        Long passportId = src.stream().mapToLong(EnergyPassportDataDTO::getPassportId).findFirst().getAsLong();
+
+        EnergyPassport pass = energyPassportRepository.findOne(passportId);
+
+        pass.getSections().forEach((i) -> {
+            EnergyPassportDataDTO templateData = extractEnergyPassportData(i);
+            boolean exists = src.stream().filter((j) -> i.getSectionKey() == j.getSectionKey()).findFirst().isPresent();
+            if (!exists) {
+                result.add(templateData);
+            }
+        });
+
+
+        return result;
     }
 
 }
