@@ -5,11 +5,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.model.EnergyPassportDataValue;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
+import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
@@ -33,6 +35,9 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
     @Autowired
     private EnergyPassportTemplateRepository energyPassportTemplateRepository;
+
+    @Autowired
+    private EnergyPassportDataValueRepository energyPassportDataValueRepository;
 
 
     @Test
@@ -126,10 +131,15 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         passportDataDTOList.forEach((i) -> {
             try {
                 _testUpdateJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data",i);
+                List<EnergyPassportDataValue> sectionValues = energyPassportDataValueRepository.findByPassportIdAndSectionKey (passportDTO.getId(), i.getSectionKey());
+                Assert.assertTrue(sectionValues.size() > 0);
             } catch (Exception e) {
                 Assert.fail();
             }
         });
+
+        List<EnergyPassportDataValue> values = energyPassportDataValueRepository.findByPassportId(passportDTO.getId());
+        Assert.assertTrue(values.size() > 0);
     }
 
     @Test

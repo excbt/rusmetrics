@@ -14,6 +14,8 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueDoubleDTO extends PDValueDTO {
 
+    public static String TYPE = "Double";
+
     @JsonInclude(value = Include.ALWAYS)
     @Getter
     @Setter
@@ -27,5 +29,15 @@ public class PDValueDoubleDTO extends PDValueDTO {
         result.setCommonProperties(srcValue);
         result.value = srcValue.getValue();
         return result;
+    }
+
+    @Override
+    public String valueAsString() {
+        return value != null ? String.format("%f",value) : null;
+    }
+
+    @Override
+    public String dataType() {
+        return TYPE;
     }
 }

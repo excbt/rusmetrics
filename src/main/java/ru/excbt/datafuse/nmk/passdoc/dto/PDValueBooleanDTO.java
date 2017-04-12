@@ -15,6 +15,8 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueBooleanDTO extends PDValueDTO {
 
+    public static String TYPE = "Boolean";
+
     @JsonInclude(value = Include.ALWAYS)
     @Getter
     @Setter
@@ -29,4 +31,13 @@ public class PDValueBooleanDTO extends PDValueDTO {
         return result;
     }
 
+    @Override
+    public String valueAsString() {
+        return value != null ? value.toString() : null;
+    }
+
+    @Override
+    public String dataType() {
+        return TYPE;
+    }
 }

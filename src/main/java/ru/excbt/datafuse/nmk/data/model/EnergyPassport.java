@@ -81,4 +81,9 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
         return sections.stream().filter(i -> sectionKey.equals(i.getSectionKey())).findFirst();
     }
 
+    public EnergyPassport id (Long id) {
+        this.setId(id);
+        return this;
+    }
+
 }

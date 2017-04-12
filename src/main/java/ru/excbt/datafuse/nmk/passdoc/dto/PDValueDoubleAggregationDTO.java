@@ -14,6 +14,8 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueDoubleAggregationDTO extends PDValueDTO {
 
+    public static String TYPE = "DoubleAgg";
+
     @JsonInclude(value = Include.ALWAYS)
     @Getter
     @Setter
@@ -39,4 +41,13 @@ public class PDValueDoubleAggregationDTO extends PDValueDTO {
         return result;
     }
 
+    @Override
+    public String valueAsString() {
+        return value != null ? String.format("%f",value) : null;
+    }
+
+    @Override
+    public String dataType() {
+        return TYPE;
+    }
 }

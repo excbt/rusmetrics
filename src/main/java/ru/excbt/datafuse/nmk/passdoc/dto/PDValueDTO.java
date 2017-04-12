@@ -3,10 +3,7 @@ package ru.excbt.datafuse.nmk.passdoc.dto;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.excbt.datafuse.nmk.passdoc.ComplexIdx;
-import ru.excbt.datafuse.nmk.passdoc.PDCellType;
-import ru.excbt.datafuse.nmk.passdoc.PDConstants;
-import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
+import ru.excbt.datafuse.nmk.passdoc.*;
 
 /**
  * Created by kovtonyk on 28.03.2017.
@@ -24,7 +21,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({"__type", "cellType", "partKey", "keyValueIdx", "valuePackIdx"})
-public abstract class PDValueDTO implements ComplexIdx {
+public abstract class PDValueDTO implements ComplexIdx{
 
     @Getter
     @Setter
@@ -103,4 +100,7 @@ public abstract class PDValueDTO implements ComplexIdx {
         return sb.toString();
     }
 
+    public abstract String valueAsString();
+
+    public abstract String dataType();
 }

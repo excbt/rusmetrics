@@ -54,18 +54,23 @@ public class EPSectionValueUtil {
 
     }
 
-
     public static boolean validateJson(String json) {
         if (json == null) {
             return false;
         }
-        PDTableValueCellsDTO cellValuesDTO;
+        Optional<PDTableValueCellsDTO> valueCellsDTO = jsonToValueCellsDTO(json);
+        return valueCellsDTO.map((i) -> i.checkComplexIdxs()).orElse(false);
+    }
+
+
+    public static Optional<PDTableValueCellsDTO> jsonToValueCellsDTO (String json) {
+        PDTableValueCellsDTO valuesCellsDTO;
         try {
-            cellValuesDTO = OBJECT_MAPPER.readValue(json, PDTableValueCellsDTO.class);
+            valuesCellsDTO = OBJECT_MAPPER.readValue(json, PDTableValueCellsDTO.class);
         } catch (IOException e) {
-            return false;
+            return Optional.empty();
         }
-        return cellValuesDTO.checkComplexIdxs();
+        return Optional.of(valuesCellsDTO);
     }
 
 }

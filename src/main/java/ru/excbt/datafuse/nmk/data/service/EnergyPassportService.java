@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataRepository;
+import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.energypassport.EPSectionValueUtil;
@@ -30,14 +31,17 @@ public class EnergyPassportService {
     private final EnergyPassportTemplateRepository energyPassportTemplateRepository;
     private final EnergyPassportRepository energyPassportRepository;
     private final EnergyPassportDataRepository energyPassportDataRepository;
+    private final EnergyPassportDataValueRepository energyPassportDataValueRepository;
 
 
     public EnergyPassportService(EnergyPassportTemplateRepository energyPassportTemplateRepository,
                                  EnergyPassportRepository energyPassportRepository,
-                                 EnergyPassportDataRepository energyPassportDataRepository) {
+                                 EnergyPassportDataRepository energyPassportDataRepository,
+                                 EnergyPassportDataValueRepository energyPassportDataValueRepository) {
         this.energyPassportTemplateRepository = energyPassportTemplateRepository;
         this.energyPassportRepository = energyPassportRepository;
         this.energyPassportDataRepository = energyPassportDataRepository;
+        this.energyPassportDataValueRepository = energyPassportDataValueRepository;
     }
 
 
@@ -130,6 +134,8 @@ public class EnergyPassportService {
         passportData.updateFromDTO(energyPassportDataDTO);
         passportData.setSectionId(section.get().getId());
         energyPassportDataRepository.save(passportData);
+
+        updateDataValue(energyPassportDataDTO);
 
         return passportData.getDTO();
     }
@@ -238,6 +244,27 @@ public class EnergyPassportService {
 
 
         return result;
+    }
+
+    private void updateDataValue(EnergyPassportDataDTO energyPassportDataDTO) {
+        energyPassportDataValueRepository.deleteByPassportId(energyPassportDataDTO.getPassportId());
+        List<EnergyPassportDataValue> dataValues = new ArrayList<>();
+        EPSectionValueUtil.jsonToValueCellsDTO(energyPassportDataDTO.getSectionDataJson())
+            .ifPresent((i) ->
+                i.getElements().forEach((e) -> {
+                    EnergyPassportDataId id = EnergyPassportDataId.builder()
+                        .passport(new EnergyPassport().id(energyPassportDataDTO.getPassportId()))
+                        .sectionKey(energyPassportDataDTO.getSectionKey())
+                        .complexIdx(e.get_complexIdx()).build();
+                    EnergyPassportDataValue value = new EnergyPassportDataValue();
+                    value.setEnergyPassportDataId(id);
+                    value.setDataValue(e.valueAsString());
+                    value.setDataType(e.dataType());
+                    dataValues.add(value);
+                })
+            );
+
+        energyPassportDataValueRepository.save(dataValues);
     }
 
 }

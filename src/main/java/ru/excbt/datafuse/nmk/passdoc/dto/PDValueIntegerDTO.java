@@ -14,6 +14,8 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueIntegerDTO extends PDValueDTO {
 
+    public static String TYPE = "Integer";
+
     @JsonInclude(value = Include.ALWAYS)
     @DecimalMin(value = "0")
     @Getter
@@ -28,4 +30,13 @@ public class PDValueIntegerDTO extends PDValueDTO {
         return result;
     }
 
+    @Override
+    public String valueAsString() {
+        return value != null ? value.toString() : null;
+    }
+
+    @Override
+    public String dataType() {
+        return TYPE;
+    }
 }

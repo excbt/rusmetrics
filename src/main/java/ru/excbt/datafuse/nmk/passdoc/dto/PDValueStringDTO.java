@@ -12,6 +12,8 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueString;
  */
 public class PDValueStringDTO extends PDValueDTO {
 
+    public static String TYPE = "String";
+
     @JsonInclude(value = Include.ALWAYS)
     @Getter
     @Setter
@@ -24,5 +26,15 @@ public class PDValueStringDTO extends PDValueDTO {
         result.setCommonProperties(srcValue);
         result.setValue(srcValue.getValue());
         return result;
+    }
+
+    @Override
+    public String valueAsString() {
+        return value;
+    }
+
+    @Override
+    public String dataType() {
+        return TYPE;
     }
 }

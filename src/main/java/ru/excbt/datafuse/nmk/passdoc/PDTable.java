@@ -115,7 +115,6 @@ public class PDTable implements PDReferable {
                 result.addAll(partValues);
             }
         }
-        log.info("Size of values: {}", result.size());
         return result;
     }
 

@@ -13,6 +13,8 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueCounter;
  */
 public class PDValueCounterDTO extends PDValueDTO {
 
+    public static String TYPE = "Counter";
+
     @JsonInclude(value = Include.ALWAYS)
     @Getter
     @Setter
@@ -27,4 +29,13 @@ public class PDValueCounterDTO extends PDValueDTO {
         return result;
     }
 
+    @Override
+    public String valueAsString() {
+        return value != null ? value.toString() : null;
+    }
+
+    @Override
+    public String dataType() {
+        return TYPE;
+    }
 }
