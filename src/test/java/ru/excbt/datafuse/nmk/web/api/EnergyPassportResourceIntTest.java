@@ -75,6 +75,16 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
     @Test
     @Transactional
+    public void testGetPassportData() throws Exception {
+
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data");
+    }
+
+    @Test
+    @Transactional
     public void testGetPassports() throws Exception {
 
         EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT,

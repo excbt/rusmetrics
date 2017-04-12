@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
@@ -8,14 +7,15 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
+import ru.excbt.datafuse.nmk.data.service.energypassport.EPSectionValueUtil;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -137,6 +137,10 @@ public class EnergyPassportService {
     public List<EnergyPassportDataDTO> findPassportData(Long passportId) {
         List<EnergyPassportData> passportDataList = energyPassportDataRepository.findByPassportId(passportId);
 
+        if (passportDataList.isEmpty()) {
+            return extractEnergyPassportData(passportId);
+        }
+
         return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
     }
 
@@ -152,7 +156,53 @@ public class EnergyPassportService {
         }
         List<EnergyPassportData> passportDataList = energyPassportDataRepository.findByPassportIdAndSectionKey(passportId, section.get().getSectionKey());
 
+        if (passportDataList.isEmpty()) {
+            return Arrays.asList(extractEnergyPassportData(section.get()));
+        }
+
         return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
+    public boolean validatePassportData (EnergyPassportDataDTO dto) {
+        return true;
+    }
+
+    /*
+
+     */
+    @Transactional(readOnly = true)
+    public List<EnergyPassportDataDTO> extractEnergyPassportData(Long passportId) {
+        EnergyPassport energyPassport = energyPassportRepository.findOne(passportId);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, passportId);
+        }
+        return extractEnergyPassportData(energyPassport);
+    }
+
+    /*
+
+     */
+    private List<EnergyPassportDataDTO> extractEnergyPassportData(EnergyPassport energyPassport) {
+        List<EnergyPassportDataDTO> result =
+            energyPassport.getSections().stream().map((i) -> {
+                EnergyPassportDataDTO dto = new EnergyPassportDataDTO();
+                dto.setPassportId(energyPassport.getId());
+                dto.setSectionKey(i.getSectionKey());
+                EPSectionValueUtil.extractValues(i.getSectionJson()).ifPresent((json) -> dto.setSectionDataJson(json));
+                return dto;
+            }).collect(Collectors.toList());
+
+        return result;
+    }
+
+    private EnergyPassportDataDTO extractEnergyPassportData(EnergyPassportSection energyPassportSection) {
+        EnergyPassportDataDTO dto = new EnergyPassportDataDTO();
+        dto.setPassportId(energyPassportSection.getPassport().getId());
+        dto.setSectionKey(energyPassportSection.getSectionKey());
+        EPSectionValueUtil.extractValues(energyPassportSection.getSectionJson()).ifPresent((json) -> dto.setSectionDataJson(json));
+        return dto;
     }
 
 }

@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -89,7 +92,10 @@ public class EnergyPassport401_2014Test {
             fail();
         }
 
+        Optional<String> extractedValues = EPSectionValueUtil.extractValues(templateJson,true);
 
+        assertTrue(extractedValues.isPresent());
+        assertEquals(valuesJson, extractedValues.get());
 
     }
 

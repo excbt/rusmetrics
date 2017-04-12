@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,22 +63,27 @@ public class EnergyPassportResource extends SubscrApiController {
 
     @RequestMapping(value = "/{id}/data", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> getPassportSectionsData(@PathVariable("id") Long passportId) {
-        List<EnergyPassportDataDTO> result = energyPassportService.findPassportData(passportId);
+    public ResponseEntity<?> getPassportSectionsData(@PathVariable("id") Long passportId,
+                                                     @RequestParam(name = "sectionId", required = false) Long sectionId) {
+        List<EnergyPassportDataDTO> result;
+        if (sectionId == null) {
+            result = energyPassportService.findPassportData(passportId);
+        } else {
+            result = energyPassportService.findPassportData(passportId, sectionId);
+        }
         return responseOK(result);
     }
 
-    @RequestMapping(value = "/{id}/data/{sectionId}", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> getPassportSectionData(@PathVariable("id") Long passportId,
-                                                    @PathVariable("sectionId") Long sectionId) {
-        List<EnergyPassportDataDTO> result = energyPassportService.findPassportData(passportId, sectionId);
-        return responseOK(result);
-    }
 
-    @RequestMapping(value = "/data", method = RequestMethod.PUT,
+    @RequestMapping(value = "/{id}/data", method = RequestMethod.PUT,
         produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> updatePassportSectionData(@RequestBody @Valid EnergyPassportDataDTO energyPassportDataDTO) {
+    public ResponseEntity<?> updatePassportSectionData(@PathVariable("id") Long passportId,
+                                                       @RequestBody @Valid EnergyPassportDataDTO energyPassportDataDTO) {
+        energyPassportDataDTO.setPassportId(passportId);
+
+        if (!energyPassportService.validatePassportData(energyPassportDataDTO)) {
+            return responseBadRequest();
+        }
 
         ApiActionProcess<EnergyPassportDataDTO> process = () -> energyPassportService.savePassportData(energyPassportDataDTO);
 
