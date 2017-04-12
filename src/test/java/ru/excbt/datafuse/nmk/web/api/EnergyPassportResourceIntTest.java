@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
@@ -81,6 +82,24 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         energyPassportRepository.flush();
 
         _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data");
+    }
+
+    @Test
+    @Transactional
+    public void testUpdatePassportData() throws Exception {
+
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_PASSPORT, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        List<EnergyPassportDataDTO> passportDataDTOList = energyPassportService.extractEnergyPassportData(passportDTO.getId());
+
+        passportDataDTOList.forEach((i) -> {
+            try {
+                _testUpdateJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data",i);
+            } catch (Exception e) {
+                Assert.fail();
+            }
+        });
     }
 
     @Test

@@ -15,9 +15,8 @@ import java.util.Optional;
  */
 public class EPSectionValueUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(EPSectionValueUtil.class);
-
     public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Logger log = LoggerFactory.getLogger(EPSectionValueUtil.class);
 
     static {
 
@@ -40,7 +39,7 @@ public class EPSectionValueUtil {
 
         PDTable pdTable1;
         try {
-            pdTable1 = OBJECT_MAPPER.readValue(json,PDTable.class);
+            pdTable1 = OBJECT_MAPPER.readValue(json, PDTable.class);
             pdTable1.linkInternalRefs();
         } catch (IOException e) {
             log.warn("Invalid input JSON. Can't parse it to PDTableValueCellsDTO");
@@ -53,6 +52,20 @@ public class EPSectionValueUtil {
         String result = JsonMapperUtils.objectToJson(valueCellsDTO, pretty);
         return Optional.of(result);
 
+    }
+
+
+    public static boolean validateJson(String json) {
+        if (json == null) {
+            return false;
+        }
+        PDTableValueCellsDTO cellValuesDTO;
+        try {
+            cellValuesDTO = OBJECT_MAPPER.readValue(json, PDTableValueCellsDTO.class);
+        } catch (IOException e) {
+            return false;
+        }
+        return cellValuesDTO.checkComplexIdxs();
     }
 
 }

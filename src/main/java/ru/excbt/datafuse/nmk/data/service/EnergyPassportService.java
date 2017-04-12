@@ -163,10 +163,11 @@ public class EnergyPassportService {
         return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
     }
 
-
-    @Transactional(readOnly = true)
     public boolean validatePassportData (EnergyPassportDataDTO dto) {
-        return true;
+        if (dto == null)
+            return false;
+
+        return EPSectionValueUtil.validateJson(dto.getSectionDataJson());
     }
 
     /*

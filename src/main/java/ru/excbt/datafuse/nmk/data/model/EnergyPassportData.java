@@ -60,6 +60,7 @@ public class EnergyPassportData extends JsonAbstractAuditableModel implements De
             throw new IllegalStateException();
         }
         this.sectionDataJson = dto.getSectionDataJson();
+        this.sectionKey = dto.getSectionKey();
         this.version = dto.getVersion();
     }
 }
