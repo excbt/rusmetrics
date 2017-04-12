@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
@@ -11,6 +12,8 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +58,35 @@ public class EnergyPassportResource extends SubscrApiController {
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> deleteEnergyPassport(@PathVariable("id") Long id) {
         ApiActionVoidProcess process = () -> energyPassportService.delete(id, getCurrentSubscriber());
+        return responseOK(process);
+    }
+
+    @RequestMapping(value = "/{id}/data", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getPassportSectionsData(@PathVariable("id") Long passportId,
+                                                     @RequestParam(name = "sectionId", required = false) Long sectionId) {
+        List<EnergyPassportDataDTO> result;
+        if (sectionId == null) {
+            result = energyPassportService.findPassportData(passportId);
+        } else {
+            result = energyPassportService.findPassportData(passportId, sectionId);
+        }
+        return responseOK(result);
+    }
+
+
+    @RequestMapping(value = "/{id}/data", method = RequestMethod.PUT,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> updatePassportSectionData(@PathVariable("id") Long passportId,
+                                                       @RequestBody @Valid EnergyPassportDataDTO energyPassportDataDTO) {
+        energyPassportDataDTO.setPassportId(passportId);
+
+        if (!energyPassportService.validatePassportData(energyPassportDataDTO)) {
+            return responseBadRequest();
+        }
+
+        ApiActionProcess<EnergyPassportDataDTO> process = () -> energyPassportService.savePassportData(energyPassportDataDTO);
+
         return responseOK(process);
     }
 

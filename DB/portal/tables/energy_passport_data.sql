@@ -4,6 +4,7 @@
 create table portal.energy_passport_data (
    id                   bigint default nextval('seq_global_id')  PRIMARY KEY,
    passport_id          bigint  not null references portal.energy_passport(id),
+   section_id           bigint,
    section_key          TEXT NOT null,
    section_data_json    jsonb
 );

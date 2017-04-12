@@ -5,7 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import ru.excbt.datafuse.nmk.data.domain.DTOModel;
+import ru.excbt.datafuse.nmk.data.domain.DTOUpdatableModel;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
+import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
 
@@ -17,12 +22,16 @@ import javax.persistence.*;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport_data")
 @Getter
 @Setter
-public class EnergyPassportData extends JsonAbstractAuditableModel {
+public class EnergyPassportData extends JsonAbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportDataDTO>,
+    DTOUpdatableModel<EnergyPassportDataDTO> {
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "passport_id")
     private EnergyPassport passport;
+
+    @Column(name = "section_id")
+    private Long sectionId;
 
     @Column(name = "section_key")
     private String sectionKey;
@@ -37,4 +46,21 @@ public class EnergyPassportData extends JsonAbstractAuditableModel {
     @Column(name = "deleted")
     private int deleted;
 
+    @Override
+    public EnergyPassportDataDTO getDTO() {
+        return ModelMapperUtil.map(this, EnergyPassportDataDTO.class);
+    }
+
+    @Override
+    public void updateFromDTO(EnergyPassportDataDTO dto) {
+        if (this.sectionKey != null && !this.sectionKey.equals(dto.getSectionKey())) {
+            throw new IllegalArgumentException();
+        }
+        if (this.deleted == 1) {
+            throw new IllegalStateException();
+        }
+        this.sectionDataJson = dto.getSectionDataJson();
+        this.sectionKey = dto.getSectionKey();
+        this.version = dto.getVersion();
+    }
 }

@@ -48,7 +48,7 @@ public class PDTablePart implements PDReferable {
     @JsonInclude(value = Include.NON_NULL)
     @Getter
     @Setter
-    private PDTable innerPdTable;
+    private PDInnerTable innerPdTable;
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     @Getter
@@ -240,6 +240,10 @@ public class PDTablePart implements PDReferable {
 
     @Override
     public void linkInternalRefs() {
+        if (innerPdTable != null) {
+            innerPdTable.setParentTablePart(this);
+            innerPdTable.linkInternalRefs();
+        }
         for (PDTableCell<?> cell: elements) {
             cell.tablePart(this);
             cell.linkInternalRefs();
