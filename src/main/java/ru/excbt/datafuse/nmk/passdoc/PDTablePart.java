@@ -151,6 +151,11 @@ public class PDTablePart implements PDReferable {
         return this;
     }
 
+    public PDTablePart and() {
+        return this;
+    }
+
+
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     public List<Double> get_columnWidths() {
 

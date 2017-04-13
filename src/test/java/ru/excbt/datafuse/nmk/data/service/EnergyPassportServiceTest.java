@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
@@ -13,6 +15,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
@@ -24,11 +27,16 @@ import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 public class EnergyPassportServiceTest extends JpaSupportTest {
 
+    private static final Logger log = LoggerFactory.getLogger(EnergyPassportServiceTest.class);
+
     @Autowired
     private EnergyPassportService energyPassportService;
 
     @Autowired
     private EnergyPassportTemplateRepository energyPassportTemplateRepository;
+
+    @Autowired
+    private EnergyPassportTemplateService energyPassportTemplateService;
 
     @Test
     @Transactional
@@ -40,5 +48,19 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
         Assert.assertNotNull(energyPassportDTO);
         Assert.assertTrue(energyPassportDTO.getSections().size() == 1);
     }
+
+    @Test
+    @Transactional
+    public void testUpdatingPassportFromTemplate() throws Exception {
+        EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
+        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014.ENERGY_PASSPORT);
+        EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
+        log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
+        energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());
+    }
+
+
+
+
 }
 

@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
+    public static final String DUMMY_JSON = "{\"a\":123}";
+
     @Autowired
     private EnergyPassportService energyPassportService;
 
@@ -45,7 +47,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     public void testCreatePassport() throws Exception {
 
         EnergyPassportTemplate energyPassportTemplate = EnergyPassportTemplateResourceIntTest.createEnergyPassportTemplate();
-        energyPassportTemplate.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1));
+        energyPassportTemplate.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1).sectionJson(DUMMY_JSON));
         energyPassportTemplateRepository.saveAndFlush(energyPassportTemplate);
 
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").build();
