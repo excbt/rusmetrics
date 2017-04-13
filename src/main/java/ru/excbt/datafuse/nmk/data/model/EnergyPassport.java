@@ -7,12 +7,14 @@ import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.DTOModel;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +72,11 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
 
     @Override
     public EnergyPassportDTO getDTO() {
-        return ModelMapperUtil.map(this, EnergyPassportDTO.class);
+        EnergyPassportDTO result = ModelMapperUtil.map(this, EnergyPassportDTO.class);
+        if (!result.getSections().stream().filter((i) -> i.getSectionOrder() != null).findFirst().isPresent()) {
+            result.getSections().sort(Comparator.comparingInt(EnergyPassportSectionDTO::getSectionOrder));
+        }
+        return result;
     }
 
     @JsonIgnore

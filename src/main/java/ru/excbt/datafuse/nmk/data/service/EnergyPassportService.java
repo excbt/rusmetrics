@@ -74,6 +74,7 @@ public class EnergyPassportService {
             EnergyPassportSection energyPassportSection = new EnergyPassportSection();
             energyPassportSection.setSectionKey(sectionTemplate.getSectionKey());
             energyPassportSection.setSectionJson(sectionTemplate.getSectionJson());
+            energyPassportSection.setSectionOrder(sectionTemplate.getSectionOrder());
             energyPassport.addSection(energyPassportSection);
         }
         energyPassportRepository.save(energyPassport);
