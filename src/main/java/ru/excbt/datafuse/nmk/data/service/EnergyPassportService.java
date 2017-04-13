@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class EnergyPassportService {
+
+    private static final Logger log = LoggerFactory.getLogger(EnergyPassportService.class);
 
     private final EnergyPassportTemplateRepository energyPassportTemplateRepository;
     private final EnergyPassportRepository energyPassportRepository;
@@ -119,7 +123,7 @@ public class EnergyPassportService {
             DBExceptionUtils.entityNotFoundException(EnergyPassport.class,energyPassportDataDTO.getPassportId());
         }
 
-        Optional<EnergyPassportSection> section = passport.getSection(energyPassportDataDTO.getSectionKey());
+        Optional<EnergyPassportSection> section = passport.searchSection(energyPassportDataDTO.getSectionKey());
         if (!section.isPresent()) {
             DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, energyPassportDataDTO.getSectionKey(), "sectionKey");
         }
@@ -267,6 +271,49 @@ public class EnergyPassportService {
             );
 
         energyPassportDataValueRepository.save(dataValues);
+    }
+
+    /**
+     *
+     * @param passportId
+     * @return
+     */
+    private EnergyPassport findPassportChecked(Long passportId) {
+        EnergyPassport energyPassport = energyPassportRepository.findOne(passportId);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, passportId);
+        }
+        return energyPassport;
+    }
+
+    /**
+     *
+     * @param passportId
+     */
+    @Transactional
+    protected void updateEnergyPassportFromTemplate(Long passportId) {
+        EnergyPassport energyPassport = findPassportChecked(passportId);
+        EnergyPassportTemplate template = energyPassport.getPassportTemplate();
+        template.getSectionTemplates().forEach((t) -> {
+            energyPassport.searchSection(t.getSectionKey()).ifPresent((s) -> s.updateFromTemplate(t));
+        });
+        energyPassportRepository.save(energyPassport);
+    }
+
+    @Transactional
+    public void updateExistingEnergyPassportsFromTemplate(Long passportTamplateId) {
+        List<EnergyPassport> energyPassports = energyPassportRepository.findByPassportTemplateId(passportTamplateId);
+        energyPassports.forEach((p) -> {
+            log.debug("Found EnergyPassport(id={})", p.getId());
+            EnergyPassportTemplate template = p.getPassportTemplate();
+            template.getSectionTemplates().forEach((t) ->
+                p.searchSection(t.getSectionKey()).ifPresent((s) -> {
+                log.debug("Updating EnergyPassport(id={}) section(id={})", p.getId(), s.getId());
+                s.updateFromTemplate(t);
+                })
+            );
+        });
+        energyPassportRepository.save(energyPassports);
     }
 
 }

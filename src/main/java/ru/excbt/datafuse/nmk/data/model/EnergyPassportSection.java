@@ -45,4 +45,9 @@ public class EnergyPassportSection extends JsonAbstractAuditableModel {
     @Column(name = "deleted")
     private int deleted;
 
+    public void updateFromTemplate (EnergyPassportSectionTemplate template) {
+        this.sectionKey = template.getSectionKey();
+        this.sectionJson = template.getSectionJson();
+        this.sectionOrder = template.getSectionOrder();
+    }
 }

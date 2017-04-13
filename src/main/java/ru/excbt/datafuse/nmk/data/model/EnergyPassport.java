@@ -80,7 +80,7 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
     }
 
     @JsonIgnore
-    public Optional<EnergyPassportSection> getSection(String sectionKey) {
+    public Optional<EnergyPassportSection> searchSection(String sectionKey) {
         if (sectionKey == null) {
             return Optional.empty();
         }
