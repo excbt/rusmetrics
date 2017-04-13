@@ -41,7 +41,7 @@ public class WWWMetricsResource implements ServletContextAware {
 
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
         if (!activeProfiles.contains(Constants.SPRING_PROFILE_PRODUCTION)) {
-            return ResponseEntity.ok("<script><!-- DEVELOPMENT --></script>");
+            return ResponseEntity.ok("<!-- DEVELOPMENT -->");
         }
 
         String rootPath = servletContext.getRealPath("/");
@@ -50,7 +50,7 @@ public class WWWMetricsResource implements ServletContextAware {
         try {
             content = FileUtils.readFileToString(new File(jsPath), StandardCharsets.UTF_8.name());
         } catch (IOException e) {
-            content = "<script><!-- NOT FOUND --></script>";
+            content = "<!-- NOT FOUND -->";
         }
         return ResponseEntity.ok(content);
     }
