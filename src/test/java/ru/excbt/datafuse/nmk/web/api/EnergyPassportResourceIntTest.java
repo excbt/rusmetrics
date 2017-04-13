@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
-import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;

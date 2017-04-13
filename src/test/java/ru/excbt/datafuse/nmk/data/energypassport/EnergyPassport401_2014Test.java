@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.energypassport;
+package ru.excbt.datafuse.nmk.data.energypassport;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

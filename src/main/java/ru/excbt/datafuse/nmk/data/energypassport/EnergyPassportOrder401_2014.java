@@ -1,11 +1,8 @@
-package ru.excbt.datafuse.nmk.data.service.energypassport;
+package ru.excbt.datafuse.nmk.data.energypassport;
 
 import org.springframework.stereotype.Service;
-import ru.excbt.datafuse.nmk.data.model.EnergyPassportSectionTemplate;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
-import ru.excbt.datafuse.nmk.data.util.JsonMapperUtils;
 import ru.excbt.datafuse.nmk.passdoc.*;
-import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
 /**
  * Created by kovtonyk on 03.04.2017.

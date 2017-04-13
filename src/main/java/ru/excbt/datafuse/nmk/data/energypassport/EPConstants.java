@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.energypassport;
+package ru.excbt.datafuse.nmk.data.energypassport;
 
 /**
  * Created by kovtonyk on 13.04.2017.

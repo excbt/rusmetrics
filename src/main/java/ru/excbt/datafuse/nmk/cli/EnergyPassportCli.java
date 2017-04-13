@@ -10,8 +10,8 @@ import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportTemplateService;
-import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
-import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014_Add;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 
 import java.io.IOException;

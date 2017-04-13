@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.energypassport;
+package ru.excbt.datafuse.nmk.data.energypassport;
 
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;

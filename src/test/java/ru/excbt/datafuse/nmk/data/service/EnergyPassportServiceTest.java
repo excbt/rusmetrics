@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
-import ru.excbt.datafuse.nmk.data.service.energypassport.EnergyPassport401_2014;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
 
 /**
