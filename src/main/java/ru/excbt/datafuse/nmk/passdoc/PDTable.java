@@ -95,8 +95,12 @@ public class PDTable implements PDReferable {
     }
 
     public PDTablePart findHeader() {
+        if (parts.isEmpty()) {
+            return null;
+        }
         Optional<PDTablePart> result = parts.stream().filter(i -> PDPartType.HEADER.equals(i.getPartType())).findFirst();
-        return result.isPresent() ? result.get() : null;
+        // if we cannot find header, then return first part
+        return result.isPresent() ? result.get() : parts.get(0);
     }
 
     @Override

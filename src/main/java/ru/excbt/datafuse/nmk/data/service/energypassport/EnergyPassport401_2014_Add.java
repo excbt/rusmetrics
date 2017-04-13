@@ -52,7 +52,8 @@ public class EnergyPassport401_2014_Add {
             .createStaticElement("Тепловая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.GCAL_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Тепловая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2);
+            .and().createDoubleValueElement().keyValueIdx(2)
+            .and().widthsOfElements(30,20,10,30,20,10);
 
         innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_electricity")
             .createStaticElement("Электрическая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.KWH_YEAR)

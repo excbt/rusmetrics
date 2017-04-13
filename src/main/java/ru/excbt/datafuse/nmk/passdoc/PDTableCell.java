@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -86,7 +85,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     private String columnKey;
 
 
-    public T width(int value) {
+    public T width(double value) {
         this.width = value;
         return (T) this;
     }
@@ -158,6 +157,19 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         }
         return result;
     }
+
+    protected List<PDTableCell<?>> searchLowestElements() {
+        List<PDTableCell<?>> result = new ArrayList<>();
+        if (childElements.size() == 0) {
+            result.add(this);
+        } else {
+            for (PDTableCell cell : childElements) {
+                result.addAll(cell.searchLowestElements());
+            }
+        }
+        return result;
+    }
+
 
     protected int topLevel() {
         int currentLevel = 0;

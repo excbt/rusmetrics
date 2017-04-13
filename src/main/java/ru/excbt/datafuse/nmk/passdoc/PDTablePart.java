@@ -5,11 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -22,6 +26,7 @@ import java.util.OptionalInt;
 @JsonPropertyOrder({ "key", "partType", "caption", "dynamic", "dynamicSuffix", "valueIdxSuffix", "elements", "innerPdTable" })
 public class PDTablePart implements PDReferable {
 
+    private static final Logger log = LoggerFactory.getLogger(PDTablePart.class);
 
     @JsonIgnore
     @Getter
@@ -155,6 +160,28 @@ public class PDTablePart implements PDReferable {
         return this;
     }
 
+    public PDTablePart widthsOfElements(double ... widths) {
+
+        List<PDTableCell<?>> lowestElements = searchLowestElements();
+        Preconditions.checkState(widths.length == lowestElements.size());
+        int idx = 0;
+        for (PDTableCell<?> cell: lowestElements) {
+            cell.width(widths[idx++]);
+        }
+
+        return this;
+    }
+
+    public PDTablePart widthsOfElements(int ... widths) {
+        widthsOfElements(Arrays.stream(widths).asDoubleStream().toArray());
+        return this;
+    }
+
+    private List<PDTableCell<?>> searchLowestElements() {
+        List<PDTableCell<?>> result = new ArrayList<>();
+        elements.forEach((e) -> result.addAll(e.searchLowestElements()));
+        return result;
+    }
 
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     public List<Double> get_columnWidths() {
@@ -198,6 +225,7 @@ public class PDTablePart implements PDReferable {
 
         return result;
     }
+
 
 
     public boolean hasVerticalElements() {
