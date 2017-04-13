@@ -236,7 +236,8 @@ public class EnergyPassportService {
 
         pass.getSections().forEach((i) -> {
             EnergyPassportDataDTO templateData = extractEnergyPassportData(i);
-            boolean exists = src.stream().filter((j) -> i.getSectionKey() == j.getSectionKey()).findFirst().isPresent();
+            boolean exists = src.stream().filter((j) -> j.getSectionKey() != null && j.getSectionKey().equals(i.getSectionKey()))
+                .findFirst().isPresent();
             if (!exists) {
                 result.add(templateData);
             }
