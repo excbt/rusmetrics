@@ -301,15 +301,25 @@ public class EnergyPassportService {
     }
 
     @Transactional
-    public void updateExistingEnergyPassportsFromTemplate(Long passportTamplateId) {
-        List<EnergyPassport> energyPassports = energyPassportRepository.findByPassportTemplateId(passportTamplateId);
+    public void updateExistingEnergyPassportsFromTemplate(Long passportTemplateId) {
+        List<EnergyPassport> energyPassports = energyPassportRepository.findByPassportTemplateId(passportTemplateId);
         energyPassports.forEach((p) -> {
             log.debug("Found EnergyPassport(id={})", p.getId());
             EnergyPassportTemplate template = p.getPassportTemplate();
             template.getSectionTemplates().forEach((t) ->
-                p.searchSection(t.getSectionKey()).ifPresent((s) -> {
-                log.debug("Updating EnergyPassport(id={}) section(id={})", p.getId(), s.getId());
-                s.updateFromTemplate(t);
+                p.searchSection(t.getSectionKey())
+                    .map((s) -> {
+                        log.debug("Updating EnergyPassport(id={}) section(id={})", p.getId(), s.getId());
+                        s.updateFromTemplate(t);
+                        return s;
+                    }).orElseGet(() -> {
+                        log.debug("Adding new section to EnergyPassport(id={}), sectionKey: {}", p.getId(), t.getSectionKey());
+                        EnergyPassportSection energyPassportSection = new EnergyPassportSection();
+                        energyPassportSection.setSectionKey(t.getSectionKey());
+                        energyPassportSection.setSectionJson(t.getSectionJson());
+                        energyPassportSection.setSectionOrder(t.getSectionOrder());
+                        p.addSection(energyPassportSection);
+                        return energyPassportSection;
                 })
             );
         });
