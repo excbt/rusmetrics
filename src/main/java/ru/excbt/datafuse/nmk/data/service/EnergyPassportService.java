@@ -310,6 +310,10 @@ public class EnergyPassportService {
      * Updates section from section templates
      */
     private BiFunction<EnergyPassportSection, EnergyPassportSectionTemplate, EnergyPassportSection> energyPassportSectionUpdater = (section, sectionTemplate) -> {
+        log.debug("Updating passport section (id:{}, sectionKey:{}) from sectionTemplate (id:{})",
+            section.getId(),
+            section.getSectionKey(),
+            sectionTemplate.getId());
         section.updateFromTemplate(sectionTemplate);
         return section;
     };
