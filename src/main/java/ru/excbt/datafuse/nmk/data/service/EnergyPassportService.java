@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -74,13 +75,8 @@ public class EnergyPassportService {
             }
         }
 
-        for (EnergyPassportSectionTemplate sectionTemplate : energyPassportTemplate.get().getSectionTemplates()) {
-            EnergyPassportSection energyPassportSection = new EnergyPassportSection();
-            energyPassportSection.setSectionKey(sectionTemplate.getSectionKey());
-            energyPassportSection.setSectionJson(sectionTemplate.getSectionJson());
-            energyPassportSection.setSectionOrder(sectionTemplate.getSectionOrder());
-            energyPassport.addSection(energyPassportSection);
-        }
+        energyPassportTemplate.get().getSectionTemplates().forEach((s) -> energyPassportSectionCreator.apply(energyPassport,s));
+
         energyPassportRepository.save(energyPassport);
 
         EnergyPassportDTO energyPassportDTO = energyPassport.getDTO();
@@ -145,6 +141,11 @@ public class EnergyPassportService {
         return passportData.getDTO();
     }
 
+    /**
+     *
+     * @param passportId
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<EnergyPassportDataDTO> findPassportData(Long passportId) {
 
@@ -165,6 +166,12 @@ public class EnergyPassportService {
         return passportDataDTOList;
     }
 
+    /**
+     *
+     * @param passportId
+     * @param sectionId
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<EnergyPassportDataDTO> findPassportData(Long passportId, Long sectionId) {
         EnergyPassport energyPassport = energyPassportRepository.findOne(passportId);
@@ -287,6 +294,27 @@ public class EnergyPassportService {
     }
 
     /**
+     * Creates section from section templates
+     */
+    private BiFunction<EnergyPassport, EnergyPassportSectionTemplate, EnergyPassportSection> energyPassportSectionCreator = (passport, sectionTemplate) -> {
+        log.debug("Adding new section to EnergyPassport(id={}), sectionKey: {}", passport.getId(), sectionTemplate.getSectionKey());
+        EnergyPassportSection energyPassportSection = new EnergyPassportSection();
+        energyPassportSection.setSectionKey(sectionTemplate.getSectionKey());
+        energyPassportSection.setSectionJson(sectionTemplate.getSectionJson());
+        energyPassportSection.setSectionOrder(sectionTemplate.getSectionOrder());
+        passport.addSection(energyPassportSection);
+        return energyPassportSection;
+    };
+
+    /**
+     * Updates section from section templates
+     */
+    private BiFunction<EnergyPassportSection, EnergyPassportSectionTemplate, EnergyPassportSection> energyPassportSectionUpdater = (section, sectionTemplate) -> {
+        section.updateFromTemplate(sectionTemplate);
+        return section;
+    };
+
+    /**
      *
      * @param passportId
      */
@@ -294,11 +322,14 @@ public class EnergyPassportService {
     protected void updateEnergyPassportFromTemplate(Long passportId) {
         EnergyPassport energyPassport = findPassportChecked(passportId);
         EnergyPassportTemplate template = energyPassport.getPassportTemplate();
-        template.getSectionTemplates().forEach((t) -> {
-            energyPassport.searchSection(t.getSectionKey()).ifPresent((s) -> s.updateFromTemplate(t));
-        });
+        template.getSectionTemplates().forEach((t) ->
+            energyPassport.searchSection(t.getSectionKey())
+                .map((s) -> energyPassportSectionUpdater.apply(s, t))
+                .orElseGet(() -> energyPassportSectionCreator.apply(energyPassport, t))
+        );
         energyPassportRepository.save(energyPassport);
     }
+
 
     @Transactional
     public void updateExistingEnergyPassportsFromTemplate(Long passportTemplateId) {
@@ -308,21 +339,10 @@ public class EnergyPassportService {
             EnergyPassportTemplate template = p.getPassportTemplate();
             template.getSectionTemplates().forEach((t) ->
                 p.searchSection(t.getSectionKey())
-                    .map((s) -> {
-                        log.debug("Updating EnergyPassport(id={}) section(id={})", p.getId(), s.getId());
-                        s.updateFromTemplate(t);
-                        return s;
-                    }).orElseGet(() -> {
-                        log.debug("Adding new section to EnergyPassport(id={}), sectionKey: {}", p.getId(), t.getSectionKey());
-                        EnergyPassportSection energyPassportSection = new EnergyPassportSection();
-                        energyPassportSection.setSectionKey(t.getSectionKey());
-                        energyPassportSection.setSectionJson(t.getSectionJson());
-                        energyPassportSection.setSectionOrder(t.getSectionOrder());
-                        p.addSection(energyPassportSection);
-                        return energyPassportSection;
-                })
-            );
+                    .map((s) -> energyPassportSectionUpdater.apply(s, t))
+                    .orElseGet(() -> energyPassportSectionCreator.apply(p,t)));
         });
+        ;
         energyPassportRepository.save(energyPassports);
     }
 
