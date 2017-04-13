@@ -11,10 +11,88 @@ import ru.excbt.datafuse.nmk.passdoc.*;
 public class EnergyPassport401_2014_Add {
 
 
-    /**
-     * page 26 of Order
-     * @return
-     */
+    public EnergyPassportSectionTemplateFactory section_1_4() {
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.4")
+            .caption("ИНФОРМАЦИЯ\n" +
+                "           о потреблении энергетических ресурсов на производство " +
+                "                       продукции (работ, услуг)\n" +
+                "                                за 20__ год\n")
+            .shortCaption("1.4")
+            .sectionNr("1.4")
+            .sectionHeader("ИНФОРМАЦИЯ\n" +
+                "           о потреблении энергетических ресурсов на производство\n" +
+                "                       продукции (работ, услуг)\n" +
+                "                                за 20__ год\n");
+
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1").createStaticElement("1.")
+            .and().createStaticElement("Промышленное производство (цех, участок)")
+            .and().createStringValueElement();
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1_1").createStaticElement("1.1.")
+            .and().createStaticElement("Отраслевая принадлежность")
+            .and().createStringValueElement();
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1_2").createStaticElement("1.2.")
+            .and().createStaticElement("Основные виды продукции")
+            .and().createStringValueElement();
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1_2b")
+            .createStaticElement("Код основной продукции (работ, услуг) по ОКП")
+            .and().createStringValueElement();
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).createStaticElement("2. ")
+            .and().createStaticElement("Сведения о потреблении энергоресурсов по номенклатуре основной продукции\n" +
+                "(работам, услугам)\n");
+
+        final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_2").createInnerTable();
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_heat")
+            .createStaticElement("Тепловая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.GCAL_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(1)
+            .and().createStaticElement("Тепловая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(2);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_electricity")
+            .createStaticElement("Электрическая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.KWH_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(1)
+            .and().createStaticElement("Электрическая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(2);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_gas")
+            .and().createStaticElement("Газ").keyValueIdx(1).and().createStaticElement(EPConstants.KVM_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(1)
+            .and().createStaticElement("Газ").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(2);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_liquid")
+            .and().createStaticElement("Жидкое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(1)
+            .and().createStaticElement("Жидкое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(2);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_solid")
+            .and().createStaticElement("Твердое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(1)
+            .and().createStaticElement("Твердое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(2);
+
+        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_motor")
+            .and().createStaticElement("Моторное топливо").keyValueIdx(1).and().createStaticElement(EPConstants.L_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(1)
+            .and().createStaticElement("Моторное топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createDoubleValueElement().keyValueIdx(2);
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
+
+        /**
+         * page 26 of Order
+         * @return
+         */
     public EnergyPassportSectionTemplateFactory section_2_3() {
 
         final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.3")
