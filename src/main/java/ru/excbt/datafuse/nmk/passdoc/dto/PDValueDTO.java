@@ -3,7 +3,10 @@ package ru.excbt.datafuse.nmk.passdoc.dto;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.excbt.datafuse.nmk.passdoc.*;
+import ru.excbt.datafuse.nmk.passdoc.ComplexIdx;
+import ru.excbt.datafuse.nmk.passdoc.PDCellType;
+import ru.excbt.datafuse.nmk.passdoc.PDConstants;
+import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 
 /**
  * Created by kovtonyk on 28.03.2017.
@@ -103,4 +106,18 @@ public abstract class PDValueDTO implements ComplexIdx{
     public abstract String valueAsString();
 
     public abstract String dataType();
+
+    @Override
+    public String toString() {
+        return "PDValueDTO{" +
+            "cellType=" + cellType +
+            ", keyValueIdx=" + keyValueIdx +
+            ", valuePackIdx=" + valuePackIdx +
+            ", partKey='" + partKey + '\'' +
+            ", columnKey='" + columnKey + '\'' +
+            ", _packed=" + _packed +
+            ", _dynamic=" + _dynamic +
+            ", _dynamicIdx=" + _dynamicIdx +
+            '}';
+    }
 }

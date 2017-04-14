@@ -27,4 +27,15 @@ public class EnergyPassportSectionDTO {
     private Integer sectionOrder;
 
     private int version;
+
+    @Override
+    public String toString() {
+        return "EnergyPassportSectionDTO{" +
+            "id=" + id +
+            ", passportId=" + passportId +
+            ", sectionKey='" + sectionKey + '\'' +
+            ", sectionOrder=" + sectionOrder +
+            ", version=" + version +
+            '}';
+    }
 }

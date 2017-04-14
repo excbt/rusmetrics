@@ -1,11 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,7 +12,6 @@ import java.util.List;
  */
 @Getter
 @Setter
-@ToString
 public class EnergyPassportTemplateDTO {
 
     private Long id;
@@ -31,7 +26,7 @@ public class EnergyPassportTemplateDTO {
 
     private LocalDate documentDate;
 
-    private Integer version;
+    private int version;
 
     private List<EnergyPassportSectionTemplateDTO> sectionTemplates = new ArrayList<>();
 
@@ -40,4 +35,17 @@ public class EnergyPassportTemplateDTO {
         section.setSectionOrder(sectionTemplates.size());
     }
 
+    @Override
+    public String toString() {
+        return "EnergyPassportTemplateDTO{" +
+            "id=" + id +
+            ", keyname='" + keyname + '\'' +
+            ", description='" + description + '\'' +
+            ", documentName='" + documentName + '\'' +
+            ", documentVersion='" + documentVersion + '\'' +
+            ", documentDate=" + documentDate +
+            ", version=" + version +
+            ", sectionTemplates=" + sectionTemplates +
+            '}';
+    }
 }

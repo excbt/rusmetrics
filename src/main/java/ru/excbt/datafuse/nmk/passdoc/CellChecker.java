@@ -23,7 +23,7 @@ public final class CellChecker {
         for (T cell: cells) {
             boolean pass = keys.add(cell.get_complexIdx());
             if (!pass) {
-                log.warn("complexIdx: {} exists", cell.get_complexIdx());
+                log.warn("complexIdx: {} exists. Object: ", cell.get_complexIdx(), cell.toString());
                 return false;
             }
         }

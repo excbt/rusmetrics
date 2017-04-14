@@ -20,6 +20,17 @@ public class EnergyPassportSectionTemplateDTO {
 
     private Integer sectionOrder;
 
-    private Integer version;
+    private int version;
 
+    @Override
+    public String toString() {
+        return "EnergyPassportSectionTemplateDTO{" +
+            "id=" + id +
+            ", passportTemplateId=" + passportTemplateId +
+            ", sectionKey='" + sectionKey + '\'' +
+            ", sectionJson='" + sectionJson + '\'' +
+            ", sectionOrder=" + sectionOrder +
+            ", version=" + version +
+            '}';
+    }
 }

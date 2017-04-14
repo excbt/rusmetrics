@@ -23,4 +23,15 @@ public class EnergyPassportDataDTO {
     private String sectionDataJson;
 
     private int version;
+
+    @Override
+    public String toString() {
+        return "EnergyPassportDataDTO{" +
+            "id=" + id +
+            ", passportId=" + passportId +
+            ", sectionKey='" + sectionKey + '\'' +
+            ", sectionDataJson='" + sectionDataJson + '\'' +
+            ", version=" + version +
+            '}';
+    }
 }
