@@ -90,6 +90,112 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    public EnergyPassportSectionTemplateFactory section_2_2() {
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.2")
+            .caption("2.2. Общие сведения " +
+                "о лице, в отношении которого указана информация")
+            .shortCaption("2.2")
+            .sectionNr("2.2")
+            .sectionHeader("Общие сведения " +
+                "о лице, в отношении которого указана информация");
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_NAME")
+            .and().createStringValueElement();
+
+        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_NAME")
+            .and().createStaticElement("(полное наименование юридического лица, в отношении которого" +
+            "указана информация)");
+
+        topTable.createPartLine("1.")
+            .and().createStaticElement("Организационно-правовая форма")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("2.")
+            .and().createStaticElement("Почтовый адрес организации")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.")
+            .and().createStaticElement("Место нахождения")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("4.")
+            .and().createStaticElement("Полное наименование организации (основного общества - для дочерних " +
+            "(зависимых) обществ)")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("5.")
+            .and().createStaticElement("Доля  государственной (муниципальной) собственности в уставном капитале" +
+            "организации, %")
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6.")
+            .and().createStaticElement("Реквизиты организации:");
+
+        topTable.createPartLine("6.1.")
+            .and().createStaticElement("ОГРН")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("6.2.")
+            .and().createStaticElement("ИНН")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("6.3.")
+            .and().createStaticElement("КПП (для юридических лиц)")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("6.4.")
+            .and().createStaticElement("Банковские реквизиты:");
+
+        topTable.createPartLine("6.4.1.")
+            .and().createStaticElement("Полное наименование банка")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("6.4.2.")
+            .and().createStaticElement("БИК")
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("6.4.3.")
+            .and().createStaticElement("Расчетный счет")
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("6.4.4.")
+            .and().createStaticElement("Лицевой счет (при наличии)")
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.")
+            .and().createStaticElement("Коды по классификаторам:")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("7.1.")
+            .and().createStaticElement("Основной код по ОКВЭД")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("7.2.")
+            .and().createStaticElement("Дополнительные коды по ОКВЭД")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("7.3.")
+            .and().createStaticElement("Код по ОКОГУ")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("8.")
+            .and().createStaticElement("Ф.И.О., должность руководителя")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("9.")
+            .and().createStaticElement("Ф.И.О.,  должность, телефон, факс, адрес электронной почты должностного " +
+            "лица, ответственного за техническое состояние оборудования")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("10.")
+            .and().createStaticElement("Ф.И.О., должность, телефон, факс, адрес электронной почты должностного " +
+            "лица, ответственного за энергетическое хозяйство")
+            .and().createStringValueElement();
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
         /**
          * page 26 of Order
          * @return
