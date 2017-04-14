@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -129,6 +130,12 @@ public class PDTable implements PDReferable {
         String key = PREFIX + (nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
 
         return createPart(PDPartType.SIMPLE_LINE).key(key).createStaticElement(nr).and();
+    }
+
+    public PDTablePart createPartRow(String nr) {
+        String nr2 = nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
+        String key = PREFIX + nr2;
+        return createPart(PDPartType.ROW).key(key).createStaticElement(nr).and();
     }
 
 }

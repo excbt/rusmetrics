@@ -26,15 +26,15 @@ public class EnergyPassport401_2014_Add {
                 "                                за 20__ год\n");
 
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1").createStaticElement("1.")
+        topTable.createPartLine("1.")
             .and().createStaticElement("Промышленное производство (цех, участок)")
             .and().createStringValueElement();
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1_1").createStaticElement("1.1.")
+        topTable.createPartLine("1.1.")
             .and().createStaticElement("Отраслевая принадлежность")
             .and().createStringValueElement();
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1_2").createStaticElement("1.2.")
+        topTable.createPartLine("1.2.")
             .and().createStaticElement("Основные виды продукции")
             .and().createStringValueElement();
 
@@ -48,38 +48,38 @@ public class EnergyPassport401_2014_Add {
 
         final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_2").createInnerTable();
 
-        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_heat")
+        innerTable.createPartRowInner( "_heat")
             .createStaticElement("Тепловая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.GCAL_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Тепловая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
             .and().createDoubleValueElement().keyValueIdx(2)
             .and().widthsOfElements(30,20,10,30,20,10);
 
-        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_electricity")
+        innerTable.createPartRowInner("_electricity")
             .createStaticElement("Электрическая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.KWH_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Электрическая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
             .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_gas")
+        innerTable.createPartRowInner("_gas")
             .and().createStaticElement("Газ").keyValueIdx(1).and().createStaticElement(EPConstants.KVM_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Газ").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
             .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_liquid")
+        innerTable.createPartRowInner("_liquid")
             .and().createStaticElement("Жидкое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Жидкое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
             .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_solid")
+        innerTable.createPartRowInner("_solid")
             .and().createStaticElement("Твердое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Твердое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
             .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPart(PDPartType.ROW).key(innerTable.getParentPartKey() + "_motor")
+        innerTable.createPartRowInner("_motor")
             .and().createStaticElement("Моторное топливо").keyValueIdx(1).and().createStaticElement(EPConstants.L_YEAR)
             .and().createDoubleValueElement().keyValueIdx(1)
             .and().createStaticElement("Моторное топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
@@ -243,24 +243,24 @@ public class EnergyPassport401_2014_Add {
             i.setValueGroup("P_1.1.*");
         });
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.1").createStaticElement("1.1.1")
+        pdTable.createPartRow("1.1.1")
             .and().createStaticElement("полученной от стороннего источника")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.2").createStaticElement("1.1.2")
+        pdTable.createPartRow("1.1.2")
             .and().createStaticElement("собственного производства")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.3").createStaticElement("1.1.3")
+        pdTable.createPartRow("1.1.3")
             .and().createStaticElement("потребленной на собственные нужды")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.1.4").createStaticElement("1.1.4")
+        pdTable.createPartRow("1.1.4")
             .and().createStaticElement("отданной субабонентам (сторонним потребителям)")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
         /// 1.2
-        pdTable.createPart(PDPartType.ROW).key("P_1.2").createStaticElement("1.2")
+        pdTable.createPartRow("1.2")
             .and().createStaticElement("Количество необорудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
             "в том числе:\n")
             .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
@@ -268,41 +268,41 @@ public class EnergyPassport401_2014_Add {
             i.setValueGroup("P_2.1.*");
         });
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.2.1").createStaticElement("1.2.1")
+        pdTable.createPartRow("1.2.1")
             .and().createStaticElement("полученной от стороннего источника")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.2.2").createStaticElement("1.2.2")
+        pdTable.createPartRow("1.2.2")
             .and().createStaticElement("собственного производства")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.2.3").createStaticElement("1.2.3")
+        pdTable.createPartRow("1.2.3")
             .and().createStaticElement("потребленной на собственные нужды")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
-        pdTable.createPart(PDPartType.ROW).key("P_1.2.4").createStaticElement("1.2.4")
+        pdTable.createPartRow("1.2.4")
             .and().createStaticElement("отданной субабонентам (сторонним потребителям)")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
 
         // 1.3
-        pdTable.createPart(PDPartType.ROW).key("P_1.3").createStaticElement("1.3")
+        pdTable.createPartRow("1.3")
             .and().createStaticElement("Количество узлов (приборов) учета с нарушенными сроками поверки")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
         // 1.4
-        pdTable.createPart(PDPartType.ROW).key("P_1.4").createStaticElement("1.4")
+        pdTable.createPartRow("1.4")
             .and().createStaticElement("Количество узлов (приборов) учета с нарушением требований к классу точности " +
             "(относительной погрешности) узла (прибора) учета")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
 
         // 2
-        pdTable.createPart(PDPartType.ROW).key("P_2").createStaticElement("2")
+        pdTable.createPartRow("2")
             .and().createStaticElement("Сведения об оснащенности узлами (приборами) технического учета").mergedCells(7);
 
         // 2.1
-        pdTable.createPart(PDPartType.ROW).key("P_2.1").createStaticElement("2.1")
+        pdTable.createPartRow("2.1")
             .and().createStaticElement("Суммарное количество узлов (приборов) учета")
             .and().createValueElements(6, PDTableCellValueDouble.class);
 
@@ -317,7 +317,9 @@ public class EnergyPassport401_2014_Add {
     public EnergyPassportSectionTemplateFactory section_2_10(){
 
         final PDTable topTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.10")
-            .caption("Краткая характеристика зданий (строений, сооружений)");
+            .caption("Краткая характеристика зданий (строений, сооружений)")
+            .shortCaption("2.10")
+            .sectionNr("2.10");
 
 
         final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();

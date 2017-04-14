@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +25,11 @@ public class PDInnerTable extends PDTable {
     public String getParentPartKey() {
         return parentTablePart != null ? parentTablePart.getKey() : null;
     }
+
+    public PDTablePart createPartRowInner(String suffix) {
+        Preconditions.checkState(parentTablePart != null);
+        return createPart(PDPartType.ROW).key(getParentPartKey() + suffix);
+    }
+
+
 }
