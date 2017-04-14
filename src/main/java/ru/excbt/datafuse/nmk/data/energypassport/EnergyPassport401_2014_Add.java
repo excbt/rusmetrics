@@ -310,6 +310,136 @@ public class EnergyPassport401_2014_Add {
         return new EPSectionTemplateFactory(topTable);
     }
 
+    public EnergyPassportSectionTemplateFactory section_2_4() {
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.4")
+            .caption("2.4. Сведения по балансу электрической энергии и его изменениях")
+            .shortCaption("2.4")
+            .sectionNr("2.4")
+            .sectionHeader("Сведения по балансу электрической энергии и его изменениях");
+
+        final PDInnerTable innerTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
+
+        partHeader.createStaticElement().caption("№ п/п");
+        partHeader.createStaticElement().caption("Статья").columnKey("accounting");
+        partHeader
+            .createStaticElement().caption("Предшествующие годы")
+                .createStaticChild("___").columnKey("YYYY-4")
+                .createStaticSibling("___").columnKey("YYYY-3")
+                .createStaticSibling("___").columnKey("YYYY-2")
+                .createStaticSibling("___").columnKey("YYYY-1")
+            .and().createStaticElement("Отчетный год").columnKey("YYYY");
+
+        partHeader.widthsOfElements(10,50,15,15,15,15,15);
+
+        innerTable.createPartRow("1")
+            .and().createStaticElement("Приход").mergedCells(6);
+
+        innerTable.createPartRow("1.1")
+            .and().createStaticElement("Сторонний источник").columnKey("income_side")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("1.2")
+            .and().createStaticElement("Собственное производство").columnKey("income_own")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+
+        innerTable.createPartRow("1_total", "")
+            .createStaticElement("Итого суммарный приход")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_1.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("2")
+            .and().createStaticElement("Расход").mergedCells(6);
+
+        innerTable.createPartRow("2.1")
+            .and().createStaticElement("На собственные нужды, всего, в том числе:")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.1.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("2.1.1")
+            .and().createStaticElement("производственный (технологический) расход")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.1.2")
+            .and().createStaticElement("хозяйственные нужды")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.1.3")
+            .and().createStaticElement("электрическое отопление")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.1.4")
+            .and().createStaticElement("электрический транспорт")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.1.5")
+            .and().createStaticElement("прочие собственные нужды")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.2")
+            .and().createStaticElement("Субабоненты (сторонние потребители)")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.3")
+            .and().createStaticElement("Фактические (отчетные) потери, всего, в том числе:")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.3.1|2.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("2.3.1")
+            .and().createStaticElement("технологические потери, всего, в том числе:")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.3.1.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("2.3.1.1", "")
+            .and().createStaticElement("условно-постоянные")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.3.1.2", "")
+            .and().createStaticElement("нагрузочные")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.3.1.3", "")
+            .and().createStaticElement("потери, обусловленные допустимыми погрешностями приборов учета")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.3.2")
+            .and().createStaticElement("нерациональные потери")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2_total", "")
+            .createStaticElement("Итого суммарный расход")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("3")
+            .and().createStaticElement("Значения утвержденных нормативов потерь")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
+
     /**
      *
      * @return

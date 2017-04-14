@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown =  true)
-@JsonPropertyOrder({ "caption", "shortCaption", "viewType", "sectionKey", "parts"})
+@JsonPropertyOrder({ "caption", "shortCaption", "viewType", "sectionKey", "sectionHeader", "sectionNr","parts"})
 public class PDTable implements PDReferable {
 
     private static final Logger log = LoggerFactory.getLogger(PDTable.class);
@@ -127,15 +127,21 @@ public class PDTable implements PDReferable {
 
 
     public PDTablePart createPartLine(String nr) {
-        String key = PREFIX + (nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
+        String key = PREFIX + (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
 
         return createPart(PDPartType.SIMPLE_LINE).key(key).createStaticElement(nr).and();
     }
 
     public PDTablePart createPartRow(String nr) {
-        String nr2 = nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
+        String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
         String key = PREFIX + nr2;
         return createPart(PDPartType.ROW).key(key).createStaticElement(nr).and();
+    }
+
+    public PDTablePart createPartRow(String nr, String staticCaption) {
+        String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
+        String key = PREFIX + nr2;
+        return createPart(PDPartType.ROW).key(key).createStaticElement(staticCaption).and();
     }
 
 }

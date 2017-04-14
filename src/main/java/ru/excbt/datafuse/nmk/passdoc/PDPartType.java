@@ -5,7 +5,7 @@ package ru.excbt.datafuse.nmk.passdoc;
  */
 public enum PDPartType {
     HEADER,
-    BODY,
+    //BODY,
     ROW,
     SIMPLE_LINE,
     INNER_TABLE

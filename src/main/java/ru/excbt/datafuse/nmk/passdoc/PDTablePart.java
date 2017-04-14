@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.excbt.datafuse.nmk.data.util.JsonMapperUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -163,6 +164,12 @@ public class PDTablePart implements PDReferable {
     public PDTablePart widthsOfElements(double ... widths) {
 
         List<PDTableCell<?>> lowestElements = searchLowestElements();
+        if (widths.length != lowestElements.size()) {
+            log.error("widths.length ({}) != lowestElements.size() ({})", widths.length, lowestElements.size());
+            lowestElements.forEach((i) -> {
+                log.info("\n{}",JsonMapperUtils.objectToJson(i,true));
+            });
+        }
         Preconditions.checkState(widths.length == lowestElements.size());
         int idx = 0;
         for (PDTableCell<?> cell: lowestElements) {
