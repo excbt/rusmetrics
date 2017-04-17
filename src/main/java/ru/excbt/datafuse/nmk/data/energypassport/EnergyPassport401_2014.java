@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDViewType;
 @Service
 public class EnergyPassport401_2014 {
 
-    public final static String ENERGY_PASSPORT = "ENERGY_PASSPORT";
+    public final static String ENERGY_DECLARATION = "ENERGY_DECLARATION";
 
     /*
 

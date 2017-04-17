@@ -33,7 +33,7 @@ public class EnergyPassportResource extends SubscrApiController {
     public ResponseEntity<?> createEnergyPassport(@RequestParam(name = "templateKeyname", required = false) String templateKeyname,
                                                   @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
 
-        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014.ENERGY_PASSPORT;
+        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014.ENERGY_DECLARATION;
         ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createPassport(keyname, energyPassportVM, getCurrentSubscriber());
         return responseOK(action);
     }
