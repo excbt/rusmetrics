@@ -64,12 +64,13 @@ public class EnergyPassportResource extends SubscrApiController {
     @RequestMapping(value = "/{id}/data", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getPassportSectionsData(@PathVariable("id") Long passportId,
-                                                     @RequestParam(name = "sectionId", required = false) Long sectionId) {
+                                                     @RequestParam(name = "sectionId", required = false) Long sectionId,
+                                                     @RequestParam(name = "sectionEntryId", required = false) Long sectionEntryId) {
         List<EnergyPassportDataDTO> result;
         if (sectionId == null) {
             result = energyPassportService.findPassportData(passportId);
         } else {
-            result = energyPassportService.findPassportData(passportId, sectionId);
+            result = energyPassportService.findPassportData(passportId, sectionId, sectionEntryId);
         }
         return responseOK(result);
     }

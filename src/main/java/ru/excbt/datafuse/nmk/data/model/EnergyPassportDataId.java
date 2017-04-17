@@ -31,6 +31,9 @@ public class EnergyPassportDataId implements Serializable {
     @Column(name = "section_key")
     private String sectionKey;
 
+    @Column(name = "section_entry_id")
+    private Long sectionEntryId;
+
     @NotNull
     @Column(name = "complex_idx")
     private String complexIdx;

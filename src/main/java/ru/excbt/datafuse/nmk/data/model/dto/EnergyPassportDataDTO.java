@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -20,6 +21,9 @@ public class EnergyPassportDataDTO {
     @NotNull
     private String sectionKey;
 
+    @Min(0)
+    private long sectionEntryId = 0;
+
     private String sectionDataJson;
 
     private int version;
@@ -30,6 +34,7 @@ public class EnergyPassportDataDTO {
             "id=" + id +
             ", passportId=" + passportId +
             ", sectionKey='" + sectionKey + '\'' +
+            ", sectionEntryId=" + sectionEntryId +
             ", sectionDataJson='" + sectionDataJson + '\'' +
             ", version=" + version +
             '}';

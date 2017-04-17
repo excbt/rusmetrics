@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by kovtonyk on 10.04.2017.
@@ -40,6 +41,10 @@ public class EnergyPassportData extends JsonAbstractAuditableModel implements De
     @Type(type = "StringJsonObject")
     private String sectionDataJson;
 
+    @NotNull
+    @Column(name = "section_entry_id")
+    private Long sectionEntryId;
+
     @Version
     private int version;
 
@@ -61,6 +66,7 @@ public class EnergyPassportData extends JsonAbstractAuditableModel implements De
         }
         this.sectionDataJson = dto.getSectionDataJson();
         this.sectionKey = dto.getSectionKey();
+        this.sectionEntryId = dto.getSectionEntryId();
         this.version = dto.getVersion();
     }
 }

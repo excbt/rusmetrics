@@ -203,7 +203,7 @@ public class EnergyPassportService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<EnergyPassportDataDTO> findPassportData(Long passportId, Long sectionId) {
+    public List<EnergyPassportDataDTO> findPassportData(Long passportId, Long sectionId, Long sectionEntryId) {
         EnergyPassport energyPassport = passportRepository.findOne(passportId);
         if (energyPassport == null) {
             DBExceptionUtils.entityNotFoundException(EnergyPassport.class, passportId);
@@ -212,7 +212,9 @@ public class EnergyPassportService {
         if (!section.isPresent()) {
             DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, sectionId);
         }
-        List<EnergyPassportData> passportDataList = passportDataRepository.findByPassportIdAndSectionKey(passportId, section.get().getSectionKey());
+        List<EnergyPassportData> passportDataList = sectionEntryId == null ?
+            passportDataRepository.findByPassportIdAndSectionKey(passportId, section.get().getSectionKey()) :
+            passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.get().getSectionKey(), sectionEntryId);
 
         if (passportDataList.isEmpty()) {
             return Arrays.asList(extractEnergyPassportData(section.get()));
@@ -293,15 +295,16 @@ public class EnergyPassportService {
         List<EnergyPassportDataValue> dataValues = new ArrayList<>();
         EPSectionValueUtil.jsonToValueCellsDTO(energyPassportDataDTO.getSectionDataJson())
             .ifPresent((i) ->
-                i.getElements().forEach((e) -> {
+                i.getElements().forEach((element) -> {
                     EnergyPassportDataId id = EnergyPassportDataId.builder()
                         .passport(new EnergyPassport().id(energyPassportDataDTO.getPassportId()))
                         .sectionKey(energyPassportDataDTO.getSectionKey())
-                        .complexIdx(e.get_complexIdx()).build();
+                        .sectionEntryId(energyPassportDataDTO.getSectionEntryId())
+                        .complexIdx(element.get_complexIdx()).build();
                     EnergyPassportDataValue value = new EnergyPassportDataValue();
                     value.setEnergyPassportDataId(id);
-                    value.setDataValue(e.valueAsString());
-                    value.setDataType(e.dataType());
+                    value.setDataValue(element.valueAsString());
+                    value.setDataType(element.dataType());
                     dataValues.add(value);
                 })
             );
