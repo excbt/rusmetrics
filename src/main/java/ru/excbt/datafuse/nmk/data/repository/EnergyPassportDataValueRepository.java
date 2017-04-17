@@ -21,7 +21,16 @@ public interface EnergyPassportDataValueRepository extends JpaRepository<EnergyP
     @Query("SELECT v FROM EnergyPassportDataValue v WHERE v.energyPassportDataId.passport.id = :passportId")
     List<EnergyPassportDataValue> findByPassportId(@Param("passportId") Long passportId);
 
-    @Query("SELECT v FROM EnergyPassportDataValue v WHERE v.energyPassportDataId.passport.id = :passportId AND v.energyPassportDataId.sectionKey = :sectionKey")
-    List<EnergyPassportDataValue> findByPassportIdAndSectionKey(@Param("passportId") Long passportId, @Param("sectionKey") String sectionKey);
+    @Query("SELECT v FROM EnergyPassportDataValue v WHERE v.energyPassportDataId.passport.id = :passportId " +
+        " AND v.energyPassportDataId.sectionKey = :sectionKey")
+    List<EnergyPassportDataValue> findByPassportIdAndSectionKey(@Param("passportId") Long passportId,
+                                                                @Param("sectionKey") String sectionKey);
+
+    @Query("SELECT v FROM EnergyPassportDataValue v WHERE v.energyPassportDataId.passport.id = :passportId " +
+        " AND v.energyPassportDataId.sectionKey = :sectionKey " +
+        " AND v.energyPassportDataId.sectionEntryId = :sectionEntryId")
+    List<EnergyPassportDataValue> findByPassportIdAndSectionKey(@Param("passportId") Long passportId,
+                                                                @Param("sectionKey") String sectionKey,
+                                                                @Param("sectionEntryId") Long sectionEntryId);
 
 }

@@ -48,6 +48,9 @@ public class EnergyPassportSectionTemplate extends AbstractAuditableModel implem
     @Column(name = "section_order")
     private Integer sectionOrder;
 
+    @Column(name = "has_entries")
+    private boolean hasEntries;
+
     @Version
     private int version;
 
@@ -66,7 +69,14 @@ public class EnergyPassportSectionTemplate extends AbstractAuditableModel implem
         this.sectionKey = dto.getSectionKey();
         this.sectionJson = dto.getSectionJson();
         this.sectionOrder = dto.getSectionOrder();
-        //this.version = dto.getVersion() != null ? dto.getVersion() : 0;
+        this.hasEntries = dto.isHasEntries();
+        //this.version = dto.getVersion();
+    }
+
+
+    public EnergyPassportSectionTemplate hasEntries(boolean value) {
+        this.hasEntries = value;
+        return this;
     }
 
 }

@@ -72,7 +72,7 @@ public class EnergyPassportTemplateService {
     public EnergyPassportTemplateDTO createNewDTO_401() {
         EnergyPassportTemplateDTO templateDTO = new EnergyPassportTemplateDTO();
         templateDTO.addSection(createSectionDTO(energyPassport401_2014.sectionMainFactory()));
-        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_4()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_4()).hasEntries(true));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_2()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_3()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_4()));

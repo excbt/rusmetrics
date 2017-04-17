@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 /**
  * Created by kovtonyk on 10.04.2017.
@@ -26,7 +27,13 @@ public class EnergyPassportSectionDTO {
     @NotNull
     private Integer sectionOrder;
 
+    private boolean enabled = true;
+
+    private boolean hasEntries = false;
+
     private int version;
+
+    private Collection<EnergyPassportSectionEntryDTO> entries;
 
     @Override
     public String toString() {
@@ -35,6 +42,7 @@ public class EnergyPassportSectionDTO {
             ", passportId=" + passportId +
             ", sectionKey='" + sectionKey + '\'' +
             ", sectionOrder=" + sectionOrder +
+            ", hasEntries=" + hasEntries +
             ", version=" + version +
             '}';
     }
