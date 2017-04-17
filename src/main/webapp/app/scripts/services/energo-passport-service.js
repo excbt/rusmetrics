@@ -2,7 +2,7 @@
 /*global angular*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('energoPassportSvc', ['mainSvc', '$http', function (mainSvc, $http) {
+app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $http, $q) {
     var service = {};
     
     var PASSPORT_URL_OLD = "../api/energy-passport-templates",
@@ -48,8 +48,35 @@ app.service('energoPassportSvc', ['mainSvc', '$http', function (mainSvc, $http) 
         return $http.get(url);
     }
     
+    function loadPassportData(id) {
+        var url = PASSPORT_URL;
+        if (!mainSvc.checkUndefinedNull(id)) {
+            url += "/" + id + "/data";
+            return $http.get(url);
+        } else {
+            var defer = $q.defer();
+            defer.reject("Passport id is undefined or null!");
+            return defer;
+        }
+        
+    }
+    
+    function savePassport(passportId, passportSectionData) {
+        var url = PASSPORT_URL;
+        if (!mainSvc.checkUndefinedNull(passportId) && !mainSvc.checkUndefinedNull(passportSectionData)) {
+            url += "/" + passportId + "/data";
+            return $http.put(url, passportSectionData);
+        } else {
+            var defer = $q.defer();
+            defer.reject("Passport data is undefined or null!");
+            return defer;
+        }
+    }
+    
     service.createPassport = createPassport;
     service.loadPassports = loadPassports;
+    service.loadPassportData = loadPassportData;
+    service.savePassport = savePassport;
     
     return service;
 }]);
