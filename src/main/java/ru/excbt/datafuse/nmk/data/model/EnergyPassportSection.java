@@ -39,6 +39,12 @@ public class EnergyPassportSection extends JsonAbstractAuditableModel {
     @Column(name = "section_order")
     private Integer sectionOrder;
 
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
+    @Column(name = "has_entries")
+    private boolean hasEntries;
+
     @Version
     private int version;
 
@@ -49,5 +55,6 @@ public class EnergyPassportSection extends JsonAbstractAuditableModel {
         this.sectionKey = template.getSectionKey();
         this.sectionJson = template.getSectionJson();
         this.sectionOrder = template.getSectionOrder();
+        this.hasEntries = template.isHasEntries();
     }
 }

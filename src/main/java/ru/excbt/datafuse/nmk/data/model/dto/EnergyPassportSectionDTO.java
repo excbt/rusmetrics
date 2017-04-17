@@ -26,6 +26,8 @@ public class EnergyPassportSectionDTO {
     @NotNull
     private Integer sectionOrder;
 
+    private boolean enabled = true;
+
     private int version;
 
     @Override

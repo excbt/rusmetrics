@@ -20,7 +20,14 @@ public class EnergyPassportSectionTemplateDTO {
 
     private Integer sectionOrder;
 
+    private boolean hasEntries;
+
     private int version;
+
+    public EnergyPassportSectionTemplateDTO hasEntries(boolean value) {
+        this.hasEntries = value;
+        return this;
+    }
 
     @Override
     public String toString() {
@@ -30,6 +37,7 @@ public class EnergyPassportSectionTemplateDTO {
             ", sectionKey='" + sectionKey + '\'' +
             ", sectionJson='" + sectionJson + '\'' +
             ", sectionOrder=" + sectionOrder +
+            ", hasEntries=" + hasEntries +
             ", version=" + version +
             '}';
     }
