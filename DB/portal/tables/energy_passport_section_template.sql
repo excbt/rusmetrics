@@ -9,7 +9,8 @@ create table portal.energy_passport_section_template (
    passport_template_id BIGINT REFERENCES portal.energy_passport_template(id),
    section_key          TEXT                 not null,
    section_json         jsonb,
-   section_order        int
+   section_order        int,
+   has_entries          boolean not null default false
 );
 
 comment on table portal.energy_passport_section_template is
