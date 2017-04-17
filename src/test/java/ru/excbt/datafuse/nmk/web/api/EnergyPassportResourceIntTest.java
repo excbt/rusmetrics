@@ -222,7 +222,6 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
 
         Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
-        //Optional<EnergyPassportSectionDTO> sectionDTO = Optional.of(passportDTO.getSections().get(0));
         Assert.assertTrue(sectionDTO.isPresent());
 
         EnergyPassportSectionEntryDTO entryDto = null;
@@ -243,7 +242,24 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
         int checkSize = energyPassportService.findSectionEntries(sectionDTO.get().getId()).size();
         Assert.assertTrue(checkSize == 3);
-
-
     }
+
+    @Test
+    @Transactional
+    public void testPassportWithSectionEntriesGet() throws Exception {
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
+        Assert.assertTrue(sectionDTO.isPresent());
+
+        for (int i = 0; i < 2; i++) {
+            EnergyPassportSectionEntryDTO entryDto = createSectionEntryDTO(sectionDTO.get().getId(), i);
+            energyPassportService.saveSectionEntry(entryDto);
+        }
+
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId());
+    }
+
+
 }

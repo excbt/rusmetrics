@@ -113,13 +113,20 @@ public class EnergyPassportService {
     @Transactional(value = TxConst.TX_DEFAULT)
     public EnergyPassportDTO find(Long id) {
         EnergyPassport energyPassport = passportRepository.findOne(id);
-        return energyPassport != null ? energyPassport.getDTO() : null;
+
+        EnergyPassportDTO result = energyPassport != null ? energyPassport.getDTO() : null;
+        if (result != null) {
+            result.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId())));
+        }
+        return result;
     }
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<EnergyPassportDTO> findBySubscriberId(Long subscriberId) {
-        return passportRepository.findBySubscriberId(subscriberId).stream()
+        List<EnergyPassportDTO> resultList = passportRepository.findBySubscriberId(subscriberId).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+        resultList.forEach((p) -> p.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId()))));
+        return resultList;
     }
 
     @Transactional(value = TxConst.TX_DEFAULT)
