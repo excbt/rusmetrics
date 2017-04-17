@@ -8,6 +8,10 @@ app.directive('contenteditable', ['$sce', function ($sce) {
         require: '?ngModel', // get a hold of NgModelController
         link: function (scope, element, attrs, ngModel) {
             if (!ngModel) { return; }// do nothing if no ng-model
+//console.log(ngModel);
+//console.log(scope);            
+//console.log(element);
+//console.log(attrs);            
 
           // Specify how UI should be updated
             ngModel.$render = function () {
@@ -29,7 +33,7 @@ app.directive('contenteditable', ['$sce', function ($sce) {
             element.on('blur keyup change', function () {
                 scope.$evalAsync(read);
             });
-            read(); // initialize          
+            //read(); // initialize          
         }
     };
 }]);
