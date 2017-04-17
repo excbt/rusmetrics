@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
@@ -87,6 +88,29 @@ public class EnergyPassportResource extends SubscrApiController {
         ApiActionProcess<EnergyPassportDataDTO> process = () -> energyPassportService.savePassportData(energyPassportDataDTO);
 
         return responseOK(process);
+    }
+
+
+    @RequestMapping(value = "/{id}/section/{sectionId}/entries", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getPassportSectionsEntries(@PathVariable("id") Long passportId,
+                                                        @PathVariable(name = "sectionId") Long sectionId) {
+        List<EnergyPassportSectionEntryDTO> entries = energyPassportService.findSectionEntries(sectionId);
+        return responseOK(entries);
+    }
+
+    @RequestMapping(value = "/{id}/section/{sectionId}/entries", method = RequestMethod.PUT,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> updatePassportSectionsEntries(@PathVariable("id") Long passportId,
+                                                           @PathVariable(name = "sectionId") Long sectionId,
+                                                           @RequestBody @Valid EnergyPassportSectionEntryDTO entryDTO) {
+
+        if (!sectionId.equals(entryDTO.getSectionId())) {
+            return responseBadRequest();
+        }
+
+        ApiActionProcess<EnergyPassportSectionEntryDTO> process = () -> energyPassportService.saveSectionEntry(entryDTO);
+        return responseUpdate(process);
     }
 
 

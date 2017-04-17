@@ -28,6 +28,8 @@ public class EnergyPassportSectionDTO {
 
     private boolean enabled = true;
 
+    private boolean hasEntries = false;
+
     private int version;
 
     @Override
@@ -37,6 +39,7 @@ public class EnergyPassportSectionDTO {
             ", passportId=" + passportId +
             ", sectionKey='" + sectionKey + '\'' +
             ", sectionOrder=" + sectionOrder +
+            ", hasEntries=" + hasEntries +
             ", version=" + version +
             '}';
     }

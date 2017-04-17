@@ -2,14 +2,19 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportDataValue;
+import ru.excbt.datafuse.nmk.data.model.EnergyPassportSection;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
@@ -21,11 +26,14 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kovtonyk on 10.04.2017.
  */
 public class EnergyPassportResourceIntTest extends AnyControllerTest {
+
+    private static final Logger log = LoggerFactory.getLogger(EnergyPassportResourceIntTest.class);
 
     public static final String DUMMY_JSON = "{\"a\":123}";
 
@@ -174,6 +182,68 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     }
 
 
+    private EnergyPassportSectionEntryDTO createSectionEntryDTO (Long sectionId, int entryIdx) {
+        EnergyPassportSectionEntryDTO entryDto = new EnergyPassportSectionEntryDTO();
+        entryDto.setSectionId(sectionId);
+        entryDto.setEntryName("New Entry " + entryIdx);
+        entryDto.setEntryDescription("MyDescription " + entryIdx);
+        return  entryDto;
+    }
 
 
+    @Test
+    @Transactional
+    public void testPassportSectionEntriesGet() throws Exception {
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
+
+        Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
+        //Optional<EnergyPassportSectionDTO> sectionDTO = Optional.of(passportDTO.getSections().get(0));
+        Assert.assertTrue(sectionDTO.isPresent());
+
+        for (int i = 0; i < 2; i++) {
+            EnergyPassportSectionEntryDTO entryDto = createSectionEntryDTO(sectionDTO.get().getId(), i);
+            energyPassportService.saveSectionEntry(entryDto);
+        }
+
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() +
+            "/section/" + sectionDTO.get().getId() +"/entries");
+    }
+
+
+    @Test
+    @Transactional
+    public void testPassportSectionEntryUpdate() throws Exception {
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
+
+        Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
+        //Optional<EnergyPassportSectionDTO> sectionDTO = Optional.of(passportDTO.getSections().get(0));
+        Assert.assertTrue(sectionDTO.isPresent());
+
+        EnergyPassportSectionEntryDTO entryDto = null;
+        for (int i = 0; i < 3; i++) {
+            entryDto = energyPassportService.saveSectionEntry(createSectionEntryDTO(sectionDTO.get().getId(), i));
+        }
+
+        entryDto.setEntryOrder(1);
+        entryDto.setEntryDescription("Modified Description");
+
+        Assert.assertTrue(entryDto.getId() != null);
+
+        _testUpdateJson("/api/subscr/energy-passports/" + passportDTO.getId() +
+            "/section/" + sectionDTO.get().getId() +"/entries", entryDto);
+
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() +
+            "/section/" + sectionDTO.get().getId() +"/entries");
+
+        int checkSize = energyPassportService.findSectionEntries(sectionDTO.get().getId()).size();
+        Assert.assertTrue(checkSize == 3);
+
+
+    }
 }
