@@ -9,7 +9,7 @@ declare
 
 v_adv_lock                      boolean;
 r_last_data 			record;
-r_cont_events                   record;
+r_mon_cont_events               record;
 r_cont_event_type_NO_DEV_DATA   record;
 v_cnt 				bigint = 0;
 
@@ -31,9 +31,9 @@ v_step_overflow_id              bigint;
 
 	--v_process_limit integer = 10;
 begin
-v_adv_lock := pg_try_advisory_xact_lock(hashtext('portal register_last_cont_even'));
+v_adv_lock := pg_try_advisory_xact_lock(hashtext('portal.cont_zpoint_check_no_data'));
 IF v_adv_lock = 'false' THEN
-	RAISE NOTICE 'Portal register_last_cont_event already running.';
+	RAISE NOTICE 'Portal cont_zpoint_check_no_data already running.';
 	RETURN 0;
 END IF;
 
@@ -43,7 +43,7 @@ SELECT param_value::boolean into v_check_disabled
 where keyname = 'SP_CONT_EVENT_LAST_DATA_CHECK_DISABLED' and param_group = 'SYSTEM';
 
 if (v_check_disabled = true) then
-   RAISE NOTICE 'Portal register_last_cont_event is disabled';
+   RAISE NOTICE 'Portal cont_zpoint_check_no_data is disabled';
    RETURN 0;
 end if;
 
@@ -71,7 +71,7 @@ for r_last_data in (
 			)
 loop
 
-        for r_cont_events in (
+        for r_mon_cont_events in (
                                 SELECT m.*, ce.cont_zpoint_id, ce.cont_event_message
                                   FROM portal.cont_event_monitor_v2 m LEFT JOIN cont_event ce ON (m.cont_event_id = ce.id)
                                 where m.cont_event_type_id in (
@@ -91,7 +91,10 @@ loop
                         ) 
         loop
                 
-                RAISE NOTICE '===== Found event: %, message: %', r_cont_events.cont_event_id, r_cont_events.cont_event_message;
+                RAISE NOTICE '===== Found event: cont_event_monitor_id: %, cont_event_id: %, message: %, cont_event_time: %', r_mon_cont_events.id, r_mon_cont_events.cont_event_id, r_mon_cont_events.cont_event_message, r_mon_cont_events.cont_event_time;
+                DELETE FROM portal.cont_event_monitor_v2
+                WHERE id = r_mon_cont_events.id;
+
         end loop;                
 
         select zp.* into r_cont_zpoint from cont_zpoint zp where zp.id = r_last_data.cont_zpoint_id;
