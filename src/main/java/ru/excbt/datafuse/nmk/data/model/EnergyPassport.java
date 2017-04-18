@@ -73,7 +73,7 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
     @Override
     public EnergyPassportDTO getDTO() {
         EnergyPassportDTO result = ModelMapperUtil.map(this, EnergyPassportDTO.class);
-        if (!result.getSections().stream().filter((i) -> i.getSectionOrder() != null).findFirst().isPresent()) {
+        if (!result.getSections().stream().filter((i) -> i.getSectionOrder() == null).findFirst().isPresent()) {
             result.getSections().sort(Comparator.comparingInt(EnergyPassportSectionDTO::getSectionOrder));
         }
         return result;
