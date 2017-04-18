@@ -213,11 +213,15 @@ public class EnergyPassportService {
             DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, sectionId);
         }
         List<EnergyPassportData> passportDataList = sectionEntryId == null ?
-            passportDataRepository.findByPassportIdAndSectionKey(passportId, section.get().getSectionKey()) :
+            passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.get().getSectionKey(),0L) :
             passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.get().getSectionKey(), sectionEntryId);
 
         if (passportDataList.isEmpty()) {
-            return Arrays.asList(extractEnergyPassportData(section.get()));
+            List<EnergyPassportDataDTO> newDataDTO = Arrays.asList(extractEnergyPassportData(section.get()));
+            if (sectionEntryId != null) {
+                newDataDTO.forEach((i) -> i.setSectionEntryId(sectionEntryId));
+            }
+            return newDataDTO;
         }
 
         return passportDataList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());

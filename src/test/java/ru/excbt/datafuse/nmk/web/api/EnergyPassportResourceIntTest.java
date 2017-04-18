@@ -284,6 +284,14 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         List<EnergyPassportDataValue> dataValues = energyPassportDataValueRepository.findByPassportIdAndSectionKey(passportDTO.getId(), sectionDTO.get().getSectionKey(), entryDto.getId());
         dataValues.forEach((i) -> Assert.assertTrue(i.getEnergyPassportDataId() != null));
 
+        RequestExtraInitializer params = (b) -> {
+            b.param("sectionId", data.get(0).getSectionId().toString());
+            b.param("sectionEntryId", data.get(0).getSectionEntryId().toString());
+        };
+
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data", params);
+
+
     }
 
 
