@@ -9,7 +9,7 @@ declare
 
 v_adv_lock                      boolean;
 r_last_data 			record;
-r_cont_events                   record;
+r_mon_cont_events               record;
 r_cont_event_type_NO_DEV_DATA   record;
 v_cnt 				bigint = 0;
 
@@ -31,9 +31,9 @@ v_step_overflow_id              bigint;
 
 	--v_process_limit integer = 10;
 begin
-v_adv_lock := pg_try_advisory_xact_lock(hashtext('portal register_last_cont_even'));
+v_adv_lock := pg_try_advisory_xact_lock(hashtext('portal.cont_zpoint_check_no_data'));
 IF v_adv_lock = 'false' THEN
-	RAISE NOTICE 'Portal register_last_cont_event already running.';
+	RAISE NOTICE 'Portal cont_zpoint_check_no_data already running.';
 	RETURN 0;
 END IF;
 
@@ -43,7 +43,7 @@ SELECT param_value::boolean into v_check_disabled
 where keyname = 'SP_CONT_EVENT_LAST_DATA_CHECK_DISABLED' and param_group = 'SYSTEM';
 
 if (v_check_disabled = true) then
-   RAISE NOTICE 'Portal register_last_cont_event is disabled';
+   RAISE NOTICE 'Portal cont_zpoint_check_no_data is disabled';
    RETURN 0;
 end if;
 
@@ -68,16 +68,30 @@ for r_last_data in (
                         SELECT cont_zpoint_id, last_data_date, last_data_date_time
                         FROM mv_last_data_date_aggr
                         where last_data_date < (current_date - v_INTERVAL)::date
+
+                        UNION ALL
+
+                        SELECT zp.id,
+                                NULL last_data_date,
+                                NULL last_data_date_time
+                        FROM cont_zpoint zp
+                        INNER JOIN cont_object co ON zp.cont_object_id = co.id
+                        WHERE zp.id NOT IN (
+                                        SELECT cont_zpoint_id
+                                        FROM portal.mv_last_data_date_aggr
+                                        )
+                                AND zp.deleted = 0
+                                AND co.deleted = 0                        
 			)
 loop
 
-        for r_cont_events in (
+        for r_mon_cont_events in (
                                 SELECT m.*, ce.cont_zpoint_id, ce.cont_event_message
                                   FROM portal.cont_event_monitor_v2 m LEFT JOIN cont_event ce ON (m.cont_event_id = ce.id)
                                 where m.cont_event_type_id in (
                                                         SELECT id AS cont_event_type_id
                                                         FROM cont_event_type
-                                                        WHERE is_scalar_event IS NULL
+                                                        WHERE (is_scalar_event IS NULL
                                                                 OR is_scalar_event = false
                                                                 AND is_base_event = true
                                                                 AND cont_event_level_v2 < (
@@ -85,13 +99,17 @@ loop
                                                                         FROM portal.cont_event_level_color_v2 clr
                                                                         WHERE clr.keyname = v_GREEN_LEVEL
                                                                         )  
-                                                                and keyname <> v_DEV_NO_DATA       
+                                                                )
+                                                               and keyname <> v_DEV_NO_DATA       
                                                         )
                                 and ce.cont_zpoint_id = r_last_data.cont_zpoint_id                       
                         ) 
         loop
                 
-                RAISE NOTICE '===== Found event: %, message: %', r_cont_events.cont_event_id, r_cont_events.cont_event_message;
+                RAISE NOTICE '===== Found event: cont_event_monitor_id: %, cont_event_id: %, message: %, cont_event_time: %', r_mon_cont_events.id, r_mon_cont_events.cont_event_id, r_mon_cont_events.cont_event_message, r_mon_cont_events.cont_event_time;
+                DELETE FROM portal.cont_event_monitor_v2
+                WHERE id = r_mon_cont_events.id;
+
         end loop;                
 
         select zp.* into r_cont_zpoint from cont_zpoint zp where zp.id = r_last_data.cont_zpoint_id;
@@ -100,15 +118,20 @@ loop
         select count(1) into v_no_dev_data_cnt
         from cont_event m 
         where m.cont_object_id = r_cont_zpoint.cont_object_id
+        AND m.cont_zpoint_id = r_cont_zpoint.id
         and m.cont_event_type_id = r_cont_event_type_NO_DEV_DATA.id
         and m.cont_event_time > r_last_data.last_data_date;
 
         RAISE NOTICE 'Check NO_DEV_DATA event. cnt:% cont_zpoint_id:%', v_no_dev_data_cnt, r_last_data.cont_zpoint_id;
 
-        v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, to_char(r_last_data.last_data_date, 'DD-MM-YYYY'));
+        if (r_last_data.last_data_date <> null) then
+                v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, to_char(r_last_data.last_data_date, 'DD-MM-YYYY'));
+        else
+                v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, 'момента регистрации в системе');
+        end if;        
         
         if (v_no_dev_data_cnt = 0) then
-                RAISE NOTICE 'Creating event for cont_zpoint_id:%', r_last_data.cont_zpoint_id;
+                RAISE NOTICE 'Creating NO_DEV_DATA event for cont_zpoint_id: %, v_cont_event_message: %', r_last_data.cont_zpoint_id, v_cont_event_message;
 
                 INSERT INTO cont_event(
                                 cont_object_id, 
