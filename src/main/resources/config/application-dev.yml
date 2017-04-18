@@ -85,6 +85,11 @@ portal:
 #            maximum-pool-size: 5
 #            pool-name: MasterPool
 
+    security:
+        rememberMe:
+            # security key (this key should be unique for your application, and kept secret)
+            key: 7e622ab5b0586c431f5180bf656a1d972f167ba5
+
 raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource

@@ -10,10 +10,12 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
+import ru.excbt.datafuse.nmk.config.PortalProperties;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -32,6 +34,7 @@ import java.util.Collection;
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
 @ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"})
+@EnableConfigurationProperties({PortalProperties.class})
 public class PortalApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(PortalApplication.class);

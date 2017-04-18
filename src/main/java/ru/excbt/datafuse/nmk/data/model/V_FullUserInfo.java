@@ -11,11 +11,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
 /**
  * Полная информация о пользователе
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -26,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 public class V_FullUserInfo implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6844261142252428185L;
 
@@ -77,6 +79,11 @@ public class V_FullUserInfo implements Serializable {
 
 	@Column(name = "subscr_type")
 	private String subscrType;
+
+	@Column(name = "is_blocked")
+    @Getter
+    @Setter
+	private Boolean isBlocked;
 
 	public V_FullUserInfo() {
 

@@ -10,11 +10,12 @@ import org.springframework.security.core.userdetails.User;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
 /**
  * Информацией об абоненте для авторизации
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.07.2015
@@ -23,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 public class SubscriberUserDetails extends User implements SubscriberUser {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6647486217901487396L;
 
@@ -35,7 +36,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 	private final boolean isBlocked;
 
 	/**
-	 * 
+	 *
 	 * @param sUser
 	 * @param password
 	 * @param authorities
@@ -51,8 +52,25 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.isBlocked = Boolean.TRUE.equals(sUser.getIsBlocked());
 	}
 
+    /**
+     *
+     * @param sUser
+     * @param password
+     * @param authorities
+     */
+	public SubscriberUserDetails(V_FullUserInfo sUser, String password,
+                                 Collection<? extends GrantedAuthority> authorities) {
+		super(checkNotNull(sUser).getUserName(), password, authorities);
+		this.id = sUser.getId();
+		this.subscriber = sUser.getSubscriber();
+		this.version = sUser.getVersion();
+		this.isSystem = false;
+		this.skipServiceFilter = false;
+		this.isBlocked = Boolean.TRUE.equals(sUser.getIsBlocked());
+	}
+
 	/**
-	 * 
+	 *
 	 * @param sUser
 	 * @param password
 	 * @param authorities
