@@ -118,6 +118,7 @@ loop
         select count(1) into v_no_dev_data_cnt
         from cont_event m 
         where m.cont_object_id = r_cont_zpoint.cont_object_id
+        AND m.cont_zpoint_id = r_cont_zpoint.id
         and m.cont_event_type_id = r_cont_event_type_NO_DEV_DATA.id
         and m.cont_event_time > r_last_data.last_data_date;
 
