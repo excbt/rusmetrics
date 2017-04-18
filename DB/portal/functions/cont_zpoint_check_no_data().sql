@@ -68,6 +68,20 @@ for r_last_data in (
                         SELECT cont_zpoint_id, last_data_date, last_data_date_time
                         FROM mv_last_data_date_aggr
                         where last_data_date < (current_date - v_INTERVAL)::date
+
+                        UNION ALL
+
+                        SELECT zp.id,
+                                NULL last_data_date,
+                                NULL last_data_date_time
+                        FROM cont_zpoint zp
+                        INNER JOIN cont_object co ON zp.cont_object_id = co.id
+                        WHERE zp.id NOT IN (
+                                        SELECT cont_zpoint_id
+                                        FROM portal.mv_last_data_date_aggr
+                                        )
+                                AND zp.deleted = 0
+                                AND co.deleted = 0                        
 			)
 loop
 
@@ -77,7 +91,7 @@ loop
                                 where m.cont_event_type_id in (
                                                         SELECT id AS cont_event_type_id
                                                         FROM cont_event_type
-                                                        WHERE is_scalar_event IS NULL
+                                                        WHERE (is_scalar_event IS NULL
                                                                 OR is_scalar_event = false
                                                                 AND is_base_event = true
                                                                 AND cont_event_level_v2 < (
@@ -85,7 +99,8 @@ loop
                                                                         FROM portal.cont_event_level_color_v2 clr
                                                                         WHERE clr.keyname = v_GREEN_LEVEL
                                                                         )  
-                                                                and keyname <> v_DEV_NO_DATA       
+                                                                )
+                                                               and keyname <> v_DEV_NO_DATA       
                                                         )
                                 and ce.cont_zpoint_id = r_last_data.cont_zpoint_id                       
                         ) 
@@ -108,10 +123,14 @@ loop
 
         RAISE NOTICE 'Check NO_DEV_DATA event. cnt:% cont_zpoint_id:%', v_no_dev_data_cnt, r_last_data.cont_zpoint_id;
 
-        v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, to_char(r_last_data.last_data_date, 'DD-MM-YYYY'));
+        if (r_last_data.last_data_date <> null) then
+                v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, to_char(r_last_data.last_data_date, 'DD-MM-YYYY'));
+        else
+                v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, 'момента регистрации в системе');
+        end if;        
         
         if (v_no_dev_data_cnt = 0) then
-                RAISE NOTICE 'Creating event for cont_zpoint_id:%', r_last_data.cont_zpoint_id;
+                RAISE NOTICE 'Creating NO_DEV_DATA event for cont_zpoint_id: %, v_cont_event_message: %', r_last_data.cont_zpoint_id, v_cont_event_message;
 
                 INSERT INTO cont_event(
                                 cont_object_id, 
