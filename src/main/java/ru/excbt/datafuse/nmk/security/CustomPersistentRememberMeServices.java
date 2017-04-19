@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -84,11 +85,23 @@ public class CustomPersistentRememberMeServices extends
     }
 
     @Override
+    @Transactional
     protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request,
                                                  HttpServletResponse response) {
 
-        UserPersistentToken token = getPersistentToken(cookieTokens);
-        V_FullUserInfo user = userRepository.findOne(token.getUserId());
+
+        UserPersistentToken token;
+        V_FullUserInfo user = null;
+        try {
+            token = getPersistentToken(cookieTokens);
+            user = userRepository.findOne(token.getUserId());
+        } catch (CookieTheftException e) {
+            // We catch CookieTheftException and throw RememberMeAuthenticationException,
+            // because CookieTheftException doesn't redirect to login form
+            log.error("CookieTheftException: {}", e);
+            throw new RememberMeAuthenticationException("Autologin failed due to token problem");
+        }
+
 
         if (user == null) {
             log.error("User with ID: {} is not found in V_FullUserInfo", token.getUserId());
@@ -152,7 +165,7 @@ public class CustomPersistentRememberMeServices extends
             try {
                 String[] cookieTokens = decodeCookie(rememberMeCookie);
                 UserPersistentToken token = getPersistentToken(cookieTokens);
-                persistentTokenRepository.delete(token);
+                persistentTokenRepository.deleteTokenBySeries(token.getSeries());
             } catch (InvalidCookieException ice) {
                 log.info("Invalid cookie, no persistent token could be deleted", ice);
             } catch (RememberMeAuthenticationException rmae) {
@@ -183,13 +196,13 @@ public class CustomPersistentRememberMeServices extends
         log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
         if (!presentedToken.equals(token.getTokenValue())) {
             // Token doesn't match series value. Delete this session and throw an exception.
-            persistentTokenRepository.delete(token);
+            persistentTokenRepository.deleteTokenBySeries(token.getSeries());
             throw new CookieTheftException("Invalid remember-me token (Series/token) mismatch. Implies previous " +
                 "cookie theft attack.");
         }
 
         if (token.getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
-            persistentTokenRepository.delete(token);
+            persistentTokenRepository.deleteTokenBySeries(token.getSeries());
             throw new RememberMeAuthenticationException("Remember-me login has expired");
         }
         return token;
