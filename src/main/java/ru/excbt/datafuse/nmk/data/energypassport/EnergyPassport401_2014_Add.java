@@ -310,6 +310,7 @@ public class EnergyPassport401_2014_Add {
         return new EPSectionTemplateFactory(topTable);
     }
 
+    // TODO Make rexexp for functions
     public EnergyPassportSectionTemplateFactory section_2_4() {
 
         final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.4")
@@ -433,17 +434,136 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("Значения утвержденных нормативов потерь")
             .and().createValueElements(5, PDTableCellValueDouble.class);
 
+        return new EPSectionTemplateFactory(topTable);
+    }
 
+    /**
+     *
+     * @return
+     */
+    public EnergyPassportSectionTemplateFactory section_2_5() {
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.5")
+            .caption("Сведения по балансу тепловой энергии и его изменениях")
+            .shortCaption("2.5")
+            .sectionNr("2.5")
+            .sectionHeader("Сведения по балансу тепловой энергии и его изменениях ");
+
+        final PDInnerTable innerTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
+
+        partHeader.createStaticElement().caption("№ п/п");
+        partHeader.createStaticElement().caption("Статья").columnKey("accounting");
+        partHeader
+            .createStaticElement().caption("Предшествующие годы")
+            .createStaticChild("___").columnKey("YYYY-4")
+            .createStaticSibling("___").columnKey("YYYY-3")
+            .createStaticSibling("___").columnKey("YYYY-2")
+            .createStaticSibling("___").columnKey("YYYY-1")
+            .and().createStaticElement("Отчетный год").columnKey("YYYY");
+
+        partHeader.widthsOfElements(10,50,15,15,15,15,15);
+
+        innerTable.createPartRow("1")
+            .and().createStaticElement("Приход").mergedCells(6);
+
+        innerTable.createPartRow("1.1")
+            .and().createStaticElement("Сторонний источник").columnKey("income_side")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("1.2")
+            .and().createStaticElement("Собственное производство,\n" +
+            "в том числе:").columnKey("income_own")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_1.2.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("1.2.1")
+            .and().createStaticElement("электрическое отопление").columnKey("income_own")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+
+
+        innerTable.createPartRow("1_total", "")
+            .createStaticElement("Итого суммарный приход")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_1.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("2")
+            .and().createStaticElement("Расход").mergedCells(6);
+
+        innerTable.createPartRow("2.1")
+            .and().createStaticElement("На собственные нужды, всего, в том числе:")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.1.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("2.1.1")
+            .and().createStaticElement("пара, из них контактным (острым) способом")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.1.2")
+            .and().createStaticElement("горячей воды")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+
+        innerTable.createPartRow("2.2")
+            .and().createStaticElement("Отопление и вентиляция, всего,\n" +
+            "в том числе:\n")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.2.*");
+                i.setValueFunction("sum()");
+            });
+
+
+        innerTable.createPartRow("2.2.1")
+            .and().createStaticElement("калориферы воздушные")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+
+        innerTable.createPartRow("2.3")
+            .and().createStaticElement("Горячее водоснабжение")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+
+        innerTable.createPartRow("2.4")
+            .and().createStaticElement("Субабоненты (сторонние потребители)")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2.5")
+            .and().createStaticElement("Субабоненты (сторонние потребители)")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
+
+        innerTable.createPartRow("2_total", "")
+            .createStaticElement("Итого суммарный расход")
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.setValueGroup("P_2.*");
+                i.setValueFunction("sum()");
+            });
+
+        innerTable.createPartRow("3")
+            .and().createStaticElement("Значения утвержденных нормативов потерь")
+            .and().createValueElements(5, PDTableCellValueDouble.class);
 
 
         return new EPSectionTemplateFactory(topTable);
     }
 
 
-    /**
-     *
-     * @return
-     */
+        /**
+         *
+         * @return
+         */
     public EnergyPassportSectionTemplateFactory section_2_10(){
 
         final PDTable topTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.10")
