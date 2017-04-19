@@ -791,54 +791,126 @@ public class EnergyPassport401_2014_Add {
      */
     public EnergyPassportSectionTemplateFactory section_2_8() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.8")
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.8")
             .caption("Сведения об использовании вторичных энергетических ресурсов")
             .shortCaption("2.8")
             .sectionNr("2.8");
 
-        final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
 
-        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+        topTable.createPartLine("1h", "Сведения об использовании вторичных энергетических ресурсов");
 
-        partHeader.createStaticElement().caption("№ п/п");
-        partHeader.createStaticElement().caption("Наименование и источник вторичного (теплового) энергетического ресурса (далее - ВЭР)").columnKey("res_name");
-        partHeader
-            .createStaticElement("Характеристики ВЭР")
-            .createStaticChild("фазовое состояние").columnKey("phase")
-            .createStaticSibling("расход куб. м/ч").columnKey("consumption")
-            .createStaticSibling("давление, МПа").columnKey("pressure")
-            .createStaticSibling("температура, °C").columnKey("temperature")
-            .createStaticSibling("характерные загрязнители, их концентрация, %").columnKey("pollutants")
-        .and().createStaticElement("Годовой выход ВЭР, Гкал").columnKey("year_output")
-        .and().createStaticElement("Годовое фактическое использование, Гкал").columnKey("year_use")
-        .and().createStaticElement("Примечание").columnKey("annotation");
+        topTable.createPartLine("1h1", "Таблица 1");
 
-        partHeader.widthsOfElements(10,30,15,15,15,15,20,15,15,20);
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
 
-        pdTable.createPartRow("1")
-            .and().createStaticElement("1")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createDoubleValueElement().keyValueIdx(2)
-            .and().createDoubleValueElement().keyValueIdx(3)
-            .and().createDoubleValueElement().keyValueIdx(4)
-            .and().createDoubleValueElement().keyValueIdx(5)
-            .and().createDoubleValueElement().keyValueIdx(6)
-            .and().createDoubleValueElement().keyValueIdx(7)
-            .and().createDoubleValueElement().keyValueIdx(8)
-            .and().createStringValueElement().keyValueIdx(9);
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-        pdTable.createPartRow("2")
-            .and().createStaticElement("2")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createDoubleValueElement().keyValueIdx(2)
-            .and().createDoubleValueElement().keyValueIdx(3)
-            .and().createDoubleValueElement().keyValueIdx(4)
-            .and().createDoubleValueElement().keyValueIdx(5)
-            .and().createDoubleValueElement().keyValueIdx(6)
-            .and().createDoubleValueElement().keyValueIdx(7)
-            .and().createDoubleValueElement().keyValueIdx(8)
-            .and().createStringValueElement().keyValueIdx(9);
+            partHeader.createStaticElement().caption("№ п/п");
+            partHeader.createStaticElement().caption("Наименование и источник вторичного (теплового) энергетического ресурса (далее - ВЭР)").columnKey("res_name");
+            partHeader
+                .createStaticElement("Характеристики ВЭР")
+                .createStaticChild("фазовое состояние").columnKey("phase")
+                .createStaticSibling("расход куб. м/ч").columnKey("consumption")
+                .createStaticSibling("давление, МПа").columnKey("pressure")
+                .createStaticSibling("температура, °C").columnKey("temperature")
+                .createStaticSibling("характерные загрязнители, их концентрация, %").columnKey("pollutants")
+                .and().createStaticElement("Годовой выход ВЭР, Гкал").columnKey("year_output")
+                .and().createStaticElement("Годовое фактическое использование, Гкал").columnKey("year_use")
+                .and().createStaticElement("Примечание").columnKey("annotation");
 
+            partHeader.widthsOfElements(10, 30, 15, 15, 15, 15, 20, 15, 15, 20);
+
+            pdTable.createPartRow("1.1", "1")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
+                .and().createDoubleValueElement().keyValueIdx(4)
+                .and().createDoubleValueElement().keyValueIdx(5)
+                .and().createDoubleValueElement().keyValueIdx(6)
+                .and().createDoubleValueElement().keyValueIdx(7)
+                .and().createDoubleValueElement().keyValueIdx(8)
+                .and().createStringValueElement().keyValueIdx(9);
+
+            pdTable.createPartRow("1.2","2")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
+                .and().createDoubleValueElement().keyValueIdx(4)
+                .and().createDoubleValueElement().keyValueIdx(5)
+                .and().createDoubleValueElement().keyValueIdx(6)
+                .and().createDoubleValueElement().keyValueIdx(7)
+                .and().createDoubleValueElement().keyValueIdx(8)
+                .and().createStringValueElement().keyValueIdx(9);
+
+
+            PDTablePart table1TotalPart = pdTable.createPartRow("1_total", "");
+            table1TotalPart.createStaticElement("Итого")
+                .and().createStaticElement("").mergedCells(5)
+                .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
+                .forEach((i) -> {
+                    i.setValueGroup("P_1.*");
+                    i.setValueFunction("sum()");
+                });
+            table1TotalPart.createStaticElement();
+
+        }
+        topTable.createPartLine("2h", "Сведения\n" +
+            "об использовании альтернативных (местных) топлив\n" +
+            "и возобновляемых источников энергии");
+
+        topTable.createPartLine("2h1", "Таблица 2");
+
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+            partHeader.createStaticElement().caption("№ п/п");
+            partHeader.createStaticElement().caption("Наименование альтернативного (местного) или возобновляемого вида ТЭР").columnKey("res_name")
+                .and().createStaticElement("Основные характеристики")
+                .and().createStaticElement("Теплотворная способность, ккал/кг")
+                .and().createStaticElement("Годовая наработка энергоустановки, ч")
+                .and().createStaticElement("КПД энергоустановки, %")
+                .and().createStaticElement("Годовой фактический выход энергии за отчетный год")
+                    .createStaticChild("по тепловой энергии, Гкал")
+                    .createStaticSibling("по электрической энергии, МВт·ч")
+                .and().createStaticElement("Примечание").columnKey("annotation");
+
+            partHeader.widthsOfElements(10, 30, 15, 15, 15, 15, 15, 15, 20);
+
+            pdTable.createPartRow("2.1", "1")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
+                .and().createDoubleValueElement().keyValueIdx(4)
+                .and().createDoubleValueElement().keyValueIdx(5)
+                .and().createDoubleValueElement().keyValueIdx(6)
+                .and().createDoubleValueElement().keyValueIdx(7)
+                .and().createStringValueElement().keyValueIdx(8);
+
+            pdTable.createPartRow("2.2","2")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
+                .and().createDoubleValueElement().keyValueIdx(4)
+                .and().createDoubleValueElement().keyValueIdx(5)
+                .and().createDoubleValueElement().keyValueIdx(6)
+                .and().createDoubleValueElement().keyValueIdx(7)
+                .and().createStringValueElement().keyValueIdx(8);
+
+
+            PDTablePart table2TotalPart = pdTable.createPartRow("2_total", "");
+            table2TotalPart.createStaticElement("Итого")
+                .and().createStaticElement("").mergedCells(4)
+                .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
+                .forEach((i) -> {
+                    i.setValueGroup("P_2.*");
+                    i.setValueFunction("sum()");
+                });
+            table2TotalPart.createStaticElement();
+
+        }
 
         return new EPSectionTemplateFactory(topTable);
     }
@@ -850,7 +922,7 @@ public class EnergyPassport401_2014_Add {
          */
     public EnergyPassportSectionTemplateFactory section_2_10(){
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.10")
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.10")
             .caption("Краткая характеристика зданий (строений, сооружений)")
             .shortCaption("2.10")
             .sectionNr("2.10");
