@@ -115,12 +115,20 @@ loop
         select zp.* into r_cont_zpoint from cont_zpoint zp where zp.id = r_last_data.cont_zpoint_id;
         
 
-        select count(1) into v_no_dev_data_cnt
+/*        select count(1) into v_no_dev_data_cnt
         from cont_event m 
         where m.cont_object_id = r_cont_zpoint.cont_object_id
         AND m.cont_zpoint_id = r_cont_zpoint.id
         and m.cont_event_type_id = r_cont_event_type_NO_DEV_DATA.id
+        and m.cont_event_time > r_last_data.last_data_date;*/
+
+        select count(1) into v_no_dev_data_cnt
+        from portal.cont_event_monitor_v2 m LEFT JOIN cont_event ce ON (m.cont_event_id = ce.id)
+        where m.cont_object_id = r_cont_zpoint.cont_object_id
+        AND ce.cont_zpoint_id = r_cont_zpoint.id
+        and m.cont_event_type_id = r_cont_event_type_NO_DEV_DATA.id
         and m.cont_event_time > r_last_data.last_data_date;
+        
 
         RAISE NOTICE 'Check NO_DEV_DATA event. cnt:% cont_zpoint_id:%', v_no_dev_data_cnt, r_last_data.cont_zpoint_id;
 
