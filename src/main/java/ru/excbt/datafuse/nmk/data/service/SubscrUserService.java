@@ -1,24 +1,13 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
@@ -26,15 +15,27 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.repository.UserPersistentTokenRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+import javax.persistence.PersistenceException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Сервис для работы с пользователями абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 26.02.2015
@@ -43,7 +44,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class SubscrUserService extends AbstractService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrUserService.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrUserService.class);
 
 	public interface LdapAction {
 		void doAction(LdapUserAccount user);
@@ -61,8 +62,11 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	@Autowired
 	private SubscrRoleService subscrRoleService;
 
+    @Autowired
+    private UserPersistentTokenRepository persistentTokenRepository;
+
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -73,7 +77,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -87,7 +91,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -97,7 +101,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @return
 	 */
@@ -108,7 +112,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @param password
 	 * @param skipLdapAction
@@ -144,7 +148,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @return
 	 */
@@ -215,7 +219,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
@@ -237,13 +241,13 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		try {
 			processLdapAction(subscrUser, action);
 		} catch (Exception e) {
-			logger.error("Error during processLdapAction for user {}: {}", subscrUser.getUserName(), e);
+			log.error("Error during processLdapAction for user {}: {}", subscrUser.getUserName(), e);
 		}
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
@@ -259,7 +263,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @return
 	 */
@@ -290,7 +294,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 */
 	public void processLdapAction(SubscrUser subscrUser, LdapAction action) {
@@ -298,9 +302,9 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		try {
 			action.doAction(user);
 		} catch (Exception e) {
-			logger.error("LDAP Service Error Message: {}", e.getMessage());
-			logger.error("LDAP Service Exception: {}", e);
-			logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
+			log.error("LDAP Service Error Message: {}", e.getMessage());
+			log.error("LDAP Service Exception: {}", e);
+			log.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
 
 			if (org.springframework.ldap.NamingException.class.isAssignableFrom(e.getClass())) {
 				throw new SubscrLdapException(
@@ -314,7 +318,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param userName
 	 * @return
 	 */
@@ -325,7 +329,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET })
@@ -343,7 +347,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 			try {
 				processLdapAction(subscrUser, action);
 			} catch (Exception e) {
-				logger.error("Error during processLdapAction for user {}: {}", subscrUser.getUserName(), e);
+				log.error("Error during processLdapAction for user {}: {}", subscrUser.getUserName(), e);
 			}
 
 		}
@@ -358,7 +362,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_USER, ROLE_CABINET_USER })
@@ -374,7 +378,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param isAdmin
 	 * @param isReadonly
@@ -407,5 +411,16 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 		return new ArrayList<>(subscrRolesMap.values());
 	}
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public void removeOldPersistentTokens() {
+        LocalDate now = LocalDate.now();
+        persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).forEach(token -> {
+            Long userId = token.getUserId();
+            log.debug("Deleting token {} for userId: {}", token.getSeries(), userId);
+            persistentTokenRepository.delete(token);
+        });
+    }
 
 }

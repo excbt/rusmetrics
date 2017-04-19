@@ -81,6 +81,12 @@ portal:
         minIdle: 10
         maxIdle: 30
 
+    security:
+        rememberMe:
+            # security key (this key should be unique for your application, and kept secret)
+            key: fa2fe9884ee1cc1f0b7da1a27404d9787a96d389
+
+
 #        hikari:
 #            connection-test-query: SELECT 1
 #            minimum-idle: 3

@@ -14,8 +14,8 @@
 </head>
 <body class="excbt_login_body">
 <!--[if IE]>
-  <p class="text-center">Вы используете браузер, который не поддерживает работу с порталом Rusmetrics. Установите <a href="https://www.google.com/chrome" target="_blank">Chrome</a> или <a href="https://www.firefox.com" target="_blank">Firefox</a>.  
-<![endif]-->	
+  <p class="text-center">Вы используете браузер, который не поддерживает работу с порталом Rusmetrics. Установите <a href="https://www.google.com/chrome" target="_blank">Chrome</a> или <a href="https://www.firefox.com" target="_blank">Firefox</a>.
+<![endif]-->
 <!--[if !IE]>-->
 	<div id="wrap">
 		<div class="container">
@@ -33,24 +33,33 @@
 
 					<form role="form" method="post" action="j_spring_security_check" class="form-horizontal">
 						<div class="form-group">
-							
+
 							<label for="j_username" class="col-xs-3 control-label">Пользователь: </label>
-							
+
 							<div class="col-xs-9">
 								<input name="j_username" id="j_username" type="text"
 									class="form-control" placeholder="имя пользователя"/>
 							</div>
 						</div>
-						<div class="form-group">							
+						<div class="form-group">
 							<label for="j_password" class="col-xs-3 control-label">Пароль: </label>
-							<div class="col-xs-9">	
+							<div class="col-xs-9">
 								<input name="j_password" id="j_password" type="password"
 									class="form-control" placeholder="пароль"><br /> <input
 									type="hidden" name="${_csrf.parameterName}"
 									value="${_csrf.token}" />
 							</div>
 						</div>
-						<div class="form-group">
+                        <div class="form-group">
+                            <label for="remember-me" class="col-xs-3 control-label">Запомнить: </label>
+                            <div class="col-xs-9">
+                                <input name="remember-me" id="remember-me" type="checkbox" ><br />
+                                <input type="hidden" name="${_csrf.parameterName}"
+                                value="${_csrf.token}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
 							<div class="col-xs-12 alert alert-error bg-danger nmc-hide"
 								ng-class="{'nmc-hide':!displayLoginError, 'nmc-show':displayLoginError}">
 								<p>Неправильное имя пользователя или пароль</p>
@@ -78,7 +87,7 @@
 		<div class="container">
 			<div class="text-left">
 				<p>
-					
+
 				</p>
 			</div>
 		</div>
@@ -107,15 +116,15 @@
 				function($scope, $location) {
 					var url = "" + $location.$$absUrl;
 					$scope.displayLoginError = (url.indexOf("error") >= 0);
-										
+
 				} ]);
-		
+
 		function setSeasonBackground(){
 			var curDate = new Date(),
 				curMonth = curDate.getMonth(),
 				curSeason = "title_bg";
 			;
-			
+
 			switch(curMonth){
 			case 0: curSeason = "January"; break;
 			case 1: curSeason = "February"; break;
@@ -128,9 +137,9 @@
 			case 8: curSeason = "September"; break;
 			case 9: curSeason = "October"; break;
 			case 10: curSeason = "November"; break;
-			case 11: curSeason = "December"; break;			
+			case 11: curSeason = "December"; break;
 			}
-			
+
 // 			if (curMonth >= 2 && curMonth <= 4){
 // 				curSeason = "spring";
 // 			}else
@@ -142,12 +151,12 @@
 // 			}else{
 // 				curSeason = "title_bg";
 // 			}
-	
-			document.body.style = "background-image: url(../public/resources/images/" + curSeason + ".png)";		
+
+			document.body.style = "background-image: url(../public/resources/images/" + curSeason + ".png)";
 		}
-		
+
 //		setSeasonBackground();
-		
+
 	</script>
 <!--<![endif]-->
 </body>

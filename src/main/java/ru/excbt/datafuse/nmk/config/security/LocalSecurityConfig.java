@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-
+import org.springframework.security.web.authentication.RememberMeServices;
+import ru.excbt.datafuse.nmk.config.PortalProperties;
+import ru.excbt.datafuse.nmk.security.AjaxAuthenticationFailureHandler;
 import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 
 @Configuration
@@ -26,6 +28,15 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
+    private RememberMeServices rememberMeServices;
+
+    @Autowired
+    private PortalProperties portalProperties;
+
+    @Autowired
+    private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;
 
 	@Autowired
 	public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
@@ -51,6 +62,11 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.sessionManagement().maximumSessions(5).sessionRegistry(getSessionRegistry()).expiredUrl("/login");
 
+		http.rememberMe()
+            .rememberMeServices(rememberMeServices)
+            .rememberMeParameter("remember-me")
+            .key(portalProperties.getSecurity().getRememberMe().getKey());
+
 		http.formLogin()
 				// указываем страницу с формой логина
 				.loginPage("/login")
@@ -61,6 +77,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Указываем параметры логина и пароля с формы логина
 				.usernameParameter("j_username").passwordParameter("j_password")
 				.successHandler(authenticationSuccessHandler)
+                .failureHandler(ajaxAuthenticationFailureHandler)
 				// даем доступ к форме логина всем
 				.permitAll();
 
