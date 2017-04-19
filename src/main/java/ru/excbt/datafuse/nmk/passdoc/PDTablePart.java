@@ -69,6 +69,10 @@ public class PDTablePart implements PDReferable {
     @Getter
     private String valueIdxSuffix = PDConstants.COMPLEX_IDX_VALUE_IDX_SUFFIX;
 
+    @Getter
+    @Setter
+    private boolean indentAfter = true;
+
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
     }
@@ -148,6 +152,11 @@ public class PDTablePart implements PDReferable {
 
     public PDTablePart key(String value){
         this.key = value;
+        return this;
+    }
+
+    public PDTablePart indentAfter(boolean value){
+        this.indentAfter = value;
         return this;
     }
 
@@ -276,7 +285,18 @@ public class PDTablePart implements PDReferable {
             result.add(element);
         }
         return result;
-    };
+    }
+
+    public <T extends PDTableCell<T>> List<T> createValueElements(int count, final Class<T> valueType, int keyValueStarts) {
+        Preconditions.checkArgument(keyValueStarts >= 0);
+        List<T> result = new ArrayList<>();
+        for (int i = 1; i <= count ; i++) {
+            T element = createValueElement(valueType);
+            element.keyValueIdx(keyValueStarts + i);
+            result.add(element);
+        }
+        return result;
+    }
 
     @Override
     public void linkInternalRefs() {
