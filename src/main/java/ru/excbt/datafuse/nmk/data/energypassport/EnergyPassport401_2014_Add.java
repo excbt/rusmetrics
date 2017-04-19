@@ -785,6 +785,65 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    /**
+     *
+     * @return
+     */
+    public EnergyPassportSectionTemplateFactory section_2_8() {
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.TABLE).sectionKey("S_2.8")
+            .caption("Сведения об использовании вторичных энергетических ресурсов")
+            .shortCaption("2.8")
+            .sectionNr("2.8");
+
+        final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+        partHeader.createStaticElement().caption("№ п/п");
+        partHeader.createStaticElement().caption("Наименование и источник вторичного (теплового) энергетического ресурса (далее - ВЭР)").columnKey("res_name");
+        partHeader
+            .createStaticElement("Характеристики ВЭР")
+            .createStaticChild("фазовое состояние").columnKey("phase")
+            .createStaticSibling("расход куб. м/ч").columnKey("consumption")
+            .createStaticSibling("давление, МПа").columnKey("pressure")
+            .createStaticSibling("температура, °C").columnKey("temperature")
+            .createStaticSibling("характерные загрязнители, их концентрация, %").columnKey("pollutants")
+        .and().createStaticElement("Годовой выход ВЭР, Гкал").columnKey("year_output")
+        .and().createStaticElement("Годовое фактическое использование, Гкал").columnKey("year_use")
+        .and().createStaticElement("Примечание").columnKey("annotation");
+
+        partHeader.widthsOfElements(10,30,15,15,15,15,20,15,15,20);
+
+        pdTable.createPartRow("1")
+            .and().createStaticElement("1")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createDoubleValueElement().keyValueIdx(2)
+            .and().createDoubleValueElement().keyValueIdx(3)
+            .and().createDoubleValueElement().keyValueIdx(4)
+            .and().createDoubleValueElement().keyValueIdx(5)
+            .and().createDoubleValueElement().keyValueIdx(6)
+            .and().createDoubleValueElement().keyValueIdx(7)
+            .and().createDoubleValueElement().keyValueIdx(8)
+            .and().createStringValueElement().keyValueIdx(9);
+
+        pdTable.createPartRow("2")
+            .and().createStaticElement("2")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createDoubleValueElement().keyValueIdx(2)
+            .and().createDoubleValueElement().keyValueIdx(3)
+            .and().createDoubleValueElement().keyValueIdx(4)
+            .and().createDoubleValueElement().keyValueIdx(5)
+            .and().createDoubleValueElement().keyValueIdx(6)
+            .and().createDoubleValueElement().keyValueIdx(7)
+            .and().createDoubleValueElement().keyValueIdx(8)
+            .and().createStringValueElement().keyValueIdx(9);
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
+
         /**
          *
          * @return
