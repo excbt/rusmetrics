@@ -20,12 +20,17 @@ public class PDValueCounterDTO extends PDValueDTO {
     @Setter
     private Integer value;
 
+    @Getter
+    @Setter
+    private String counterPrefix;
+
     public static PDValueCounterDTO newInstance(PDTableCell<?> pdTableCell) {
         checkValueTypeClass(PDTableCellValueCounter.class, pdTableCell);
         PDTableCellValueCounter srcValue = (PDTableCellValueCounter) pdTableCell;
         PDValueCounterDTO result = new PDValueCounterDTO();
         result.setCommonProperties(srcValue);
         result.value = srcValue.getValue();
+        result.counterPrefix = srcValue.getCounterPrefix();
         return result;
     }
 
@@ -38,4 +43,5 @@ public class PDValueCounterDTO extends PDValueDTO {
     public String dataType() {
         return TYPE;
     }
+
 }

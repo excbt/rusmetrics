@@ -276,7 +276,18 @@ public class PDTablePart implements PDReferable {
             result.add(element);
         }
         return result;
-    };
+    }
+
+    public <T extends PDTableCell<T>> List<T> createValueElements(int count, final Class<T> valueType, int keyValueStarts) {
+        Preconditions.checkArgument(keyValueStarts >= 0);
+        List<T> result = new ArrayList<>();
+        for (int i = 1; i <= count ; i++) {
+            T element = createValueElement(valueType);
+            element.keyValueIdx(keyValueStarts + i);
+            result.add(element);
+        }
+        return result;
+    }
 
     @Override
     public void linkInternalRefs() {

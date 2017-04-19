@@ -253,7 +253,10 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
 
     @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
     public int get_dynamicIdx() {
-        return is_dynamic() ? getRowIndex() + 1 : 0;
+        List<PDTablePart> rows = this.tablePart.getPdTable().getParts()
+            .stream().filter(i -> PDPartType.ROW.equals(i.getPartType()) && i.isDynamic()).collect(Collectors.toList());
+        int idx = rows.indexOf(this.tablePart);
+        return is_dynamic() ? idx + 1 : 0;
     }
 
     @Override
