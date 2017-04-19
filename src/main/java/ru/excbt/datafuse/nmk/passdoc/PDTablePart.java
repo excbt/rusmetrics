@@ -69,6 +69,10 @@ public class PDTablePart implements PDReferable {
     @Getter
     private String valueIdxSuffix = PDConstants.COMPLEX_IDX_VALUE_IDX_SUFFIX;
 
+    @Getter
+    @Setter
+    private boolean indentAfter = true;
+
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
     }
@@ -148,6 +152,11 @@ public class PDTablePart implements PDReferable {
 
     public PDTablePart key(String value){
         this.key = value;
+        return this;
+    }
+
+    public PDTablePart indentAfter(boolean value){
+        this.indentAfter = value;
         return this;
     }
 
