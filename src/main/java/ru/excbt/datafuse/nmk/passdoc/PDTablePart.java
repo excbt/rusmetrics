@@ -231,7 +231,7 @@ public class PDTablePart implements PDReferable {
             } else {
                 Double mergedWidth = 0.0;
                 for (int j = i; j < i + elements.get(i).getMergedCells(); j++) {
-                    Double v = headerWidths.get(j);
+                    Double v = j < headerWidths.size() ? headerWidths.get(j) : null;
                     if (v != null && v != 0) mergedWidth = mergedWidth + v;
                 }
                 if (mergedWidth != null && mergedWidth != 0) result.add(mergedWidth);
