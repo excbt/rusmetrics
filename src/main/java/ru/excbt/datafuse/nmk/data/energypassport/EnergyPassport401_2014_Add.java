@@ -11,6 +11,625 @@ import ru.excbt.datafuse.nmk.passdoc.*;
 public class EnergyPassport401_2014_Add {
 
 
+
+    public EnergyPassportSectionTemplateFactory section_1_3() {
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.3")
+            .caption("ИНФОРМАЦИЯ\n" +
+                "              о потреблении энергетических ресурсов в здании\n" +
+                "                        (строении, сооружении) \n")
+            .shortCaption("1.3")
+            .sectionNr("1.3")
+            .sectionHeader("ИНФОРМАЦИЯ\n" +
+                "              о потреблении энергетических ресурсов в здании\n" +
+                "                        (строении, сооружении) <*>\n" +
+                "                                за 20__ год");
+
+        topTable.createPartLine("1").createStaticElement("Место нахождения")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("2").createStaticElement("Тип здания (строения, сооружения) и функциональное назначение:");
+
+
+        topTable.createPartLine("2_type",false)
+            .and().createStaticElement("         ")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("ОБЩЕСТВЕННОЕ         ").keyValueIdx(1)
+            .and().createBooleanValueElement().keyValueIdx(2)
+            .and().createStaticElement("ЖИЛОЕ                ").keyValueIdx(2)
+            .and().createBooleanValueElement().keyValueIdx(3)
+            .and().createStaticElement("СТРОЕНИЕ, СООРУЖЕНИЕ ").keyValueIdx(3);
+
+        final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_2").createInnerTable();
+        innerTable.noBorder(true);
+        {
+            innerTable.createPartRow("2a", false)
+                .and().createStaticElement("Здравоохранение      ")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement("Жилой дом            ")
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createStaticElement("                     ")
+                .and().createStringValueElement().keyValueIdx(3);
+
+            innerTable.createPartRow("2b", false)
+                .and().createStaticElement("Воспитание и обучение")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement("Общежитие            ")
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createStringValueElement().keyValueIdx(3);
+
+
+            innerTable.createPartRow("2c", false)
+                .and().createStaticElement("Наука                ")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement("Гостиница            ")
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createStringValueElement().keyValueIdx(3);
+
+            innerTable.createPartRow("2d", false)
+                .and().createStaticElement("Управленческо-административное     ")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement("Другое")
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createStringValueElement().keyValueIdx(3);
+
+            innerTable.createPartRow("2e", false)
+                .and().createStaticElement("Другое               ")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement("                     ")
+                .and().createStaticElement("                     ")
+                .and().createStringValueElement().keyValueIdx(3);
+
+        }
+
+
+        topTable.createPartLine("2a-1", false)
+            .and().createStaticElement("Здравоохранение      ")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createStaticElement("Жилой дом            ")
+            .and().createStringValueElement().keyValueIdx(2)
+            .and().createStaticElement("                     ")
+            .and().createStringValueElement().keyValueIdx(3);
+
+        topTable.createPartLine("2b-1", false)
+            .and().createStaticElement("Воспитание и обучение")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createStaticElement("Общежитие            ")
+            .and().createStringValueElement().keyValueIdx(2)
+            .and().createStringValueElement().keyValueIdx(3);
+
+
+        topTable.createPartLine("2c-1", false)
+            .and().createStaticElement("Наука                ")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createStaticElement("Гостиница            ")
+            .and().createStringValueElement().keyValueIdx(2)
+            .and().createStringValueElement().keyValueIdx(3);
+
+        topTable.createPartLine("2d-0", false)
+            .and().createStaticElement("Управленческо-       ");
+
+        topTable.createPartLine("2d-1", false)
+            .and().createStaticElement("административное     ")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createStaticElement("Другое")
+            .and().createStringValueElement().keyValueIdx(2)
+            .and().createStringValueElement().keyValueIdx(3);
+
+        topTable.createPartLine("2e-1", false)
+            .and().createStaticElement("Другое               ")
+            .and().createStringValueElement().keyValueIdx(1)
+            .and().createStaticElement("                     ")
+            .and().createStaticElement("                     ")
+            .and().createStringValueElement().keyValueIdx(3);
+
+        topTable.createPartLine("3")
+            .and().createStaticElement("Техническое описание объекта (да/нет/значение показателя)");
+
+        topTable.createPartLine("3.1")
+            .and().createStaticElement("Общая площадь")
+            .and().createStaticElement(EPConstants.SQW_M)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.2")
+            .and().createStaticElement("Этажность")
+            .and().createStaticElement(EPConstants.PCS)
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("3.2.1")
+            .and().createStaticElement("Количество лифтов, год установки/   (шт.)\n" +
+            "замены")
+            .and().createStaticElement(EPConstants.PCS)
+            .and().createIntegerValueElement();
+
+
+        topTable.createPartLine("3.3")
+            .and().createStaticElement("Отапливаемая площадь")
+            .and().createStaticElement(EPConstants.SQW_M)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.4")
+            .and().createStaticElement("Полезная площадь")
+            .and().createStaticElement(EPConstants.SQW_M)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.5")
+            .and().createStaticElement("Общий объем")
+            .and().createStaticElement(EPConstants.CUB_M)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.6")
+            .and().createStaticElement("Год ввода в эксплуатацию")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("3.7")
+            .and().createStaticElement("Фактический износ")
+            .and().createStaticElement(EPConstants.PERC)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.8")
+            .and().createStaticElement("Год проведения последнего капитального ремонта")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("3.8.1")
+            .and().createStaticElement("Год проведения последнего текущего ремонта")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.8.2")
+            .and().createStaticElement("Объем инвестиций на капитальный ремонт")
+            .and().createStaticElement(EPConstants.KRUB)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.8.2-1",false)
+            .and().createStaticElement("В том числе из внебюджетных источников")
+            .and().createStaticElement(EPConstants.KRUB)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.9")
+            .and().createStaticElement("Планируется ли проведение капитального ремонта")
+            .and().createStaticElement(EPConstants.YN)
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.9.1")
+            .and().createStaticElement("Планируемый объем инвестиций")
+            .and().createStaticElement(EPConstants.KRUB)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.9.1-1",false)
+            .and().createStaticElement("В том числе из внебюджетных источников")
+            .and().createStaticElement(EPConstants.KRUB)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("3.9.2")
+            .and().createStaticElement("Основные цели капитального ремонта");
+
+        topTable.createPartLine("3.9.2.1")
+            .and().createStaticElement("Замена изношенных конструктивных элементов" +
+            " и улучшение эксплуатационных характеристик")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.9.2.2")
+            .and().createStaticElement("Повышение энергоэффективности")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.9.2.3").createStaticElement("Достижение нормативных показателей " +
+            "энергопотребления")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.9.3").createStaticElement("Ожидаемый эффект снижения потребления топливно-энергетических ресурсов" +
+            " (далее - ТЭР)")
+            .and().createStaticElement(EPConstants.TUT_YEAR)
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.10").createStaticElement("Наружные стены");
+
+        topTable.createPartLine("3.11").createStaticElement("Окна");
+
+        topTable.createPartLine("3.11a",false)
+            .and().createStaticElement("Тип оконных блоков");
+
+        topTable.createPartLine("3.11a",false)
+            .and().createStaticElement("Деревянные рамы:")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11b",false)
+            .and().createStaticElement("- одинарные")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11c",false)
+            .and().createStaticElement("- двойные")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11d",false)
+            .and().createStaticElement("Энергосберегающие стеклопакеты:")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11e",false)
+            .and().createStaticElement("- однокамерные")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11f",false)
+            .and().createStaticElement("- двухкамерные (многокамерные)")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11g",false)
+            .and().createStaticElement("- двухкамерные (многокамерные) с напылением")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11h",false)
+            .and().createStaticElement("Другие (указать, какие)")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.11i",false)
+            .and().createStaticElement("Остекление энергосберегающими " +
+            "стеклопакетами")
+            .and().createStaticElement("(% от общего остекления)")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.12")
+            .and().createStaticElement("Входные двери")
+            .and().createStaticElement("(есть/нет/количество)");
+        topTable.createPartLine("3.12a",false)
+            .and().createStaticElement("Одинарные")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12b",false)
+            .and().createStaticElement("Двойные")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12c",false)
+            .and().createStaticElement("Количество входов")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12d",false)
+            .and().createStaticElement("Из них оборудованы:")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12e",false)
+            .and().createStaticElement("- тамбуром")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12f",false)
+            .and().createStaticElement("- доводчиком")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12g",false)
+            .and().createStaticElement("- тепловой завесой в рабочем состоянии")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12h",false)
+            .and().createStaticElement("- тепловой завесой с регулированием включения и отключения")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+        topTable.createPartLine("3.12i",false)
+            .and().createStaticElement("- автоматизацией отключения тепловой завесы")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+
+        topTable.createPartLine("3.13")
+            .and().createStaticElement("Крыша")
+            .and().createStaticElement("(есть/нет)");
+
+        topTable.createPartLine("3.13a",false)
+            .and().createStaticElement("Без чердачного помещения")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13b",false)
+            .and().createStaticElement("С чердачным помещением")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13c",false)
+            .and().createStaticElement("В том числе:")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13d",false)
+            .and().createStaticElement("- с холодным чердаком")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13e",false)
+            .and().createStaticElement("- с утепленным чердаком")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13f",false)
+            .and().createStaticElement("Утепление крыши")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13g",false)
+            .and().createStaticElement("Плоская (мягкая) кровля:")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13h",false)
+            .and().createStaticElement("- с однослойной системой теплоизоляции типовое решение)")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13i",false)
+            .and().createStaticElement("- наличие технического этажа")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13j",false)
+            .and().createStaticElement("- с двухслойной системой теплоизоляции")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13k",false)
+            .and().createStaticElement("- наличие технического этажа")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13l",false)
+            .and().createStaticElement("Металлическая:")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13m",false)
+            .and().createStaticElement("- без утепления крыши изнутри")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13n",false)
+            .and().createStaticElement("- без утепления чердачного помещения")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13p",false)
+            .and().createStaticElement("- с утеплением крыши изнутри")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13q",false)
+            .and().createStaticElement("- с утеплением чердачного помещения")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13r",false)
+            .and().createStaticElement("Наличие протечек (конденсата) на потолке верхнего этажа")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13s",false)
+            .and().createStaticElement("Отсутствие протечек (конденсата) на потолке верхнего этажа")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13t",false)
+            .and().createStaticElement("Отсутствие наледи на крыше (во время отопительного сезона)")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.13u",false)
+            .and().createStaticElement("Наличие наледи на крыше (во время отопительного сезона)")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+
+        topTable.createPartLine("3.14")
+            .and().createStaticElement("Подвальные помещения")
+            .and().createStaticElement("(есть/нет)");
+
+
+        topTable.createPartLine("3.14a",false)
+            .and().createStaticElement("Без подвального помещения")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14b",false)
+            .and().createStaticElement("С холодным подвалом")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14c",false)
+            .and().createStaticElement("С теплым подвалом")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14d",false)
+            .and().createStaticElement("Сырые")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14e",false)
+            .and().createStaticElement("В сухом состоянии")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14f",false)
+            .and().createStaticElement("Стены не промерзают")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14g",false)
+            .and().createStaticElement("Стены промерзают")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.14h",false)
+            .and().createStaticElement("Имеется остекление")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+
+        topTable.createPartLine("3.15")
+            .and().createStaticElement("Подключение к сетям инженерно-технического обеспечения")
+            .and().createStaticElement("(есть/нет)");
+
+
+
+
+        topTable.createPartLine("3.16")
+            .and().createStaticElement("Присоединение к магистральной тепловой сети (при отсутствии собственного источника)")
+            .and().createStaticElement("(есть/нет)");
+
+
+        topTable.createPartLine("3.16a",false)
+            .and().createStaticElement("Групповое (центральный тепловой пункт)(далее - ЦТП)")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.16b",false)
+            .and().createStaticElement("Индивидуальное (индивидуальный тепловойпункт) (далее - ИТП)")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.16c",false)
+            .and().createStaticElement("Индивидуальное с автоматизацией отопленияи горячего водоснабжения (далее - АИТП)")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.16d",false)
+            .and().createStaticElement("Присоединение системы отопления:")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.16e",false)
+            .and().createStaticElement("- зависимое")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("3.16f",false)
+            .and().createStaticElement("- независимое")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("4")
+            .and().createStaticElement("Сведения о потреблении энергоресурсов в базовом году");
+
+        topTable.createPartLine("4a",false)
+            .and().createStaticElement("Тепловая энергия")
+            .and().createStaticElement(EPConstants.GCAL_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("4b",false)
+            .and().createStaticElement("Электрическая энергия")
+            .and().createStaticElement(EPConstants.KWH_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("4c",false)
+            .and().createStaticElement("Газ")
+            .and().createStaticElement(EPConstants.KVM_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("4d",false)
+            .and().createStaticElement("Жидкое топливо")
+            .and().createStaticElement(EPConstants.T_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("4e",false)
+            .and().createStaticElement("Твердое топливо")
+            .and().createStaticElement(EPConstants.T_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("4f",false)
+            .and().createStaticElement("Моторное топливо")
+            .and().createStaticElement(EPConstants.L_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("5")
+            .and().createStaticElement("Тарифы на оплату энергетических ресурсов");
+
+        topTable.createPartLine("5a",false)
+            .and().createStaticElement("Тепловая энергия")
+            .and().createStaticElement(EPConstants.RUB_GCAL)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine()
+            .and().createStaticElement("Электрическая энергия:");
+
+        topTable.createPartLine("5b",false)
+            .and().createStaticElement("- одноставочный тариф")
+            .and().createStaticElement(EPConstants.RUB_KWH)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("5c",false)
+            .and().createStaticElement("- двуставочный тариф")
+            .and().createStaticElement(EPConstants.RUB_KWH)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("5d",false)
+            .and().createStaticElement()
+            .and().createStaticElement(EPConstants.RUB_KWH)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("5e",false)
+            .and().createStaticElement("Газ")
+            .and().createStaticElement(EPConstants.KVM_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("5f",false)
+            .and().createStaticElement("Твердое топливо")
+            .and().createStaticElement(EPConstants.RUB_T)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("5g",false)
+            .and().createStaticElement("Моторное топливо")
+            .and().createStaticElement(EPConstants.RUB_T)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6")
+            .and().createStaticElement("Оплата энергетических ресурсов");
+
+        topTable.createPartLine("6a",false)
+            .and().createStaticElement("Тепловая энергия")
+            .and().createStaticElement(EPConstants.RUB_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6b",false)
+            .and().createStaticElement("Электрическая энергия")
+            .and().createStaticElement(EPConstants.RUB_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6c",false)
+            .and().createStaticElement("Газ")
+            .and().createStaticElement(EPConstants.RUB_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6d",false)
+            .and().createStaticElement("Жидкое топливо")
+            .and().createStaticElement(EPConstants.RUB_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6e",false)
+            .and().createStaticElement("Твердое топливо")
+            .and().createStaticElement(EPConstants.RUB_YEAR)
+            .and().createDoubleValueElement();
+
+        topTable.createPartLine("6f",false)
+            .and().createStaticElement("Моторное топливо")
+            .and().createStaticElement(EPConstants.RUB_YEAR)
+            .and().createDoubleValueElement();
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
+
+    /**
+     *
+     * @return
+     */
     public EnergyPassportSectionTemplateFactory section_1_4() {
 
         final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.4")
