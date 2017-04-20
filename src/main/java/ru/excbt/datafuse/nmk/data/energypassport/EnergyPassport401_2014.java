@@ -18,13 +18,19 @@ public class EnergyPassport401_2014 {
     /*
 
      */
-    public EnergyPassportSectionTemplateFactory sectionMainFactory() {
+    public EnergyPassportSectionTemplateFactory section_1_2() {
 
 
-        final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_M")
+        final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.2")
             .caption("ИНФОРМАЦИЯ\nо потреблении энергетических ресурсов организации\n" +
                 "за 20__ год")
-            .shortCaption("1.1");
+            .shortCaption("1.2")
+            .sectionNr("1.2")
+            .sectionHeader("ИНФОРМАЦИЯ\n" +
+                "              о потреблении энергетических ресурсов в здании\n" +
+                "                        (строении, сооружении) <*>\n" +
+                "                                за 20__ год");
+
 
         createSectionPartsM1(pdTable);
 
