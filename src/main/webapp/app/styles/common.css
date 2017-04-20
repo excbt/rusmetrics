@@ -2288,7 +2288,11 @@ tr.nmc-inactive-price > td {
 tr.nmc-bg-distinguish > td {
     background-color: #D2D2D2 !important;
 }
- 
+/* Энергетические документы - класс, для выделения фона */
+.nmc-bg-distinguish-energy {
+    background-color: #D2D2D2 !important;
+}
+
 /* Заголовки */
 
 .nmc-h1 {
@@ -3007,4 +3011,20 @@ input[type="checkbox"] {
     position: relative;
     right: -2px;
     cursor: pointer;
+}
+
+.nmc-energy-contents{
+    cursor: pointer;
+}
+
+.nmc-energy-contents-entry {
+    cursor: pointer;
+    border-bottom: 1px solid #D2D2D2;
+}
+.nmc-energy-contents-odd {
+    background-color: #eee;
+}
+
+.nmc-energy-contents-entry:nth-of-type(odd) {    
+    background-color: #eee;
 }
