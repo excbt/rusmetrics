@@ -48,10 +48,12 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
         return $http.get(url);
     }
     
-    function loadPassportData(id) {
+    function loadPassportData(id, sectionId, entryId) {
         var url = PASSPORT_URL;
         if (!mainSvc.checkUndefinedNull(id)) {
             url += "/" + id + "/data";
+            url = mainSvc.addParamToURL(url, "sectionId", sectionId);
+            url = mainSvc.addParamToURL(url, "sectionEntryId", entryId);
             return $http.get(url);
         } else {
             var defer = $q.defer();
@@ -59,6 +61,18 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             return defer;
         }
         
+    }
+    
+    function saveEntry(passportId, sectionId, entry) {
+        var url = PASSPORT_URL;
+        if (!mainSvc.checkUndefinedNull(passportId) && !mainSvc.checkUndefinedNull(sectionId) && !mainSvc.checkUndefinedNull(entry)) {
+            url += "/" + passportId + "/section/" + sectionId + "/entries";
+            return $http.put(url, entry);
+        } else {
+            var defer = $q.defer();
+            defer.reject("Passport data is undefined or null!");
+            return defer;
+        }
     }
     
     function savePassport(passportId, passportSectionData) {
@@ -76,6 +90,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
     service.createPassport = createPassport;
     service.loadPassports = loadPassports;
     service.loadPassportData = loadPassportData;
+    service.saveEntry = saveEntry;
     service.savePassport = savePassport;
     
     return service;

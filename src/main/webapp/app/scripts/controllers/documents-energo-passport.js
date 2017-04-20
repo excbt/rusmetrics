@@ -12,7 +12,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.ctrlSettings = {};
 //    $scope.ctrlSettings.loading = true;
-    $scope.ctrlSettings.cssMeasureUnit = "em";
+    $scope.ctrlSettings.cssMeasureUnit = "rem";
     $scope.ctrlSettings.passportLoading = true;
 //    $scope.ctrlSettings.emptyString = " ";
     
@@ -22,12 +22,16 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.data = {};
     
+    $scope.data.isSectionChanged = false; //flag of section data changed
+    
     $scope.data.passport = {};
     
     //hash map for passport values
     $scope.data.passDocValues = {};
+    //hash map for current section values
+    $scope.data.currentSectionValues = {};
     //passport structure
-    $scope.data.passDocStructure = null;
+//    $scope.data.passDocStructure = null;
     //current passport structure which is shown at present moment
     $scope.data.currentPassDocSection = null;
     
@@ -103,6 +107,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         if (tablePart.dynamic === true && preparedRows.length > 0) {
             preparedRows[0].dynamic = true;
             preparedRows[0].startPartRow = true;
+            preparedRows[preparedRows.length - 1].dynamic = true;
             preparedRows[preparedRows.length - 1].canDelete = true;
             preparedRows[preparedRows.length - 1].endPartRow = true;
         }
@@ -130,8 +135,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             if (passDocPart.partType !== "INNER_TABLE") {
                 return;
             }
-            var theads = [];
-            var tbodies = [];
+            var theads = [],
+                tbodies = [],
+                dynamicRowTemplate = null;
             passDocPart.innerPdTable.parts.forEach(performTablePart);
             passDocPart.innerPdTable.parts.forEach(function (part) {
                 if (part.partType === "HEADER") {
@@ -141,8 +147,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                 if (part.partType === "ROW") {
 //                    Array.prototype.push.apply(tbodies, part.tbody);
                     tbodies = tbodies.concat(part.tbody);
+                    if (part.dynamic === true) {
+                        dynamicRowTemplate = part;
+                    }
                 }
+                
             });
+            passDocPart.innerPdTable.dynamicRowTemplate = angular.copy(dynamicRowTemplate);
             passDocPart.innerPdTable.theads = theads;
             passDocPart.innerPdTable.tbodies = tbodies;
         });
@@ -155,12 +166,16 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     }
     
     function performLoadedSection(loadedSection, sectionValues) {
-        
         loadedSection.sectionData = JSON.parse(loadedSection.sectionDataJson);
-        sectionValues[loadedSection.sectionKey] = {};
-        sectionValues[loadedSection.sectionKey].version = loadedSection.sectionData.version;
+        if (mainSvc.checkUndefinedNull(sectionValues[loadedSection.sectionKey])) {
+            sectionValues[loadedSection.sectionKey] = {};
+        }
+        if (mainSvc.checkUndefinedNull(sectionValues[loadedSection.sectionKey][loadedSection.sectionEntryId])) {
+            sectionValues[loadedSection.sectionKey][loadedSection.sectionEntryId] = {};
+        }
+        sectionValues[loadedSection.sectionKey][loadedSection.sectionEntryId].version = loadedSection.sectionData.version;
         loadedSection.sectionData.elements.forEach(function (dataValueElem) {
-            sectionValues[loadedSection.sectionKey][dataValueElem._complexIdx] = angular.copy(dataValueElem);
+            sectionValues[loadedSection.sectionKey][loadedSection.sectionEntryId][dataValueElem._complexIdx] = angular.copy(dataValueElem);
         });
         return sectionValues;
     }
@@ -192,9 +207,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         
         //rebuild
         var passportSectionStructure = null;
-        $scope.data.passDocStructure.some(function (pds) {
+        $scope.data.passport.sections.some(function (pds) {
             if (pds.sectionKey === loadedSectionKey) {
-                passportSectionStructure = pds;
+                passportSectionStructure = pds.preparedSection;
                 return true;
             }
         });
@@ -234,7 +249,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         //update passport.passportData
         $scope.data.passport.passportData.some(function (pd) {
-            if (pd.sectionKey === resp.data.sectionKey) {
+            if (pd.sectionKey === resp.data.sectionKey && pd.sectionEntryId === resp.data.sectionEntryId) {
                 pd = angular.copy(resp.data);
             }
         });
@@ -266,9 +281,43 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         });
 //        $scope.data.passport.passportData = passDocData;
         $scope.data.passDocValues = sectionValues;
+        $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
         $scope.ctrlSettings.passportLoading = false;
 //        console.log(passDocData);
 //        console.log(sectionValues);
+    }
+    
+    function successLoadSectionEntryDataCallback(resp) {
+        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+            console.warn("Empty response from server: ");
+            console.warn(resp);
+            return false;
+        }
+        if (!angular.isArray(resp.data) || resp.data.length === 0) {
+            console.log("Response from server is not array: ");
+            console.warn(resp.data);
+            return false;
+        }
+        //update passport.passportData
+        var isPassportDataElementFound = false,
+            respData = resp.data[0];
+        $scope.data.passport.passportData.some(function (pd) {
+            if (pd.sectionKey === respData.sectionKey && pd.sectionEntryId === respData.sectionEntryId) {
+                isPassportDataElementFound = true;
+                pd = angular.copy(resp.data);
+                return true;
+            }
+        });
+        if (isPassportDataElementFound === false) {
+            $scope.data.passport.passportData.push(angular.copy(respData));
+        }
+//console.log($scope.data.passport);
+        //perform section data
+        var sectionValues = angular.copy($scope.data.passDocValues);
+//console.log(respData);        
+//console.log(respData.sectionDataJson);        
+//console.log(JSON.parse(respData.sectionDataJson));        
+        $scope.data.passDocValues = performLoadedSection(respData, sectionValues);
     }
     
     function loadPassportData(passport) {
@@ -280,24 +329,29 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         //TODO: comment
 //        console.log(response);
         if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
+            console.warn("Loaded passport is empty!");
             return false;
         }
         
         var result = [],
             tmp = angular.copy(response.data);
         
-        $scope.data.passport = angular.copy(response.data);
+        //$scope.data.passport = angular.copy(response.data);
         
         tmp.sections.forEach(function (secTempl) {
+            secTempl.preparedSection = preparePassDoc(JSON.parse(secTempl.sectionJson));
             result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
         });
 //        result = preparePassDoc(result);
+        $scope.data.passport = tmp;
         //TODO: comment
+//        console.log($scope.data.passport);
 //        console.log(result);
 //return;        
-        $scope.data.passDocStructure = result;
-        if ($scope.data.passDocStructure.length >= 1) {
-            $scope.data.currentPassDocSection = $scope.data.passDocStructure[INDEX_OF_DEFAULT_SECTION];
+//        $scope.data.passDocStructure = result;
+//        if ($scope.data.passDocStructure.length >= 1) {
+        if ($scope.data.passport.sections.length >= 1) {
+            $scope.data.currentPassDocSection = $scope.data.passport.sections[INDEX_OF_DEFAULT_SECTION]; //$scope.data.passDocStructure[INDEX_OF_DEFAULT_SECTION];
 //            if (mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.values)) {
 //                $scope.data.currentPassDocSection.values = {};
 //            }
@@ -324,20 +378,66 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             .then(successCreatePassportCallback, errorCallback);
     }
     
-    $scope.contentsPartSelect = function (part) {
-//console.log(part);
-        $scope.data.currentPassDocSection.isSelected = false;
+    function loadEntryData(passportId, sectionId, entryId) {
+        energoPassportSvc.loadPassportData(passportId, sectionId, entryId)
+            .then(successLoadSectionEntryDataCallback, errorCallback);
+    }
+    
+    function changeSection(part) {
+        if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection)) {
+            $scope.data.currentPassDocSection.isSelected = false;
+        }
+        if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.entries) && $scope.data.currentPassDocSection.entries.length > 0) {
+            $scope.data.currentPassDocSection.entries.forEach(function (entry) {
+                entry.isSelected = false;
+            });
+        }
         $scope.data.currentPassDocSection = part;
         $scope.data.currentPassDocSection.isSelected = true;
+        
+        //set section values
+//console.log($scope.data.passDocValues);
+//console.log($scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey]);
+//console.log($scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0]);
+        if (mainSvc.checkUndefinedNull($scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0])) {
+            $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0] = {};
+            //load entry data
+            loadEntryData($scope.data.passport.id, $scope.data.currentPassDocSection.sectionId || $scope.data.currentPassDocSection.id, $scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0);
+        }
+        $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
+        
         $timeout(function () {
             $(':input').inputmask();
-//            $(':input').focus();
         }, 0);
+    }
+    
+    $scope.contentsPartSelect = function (part) {
+//        console.log(part);
+        //if previous section was changed - need it save or cancel changes
+        if ($scope.data.isSectionChanged === true) {
+            //open window with message and to buttons - save and cancel
+        } else {
+            changeSection(part);
+        }
         
     };
     
-    $scope.tdBlur = function (cell) {
+    $scope.contentsPartEntrySelect = function (part, entry) {
+        changeSection(part);
+        //part.isSelected = false;
+        //entry.isSelected = true;
+        //load section template for entry interface build
+        entry.preparedSection = angular.copy(part.preparedSection);
+        entry.preparedSection.sectionEntryId = entry.id;
+        changeSection(entry);
+        //load entry data
+    };
+    
+    $scope.tdBlur = function (cell, values, complexIdx) {
 //console.log(cell);
+//        console.log(values);        
+//        console.log(complexIdx);
+        
     };
     
     $scope.cancelEnergoPassportEdit = function () {
@@ -353,7 +453,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             }
             //add value to global array
             if (!mainSvc.checkUndefinedNull($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey])) {
-                $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][cell._complexIdx] = angular.copy(cell);
+                $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0][cell._complexIdx] = angular.copy(cell);
             }
         }
         if (mainSvc.checkUndefinedNull(cell.elements)) {
@@ -373,7 +473,19 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             console.error("Incorrect part.innerPdTable.parts: " + part);
             return false;
         }
-        var addingRow = angular.copy(part.innerPdTable.parts[1]);
+        //find dynamic part
+        var dynamicRowTemplate = null;
+        part.innerPdTable.parts.some(function (part) {
+            if (part.dynamic === true) {
+                dynamicRowTemplate = part;
+                return true;
+            }
+        });
+        if (dynamicRowTemplate === null) {
+            console.error("Not enough dynamic parts!");
+            console.error(part);
+        }
+        var addingRow = angular.copy(dynamicRowTemplate);
         addingRow.elements.forEach(function (rowElem) {
             if (rowElem.__type === 'Counter') {
                 if (angular.isUndefined(part.innerPdTable.counterValue)) {
@@ -393,8 +505,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                     rowElem._complexIdx += "[" + rowElem.valuePackIdx + "]";
                 }
                 //add value to global array
-                if (!mainSvc.checkUndefinedNull($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey])) {
-                    $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][rowElem._complexIdx] = angular.copy(rowElem);
+//console.log($scope.data.currentPassDocSection);
+//console.log($scope.data.passDocValues);
+//console.log($scope.data.currentSectionValues);                
+                if (!mainSvc.checkUndefinedNull($scope.data.currentSectionValues)) {
+                    $scope.data.currentSectionValues[rowElem._complexIdx] = angular.copy(rowElem);
                 }
                 rowElem.value = part.innerPdTable.counterValue;
             } else {
@@ -415,8 +530,19 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.deleteRowFromTable = function (part, ind) {
         //ind - row index at tbodies, it is not real row index;
-        var partLength = part.innerPdTable.parts[1].tbody.length,
-            deleteRow = angular.copy(part.innerPdTable.tbodies[ind - part.innerPdTable.parts[1].tbody.length + 1]);
+        var dynamicRowTemplate = null;
+        part.innerPdTable.parts.some(function (part) {
+            if (part.dynamic === true) {
+                dynamicRowTemplate = part;
+                return true;
+            }
+        });
+        if (dynamicRowTemplate === null) {
+            console.error("Not enough dynamic parts!");
+            console.error(part);
+        }
+        var partLength = dynamicRowTemplate.tbody.length,
+            deleteRow = angular.copy(part.innerPdTable.tbodies[ind - dynamicRowTemplate.tbody.length + 1]);
         //TODO: delete values from Values array; ??????????????????? Need delete last row value?
         //move array elements for 1 row ahead and delete last row
 //        deleteRow.tds.forEach(function (td) {
@@ -453,10 +579,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             var maxDataIdx = part.innerPdTable.counterValue;
             var vkey, dataIndexCounter;
             for (dataIndexCounter = dataIndex; dataIndexCounter < maxDataIdx; dataIndexCounter += 1) {
-                for (vkey in  $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey]) {
-                    if ($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey].hasOwnProperty(vkey) && $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][vkey]._dynamicIdx === dataIndexCounter) {
-                        var currentVal = $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][vkey];
-                        var newComplexIdx = currentVal.partKey + part.innerPdTable.parts[1].dynamicSuffix + (dataIndexCounter + 1) + part.innerPdTable.parts[1].valueIdxSuffix + currentVal.keyValueIdx;
+//console.log($scope.data.currentSectionValues);                
+                for (vkey in  $scope.data.currentSectionValues) {
+//console.log(vkey);
+//console.log($scope.data.currentSectionValues[vkey]);                    
+                    if ($scope.data.currentSectionValues.hasOwnProperty(vkey) && !mainSvc.checkUndefinedNull($scope.data.currentSectionValues[vkey]) && $scope.data.currentSectionValues[vkey].hasOwnProperty("_dynamicIdx") && $scope.data.currentSectionValues[vkey]._dynamicIdx === dataIndexCounter) {
+                        var currentVal = $scope.data.currentSectionValues[vkey];
+                        var newComplexIdx = currentVal.partKey + dynamicRowTemplate.dynamicSuffix + (dataIndexCounter + 1) + dynamicRowTemplate.valueIdxSuffix + currentVal.keyValueIdx;
                         if (mainSvc.isNumeric(currentVal.valuePackIdx)) {
                             newComplexIdx += "[" + currentVal.valuePackIdx + "]";
                         }
@@ -467,22 +596,22 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //                        console.log("currentVal._complexIdx: " + currentVal._complexIdx);
 //                        console.log("newComplexIdx: " + newComplexIdx);
                         
-                        var newVal = angular.copy($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][newComplexIdx]);
+                        var newVal = angular.copy($scope.data.currentSectionValues[newComplexIdx]);
                         newVal._dynamicIdx = dataIndexCounter;
                         newVal._complexIdx = currentVal._complexIdx;
                         
 //                        console.log("newVal:");
 //                        console.log(newVal);
                         
-                        $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][vkey] = newVal;
+                        $scope.data.currentSectionValues[vkey] = newVal;
                     }
                     
                 }
             }
             //delete last row from values array
-            for (vkey in  $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey]) {
-                if ($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey].hasOwnProperty(vkey) && $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][vkey]._dynamicIdx === maxDataIdx) {
-                    delete $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][vkey];
+            for (vkey in  $scope.data.currentSectionValues) {
+                if ($scope.data.currentSectionValues.hasOwnProperty(vkey)  && !mainSvc.checkUndefinedNull($scope.data.currentSectionValues[vkey]) && $scope.data.currentSectionValues[vkey].hasOwnProperty("_dynamicIdx") && $scope.data.currentSectionValues[vkey]._dynamicIdx === maxDataIdx) {
+                    delete $scope.data.currentSectionValues[vkey];
                 }
             }
             
@@ -501,7 +630,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //                        return true;
                 }
                 td._dynamicIdx = counter;
-                td._complexIdx = td.partKey + part.innerPdTable.parts[1].dynamicSuffix + counter + part.innerPdTable.parts[1].valueIdxSuffix + td.keyValueIdx;
+                td._complexIdx = td.partKey + dynamicRowTemplate.dynamicSuffix + counter + dynamicRowTemplate.valueIdxSuffix + td.keyValueIdx;
 //                    rowElem._complexIdx = rowElem.partKey + addingRow.dynamicSuffix + part.innerPdTable.counterValue + addingRow.valueIdxSuffix + rowElem.keyValueIdx;
                 if (mainSvc.isNumeric(td.valuePackIdx)) {
                     td._complexIdx += "[" + td.valuePackIdx + "]";
@@ -527,31 +656,91 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.savePassportSection = function (passportSection) {
 //        console.log(passportSection);
-//        console.log($scope.data.passDocValues[passportSection.sectionKey]);
+//        console.log($scope.data.passDocValues[passportSection.preparedSection.sectionKey]);
         //prepare value array
-        var sectionData = {};
-        sectionData.version = $scope.data.passDocValues[passportSection.sectionKey].version;
-        delete $scope.data.passDocValues[passportSection.sectionKey].version;
+        var sectionData = {},
+            sectionValues = $scope.data.passDocValues[passportSection.preparedSection.sectionKey][passportSection.preparedSection.sectionEntryId || 0];
+        sectionData.version = sectionValues.version;
+        delete sectionValues.version;
         sectionData.elements = [];
         var vkey;
-        for (vkey in $scope.data.passDocValues[passportSection.sectionKey]) {
-            if ($scope.data.passDocValues[passportSection.sectionKey].hasOwnProperty(vkey)) {
-                sectionData.elements.push($scope.data.passDocValues[passportSection.sectionKey][vkey]);
+        for (vkey in sectionValues) {
+            if (sectionValues.hasOwnProperty(vkey)) {
+                sectionData.elements.push(sectionValues[vkey]);
             }
         }
 //        console.log(sectionData);
         var currentPassportSection = null;
         $scope.data.passport.passportData.some(function (pd) {
-            if (pd.sectionKey === passportSection.sectionKey) {
+            if (pd.sectionKey === passportSection.preparedSection.sectionKey && pd.sectionEntryId === (passportSection.preparedSection.sectionEntryId || 0)) {
                 currentPassportSection = angular.copy(pd);
             }
         });
+        if (currentPassportSection === null) {
+            console.warn("currentPassportSection === null!");
+        }
         currentPassportSection.sectionDataJson = JSON.stringify(sectionData);
 //console.log(currentPassportSection);
         //call save function: passport id, section key, values
         energoPassportSvc.savePassport($scope.data.passport.id, currentPassportSection)
             .then(successPutCallback, errorCallback);
     };
+    
+// **** work with section entry ***
+    
+    $scope.emptyString = function (str) {
+        return mainSvc.checkUndefinedEmptyNullValue(str);
+    };
+    
+    $scope.selectEntry = function () {
+        //TODO: add code
+    };
+    
+    $scope.addEntryInit = function () {
+        $scope.data.currentSectionEntry = {};
+        $('#showSectionEntryOptionModal').modal();
+    };
+    
+    $scope.editEntryInit = function (entry) {
+        $scope.data.currentSectionEntry = angular.copy(entry);
+        $('#showSectionEntryOptionModal').modal();
+    }
+    
+    function successSaveEntryCallback(resp) {
+//        console.log(resp);
+        if ($scope.data.currentPassDocSection.hasEntries !== true) {
+            console.error("Секция:");
+            console.error($scope.data.currentPassDocSection);
+            console.error("не может иметь дочерних секций!");
+            return false;
+        }
+        $scope.data.currentPassDocSection.entries.push(resp.data);
+        $('#showSectionEntryOptionModal').modal('hide');
+        
+    }
+    
+    $scope.saveEntry = function (passportId, sectionId, entry) {
+        //TODO: check passportId, sectionId, entry
+        
+        if (mainSvc.checkUndefinedNull(passportId) || mainSvc.checkUndefinedNull(sectionId) || mainSvc.checkUndefinedNull(entry)) {
+            notificationFactory.errorInfo("Ошибка", "Некорректно заданы параметры для записи секции.");
+            console.error("passportId: " + passportId);
+            console.error("sectionId:" + sectionId);
+            console.error("SectionEntry:");
+            console.error(entry);
+            return false;
+        }
+        //add sectionId to entry
+        entry.sectionId = sectionId;
+        energoPassportSvc.saveEntry(passportId, sectionId, entry)
+            .then(successSaveEntryCallback, errorCallback);
+    };
+    
+    $('#showSectionEntryOptionModal').on('shown.bs.modal', function () {
+        $('#inputSectionEntryName').focus();
+        $('#inputSectionOrder').inputmask();
+    });
+// **** end of work with section entry ***    
     
     function initCtrl() {
         var routeParams = $routeParams;

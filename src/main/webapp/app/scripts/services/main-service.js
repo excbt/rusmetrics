@@ -904,6 +904,19 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         }, tDelay);
     };
     
+/**
+    Work with URL 
+*/
+    function addParamToURL(url, paramName, paramValue) {
+        if (checkUndefinedNull(url) || checkUndefinedNull(paramName) || checkUndefinedNull(paramValue)) {
+            return url;
+        }
+        url += ((url.indexOf('?') === -1) ? '?' : '&') + paramName + "=" + paramValue;
+        return url;
+        
+    }
+// end work with URL
+    
     function initSvc() {
         requestCanceler = $q.defer();
         httpOptions = {
@@ -915,6 +928,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     initSvc();
     
     return {
+        addParamToURL,
         checkContext,
         checkEmptyObject,
         checkHHmm,
