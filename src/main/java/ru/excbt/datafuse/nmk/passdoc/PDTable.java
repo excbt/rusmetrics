@@ -52,6 +52,9 @@ public class PDTable implements PDReferable {
     @Setter
     private String sectionKey;
 
+    @Getter
+    @Setter
+    private boolean noBorder;
 
     public PDTable caption(String value) {
         this.caption = value;
@@ -80,6 +83,11 @@ public class PDTable implements PDReferable {
 
     public PDTable sectionNr(String value) {
         this.sectionNr = value;
+        return this;
+    }
+
+    public PDTable noBorder(boolean value) {
+        this.noBorder = value;
         return this;
     }
 
@@ -125,11 +133,24 @@ public class PDTable implements PDReferable {
         return result;
     }
 
+    public PDTablePart createPartLine() {
+        return createPart(PDPartType.SIMPLE_LINE).and();
+    }
 
     public PDTablePart createPartLine(String nr) {
         String key = PREFIX + (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
 
         return createPart(PDPartType.SIMPLE_LINE).key(key).createStaticElement(nr).and();
+    }
+
+    public PDTablePart createPartLine(String nr, boolean createStaticNr) {
+        String key = PREFIX + (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
+
+        PDTablePart result = createPart(PDPartType.SIMPLE_LINE).key(key);
+        if (createStaticNr) {
+            result.createStaticElement(nr);
+        }
+        return result;
     }
 
     public PDTablePart createPartLine(String nr, String staticCaption) {
@@ -142,6 +163,20 @@ public class PDTable implements PDReferable {
         String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
         String key = PREFIX + nr2;
         return createPart(PDPartType.ROW).key(key).createStaticElement(nr).and();
+    }
+
+    public PDTablePart createPartRow(String nr, boolean createStaticNr) {
+        String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
+        String key = PREFIX + nr2;
+        PDTablePart result = createPart(PDPartType.ROW).key(key);
+        if (createStaticNr) {
+            result.createStaticElement(nr);
+        }
+        return result;
+    }
+
+    public PDTablePart createPartRow() {
+        return createPart(PDPartType.ROW).and();
     }
 
     public PDTablePart createPartRow(String nr, String staticCaption) {

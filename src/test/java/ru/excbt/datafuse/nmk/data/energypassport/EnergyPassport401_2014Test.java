@@ -45,62 +45,68 @@ public class EnergyPassport401_2014Test {
 
 
     @Test
-    public void test_Main() throws Exception {
-        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014.sectionMainFactory();
+    public void test_S_1_2() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014.section_1_2();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_1_4() throws Exception {
+    public void test_S_1_3() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_1_3();
+        checkFactory(factory);
+    }
+
+    @Test
+    public void test_S_1_4() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_1_4();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_2() throws Exception {
+    public void test_S_2_2() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_2();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_3() throws Exception {
+    public void test_S_2_3() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_3();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_4() throws Exception {
+    public void test_S_2_4() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_4();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_5() throws Exception {
+    public void test_S_2_5() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_5();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_6() throws Exception {
+    public void test_S_2_6() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_6();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_6b() throws Exception {
+    public void test_S_2_6b() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_6b();
         checkFactory(factory);
     }
 
     @Test
-    public void test_Add_2_8() throws Exception {
+    public void test_S_2_8() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_8();
         checkFactory(factory);
     }
 
 
     @Test
-    public void test_Add_2_10() throws Exception {
+    public void test_S_2_10() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_10();
 
         checkFactory(factory);
