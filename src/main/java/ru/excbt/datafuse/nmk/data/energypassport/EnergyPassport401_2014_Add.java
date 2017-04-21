@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
 
+import java.util.function.Consumer;
+
 /**
  * Created by kovtonyk on 05.04.2017.
  */
@@ -727,94 +729,315 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement()
             .and().createIntegerValueElement();
 
-        topTable.createPartLine("7.2")
-            .and().createStaticElement("Технический учет")
-            .and().createStaticElement(EPConstants.YN)
-            .and().createBooleanValueElement();
 
-        topTable.createPartLine("7.2a",false)
-            .and().createStaticElement("Суммарное количество узлов технического учета:")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
+        section_helper1(topTable,"7.2.", "Технический учет",
+            new String[]{"Суммарное количество узлов технического учета:",
+                        "- по тепловой энергии",
+                "- по электрической энергии",
+                "- по газу"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueInteger.class);
 
-        topTable.createPartLine("7.2b",false)
-            .and().createStaticElement("- по тепловой энергии")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
+//
+//        topTable.createPartLine("7.2")
+//            .and().createStaticElement("Технический учет")
+//            .and().createStaticElement(EPConstants.YN)
+//            .and().createBooleanValueElement();
+//
+//        topTable.createPartLine("7.2a",false)
+//            .and().createStaticElement("Суммарное количество узлов технического учета:")
+//            .and().createStaticElement()
+//            .and().createIntegerValueElement();
+//
+//        topTable.createPartLine("7.2b",false)
+//            .and().createStaticElement("- по тепловой энергии")
+//            .and().createStaticElement()
+//            .and().createIntegerValueElement();
+//
+//        topTable.createPartLine("7.2c",false)
+//            .and().createStaticElement("- по электрической энергии")
+//            .and().createStaticElement()
+//            .and().createIntegerValueElement();
+//
+//        topTable.createPartLine("7.2d",false)
+//            .and().createStaticElement("- по газу")
+//            .and().createStaticElement()
+//            .and().createIntegerValueElement();
 
-        topTable.createPartLine("7.2c",false)
-            .and().createStaticElement("- по электрической энергии")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
 
-        topTable.createPartLine("7.2d",false)
-            .and().createStaticElement("- по газу")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
 
-        topTable.createPartLine("8")
+
+        topTable.createPartLine("8.")
             .and().createStaticElement("Система теплопотребления");
 
-        topTable.createPartLine("8.1")
-            .and().createStaticElement("Способ присоединения системы горячего водоснабжения:")
-            .and().createStaticElement()
-            .and().createStringValueElement();
-
-        topTable.createPartLine("8.1a",false)
-            .and().createStaticElement("- открытый")
-            .and().createStaticElement()
-            .and().createStringValueElement();
-
-        topTable.createPartLine("8.1b", false)
-            .and().createStaticElement("- закрытый")
-            .and().createStaticElement()
-            .and().createStringValueElement();
+        section_helper1(topTable,"8.1.", "Способ присоединения системы горячего водоснабжения:",
+            new String[]{"- открытый", "- закрытый"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
 
 
-        section_helper1(topTable,"8.2", "Схема разводки трубопроводов системы отопления:",
+        section_helper1(topTable,"8.2.", "Схема разводки трубопроводов системы отопления:",
             new String[]{"- однотрубная", "- двухтрубная"},
+            PDTableCellValueString.class,
             PDTableCellValueString.class);
 
-        section_helper1(topTable, "8.3", "Регулирование отопительной нагрузки в тепловом пункте",
+        section_helper1(topTable, "8.3.", "Регулирование отопительной нагрузки в тепловом пункте",
             new String[]{"- элеваторный узел", "- узел автоматизированного устройства управления", "- ИТП"},
+            PDTableCellValueString.class,
             PDTableCellValueString.class);
 
-        section_helper1(topTable, "8.4", "Отопительные приборы:",
+        section_helper1(topTable, "8.4.", "Отопительные приборы:",
             new String[]{"- чугунные", "- биметаллические", "- с термостатическим регулированием расхода"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.5.", "Температурный режим в помещениях:",
+            new String[]{"- соответствует санитарно-эпидемиологическим требованиям",
+                "с возможностью индивидуального регулирования", "без возможности индивидуального",
+                "- не соответствует санитарно-эпидемиологическим требованиям", "с возможностью использования дополнительных электронагревателей"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.6.",
+            new String[]{"Централизованная приточно-вытяжная вентиляция", EPConstants.YN},
+            new String[]{"- в работающем состоянии",
+                "- с регулированием включения и отключения"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.7.",
+            new String[]{"Система регулирования горячего водоснабжения (далее - ГВС)", EPConstants.YN},
+            new String[]{"- с регулированием расхода",
+                "- с циркуляционным контуром горячей воды"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.8.",
+            "Состояние распределительных тепловых коммуникаций:",
+            new String[]{"- с теплоизоляцией труб в подвальных помещениях",
+                "- теплоизоляция труб в подвальных помещениях отсутствует",
+                "- с теплоизоляцией труб чердачного помещения",
+                "- теплоизоляция труб чердачного помещения отсутствует"},
+            PDTableCellValueString.class,
             PDTableCellValueString.class);
 
 
+        topTable.createPartLine("9.")
+            .and().createStaticElement("Система электропотребления ")
+            .and().createStaticElement("(да (нет)/количество)");
 
+        topTable.createPartLine("9.1.")
+            .and().createStaticElement("Внутреннее освещение")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+
+        section_helper1(topTable, "9.1.1.",
+            "Используемые источники света:",
+            new String[]{"- лампы накаливания (шт.)",
+                "- люминесцентные лампы (шт.)",
+                "- светодиодные лампы (шт.)"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.1.2.",
+            "Управление внутренним освещением:",
+            new String[]{"- централизованное включение/отключение",
+                "- датчики движения",
+                "- датчики освещенности",
+                "- ручное"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.1.3.",
+            "Уровень освещенности:",
+            new String[]{"- соответствует санитарно-эпидемиологическим требованиям",
+                "- не соответствует санитарно-эпидемиологическим требованиям"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        topTable.createPartLine("9.2.")
+            .and().createStaticElement("Освещение - общие характеристики")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        section_helper1(topTable, "9.2.1.",
+            "Лампы накаливания в местах общего пользования:",
+            new String[]{"- доля ламп накаливания более 50%",
+                "- доля ламп накаливания 50% и менее"},
+            PDTableCellValueString.class,
+            PDTableCellValueDouble.class);
+
+        section_helper1(topTable, "9.2.2.",
+            "Люминесцентные лампы:",
+            new String[]{"- светильниками с зеркальными отражателями оснащено 90% люминесцентных ламп и более",
+                "- светильниками с зеркальными отражателями оснащено до 90% люминесцентных ламп",
+                "- светильниками с зеркальными отражателями оснащено до 50% люминесцентных ламп",
+                "- светильниками с зеркальными отражателями оснащено менее 20% люминесцентных ламп"},
+            PDTableCellValueString.class,
+            PDTableCellValueDouble.class);
+
+        section_helper1(topTable, "9.2.3.",
+            "Светодиодные светильники:",
+            new String[]{"- отсутствуют",
+                "- 20% от всех ламп и более"},
+            PDTableCellValueString.class,
+            PDTableCellValueDouble.class);
+
+        topTable.createPartLine("9.3.")
+            .and().createStaticElement("Наружное освещение")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        section_helper1(topTable, "9.3.1.",
+            "Используемые источники света (шт.):",
+            new String[]{"- лампы накаливания (шт.)",
+                "- люминесцентные лампы (шт.)",
+                "- светодиодные лампы (шт.)",
+                "- дуговые ртутные люминесцентные лампы (лампы типа ДРЛ) (шт.)"},
+            PDTableCellValueString.class,
+            PDTableCellValueInteger.class);
+
+        section_helper1(topTable, "9.3.2.",
+            "Управление наружным освещением:",
+            new String[]{"- централизованное включение/отключение",
+                "- датчики движения",
+                "- датчики освещенности",
+                "- ручное"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.4.",
+            "Вентиляция принудительная (есть/нет)",
+            new String[]{"Год установки",
+                "Число часов работы в неделю",
+                "Год ввода в эксплуатацию",
+                "Год проведения ремонта",
+                "Управление таймером",
+                "Автоматизированное управление"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.5.",
+            "Система кондиционирования воздуха (есть/нет/количество)",
+            new String[]{"централизованная",
+                "сплит-системы",
+                "- количество сплит-систем"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.6.",
+            "Кухонное оборудование (есть/нет)",
+            new String[]{"индукционные плиты",
+                "другие плиты",
+                "Пароконвектоматы",
+                "Другой разогрев пищи"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.7.",
+            "Насосное оборудование (холодного водоснабжения, горячего водоснабжения) (есть/нет)",
+            new String[]{"Регулируемый привод",
+                "Нерегулируемый привод"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.8.",
+            new String[] {"Офисная, бытовая и специальная техника (по профилю объекта), класс энергетической эффективности (есть/нет)"},
+            create2EmptyStaticF,
+            new String[]{"A", "B", "C", "D", "E", "F", "G"},
+            create2EmptyStaticF,
+            PDTableCellValueBoolean.class,
+            PDTableCellValueBoolean.class);
 
 
         return new EPSectionTemplateFactory(topTable);
     }
 
 
+    private String removeLastPoint (String nr) {
+        return (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
+    }
+    private final static Consumer<PDTablePart> create1EmptyStaticF = (p) -> p.createStaticElement();
+    private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
 
 
-    private <T extends PDTableCell<T>> void section_helper1(PDTable pdTable,
-                                                            String masterNr,
-                                                            String partHeader,
-                                                            String[] points,
-                                                            final Class<T> valueType) {
 
-        pdTable.createPartLine(masterNr)
-            .and().createStaticElement(partHeader)
-            .and().createStaticElement()
-            .and().createValueElement(valueType);
+    private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
+                                                                                      String masterNr,
+                                                                                      String[] partHeader,
+                                                                                      Consumer<PDTablePart> beforeItem,
+                                                                                      String[] points,
+                                                                                      Consumer<PDTablePart> afterItem,
+                                                                                      final Class<M> masterValueType,
+                                                                                      final Class<V> valueType) {
+        {
+            PDTablePart masterPart =
+                pdTable.createPartLine(removeLastPoint(masterNr))
+                    .and().createStaticElement(partHeader[0]).and();
 
+            if (partHeader.length > 1) {
+                masterPart.createStaticElement(partHeader[1]).and();
+            }
+
+            if (masterValueType != null)
+                masterPart.createValueElement(valueType);
+
+        }
         String alfa = "abcdefghijklmnopqrstuwxyz";
 
         Preconditions.checkState(points.length < alfa.length());
 
         int idx = 0;
         for (String s : points) {
-            pdTable.createPartLine(masterNr + alfa.charAt(idx++))
-                .and().createStaticElement(s)
-                .and().createStaticElement()
-                .and().createValueElement(valueType);
+            PDTablePart itemPart = pdTable.createPartLine(removeLastPoint(masterNr) + alfa.charAt(idx++), false);
+            if (beforeItem != null) beforeItem.accept(itemPart);
+            itemPart.createStaticElement(s);
+            if (afterItem != null) afterItem.accept(itemPart);
+            itemPart.createValueElement(valueType);
         }
+
+    }
+
+    private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
+                                                                                      String masterNr,
+                                                                                      String[] partHeaders,
+                                                                                      String[] points,
+                                                                                      final Class<M> masterValueType,
+                                                                                      final Class<V> valueType) {
+
+        section_helper1(pdTable, masterNr, partHeaders, null, points, create1EmptyStaticF, masterValueType, valueType);
+    }
+
+
+    private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
+                                                                                      String masterNr,
+                                                                                      String partHeader,
+                                                                                      String[] points,
+                                                                                      final Class<M> masterValueType,
+                                                                                      final Class<V> valueType) {
+
+        section_helper1(pdTable, masterNr, new String[]{partHeader}, points, masterValueType, valueType);
+//
+//        PDTablePart part =
+//            pdTable.createPartLine(masterNr)
+//                .and().createStaticElement(partHeader)
+//                .and().createStaticElement().and();
+//
+//        if (masterValueType != null)
+//            part.createValueElement(valueType);
+//
+//        String alfa = "abcdefghijklmnopqrstuwxyz";
+//
+//        Preconditions.checkState(points.length < alfa.length());
+//
+//        int idx = 0;
+//        for (String s : points) {
+//            pdTable.createPartLine(removeLastPoint(masterNr) + alfa.charAt(idx++))
+//                .and().createStaticElement(s)
+//                .and().createStaticElement()
+//                .and().createValueElement(valueType);
+//        }
 
     }
 
