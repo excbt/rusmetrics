@@ -1,8 +1,11 @@
 package ru.excbt.datafuse.nmk.data.energypassport;
 
+import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
+
+import java.util.function.Consumer;
 
 /**
  * Created by kovtonyk on 05.04.2017.
@@ -280,6 +283,7 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("(% от общего остекления)")
             .and().createStringValueElement();
 
+
         topTable.createPartLine("3.12")
             .and().createStaticElement("Входные двери")
             .and().createStaticElement("(есть/нет/количество)");
@@ -321,198 +325,62 @@ public class EnergyPassport401_2014_Add {
             .and().createStringValueElement();
 
 
-        topTable.createPartLine("3.13")
-            .and().createStaticElement("Крыша")
-            .and().createStaticElement("(есть/нет)");
-
-        topTable.createPartLine("3.13a",false)
-            .and().createStaticElement("Без чердачного помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13b",false)
-            .and().createStaticElement("С чердачным помещением")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13c",false)
-            .and().createStaticElement("В том числе:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13d",false)
-            .and().createStaticElement("- с холодным чердаком")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13e",false)
-            .and().createStaticElement("- с утепленным чердаком")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13f",false)
-            .and().createStaticElement("Утепление крыши")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13g",false)
-            .and().createStaticElement("Плоская (мягкая) кровля:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13h",false)
-            .and().createStaticElement("- с однослойной системой теплоизоляции типовое решение)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13i",false)
-            .and().createStaticElement("- наличие технического этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13j",false)
-            .and().createStaticElement("- с двухслойной системой теплоизоляции")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13k",false)
-            .and().createStaticElement("- наличие технического этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13l",false)
-            .and().createStaticElement("Металлическая:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13m",false)
-            .and().createStaticElement("- без утепления крыши изнутри")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13n",false)
-            .and().createStaticElement("- без утепления чердачного помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13p",false)
-            .and().createStaticElement("- с утеплением крыши изнутри")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13q",false)
-            .and().createStaticElement("- с утеплением чердачного помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13r",false)
-            .and().createStaticElement("Наличие протечек (конденсата) на потолке верхнего этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13s",false)
-            .and().createStaticElement("Отсутствие протечек (конденсата) на потолке верхнего этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13t",false)
-            .and().createStaticElement("Отсутствие наледи на крыше (во время отопительного сезона)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13u",false)
-            .and().createStaticElement("Наличие наледи на крыше (во время отопительного сезона)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
+        section_helper1(topTable,"3.13.",
+            "Крыша (есть/нет)",
+            new String[]{"Без чердачного помещения",
+                "С чердачным помещением",
+                "В том числе:",
+                "- с холодным чердаком",
+                "- с утепленным чердаком",
+                "Утепление крыши",
+                "Плоская (мягкая) кровля:",
+                "- с однослойной системой теплоизоляции типовое решение)",
+                "- наличие технического этажа",
+                "- с двухслойной системой теплоизоляции",
+                "- наличие технического этажа",
+                "Металлическая:",
+                "- без утепления крыши изнутри",
+                "- без утепления чердачного помещения",
+                "- с утеплением крыши изнутри",
+                "- с утеплением чердачного помещения",
+                "Наличие протечек (конденсата) на потолке верхнего этажа",
+                "Отсутствие протечек (конденсата) на потолке верхнего этажа",
+                "Отсутствие наледи на крыше (во время отопительного сезона)",
+                "Наличие наледи на крыше (во время отопительного сезона)"
+            },
+            null,
+            PDTableCellValueBoolean.class);
 
 
-        topTable.createPartLine("3.14")
-            .and().createStaticElement("Подвальные помещения")
-            .and().createStaticElement("(есть/нет)");
-
-
-        topTable.createPartLine("3.14a",false)
-            .and().createStaticElement("Без подвального помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14b",false)
-            .and().createStaticElement("С холодным подвалом")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14c",false)
-            .and().createStaticElement("С теплым подвалом")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14d",false)
-            .and().createStaticElement("Сырые")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14e",false)
-            .and().createStaticElement("В сухом состоянии")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14f",false)
-            .and().createStaticElement("Стены не промерзают")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14g",false)
-            .and().createStaticElement("Стены промерзают")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14h",false)
-            .and().createStaticElement("Имеется остекление")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
+        section_helper1(topTable,"3.14.",
+            "Подвальные помещения (есть/нет)",
+            new String[]{"Без подвального помещения",
+            "С холодным подвалом",
+            "С теплым подвалом",
+            "Сырые",
+            "В сухом состоянии",
+            "Стены не промерзают",
+            "Стены промерзают",
+            "Имеется остекление"},
+            null,
+            PDTableCellValueBoolean.class);
 
         topTable.createPartLine("3.15")
             .and().createStaticElement("Подключение к сетям инженерно-технического обеспечения")
             .and().createStaticElement("(есть/нет)");
 
 
+        section_helper1(topTable,"3.16.",
+            "Присоединение к магистральной тепловой сети (при отсутствии собственного источника) (есть/нет)",
+            new String[]{"Групповое (центральный тепловой пункт)(далее - ЦТП)",
+            "Групповое (центральный тепловой пункт)(далее - ЦТП)",
+            "Индивидуальное с автоматизацией отопленияи горячего водоснабжения (далее - АИТП)",
+            "Присоединение системы отопления:",
+            "- зависимое",
+            "- независимое"},
+            null,
+            PDTableCellValueBoolean.class);
 
-
-        topTable.createPartLine("3.16")
-            .and().createStaticElement("Присоединение к магистральной тепловой сети (при отсутствии собственного источника)")
-            .and().createStaticElement("(есть/нет)");
-
-
-        topTable.createPartLine("3.16a",false)
-            .and().createStaticElement("Групповое (центральный тепловой пункт)(далее - ЦТП)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16b",false)
-            .and().createStaticElement("Индивидуальное (индивидуальный тепловойпункт) (далее - ИТП)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16c",false)
-            .and().createStaticElement("Индивидуальное с автоматизацией отопленияи горячего водоснабжения (далее - АИТП)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16d",false)
-            .and().createStaticElement("Присоединение системы отопления:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16e",false)
-            .and().createStaticElement("- зависимое")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16f",false)
-            .and().createStaticElement("- независимое")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
 
         topTable.createPartLine("4")
             .and().createStaticElement("Сведения о потреблении энергоресурсов в базовом году");
@@ -546,6 +414,7 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("Моторное топливо")
             .and().createStaticElement(EPConstants.L_YEAR)
             .and().createDoubleValueElement();
+
 
         topTable.createPartLine("5")
             .and().createStaticElement("Тарифы на оплату энергетических ресурсов");
@@ -588,41 +457,468 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement(EPConstants.RUB_T)
             .and().createDoubleValueElement();
 
-        topTable.createPartLine("6")
-            .and().createStaticElement("Оплата энергетических ресурсов");
 
-        topTable.createPartLine("6a",false)
-            .and().createStaticElement("Тепловая энергия")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
+        Consumer<PDTablePart> createStaticRub = (p) -> p.createStaticElement(EPConstants.RUB_YEAR);
+        section_helper1(topTable, "6.",
+            new String[] {"Оплата энергетических ресурсов"},
+            createStaticRub,
+            new String[]{"Тепловая энергия",
+                "Электрическая энергия",
+                "Газ",
+                "Жидкое топливо",
+                "Твердое топливо",
+                "Моторное топливо"
+            },
+            null,
+            null,
+            PDTableCellValueDouble.class);
 
-        topTable.createPartLine("6b",false)
-            .and().createStaticElement("Электрическая энергия")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
 
-        topTable.createPartLine("6c",false)
-            .and().createStaticElement("Газ")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
+        topTable.createPartLine("7")
+            .and().createStaticElement("Сведения об оснащенности приборами учета");
 
-        topTable.createPartLine("6d",false)
-            .and().createStaticElement("Жидкое топливо")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
+        section_helper1(topTable, "7.1.",
+            "Коммерческий учет",
+            new String[]{"Количество вводов тепловой энергии:",
+                "- количество вводов, оборудованных узлами коммерческого учета",
+            "- в составе автоматизированной информационной системы (далее - АИС)",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- в составе группового учета (на несколько зданий)",
+            "Количество вводов электрической энергии:",
+            "- количество вводов, оборудованных узлами коммерческого учета",
+            "- в составе АИС",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- группового учета (на несколько зданий)",
+            "Количество вводов по газу:",
+            "- количество вводов, оборудованных узлами коммерческого учета",
+            "- в составе АИС",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- группового учета (на несколько зданий)",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- группового учета (на несколько зданий)"
+            },
+            null,
+            PDTableCellValueInteger.class);
 
-        topTable.createPartLine("6e",false)
-            .and().createStaticElement("Твердое топливо")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
 
-        topTable.createPartLine("6f",false)
-            .and().createStaticElement("Моторное топливо")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
 
+        section_helper1(topTable,"7.2.", "Технический учет",
+            new String[]{"Суммарное количество узлов технического учета:",
+                        "- по тепловой энергии",
+                "- по электрической энергии",
+                "- по газу"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueInteger.class);
+
+
+
+        topTable.createPartLine("8.")
+            .and().createStaticElement("Система теплопотребления");
+
+        section_helper1(topTable,"8.1.", "Способ присоединения системы горячего водоснабжения:",
+            new String[]{"- открытый", "- закрытый"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+
+        section_helper1(topTable,"8.2.", "Схема разводки трубопроводов системы отопления:",
+            new String[]{"- однотрубная", "- двухтрубная"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.3.", "Регулирование отопительной нагрузки в тепловом пункте",
+            new String[]{"- элеваторный узел", "- узел автоматизированного устройства управления", "- ИТП"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.4.", "Отопительные приборы:",
+            new String[]{"- чугунные", "- биметаллические", "- с термостатическим регулированием расхода"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.5.", "Температурный режим в помещениях:",
+            new String[]{"- соответствует санитарно-эпидемиологическим требованиям",
+                "с возможностью индивидуального регулирования", "без возможности индивидуального",
+                "- не соответствует санитарно-эпидемиологическим требованиям", "с возможностью использования дополнительных электронагревателей"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.6.",
+            new String[]{"Централизованная приточно-вытяжная вентиляция", EPConstants.YN},
+            new String[]{"- в работающем состоянии",
+                "- с регулированием включения и отключения"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.7.",
+            new String[]{"Система регулирования горячего водоснабжения (далее - ГВС)", EPConstants.YN},
+            new String[]{"- с регулированием расхода",
+                "- с циркуляционным контуром горячей воды"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.8.",
+            "Состояние распределительных тепловых коммуникаций:",
+            new String[]{"- с теплоизоляцией труб в подвальных помещениях",
+                "- теплоизоляция труб в подвальных помещениях отсутствует",
+                "- с теплоизоляцией труб чердачного помещения",
+                "- теплоизоляция труб чердачного помещения отсутствует"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+
+        topTable.createPartLine("9.")
+            .and().createStaticElement("Система электропотребления ")
+            .and().createStaticElement("(да (нет)/количество)");
+
+        topTable.createPartLine("9.1.")
+            .and().createStaticElement("Внутреннее освещение")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+
+        section_helper1(topTable, "9.1.1.",
+            "Используемые источники света:",
+            new String[]{"- лампы накаливания (шт.)",
+                "- люминесцентные лампы (шт.)",
+                "- светодиодные лампы (шт.)"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.1.2.",
+            "Управление внутренним освещением:",
+            new String[]{"- централизованное включение/отключение",
+                "- датчики движения",
+                "- датчики освещенности",
+                "- ручное"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.1.3.",
+            "Уровень освещенности:",
+            new String[]{"- соответствует санитарно-эпидемиологическим требованиям",
+                "- не соответствует санитарно-эпидемиологическим требованиям"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        topTable.createPartLine("9.2.")
+            .and().createStaticElement("Освещение - общие характеристики")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        section_helper1(topTable, "9.2.1.",
+            "Лампы накаливания в местах общего пользования:",
+            new String[]{"- доля ламп накаливания более 50%",
+                "- доля ламп накаливания 50% и менее"},
+            PDTableCellValueString.class,
+            PDTableCellValueDouble.class);
+
+        section_helper1(topTable, "9.2.2.",
+            "Люминесцентные лампы:",
+            new String[]{"- светильниками с зеркальными отражателями оснащено 90% люминесцентных ламп и более",
+                "- светильниками с зеркальными отражателями оснащено до 90% люминесцентных ламп",
+                "- светильниками с зеркальными отражателями оснащено до 50% люминесцентных ламп",
+                "- светильниками с зеркальными отражателями оснащено менее 20% люминесцентных ламп"},
+            PDTableCellValueString.class,
+            PDTableCellValueDouble.class);
+
+        section_helper1(topTable, "9.2.3.",
+            "Светодиодные светильники:",
+            new String[]{"- отсутствуют",
+                "- 20% от всех ламп и более"},
+            PDTableCellValueString.class,
+            PDTableCellValueDouble.class);
+
+        topTable.createPartLine("9.3.")
+            .and().createStaticElement("Наружное освещение")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        section_helper1(topTable, "9.3.1.",
+            "Используемые источники света (шт.):",
+            new String[]{"- лампы накаливания (шт.)",
+                "- люминесцентные лампы (шт.)",
+                "- светодиодные лампы (шт.)",
+                "- дуговые ртутные люминесцентные лампы (лампы типа ДРЛ) (шт.)"},
+            PDTableCellValueString.class,
+            PDTableCellValueInteger.class);
+
+        section_helper1(topTable, "9.3.2.",
+            "Управление наружным освещением:",
+            new String[]{"- централизованное включение/отключение",
+                "- датчики движения",
+                "- датчики освещенности",
+                "- ручное"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.4.",
+            "Вентиляция принудительная (есть/нет)",
+            new String[]{"Год установки",
+                "Число часов работы в неделю",
+                "Год ввода в эксплуатацию",
+                "Год проведения ремонта",
+                "Управление таймером",
+                "Автоматизированное управление"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.5.",
+            "Система кондиционирования воздуха (есть/нет/количество)",
+            new String[]{"централизованная",
+                "сплит-системы",
+                "- количество сплит-систем"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.6.",
+            "Кухонное оборудование (есть/нет)",
+            new String[]{"индукционные плиты",
+                "другие плиты",
+                "Пароконвектоматы",
+                "Другой разогрев пищи"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.7.",
+            "Насосное оборудование (холодного водоснабжения, горячего водоснабжения) (есть/нет)",
+            new String[]{"Регулируемый привод",
+                "Нерегулируемый привод"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "9.8.",
+            new String[] {"Офисная, бытовая и специальная техника (по профилю объекта), класс энергетической эффективности (есть/нет)"},
+            create2EmptyStaticF,
+            new String[]{"A", "B", "C", "D", "E", "F", "G"},
+            create2EmptyStaticF,
+            PDTableCellValueBoolean.class,
+            PDTableCellValueBoolean.class);
+
+        itemCreator(topTable, "9.8.",
+            null,
+            new String[]{"Отсутствие техники с классом энергоэффективности A+ и A++",
+                "Количество техники с классом энергоэффективности A+ или A++ менее 50%",
+                "Количество техники с классом энергоэффективности A+ или A++ от 50% до 70%",
+                "Вся техника с классом энергоэффективности A+ и A++"},
+            create1EmptyStaticF,
+            PDTableCellValueString.class,
+            7,
+            null);
+
+        // Next L
+
+        topTable.createPartLine("9.8l", false)
+            .and().createStaticElement("электрические чайники (да/нет)")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("количество")
+            .and().createIntegerValueElement().keyValueIdx(2);
+
+        topTable.createPartLine("9.8m", false)
+            .and().createStaticElement("электрические обогреватели (да/нет)")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("количество")
+            .and().createIntegerValueElement().keyValueIdx(2);
+
+        topTable.createPartLine("9.8n", false)
+            .and().createStaticElement("специальное оборудование (по профилю объекта)")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("количество")
+            .and().createIntegerValueElement().keyValueIdx(2);
+
+
+        section_helper1(topTable, "9.9.",
+            "Лифты (есть/нет):",
+            new String[]{"- год установки до 1980 г.",
+                "- год установки с 1980 г. до 2000 г.",
+                "- год установки с 2000 г. до 2005 г.",
+                "- год установки с 2005 г. по настоящее время"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueBoolean.class);
+
+        topTable.createPartLine("10.")
+            .and().createStaticElement("Холодное водоснабжение")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        section_helper1(topTable, "10.1.",
+            "Сантехническое оборудование:",
+            new String[]{"- отсутствие унитазов с экономным сливом воды",
+                "- наличие унитазов с экономным сливом воды"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "10.1.1.",
+            "Состояние сантехнического оборудования:",
+            new String[]{"- водяные клапаны унитазов пропускают воду",
+                "- водяные клапаны унитазов не пропускают воду"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "10.2.",
+            "Состояние сантехнической арматуры:",
+            new String[]{"- наличие шаровых кранов вместо вентильных",
+                "- краны для мытья рук полностью перекрывают воду",
+            "- краны для мытья рук не полностью перекрывают воду",
+            "- наличие регуляторов подачи воды для мытья рук"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "11.",
+            "Сведения об использовании вторичных " +
+                "энергетических ресурсов, альтернативных" +
+                "(местных) топлив и возобновляемых источников" +
+                "энергии (есть/нет)",
+            new String[]{"Источник вторичного (теплового) энергетического ресурса",
+                "- тепла отходящих газов (воздуха), воды",
+                "Альтернативный (местный) вид ТЭР",
+                "Возобновляемый источник энергии",
+                "- ветро-, гидроэнергетика, геотермальные установки"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueBoolean.class);
+
+        section_helper1(topTable, "12.",
+            "Экология материалов и оборудования",
+            new String[]{"Материалы и конструкции имеют экологические сертификаты",
+            "Наличие экологических сертификатов бытового оборудования и оргтехники"},
+            null,
+            PDTableCellValueBoolean.class);
+
+        section_helper1(topTable, "13.",
+            "Среднесписочная численность (человек)",
+            new String[]{"- всех сотрудников"},
+            null,
+            PDTableCellValueInteger.class);
+
+        section_helper1(topTable, "14.",
+            "Внедрение энергосберегающих мероприятий по программе энергосбережения (да/нет)",
+            new String[]{"Были ли внедрены мероприятия в отчетном году",
+            "Планируется ли внедрение мероприятий в будущем году"},
+            null,
+            PDTableCellValueBoolean.class);
+
+        topTable.createPartLine("15.")
+            .and().createStaticElement("Качество контроля и управления комфортностью здания")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("15.1.")
+            .and().createStaticElement("Централизованная система диспетчеризации с возможностью индивидуального" +
+            " (зонального) регулирования")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("15.2.")
+            .and().createStaticElement("Локальные системы автоматизации систем" +
+            " инженерного обеспечения")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
 
         return new EPSectionTemplateFactory(topTable);
+    }
+
+
+    private String removeLastPoint (String nr) {
+        return (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
+    }
+    private final static Consumer<PDTablePart> create1EmptyStaticF = (p) -> p.createStaticElement();
+    private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
+
+
+    /**
+     *
+     * @param pdTable
+     * @param masterNr
+     * @param beforeItem
+     * @param points
+     * @param afterItem
+     * @param valueType
+     * @param valueInitializer
+     * @param startIdx
+     * @param <V>
+     */
+    private <V extends PDTableCell<V>> void itemCreator (PDTable pdTable,
+                                                         String masterNr,
+                                                         Consumer<PDTablePart> beforeItem,
+                                                         String[] points,
+                                                         Consumer<PDTablePart> afterItem,
+                                                         final Class<V> valueType,
+                                                         int startIdx,
+                                                         Consumer<V> valueInitializer) {
+        String alfa = "abcdefghijklmnopqrstuwxyz";
+
+        Preconditions.checkState(points.length < alfa.length());
+        Preconditions.checkState(startIdx < alfa.length());
+
+        int idx = startIdx;
+        for (String s : points) {
+            PDTablePart itemPart = pdTable.createPartLine(removeLastPoint(masterNr) + alfa.charAt(idx++), false);
+            if (beforeItem != null) beforeItem.accept(itemPart);
+            itemPart.createStaticElement(s);
+            if (afterItem != null) afterItem.accept(itemPart);
+            V value = itemPart.createValueElement(valueType);
+            if (valueInitializer != null) valueInitializer.accept(value);
+        }
+    }
+
+
+    private <V extends PDTableCell<V>> void itemCreator (PDTable pdTable,
+                                                         String masterNr,
+                                                         Consumer<PDTablePart> beforeItem,
+                                                         String[] points,
+                                                         Consumer<PDTablePart> afterItem,
+                                                         final Class<V> valueType) {
+        itemCreator (pdTable,masterNr,beforeItem,points,afterItem,valueType,0, null);
+    }
+
+    private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
+                                                                                      String masterNr,
+                                                                                      String[] partHeader,
+                                                                                      Consumer<PDTablePart> beforeItem,
+                                                                                      String[] points,
+                                                                                      Consumer<PDTablePart> afterItem,
+                                                                                      final Class<M> masterValueType,
+                                                                                      final Class<V> valueType) {
+        {
+            PDTablePart masterPart =
+                pdTable.createPartLine(removeLastPoint(masterNr))
+                    .and().createStaticElement(partHeader[0]).and();
+
+            if (partHeader.length > 1) {
+                masterPart.createStaticElement(partHeader[1]).and();
+            }
+
+            if (masterValueType != null)
+                masterPart.createValueElement(valueType);
+
+        }
+
+        itemCreator(pdTable, masterNr, beforeItem, points, afterItem, valueType, 0, null);
+
+    }
+
+    private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
+                                                                                      String masterNr,
+                                                                                      String[] partHeaders,
+                                                                                      String[] points,
+                                                                                      final Class<M> masterValueType,
+                                                                                      final Class<V> valueType) {
+
+        section_helper1(pdTable, masterNr, partHeaders, null, points, create1EmptyStaticF, masterValueType, valueType);
+    }
+
+
+    private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
+                                                                                      String masterNr,
+                                                                                      String partHeader,
+                                                                                      String[] points,
+                                                                                      final Class<M> masterValueType,
+                                                                                      final Class<V> valueType) {
+        section_helper1(pdTable, masterNr, new String[]{partHeader}, null, points, create1EmptyStaticF, masterValueType, valueType);
     }
 
 
