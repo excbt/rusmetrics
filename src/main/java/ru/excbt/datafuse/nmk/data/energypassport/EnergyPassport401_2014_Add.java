@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.energypassport;
 
+import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
@@ -621,8 +622,200 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement(EPConstants.RUB_YEAR)
             .and().createDoubleValueElement();
 
+        topTable.createPartLine("7")
+            .and().createStaticElement("Сведения об оснащенности приборами учета");
+
+        topTable.createPartLine("7.1")
+            .and().createStaticElement("Коммерческий учет");
+
+        topTable.createPartLine("7.1a",false)
+            .and().createStaticElement("Количество вводов тепловой энергии:")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1b",false)
+            .and().createStaticElement("- количество вводов, оборудованных узлами коммерческого учета")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1c",false)
+            .and().createStaticElement("- в составе автоматизированной информационной системы (далее - АИС)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1d",false)
+            .and().createStaticElement("из них в составе:");
+
+        topTable.createPartLine("7.1e",false)
+            .and().createStaticElement("- индивидуального учета (на здание)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1f",false)
+            .and().createStaticElement("- в составе группового учета (на несколько зданий)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1g",false)
+            .and().createStaticElement("Количество вводов электрической энергии:")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1h",false)
+            .and().createStaticElement("- количество вводов, оборудованных узлами коммерческого учета")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1i",false)
+            .and().createStaticElement("- в составе АИС")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1j",false)
+            .and().createStaticElement("из них в составе:");
+
+        topTable.createPartLine("7.1k",false)
+            .and().createStaticElement("- индивидуального учета (на здание)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1l",false)
+            .and().createStaticElement("- группового учета (на несколько зданий)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+
+        topTable.createPartLine("7.1m",false)
+            .and().createStaticElement("Количество вводов по газу:")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+
+        topTable.createPartLine("7.1n",false)
+            .and().createStaticElement("- количество вводов, оборудованных узлами коммерческого учета")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1o",false)
+            .and().createStaticElement("- в составе АИС")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1p",false)
+            .and().createStaticElement("из них в составе:");
+
+        topTable.createPartLine("7.1q",false)
+            .and().createStaticElement("- индивидуального учета (на здание)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1r",false)
+            .and().createStaticElement("- группового учета (на несколько зданий)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1s",false)
+            .and().createStaticElement("из них в составе:");
+
+        topTable.createPartLine("7.1t",false)
+            .and().createStaticElement("- индивидуального учета (на здание)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.1u",false)
+            .and().createStaticElement("- группового учета (на несколько зданий)")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.2")
+            .and().createStaticElement("Технический учет")
+            .and().createStaticElement(EPConstants.YN)
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("7.2a",false)
+            .and().createStaticElement("Суммарное количество узлов технического учета:")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.2b",false)
+            .and().createStaticElement("- по тепловой энергии")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.2c",false)
+            .and().createStaticElement("- по электрической энергии")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("7.2d",false)
+            .and().createStaticElement("- по газу")
+            .and().createStaticElement()
+            .and().createIntegerValueElement();
+
+        topTable.createPartLine("8")
+            .and().createStaticElement("Система теплопотребления");
+
+        topTable.createPartLine("8.1")
+            .and().createStaticElement("Способ присоединения системы горячего водоснабжения:")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("8.1a",false)
+            .and().createStaticElement("- открытый")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("8.1b", false)
+            .and().createStaticElement("- закрытый")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+
+        section_helper1(topTable,"8.2", "Схема разводки трубопроводов системы отопления:",
+            new String[]{"- однотрубная", "- двухтрубная"},
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.3", "Регулирование отопительной нагрузки в тепловом пункте",
+            new String[]{"- элеваторный узел", "- узел автоматизированного устройства управления", "- ИТП"},
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "8.4", "Отопительные приборы:",
+            new String[]{"- чугунные", "- биметаллические", "- с термостатическим регулированием расхода"},
+            PDTableCellValueString.class);
+
+
+
+
 
         return new EPSectionTemplateFactory(topTable);
+    }
+
+
+
+
+    private <T extends PDTableCell<T>> void section_helper1(PDTable pdTable,
+                                                            String masterNr,
+                                                            String partHeader,
+                                                            String[] points,
+                                                            final Class<T> valueType) {
+
+        pdTable.createPartLine(masterNr)
+            .and().createStaticElement(partHeader)
+            .and().createStaticElement()
+            .and().createValueElement(valueType);
+
+        String alfa = "abcdefghijklmnopqrstuwxyz";
+
+        Preconditions.checkState(points.length < alfa.length());
+
+        int idx = 0;
+        for (String s : points) {
+            pdTable.createPartLine(masterNr + alfa.charAt(idx++))
+                .and().createStaticElement(s)
+                .and().createStaticElement()
+                .and().createValueElement(valueType);
+        }
+
     }
 
 
