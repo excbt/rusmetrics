@@ -950,6 +950,124 @@ public class EnergyPassport401_2014_Add {
             PDTableCellValueBoolean.class,
             PDTableCellValueBoolean.class);
 
+        itemCreator(topTable, "9.8.",
+            null,
+            new String[]{"Отсутствие техники с классом энергоэффективности A+ и A++",
+                "Количество техники с классом энергоэффективности A+ или A++ менее 50%",
+                "Количество техники с классом энергоэффективности A+ или A++ от 50% до 70%",
+                "Вся техника с классом энергоэффективности A+ и A++"},
+            create1EmptyStaticF,
+            PDTableCellValueString.class,
+            7,
+            null);
+
+        // Next L
+
+        topTable.createPartLine("9.8l", false)
+            .and().createStaticElement("электрические чайники (да/нет)")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("количество")
+            .and().createIntegerValueElement().keyValueIdx(2);
+
+        topTable.createPartLine("9.8m", false)
+            .and().createStaticElement("электрические обогреватели (да/нет)")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("количество")
+            .and().createIntegerValueElement().keyValueIdx(2);
+
+        topTable.createPartLine("9.8n", false)
+            .and().createStaticElement("специальное оборудование (по профилю объекта)")
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStaticElement("количество")
+            .and().createIntegerValueElement().keyValueIdx(2);
+
+
+        section_helper1(topTable, "9.9.",
+            "Лифты (есть/нет):",
+            new String[]{"- год установки до 1980 г.",
+                "- год установки с 1980 г. до 2000 г.",
+                "- год установки с 2000 г. до 2005 г.",
+                "- год установки с 2005 г. по настоящее время"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueBoolean.class);
+
+        topTable.createPartLine("10.")
+            .and().createStaticElement("Холодное водоснабжение")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        section_helper1(topTable, "10.1.",
+            "Сантехническое оборудование:",
+            new String[]{"- отсутствие унитазов с экономным сливом воды",
+                "- наличие унитазов с экономным сливом воды"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "10.1.1.",
+            "Состояние сантехнического оборудования:",
+            new String[]{"- водяные клапаны унитазов пропускают воду",
+                "- водяные клапаны унитазов не пропускают воду"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "10.2.",
+            "Состояние сантехнической арматуры:",
+            new String[]{"- наличие шаровых кранов вместо вентильных",
+                "- краны для мытья рук полностью перекрывают воду",
+            "- краны для мытья рук не полностью перекрывают воду",
+            "- наличие регуляторов подачи воды для мытья рук"},
+            PDTableCellValueString.class,
+            PDTableCellValueString.class);
+
+        section_helper1(topTable, "11.",
+            "Сведения об использовании вторичных " +
+                "энергетических ресурсов, альтернативных" +
+                "(местных) топлив и возобновляемых источников" +
+                "энергии (есть/нет)",
+            new String[]{"Источник вторичного (теплового) энергетического ресурса",
+                "- тепла отходящих газов (воздуха), воды",
+                "Альтернативный (местный) вид ТЭР",
+                "Возобновляемый источник энергии",
+                "- ветро-, гидроэнергетика, геотермальные установки"},
+            PDTableCellValueBoolean.class,
+            PDTableCellValueBoolean.class);
+
+        section_helper1(topTable, "12.",
+            "Экология материалов и оборудования",
+            new String[]{"Материалы и конструкции имеют экологические сертификаты",
+            "Наличие экологических сертификатов бытового оборудования и оргтехники"},
+            null,
+            PDTableCellValueBoolean.class);
+
+        section_helper1(topTable, "13.",
+            "Среднесписочная численность (человек)",
+            new String[]{"- всех сотрудников"},
+            null,
+            PDTableCellValueInteger.class);
+
+        section_helper1(topTable, "14.",
+            "Внедрение энергосберегающих мероприятий по программе энергосбережения (да/нет)",
+            new String[]{"Были ли внедрены мероприятия в отчетном году",
+            "Планируется ли внедрение мероприятий в будущем году"},
+            null,
+            PDTableCellValueBoolean.class);
+
+        topTable.createPartLine("15.")
+            .and().createStaticElement("Качество контроля и управления комфортностью здания")
+            .and().createStaticElement()
+            .and().createStringValueElement();
+
+        topTable.createPartLine("15.1.")
+            .and().createStaticElement("Централизованная система диспетчеризации с возможностью индивидуального" +
+            " (зонального) регулирования")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("15.2.")
+            .and().createStaticElement("Локальные системы автоматизации систем" +
+            " инженерного обеспечения")
+            .and().createStaticElement()
+            .and().createBooleanValueElement();
 
         return new EPSectionTemplateFactory(topTable);
     }
@@ -962,6 +1080,51 @@ public class EnergyPassport401_2014_Add {
     private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
 
 
+    /**
+     *
+     * @param pdTable
+     * @param masterNr
+     * @param beforeItem
+     * @param points
+     * @param afterItem
+     * @param valueType
+     * @param valueInitializer
+     * @param startIdx
+     * @param <V>
+     */
+    private <V extends PDTableCell<V>> void itemCreator (PDTable pdTable,
+                                                         String masterNr,
+                                                         Consumer<PDTablePart> beforeItem,
+                                                         String[] points,
+                                                         Consumer<PDTablePart> afterItem,
+                                                         final Class<V> valueType,
+                                                         int startIdx,
+                                                         Consumer<V> valueInitializer) {
+        String alfa = "abcdefghijklmnopqrstuwxyz";
+
+        Preconditions.checkState(points.length < alfa.length());
+        Preconditions.checkState(startIdx < alfa.length());
+
+        int idx = startIdx;
+        for (String s : points) {
+            PDTablePart itemPart = pdTable.createPartLine(removeLastPoint(masterNr) + alfa.charAt(idx++), false);
+            if (beforeItem != null) beforeItem.accept(itemPart);
+            itemPart.createStaticElement(s);
+            if (afterItem != null) afterItem.accept(itemPart);
+            V value = itemPart.createValueElement(valueType);
+            if (valueInitializer != null) valueInitializer.accept(value);
+        }
+    }
+
+
+    private <V extends PDTableCell<V>> void itemCreator (PDTable pdTable,
+                                                         String masterNr,
+                                                         Consumer<PDTablePart> beforeItem,
+                                                         String[] points,
+                                                         Consumer<PDTablePart> afterItem,
+                                                         final Class<V> valueType) {
+        itemCreator (pdTable,masterNr,beforeItem,points,afterItem,valueType,0, null);
+    }
 
     private <M extends PDTableCell<M>, V extends PDTableCell<V>> void section_helper1(PDTable pdTable,
                                                                                       String masterNr,
@@ -984,18 +1147,8 @@ public class EnergyPassport401_2014_Add {
                 masterPart.createValueElement(valueType);
 
         }
-        String alfa = "abcdefghijklmnopqrstuwxyz";
 
-        Preconditions.checkState(points.length < alfa.length());
-
-        int idx = 0;
-        for (String s : points) {
-            PDTablePart itemPart = pdTable.createPartLine(removeLastPoint(masterNr) + alfa.charAt(idx++), false);
-            if (beforeItem != null) beforeItem.accept(itemPart);
-            itemPart.createStaticElement(s);
-            if (afterItem != null) afterItem.accept(itemPart);
-            itemPart.createValueElement(valueType);
-        }
+        itemCreator(pdTable, masterNr, beforeItem, points, afterItem, valueType, 0, null);
 
     }
 
@@ -1016,29 +1169,7 @@ public class EnergyPassport401_2014_Add {
                                                                                       String[] points,
                                                                                       final Class<M> masterValueType,
                                                                                       final Class<V> valueType) {
-
-        section_helper1(pdTable, masterNr, new String[]{partHeader}, points, masterValueType, valueType);
-//
-//        PDTablePart part =
-//            pdTable.createPartLine(masterNr)
-//                .and().createStaticElement(partHeader)
-//                .and().createStaticElement().and();
-//
-//        if (masterValueType != null)
-//            part.createValueElement(valueType);
-//
-//        String alfa = "abcdefghijklmnopqrstuwxyz";
-//
-//        Preconditions.checkState(points.length < alfa.length());
-//
-//        int idx = 0;
-//        for (String s : points) {
-//            pdTable.createPartLine(removeLastPoint(masterNr) + alfa.charAt(idx++))
-//                .and().createStaticElement(s)
-//                .and().createStaticElement()
-//                .and().createValueElement(valueType);
-//        }
-
+        section_helper1(pdTable, masterNr, new String[]{partHeader}, null, points, create1EmptyStaticF, masterValueType, valueType);
     }
 
 

@@ -18,6 +18,9 @@ public class EPConstants {
     public static final String PCS = "(шт.)";
     public static final String KRUB = "(тыс. руб.)";
     public static final String YN = "(да/нет)";
+    public static final String YN_QTY = "(да (нет)/количество)";
+    public static final String EXN = "(есть/нет)";
+    public static final String EXN_QTY = "(есть/нет/количество)";
 
     public static final String RUB_GCAL = "(руб./Гкал)";
     public static final String RUB_KWH = "(руб./кВт·ч)";
