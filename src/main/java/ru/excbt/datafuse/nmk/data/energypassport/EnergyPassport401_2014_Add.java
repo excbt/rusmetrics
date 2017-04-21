@@ -283,6 +283,7 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("(% от общего остекления)")
             .and().createStringValueElement();
 
+
         topTable.createPartLine("3.12")
             .and().createStaticElement("Входные двери")
             .and().createStaticElement("(есть/нет/количество)");
@@ -324,198 +325,62 @@ public class EnergyPassport401_2014_Add {
             .and().createStringValueElement();
 
 
-        topTable.createPartLine("3.13")
-            .and().createStaticElement("Крыша")
-            .and().createStaticElement("(есть/нет)");
-
-        topTable.createPartLine("3.13a",false)
-            .and().createStaticElement("Без чердачного помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13b",false)
-            .and().createStaticElement("С чердачным помещением")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13c",false)
-            .and().createStaticElement("В том числе:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13d",false)
-            .and().createStaticElement("- с холодным чердаком")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13e",false)
-            .and().createStaticElement("- с утепленным чердаком")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13f",false)
-            .and().createStaticElement("Утепление крыши")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13g",false)
-            .and().createStaticElement("Плоская (мягкая) кровля:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13h",false)
-            .and().createStaticElement("- с однослойной системой теплоизоляции типовое решение)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13i",false)
-            .and().createStaticElement("- наличие технического этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13j",false)
-            .and().createStaticElement("- с двухслойной системой теплоизоляции")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13k",false)
-            .and().createStaticElement("- наличие технического этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13l",false)
-            .and().createStaticElement("Металлическая:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13m",false)
-            .and().createStaticElement("- без утепления крыши изнутри")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13n",false)
-            .and().createStaticElement("- без утепления чердачного помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13p",false)
-            .and().createStaticElement("- с утеплением крыши изнутри")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13q",false)
-            .and().createStaticElement("- с утеплением чердачного помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13r",false)
-            .and().createStaticElement("Наличие протечек (конденсата) на потолке верхнего этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13s",false)
-            .and().createStaticElement("Отсутствие протечек (конденсата) на потолке верхнего этажа")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13t",false)
-            .and().createStaticElement("Отсутствие наледи на крыше (во время отопительного сезона)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.13u",false)
-            .and().createStaticElement("Наличие наледи на крыше (во время отопительного сезона)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
+        section_helper1(topTable,"3.13.",
+            "Крыша (есть/нет)",
+            new String[]{"Без чердачного помещения",
+                "С чердачным помещением",
+                "В том числе:",
+                "- с холодным чердаком",
+                "- с утепленным чердаком",
+                "Утепление крыши",
+                "Плоская (мягкая) кровля:",
+                "- с однослойной системой теплоизоляции типовое решение)",
+                "- наличие технического этажа",
+                "- с двухслойной системой теплоизоляции",
+                "- наличие технического этажа",
+                "Металлическая:",
+                "- без утепления крыши изнутри",
+                "- без утепления чердачного помещения",
+                "- с утеплением крыши изнутри",
+                "- с утеплением чердачного помещения",
+                "Наличие протечек (конденсата) на потолке верхнего этажа",
+                "Отсутствие протечек (конденсата) на потолке верхнего этажа",
+                "Отсутствие наледи на крыше (во время отопительного сезона)",
+                "Наличие наледи на крыше (во время отопительного сезона)"
+            },
+            null,
+            PDTableCellValueBoolean.class);
 
 
-        topTable.createPartLine("3.14")
-            .and().createStaticElement("Подвальные помещения")
-            .and().createStaticElement("(есть/нет)");
-
-
-        topTable.createPartLine("3.14a",false)
-            .and().createStaticElement("Без подвального помещения")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14b",false)
-            .and().createStaticElement("С холодным подвалом")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14c",false)
-            .and().createStaticElement("С теплым подвалом")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14d",false)
-            .and().createStaticElement("Сырые")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14e",false)
-            .and().createStaticElement("В сухом состоянии")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14f",false)
-            .and().createStaticElement("Стены не промерзают")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14g",false)
-            .and().createStaticElement("Стены промерзают")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.14h",false)
-            .and().createStaticElement("Имеется остекление")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
+        section_helper1(topTable,"3.14.",
+            "Подвальные помещения (есть/нет)",
+            new String[]{"Без подвального помещения",
+            "С холодным подвалом",
+            "С теплым подвалом",
+            "Сырые",
+            "В сухом состоянии",
+            "Стены не промерзают",
+            "Стены промерзают",
+            "Имеется остекление"},
+            null,
+            PDTableCellValueBoolean.class);
 
         topTable.createPartLine("3.15")
             .and().createStaticElement("Подключение к сетям инженерно-технического обеспечения")
             .and().createStaticElement("(есть/нет)");
 
 
+        section_helper1(topTable,"3.16.",
+            "Присоединение к магистральной тепловой сети (при отсутствии собственного источника) (есть/нет)",
+            new String[]{"Групповое (центральный тепловой пункт)(далее - ЦТП)",
+            "Групповое (центральный тепловой пункт)(далее - ЦТП)",
+            "Индивидуальное с автоматизацией отопленияи горячего водоснабжения (далее - АИТП)",
+            "Присоединение системы отопления:",
+            "- зависимое",
+            "- независимое"},
+            null,
+            PDTableCellValueBoolean.class);
 
-
-        topTable.createPartLine("3.16")
-            .and().createStaticElement("Присоединение к магистральной тепловой сети (при отсутствии собственного источника)")
-            .and().createStaticElement("(есть/нет)");
-
-
-        topTable.createPartLine("3.16a",false)
-            .and().createStaticElement("Групповое (центральный тепловой пункт)(далее - ЦТП)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16b",false)
-            .and().createStaticElement("Индивидуальное (индивидуальный тепловойпункт) (далее - ИТП)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16c",false)
-            .and().createStaticElement("Индивидуальное с автоматизацией отопленияи горячего водоснабжения (далее - АИТП)")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16d",false)
-            .and().createStaticElement("Присоединение системы отопления:")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16e",false)
-            .and().createStaticElement("- зависимое")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
-
-        topTable.createPartLine("3.16f",false)
-            .and().createStaticElement("- независимое")
-            .and().createStaticElement()
-            .and().createBooleanValueElement();
 
         topTable.createPartLine("4")
             .and().createStaticElement("Сведения о потреблении энергоресурсов в базовом году");
@@ -549,6 +414,7 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("Моторное топливо")
             .and().createStaticElement(EPConstants.L_YEAR)
             .and().createDoubleValueElement();
+
 
         topTable.createPartLine("5")
             .and().createStaticElement("Тарифы на оплату энергетических ресурсов");
@@ -591,143 +457,53 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement(EPConstants.RUB_T)
             .and().createDoubleValueElement();
 
-        topTable.createPartLine("6")
-            .and().createStaticElement("Оплата энергетических ресурсов");
 
-        topTable.createPartLine("6a",false)
-            .and().createStaticElement("Тепловая энергия")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
+        Consumer<PDTablePart> createStaticRub = (p) -> p.createStaticElement(EPConstants.RUB_YEAR);
+        section_helper1(topTable, "6.",
+            new String[] {"Оплата энергетических ресурсов"},
+            createStaticRub,
+            new String[]{"Тепловая энергия",
+                "Электрическая энергия",
+                "Газ",
+                "Жидкое топливо",
+                "Твердое топливо",
+                "Моторное топливо"
+            },
+            null,
+            null,
+            PDTableCellValueDouble.class);
 
-        topTable.createPartLine("6b",false)
-            .and().createStaticElement("Электрическая энергия")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
-
-        topTable.createPartLine("6c",false)
-            .and().createStaticElement("Газ")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
-
-        topTable.createPartLine("6d",false)
-            .and().createStaticElement("Жидкое топливо")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
-
-        topTable.createPartLine("6e",false)
-            .and().createStaticElement("Твердое топливо")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
-
-        topTable.createPartLine("6f",false)
-            .and().createStaticElement("Моторное топливо")
-            .and().createStaticElement(EPConstants.RUB_YEAR)
-            .and().createDoubleValueElement();
 
         topTable.createPartLine("7")
             .and().createStaticElement("Сведения об оснащенности приборами учета");
 
-        topTable.createPartLine("7.1")
-            .and().createStaticElement("Коммерческий учет");
+        section_helper1(topTable, "7.1.",
+            "Коммерческий учет",
+            new String[]{"Количество вводов тепловой энергии:",
+                "- количество вводов, оборудованных узлами коммерческого учета",
+            "- в составе автоматизированной информационной системы (далее - АИС)",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- в составе группового учета (на несколько зданий)",
+            "Количество вводов электрической энергии:",
+            "- количество вводов, оборудованных узлами коммерческого учета",
+            "- в составе АИС",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- группового учета (на несколько зданий)",
+            "Количество вводов по газу:",
+            "- количество вводов, оборудованных узлами коммерческого учета",
+            "- в составе АИС",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- группового учета (на несколько зданий)",
+            "из них в составе:",
+            "- индивидуального учета (на здание)",
+            "- группового учета (на несколько зданий)"
+            },
+            null,
+            PDTableCellValueInteger.class);
 
-        topTable.createPartLine("7.1a",false)
-            .and().createStaticElement("Количество вводов тепловой энергии:")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1b",false)
-            .and().createStaticElement("- количество вводов, оборудованных узлами коммерческого учета")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1c",false)
-            .and().createStaticElement("- в составе автоматизированной информационной системы (далее - АИС)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1d",false)
-            .and().createStaticElement("из них в составе:");
-
-        topTable.createPartLine("7.1e",false)
-            .and().createStaticElement("- индивидуального учета (на здание)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1f",false)
-            .and().createStaticElement("- в составе группового учета (на несколько зданий)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1g",false)
-            .and().createStaticElement("Количество вводов электрической энергии:")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1h",false)
-            .and().createStaticElement("- количество вводов, оборудованных узлами коммерческого учета")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1i",false)
-            .and().createStaticElement("- в составе АИС")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1j",false)
-            .and().createStaticElement("из них в составе:");
-
-        topTable.createPartLine("7.1k",false)
-            .and().createStaticElement("- индивидуального учета (на здание)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1l",false)
-            .and().createStaticElement("- группового учета (на несколько зданий)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-
-        topTable.createPartLine("7.1m",false)
-            .and().createStaticElement("Количество вводов по газу:")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-
-        topTable.createPartLine("7.1n",false)
-            .and().createStaticElement("- количество вводов, оборудованных узлами коммерческого учета")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1o",false)
-            .and().createStaticElement("- в составе АИС")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1p",false)
-            .and().createStaticElement("из них в составе:");
-
-        topTable.createPartLine("7.1q",false)
-            .and().createStaticElement("- индивидуального учета (на здание)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1r",false)
-            .and().createStaticElement("- группового учета (на несколько зданий)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1s",false)
-            .and().createStaticElement("из них в составе:");
-
-        topTable.createPartLine("7.1t",false)
-            .and().createStaticElement("- индивидуального учета (на здание)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
-
-        topTable.createPartLine("7.1u",false)
-            .and().createStaticElement("- группового учета (на несколько зданий)")
-            .and().createStaticElement()
-            .and().createIntegerValueElement();
 
 
         section_helper1(topTable,"7.2.", "Технический учет",
@@ -737,33 +513,6 @@ public class EnergyPassport401_2014_Add {
                 "- по газу"},
             PDTableCellValueBoolean.class,
             PDTableCellValueInteger.class);
-
-//
-//        topTable.createPartLine("7.2")
-//            .and().createStaticElement("Технический учет")
-//            .and().createStaticElement(EPConstants.YN)
-//            .and().createBooleanValueElement();
-//
-//        topTable.createPartLine("7.2a",false)
-//            .and().createStaticElement("Суммарное количество узлов технического учета:")
-//            .and().createStaticElement()
-//            .and().createIntegerValueElement();
-//
-//        topTable.createPartLine("7.2b",false)
-//            .and().createStaticElement("- по тепловой энергии")
-//            .and().createStaticElement()
-//            .and().createIntegerValueElement();
-//
-//        topTable.createPartLine("7.2c",false)
-//            .and().createStaticElement("- по электрической энергии")
-//            .and().createStaticElement()
-//            .and().createIntegerValueElement();
-//
-//        topTable.createPartLine("7.2d",false)
-//            .and().createStaticElement("- по газу")
-//            .and().createStaticElement()
-//            .and().createIntegerValueElement();
-
 
 
 
