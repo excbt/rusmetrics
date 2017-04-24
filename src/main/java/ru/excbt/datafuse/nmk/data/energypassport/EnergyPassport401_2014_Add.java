@@ -1169,6 +1169,7 @@ public class EnergyPassport401_2014_Add {
 
 
         topTable.createPartLine("1h1", "")
+            .applyCreator(create2EmptyStaticF)
             .and().createStaticElement("Таблица 1");
 
 
@@ -1191,11 +1192,11 @@ public class EnergyPassport401_2014_Add {
 
 
             final Consumer<PDTablePart> rowCreator = (p) -> {
-                    p.and().createDoubleValueElement().keyValueIdx(1)
-                    .and().createDoubleValueElement().keyValueIdx(2)
+                    p.and().createDoubleValueElement().keyValueIdx(2)
                     .and().createDoubleValueElement().keyValueIdx(3)
                     .and().createDoubleValueElement().keyValueIdx(4)
-                    .and().createDoubleValueElement().keyValueIdx(5);
+                    .and().createDoubleValueElement().keyValueIdx(5)
+                    .and().createDoubleValueElement().keyValueIdx(6);
             };
 
             final String mainS = "на производство основной продукции (работ, услуг)";
@@ -1282,17 +1283,17 @@ public class EnergyPassport401_2014_Add {
 
             pdTable.createPartRow("29")
                 .and().createStaticElement("Объем иных потребленных энергетических ресурсов в натуральном выражении, всего, в том числе:")
-                .and().createStringValueElement()
+                .and().createStringValueElement().keyValueIdx(1)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRow("29" +".1")
                 .and().createStaticElement(mainS)
-                .and().createStringValueElement()
+                .and().createStringValueElement().keyValueIdx(1)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRow("29" +".2")
                 .and().createStaticElement(secondS)
-                .and().createStringValueElement()
+                .and().createStringValueElement().keyValueIdx(1)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRow("30")
@@ -1315,11 +1316,40 @@ public class EnergyPassport401_2014_Add {
                 .and().createStaticElement("чел.")
                 .and().applyCreator(rowCreator);
 
+        }
 
+        topTable.createPartLine("2h1", "")
+            .and().createStaticElement("Сведения об обособленных подразделениях лица,в отношении которого указана информация");
+
+        topTable.createPartLine("2h2", "")
+            .applyCreator(create2EmptyStaticF)
+            .and().createStaticElement("Таблица 2");
+
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().key("TBL_1").createInnerTable();
+
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+            partHeader.createStaticElement().caption("№ п/п").keyValueIdx(1);
+            partHeader.createStaticElement().caption("Наименование подразделения").keyValueIdx(2)
+                .and().createStaticElement("Адрес местонахождения").keyValueIdx(3)
+                .and().createStaticElement("КПП (в случае отсутствия - территориальный код ФНС)").keyValueIdx(4)
+                .and().createStaticElement("Среднесписочная численность")
+                .createStaticChild("работников (всего), чел.").keyValueIdx(5)
+                .createStaticSibling("производственного персонала, чел.").keyValueIdx(6)
+                .and().widthsOfElements(5, 20, 20, 15, 15, 15);
+
+            pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
+                .createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)// #
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createStringValueElement().keyValueIdx(3)
+                .and().createStringValueElement().keyValueIdx(4)
+                .and().createIntegerValueElement().keyValueIdx(5)
+                .and().createIntegerValueElement().keyValueIdx(6);
 
         }
 
-        return new EPSectionTemplateFactory(topTable);
+            return new EPSectionTemplateFactory(topTable);
     }
 
         /**
