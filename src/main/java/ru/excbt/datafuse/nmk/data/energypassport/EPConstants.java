@@ -28,6 +28,14 @@ public class EPConstants {
     public static final String RUB_T = "(руб./т)";
     public static final String RUB_YEAR = "(руб./год)";
 
+
+    public static final String KRUB2 = "тыс. руб.";
+    public static final String KKWH2 = "тыс. кВт·ч";
+    public static final String GCAL2 = "Гкал";
+    public static final String T2 = "т";
+    public static final String KT2 = "тыс. т";
+    public static final String KNVM2 = "тыс. н. куб. м";
+
     private EPConstants() {
     }
 }

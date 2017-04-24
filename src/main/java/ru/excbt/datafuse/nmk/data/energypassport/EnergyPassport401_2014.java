@@ -35,42 +35,48 @@ public class EnergyPassport401_2014 {
         createSectionPartsM1(pdTable);
 
         /// Inner 2
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_2").createStaticElement("Общие сведения о потреблении энергетических ресурсов в отчетном году");
+        pdTable.createPartLine("P_2","")
+            .and().createStaticElement("Общие сведения о потреблении энергетических ресурсов в отчетном году");
         createSectionPartInnerM2(pdTable);
 
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3").createStaticElement("Наличие собственного источника выработки энергии (есть/нет)")
-            .and()
-            .createBooleanValueElement();
+        pdTable.createPartLine("P_3","")
+            .and().createStaticElement("Наличие собственного источника выработки энергии (есть/нет)")
+            .and().createBooleanValueElement();
 
         // Inner 3
         createSectionPartInnerM31(pdTable);
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).createStaticElement("Вид вырабатываемой энергии:");
+        pdTable.createPartLine().and().createStaticElement().and().createStaticElement("Вид вырабатываемой энергии:");
 
         createSectionPartInnerM32(pdTable);
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3_comb").createStaticElement("Комбинированная выработка (да/нет):")
+        pdTable.createPartLine("P_3_comb","")
+            .and().createStaticElement("Комбинированная выработка (да/нет):")
             .and().createBooleanValueElement();
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_3_mode").createStaticElement("Режим управления работой котлов\n" +
-            "(автоматический/ручное управление) \n")
+        pdTable.createPartLine("P_3_mode","")
+            .and().createStaticElement("Режим управления работой котлов (автоматический/ручное управление)")
             .and().createBooleanValueElement();
 
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_4").createStaticElement("Общие сведения об оплате за энергоресурсы");
-
+        pdTable.createPartLine()
+            .and().createStaticElement()
+            .and().createStaticElement("Общие сведения об оплате за энергоресурсы");
 
         createSectionPartInnerM4(pdTable);
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_5").createStaticElement("Среднесписочная численность (чел.)\n" +
-            "Всех работников").and().createIntegerValueElement();
+        pdTable.createPartLine("P_5","")
+            .and().createStaticElement("Среднесписочная численность (чел.) Всех работников")
+            .and().createIntegerValueElement();
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_6").createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n" +
+        pdTable.createPartLine("P_6","")
+            .and().createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n" +
             "Наличие утвержденной программы энергосбережения\n" +
             "(есть/нет)").and().createBooleanValueElement();
 
-        pdTable.createPart(PDPartType.SIMPLE_LINE).key("P_7_build").createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
+        pdTable.createPartLine("P_7_build","")
+            .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
 
         return new EPSectionTemplateFactory(pdTable);
 

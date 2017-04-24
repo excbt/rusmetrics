@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -131,6 +132,13 @@ public class PDTable implements PDReferable {
             }
         }
         return result;
+    }
+
+    public PDTable applyCreator(Consumer<PDTable> creator) {
+        if (creator != null) {
+            creator.accept(this);
+        }
+        return this;
     }
 
     public PDTablePart createPartLine() {

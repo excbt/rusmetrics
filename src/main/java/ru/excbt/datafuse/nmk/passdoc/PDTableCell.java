@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
@@ -137,6 +138,13 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     public PDTablePart and() {
         return this.tablePart;
     }
+
+    public PDTableCell<?> andParentCell() {
+        checkNotNull(this.parent != null);
+        return this.parent;
+    }
+
+
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public Double get_totalWidth() {
@@ -303,6 +311,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         child.parent = this;
         return child;
     }
+
 
     public PDTableCellStatic createStaticSibling() {
         checkState(parent != null);

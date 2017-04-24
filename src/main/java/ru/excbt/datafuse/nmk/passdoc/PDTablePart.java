@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -167,6 +168,13 @@ public class PDTablePart implements PDReferable {
     }
 
     public PDTablePart and() {
+        return this;
+    }
+
+    public PDTablePart applyCreator(Consumer<PDTablePart> creator) {
+        if (creator != null) {
+            creator.accept(this);
+        }
         return this;
     }
 
