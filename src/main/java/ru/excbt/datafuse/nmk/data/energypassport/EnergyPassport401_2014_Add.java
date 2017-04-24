@@ -2087,11 +2087,14 @@ public class EnergyPassport401_2014_Add {
             table1TotalPart.createStaticElement();
 
         }
-        topTable.createPartLine("2h", "Сведения\n" +
+
+
+        tableCreateLineHeader.accept(topTable, "2h", "Сведения\n" +
             "об использовании альтернативных (местных) топлив\n" +
             "и возобновляемых источников энергии");
 
-        topTable.createPartLine("2h1", "Таблица 2");
+
+        topTable.createPartLine("2h1", "").applyCreator(create2EmptyStaticF).createStaticElement("Таблица 2");
 
         {
             final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
