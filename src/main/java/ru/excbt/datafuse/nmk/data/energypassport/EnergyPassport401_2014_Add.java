@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -1066,19 +1067,19 @@ public class EnergyPassport401_2014_Add {
 
     public EnergyPassportSectionTemplateFactory section_2_2() {
         final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.2")
-            .caption("2.2. Общие сведения " +
+            .caption("Общие сведения " +
                 "о лице, в отношении которого указана информация")
             .shortCaption("2.2")
             .sectionNr("2.2")
             .sectionHeader("Общие сведения " +
                 "о лице, в отношении которого указана информация");
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_NAME")
+        topTable.createPartLine("P_NAME","")
             .and().createStringValueElement();
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_NAME")
-            .and().createStaticElement("(полное наименование юридического лица, в отношении которого" +
-            "указана информация)");
+        topTable.createPartLine()
+            .and().createStaticElement()
+            .and().createStaticElement("(полное наименование юридического лица, в отношении которого указана информация)");
 
         topTable.createPartLine("1.")
             .and().createStaticElement("Организационно-правовая форма")
@@ -1167,6 +1168,157 @@ public class EnergyPassport401_2014_Add {
             .and().createStringValueElement();
 
 
+        topTable.createPartLine("1h1", "")
+            .and().createStaticElement("Таблица 1");
+
+
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().key("TBL_1").createInnerTable();
+
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+            partHeader.createStaticElement().caption("№ п/п");
+            partHeader.createStaticElement().caption("Наименование").columnKey("res_name")
+                .and().createStaticElement("Единица измерения")
+                .and().createStaticElement("Предшествующие годы")
+                    .createStaticChild("______").columnKey("YYYY-4")
+                    .createStaticSibling("______").columnKey("YYYY-3")
+                    .createStaticSibling("______").columnKey("YYYY-2")
+                    .createStaticSibling("______").columnKey("YYYY-1")
+                .and().createStaticElement("Отчетный год");
+
+            partHeader.widthsOfElements(5, 30, 10, 15, 15, 15, 15, 15);
+
+
+            final Consumer<PDTablePart> rowCreator = (p) -> {
+                    p.and().createDoubleValueElement().keyValueIdx(1)
+                    .and().createDoubleValueElement().keyValueIdx(2)
+                    .and().createDoubleValueElement().keyValueIdx(3)
+                    .and().createDoubleValueElement().keyValueIdx(4)
+                    .and().createDoubleValueElement().keyValueIdx(5);
+            };
+
+            final String mainS = "на производство основной продукции (работ, услуг)";
+            final String secondS = "на производство дополнительной продукции (работ, услуг)";
+
+
+            TriConsumer<String, String, String> sec = (nr, s, k) -> {
+                pdTable.createPartRow(nr)
+                    .and().createStaticElement(s)
+                    .and().createStaticElement(k)
+                    .and().applyCreator(rowCreator);
+
+                pdTable.createPartRow(nr +".1")
+                    .and().createStaticElement(mainS)
+                    .and().createStaticElement(k)
+                    .and().applyCreator(rowCreator);
+
+                pdTable.createPartRow(nr +".2")
+                    .and().createStaticElement(secondS)
+                    .and().createStaticElement(k)
+                    .and().applyCreator(rowCreator);
+
+            };
+
+            pdTable.createPartRow("1")
+                .and().createStaticElement("Номенклатура основной продукции (работ, услуг)")
+                .and().createStaticElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("2")
+                .and().createStaticElement("Код основной продукции (работ, услуг) по ОКДП")
+                .and().createStaticElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("3")
+                .and().createStaticElement("Номенклатура дополнительной продукции (работ, услуг)")
+                .and().createStaticElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("4")
+                .and().createStaticElement("Код дополнительной продукции (работ, услуг) по ОКДП")
+                .and().createStaticElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("5")
+                .and().createStaticElement("Объем производства продукции (работ, услуг) в стоимостном выражении, всего,в том числе:")
+                .and().createStaticElement(EPConstants.KRUB2)
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("5.1")
+                .and().createStaticElement("основной продукции (работ, услуг)")
+                .and().createStaticElement(EPConstants.KRUB2)
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("5.2")
+                .and().createStaticElement("дополнительной продукции (работ, услуг)")
+                .and().createStaticElement(EPConstants.KRUB2)
+                .and().applyCreator(rowCreator);
+
+
+            sec.accept("6", "Объем потребленной электрической энергии в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("7", "Объем потребленной электрической энергии в натуральном выражении, всего, в том числе:", EPConstants.KKWH2);
+            sec.accept("8", "Объем потребленной тепловой энергии в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("9", "Объем потребленной тепловой энергии в натуральном выражении, всего, в том числе:", EPConstants.GCAL2);
+            sec.accept("10", "Объем потребленного твердого топлива в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("11", "Объем потребленного твердого топлива в натуральном выражении, всего, в том числе:", EPConstants.T2);
+            sec.accept("12", "Объем потребленного жидкого топлива в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("13", "Объем потребленного жидкого топлива в натуральном выражении, всего, в том числе:", EPConstants.T2);
+            sec.accept("14", "Объем потребленного природного газа в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("15", "Объем потребленного природного газа в натуральном выражении, всего, в том числе:", EPConstants.KNVM2);
+            sec.accept("16", "Объем потребленного сжиженного газа в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("17", "Объем потребленного сжиженного газа в натуральном выражении, всего,в том числе:", EPConstants.KT2);
+            sec.accept("18", "Объем потребленного сжатого газа в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("19", "Объем потребленного сжатого газа в натуральном выражении, всего в том числе:", EPConstants.KNVM2);
+            sec.accept("20", "Объем потребленного попутного нефтяного газа в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("21", "Объем потребленного попутного нефтяного газа в натуральном выражении, всего, в том числе:", EPConstants.KNVM2);
+            sec.accept("22", "Объем потребленного бензина в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("23", "Объем потребленного бензина в натуральном выражении, всего, в том числе:", "тыс. л");
+            sec.accept("24", "Объем потребленного керосина в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("25", "Объем потребленного керосина в натуральном выражении, всего, в том числе:", "тыс. л");
+            sec.accept("26", "Объем потребленного дизельного топлива в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+            sec.accept("27", "Объем потребленного дизельного топлива в натуральном выражении, всего, в том числе:", "тыс. л");
+            sec.accept("28", "Объем иных потребленных энергетических ресурсов в стоимостном выражении, всего, в том числе:", EPConstants.KRUB2);
+
+            pdTable.createPartRow("29")
+                .and().createStaticElement("Объем иных потребленных энергетических ресурсов в натуральном выражении, всего, в том числе:")
+                .and().createStringValueElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("29" +".1")
+                .and().createStaticElement(mainS)
+                .and().createStringValueElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("29" +".2")
+                .and().createStaticElement(secondS)
+                .and().createStringValueElement()
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("30")
+                .and().createStaticElement("Суммарная максимальная мощность энергопринимающих устройств")
+                .and().createStaticElement(EPConstants.KKWH2)
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("31")
+                .and().createStaticElement("Суммарная среднегодовая заявленная мощность энергопринимающих устройств")
+                .and().createStaticElement(EPConstants.KKWH2)
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("32")
+                .and().createStaticElement("Среднесписочная численность работников, всего, в том числе:")
+                .and().createStaticElement("чел.")
+                .and().applyCreator(rowCreator);
+
+            pdTable.createPartRow("32.1")
+                .and().createStaticElement("производственного персонала")
+                .and().createStaticElement("чел.")
+                .and().applyCreator(rowCreator);
+
+
+
+        }
+
         return new EPSectionTemplateFactory(topTable);
     }
 
@@ -1177,7 +1329,7 @@ public class EnergyPassport401_2014_Add {
     public EnergyPassportSectionTemplateFactory section_2_3() {
 
         final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.3")
-            .caption("2.3. Сведения об оснащенности приборами учета")
+            .caption("Сведения об оснащенности приборами учета")
             .shortCaption("2.3")
             .sectionNr("2.3")
             .sectionHeader("Сведения об оснащенности приборами учета");
@@ -1288,7 +1440,7 @@ public class EnergyPassport401_2014_Add {
     public EnergyPassportSectionTemplateFactory section_2_4() {
 
         final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.4")
-            .caption("2.4. Сведения по балансу электрической энергии и его изменениях")
+            .caption("Сведения по балансу электрической энергии и его изменениях")
             .shortCaption("2.4")
             .sectionNr("2.4")
             .sectionHeader("Сведения по балансу электрической энергии и его изменениях");
@@ -1935,6 +2087,22 @@ public class EnergyPassport401_2014_Add {
             .and().createDoubleValueElement().columnKey("wear").keyValueIdx(9);
 
         return new EPSectionTemplateFactory(topTable);
+    }
+
+
+    @FunctionalInterface
+    public interface TriConsumer<T, U, K> {
+
+        void accept(T t, U u, K k);
+
+        default TriConsumer<T, U, K> TriConsumer(TriConsumer<? super T, ? super U, ? super K> after) {
+            Objects.requireNonNull(after);
+
+            return (l, r, k) -> {
+                accept(l, r, k);
+                after.accept(l, r, k);
+            };
+        }
     }
 
 
