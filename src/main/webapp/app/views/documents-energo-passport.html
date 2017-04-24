@@ -192,8 +192,9 @@
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"
                                          style = "padding: 5px 0;">
-                                        <div ng-repeat = "elm in part.elements"
-                                             style = "display: inline-block; padding: 0 10px;">
+                                        <div ng-repeat = "elm in part.elements track by $index"
+                                             style = "display: inline-block; padding: 0 10px;"
+                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length)}">
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>

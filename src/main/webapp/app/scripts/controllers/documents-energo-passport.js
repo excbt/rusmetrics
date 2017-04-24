@@ -14,6 +14,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //    $scope.ctrlSettings.loading = true;
     $scope.ctrlSettings.cssMeasureUnit = "rem";
     $scope.ctrlSettings.passportLoading = true;
+    
+    $scope.ctrlSettings.FIRST_STATIC_ELEM = 5;
+    $scope.ctrlSettings.STATIC_ELEM = 30;
+    $scope.ctrlSettings.BOOLEAN_ELEM = 5;
+    $scope.ctrlSettings.VALUE_ELEM = 30;
 //    $scope.ctrlSettings.emptyString = " ";
     
 //    $timeout(function () {
@@ -34,6 +39,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //    $scope.data.passDocStructure = null;
     //current passport structure which is shown at present moment
     $scope.data.currentPassDocSection = null;
+    
+    $scope.calcInlineWidth = function (first, elm, count) {
+        var result = (first ? $scope.ctrlSettings.FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? $scope.ctrlSettings.STATIC_ELEM : (elm.__type === 'Boolean' ? $scope.ctrlSettings.BOOLEAN_ELEM : $scope.ctrlSettings.VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+        return result;
+    };
     
     function errorCallback(e) {
         var errorObj = mainSvc.errorCallbackHandler(e);
@@ -325,7 +335,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             .then(successLoadPassportDataCallback, errorCallback);
     }
     
-    function successCreatePassportCallback(response) {
+    function successLoadPassportCallback(response) {
         //TODO: comment
 //        console.log(response);
         if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
@@ -345,7 +355,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //        result = preparePassDoc(result);
         $scope.data.passport = tmp;
         //TODO: comment
-//        console.log($scope.data.passport);
+        console.log($scope.data.passport);
 //        console.log(result);
 //return;        
 //        $scope.data.passDocStructure = result;
@@ -370,12 +380,12 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     function createPassDocInit() {
         energoPassportSvc.createPassport()
-            .then(successCreatePassportCallback, errorCallback);
+            .then(successLoadPassportCallback, errorCallback);
     }
     
     function loadPassDoc(id) {
         energoPassportSvc.loadPassports(id)
-            .then(successCreatePassportCallback, errorCallback);
+            .then(successLoadPassportCallback, errorCallback);
     }
     
     function loadEntryData(passportId, sectionId, entryId) {
