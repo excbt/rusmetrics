@@ -70,14 +70,14 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("2e", "")
             .and().createStaticElement("Управленческо-       ");
 
-        topTable.createPartLine("2d", "")
+        topTable.createPartLine("2f", "")
             .and().createStaticElement("административное     ")
             .and().createStringValueElement().keyValueIdx(1)
             .and().createStaticElement("Другое")
             .and().createStringValueElement().keyValueIdx(2)
             .and().createStringValueElement().keyValueIdx(3);
 
-        topTable.createPartLine("2e", "")
+        topTable.createPartLine("2g", "")
             .and().createStaticElement("Другое               ")
             .and().createStringValueElement().keyValueIdx(1)
             .and().createStaticElement("                     ")
@@ -929,53 +929,136 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("Основные виды продукции")
             .and().createStringValueElement();
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).key("P_1_2b")
-            .createStaticElement("Код основной продукции (работ, услуг) по ОКП")
+        topTable.createPartLine("P_1_2b","")
+            .and().createStaticElement()
+            .and().createStaticElement("Код основной продукции (работ, услуг) по ОКП")
             .and().createStringValueElement();
 
-        topTable.createPart(PDPartType.SIMPLE_LINE).createStaticElement("2. ")
+        topTable.createPartLine()
+            .and().createStaticElement("2.")
             .and().createStaticElement("Сведения о потреблении энергоресурсов по номенклатуре основной продукции\n" +
                 "(работам, услугам)\n");
 
-        final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_2").createInnerTable();
+        {
+            final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_2").createInnerTable();
 
-        innerTable.createPartRowInner( "_heat")
-            .createStaticElement("Тепловая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.GCAL_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(1)
-            .and().createStaticElement("Тепловая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2)
-            .and().widthsOfElements(30,20,10,30,20,10);
+            innerTable.createPartRowInner("_heat")
+                .createStaticElement("Тепловая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.GCAL_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Тепловая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().widthsOfElements(30, 20, 10, 30, 20, 10);
 
-        innerTable.createPartRowInner("_electricity")
-            .createStaticElement("Электрическая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.KWH_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(1)
-            .and().createStaticElement("Электрическая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2);
+            innerTable.createPartRowInner("_electricity")
+                .createStaticElement("Электрическая энергия").keyValueIdx(1).and().createStaticElement(EPConstants.KWH_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Электрическая энергия").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPartRowInner("_gas")
-            .and().createStaticElement("Газ").keyValueIdx(1).and().createStaticElement(EPConstants.KVM_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(1)
-            .and().createStaticElement("Газ").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2);
+            innerTable.createPartRowInner("_gas")
+                .and().createStaticElement("Газ").keyValueIdx(1).and().createStaticElement(EPConstants.KVM_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Газ").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPartRowInner("_liquid")
-            .and().createStaticElement("Жидкое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(1)
-            .and().createStaticElement("Жидкое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2);
+            innerTable.createPartRowInner("_liquid")
+                .and().createStaticElement("Жидкое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Жидкое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPartRowInner("_solid")
-            .and().createStaticElement("Твердое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(1)
-            .and().createStaticElement("Твердое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2);
+            innerTable.createPartRowInner("_solid")
+                .and().createStaticElement("Твердое топливо").keyValueIdx(1).and().createStaticElement(EPConstants.T_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Твердое топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(2);
 
-        innerTable.createPartRowInner("_motor")
-            .and().createStaticElement("Моторное топливо").keyValueIdx(1).and().createStaticElement(EPConstants.L_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(1)
-            .and().createStaticElement("Моторное топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
-            .and().createDoubleValueElement().keyValueIdx(2);
+            innerTable.createPartRowInner("_motor")
+                .and().createStaticElement("Моторное топливо").keyValueIdx(1).and().createStaticElement(EPConstants.L_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Моторное топливо").keyValueIdx(2).and().createStaticElement(EPConstants.TUT_YEAR)
+                .and().createDoubleValueElement().keyValueIdx(2);
 
+        }
+
+        topTable.createPartLine().and().createStaticElement("3.")
+            .and().createStaticElement("Объем производства продукции (работ, услуг) в натуральном выражении");
+
+        {
+            final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_3").createInnerTable();
+
+            PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
+            partHeader
+                .createStaticElement("Вид продукции").keyValueIdx(1)
+                .and().createStaticElement()
+                .and().createStaticElement("Объем производства").keyValueIdx(2)
+                .and().createStaticElement()
+                .and().createStaticElement("Ед. изм.").keyValueIdx(3)
+                .and().createStaticElement()
+                .and().widthsOfElements(30,30,30,30,30,30);
+
+            innerTable.createPartRowInner("_data")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement()
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createStaticElement()
+                .and().createStringValueElement().keyValueIdx(3)
+                .and().createIntegerValueElement();
+
+        }
+
+        topTable.createPartLine().and().createStaticElement("4.")
+            .and().createStaticElement("Объем производства продукции (работ, услуг) в натуральном выражении");
+
+        {
+            final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_4").createInnerTable();
+
+            PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
+            partHeader
+                .createStaticElement("Вид продукции").keyValueIdx(1)
+                .and().createStaticElement()
+                .and().createStaticElement("Объем производства").keyValueIdx(2)
+                .and().createStaticElement()
+                .and().widthsOfElements(30,20,30,20);
+
+            innerTable.createPartRowInner("_data")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement()
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createStaticElement();
+        }
+
+        topTable.createPartLine().and().createStaticElement("5.")
+            .and().createStaticElement("Объем производства продукции (работ, услуг) в стоимостном выражении");
+
+        {
+            final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_5").createInnerTable();
+
+            PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
+            partHeader
+                .createStaticElement("Вид продукции").keyValueIdx(1)
+                .and().createStaticElement()
+                .and().createStaticElement("Объем производства (тыс. руб.) ").keyValueIdx(2)
+                .and().createStaticElement()
+                .and().widthsOfElements(30,20,30,20);
+
+            innerTable.createPartRowInner("_data")
+                .and().createStringValueElement().keyValueIdx(1)
+                .and().createStaticElement()
+                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createStaticElement();
+        }
+
+        {
+            final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_5a").createInnerTable();
+
+            innerTable.createPartRowInner("_data")
+                .and().createStaticElement("Суммарный показатель")
+                .and().createDoubleValueElement().keyValueIdx(1)
+                .and().createStaticElement("Единица измерения")
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().widthsOfElements(30,20,30,20);
+        }
 
         return new EPSectionTemplateFactory(topTable);
     }
