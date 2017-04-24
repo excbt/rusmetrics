@@ -1398,7 +1398,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successLoadPassportsCallback(resp) {
-console.log(resp);        
+//console.log(resp);        
         $scope.data.passports = angular.copy(resp.data);
         $scope.ctrlSettings.loading = false;
     }

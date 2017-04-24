@@ -911,7 +911,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         if (checkUndefinedNull(url) || checkUndefinedNull(paramName) || checkUndefinedNull(paramValue)) {
             return url;
         }
-        url += ((url.indexOf('?') === -1) ? '?' : '&') + paramName + "=" + paramValue;
+        url += ((url.indexOf('?') === -1) ? '?' : '&') + encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue);
         return url;
         
     }

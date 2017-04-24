@@ -13,23 +13,22 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
         return $http.get(PASSPORT_URL_OLD_NEW);
     }
     
-    function addQueryParam(url, paramName, paramValue) {
-        if (!mainSvc.checkUndefinedNull(paramValue)) {
-            if (url.indexOf('?') === -1) {
-                url += "?";
-            } else {
-                url += "&";
-            }
-            url += encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue);
-        }
-//        console.log(url);
-        return url;
-    }
+//    function addQueryParam(url, paramName, paramValue) {
+//        if (!mainSvc.checkUndefinedNull(paramValue)) {
+//            if (url.indexOf('?') === -1) {
+//                url += "?";
+//            } else {
+//                url += "&";
+//            }
+//            url += encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue);
+//        }
+//        return url;
+//    }
     
     function createPassport(passportName, passportDescription) {
         var url = PASSPORT_URL;
-        url = addQueryParam(url, "passportName", passportName);
-        url = addQueryParam(url, "passportDescription", passportDescription);
+        url = mainSvc.addParamToURL(url, "passportName", passportName);
+        url = mainSvc.addParamToURL(url, "passportDescription", passportDescription);
        
         return $http.post(url);
     }
