@@ -802,6 +802,9 @@ public class EnergyPassport401_2014_Add {
     }
     private final static Consumer<PDTablePart> create1EmptyStaticF = (p) -> p.createStaticElement();
     private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
+    private final static TriConsumer<PDTable, String, String> tableCreateLineHeader = (p, nr, s) ->
+        p.createPartLine(nr, "")
+            .and().createStaticElement(s);
 
 
     /**
@@ -1941,6 +1944,76 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+
+
+    public EnergyPassportSectionTemplateFactory section_2_7() {
+
+        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.7")
+            .caption("Сведения об использовании моторного топлива ")
+            .shortCaption("2.7")
+            .sectionNr("2.7");
+
+
+        tableCreateLineHeader.accept(topTable,"1h", "Сведения об использовании вторичных энергетических ресурсов");
+
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+            partHeader.createStaticElement().caption("№ п/п")
+                .and().createStaticElement().caption("Наименование (марка) транспортного средства, оборудования").columnKey("res_name")
+                .and().createStaticElement("Количество единиц транспортных средств, оборудования")
+                .and().createStaticElement("Грузоподъемность, т, пассажиров вместимость, чел.")
+                .and().createStaticElement("Объем грузоперевозок, тыс. т-км, тыс. пасс.-км.")
+                .and().createStaticElement("Сведения об использовании моторного топлива за отчетный год ")
+                    .createStaticChild("N п/п").andParentCell()
+                    .createStaticChild("вид использованного топлива, в том числе электрической энергии").andParentCell()
+                    .createStaticChild("способ измерения расхода топлива (электрической энергии)").andParentCell()
+                    .createStaticChild("удельный расход топлива и электрической энергии, л/100 км, л/моточас, т/100 км, т/моточас, н. куб. м/100 км, н. куб. м/моточас, кВт·ч/100 км, кВт·ч/моточас")
+                        .createStaticChild("нормативный").andParentCell()
+                        .createStaticChild("фактический").andParentCell()
+                        .andParentCell()
+                    .createStaticChild("пробег, тыс. км, отработано, моточас").andParentCell()
+                    .createStaticChild("количество топлива и электрической энергии, тыс. л, т, н. куб. м, тыс. кВт·ч")
+                        .createStaticChild("полученного").andParentCell()
+                        .createStaticChild("израсходованного")
+                .and().widthsOfElements(5,10,10,10,10,5,10,10,5,5,10,10,10);
+
+
+
+            pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
+                .createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)// #
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createStringValueElement().keyValueIdx(3)
+                .and().createDoubleValueElement().keyValueIdx(4)
+                .and().createDoubleValueElement().keyValueIdx(5)
+                .and().createIntegerValueElement().keyValueIdx(6)
+                .and().createStringValueElement().keyValueIdx(7)
+                .and().createStringValueElement().keyValueIdx(8)
+                .and().createDoubleValueElement().keyValueIdx(9)
+                .and().createDoubleValueElement().keyValueIdx(10)
+                .and().createDoubleValueElement().keyValueIdx(11)
+                .and().createDoubleValueElement().keyValueIdx(12)
+                .and().createDoubleValueElement().keyValueIdx(13);
+
+
+//            pdTable.createPartRow("1.1", "1")
+//                .and().createStringValueElement().keyValueIdx(1)
+//                .and().createDoubleValueElement().keyValueIdx(2)
+//                .and().createDoubleValueElement().keyValueIdx(3)
+//                .and().createDoubleValueElement().keyValueIdx(4)
+//                .and().createDoubleValueElement().keyValueIdx(5)
+//                .and().createDoubleValueElement().keyValueIdx(6)
+//                .and().createDoubleValueElement().keyValueIdx(7)
+//                .and().createDoubleValueElement().keyValueIdx(8)
+//                .and().createStringValueElement().keyValueIdx(9);
+        }
+
+        return new EPSectionTemplateFactory(topTable);
+    };
+
+
     /**
      *
      * @return
@@ -1953,9 +2026,12 @@ public class EnergyPassport401_2014_Add {
             .sectionNr("2.8");
 
 
-        topTable.createPartLine("1h", "Сведения об использовании вторичных энергетических ресурсов");
 
-        topTable.createPartLine("1h1", "Таблица 1");
+        tableCreateLineHeader.accept(topTable,"1h", "Сведения об использовании вторичных энергетических ресурсов");
+
+        topTable.createPartLine("1h1", "")
+            .and().applyCreator(create2EmptyStaticF)
+            .and().createStaticElement("Таблица 1");
 
         {
             final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();

@@ -99,6 +99,12 @@ public class EnergyPassport401_2014Test {
     }
 
     @Test
+    public void test_S_2_7() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_7();
+        checkFactory(factory);
+    }
+
+    @Test
     public void test_S_2_8() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_8();
         checkFactory(factory);
