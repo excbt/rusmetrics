@@ -283,13 +283,13 @@
                                                         Удалить
                                                     </i>
                                                 </td>
-                                                <td ng-if = "trow.dynamic === true && $last"
+                                                <td ng-if = "isAddRowButtonEnable(part, $index)"
                                                     style = "border: 0"
                                                     ng-style = "{'width': '10' + ctrlSettings.cssMeasureUnit, 'max-width': '10' + ctrlSettings.cssMeasureUnit}">
 <!--                                                    ng-attr-rowspan = "{{part.innerPdTable.parts[1].tbody.length}}">-->
                                                     <i 
                                                        class = "btn btn-xs btn-primary btn-xs"
-                                                       ng-click = "addRowToTable(part)">
+                                                       ng-click = "addRowToTable(part, $index)">
                                                         Добавить
                                                     </i>                                                    
                                                 </td>
