@@ -3,6 +3,7 @@
 
   <!-- Навигационная полоса -->
     <ul class = "nav nav-tabs" role = "tablist">
+<!--
         <li id = "object_list_2nd_menu_item" role = "presentation" class = ""><a id = "monitorTab" class = "nmc-main-tab-button" href = "#/" aria-controls = "objects" data-target = "#objects" role = "tab" data-toggle = "tab">Список объектов</a></li>
         <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
         <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
@@ -19,6 +20,7 @@
             </a>
         </li>
         <li id="document_list_2nd_menu_item" role="presentation" class="active"><a id="documentTab" class="nmc-main-tab-button" href="" aria-controls="documents" data-target="#documents" role="tab" data-toggle="tab">Документы</a></li>
+-->
 
         <li style = "padding: 0 10px;">
             <button class="btn nmc-main-add-button"
@@ -48,7 +50,8 @@
                     style = "height: 1.5rem;">
                     <span ng-show = "showContentsFlag">Содержание</span>
                 </h3>
-                <div class = "nmc-energo-passport-main-div">
+                <div class = "nmc-energo-passport-main-div"
+                     ng-show = "!ctrlSettings.passportLoading">
 <!--
                     <table id="table_objects_in_window" 
                            class = "table table-striped table-condensed nmc-modal-table-with-chkbx">
@@ -198,14 +201,22 @@
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
-                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type !== 'Boolean'" 
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type !== 'Boolean' && elm.__type !== 'Date'" 
                                                    type = "text"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
                                                    style = "width: 100%; border: 0; border-bottom: 1px solid;"/>
+                                            
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'Boolean'" 
                                                    type = "checkbox"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
                                                    style = ""/>
+                                            
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type == 'Date'" 
+                                                   ng-attr-id = "{{'date_value_' + elm._complexIdx}}"
+                                                   readonly
+                                                   type = "text"
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   style = "width: 100%; border: 0; border-bottom: 1px solid;"/>
                                         </div>
                                     </div>
                                     <div ng-switch-when = "INNER_TABLE"

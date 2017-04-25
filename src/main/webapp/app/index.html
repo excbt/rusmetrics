@@ -225,6 +225,21 @@
                                         Журналы
                                     </span>
                                 </a>
+                                <a ng-show="!isCabinet()"
+                                   ng-hide="isTestMode()"
+                                   id="energy_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"
+
+                                   href="#/documents/energo-passports/"
+                                   data-toggle="offcanvas"
+                                   ng-click="clickMenu('energy_menu_item')"
+                                   ng-cloak>
+                                    <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon" title="Энергоэффективность"></i>
+                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
+                                        Энерго - эффективность
+                                    </span>
+                                </a>
 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
