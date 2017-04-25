@@ -117,6 +117,7 @@ public class EnergyPassport401_2014Test {
     }
 
 
+
     @Test
     public void test_S_2_10() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_10();
@@ -137,6 +138,12 @@ public class EnergyPassport401_2014Test {
 //        PDTableValueCellsDTO tableValueCellsDTO = mapper.readValue(valuesJson, PDTableValueCellsDTO.class);
     }
 
+
+    @Test
+    public void test_S_2_11() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_11();
+        checkFactory(factory);
+    }
 
 
     private void checkFactory(EnergyPassportSectionTemplateFactory factory) {

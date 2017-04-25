@@ -2294,6 +2294,56 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    public EnergyPassportSectionTemplateFactory section_2_11() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.11", "Сведения о программе энергосбережения, " +
+            "повышения энергетической эффективности и выполненных" +
+            "энергоресурсосберегающих мероприятиях")));
+
+        headerTool(topTable, "h1-", "Сведения о программе энергосбережения,\n" +
+            "повышения энергетической эффективности и выполненных\n" +
+            "энергоресурсосберегающих мероприятиях\n");
+
+
+        topTable.createPartLine("1.")
+            .and().createStaticElement("Наличие   программы   энергосбережения   и   повышения  энергетической эффективности:")
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("2.")
+            .and().createStaticElement("Наименование  программы  энергосбережения  и  повышения  энергетической эффективности:")
+            .and().createStringValueElement();
+
+        topTable.createPartLine("3.")
+            .and().createStaticElement("Дата утверждения:")
+            .and().createDateValueElement();
+
+
+        headerTool(topTable, "h2-", "Оценка соответствия фактических значений\n" +
+            "расчетно-нормативным по каждому показателю энергетической\n" +
+            "эффективности, указанному в программе энергосбережения\n" +
+            "и повышения энергетической эффективности\n");
+
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+            partHeader.createStaticElement().caption("№ п/п").keyValueIdxCnt()
+                .and().createStaticElement().caption("Наименование показателя энергетической эффективности").keyValueIdxCnt()
+                .and().createStaticElement().caption("Единица измерения").keyValueIdxCnt()
+                .and().createStaticElement().caption("Значение показателя")
+                .createStaticChild("фактическое (по узлам (приборам) учета, расчетам)")
+                .andParentCell()
+                .createStaticChild("расчетно-нормативное за отчетный год").keyValueIdxCnt();
+
+            partHeader.widthsOfElements(10, 30, 20, 15, 15);
+
+        }
+        return new EPSectionTemplateFactory(topTable);
+    }
+
     @FunctionalInterface
     public interface TriConsumer<T, U, K> {
 
@@ -2307,6 +2357,27 @@ public class EnergyPassport401_2014_Add {
                 after.accept(l, r, k);
             };
         }
+    }
+
+
+    /**
+     *
+     * @param pdTable - to apply header
+     * @param key - key of header
+     * @param header - header with new line characters \n
+     * @return PDTable
+     */
+    private PDTable headerTool(PDTable pdTable, String key, String header) {
+        String[] headerLines = header.split("\n");
+        for (int i = 0; i < headerLines.length; i++) {
+            if (headerLines[i].trim().length() == 0) {
+                continue;
+            }
+            pdTable.createPartLine(key + (i + 1), "")
+                .and().createStaticElement(headerLines[i].trim())
+                    .cellStyle(new PDCellStyle().hAlignment(HAlignment.CENTER));
+        }
+        return pdTable;
     }
 
 
