@@ -56,6 +56,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") !== -1 ? true : false);
         $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/") !== -1 ? true : false);
         $scope.menuMassive.log_menu_item = (loca.indexOf("/log") !== -1 ? true : false);
+        $scope.menuMassive.energy_menu_item = (loca.indexOf("/documents") !== -1 ? true : false);
         $scope.menuMassive.test_menu_item = (loca.indexOf("/test") !== -1 ? true : false);
         
         //check menu flags
@@ -99,6 +100,9 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         }
         if ($scope.menuMassive.log_menu_item) {
           window.location.assign("#/log/");
+        }
+        if ($scope.menuMassive.energy_menu_item) {
+          window.location.assign("#/documents/energo-passports");
         }
         if ($scope.menuMassive.test_menu_item) {
           window.location.assign("#/test/");
