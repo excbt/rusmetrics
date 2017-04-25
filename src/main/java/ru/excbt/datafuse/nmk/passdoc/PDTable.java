@@ -167,7 +167,7 @@ public class PDTable implements PDReferable {
         return createPart(PDPartType.SIMPLE_LINE).key(key).createStaticElement(staticCaption).and();
     }
 
-    public PDTablePart createPartRow(String nr) {
+    public PDTablePart createPartRowNr(String nr) {
         String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
         String key = PREFIX + nr2;
         return createPart(PDPartType.ROW).key(key).createStaticElement(nr).and();
