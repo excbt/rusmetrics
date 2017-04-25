@@ -2053,28 +2053,22 @@ public class EnergyPassport401_2014_Add {
 
             partHeader.widthsOfElements(10, 30, 15, 15, 15, 15, 20, 15, 15, 20);
 
-            pdTable.createPartRow("1.1", "1")
-                .and().createStringValueElement().keyValueIdx(1)
-                .and().createDoubleValueElement().keyValueIdx(2)
-                .and().createDoubleValueElement().keyValueIdx(3)
-                .and().createDoubleValueElement().keyValueIdx(4)
-                .and().createDoubleValueElement().keyValueIdx(5)
-                .and().createDoubleValueElement().keyValueIdx(6)
-                .and().createDoubleValueElement().keyValueIdx(7)
-                .and().createDoubleValueElement().keyValueIdx(8)
-                .and().createStringValueElement().keyValueIdx(9);
 
-            pdTable.createPartRow("1.2","2")
-                .and().createStringValueElement().keyValueIdx(1)
-                .and().createDoubleValueElement().keyValueIdx(2)
-                .and().createDoubleValueElement().keyValueIdx(3)
-                .and().createDoubleValueElement().keyValueIdx(4)
-                .and().createDoubleValueElement().keyValueIdx(5)
-                .and().createDoubleValueElement().keyValueIdx(6)
-                .and().createDoubleValueElement().keyValueIdx(7)
-                .and().createDoubleValueElement().keyValueIdx(8)
-                .and().createStringValueElement().keyValueIdx(9);
+            Consumer<PDTablePart> valuesCreator = (p) ->
+                p.createStringValueElement().keyValueIdx(1)
+                    .and().createDoubleValueElement().keyValueIdx(2)
+                    .and().createDoubleValueElement().keyValueIdx(3)
+                    .and().createDoubleValueElement().keyValueIdx(4)
+                    .and().createDoubleValueElement().keyValueIdx(5)
+                    .and().createDoubleValueElement().keyValueIdx(6)
+                    .and().createDoubleValueElement().keyValueIdx(7)
+                    .and().createDoubleValueElement().keyValueIdx(8)
+                    .and().createStringValueElement().keyValueIdx(9);
 
+
+            pdTable.createPartRow("1.1", "1").applyCreator(valuesCreator);
+
+            pdTable.createPartRow("1.2","2").applyCreator(valuesCreator);
 
             PDTablePart table1TotalPart = pdTable.createPartRow("1_total", "");
             table1TotalPart.createStaticElement("Итого")
@@ -2114,26 +2108,19 @@ public class EnergyPassport401_2014_Add {
 
             partHeader.widthsOfElements(10, 30, 15, 15, 15, 15, 15, 15, 20);
 
-            pdTable.createPartRow("2.1", "1")
-                .and().createStringValueElement().keyValueIdx(1)
-                .and().createDoubleValueElement().keyValueIdx(2)
-                .and().createDoubleValueElement().keyValueIdx(3)
-                .and().createDoubleValueElement().keyValueIdx(4)
-                .and().createDoubleValueElement().keyValueIdx(5)
-                .and().createDoubleValueElement().keyValueIdx(6)
-                .and().createDoubleValueElement().keyValueIdx(7)
-                .and().createStringValueElement().keyValueIdx(8);
+            Consumer<PDTablePart> valuesCreator = (p) ->
+                p.createStringValueElement().keyValueIdx(1)
+                    .and().createDoubleValueElement().keyValueIdx(2)
+                    .and().createDoubleValueElement().keyValueIdx(3)
+                    .and().createDoubleValueElement().keyValueIdx(4)
+                    .and().createDoubleValueElement().keyValueIdx(5)
+                    .and().createDoubleValueElement().keyValueIdx(6)
+                    .and().createDoubleValueElement().keyValueIdx(7)
+                    .and().createStringValueElement().keyValueIdx(8);
 
-            pdTable.createPartRow("2.2","2")
-                .and().createStringValueElement().keyValueIdx(1)
-                .and().createDoubleValueElement().keyValueIdx(2)
-                .and().createDoubleValueElement().keyValueIdx(3)
-                .and().createDoubleValueElement().keyValueIdx(4)
-                .and().createDoubleValueElement().keyValueIdx(5)
-                .and().createDoubleValueElement().keyValueIdx(6)
-                .and().createDoubleValueElement().keyValueIdx(7)
-                .and().createStringValueElement().keyValueIdx(8);
+            pdTable.createPartRow("2.1", "1").applyCreator(valuesCreator);
 
+            pdTable.createPartRow("2.2","2").applyCreator(valuesCreator);
 
             PDTablePart table2TotalPart = pdTable.createPartRow("2_total", "");
             table2TotalPart.createStaticElement("Итого")
