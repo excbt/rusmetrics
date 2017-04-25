@@ -16,9 +16,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.ctrlSettings.passportLoading = true;
     
     $scope.ctrlSettings.FIRST_STATIC_ELEM = 5;
-    $scope.ctrlSettings.STATIC_ELEM = 30;
+    $scope.ctrlSettings.STATIC_ELEM = 25;
     $scope.ctrlSettings.BOOLEAN_ELEM = 5;
-    $scope.ctrlSettings.VALUE_ELEM = 30;
+    $scope.ctrlSettings.VALUE_ELEM = 25;
 //    $scope.ctrlSettings.emptyString = " ";
     
 //    $timeout(function () {
@@ -41,7 +41,12 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.data.currentPassDocSection = null;
     
     $scope.calcInlineWidth = function (first, elm, count) {
-        var result = (first ? $scope.ctrlSettings.FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? $scope.ctrlSettings.STATIC_ELEM : (elm.__type === 'Boolean' ? $scope.ctrlSettings.BOOLEAN_ELEM : $scope.ctrlSettings.VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+        var result = "inherit";
+        if (count > 2) {
+            result = (first ? $scope.ctrlSettings.FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? $scope.ctrlSettings.STATIC_ELEM : (elm.__type === 'Boolean' ? $scope.ctrlSettings.BOOLEAN_ELEM : $scope.ctrlSettings.VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+        } else {
+            result = first ? $scope.ctrlSettings.FIRST_STATIC_ELEM  + $scope.ctrlSettings.cssMeasureUnit : "inherit";
+        }
         return result;
     };
     
@@ -328,6 +333,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //console.log(respData.sectionDataJson);        
 //console.log(JSON.parse(respData.sectionDataJson));        
         $scope.data.passDocValues = performLoadedSection(respData, sectionValues);
+        $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
+        $timeout(function () {
+            $(':input').inputmask();
+        }, 0);
+        
+//console.log($scope.data.currentPassDocSection);        
+//console.log($scope.data.currentSectionValues);                
     }
     
     function loadPassportData(passport) {
@@ -413,12 +425,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0] = {};
             //load entry data
             loadEntryData($scope.data.passport.id, $scope.data.currentPassDocSection.sectionId || $scope.data.currentPassDocSection.id, $scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0);
+        } else {
+            $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
+
+            $timeout(function () {
+                $(':input').inputmask();
+            }, 0);
         }
-        $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
-        
-        $timeout(function () {
-            $(':input').inputmask();
-        }, 0);
     }
     
     $scope.contentsPartSelect = function (part) {
@@ -474,11 +487,26 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         });
     }
     
+    $scope.isAddRowButtonEnable = function (part, rowIndex) {
+        var result = false,
+            lastDynamicIndex = null;
+        
+        part.innerPdTable.tbodies.forEach(function (bodyRow, ind) {
+            if (bodyRow.dynamic === true) {
+                lastDynamicIndex = ind;
+            }
+        });
+        if (lastDynamicIndex === rowIndex) {
+            result = true;
+        }
+        return result;
+    };
+    
     /**
     Add row at dynamic table.
     Need add value to global values hash map
     */
-    $scope.addRowToTable = function (part) {
+    $scope.addRowToTable = function (part, rowIndex) {
         if (part.innerPdTable.parts.length < 2) {
             console.error("Incorrect part.innerPdTable.parts: " + part);
             return false;
@@ -494,6 +522,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         if (dynamicRowTemplate === null) {
             console.error("Not enough dynamic parts!");
             console.error(part);
+            return false;
         }
         var addingRow = angular.copy(dynamicRowTemplate);
         addingRow.elements.forEach(function (rowElem) {
@@ -528,7 +557,17 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             
         });
         prepareTableRowRecursion(addingRow);
-        part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);
+        //find static rows
+        if (!mainSvc.checkUndefinedNull(rowIndex)) {
+            var tmpTbodies = part.innerPdTable.tbodies.splice(rowIndex + 1, part.innerPdTable.tbodies.length);
+            part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);            
+            part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(tmpTbodies);
+//console.log(tmpTbodies);                        
+//console.log(addingRow.tbody);            
+//console.log(part.innerPdTable.tbodies);            
+        } else {
+            part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);
+        }
         
         $timeout(function () {
             $(':input').inputmask();
@@ -691,6 +730,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         currentPassportSection.sectionDataJson = JSON.stringify(sectionData);
 //console.log(currentPassportSection);
+//return;        
         //call save function: passport id, section key, values
         energoPassportSvc.savePassport($scope.data.passport.id, currentPassportSection)
             .then(successPutCallback, errorCallback);
