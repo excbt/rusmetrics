@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.energypassport;
 
 import com.google.common.base.Preconditions;
+import lombok.Builder;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
@@ -2296,6 +2297,10 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public EnergyPassportSectionTemplateFactory section_2_11() {
 
         final PDTable topTable = new PDTable();
@@ -2354,18 +2359,19 @@ public class EnergyPassport401_2014_Add {
                 .and().createDoubleValueElement().keyValueIdxCnt();
 
 
-            List<String> headers = new ArrayList<>();
-            headers.add("По номенклатуре основной и дополнительной продукции");
-            headers.add("По видам проводимых работ");
-            headers.add("По видам оказываемых услуг");
-            headers.add("По основным энергоемким технологическим процессам");
-            headers.add("По основному технологическому оборудованию");
+            List<String> items = new ArrayList<>();
+            items.add("По номенклатуре основной и дополнительной продукции");
+            items.add("По видам проводимых работ");
+            items.add("По видам оказываемых услуг");
+            items.add("По основным энергоемким технологическим процессам");
+            items.add("По основному технологическому оборудованию");
 
             int idx = 1;
-            for (String s : headers) {
+            for (String s : items) {
                 pdTable.createPartRowInner(idx+ "")
                     .and().createStaticElement(idx + "")
                     .and().createStaticElement(s).mergedCells(4);
+
                 pdTable.createPartRowInner(idx + ".1")
                     .and().createStaticElement(idx + ".1")
                     .and().applyCreator(rowCreator);
@@ -2380,7 +2386,6 @@ public class EnergyPassport401_2014_Add {
             "году представления информации, обеспечивших снижение\n" +
             "потребления энергетических ресурсов и воды");
 
-
         {
             final PDInnerTable pdTable = topTable.createPartInnerTable().key("TBL2_").createInnerTable();
 
@@ -2393,16 +2398,47 @@ public class EnergyPassport401_2014_Add {
                 .and().createStaticElement().caption("Год внедрения").keyValueIdxCnt()
                 .and().createStaticElement().caption("Краткое описание, достигнутый энергетический эффект").keyValueIdxCnt();
 
-            partHeader.widthsOfElements(10, 30, 15, 20, 15, 30);
+            partHeader.widthsOfElements(5, 25, 25, 15, 15, 30);
 
 
             pdTable.createPartRowNr("1")
                 .and().createStaticElement("Энергоресурсосберегающие мероприятия, обеспечившие снижение потребления:").mergedCells(5);
 
-            Consumer<PDTablePart> rowCreator = (p) -> p.createStringValueElement().keyValueIdxCnt()
-                .and().createStringValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt();
+            Consumer<PDTablePart> rowCreator = (p) -> p.createStringValueElement().keyValueIdx(1)
+                .and().createStringValueElement().keyValueIdx(2)
+                .and().createIntegerValueElement().keyValueIdx(3)
+                .and().createDoubleValueElement().keyValueIdx(4)
+                .and().createStringValueElement().keyValueIdx(5);
+
+            class CreatorHelper {
+                private final String s0;
+                private final String s1;
+                private final String pnt;
+                private final int idx;
+                public CreatorHelper(String s0, String s1, String pnt, int idx) {
+                    this.s0 = s0;
+                    this.s1 = s1;
+                    this.pnt = pnt;
+                    this.idx = idx;
+                }
+
+                private void build() {
+                    pdTable.createPartRowInner(pnt + idx+ "")
+                        .and().createStaticElement(pnt + idx + "")
+                        .and().createStaticElement(s0)
+                        .and().createStaticElement(s1).cellStyle(new PDCellStyle().hAlignment(HAlignment.CENTER))
+                        .and().createStringValueElement().keyValueIdx(3)
+                        .and().createStaticElement().mergedCells(2);
+
+                    pdTable.createPartRowInner(pnt + idx + ".1")
+                        .and().createStaticElement(pnt + idx + ".1")
+                        .and().applyCreator(rowCreator);
+
+                    pdTable.createPartRowInner(pnt + idx + ".2")
+                        .and().createStaticElement(pnt + idx + ".2")
+                        .and().applyCreator(rowCreator);
+                }
+            }
 
 
             List<String[]> items = new ArrayList<>();
@@ -2415,24 +2451,46 @@ public class EnergyPassport401_2014_Add {
             items.add(new String[] {"Сжатого газа", "тыс. н. куб. м"});
             items.add(new String[] {"Попутного нефтяного газа ", "тыс. н. куб. м"});
 
-//            int idx = 1;
-//            for (String[] s : headers) {
-//                pdTable.createPartRowInner(idx+ "")
-//                    .and().createStaticElement(idx + "")
-//                    .and().createStaticElement(s[0])
-//                    .and().createStaticElement(s[1])
-//                    .and().createStringValueElement().keyValueIdx(4)
-//                    .and().createStaticElement().mergedCells(2);
-//                pdTable.createPartRowInner(idx + ".1")
-//                    .applyCreator(rowCreator);
-//                idx++;
-//            }
+            int idx = 1;
+            for (String[] s : items) {
+                new CreatorHelper(s[0], s[1], "1.",idx++).build();
+            }
+
+            pdTable.createPartRowInner("1.9")
+                .and().createStaticElement("1.9")
+                .and().createStaticElement("Моторного топлива, в том числе:")
+                .and().createStaticElement().mergedCells(2)
+                .and().createStaticElement().mergedCells(2);
+
+            List<String[]> items19 = new ArrayList<>();
+            items19.add(new String[] {"бензина","тыс. л"});
+            items19.add(new String[] {"керосина","тыс. л"});
+            items19.add(new String[] {"дизельного топлива","тыс. л"});
+            items19.add(new String[] {"сжиженного газа","т"});
+            items19.add(new String[] {"сжатого газа","н. куб. м"});
+            items19.add(new String[] {"твердого топлива","т"});
+            items19.add(new String[] {"жидкого топлива","т"});
+
+            idx = 1;
+            for (String[] s: items19) {
+                new CreatorHelper(s[0], s[1], "1.9.",idx++).build();
+            }
+
         }
+
+        topTable.createPartLine().applyCreator(create1EmptyStaticF)
+            .and().createStaticElement("1 т у.т. = 29,31 ГДж");
 
 
         return new EPSectionTemplateFactory(topTable);
     }
 
+    /**
+     * 
+     * @param <T>
+     * @param <U>
+     * @param <K>
+     */
     @FunctionalInterface
     public interface TriConsumer<T, U, K> {
 
