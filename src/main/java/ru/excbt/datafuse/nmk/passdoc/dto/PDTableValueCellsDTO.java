@@ -62,6 +62,8 @@ public class PDTableValueCellsDTO {
 
         } else if (PDTableCellValueBoolean.class.isAssignableFrom(pdTableCell.getClass())) {
             result = PDValueBooleanDTO.newInstance(pdTableCell);
+        } else if (PDTableCellValueDate.class.isAssignableFrom(pdTableCell.getClass())) {
+            result = PDValueDateDTO.newInstance(pdTableCell);
         }
 
         if (result == null) {

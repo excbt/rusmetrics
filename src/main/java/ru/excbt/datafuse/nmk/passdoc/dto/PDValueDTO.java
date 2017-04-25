@@ -20,7 +20,8 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
     @JsonSubTypes.Type(value = PDValueIntegerDTO.class, name = "Integer"),
     @JsonSubTypes.Type(value = PDValueDoubleDTO.class, name = "Double"),
     @JsonSubTypes.Type(value = PDValueDoubleAggregationDTO.class, name = "DoubleAgg"),
-    @JsonSubTypes.Type(value = PDValueBooleanDTO.class, name = "Boolean")
+    @JsonSubTypes.Type(value = PDValueBooleanDTO.class, name = "Boolean"),
+    @JsonSubTypes.Type(value = PDValueDateDTO.class, name = "Date")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({"__type", "cellType", "partKey", "keyValueIdx", "valuePackIdx"})

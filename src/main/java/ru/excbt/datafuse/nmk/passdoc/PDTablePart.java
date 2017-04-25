@@ -74,6 +74,9 @@ public class PDTablePart implements PDReferable {
     @Setter
     private boolean indentAfter = true;
 
+
+    private int keyValueIdxCounter = 0;
+
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
     }
@@ -134,6 +137,9 @@ public class PDTablePart implements PDReferable {
         return createValueElement(PDTableCellValueBoolean.class);
     }
 
+    public PDTableCell<PDTableCellValueDate> createDateValueElement() {
+        return createValueElement(PDTableCellValueDate.class);
+    }
 
     public PDTableCell<?> createIntegerValueElement() {
         return createValueElement(PDTableCellValueInteger.class);
@@ -271,6 +277,8 @@ public class PDTablePart implements PDReferable {
             result = (T) new PDTableCellValueBoolean().tablePart(this);
         } else if (PDTableCellValueCounter.class.isAssignableFrom(valueType)) {
             result = (T) new PDTableCellValueCounter().tablePart(this);
+        } else if (PDTableCellValueDate.class.isAssignableFrom(valueType)) {
+            result = (T) new PDTableCellValueDate().tablePart(this);
         }
 
         if (result == null) {
@@ -357,6 +365,11 @@ public class PDTablePart implements PDReferable {
         PDInnerTable innerTable = new PDInnerTable(this);
         this.innerPdTable = innerTable;
         return innerTable;
+    }
+
+
+    int nextKeyValueIdx() {
+        return ++keyValueIdxCounter;
     }
 
 
