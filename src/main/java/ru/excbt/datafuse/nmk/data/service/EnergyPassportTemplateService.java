@@ -84,6 +84,7 @@ public class EnergyPassportTemplateService {
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_9()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_10()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_11()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_12()));
         templateDTO.setDocumentDate(LocalDate.of(2014,6,30));
         templateDTO.setDocumentName("ПРИКАЗ 401");
         templateDTO.setDescription("ОБ УТВЕРЖДЕНИИ ПОРЯДКА ПРЕДСТАВЛЕНИЯ ИНФОРМАЦИИ ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ");
@@ -107,6 +108,7 @@ public class EnergyPassportTemplateService {
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_9()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_10()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_11()));
+        passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_12()));
         passportTemplate.setDocumentDate(LocalDate.of(2014,6,30));
         passportTemplate.setDocumentName("ПРИКАЗ 401");
         passportTemplate.setDescription("ОБ УТВЕРЖДЕНИИ ПОРЯДКА ПРЕДСТАВЛЕНИЯ ИНФОРМАЦИИ ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ");

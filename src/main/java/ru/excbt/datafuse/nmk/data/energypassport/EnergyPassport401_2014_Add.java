@@ -2486,7 +2486,46 @@ public class EnergyPassport401_2014_Add {
     }
 
     /**
-     * 
+     *
+     * @return
+     */
+    public EnergyPassportSectionTemplateFactory section_2_12() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.12", "Сведения\n" +
+            "о линиях передачи (транспортировки)\n" +
+            "энергетических ресурсов \n")));
+
+        headerTool(topTable, "h1-", "Сведения\n" +
+            "о линиях передачи (транспортировки)\n" +
+            "энергетических ресурсов \n");
+
+
+        final PDInnerTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+        partHeader.createStaticElement().caption("№ п/п").keyValueIdxCnt()
+            .and().createStaticElement().caption("Наименование линии").keyValueIdxCnt()
+            .and().createStaticElement().caption("Вид передаваемого ресурса").keyValueIdxCnt()
+            .and().createStaticElement().caption("Способ прокладки").keyValueIdxCnt()
+            .and().createStaticElement().caption("Суммарная протяженность, км").keyValueIdxCnt();
+
+        partHeader.widthsOfElements(5, 25, 25, 15, 15);
+
+        pdTable.createPartRow().key("DATA").dynamic()
+            .and().createValueElement(PDTableCellValueCounter.class).keyValueIdxCnt()
+            .and().createStringValueElement().keyValueIdxCnt()
+            .and().createStringValueElement().keyValueIdxCnt()
+            .and().createStringValueElement().keyValueIdxCnt()
+            .and().createDoubleValueElement().keyValueIdxCnt();
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
+    /**
+     *
      * @param <T>
      * @param <U>
      * @param <K>
@@ -2526,6 +2565,7 @@ public class EnergyPassport401_2014_Add {
         }
         return pdTable;
     }
+
 
 
 }
