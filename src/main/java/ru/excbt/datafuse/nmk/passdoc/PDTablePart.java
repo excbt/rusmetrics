@@ -74,6 +74,9 @@ public class PDTablePart implements PDReferable {
     @Setter
     private boolean indentAfter = true;
 
+
+    private int keyValueIdxCounter = 0;
+
     public PDTablePart(PDTable pdTable){
         this.pdTable = pdTable;
     }
@@ -357,6 +360,11 @@ public class PDTablePart implements PDReferable {
         PDInnerTable innerTable = new PDInnerTable(this);
         this.innerPdTable = innerTable;
         return innerTable;
+    }
+
+
+    int nextKeyValueIdx() {
+        return ++keyValueIdxCounter;
     }
 
 

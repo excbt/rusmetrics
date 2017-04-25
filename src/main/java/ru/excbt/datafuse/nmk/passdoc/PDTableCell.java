@@ -85,6 +85,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @Setter
     private String columnKey;
 
+    @Getter
+    @Setter
+    @JsonInclude(value = Include.NON_NULL)
+    private PDCellStyle cellStyle = new PDCellStyle();
+
 
     public T width(double value) {
         this.width = value;
@@ -109,8 +114,18 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return (T) this;
     }
 
+    public T cellStyle(PDCellStyle cellStyle) {
+        this.cellStyle = cellStyle;
+        return (T) this;
+    }
+
     public T keyValueIdx(int value) {
         this.keyValueIdx = value;
+        return (T) this;
+    }
+
+    public T keyValueIdxCnt() {
+        this.keyValueIdx = tablePart.nextKeyValueIdx();
         return (T) this;
     }
 
