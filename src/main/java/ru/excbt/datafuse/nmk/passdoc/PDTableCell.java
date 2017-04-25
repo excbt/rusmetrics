@@ -27,7 +27,8 @@ import static com.google.common.base.Preconditions.checkState;
     @JsonSubTypes.Type(value = PDTableCellValueInteger.class, name = "Integer"),
     @JsonSubTypes.Type(value = PDTableCellValueDouble.class, name = "Double"),
     @JsonSubTypes.Type(value = PDTableCellValueDoubleAggregation.class, name = "DoubleAgg"),
-    @JsonSubTypes.Type(value = PDTableCellValueBoolean.class, name = "Boolean")
+    @JsonSubTypes.Type(value = PDTableCellValueBoolean.class, name = "Boolean"),
+    @JsonSubTypes.Type(value = PDTableCellValueDate.class, name = "Date")
 })
 @NoArgsConstructor
 @JsonPropertyOrder({"__type", "cellType", "partKey", "keyValueIdx", "packValueIdx"})
