@@ -74,7 +74,7 @@
 
     <!--<logger name="ru.excbt.datafuse.nmk" level="debug" />-->
 
-	<root level="debug">
+	<root level="info">
 <!-- 		<appender-ref ref="console" /> -->
 		<appender-ref ref="FILE" />
 	</root>
