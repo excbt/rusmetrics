@@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
+import ru.excbt.datafuse.nmk.passdoc.PDCellStyle.HAlignment;
 
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -802,8 +804,8 @@ public class EnergyPassport401_2014_Add {
     }
     private final static Consumer<PDTablePart> create1EmptyStaticF = (p) -> p.createStaticElement();
     private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
-    private final static TriConsumer<PDTable, String, String> tableCreateLineHeader = (p, nr, s) ->
-        p.createPartLine(nr, "")
+    private final static TriConsumer<PDTable, String, String> tableCreateLineHeader = (t, nr, s) ->
+        t.createPartLine(nr, "")
             .and().createStaticElement(s);
 
 
@@ -2014,6 +2016,23 @@ public class EnergyPassport401_2014_Add {
     };
 
 
+//    @Builder
+//    private class PDKeyHeader {
+//        private final String key;
+//        private final String header;
+//    }
+
+    private BiConsumer<PDTable, PDKeyHeader> tableHeaderCreator = (t, h) -> {
+        t.viewType(PDViewType.FORM).sectionKey("S_" + h.getKey())
+            .caption(h.getHeader())
+            .shortCaption(h.getKey())
+            .sectionNr(h.getKey());
+    };
+
+    private final static BiConsumer<PDTable, PDKeyHeader> tablePartLineCreator = (t, h) ->
+        t.createPartLine(h.getKey(), "")
+            .and().createStaticElement(h.getHeader());
+
     /**
      *
      * @return
@@ -2137,6 +2156,95 @@ public class EnergyPassport401_2014_Add {
         return new EPSectionTemplateFactory(topTable);
     }
 
+
+    public EnergyPassportSectionTemplateFactory section_2_9() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.9", "Сведения " +
+            "о системах освещения и показатели энергетической " +
+            "эффективности использования электрической энергии на цели " +
+            "наружного освещения площадок предприятий, населенных " +
+            "пунктов и автомобильных дорог вне населенных пунктов ")));
+
+        {
+            final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+            PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+            partHeader.createStaticElement().caption("№ п/п").keyValueIdx(1)
+                .and().createStaticElement().caption("Наименование системы освещения").keyValueIdx(2)
+                .and().createStaticElement().caption("Тип освещаемой поверхности").keyValueIdx(3)
+                .and().createStaticElement().caption("Нормированная средняя горизонтальная освещенность покрытий").keyValueIdx(4)
+                .and().createStaticElement().caption("Соответствие фактической средней горизонтальной освещенности нормативной (да/нет)").keyValueIdx(5)
+                .and().createStaticElement().caption("Наличие системы управления освещением (да/нет)").keyValueIdx(6)
+                .and().createStaticElement().caption("Количество и установленная мощность светильников")
+                    .createStaticChild("со световой отдачей менее 35 лм/Вт")
+                        .createStaticChild("шт.").keyValueIdx(7).andParentCell()
+                        .createStaticChild("кВт").keyValueIdx(8).andParentCell()
+                    .andParentCell()
+                    .createStaticChild("со световой отдачей от 35 до 100 лм/Вт")
+                        .createStaticChild("шт.").keyValueIdx(9).andParentCell()
+                        .createStaticChild("кВт").keyValueIdx(10).andParentCell()
+                    .andParentCell()
+                    .createStaticChild("со световой отдачей более 100 лм/Вт")
+                        .createStaticChild("шт.").keyValueIdx(11).andParentCell()
+                        .createStaticChild("кВт").keyValueIdx(12).andParentCell()
+                .and().createStaticElement().caption("Суммарная установленная мощность, кВт").keyValueIdx(13)
+                .and().createStaticElement().caption("Время работы системы за год, часов").keyValueIdx(14)
+                .and().createStaticElement().caption("Освещаемая площадь, тыс. кв. м").keyValueIdx(15)
+                .and().createStaticElement().caption("Удельная мощность осветительных установок, Вт/кв. м").keyValueIdx(16)
+                .and().createStaticElement().caption("Суммарный объем потребления электрической энергии за отчетный год, тыс. кВт·ч").keyValueIdx(17);
+
+            partHeader.widthsOfElements(5, 15, 15, 15, 15, 15, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15);
+
+
+            Consumer<PDTablePart> pcsKW = (p) -> p.createIntegerValueElement().keyValueIdxCnt()
+                .and().createDoubleValueElement().keyValueIdxCnt();
+
+            pdTable.createPartRow().key("DATA").dynamic()
+                .and().createValueElement(PDTableCellValueCounter.class).keyValueIdxCnt()
+                .and().createStringValueElement().keyValueIdxCnt()
+                .and().createStringValueElement().keyValueIdxCnt()
+                .and().createStringValueElement().keyValueIdxCnt()
+                .and().createBooleanValueElement().keyValueIdxCnt()
+                .and().createBooleanValueElement().keyValueIdxCnt()
+                .and().applyCreator(pcsKW)
+                .and().applyCreator(pcsKW)
+                .and().applyCreator(pcsKW)
+                .and().createDoubleValueElement().keyValueIdxCnt()
+                .and().createDoubleValueElement().keyValueIdxCnt()
+                .and().createDoubleValueElement().keyValueIdxCnt()
+                .and().createDoubleValueElement().keyValueIdxCnt()
+                .and().createDoubleValueElement().keyValueIdxCnt();
+
+
+            final Consumer<PDTablePart> sum6 = (p) ->
+                p.createValueElements(6,PDTableCellValueDoubleAggregation.class).forEach((i) -> {
+                    i.keyValueIdxCnt();
+                    i.setValueFunction("sum()");
+                    i.setValueGroup("DATA_dr(.)_i1");
+                });
+
+            final Consumer<PDTablePart> sum5 = (p) ->
+                p.createValueElements(5,PDTableCellValueDoubleAggregation.class).forEach((i) -> {
+                    i.keyValueIdxCnt();
+                    i.setValueFunction("sum()");
+                    i.setValueGroup("DATA_dr(.)_i1");
+                });
+
+
+            pdTable.createPartRow().key("DATA_TOTAL")
+                .and().createStaticElement()
+                .and().createStaticElement("Итого").mergedCells(5).cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+                .and().applyCreator(sum6)
+                .and().applyCreator(sum5);
+
+        }
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
 
         /**
          *
