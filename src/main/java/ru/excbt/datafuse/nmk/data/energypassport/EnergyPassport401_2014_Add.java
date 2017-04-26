@@ -1,13 +1,13 @@
 package ru.excbt.datafuse.nmk.data.energypassport;
 
 import com.google.common.base.Preconditions;
-import lombok.Builder;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
 import ru.excbt.datafuse.nmk.passdoc.PDCellStyle.HAlignment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -2523,6 +2523,111 @@ public class EnergyPassport401_2014_Add {
 
         return new EPSectionTemplateFactory(topTable);
     }
+
+    /**
+     *
+     * @return
+     */
+    public EnergyPassportSectionTemplateFactory section_2_14() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.14", "Сведения\n" +
+            "о количестве трансформаторов и их установленной мощности")));
+
+        headerTool(topTable, "h1-", "Сведения\n" +
+            "о количестве трансформаторов и их установленной мощности");
+
+
+        final PDInnerTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+
+        Consumer<PDTableCell<PDTableCellStatic>> creator = (c) -> {
+            c.createStaticChild("количество, шт.").andParentCell()
+                .createStaticChild("установленная мощность, кВА");
+        };
+
+
+        partHeader.createStaticElement().caption("№ п/п")
+            .and().createStaticElement().caption("Единичная мощность, кВА")
+            .and().createStaticElement().caption("Высшее напряжение, кВ")
+            .and().createStaticElement("Динамика изменения показателей по годам")
+                .createStaticChild("предшествующие годы")
+                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                .andParentCell()
+             .createStaticChild("отчетный год").applyCreator(creator);
+
+        partHeader.widthsOfElements(5, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15);
+
+
+        class TblParam {
+            private final String nr;
+            private final String s1;
+            private List<String> items2 = new ArrayList<>();
+
+            public TblParam(String nr, String s1, String ... items2) {
+                this.nr = nr;
+                this.s1 = s1;
+                this.items2.addAll(Arrays.asList(items2));
+            }
+
+        }
+
+
+        Consumer<TblParam> tblCreator = (p) -> {
+
+            int idx = 0;
+            for (String s : p.items2) {
+                PDTablePart part = pdTable.createPartRowNr(idx == 0 ? p.nr : p.nr + "." + idx)
+                    .and();
+                if (idx == 0) {
+                    part.createStaticElement(p.s1).cellStyle(new PDCellStyle().rowSpan(p.items2.size()));
+                }
+                part.createStaticElement(s).cellStyle(new PDCellStyle().hAlignment(HAlignment.CENTER))
+                    .and().createIntegerValueElement().keyValueIdxCnt()
+                    .and().createDoubleValueElement().keyValueIdxCnt()
+                    .and().createIntegerValueElement().keyValueIdxCnt()
+                    .and().createDoubleValueElement().keyValueIdxCnt()
+                    .and().createIntegerValueElement().keyValueIdxCnt()
+                    .and().createDoubleValueElement().keyValueIdxCnt()
+                    .and().createIntegerValueElement().keyValueIdxCnt()
+                    .and().createDoubleValueElement().keyValueIdxCnt()
+                    .and().createIntegerValueElement().keyValueIdxCnt()
+                    .and().createDoubleValueElement().keyValueIdxCnt();
+                idx++;
+            }
+        };
+
+        tblCreator.accept(new TblParam("1", "До 2500 включительно",
+                                        "3 - 20", "27,5 - 35"));
+
+        tblCreator.accept(new TblParam("2", "От 2500 до 10000 включительно",
+            "3 - 20", "35", "110 - 154"));
+
+        tblCreator.accept(new TblParam("3", "От 10000 до 80000 включительно",
+            "3 - 20", "27,5 - 35", "110 - 154", "220"));
+
+        tblCreator.accept(new TblParam("4", "Более 80000",
+            "110 - 154", "220", "330 однофазные", "330 трехфазные", "400 - 500 однофазные",
+            "400 - 500 трехфазные", "750 - 1150"));
+
+
+        pdTable.createPartRow("total","")
+            .and().createStaticElement("Итого").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT)).mergedCells(2)
+            .and().createValueElements(10, PDTableCellValueDoubleAggregation.class).forEach((i) -> {
+            i.keyValueIdxCnt();
+            i.setValueFunction("sum()");
+            i.setValueGroup("P_{}_i" + i.getKeyValueIdx());
+        });
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
 
     /**
      *
