@@ -121,7 +121,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             
             rows[level].push(angular.copy(elm));
             
-            performHeaderElementsRecursion(elm.elements, level + 1, rows);
+            performHeaderElementsRecursion(elm.elements, level + elm._rowSpan, rows);
         });
     }
     
