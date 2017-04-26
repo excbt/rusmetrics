@@ -125,7 +125,7 @@ public class EnergyPassportResource extends SubscrApiController {
      */
     @RequestMapping(value = "/{id}/section/{sectionId}/entries/{entryId}", method = RequestMethod.DELETE,
         produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> deletePassportSectionsEntriy(@PathVariable("id") Long passportId,
+    public ResponseEntity<?> deletePassportSectionsEntry(@PathVariable("id") Long passportId,
                                                           @PathVariable(name = "sectionId") Long sectionId,
                                                           @PathVariable(name = "entryId") Long entryId) {
         ApiActionVoidProcess process = () -> energyPassportService.deleteSectionEntry(passportId, sectionId, entryId, getCurrentSubscriber());
