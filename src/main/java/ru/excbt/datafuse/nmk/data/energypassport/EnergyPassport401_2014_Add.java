@@ -2779,11 +2779,11 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Наименование должности").nextKeyValueIdx()
             .and().createStaticElement("Контактная информация (номера телефонов, факсов, адрес электронной почты)").nextKeyValueIdx()
             .and().createStaticElement("Основные функции и обязанности по обеспечению мероприятий").nextKeyValueIdx()
-            .and().createStaticElement("Сведения о нормативных актах, определяющих обязанности по обеспечению мероприятий").nextKeyValueIdx()
-                .createStaticChild("N п/п").valuePackIdx(1).andParentCell()
-                .createStaticChild("наименование").valuePackIdx(2).andParentCell()
-                .createStaticChild("номер").valuePackIdx(3).andParentCell()
-                .createStaticChild("дата утверждения").valuePackIdx(4).andParentCell();
+            .and().createStaticElement("Сведения о нормативных актах, определяющих обязанности по обеспечению мероприятий")
+                .createStaticChild("N п/п").nextKeyValueIdx().andParentCell()
+                .createStaticChild("наименование").nextKeyValueIdx().andParentCell()
+                .createStaticChild("номер").nextKeyValueIdx().andParentCell()
+                .createStaticChild("дата утверждения").nextKeyValueIdx().andParentCell();
 
         partHeader.widthsOfElements(5, 20, 20, 20, 20, 5, 20, 10, 10);
 
@@ -2827,6 +2827,81 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    /**
+     *
+     * @return
+     */
+    public EnergyPassportSectionTemplateFactory section_2_17() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.17", "Сведения\n" +
+            "о квалификации персонала, обеспечивающего реализацию\n" +
+            "мероприятий по энергосбережению и повышению\n" +
+            "энергетической эффективности")));
+
+        headerTool(topTable, "h1-", "Сведения\n" +
+            "о квалификации персонала, обеспечивающего реализацию\n" +
+            "мероприятий по энергосбережению и повышению\n" +
+            "энергетической эффективности");
+
+
+        final PDInnerTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+        partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+            .and().createStaticElement().caption("Ф.И.О.").nextKeyValueIdx()
+            .and().createStaticElement().caption("Наименование должности").nextKeyValueIdx()
+            .and().createStaticElement("Сведения о квалификации")
+                .createStaticChild("N п/п").nextKeyValueIdx().andParentCell()
+                .createStaticChild("сведения об образовательной организации, проводившей обучение (наименование, адрес, лицензия)").nextKeyValueIdx().andParentCell()
+                .createStaticChild("наименование и вид образовательной программы (подготовка, переподготовка, повышение квалификации)").nextKeyValueIdx().andParentCell()
+                .createStaticChild("дата начала обучения").nextKeyValueIdx().andParentCell()
+                .createStaticChild("дата окончания обучения").nextKeyValueIdx().andParentCell()
+                .createStaticChild("документ об образовании (диплом, удостоверение, сертификат)").nextKeyValueIdx().andParentCell()
+                .createStaticChild("сведения об аттестации и присвоении квалификации").nextKeyValueIdx().andParentCell();
+
+        partHeader.widthsOfElements(5, 20, 20, 5, 15, 15, 10, 10, 15, 15);
+
+
+        final int subsectionCnt = 4;
+
+        Consumer<PDTablePart> subsection = (p) -> {
+            PDTableCell<?> cell = p.createStaticElement().vertical().nextKeyValueIdx();
+            for (int i = 0; i < subsectionCnt; i++) {
+                cell.createStaticChild((i + 1) + "").keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+            }
+        };
+
+        Consumer<PDTablePart> subsectionStr = (p) -> {
+            PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+            for (int i = 0; i < subsectionCnt; i++) {
+                cell.createChildValue(PDTableCellValueString.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+            }
+        };
+
+        Consumer<PDTablePart> subsectionDate = (p) -> {
+            PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+            for (int i = 0; i < subsectionCnt; i++) {
+                cell.createChildValue(PDTableCellValueDate.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+            }
+        };
+
+        pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
+            .createValueElement(PDTableCellValueCounter.class).nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().applyCreator(subsection)
+            .and().applyCreator(subsectionStr)
+            .and().applyCreator(subsectionStr)
+            .and().applyCreator(subsectionDate)
+            .and().applyCreator(subsectionDate)
+            .and().applyCreator(subsectionStr)
+            .and().applyCreator(subsectionStr);
+
+        return new EPSectionTemplateFactory(topTable);
+    }
 
 
 
