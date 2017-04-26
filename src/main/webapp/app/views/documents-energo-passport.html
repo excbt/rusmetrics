@@ -2,7 +2,8 @@
      class = "nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
-    <ul class = "nav nav-tabs" role = "tablist">
+    <ul class = "nav nav-tabs" role = "tablist"
+        style = "padding-bottom: 5px;">
 <!--
         <li id = "object_list_2nd_menu_item" role = "presentation" class = ""><a id = "monitorTab" class = "nmc-main-tab-button" href = "#/" aria-controls = "objects" data-target = "#objects" role = "tab" data-toggle = "tab">Список объектов</a></li>
         <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
@@ -26,7 +27,17 @@
             <button class="btn nmc-main-add-button"
                     ng-click = "savePassportSection(data.currentPassDocSection)"
                     >Сохранить секцию</button>
-        </li>        
+        </li>
+        <li style = "padding: 0 10px;">
+            <button class="btn btn-default"
+                    style = "padding: 3px;"
+                    >Сохранить документ</button>
+        </li>
+        <li style = "padding: 0 10px;">
+            <button class="btn btn-default"
+                    style = "padding: 3px;"
+                    >Отменить изменения</button>
+        </li>
         <li>
             <button class="btn btn-default nmc-cancel-button"
                     style = "padding: 3px 10px;max-width: 240px;"
@@ -194,10 +205,11 @@
                             <div ng-repeat = "part in data.currentPassDocSection.preparedSection.parts">
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"
-                                         style = "padding: 5px 0;">
+                                         style = "padding: 5px 0;"
+                                         ng-style = "{'text-align': part.cellStyle.halignment}">
                                         <div ng-repeat = "elm in part.elements track by $index"
                                              style = "display: inline-block; padding: 0 10px;"
-                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length)}">
+                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}">
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
@@ -249,7 +261,7 @@
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
-                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit}"
+                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}"
 
                                                     ng-model = "td.valueDev1"                                                            
                                                     >

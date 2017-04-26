@@ -11,30 +11,31 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.ctrlSettings.cssMeasureUnit = "em";
     $scope.ctrlSettings.passportLoading = true;
     $scope.ctrlSettings.emptyString = " ";
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY";
     
         //model columns
     $scope.ctrlSettings.passportColumns = [
         {
             "name": "id",
             "caption": "id",
-            "class": "col-xs-1",
+            "class": "col-xs-1 nmc-link",
             "type": "id"
         },
         {
             "name": "passportName",
             "caption": "Название",
-            "class": "col-xs-3",
+            "class": "col-xs-3 nmc-link",
             "type": "name"
         },
         {
             "name": "description",
             "caption": "Описание",
-            "class": "col-xs-3"
+            "class": "col-xs-3 nmc-link"
         },
         {
             "name": "passportDate2",
             "caption": "Дата создания",
-            "class": "col-xs-1",
+            "class": "col-xs-1 nmc-link",
             "type": "date"
         }
         
@@ -48,15 +49,37 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     
     $scope.data = {};
     $scope.data.currentDocument = {};
+    $scope.data.documentTypes = [
+        {
+            name: "energydeclair",
+            caption: "Энергетическая декларация"
+        },
+        {
+            name: "energypassport",
+            caption: "Энергопаспорт"
+        },
+        {
+            name: "project",
+            caption: "Проект"
+        }
+    ];
     
     $scope.createEnergyDocumentInit = function () {
 //        $scope.ctrlSettings.passportLoading = true;
-        $scope.data.currentDocument = {};        
+        $scope.data.currentDocument = {}; 
+        $scope.data.currentDocument.type =  $scope.data.documentTypes[0].name;      
+        $('#showDocumentPropertiesModal').modal();
         //$('#editEnergoPassportModal').modal();
     };
     
-    $scope.editPassport = function (passport) {
-        $location.path("/documents/energo-passport/" + passport.id);
+    $scope.editEnergyDocument = function (doc) {
+        $scope.data.currentDocument = angular.copy(doc);
+        $scope.data.currentDocument.passportDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat);
+        $('#showDocumentPropertiesModal').modal();
+    }
+    
+    $scope.openEnergyDocument = function (doc) {
+        $location.path("/documents/energo-passport/" + doc.id);
     };
     
     
@@ -78,8 +101,14 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     $scope.createEnergyDocument = function (doc) {
+        $('#showDocumentPropertiesModal').modal('hide');
         $location.path("/documents/energo-passport/new");
-    }
+    };
+    
+    $('#showDocumentPropertiesModal').on("shown.bs.modal", function () {
+        $("#inputEnergyDocName").focus();
+        $('#inputEnergyDocDate').datepicker(mainSvc.getDetepickerSettingsFullView());
+    });
     
     function initCtrl() {
         loadPassports();

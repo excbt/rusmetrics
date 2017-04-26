@@ -41,19 +41,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     //current passport structure which is shown at present moment
     $scope.data.currentPassDocSection = null;
     
-//**************** data picker settings ****************************    
-    $scope.dateOptsParamsetRu = {
-        locale : {
-            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
-            firstDay : 1,
-            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
-                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
-                    'Октябрь', 'Ноябрь', 'Декабрь' ]
-        },
-        singleDatePicker: true,
-        format: $scope.ctrlSettings.dateFormat
-    };
-    
     $scope.prepareComplexIdForSetElemId = function (complexId) {
         var result;
         result = complexId.replace('[', '_');
@@ -64,22 +51,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     function setDatepicker(complexId) {
         var complexId = $scope.prepareComplexIdForSetElemId(complexId);
 //    console.log($('#date_value_' + complexId));
-        $('#date_value_' + complexId).datepicker({
-            dateFormat: "dd.mm.yy",
-            firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-            dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-            monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
-            beforeShow: function () {
-                setTimeout(function () {
-                    $('.ui-datepicker-calendar').css("display", "table");
-                }, 1);
-            },
-            onChangeMonthYear: function () {
-                setTimeout(function () {
-                    $('.ui-datepicker-calendar').css("display", "table");
-                }, 1);
-            }
-        });        
+        var datePickerSettings = mainSvc.getDetepickerSettingsFullView();
+        datePickerSettings.dateFormat = "yy-mm-dd";
+        $('#date_value_' + complexId).datepicker(datePickerSettings);        
     }
     
     function setSectionStyles(sectionData) {
