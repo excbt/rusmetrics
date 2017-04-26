@@ -23,16 +23,16 @@ public class EnergyPassport401_2014_Add {
 
     public EnergyPassportSectionTemplateFactory section_1_3() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.3")
-            .caption("ИНФОРМАЦИЯ\n" +
-                "              о потреблении энергетических ресурсов в здании\n" +
-                "                        (строении, сооружении) \n")
-            .shortCaption("1.3")
-            .sectionNr("1.3")
-            .sectionHeader("ИНФОРМАЦИЯ\n" +
-                "              о потреблении энергетических ресурсов в здании\n" +
-                "                        (строении, сооружении) <*>\n" +
-                "                                за 20__ год");
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("1.3", "ИНФОРМАЦИЯ\n" +
+            "о потреблении энергетических ресурсов в здании\n" +
+            "(строении, сооружении)")));
+
+        headerTool(topTable, "h1-", "ИНФОРМАЦИЯ\n" +
+            "о потреблении энергетических ресурсов в здании\n" +
+            "(строении, сооружении)");
+
 
         topTable.createPartLine("1").createStaticElement("Место нахождения")
             .and().createStringValueElement();
@@ -913,17 +913,15 @@ public class EnergyPassport401_2014_Add {
      */
     public EnergyPassportSectionTemplateFactory section_1_4() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.4")
-            .caption("ИНФОРМАЦИЯ\n" +
-                "           о потреблении энергетических ресурсов на производство " +
-                "                       продукции (работ, услуг)\n" +
-                "                                за 20__ год\n")
-            .shortCaption("1.4")
-            .sectionNr("1.4")
-            .sectionHeader("ИНФОРМАЦИЯ\n" +
-                "           о потреблении энергетических ресурсов на производство\n" +
-                "                       продукции (работ, услуг)\n" +
-                "                                за 20__ год\n");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("1.4", "ИНФОРМАЦИЯ\n" +
+            "о потреблении энергетических ресурсов на производство " +
+            "продукции (работ, услуг)")));
+
+        headerTool(topTable, "h1-", "ИНФОРМАЦИЯ\n" +
+            "о потреблении энергетических ресурсов на производство " +
+            "продукции (работ, услуг)\n" +
+            "за 20__ год\n");
 
 
         topTable.createPartLine("1.")
@@ -1074,13 +1072,13 @@ public class EnergyPassport401_2014_Add {
 
 
     public EnergyPassportSectionTemplateFactory section_2_2() {
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.2")
-            .caption("Общие сведения " +
-                "о лице, в отношении которого указана информация")
-            .shortCaption("2.2")
-            .sectionNr("2.2")
-            .sectionHeader("Общие сведения " +
-                "о лице, в отношении которого указана информация");
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.2", "Общие сведения " +
+            "о лице, в отношении которого указана информация")));
+
+        headerTool(topTable, "h1-", "Общие сведения " +
+            "о лице, в отношении которого указана информация");
 
         topTable.createPartLine("P_NAME","")
             .and().createStringValueElement();
@@ -1366,11 +1364,10 @@ public class EnergyPassport401_2014_Add {
          */
     public EnergyPassportSectionTemplateFactory section_2_3() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.3")
-            .caption("Сведения об оснащенности приборами учета")
-            .shortCaption("2.3")
-            .sectionNr("2.3")
-            .sectionHeader("Сведения об оснащенности приборами учета");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.3", "Сведения об оснащенности приборами учета")));
+
+        headerTool(topTable, "h1-", "Сведения об оснащенности приборами учета");
 
 
         final PDTable pdTable = topTable.createPartInnerTable().key("S_2.3").createInnerTable();
@@ -1477,11 +1474,12 @@ public class EnergyPassport401_2014_Add {
     // TODO Make rexexp for functions
     public EnergyPassportSectionTemplateFactory section_2_4() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.4")
-            .caption("Сведения по балансу электрической энергии и его изменениях")
-            .shortCaption("2.4")
-            .sectionNr("2.4")
-            .sectionHeader("Сведения по балансу электрической энергии и его изменениях");
+
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.4", "Сведения по балансу электрической энергии и его изменениях")));
+
+        headerTool(topTable, "h1-", "Сведения по балансу электрической энергии и его изменениях");
+
 
         final PDInnerTable innerTable = topTable.createPartInnerTable().createInnerTable();
 
@@ -1607,11 +1605,11 @@ public class EnergyPassport401_2014_Add {
      */
     public EnergyPassportSectionTemplateFactory section_2_5() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.5")
-            .caption("Сведения по балансу тепловой энергии и его изменениях")
-            .shortCaption("2.5")
-            .sectionNr("2.5")
-            .sectionHeader("Сведения по балансу тепловой энергии и его изменениях ");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.5", "Сведения по балансу тепловой энергии и его изменениях")));
+
+        headerTool(topTable, "h1-", "Сведения по балансу тепловой энергии и его изменениях");
+
 
         final PDInnerTable innerTable = topTable.createPartInnerTable().createInnerTable();
 
@@ -1727,13 +1725,13 @@ public class EnergyPassport401_2014_Add {
      *
      * @return
      */
-    public EnergyPassportSectionTemplateFactory section_2_6() {
+    private EnergyPassportSectionTemplateFactory section_2_6_bak() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.6")
-            .caption("Сведения по балансу потребления котельно-печного топлива")
-            .shortCaption("2.6")
-            .sectionNr("2.6")
-            .sectionHeader("Сведения по балансу тепловой энергии и его изменениях ");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.6", "Сведения по балансу потребления котельно-печного топлива")));
+
+        headerTool(topTable, "h1-", "Сведения по балансу потребления котельно-печного топлива");
+
 
         final PDInnerTable innerTable = topTable.createPartInnerTable().createInnerTable();
 
@@ -1835,13 +1833,13 @@ public class EnergyPassport401_2014_Add {
      *
      * @return
      */
-    public EnergyPassportSectionTemplateFactory section_2_6b() {
+    public EnergyPassportSectionTemplateFactory section_2_6() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.6")
-            .caption("Сведения по балансу потребления котельно-печного топлива")
-            .shortCaption("2.6")
-            .sectionNr("2.6")
-            .sectionHeader("Сведения по балансу тепловой энергии и его изменениях ");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.6", "Сведения по балансу потребления котельно-печного топлива")));
+
+        headerTool(topTable, "h1-", "Сведения по балансу потребления котельно-печного топлива");
+
 
         {
             final PDInnerTable innerTable = topTable.createPartInnerTable().createInnerTable();
@@ -1949,17 +1947,16 @@ public class EnergyPassport401_2014_Add {
     }
 
 
-
-
+    /**
+     *
+     * @return
+     */
     public EnergyPassportSectionTemplateFactory section_2_7() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.7")
-            .caption("Сведения об использовании моторного топлива ")
-            .shortCaption("2.7")
-            .sectionNr("2.7");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.7", "Сведения об использовании моторного топлива")));
 
-
-        tableCreateLineHeader.accept(topTable,"1h", "Сведения об использовании вторичных энергетических ресурсов");
+        headerTool(topTable, "h1-", "Сведения об использовании моторного топлива");
 
         {
             final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
@@ -2029,7 +2026,8 @@ public class EnergyPassport401_2014_Add {
         t.viewType(PDViewType.FORM).sectionKey("S_" + h.getKey())
             .caption(h.getHeader())
             .shortCaption(h.getKey())
-            .sectionNr(h.getKey());
+            .sectionNr(h.getKey()
+            );
     };
 
     private final static BiConsumer<PDTable, PDKeyHeader> tablePartLineCreator = (t, h) ->
@@ -2042,14 +2040,10 @@ public class EnergyPassport401_2014_Add {
      */
     public EnergyPassportSectionTemplateFactory section_2_8() {
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.8")
-            .caption("Сведения об использовании вторичных энергетических ресурсов")
-            .shortCaption("2.8")
-            .sectionNr("2.8");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.8", "Сведения об использовании вторичных энергетических ресурсов")));
 
-
-
-        tableCreateLineHeader.accept(topTable,"1h", "Сведения об использовании вторичных энергетических ресурсов");
+        headerTool(topTable, "h1-", "Сведения об использовании вторичных энергетических ресурсов");
 
         topTable.createPartLine("1h1", "")
             .and().applyCreator(create2EmptyStaticF)
@@ -2160,15 +2154,25 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public EnergyPassportSectionTemplateFactory section_2_9() {
 
         final PDTable topTable = new PDTable();
-
         topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.9", "Сведения " +
             "о системах освещения и показатели энергетической " +
             "эффективности использования электрической энергии на цели " +
             "наружного освещения площадок предприятий, населенных " +
             "пунктов и автомобильных дорог вне населенных пунктов ")));
+
+        headerTool(topTable, "h1-", "Сведения\n" +
+            "о системах освещения и показатели энергетической\n" +
+            "эффективности использования электрической энергии на цели\n" +
+            "наружного освещения площадок предприятий, населенных\n" +
+            "пунктов и автомобильных дорог вне населенных пунктов");
+
 
         {
             final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
@@ -2255,10 +2259,10 @@ public class EnergyPassport401_2014_Add {
          */
     public EnergyPassportSectionTemplateFactory section_2_10(){
 
-        final PDTable topTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_2.10")
-            .caption("Краткая характеристика зданий (строений, сооружений)")
-            .shortCaption("2.10")
-            .sectionNr("2.10");
+        final PDTable topTable = new PDTable();
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.10", "Краткая характеристика зданий (строений, сооружений)")));
+
+        headerTool(topTable, "h1-", "Краткая характеристика зданий (строений, сооружений)");
 
 
         final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
@@ -3122,7 +3126,7 @@ public class EnergyPassport401_2014_Add {
             }
             pdTable.createPartLine(key + (i + 1), "")
                 .and().createStaticElement(headerLines[i].trim())
-                    .cellStyle(new PDCellStyle().hAlignment(HAlignment.CENTER));
+                    .cellStyle(new PDCellStyle().hAlignment(HAlignment.CENTER).header1());
         }
         return pdTable;
     }

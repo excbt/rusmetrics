@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonInclude(Include.NON_NULL)
 public class PDCellStyle {
 
     public enum HAlignment {LEFT, RIGHT, CENTER}
@@ -16,6 +19,8 @@ public class PDCellStyle {
     private HAlignment hAlignment;
 
     private Integer rowSpan;
+
+    private Boolean header1;
 
     public PDCellStyle hAlignment(HAlignment hAlignment) {
         this.hAlignment = hAlignment;
@@ -26,6 +31,11 @@ public class PDCellStyle {
         Preconditions.checkNotNull(rowSpan);
         Preconditions.checkArgument(rowSpan > 0);
         this.rowSpan = rowSpan;
+        return this;
+    }
+
+    public PDCellStyle header1() {
+        this.header1 = true;
         return this;
     }
 }
