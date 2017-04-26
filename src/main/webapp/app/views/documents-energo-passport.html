@@ -194,10 +194,11 @@
                             <div ng-repeat = "part in data.currentPassDocSection.preparedSection.parts">
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"
-                                         style = "padding: 5px 0;">
+                                         style = "padding: 5px 0;"
+                                         ng-style = "{'text-align': part.cellStyle.halignment}">
                                         <div ng-repeat = "elm in part.elements track by $index"
                                              style = "display: inline-block; padding: 0 10px;"
-                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length)}">
+                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}">
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
@@ -249,7 +250,7 @@
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
-                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit}"
+                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}"
 
                                                     ng-model = "td.valueDev1"                                                            
                                                     >

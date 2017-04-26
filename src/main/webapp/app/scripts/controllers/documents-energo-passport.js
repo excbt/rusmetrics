@@ -65,7 +65,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         var complexId = $scope.prepareComplexIdForSetElemId(complexId);
 //    console.log($('#date_value_' + complexId));
         $('#date_value_' + complexId).datepicker({
-            dateFormat: "dd.mm.yy",
+            dateFormat: "yy-mm-dd",
             firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
             dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
             monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
