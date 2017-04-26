@@ -2528,6 +2528,187 @@ public class EnergyPassport401_2014_Add {
     /**
      *
      */
+    public EnergyPassportSectionTemplateFactory section_2_13() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.13", "Сведения\n" +
+            "о протяженности воздушных и кабельных линий\n" +
+            "передачи электроэнергии")));
+
+        headerTool(topTable, "h1-", "Сведения\n" +
+            "о протяженности воздушных и кабельных линий\n" +
+            "передачи электроэнергии");
+
+
+        final PDInnerTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+        partHeader.createStaticElement().caption("№ п/п")
+            .and().createStaticElement().caption("Класс напряжения")
+            .and().createStaticElement().caption("Динамика изменения показателей по годам")
+                .createStaticChild("предшествующие годы")
+                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
+                .andParentCell()
+                .createStaticChild("отчетный год").nextKeyValueIdx().cellStyle(new PDCellStyle().rowSpan(2));
+
+        partHeader.widthsOfElements(5, 25, 15, 15, 15, 15, 15);
+
+
+        class RowsCreator_2_13 {
+            private final String nr;
+            private final int startsWith;
+            private final String footer;
+            private List<String> items2 = new ArrayList<>();
+
+            private RowsCreator_2_13(String nr, int startsWith, String footer, String... items2) {
+                this.nr = nr;
+                this.startsWith = startsWith;
+                this.footer = footer;
+                this.items2.addAll(Arrays.asList(items2));
+            }
+
+            private void create(final PDTable pdTable) {
+
+                int idx = startsWith;
+                for (String s : items2) {
+                    pdTable.createPartRowNr(nr + "." + idx)
+                        .createStaticElement(s)
+                        .and().createValueElements(5, PDTableCellValueDouble.class)
+                        .forEach((i) -> {
+                            i.nextKeyValueIdx();
+                        });
+                    idx++;
+                }
+
+                if (footer != null) {
+                    pdTable.createPartRow().key(nr + "_subtotal-" + startsWith + "-" + (idx - 1)).createStaticElement()
+                        .and().createStaticElement(footer).cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+                        .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+                        .forEach((i) -> {
+                            i.nextKeyValueIdx();
+                            i.setValueFunction("sum()");
+                            i.setValueGroup("P_{}_i" + i.getKeyValueIdx());
+                        });
+                }
+            }
+        }
+
+        PDTablePart part = pdTable.createPartRowNr("1").and();
+        part.createStaticElement("Воздушные линии").mergedCells(6);
+
+        new RowsCreator_2_13("1", 1,
+            "Итого от 6 кВ и выше",
+            "1150 кВ",
+            "800 кВ",
+            "750 кВ",
+            "500 кВ",
+            "400 кВ",
+            "330 кВ",
+            "220 кВ",
+            "154 кВ",
+            "110 кВ",
+            "35 кВ",
+            "27,5 кВ",
+            "20 кВ",
+            "10 кВ",
+            "6 кВ"
+            ).create(pdTable);
+
+        new RowsCreator_2_13("1", 15,
+            "Итого ниже 6 кВ",
+            "3 кВ",
+            "2 кВ",
+            "500 В и ниже"
+            ).create(pdTable);
+
+
+        pdTable.createPartRow().key("1" + "_total").createStaticElement()
+            .and().createStaticElement("Всего по воздушным линиям").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.nextKeyValueIdx();
+                i.setValueFunction("sum()");
+                i.setValueGroup("P_{1}_i" + i.getKeyValueIdx());
+            });
+
+
+        part = pdTable.createPartRowNr("2").and();
+        part.createStaticElement("Кабельные линии").mergedCells(6);
+
+        new RowsCreator_2_13("2", 1,
+            "Итого от 6 кВ и выше",
+            "220 кВ",
+            "110 кВ",
+            "35 кВ",
+            "27,5 кВ",
+            "20 кВ",
+            "10 кВ",
+            "6 кВ"
+        ).create(pdTable);
+
+        new RowsCreator_2_13("2", 8,
+            "Итого ниже 6 кВ",
+            "3 кВ",
+            "2 кВ",
+            "500 В и ниже"
+        ).create(pdTable);
+
+        pdTable.createPartRow().key("2" + "_total").createStaticElement()
+            .and().createStaticElement("Всего по кабельным линиям").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.nextKeyValueIdx();
+                i.setValueFunction("sum()");
+                i.setValueGroup("P_{2}_i" + i.getKeyValueIdx());
+            });
+
+        pdTable.createPartRow().key("12" + "_total").createStaticElement()
+            .and().createStaticElement("Всего по воздушным и кабельным линиям").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.nextKeyValueIdx();
+                i.setValueFunction("sum()");
+                i.setValueGroup("P_{1}_i" + i.getKeyValueIdx()+","+"P_{2}_i" + i.getKeyValueIdx());
+            });
+
+
+        part = pdTable.createPartRowNr("3").and();
+        part.createStaticElement("Шинопроводы").mergedCells(6);
+
+        new RowsCreator_2_13("3", 1,
+            null,
+            "800 кВ",
+            "750 кВ",
+            "500 кВ",
+            "400 кВ",
+            "330 кВ",
+            "220 кВ",
+            "154 кВ",
+            "110 кВ",
+            "35 кВ",
+            "27,5 кВ",
+            "20 кВ",
+            "10 кВ",
+            "6 кВ"
+        ).create(pdTable);
+
+        pdTable.createPartRow().key("3" + "_total").createStaticElement()
+            .and().createStaticElement("Всего по шинопроводам").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+            .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            .forEach((i) -> {
+                i.nextKeyValueIdx();
+                i.setValueFunction("sum()");
+                i.setValueGroup("P_{3}_i" + i.getKeyValueIdx());
+            });
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
 
     /**
      *
@@ -2698,8 +2879,7 @@ public class EnergyPassport401_2014_Add {
             private void create(final PDTable pdTable) {
                 int idx = 0;
                 for (String s : items2) {
-                    PDTablePart part = pdTable.createPartRowNr(idx == 0 ? nr : nr + "." + idx)
-                        .and();
+                    PDTablePart part = pdTable.createPartRowNr(idx == 0 ? nr : nr + "." + idx).and();
                     if (idx == 0) {
                         part.createStaticElement(s1).cellStyle(new PDCellStyle().rowSpan(items2.size()+1).hAlignment(HAlignment.CENTER));
                     }

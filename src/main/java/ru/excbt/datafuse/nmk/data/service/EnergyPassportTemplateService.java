@@ -85,6 +85,7 @@ public class EnergyPassportTemplateService {
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_10()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_11()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_12()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_13()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_14()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_15()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_16()));
@@ -113,6 +114,7 @@ public class EnergyPassportTemplateService {
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_10()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_11()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_12()));
+        passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_13()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_14()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_15()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_16()));
