@@ -2202,36 +2202,36 @@ public class EnergyPassport401_2014_Add {
             partHeader.widthsOfElements(5, 15, 15, 15, 15, 15, 10, 10, 10, 10, 10, 10, 15, 15, 15, 15, 15);
 
 
-            Consumer<PDTablePart> pcsKW = (p) -> p.createIntegerValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt();
+            Consumer<PDTablePart> pcsKW = (p) -> p.createIntegerValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx();
 
             pdTable.createPartRow().key("DATA").dynamic()
-                .and().createValueElement(PDTableCellValueCounter.class).keyValueIdxCnt()
-                .and().createStringValueElement().keyValueIdxCnt()
-                .and().createStringValueElement().keyValueIdxCnt()
-                .and().createStringValueElement().keyValueIdxCnt()
-                .and().createBooleanValueElement().keyValueIdxCnt()
-                .and().createBooleanValueElement().keyValueIdxCnt()
+                .and().createValueElement(PDTableCellValueCounter.class).nextKeyValueIdx()
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createBooleanValueElement().nextKeyValueIdx()
+                .and().createBooleanValueElement().nextKeyValueIdx()
                 .and().applyCreator(pcsKW)
                 .and().applyCreator(pcsKW)
                 .and().applyCreator(pcsKW)
-                .and().createDoubleValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt();
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx();
 
 
             final Consumer<PDTablePart> sum6 = (p) ->
                 p.createValueElements(6,PDTableCellValueDoubleAggregation.class).forEach((i) -> {
-                    i.keyValueIdxCnt();
+                    i.nextKeyValueIdx();
                     i.setValueFunction("sum()");
                     i.setValueGroup("DATA_dr(.)_i1");
                 });
 
             final Consumer<PDTablePart> sum5 = (p) ->
                 p.createValueElements(5,PDTableCellValueDoubleAggregation.class).forEach((i) -> {
-                    i.keyValueIdxCnt();
+                    i.nextKeyValueIdx();
                     i.setValueFunction("sum()");
                     i.setValueGroup("DATA_dr(.)_i1");
                 });
@@ -2342,21 +2342,21 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п").keyValueIdxCnt()
-                .and().createStaticElement().caption("Наименование показателя энергетической эффективности").keyValueIdxCnt()
-                .and().createStaticElement().caption("Единица измерения").keyValueIdxCnt()
+            partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+                .and().createStaticElement().caption("Наименование показателя энергетической эффективности").nextKeyValueIdx()
+                .and().createStaticElement().caption("Единица измерения").nextKeyValueIdx()
                 .and().createStaticElement().caption("Значение показателя")
                 .createStaticChild("фактическое (по узлам (приборам) учета, расчетам)")
                 .andParentCell()
-                .createStaticChild("расчетно-нормативное за отчетный год").keyValueIdxCnt();
+                .createStaticChild("расчетно-нормативное за отчетный год").nextKeyValueIdx();
 
             partHeader.widthsOfElements(10, 30, 20, 15, 15);
 
 
-            Consumer<PDTablePart> rowCreator = (p) -> p.createStringValueElement().keyValueIdxCnt()
-                .and().createStringValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt()
-                .and().createDoubleValueElement().keyValueIdxCnt();
+            Consumer<PDTablePart> rowCreator = (p) -> p.createStringValueElement().nextKeyValueIdx()
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx();
 
 
             List<String> items = new ArrayList<>();
@@ -2391,12 +2391,12 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п").keyValueIdxCnt()
-                .and().createStaticElement().caption("Наименование мероприятия").keyValueIdxCnt()
-                .and().createStaticElement().caption("Единица измерения").keyValueIdxCnt()
-                .and().createStaticElement().caption("Фактическая годовая экономия").keyValueIdxCnt()
-                .and().createStaticElement().caption("Год внедрения").keyValueIdxCnt()
-                .and().createStaticElement().caption("Краткое описание, достигнутый энергетический эффект").keyValueIdxCnt();
+            partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+                .and().createStaticElement().caption("Наименование мероприятия").nextKeyValueIdx()
+                .and().createStaticElement().caption("Единица измерения").nextKeyValueIdx()
+                .and().createStaticElement().caption("Фактическая годовая экономия").nextKeyValueIdx()
+                .and().createStaticElement().caption("Год внедрения").nextKeyValueIdx()
+                .and().createStaticElement().caption("Краткое описание, достигнутый энергетический эффект").nextKeyValueIdx();
 
             partHeader.widthsOfElements(5, 25, 25, 15, 15, 30);
 
@@ -2506,20 +2506,20 @@ public class EnergyPassport401_2014_Add {
 
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-        partHeader.createStaticElement().caption("№ п/п").keyValueIdxCnt()
-            .and().createStaticElement().caption("Наименование линии").keyValueIdxCnt()
-            .and().createStaticElement().caption("Вид передаваемого ресурса").keyValueIdxCnt()
-            .and().createStaticElement().caption("Способ прокладки").keyValueIdxCnt()
-            .and().createStaticElement().caption("Суммарная протяженность, км").keyValueIdxCnt();
+        partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+            .and().createStaticElement().caption("Наименование линии").nextKeyValueIdx()
+            .and().createStaticElement().caption("Вид передаваемого ресурса").nextKeyValueIdx()
+            .and().createStaticElement().caption("Способ прокладки").nextKeyValueIdx()
+            .and().createStaticElement().caption("Суммарная протяженность, км").nextKeyValueIdx();
 
         partHeader.widthsOfElements(5, 25, 25, 15, 15);
 
         pdTable.createPartRow().key("DATA").dynamic()
-            .and().createValueElement(PDTableCellValueCounter.class).keyValueIdxCnt()
-            .and().createStringValueElement().keyValueIdxCnt()
-            .and().createStringValueElement().keyValueIdxCnt()
-            .and().createStringValueElement().keyValueIdxCnt()
-            .and().createDoubleValueElement().keyValueIdxCnt();
+            .and().createValueElement(PDTableCellValueCounter.class).nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createDoubleValueElement().nextKeyValueIdx();
 
         return new EPSectionTemplateFactory(topTable);
     }
@@ -2550,15 +2550,15 @@ public class EnergyPassport401_2014_Add {
 
 
         Consumer<PDTableCell<PDTableCellStatic>> creator = (c) -> {
-            c.createStaticChild("количество, шт.").andParentCell()
-                .createStaticChild("установленная мощность, кВА");
+            c.createStaticChild("количество, шт.").nextKeyValueIdx().andParentCell()
+                .createStaticChild("установленная мощность, кВА").nextKeyValueIdx();
         };
 
 
         partHeader.createStaticElement().caption("№ п/п")
-            .and().createStaticElement().caption("Единичная мощность, кВА")
-            .and().createStaticElement().caption("Высшее напряжение, кВ")
-            .and().createStaticElement("Динамика изменения показателей по годам")
+            .and().createStaticElement().caption("Единичная мощность, кВА").nextKeyValueIdx()
+            .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
+            .and().createStaticElement("Динамика изменения показателей по годам").nextKeyValueIdx()
                 .createStaticChild("предшествующие годы")
                     .createStaticChild("____").applyCreator(creator).andParentCell()
                     .createStaticChild("____").applyCreator(creator).andParentCell()
@@ -2568,6 +2568,7 @@ public class EnergyPassport401_2014_Add {
              .createStaticChild("отчетный год").applyCreator(creator);
 
         partHeader.widthsOfElements(5, 20, 20, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15);
+
 
 
 
@@ -2591,16 +2592,16 @@ public class EnergyPassport401_2014_Add {
                         part.createStaticElement(s1).cellStyle(new PDCellStyle().rowSpan(items2.size()).hAlignment(HAlignment.CENTER));
                     }
                     part.createStaticElement(s).cellStyle(new PDCellStyle().hAlignment(HAlignment.LEFT))
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt();
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx();
                     idx++;
                 }
             }
@@ -2632,7 +2633,7 @@ public class EnergyPassport401_2014_Add {
         pdTable.createPartRow("total","")
             .and().createStaticElement("Итого").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT)).mergedCells(2)
             .and().createValueElements(10, PDTableCellValueDoubleAggregation.class).forEach((i) -> {
-            i.keyValueIdxCnt();
+            i.nextKeyValueIdx();
             i.setValueFunction("sum()");
             i.setValueGroup("P_{}_i" + i.getKeyValueIdx());
         });
@@ -2663,14 +2664,14 @@ public class EnergyPassport401_2014_Add {
 
 
         Consumer<PDTableCell<PDTableCellStatic>> creator = (c) -> {
-            c.createStaticChild("количество шт./групп").andParentCell()
-                .createStaticChild("установленная мощность, Мвар");
+            c.createStaticChild("количество шт./групп").nextKeyValueIdx().andParentCell()
+                .createStaticChild("установленная мощность, Мвар").nextKeyValueIdx();
         };
 
 
         partHeader.createStaticElement().caption("№ п/п")
-            .and().createStaticElement().caption("Единичная мощность, кВА")
-            .and().createStaticElement().caption("Высшее напряжение, кВ")
+            .and().createStaticElement().caption("Единичная мощность, кВА").nextKeyValueIdx()
+            .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
             .and().createStaticElement("Динамика изменения показателей по годам")
                 .createStaticChild("предшествующие годы")
                     .createStaticChild("____").applyCreator(creator).andParentCell()
@@ -2703,16 +2704,16 @@ public class EnergyPassport401_2014_Add {
                         part.createStaticElement(s1).cellStyle(new PDCellStyle().rowSpan(items2.size()+1).hAlignment(HAlignment.CENTER));
                     }
                     part.createStaticElement(s).cellStyle(new PDCellStyle().hAlignment(HAlignment.LEFT))
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt()
-                        .and().createIntegerValueElement().keyValueIdxCnt()
-                        .and().createDoubleValueElement().keyValueIdxCnt();
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx()
+                        .and().createIntegerValueElement().nextKeyValueIdx()
+                        .and().createDoubleValueElement().nextKeyValueIdx();
                     idx++;
                 }
 
@@ -2720,7 +2721,7 @@ public class EnergyPassport401_2014_Add {
                     .createStaticElement("Итого").cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
                     .and().createValueElements(10, PDTableCellValueDoubleAggregation.class)
                         .forEach((i) -> {
-                            i.keyValueIdxCnt();
+                            i.nextKeyValueIdx();
                             i.setValueFunction("sum()");
                             i.setValueGroup("P_{}_i" + i.getKeyValueIdx());
                         });
@@ -2750,6 +2751,83 @@ public class EnergyPassport401_2014_Add {
 
         return new EPSectionTemplateFactory(topTable);
     }
+
+
+    public EnergyPassportSectionTemplateFactory section_2_16() {
+
+        final PDTable topTable = new PDTable();
+
+        topTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.16", "Сведения\n" +
+            "о должностных лицах, ответственных за обеспечение\n" +
+            "мероприятий по энергосбережению и повышению\n" +
+            "энергетической эффективности")));
+
+        headerTool(topTable, "h1-", "Сведения\n" +
+            "о должностных лицах, ответственных за обеспечение\n" +
+            "мероприятий по энергосбережению и повышению\n" +
+            "энергетической эффективности \n");
+
+
+        final PDInnerTable pdTable = topTable.createPartInnerTable().createInnerTable();
+
+        PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
+
+
+
+        partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+            .and().createStaticElement().caption("Ф.И.О.").nextKeyValueIdx()
+            .and().createStaticElement().caption("Наименование должности").nextKeyValueIdx()
+            .and().createStaticElement("Контактная информация (номера телефонов, факсов, адрес электронной почты)").nextKeyValueIdx()
+            .and().createStaticElement("Основные функции и обязанности по обеспечению мероприятий").nextKeyValueIdx()
+            .and().createStaticElement("Сведения о нормативных актах, определяющих обязанности по обеспечению мероприятий").nextKeyValueIdx()
+                .createStaticChild("N п/п").valuePackIdx(1).andParentCell()
+                .createStaticChild("наименование").valuePackIdx(2).andParentCell()
+                .createStaticChild("номер").valuePackIdx(3).andParentCell()
+                .createStaticChild("дата утверждения").valuePackIdx(4).andParentCell();
+
+        partHeader.widthsOfElements(5, 20, 20, 20, 20, 5, 20, 10, 10);
+
+
+        final int subsectionCnt = 4;
+
+        Consumer<PDTablePart> subsection = (p) -> {
+            PDTableCell<?> cell = p.createStaticElement().vertical().nextKeyValueIdx();
+            for (int i = 0; i < subsectionCnt; i++) {
+                cell.createStaticChild((i + 1) + "").keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+            }
+        };
+
+        Consumer<PDTablePart> subsectionStr = (p) -> {
+            PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+            for (int i = 0; i < subsectionCnt; i++) {
+                cell.createChildValue(PDTableCellValueString.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+            }
+        };
+
+        Consumer<PDTablePart> subsectionDate = (p) -> {
+            PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+            for (int i = 0; i < subsectionCnt; i++) {
+                cell.createChildValue(PDTableCellValueDate.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+            }
+        };
+
+        pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
+            .createValueElement(PDTableCellValueCounter.class).nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().createStringValueElement().nextKeyValueIdx()
+            .and().applyCreator(subsection)
+            .and().applyCreator(subsectionStr)
+            .and().applyCreator(subsectionStr)
+            .and().applyCreator(subsectionDate);
+
+
+        return new EPSectionTemplateFactory(topTable);
+    }
+
+
+
 
 
     /**
