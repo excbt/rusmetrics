@@ -157,6 +157,12 @@ public class EnergyPassport401_2014Test {
         checkFactory(factory);
     }
 
+    @Test
+    public void test_S_2_15() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_15();
+        checkFactory(factory);
+    }
+
 
     private void checkFactory(EnergyPassportSectionTemplateFactory factory) {
         String templateJson = factory.createSectionTemplateJson(true);
