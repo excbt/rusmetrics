@@ -22,14 +22,12 @@ public class EnergyPassport401_2014 {
 
 
         final PDTable pdTable = new PDTable().viewType(PDViewType.FORM).sectionKey("S_1.2")
-            .caption("ИНФОРМАЦИЯ\nо потреблении энергетических ресурсов организации\n" +
-                "за 20__ год")
+            .caption("ИНФОРМАЦИЯ о потреблении энергетических ресурсов организации")
             .shortCaption("1.2")
             .sectionNr("1.2")
             .sectionHeader("ИНФОРМАЦИЯ\n" +
                 "              о потреблении энергетических ресурсов в здании\n" +
-                "                        (строении, сооружении) <*>\n" +
-                "                                за 20__ год");
+                "                        (строении, сооружении)");
 
 
         createSectionPartsM1(pdTable);
