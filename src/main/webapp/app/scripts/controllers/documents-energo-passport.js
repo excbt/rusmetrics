@@ -54,8 +54,16 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         format: $scope.ctrlSettings.dateFormat
     };
     
+    $scope.prepareComplexIdForSetElemId = function (complexId) {
+        var result;
+        result = complexId.replace('[', '_');
+        result = result.replace(']', '_');
+        return result;
+    };
+    
     function setDatepicker(complexId) {
-//    console.log(complexId);
+        var complexId = $scope.prepareComplexIdForSetElemId(complexId);
+//    console.log($('#date_value_' + complexId));
         $('#date_value_' + complexId).datepicker({
             dateFormat: "dd.mm.yy",
             firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
