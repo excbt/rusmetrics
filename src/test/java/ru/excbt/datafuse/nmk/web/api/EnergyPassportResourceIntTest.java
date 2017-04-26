@@ -294,5 +294,23 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
     }
 
+    @Test
+    @Transactional
+    public void testPassportSectionEntryDelete() throws Exception {
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
+
+        Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
+        Assert.assertTrue(sectionDTO.isPresent());
+
+        EnergyPassportSectionEntryDTO entryDto = null;
+        entryDto = energyPassportService.saveSectionEntry(createSectionEntryDTO(sectionDTO.get().getId(), 1));
+
+        _testDeleteJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/section/"+ sectionDTO.get().getId() +
+            "/entries/" + entryDto.getId());
+    }
+
 
 }

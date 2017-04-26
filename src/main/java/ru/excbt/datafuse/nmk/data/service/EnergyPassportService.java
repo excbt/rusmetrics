@@ -367,7 +367,7 @@ public class EnergyPassportService {
     }
 
 
-    public List<EnergyPassportSectionEntryDTO> saveSectionEntry(List<EnergyPassportSectionEntry> energyPassportSectionEntries) {
+    private List<EnergyPassportSectionEntryDTO> saveSectionEntry(List<EnergyPassportSectionEntry> energyPassportSectionEntries) {
 
         energyPassportSectionEntries.forEach((i) -> {
         });
@@ -425,6 +425,32 @@ public class EnergyPassportService {
     public List<EnergyPassportSectionEntryDTO> findSectionEntries(Long sectionId) {
         return sectionEntryRepository.findBySectionId(sectionId).stream().map((i) -> i.getDTO()).collect(Collectors.toList());
     }
+
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public void deleteSectionEntry(Long energyPassportId, Long sectionId, Long entryId, Subscriber subscriber) {
+        EnergyPassport energyPassport = passportRepository.findOne(energyPassportId);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, energyPassportId);
+        }
+
+        if (!energyPassport.getSubscriber().equals(subscriber)) {
+            DBExceptionUtils.accessDeniedException(Subscriber.class, subscriber.getId());
+        }
+
+        EnergyPassportSectionEntry entry = sectionEntryRepository.findOne(entryId);
+        if (entry == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassportSectionEntry.class, entryId);
+        }
+
+        if (!entry.getSection().getId().equals(sectionId)) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, sectionId);
+        }
+
+        entry.setDeleted(1);
+        sectionEntryRepository.save(entry);
+    }
+
 
 
 }

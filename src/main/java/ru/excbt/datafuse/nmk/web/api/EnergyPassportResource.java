@@ -3,13 +3,13 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
-import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -113,6 +113,23 @@ public class EnergyPassportResource extends SubscrApiController {
 
         ApiActionProcess<EnergyPassportSectionEntryDTO> process = () -> energyPassportService.saveSectionEntry(entryDTO);
         return responseUpdate(process);
+    }
+
+
+    /**
+     *
+     * @param passportId
+     * @param sectionId
+     * @param entryId
+     * @return
+     */
+    @RequestMapping(value = "/{id}/section/{sectionId}/entries/{entryId}", method = RequestMethod.DELETE,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> deletePassportSectionsEntriy(@PathVariable("id") Long passportId,
+                                                          @PathVariable(name = "sectionId") Long sectionId,
+                                                          @PathVariable(name = "entryId") Long entryId) {
+        ApiActionVoidProcess process = () -> energyPassportService.deleteSectionEntry(passportId, sectionId, entryId, getCurrentSubscriber());
+        return responseOK(process);
     }
 
 
