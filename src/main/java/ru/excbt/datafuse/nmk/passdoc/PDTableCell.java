@@ -126,7 +126,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return (T) this;
     }
 
-    public T keyValueIdxCnt() {
+    public T nextKeyValueIdx() {
         this.keyValueIdx = tablePart.nextKeyValueIdx();
         return (T) this;
     }

@@ -152,8 +152,32 @@ public class EnergyPassport401_2014Test {
     }
 
     @Test
+    public void test_S_2_13() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_13();
+        checkFactory(factory);
+    }
+
+    @Test
     public void test_S_2_14() throws Exception {
         EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_14();
+        checkFactory(factory);
+    }
+
+    @Test
+    public void test_S_2_15() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_15();
+        checkFactory(factory);
+    }
+
+    @Test
+    public void test_S_2_16() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_16();
+        checkFactory(factory);
+    }
+
+    @Test
+    public void test_S_2_17() throws Exception {
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_2_17();
         checkFactory(factory);
     }
 
