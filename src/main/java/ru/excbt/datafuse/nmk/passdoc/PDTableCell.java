@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -223,14 +224,22 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         if ((parent == null && tablePart.hasVerticalElements())
             //|| (parent != null && !this.parent.vertical)
             ) {
-            OptionalInt maxColspan = tablePart.getElements().stream().map(i -> i.get_colSpan()).mapToInt(Integer::intValue).max();
-            if (maxColspan.isPresent()) {
-                return  maxColspan.getAsInt();
+            OptionalInt maxColSpan = tablePart.getElements().stream().map(i -> i.get_colSpan()).mapToInt(Integer::intValue).max();
+            if (maxColSpan.isPresent()) {
+                return  maxColSpan.getAsInt();
             }
         }
-        int level = childElementsLevel();
-        int maxSpan = tablePart != null ? tablePart.maxRowSpan() : 0;
-        return maxSpan - level - topLevel();
+
+        int childLevel = childElementsLevel();
+
+        int partMaxElementsLevel = tablePart != null ? tablePart.maxElementsLevel() : 0;
+
+        // if last element then we suppose that colSpan = 1
+        int preResult = topLevel() > 0 && childElements.size() == 0 ? 0 :
+            // Calculate colSpan
+            partMaxElementsLevel - childLevel - topLevel();
+
+        return preResult + 1;
     }
 
 
@@ -318,6 +327,13 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         childElements.add(child);
         child.parent = this;
         return child;
+    }
+
+    public PDTableCell<T> applyCreator(Consumer<PDTableCell<T>> cellCreator) {
+        if (cellCreator != null) {
+            cellCreator.accept(this);
+        }
+        return (T) this;
     }
 
     public PDTableCellStatic createStaticChild(String caption) {
