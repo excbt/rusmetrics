@@ -8,6 +8,7 @@ import ru.excbt.datafuse.nmk.data.domain.DTOModel;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
@@ -76,6 +77,11 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
         if (!result.getSections().stream().filter((i) -> i.getSectionOrder() == null).findFirst().isPresent()) {
             result.getSections().sort(Comparator.comparingInt(EnergyPassportSectionDTO::getSectionOrder));
         }
+        return result;
+    }
+
+    public EnergyPassportShortDTO getDTO_Short() {
+        EnergyPassportShortDTO result = ModelMapperUtil.map(this, EnergyPassportShortDTO.class);
         return result;
     }
 

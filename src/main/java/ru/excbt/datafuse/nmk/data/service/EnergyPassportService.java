@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
@@ -126,6 +127,13 @@ public class EnergyPassportService {
         List<EnergyPassportDTO> resultList = passportRepository.findBySubscriberId(subscriberId).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
         resultList.forEach((p) -> p.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId()))));
+        return resultList;
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<EnergyPassportShortDTO> findShortBySubscriberId(Long subscriberId) {
+        List<EnergyPassportShortDTO> resultList = passportRepository.findBySubscriberId(subscriberId).stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO_Short()).collect(Collectors.toList());
         return resultList;
     }
 

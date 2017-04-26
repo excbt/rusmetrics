@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
@@ -49,7 +50,7 @@ public class EnergyPassportResource extends SubscrApiController {
     @RequestMapping(value = "", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassports() {
-        List<EnergyPassportDTO> result = energyPassportService.findBySubscriberId(getSubscriberId());
+        List<EnergyPassportShortDTO> result = energyPassportService.findShortBySubscriberId(getSubscriberId());
         return responseOK(result);
     }
 
