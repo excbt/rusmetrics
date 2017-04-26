@@ -1558,7 +1558,7 @@ tr.nmc-inactive-price > td {
     display: inline;
 }
 
-    /*  Контрол для ввода даты в Дополнительных свойствах отчетов */
+    /*  Контрол для ввода даты в Дополнительных свойствах отчетов, Энергетические документы */
 .nmc-spec-date {
     background-color: #fff !important;
     cursor: pointer !important;

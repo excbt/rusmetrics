@@ -247,6 +247,62 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
 //        return result;
 //    };
     
+    //work with date picker
+    
+    var datePickerSettingsFullView = {
+        dateFormat: "dd.mm.yy",
+        firstDay: dateRangeOptsRu.locale.firstDay,
+        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
+        monthNames: dateRangeOptsRu.locale.monthNames,
+        beforeShow: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').css("display", "table");
+            }, 1);
+        },
+        onChangeMonthYear: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').css("display", "table");
+            }, 1);
+        }
+    };
+    
+    var datePickerSettingsMMyyView = {
+        dateFormat: "MM, yy",
+        firstDay: dateRangeOptsRu.locale.firstDay,
+        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
+        monthNames: dateRangeOptsRu.locale.monthNames,
+        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        closeText: "Ок",
+        currentText: "",
+        onClose: function (dateText, inst) {
+            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
+            $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').addClass("nmc-hide");
+            }, 1);
+        },
+        beforeShow: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').addClass("nmc-hide");
+                $('.ui-datepicker-current').addClass("nmc-hide");
+            }, 1);
+        },
+        onChangeMonthYear: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-current').addClass("nmc-hide");
+                $('.ui-datepicker-calendar').addClass("nmc-hide");
+            }, 1);
+        }
+    };
+    
+    function getDetepickerSettingsFullView() {
+        return angular.copy(datePickerSettingsFullView);
+    }
+    
     var hasMapSettings = function (userInfo) {
         var result = false;
         result = !checkUndefinedNull(userInfo.subscriber);
@@ -943,6 +999,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         findNodeInTree,
         getConfirmCode,
         getContextIds,
+        getDetepickerSettingsFullView,
         getHtmlLoading,
         getLoadingServicePermissionFlag,
         getLoadedServicePermission,

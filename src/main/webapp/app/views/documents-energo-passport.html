@@ -2,7 +2,8 @@
      class = "nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
-    <ul class = "nav nav-tabs" role = "tablist">
+    <ul class = "nav nav-tabs" role = "tablist"
+        style = "padding-bottom: 5px;">
 <!--
         <li id = "object_list_2nd_menu_item" role = "presentation" class = ""><a id = "monitorTab" class = "nmc-main-tab-button" href = "#/" aria-controls = "objects" data-target = "#objects" role = "tab" data-toggle = "tab">Список объектов</a></li>
         <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
@@ -26,7 +27,17 @@
             <button class="btn nmc-main-add-button"
                     ng-click = "savePassportSection(data.currentPassDocSection)"
                     >Сохранить секцию</button>
-        </li>        
+        </li>
+        <li style = "padding: 0 10px;">
+            <button class="btn btn-default"
+                    style = "padding: 3px;"
+                    >Сохранить документ</button>
+        </li>
+        <li style = "padding: 0 10px;">
+            <button class="btn btn-default"
+                    style = "padding: 3px;"
+                    >Отменить изменения</button>
+        </li>
         <li>
             <button class="btn btn-default nmc-cancel-button"
                     style = "padding: 3px 10px;max-width: 240px;"
