@@ -260,7 +260,7 @@
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'Counter'">
                                                         {{td.value}}
                                                     </div>
-                                                    <div ng-if = "td.cellType === 'VALUE' && (td.__type === 'String' || td.__type === 'DoubleAgg')"
+                                                    <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
                                                          contenteditable
                                                          strip-br
                                                          ng-blur = "tdBlur(td, data.currentSectionValues[td._complexIdx], td._complexIdx)"
@@ -274,7 +274,7 @@
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
                                                            
                                                            style = ""/>
-                                                    <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'DoubleAgg' && td.__type !== 'Counter')" 
+                                                    <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'DoubleAgg' && td.__type !== 'Counter' && td.__type !== 'Date')" 
                                                            type = "text"
                                                            data-inputmask = "'alias':'numeric', 'greedy': false"
                                                            style = "width: 100%; border: 0"
@@ -282,6 +282,12 @@
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
                                                            
                                                            />
+                                                    <input ng-if = "td.cellType === 'VALUE' && td.__type == 'Date'" 
+                                                           ng-attr-id = "{{'date_value_' + prepareComplexIdForSetElemId(td._complexIdx)}}"
+                                                           readonly
+                                                           type = "text"
+                                                           ng-model = "data.currentSectionValues[td._complexIdx].value"
+                                                           style = "width: 100%; border: 0"/>
 
                                                 </td>
                                                 <td ng-if = "trow.dynamic === true && trow.canDelete === true"
