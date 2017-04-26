@@ -1172,7 +1172,14 @@
                                         <tr>
                                             <td class="col-sm-3"><label for="inputAddress">Адрес</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                                <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
+                                                    <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
+                                                    </small>
+                                                    <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
+                                                    </small>
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>

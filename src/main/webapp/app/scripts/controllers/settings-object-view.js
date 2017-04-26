@@ -82,6 +82,7 @@ angular.module('portalNMC')
             $scope.object = {};
             $scope.objects = [];
             $scope.objectsOnPage = [];
+            $scope.currentSug = null;
             $scope.data = {};
             $scope.data.currentGroupId = null; //current group id: use for group object filter
             $scope.data.currentDevice = {};
@@ -89,6 +90,20 @@ angular.module('portalNMC')
             $scope.data.deviceModelsForCurDevice = [];
             $scope.data.currentDatasource = {};
             $scope.data.datasourceTypesForDatasource = {};
+                
+            var checkGeo = function () {
+               $scope.currentObject.geoState = "red";
+               $scope.currentObject.geoStateText = "Не отображается на карте";
+// console.log($scope.currentObject.isValidGeoPos);
+// console.log($scope.currentSug);
+//console.log($scope.currentObject);
+// console.log($scope.currentSug.data.geo_lat);
+// console.log($scope.currentSug.data.geo_lon);                
+               if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null) {
+                    $scope.currentObject.geoState = "green";
+                    $scope.currentObject.geoStateText = "Отображается на карте";
+                }
+            };
 
             function findObjectById(objId) {
                 var obj = null;
@@ -619,6 +634,9 @@ angular.module('portalNMC')
             var successCallbackUpdateObject = function (e) {
                 $rootScope.$broadcast('objectSvc:requestReloadData');
                 $scope.currentObject._activeContManagement = e._activeContManagement;
+                $scope.currentObject.isAddressAuto = e.isAddressAuto;
+                $scope.currentObject.isValidFiasUUID = e.isValidFiasUUID;
+                $scope.currentObject.isValidGeoPos = e.isValidGeoPos;
                 successCallback(e, null);
             };
 
@@ -655,6 +673,10 @@ angular.module('portalNMC')
                         id: object[$scope.extraProps.idColumnName],
                         cmOrganizationId: cmOrganizationId
                     };
+                }
+                object._daDataSraw = null;
+                if (!mainSvc.checkUndefinedNull($scope.currentSug)) {
+                    object._daDataSraw = JSON.stringify($scope.currentSug);
                 }
                 crudGridDataFactory($scope.crudTableName).update(params, object, successCallbackUpdateObject, errorCallback);
             };
@@ -712,6 +734,7 @@ angular.module('portalNMC')
                 }
 //                    return;
                 testCmOrganizationAtList();
+                checkGeo();
             };
 
             $scope.selectedZpoint = function (objId, zpointId) {
@@ -1827,10 +1850,21 @@ angular.module('portalNMC')
                     count: 5,
                     /* Вызывается, когда пользователь выбирает одну из подсказок */
                     onSelect: function (suggestion) {
-                        console.log(suggestion);
+//                        console.log(suggestion);
                         $scope.currentObject.fullAddress = suggestion.value;
+                        $scope.currentSug = suggestion;
+                        $scope.currentObject.isAddressAuto = true;
+                        checkGeo();
                         $scope.$apply();
                     }
+                });
+                
+                $("#inputAddress").change(function(){
+                    $scope.currentSug = null;
+                    $scope.currentObject.isAddressAuto = false;
+                    $scope.currentObject.isValidGeoPos = false;
+                    checkGeo();
+                    $scope.$apply();
                 });
 
                                 //drop menu
@@ -3060,8 +3094,8 @@ angular.module('portalNMC')
             }
 
             $('#showObjOptionModal').on('hidden.bs.modal', function () {
-//                    $scope.currentObject.isSaving = false;
-//                    $scope.currentSug = null;
+                $scope.currentObject.isSaving = false;
+                $scope.currentSug = null;
                 setActiveObjectPropertiesTab("main_object_properties_tab");
             });
 
