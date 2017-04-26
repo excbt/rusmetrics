@@ -230,6 +230,10 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
             }
         }
 
+        if (cellStyle != null && cellStyle.getRowSpan() != null) {
+            return cellStyle.getRowSpan();
+        }
+
         int childLevel = childElementsLevel();
 
         int partMaxElementsLevel = tablePart != null ? tablePart.maxElementsLevel() : 0;

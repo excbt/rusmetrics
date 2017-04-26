@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.passdoc;
 
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +15,17 @@ public class PDCellStyle {
 
     private HAlignment hAlignment;
 
+    private Integer rowSpan;
+
     public PDCellStyle hAlignment(HAlignment hAlignment) {
         this.hAlignment = hAlignment;
+        return this;
+    }
+
+    public PDCellStyle rowSpan(Integer rowSpan) {
+        Preconditions.checkNotNull(rowSpan);
+        Preconditions.checkArgument(rowSpan > 0);
+        this.rowSpan = rowSpan;
         return this;
     }
 }
