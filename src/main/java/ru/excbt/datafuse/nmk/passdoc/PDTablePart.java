@@ -353,9 +353,13 @@ public class PDTablePart implements PDReferable {
         return result;
     }
 
-    public int maxRowSpan() {
+    public int maxElementsLevel() {
         OptionalInt size = elements.stream().map(i -> i.childElementsLevel()).mapToInt(Integer::intValue).max();
-        return size.isPresent() ? size.getAsInt() + 1 : 1;
+        return size.isPresent() ? size.getAsInt() : 0;
+    }
+
+    public int maxRowSpan() {
+        return maxElementsLevel() + 1;
     }
 
     public PDInnerTable createInnerTable() {
