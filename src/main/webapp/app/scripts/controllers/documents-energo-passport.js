@@ -158,7 +158,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //    console.log(tmp);                
 //}
                 rows[level].tds.push(tmp);
-                performElementsRecursion(elm.elements, level + 1, rows);
+                performElementsRecursion(elm.elements, level + elm._rowSpan, rows);
             }
         });
     }
