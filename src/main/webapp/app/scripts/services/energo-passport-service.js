@@ -35,7 +35,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             if (docBody === null) {
                 docBody = {};
             }
-            docBody = {description: passportDescription};
+            docBody.description = passportDescription;
         }
 //        url = mainSvc.addParamToURL(url, "passportName", passportName);
 //        url = mainSvc.addParamToURL(url, "description", passportDescription);
@@ -59,7 +59,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
     
     function deletePassport(id) {
         if (mainSvc.checkUndefinedNull(id)) {
-            var defer = $q.deffer();
+            var defer = $q.defer();
             defer.reject("Delete: document id is undefined or null!");
             return defer;
         }

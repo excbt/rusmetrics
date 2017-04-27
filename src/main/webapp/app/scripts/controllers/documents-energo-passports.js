@@ -14,29 +14,23 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY";
     
         //model columns
-    $scope.ctrlSettings.passportColumns = [
-        {
-            "name": "id",
-            "caption": "id",
-            "class": "col-xs-1 nmc-link",
-            "type": "id"
-        },
+    $scope.ctrlSettings.passportColumns = [        
         {
             "name": "type",
             "caption": "Тип",
-            "class": "col-xs-1 nmc-link",
+            "class": "col-xs-1 nmc-td-for-button nmc-link",
             "type": "doctype"
         },
         {
             "name": "passportName",
             "caption": "Название",
-            "class": "col-xs-3 nmc-link",
+            "class": "col-xs-4 nmc-link",
             "type": "name"
         },
         {
             "name": "description",
             "caption": "Описание",
-            "class": "col-xs-3 nmc-link"
+            "class": "col-xs-5 nmc-link"
         },
         {
             "name": "passportDate2",
@@ -82,15 +76,27 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         //$('#editEnergoPassportModal').modal();
     };
     
-    $scope.editEnergyDocument = function (doc) {
+    $scope.editEnergyDocument = function (doc) {       
         $scope.data.currentDocument = angular.copy(doc);
-        $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat);
+        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
+        $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat); 
         $('#showDocumentPropertiesModal').modal();
     };
     
     $scope.openEnergyDocument = function (doc) {
         $location.path("/documents/energo-passport/" + doc.id);
-    };    
+    };
+    
+    var setConfirmCode = function(useImprovedMethodFlag) {
+        $scope.confirmCode = null;
+        var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;                    
+    };
+    
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
+    };
     
     function errorCallback(e) {
         $scope.ctrlSettings.loading = false;
@@ -104,25 +110,31 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         $scope.ctrlSettings.loading = false;
     }
     
-    function successCreatePassportCallback(resp) {
+    function successSavePassportCallback(resp) {
         if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
             console.error("Incorrect response from server:");
             console.error(resp);
             return false;
         }
         $('#showDocumentPropertiesModal').modal('hide');
+    }
+    
+    function successCreatePassportCallback(resp) {
+        successSavePassportCallback(resp);
         $scope.openEnergyDocument(resp.data);
     }
     
     function successDeletePassportCallback(resp) {
         //delete doc from client document array
         $scope.data.passports.some(function (passport, ind) {
-            if (passport.id === resp.data.id) {
+            if (passport.id === $scope.data.currentDocument.id) {
                 $scope.data.passports.splice(ind, 1);
                 return true;
             }
         });
+        $scope.data.currentDocument = {};
         //close modal window
+        $("#deleteWindowModal").modal('hide');
     }
     
     function loadPassports() {
@@ -130,17 +142,34 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
             .then(successLoadPassportsCallback, errorCallback);
     }
     
-    $scope.createEnergyDocument = function (doc) {        
-        energoPassportSvc.createPassport(doc.docName, doc.docDescription)
-            .then(successCreatePassportCallback, errorCallback);
-//        $location.path("/documents/energo-passport/new");
+    $scope.saveEnergyDocument = function (doc) { 
+//console.log(doc);
+        if (mainSvc.checkUndefinedNull(doc.id)) {
+            energoPassportSvc.createPassport(doc.passportName, doc.description)
+                .then(successCreatePassportCallback, errorCallback);
+    //        $location.path("/documents/energo-passport/new");
+        } else {
+            energoPassportSvc.updatePassport(doc.passportName, doc.description)
+                .then(successSavePassportCallback, errorCallback);
+        }
     };
     
     $scope.deleteEnergyDocument = function (doc) {
-        energoPassportSvc.deletePassport(doc)
+//console.log(doc);        
+        if (mainSvc.checkUndefinedNull(doc)) {
+            console.error("Deleting document is undefined or null.");
+        }
+        energoPassportSvc.deletePassport(doc.id)
             .then(successDeletePassportCallback, errorCallback);
-    };
+    };    
     
+    $scope.deleteEnergyDocumentInit = function (doc) {
+        $scope.data.currentDocument = doc;
+        $scope.data.currentDeleteMessage = doc.passportName || doc.id;        
+        setConfirmCode(true);        
+        $("#deleteWindowModal").modal();
+    };
+        
     $('#showDocumentPropertiesModal').on("shown.bs.modal", function () {
         $("#inputEnergyDocName").focus();
         $('#inputEnergyDocDate').datepicker(mainSvc.getDetepickerSettingsFullView());

@@ -83,10 +83,10 @@
                                 {{column.caption}}
                                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                             </th>
-                <!--
+                
                             <th class="col-xs-1">
                             </th>
-                -->
+                
                         </tr>
                 </table>
 
@@ -103,10 +103,10 @@
                                    ng-show = "orderBy.field == '{{column.name}}'">
                                 </i>
                             </th>
-                <!--
+                
                             <th class="col-xs-1">
                             </th>
-                -->
+                
                         </tr>
 
                         <tr ng-repeat="elm in data.passports | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
@@ -125,7 +125,9 @@
                                 ng-class="column.class"
                                 ng-click = "openEnergyDocument(elm)">
                                 <div ng-switch on="column.type">
-                                    <span ng-switch-when="name" ng-class="">{{model[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{elm['id']}})</span>
+                                    <span ng-switch-when="name" ng-class="">
+                                        {{elm[column.name] || "Без названия"}}
+                                        <span ng-show="isSystemuser()"> (id = {{elm['id']}})</span>
                                     </span>
                                     <span ng-switch-when="checkbox" ng-class="">
                                         <input type="checkbox" ng-model="elm[column.name]" disabled/>
@@ -152,9 +154,8 @@
                                     <div class="btn-group pull-right">                   
                                         <i title = "Удалить документ" 
                                            class = "btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
-                                           ng-click = "deleteEnergyDocument(elm)" 
-                                           data-target = "#deleteModelModal" 
-                                           data-toggle = "modal"></i>
+                                           ng-click = "deleteEnergyDocumentInit(elm)" 
+                                           ></i>
                                     </div>
                                 </div>
                             </td>
@@ -229,12 +230,12 @@
                                 </td>
                                 <td class = "col-sm-9 nmc-text-align-left">
                                     <div class = "form-group noMarginBottom" 
-                                         ng-class = "{'has-error': emptyString(data.currentDocument.docName)}">
+                                         ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
                                         <input  
                                                class = "form-control nmc-text-input-form" 
                                                type = "text" 
                                                id = "inputEnergyDocName" 
-                                               ng-model = "data.currentDocument.docName" />
+                                               ng-model = "data.currentDocument.passportName" />
                                     </div>
                                 </td>
                             </tr>
@@ -246,7 +247,7 @@
                                     <textarea class = "form-control nmc-textarea-form" 
                                               id = "inputEnergyDocDescription" 
                                               placeholder = "Описание" 
-                                              ng-model = "data.currentDocument.docDescription">
+                                              ng-model = "data.currentDocument.description">
                                     </textarea>
                                 </td>
                             </tr>
@@ -284,7 +285,7 @@
                         <div class = "col-xs-offset-6 col-md-3">
 							<input type = "submit" 
                                    class = "btn btn-primary btn-block btn-xs nmc-save-button"
-                                   ng-click = "createEnergyDocument(data.currentDocument)"
+                                   ng-click = "saveEnergyDocument(data.currentDocument)"
                                    ng-disabled = "data.currentDocument.id != null"
                                    value = "Сохранить" />
 						</div>
@@ -301,12 +302,12 @@
 	</div>
 </div>
 
-<!--    delete -->
+<!--   delete -->
 <div nmc-view-delete-modal-window 
      message = "{{data.currentDeleteMessage}}"      
      confirm-label = "{{confirmLabel}}"
      control-code = "{{sumNums}}"
      is-systemuser = "isSystemuser()"
-     delete-item-click = "deleteHandler(data.currentDeleteItem)">
+     delete-item-click = "deleteEnergyDocument(data.currentDocument)">
 </div>
     
