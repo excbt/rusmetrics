@@ -1963,41 +1963,68 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п")
-                .and().createStaticElement().caption("Наименование (марка) транспортного средства, оборудования").columnKey("res_name")
-                .and().createStaticElement("Количество единиц транспортных средств, оборудования")
-                .and().createStaticElement("Грузоподъемность, т, пассажиров вместимость, чел.")
+            partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+                .and().createStaticElement().caption("Наименование (марка) транспортного средства, оборудования").nextKeyValueIdx()
+                .and().createStaticElement("Количество единиц транспортных средств, оборудования").nextKeyValueIdx()
+                .and().createStaticElement("Грузоподъемность, т, пассажиров вместимость, чел.").nextKeyValueIdx()
                 .and().createStaticElement("Объем грузоперевозок, тыс. т-км, тыс. пасс.-км.")
                 .and().createStaticElement("Сведения об использовании моторного топлива за отчетный год ")
-                    .createStaticChild("N п/п").andParentCell()
-                    .createStaticChild("вид использованного топлива, в том числе электрической энергии").andParentCell()
-                    .createStaticChild("способ измерения расхода топлива (электрической энергии)").andParentCell()
+                    //.createStaticChild(" ")
+                    .createStaticChild("N п/п").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
+                    .createStaticChild("вид использованного топлива, в том числе электрической энергии").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
+                    .createStaticChild("способ измерения расхода топлива (электрической энергии)").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
                     .createStaticChild("удельный расход топлива и электрической энергии, л/100 км, л/моточас, т/100 км, т/моточас, н. куб. м/100 км, н. куб. м/моточас, кВт·ч/100 км, кВт·ч/моточас")
-                        .createStaticChild("нормативный").andParentCell()
-                        .createStaticChild("фактический").andParentCell()
+                        .createStaticChild("нормативный").nextKeyValueIdx().andParentCell()
+                        .createStaticChild("фактический").nextKeyValueIdx().andParentCell()
                         .andParentCell()
-                    .createStaticChild("пробег, тыс. км, отработано, моточас").andParentCell()
+                    .createStaticChild("пробег, тыс. км, отработано, моточас").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
                     .createStaticChild("количество топлива и электрической энергии, тыс. л, т, н. куб. м, тыс. кВт·ч")
-                        .createStaticChild("полученного").andParentCell()
-                        .createStaticChild("израсходованного")
-                .and().widthsOfElements(5,10,10,10,10,5,10,10,5,5,10,10,10);
+                        .createStaticChild("полученного").nextKeyValueIdx().andParentCell()
+                        .createStaticChild("израсходованного").nextKeyValueIdx()
+                .and().widthsOfElements(5,10,10,10,10,5,10,10,10,10,10,10,15);
 
+
+
+            final int subsectionCnt = 4;
+
+
+            Consumer<PDTablePart> subsection = (p) -> {
+                PDTableCell<?> cell = p.createStaticElement().vertical().nextKeyValueIdx();
+                for (int i = 0; i < subsectionCnt; i++) {
+                    cell.createStaticChild((i + 1) + "").keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+                }
+            };
+
+
+            Consumer<PDTablePart> subsectionStr = (p) -> {
+                PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+                for (int i = 0; i < subsectionCnt; i++) {
+                    cell.createChildValue(PDTableCellValueString.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+                }
+            };
+
+            Consumer<PDTablePart> subsectionDbl = (p) -> {
+                PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+                for (int i = 0; i < subsectionCnt; i++) {
+                    cell.createChildValue(PDTableCellValueDouble.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+                }
+            };
 
 
             pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
-                .createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)// #
-                .and().createStringValueElement().keyValueIdx(2)
-                .and().createStringValueElement().keyValueIdx(3)
-                .and().createDoubleValueElement().keyValueIdx(4)
-                .and().createDoubleValueElement().keyValueIdx(5)
-                .and().createIntegerValueElement().keyValueIdx(6)
-                .and().createStringValueElement().keyValueIdx(7)
-                .and().createStringValueElement().keyValueIdx(8)
-                .and().createDoubleValueElement().keyValueIdx(9)
-                .and().createDoubleValueElement().keyValueIdx(10)
-                .and().createDoubleValueElement().keyValueIdx(11)
-                .and().createDoubleValueElement().keyValueIdx(12)
-                .and().createDoubleValueElement().keyValueIdx(13);
+                .createValueElement(PDTableCellValueCounter.class).nextKeyValueIdx()// #
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().applyCreator(subsection)
+                .and().applyCreator(subsectionStr)
+                .and().applyCreator(subsectionStr)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl);
 
 
 //            pdTable.createPartRow("1.1", "1")
