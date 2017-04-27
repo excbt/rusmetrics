@@ -109,7 +109,53 @@ public class EnergyPassportService {
         return setupPassportVars(energyPassportDTO);
     }
 
+    /**
+     *
+     * @param energyPassportVM
+     * @param subscriber
+     * @return
+     */
     @Transactional(value = TxConst.TX_DEFAULT)
+    public EnergyPassportDTO updatePassport(EnergyPassportVM energyPassportVM, Subscriber subscriber) {
+        EnergyPassport energyPassport = passportRepository.findOne(energyPassportVM.getId());
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, energyPassportVM.getId());
+        }
+        energyPassport.setPassportDate(energyPassportVM.getPassportDate());
+        energyPassport.setPassportName(energyPassportVM.getPassportName());
+        energyPassport.setDescription(energyPassportVM.getDescription());
+
+        passportRepository.save(energyPassport);
+
+        EnergyPassportDTO energyPassportDTO = energyPassport.getDTO();
+
+        return setupPassportVars(energyPassportDTO);
+    }
+
+    /**
+     *
+     * @param energyPassportVM
+     * @param subscriber
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public EnergyPassportShortDTO updatePassportShort(EnergyPassportVM energyPassportVM, Subscriber subscriber) {
+        EnergyPassport energyPassport = passportRepository.findOne(energyPassportVM.getId());
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, energyPassportVM.getId());
+        }
+        energyPassport.setPassportDate(energyPassportVM.getPassportDate());
+        energyPassport.setPassportName(energyPassportVM.getPassportName());
+        energyPassport.setDescription(energyPassportVM.getDescription());
+
+        passportRepository.save(energyPassport);
+
+        EnergyPassportShortDTO energyPassportDTO = energyPassport.getDTO_Short();
+
+        return energyPassportDTO;
+    }
+
+        @Transactional(value = TxConst.TX_DEFAULT)
     public EnergyPassportDTO find(Long id) {
         EnergyPassport energyPassport = passportRepository.findOne(id);
 

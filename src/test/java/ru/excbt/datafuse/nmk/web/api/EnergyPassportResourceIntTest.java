@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +87,28 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         energyPassportRepository.flush();
 
         _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId());
+    }
+
+    @Test
+    @Transactional
+    public void testUpdatePassport() throws Exception {
+
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+        EnergyPassportVM vm = new EnergyPassportVM();
+        vm.setId(passportDTO.getId());
+        vm.setPassportName("Passport");
+        vm.setDescription("Description");
+        vm.setPassportDate(LocalDate.now());
+
+        _testUpdateJson("/api/subscr/energy-passports/" + passportDTO.getId(), vm);
+
+        EnergyPassport energyPassport = energyPassportRepository.findOne(passportDTO.getId());
+        Assert.assertEquals(vm.getDescription(), energyPassport.getDescription());
+        Assert.assertEquals(vm.getPassportName(), energyPassport.getPassportName());
+        Assert.assertEquals(vm.getPassportDate(), energyPassport.getPassportDate());
+
     }
 
     @Test

@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @Builder
 public class EnergyPassportVM {
 
+    private Long id;
+
     private String templateKeyname;
 
     private String passportName;
@@ -21,4 +23,8 @@ public class EnergyPassportVM {
     private String description;
 
     private Long organizationId;
+
+    private LocalDate passportDate;
+
+
 }

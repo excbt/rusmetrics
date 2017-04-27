@@ -40,6 +40,26 @@ public class EnergyPassportResource extends SubscrApiController {
         return responseOK(action);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> updateEnergyPassport(@PathVariable("id") Long id, @RequestBody EnergyPassportVM energyPassportVM) {
+        if (!id.equals(energyPassportVM.getId())) {
+            return responseBadRequest();
+        }
+        ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.updatePassport(energyPassportVM, getCurrentSubscriber());
+        return responseOK(action);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> updateEnergyPassport(@RequestBody EnergyPassportVM energyPassportVM) {
+        if (energyPassportVM.getId() == null) {
+            return responseBadRequest();
+        }
+        ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.updatePassport(energyPassportVM, getCurrentSubscriber());
+        return responseOK(action);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassport(@PathVariable("id") Long id) {
