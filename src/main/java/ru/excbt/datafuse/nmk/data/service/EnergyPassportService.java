@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil;
+import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil.JsonVars;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
@@ -500,14 +501,22 @@ public class EnergyPassportService {
 
 
     private Properties fillEnergyPassportVars(EnergyPassportDTO energyPassport) {
+
+        final String[] monthNames = new String[] {"января", "февраля", "марта",
+            "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "февраля"};
+
         Properties vars = new Properties();
         int yyyy = energyPassport.getPassportDate().getYear();
-        vars.put(Pattern.quote("{YYYY}"), Integer.toString(yyyy));
-        vars.put(Pattern.quote("{YYYY-1}"), Integer.toString(yyyy-1));
-        vars.put(Pattern.quote("{YYYY-2}"), Integer.toString(yyyy-2));
-        vars.put(Pattern.quote("{YYYY-3}"), Integer.toString(yyyy-3));
-        vars.put(Pattern.quote("{YYYY-4}"), Integer.toString(yyyy-4));
-        vars.put(Pattern.quote("{YYYY-5}"), Integer.toString(yyyy-5));
+        int dd = energyPassport.getPassportDate().getDayOfMonth();
+        int mm = energyPassport.getPassportDate().getMonth().getValue();
+        vars.put(Pattern.quote(JsonVars.DD), Integer.toString(dd));
+        vars.put(Pattern.quote(JsonVars.MONTH1), monthNames[mm - 1]);
+        vars.put(Pattern.quote(JsonVars.YYYY), Integer.toString(yyyy));
+        vars.put(Pattern.quote(JsonVars.YYYY_1), Integer.toString(yyyy-1));
+        vars.put(Pattern.quote(JsonVars.YYYY_2), Integer.toString(yyyy-2));
+        vars.put(Pattern.quote(JsonVars.YYYY_3), Integer.toString(yyyy-3));
+        vars.put(Pattern.quote(JsonVars.YYYY_4), Integer.toString(yyyy-4));
+        vars.put(Pattern.quote(JsonVars.YYYY_5), Integer.toString(yyyy-5));
         return vars;
     }
 

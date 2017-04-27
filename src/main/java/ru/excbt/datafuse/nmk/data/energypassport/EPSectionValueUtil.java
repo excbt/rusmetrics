@@ -29,6 +29,23 @@ public class EPSectionValueUtil {
     private EPSectionValueUtil() {
     }
 
+
+    public final static class JsonVars {
+
+        public static final String DD = "{DD}";
+        public static final String MONTH1 = "{MONTH1}";
+        public static final String YYYY = "{YYYY}";
+        public static final String YYYY_1 = "{YYYY-1}";
+        public static final String YYYY_2 = "{YYYY-2}";
+        public static final String YYYY_3 = "{YYYY-3}";
+        public static final String YYYY_4 = "{YYYY-4}";
+        public static final String YYYY_5 = "{YYYY-5}";
+
+        private JsonVars() {
+
+        }
+    }
+
     public static Optional<String> extractValues(String json) {
         return extractValues(json, false);
     }

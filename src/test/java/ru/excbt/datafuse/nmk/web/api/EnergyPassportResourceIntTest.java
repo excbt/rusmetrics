@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
@@ -74,7 +74,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").build();
 
         RequestExtraInitializer param = (b) -> {
-            b.param("templateKeyname", EnergyPassport401_2014.ENERGY_DECLARATION);
+            b.param("templateKeyname", EnergyPassport401_2014_Add.ENERGY_DECLARATION);
         };
         ResultActions resultActions = _testPostJson("/api/subscr/energy-passports", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
     }
@@ -83,7 +83,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testGetPassport() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId());
@@ -93,7 +93,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testUpdatePassport() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         EnergyPassportVM vm = new EnergyPassportVM();
@@ -115,7 +115,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testGetPassportData() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data");
@@ -125,7 +125,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testGetPassportDataEnhanced() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         List<EnergyPassportDataDTO> passportDataDTOList = energyPassportService.extractEnergyPassportData(passportDTO.getId());
@@ -138,7 +138,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testGetPassportDataSection() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         List<EnergyPassportDataDTO> passportDataDTOList = energyPassportService.extractEnergyPassportData(passportDTO.getId());
@@ -155,7 +155,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testUpdatePassportData() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         List<EnergyPassportDataDTO> passportDataDTOList = energyPassportService.extractEnergyPassportData(passportDTO.getId());
@@ -178,10 +178,10 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testGetPassports() throws Exception {
 
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION,
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION,
             EnergyPassportVM.builder().passportName("passport # 1").build(), new Subscriber().id(getSubscriberId()));
 
-        EnergyPassportDTO passportDTOs = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION,
+        EnergyPassportDTO passportDTOs = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION,
             EnergyPassportVM.builder().passportName("passport # 2").build(), new Subscriber().id(getSubscriberId()));
 
         energyPassportRepository.flush();
@@ -196,7 +196,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testDeletePassport() throws Exception {
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         _testDeleteJson("/api/subscr/energy-passports/" + passportDTO.getId());
@@ -216,7 +216,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testPassportSectionEntriesGet() throws Exception {
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
@@ -237,7 +237,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testPassportSectionEntryUpdate() throws Exception {
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
@@ -268,7 +268,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testPassportWithSectionEntriesGet() throws Exception {
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
@@ -284,7 +284,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testPassportWithSectionEntriesData() throws Exception {
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
@@ -320,7 +320,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testPassportSectionEntryDelete() throws Exception {
-        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
         energyPassportRepository.flush();
 
         passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));

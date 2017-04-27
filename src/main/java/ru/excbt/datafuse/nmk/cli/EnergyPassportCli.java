@@ -10,7 +10,6 @@ import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportTemplateService;
-import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 
@@ -33,7 +32,6 @@ public class EnergyPassportCli extends PortalToolCli {
     @Autowired
     private EnergyPassportTemplateService energyPassportTemplateService;
 
-    private final EnergyPassport401_2014 energyPassport401_2014;
     private final EnergyPassport401_2014_Add energyPassport401_2014_Add;
 
     /**
@@ -51,7 +49,6 @@ public class EnergyPassportCli extends PortalToolCli {
 
 
     public EnergyPassportCli() {
-        energyPassport401_2014 = new EnergyPassport401_2014();
         energyPassport401_2014_Add = new EnergyPassport401_2014_Add();
     }
 
@@ -61,7 +58,7 @@ public class EnergyPassportCli extends PortalToolCli {
     protected void doWork(){
         mockUserService.setMockUserId(1000L); // User "SYSTEM"
         EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
-        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014.ENERGY_DECLARATION);
+        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION);
         EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
         log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
         energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());

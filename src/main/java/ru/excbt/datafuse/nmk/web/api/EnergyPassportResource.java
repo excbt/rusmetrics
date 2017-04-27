@@ -3,7 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
@@ -35,7 +35,7 @@ public class EnergyPassportResource extends SubscrApiController {
     public ResponseEntity<?> createEnergyPassport(@RequestParam(name = "templateKeyname", required = false) String templateKeyname,
                                                   @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
 
-        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014.ENERGY_DECLARATION;
+        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014_Add.ENERGY_DECLARATION;
         ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createPassport(keyname, energyPassportVM, getCurrentSubscriber());
         return responseOK(action);
     }
