@@ -72,6 +72,7 @@ public class EnergyPassportTemplateService {
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_2()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_3()).hasEntries(true));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_4()).hasEntries(true));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_1()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_2()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_3()));
         templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_2_4()));
@@ -102,6 +103,7 @@ public class EnergyPassportTemplateService {
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_1_2()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_1_3()).hasEntries(true));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_1_4()).hasEntries(true));
+        passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_1()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_2()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_3()));
         passportTemplate.addSection(createSection(energyPassport401_2014_add.section_2_4()));
@@ -146,6 +148,7 @@ public class EnergyPassportTemplateService {
         result.add(createSectionData(energyPassport401_2014_add.section_1_2()));
         result.add(createSectionData(energyPassport401_2014_add.section_1_3()));
         result.add(createSectionData(energyPassport401_2014_add.section_1_4()));
+        result.add(createSectionData(energyPassport401_2014_add.section_2_1()));
         result.add(createSectionData(energyPassport401_2014_add.section_2_2()));
         result.add(createSectionData(energyPassport401_2014_add.section_2_3()));
         result.add(createSectionData(energyPassport401_2014_add.section_2_4()));

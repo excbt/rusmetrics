@@ -1349,6 +1349,47 @@ public class EnergyPassport401_2014_Add {
     }
 
 
+    public EnergyPassportSectionTemplateFactory section_2_1() {
+
+
+        final PDTable pdTable = new PDTable();
+        pdTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("2.1", "ИНФОРМАЦИЯ\n" +
+            "ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ\n" +
+            "ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ\n")));
+
+        headerTool(pdTable, "h1-1", "ИНФОРМАЦИЯ\n" +
+            "ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ\n" +
+            "ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ\n" +
+            "организаций, осуществляющих регулируемые\n" +
+            "виды деятельности; организаций, осуществляющих производство\n" +
+            "и (или) транспортировку воды, природного газа, тепловой\n" +
+            "энергии, электрической энергии, добычу природного газа,\n" +
+            "нефти, угля, производство нефтепродуктов, переработку\n" +
+            "природного газа, нефти, транспортировку нефти,\n" +
+            "нефтепродуктов; организаций, проводящих мероприятия\n" +
+            "в области энергосбережения и повышения энергетической\n" +
+            "эффективности, финансируемых полностью или частично\n" +
+            "за счет субсидий из федерального бюджета, бюджетов\n" +
+            "субъектов Российской Федерации, местных бюджетов\n");
+
+        pdTable.createPartLine("1", "")
+            .and().createStringValueElement().cellStyle(PDCellStyle._makeHAligmentCenter());
+
+        headerTool(pdTable, "h1-2", "(полное наименование юридического лица)");
+
+        headerTool(pdTable, "h1-3", "\n" +
+            "\"{DD}\" {MONTH1} {YYYY} г.\n" +
+            "(число, месяц, год составления) \n");
+
+        return new EPSectionTemplateFactory(pdTable);
+
+    }
+
+
+    /**
+     *
+     * @return
+     */
     public EnergyPassportSectionTemplateFactory section_2_2() {
         final PDTable topTable = new PDTable();
 
