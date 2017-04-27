@@ -1188,10 +1188,10 @@ public class EnergyPassport401_2014_Add {
             partHeader.createStaticElement().caption("Наименование").columnKey("res_name")
                 .and().createStaticElement("Единица измерения")
                 .and().createStaticElement("Предшествующие годы")
-                    .createStaticChild("______").columnKey("YYYY-4")
-                    .createStaticSibling("______").columnKey("YYYY-3")
-                    .createStaticSibling("______").columnKey("YYYY-2")
-                    .createStaticSibling("______").columnKey("YYYY-1")
+                    .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+                    .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+                    .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+                    .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
                 .and().createStaticElement("Отчетный год");
 
             partHeader.widthsOfElements(5, 30, 10, 15, 15, 15, 15, 15);
@@ -1489,10 +1489,10 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-                .createStaticChild("___").columnKey("YYYY-4")
-                .createStaticSibling("___").columnKey("YYYY-3")
-                .createStaticSibling("___").columnKey("YYYY-2")
-                .createStaticSibling("___").columnKey("YYYY-1")
+                .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+                .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+                .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+                .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
             .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
@@ -1510,7 +1510,7 @@ public class EnergyPassport401_2014_Add {
 
 
         innerTable.createPartRow("1_total", "")
-            .createStaticElement("Итого суммарный приход")
+            .createStaticElement("Итого суммарный приход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_1.*");
@@ -1585,7 +1585,7 @@ public class EnergyPassport401_2014_Add {
             .and().createValueElements(5, PDTableCellValueDouble.class);
 
         innerTable.createPartRow("2_total", "")
-            .createStaticElement("Итого суммарный расход")
+            .createStaticElement("Итого суммарный расход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_2.*");
@@ -1619,10 +1619,10 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-            .createStaticChild("___").columnKey("YYYY-4")
-            .createStaticSibling("___").columnKey("YYYY-3")
-            .createStaticSibling("___").columnKey("YYYY-2")
-            .createStaticSibling("___").columnKey("YYYY-1")
+            .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+            .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+            .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+            .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
             .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
@@ -1650,7 +1650,7 @@ public class EnergyPassport401_2014_Add {
 
 
         innerTable.createPartRow("1_total", "")
-            .createStaticElement("Итого суммарный приход")
+            .createStaticElement("Итого суммарный приход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_1.*");
@@ -1706,7 +1706,7 @@ public class EnergyPassport401_2014_Add {
             .and().createValueElements(5, PDTableCellValueDouble.class);
 
         innerTable.createPartRow("2_total", "")
-            .createStaticElement("Итого суммарный расход")
+            .createStaticElement("Итого суммарный расход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_2.*");
@@ -1741,10 +1741,10 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-            .createStaticChild("___").columnKey("YYYY-4")
-            .createStaticSibling("___").columnKey("YYYY-3")
-            .createStaticSibling("___").columnKey("YYYY-2")
-            .createStaticSibling("___").columnKey("YYYY-1")
+            .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+            .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+            .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+            .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
             .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
@@ -1850,10 +1850,10 @@ public class EnergyPassport401_2014_Add {
             partHeader.createStaticElement().caption("Статья").columnKey("accounting");
             partHeader
                 .createStaticElement().caption("Предшествующие годы")
-                .createStaticChild("___").columnKey("YYYY-4")
-                .createStaticSibling("___").columnKey("YYYY-3")
-                .createStaticSibling("___").columnKey("YYYY-2")
-                .createStaticSibling("___").columnKey("YYYY-1")
+                .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+                .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+                .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+                .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
                 .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
             partHeader.widthsOfElements(10, 50, 15, 15, 15, 15, 15);
@@ -1869,25 +1869,19 @@ public class EnergyPassport401_2014_Add {
                 .and().createStringValueElement().columnKey("accounting").keyValueIdx(2)
                 .and().createValueElements(5, PDTableCellValueDouble.class, 3);
 
-            partDynamic.indentAfter(false);
-        }
-
-        {
-            final PDInnerTable innerTable2 = topTable.createPartInnerTable().createInnerTable();
-
-            PDTablePart part =innerTable2.createPartRow("1_total", "");
-            part.createStaticElement("Итого суммарный приход");
-            part.createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            PDTablePart part = innerTable.createPartRow("1_total", "");
+            part.createStaticElement("Итого суммарный приход").cellStyle(PDCellStyle._makeHAligmentRight())
+                .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
                     i.setValueGroup("P_1.*");
                     i.setValueFunction("sum()");
                 });
             part.widthsOfElements(10, 50, 15, 15, 15, 15, 15);
 
-            innerTable2.createPartRowNr("2")
+            innerTable.createPartRowNr("2")
                 .and().createStaticElement("Расход").mergedCells(6);
 
-            innerTable2.createPartRowNr("2.1")
+            innerTable.createPartRowNr("2.1")
                 .and().createStaticElement("Технологическое использование, всего,\n" +
                 "в том числе:")
                 .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
@@ -1896,27 +1890,27 @@ public class EnergyPassport401_2014_Add {
                     i.setValueFunction("sum()");
                 });
 
-            innerTable2.createPartRowNr("2.1.1")
+            innerTable.createPartRowNr("2.1.1")
                 .and().createStaticElement("нетопливное использование (в виде сырья)")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.2")
+            innerTable.createPartRowNr("2.1.2")
                 .and().createStaticElement("нагрев")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.3")
+            innerTable.createPartRowNr("2.1.3")
                 .and().createStaticElement("сушка")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.4")
+            innerTable.createPartRowNr("2.1.4")
                 .and().createStaticElement("обжиг (плавление, отжиг)")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.5")
+            innerTable.createPartRowNr("2.1.5")
                 .and().createStaticElement("бытовое использование")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.2")
+            innerTable.createPartRowNr("2.2")
                 .and().createStaticElement("На выработку тепловой энергии, всего,\n" +
                 "в том числе:")
                 .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
@@ -1925,22 +1919,29 @@ public class EnergyPassport401_2014_Add {
                     i.setValueFunction("sum()");
                 });
 
-            innerTable2.createPartRowNr("2.2.1")
+            innerTable.createPartRowNr("2.2.1")
                 .and().createStaticElement("в котельной")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.2.2")
+            innerTable.createPartRowNr("2.2.2")
                 .and().createStaticElement("в собственной тепловой электрической станции (включая выработку электрической энергии)")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
 
-            innerTable2.createPartRow("2_total", "")
-                .createStaticElement("Итого суммарный расход")
+            innerTable.createPartRow("2_total", "")
+                .createStaticElement("Итого суммарный расход").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
                     i.setValueGroup("P_2.*");
                     i.setValueFunction("sum()");
                 });
+
+        }
+
+        {
+            final PDInnerTable innerTable2 = topTable.createPartInnerTable().createInnerTable();
+
+
 
         }
         return new EPSectionTemplateFactory(topTable);
@@ -1963,41 +1964,68 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п")
-                .and().createStaticElement().caption("Наименование (марка) транспортного средства, оборудования").columnKey("res_name")
-                .and().createStaticElement("Количество единиц транспортных средств, оборудования")
-                .and().createStaticElement("Грузоподъемность, т, пассажиров вместимость, чел.")
+            partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+                .and().createStaticElement().caption("Наименование (марка) транспортного средства, оборудования").nextKeyValueIdx()
+                .and().createStaticElement("Количество единиц транспортных средств, оборудования").nextKeyValueIdx()
+                .and().createStaticElement("Грузоподъемность, т, пассажиров вместимость, чел.").nextKeyValueIdx()
                 .and().createStaticElement("Объем грузоперевозок, тыс. т-км, тыс. пасс.-км.")
                 .and().createStaticElement("Сведения об использовании моторного топлива за отчетный год ")
-                    .createStaticChild("N п/п").andParentCell()
-                    .createStaticChild("вид использованного топлива, в том числе электрической энергии").andParentCell()
-                    .createStaticChild("способ измерения расхода топлива (электрической энергии)").andParentCell()
+                    //.createStaticChild(" ")
+                    .createStaticChild("N п/п").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
+                    .createStaticChild("вид использованного топлива, в том числе электрической энергии").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
+                    .createStaticChild("способ измерения расхода топлива (электрической энергии)").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
                     .createStaticChild("удельный расход топлива и электрической энергии, л/100 км, л/моточас, т/100 км, т/моточас, н. куб. м/100 км, н. куб. м/моточас, кВт·ч/100 км, кВт·ч/моточас")
-                        .createStaticChild("нормативный").andParentCell()
-                        .createStaticChild("фактический").andParentCell()
+                        .createStaticChild("нормативный").nextKeyValueIdx().andParentCell()
+                        .createStaticChild("фактический").nextKeyValueIdx().andParentCell()
                         .andParentCell()
-                    .createStaticChild("пробег, тыс. км, отработано, моточас").andParentCell()
+                    .createStaticChild("пробег, тыс. км, отработано, моточас").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
                     .createStaticChild("количество топлива и электрической энергии, тыс. л, т, н. куб. м, тыс. кВт·ч")
-                        .createStaticChild("полученного").andParentCell()
-                        .createStaticChild("израсходованного")
-                .and().widthsOfElements(5,10,10,10,10,5,10,10,5,5,10,10,10);
+                        .createStaticChild("полученного").nextKeyValueIdx().andParentCell()
+                        .createStaticChild("израсходованного").nextKeyValueIdx()
+                .and().widthsOfElements(5,10,10,10,10,5,10,10,10,10,10,10,15);
 
+
+
+            final int subsectionCnt = 4;
+
+
+            Consumer<PDTablePart> subsection = (p) -> {
+                PDTableCell<?> cell = p.createStaticElement().vertical().nextKeyValueIdx();
+                for (int i = 0; i < subsectionCnt; i++) {
+                    cell.createStaticChild((i + 1) + "").keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+                }
+            };
+
+
+            Consumer<PDTablePart> subsectionStr = (p) -> {
+                PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+                for (int i = 0; i < subsectionCnt; i++) {
+                    cell.createChildValue(PDTableCellValueString.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+                }
+            };
+
+            Consumer<PDTablePart> subsectionDbl = (p) -> {
+                PDTableCell<?> cell = p.createValuePackElement().vertical().nextKeyValueIdx();
+                for (int i = 0; i < subsectionCnt; i++) {
+                    cell.createChildValue(PDTableCellValueDouble.class).keyValueIdx(cell.getKeyValueIdx()).valuePackIdx(i + 1);
+                }
+            };
 
 
             pdTable.createPart(PDPartType.ROW).key("DATA").dynamic()
-                .createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)// #
-                .and().createStringValueElement().keyValueIdx(2)
-                .and().createStringValueElement().keyValueIdx(3)
-                .and().createDoubleValueElement().keyValueIdx(4)
-                .and().createDoubleValueElement().keyValueIdx(5)
-                .and().createIntegerValueElement().keyValueIdx(6)
-                .and().createStringValueElement().keyValueIdx(7)
-                .and().createStringValueElement().keyValueIdx(8)
-                .and().createDoubleValueElement().keyValueIdx(9)
-                .and().createDoubleValueElement().keyValueIdx(10)
-                .and().createDoubleValueElement().keyValueIdx(11)
-                .and().createDoubleValueElement().keyValueIdx(12)
-                .and().createDoubleValueElement().keyValueIdx(13);
+                .createValueElement(PDTableCellValueCounter.class).nextKeyValueIdx()// #
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createStringValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().createDoubleValueElement().nextKeyValueIdx()
+                .and().applyCreator(subsection)
+                .and().applyCreator(subsectionStr)
+                .and().applyCreator(subsectionStr)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl)
+                .and().applyCreator(subsectionDbl);
 
 
 //            pdTable.createPartRow("1.1", "1")
@@ -2087,7 +2115,7 @@ public class EnergyPassport401_2014_Add {
             pdTable.createPartRow("1.2","2").applyCreator(valuesCreator);
 
             PDTablePart table1TotalPart = pdTable.createPartRow("1_total", "");
-            table1TotalPart.createStaticElement("Итого")
+            table1TotalPart.createStaticElement("Итого").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createStaticElement("").mergedCells(5)
                 .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
@@ -2139,7 +2167,7 @@ public class EnergyPassport401_2014_Add {
             pdTable.createPartRow("2.2","2").applyCreator(valuesCreator);
 
             PDTablePart table2TotalPart = pdTable.createPartRow("2_total", "");
-            table2TotalPart.createStaticElement("Итого")
+            table2TotalPart.createStaticElement("Итого").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createStaticElement("").mergedCells(4)
                 .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
@@ -2243,7 +2271,7 @@ public class EnergyPassport401_2014_Add {
 
             pdTable.createPartRow().key("DATA_TOTAL")
                 .and().createStaticElement()
-                .and().createStaticElement("Итого").mergedCells(5).cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+                .and().createStaticElement("Итого").mergedCells(5).cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().applyCreator(sum6)
                 .and().applyCreator(sum5);
 
@@ -2553,10 +2581,10 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Класс напряжения")
             .and().createStaticElement().caption("Динамика изменения показателей по годам")
                 .createStaticChild("предшествующие годы")
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-4}").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-3}").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-2}").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-1}").nextKeyValueIdx().andParentCell()
                 .andParentCell()
                 .createStaticChild("отчетный год").nextKeyValueIdx().cellStyle(new PDCellStyle().rowSpan(2));
 
@@ -2745,10 +2773,10 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
             .and().createStaticElement("Динамика изменения показателей по годам").nextKeyValueIdx()
                 .createStaticChild("предшествующие годы")
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-4}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-3}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-2}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-1}").applyCreator(creator).andParentCell()
                 .andParentCell()
              .createStaticChild("отчетный год").applyCreator(creator);
 
@@ -2859,10 +2887,10 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
             .and().createStaticElement("Динамика изменения показателей по годам")
                 .createStaticChild("предшествующие годы")
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-4}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-3}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-2}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-1}").applyCreator(creator).andParentCell()
                 .andParentCell()
              .createStaticChild("отчетный год").applyCreator(creator);
 

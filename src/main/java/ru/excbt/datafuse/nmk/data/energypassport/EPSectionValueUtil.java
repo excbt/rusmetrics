@@ -8,7 +8,9 @@ import ru.excbt.datafuse.nmk.passdoc.PDTable;
 import ru.excbt.datafuse.nmk.passdoc.dto.PDTableValueCellsDTO;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Created by kovtonyk on 12.04.2017.
@@ -72,5 +74,17 @@ public class EPSectionValueUtil {
         }
         return Optional.of(valuesCellsDTO);
     }
+
+
+    public static String replaceJsonVars(String inJson, Properties vars) {
+        String outJson = inJson;
+        for (Map.Entry<Object, Object> entry : vars.entrySet())
+        {
+            //log.debug("found key: {}. Replace with: {}", entry.getKey(), entry.getValue());
+            outJson = outJson.replaceAll((String)entry.getKey(),(String) entry.getValue());
+        }
+        return inJson.equals(outJson) ? inJson : outJson;
+    }
+
 
 }

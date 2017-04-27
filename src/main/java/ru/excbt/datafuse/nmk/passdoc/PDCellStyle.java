@@ -38,4 +38,10 @@ public class PDCellStyle {
         this.header1 = true;
         return this;
     }
+
+
+    public static PDCellStyle _makeHAligmentRight() {
+        return new PDCellStyle().hAlignment(HAlignment.RIGHT);
+    }
+
 }
