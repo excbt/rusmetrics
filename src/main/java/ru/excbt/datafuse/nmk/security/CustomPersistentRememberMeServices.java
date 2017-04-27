@@ -193,7 +193,7 @@ public class CustomPersistentRememberMeServices extends
         }
 
         // We have a match for this user/series combination
-        log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
+        //log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
         if (!presentedToken.equals(token.getTokenValue())) {
             // Token doesn't match series value. Delete this session and throw an exception.
             persistentTokenRepository.deleteTokenBySeries(token.getSeries());
