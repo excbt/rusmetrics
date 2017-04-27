@@ -22,6 +22,38 @@ public class EnergyPassport401_2014_Add {
 
     public final static String ENERGY_DECLARATION = "ENERGY_DECLARATION";
 
+
+    public EnergyPassportSectionTemplateFactory section_1_1() {
+
+
+        final PDTable pdTable = new PDTable();
+        pdTable.applyCreator((t) -> tableHeaderCreator.accept(t, new PDKeyHeader("1.1", "ИНФОРМАЦИЯ\n" +
+            "ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ\n" +
+            "ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ\n")));
+
+        headerTool(pdTable, "h1-1", "ИНФОРМАЦИЯ\n" +
+            "ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ\n" +
+            "ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ\n" +
+            "органов государственной власти, органов местного\n" +
+            "самоуправления, наделенных правами юридических лиц,\n" +
+            "организаций с участием государства\n" +
+            "или муниципального образования");
+
+        pdTable.createPartLine("1", "")
+            .and().createStringValueElement().cellStyle(PDCellStyle._makeHAligmentCenter());
+
+        headerTool(pdTable, "h1-2", "(полное наименование органа государственной власти,\n" +
+            "органа местного самоуправления, юридического лица)\n");
+
+        headerTool(pdTable, "h1-3", "\n" +
+            "\"{DD}\" {MONTH1} {YYYY} г.\n" +
+            "(число, месяц, год составления) \n");
+
+        return new EPSectionTemplateFactory(pdTable);
+
+    }
+
+
     /*
 
      */

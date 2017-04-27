@@ -500,8 +500,16 @@ public class EnergyPassportService {
 
 
     private Properties fillEnergyPassportVars(EnergyPassportDTO energyPassport) {
+
+        final String[] monthNames = new String[] {"января", "февраля", "марта",
+            "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "февраля"};
+
         Properties vars = new Properties();
         int yyyy = energyPassport.getPassportDate().getYear();
+        int dd = energyPassport.getPassportDate().getDayOfMonth();
+        int mm = energyPassport.getPassportDate().getMonth().getValue();
+        vars.put(Pattern.quote("{DD}"), Integer.toString(dd));
+        vars.put(Pattern.quote("{MONTH1}"), monthNames[mm - 1]);
         vars.put(Pattern.quote("{YYYY}"), Integer.toString(yyyy));
         vars.put(Pattern.quote("{YYYY-1}"), Integer.toString(yyyy-1));
         vars.put(Pattern.quote("{YYYY-2}"), Integer.toString(yyyy-2));
