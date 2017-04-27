@@ -17,11 +17,9 @@ import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +106,7 @@ public class EnergyPassportService {
 
         EnergyPassportDTO energyPassportDTO = energyPassport.getDTO();
 
-        return energyPassportDTO;
+        return setupPassportVars(energyPassportDTO);
     }
 
     @Transactional(value = TxConst.TX_DEFAULT)
@@ -119,14 +117,17 @@ public class EnergyPassportService {
         if (result != null) {
             result.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId())));
         }
-        return result;
+        return setupPassportVars(result);
     }
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<EnergyPassportDTO> findBySubscriberId(Long subscriberId) {
         List<EnergyPassportDTO> resultList = passportRepository.findBySubscriberId(subscriberId).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
-        resultList.forEach((p) -> p.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId()))));
+        resultList.forEach((p) -> {
+            p.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId())));
+            setupPassportVars(p);
+        });
         return resultList;
     }
 
@@ -452,5 +453,33 @@ public class EnergyPassportService {
     }
 
 
+    private Properties fillEnergyPassportVars(EnergyPassportDTO energyPassport) {
+        Properties vars = new Properties();
+        int yyyy = energyPassport.getPassportDate().getYear();
+        vars.put(Pattern.quote("{YYYY}"), Integer.toString(yyyy));
+        vars.put(Pattern.quote("{YYYY-1}"), Integer.toString(yyyy-1));
+        vars.put(Pattern.quote("{YYYY-2}"), Integer.toString(yyyy-2));
+        vars.put(Pattern.quote("{YYYY-3}"), Integer.toString(yyyy-3));
+        vars.put(Pattern.quote("{YYYY-4}"), Integer.toString(yyyy-4));
+        vars.put(Pattern.quote("{YYYY-5}"), Integer.toString(yyyy-5));
+        return vars;
+    }
+
+    /**
+     *
+     * @param energyPassportDTO
+     * @return
+     */
+    private EnergyPassportDTO setupPassportVars(EnergyPassportDTO energyPassportDTO) {
+        Properties vars = fillEnergyPassportVars(energyPassportDTO);
+        energyPassportDTO.getSections().forEach((i) -> {
+            String inJson = i.getSectionJson();
+            String outJson = EPSectionValueUtil.replaceJsonVars(inJson,vars);
+            if (!inJson.equals(outJson)) {
+                i.setSectionJson(outJson);
+            }
+        });
+        return energyPassportDTO;
+    }
 
 }
