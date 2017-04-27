@@ -24,14 +24,12 @@ public class EnergyPassport401_2014Test {
 
     private static final Logger log = LoggerFactory.getLogger(EnergyPassport401_2014Test.class);
 
-    private EnergyPassport401_2014 energyPassport401_2014;
     private EnergyPassport401_2014_Add energyPassport401_2014_Add;
 
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void setUp() throws Exception {
-        energyPassport401_2014 = new EnergyPassport401_2014();
         energyPassport401_2014_Add = new EnergyPassport401_2014_Add();
 
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -46,7 +44,7 @@ public class EnergyPassport401_2014Test {
 
     @Test
     public void test_S_1_2() throws Exception {
-        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014.section_1_2();
+        EnergyPassportSectionTemplateFactory factory = energyPassport401_2014_Add.section_1_2();
         checkFactory(factory);
     }
 

@@ -12,12 +12,12 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
 import ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
-import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014;
 import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
 
 /**
@@ -53,7 +53,7 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
     @Transactional
     public void testUpdatingPassportFromTemplate() throws Exception {
         EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
-        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014.ENERGY_DECLARATION);
+        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION);
         EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
         log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
         energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());
