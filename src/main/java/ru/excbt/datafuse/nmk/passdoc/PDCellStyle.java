@@ -44,4 +44,8 @@ public class PDCellStyle {
         return new PDCellStyle().hAlignment(HAlignment.RIGHT);
     }
 
+    public static PDCellStyle _makeHAligmentCenter() {
+        return new PDCellStyle().hAlignment(HAlignment.CENTER);
+    }
+
 }
