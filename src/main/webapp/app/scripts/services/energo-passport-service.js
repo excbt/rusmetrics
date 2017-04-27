@@ -27,10 +27,20 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
     
     function createPassport(passportName, passportDescription) {
         var url = PASSPORT_URL;
-        url = mainSvc.addParamToURL(url, "passportName", passportName);
-        url = mainSvc.addParamToURL(url, "passportDescription", passportDescription);
+        var docBody = null;
+        if (!mainSvc.checkUndefinedNull(passportName)) {
+            docBody = {passportName: passportName};
+        }
+        if (!mainSvc.checkUndefinedNull(passportDescription)) {
+            if (docBody === null) {
+                docBody = {};
+            }
+            docBody = {description: passportDescription};
+        }
+//        url = mainSvc.addParamToURL(url, "passportName", passportName);
+//        url = mainSvc.addParamToURL(url, "description", passportDescription);
        
-        return $http.post(url);
+        return $http.post(url, docBody);
     }
 /* test    
     createPassportNew();
@@ -45,6 +55,17 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             url += "/" + id;
         }
         return $http.get(url);
+    }
+    
+    function deletePassport(id) {
+        if (mainSvc.checkUndefinedNull(id)) {
+            var defer = $q.deffer();
+            defer.reject("Delete: document id is undefined or null!");
+            return defer;
+        }
+        var url = PASSPORT_URL + "/" + id;
+        
+        return $http.delete(url);
     }
     
     function loadPassportData(id, sectionId, entryId) {
@@ -87,6 +108,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
     }
     
     service.createPassport = createPassport;
+    service.deletePassport = deletePassport;
     service.loadPassports = loadPassports;
     service.loadPassportData = loadPassportData;
     service.saveEntry = saveEntry;

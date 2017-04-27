@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true, white: true, nomen: true*/
-/*global angular, $*/
+/*global angular, $, moment*/
 'use strict';
 var app = angular.module('portalNMC');
 app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http', 'notificationFactory', 'mainSvc', '$timeout', '$interval', 'energoPassportSvc', '$location', function ($rootScope, $scope, $http, notificationFactory, mainSvc, $timeout, $interval, energoPassportSvc, $location) {
@@ -22,6 +22,12 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
             "type": "id"
         },
         {
+            "name": "type",
+            "caption": "Тип",
+            "class": "col-xs-1 nmc-link",
+            "type": "doctype"
+        },
+        {
             "name": "passportName",
             "caption": "Название",
             "class": "col-xs-3 nmc-link",
@@ -34,7 +40,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         },
         {
             "name": "passportDate2",
-            "caption": "Дата создания",
+            "caption": "Дата документа",
             "class": "col-xs-1 nmc-link",
             "type": "date"
         }
@@ -64,24 +70,27 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         }
     ];
     
+    $scope.emptyString = function (str) {
+        return mainSvc.checkUndefinedEmptyNullValue(str);
+    };
+    
     $scope.createEnergyDocumentInit = function () {
 //        $scope.ctrlSettings.passportLoading = true;
         $scope.data.currentDocument = {}; 
-        $scope.data.currentDocument.type =  $scope.data.documentTypes[0].name;      
+        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;      
         $('#showDocumentPropertiesModal').modal();
         //$('#editEnergoPassportModal').modal();
     };
     
     $scope.editEnergyDocument = function (doc) {
         $scope.data.currentDocument = angular.copy(doc);
-        $scope.data.currentDocument.passportDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat);
+        $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat);
         $('#showDocumentPropertiesModal').modal();
-    }
+    };
     
     $scope.openEnergyDocument = function (doc) {
         $location.path("/documents/energo-passport/" + doc.id);
-    };
-    
+    };    
     
     function errorCallback(e) {
         $scope.ctrlSettings.loading = false;
@@ -93,16 +102,43 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
 //console.log(resp);        
         $scope.data.passports = angular.copy(resp.data);
         $scope.ctrlSettings.loading = false;
-    }    
+    }
+    
+    function successCreatePassportCallback(resp) {
+        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+            console.error("Incorrect response from server:");
+            console.error(resp);
+            return false;
+        }
+        $('#showDocumentPropertiesModal').modal('hide');
+        $scope.openEnergyDocument(resp.data);
+    }
+    
+    function successDeletePassportCallback(resp) {
+        //delete doc from client document array
+        $scope.data.passports.some(function (passport, ind) {
+            if (passport.id === resp.data.id) {
+                $scope.data.passports.splice(ind, 1);
+                return true;
+            }
+        });
+        //close modal window
+    }
     
     function loadPassports() {
         energoPassportSvc.loadPassports()
             .then(successLoadPassportsCallback, errorCallback);
     }
     
-    $scope.createEnergyDocument = function (doc) {
-        $('#showDocumentPropertiesModal').modal('hide');
-        $location.path("/documents/energo-passport/new");
+    $scope.createEnergyDocument = function (doc) {        
+        energoPassportSvc.createPassport(doc.docName, doc.docDescription)
+            .then(successCreatePassportCallback, errorCallback);
+//        $location.path("/documents/energo-passport/new");
+    };
+    
+    $scope.deleteEnergyDocument = function (doc) {
+        energoPassportSvc.deletePassport(doc)
+            .then(successDeletePassportCallback, errorCallback);
     };
     
     $('#showDocumentPropertiesModal').on("shown.bs.modal", function () {

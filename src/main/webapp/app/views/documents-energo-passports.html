@@ -133,21 +133,32 @@
                                     <span ng-switch-when="date">
                                         {{elm[column.name] | date:'dd.MM.yyyy'}}
                                     </span>
+                                    <span ng-switch-when="doctype">
+<!--                                        <img src = "" alt = "Д" class = "img-circle"/>-->
+                                        <p class = "btn btn-xs btn-default"
+                                           style = "border-radius: 50%">
+                                            Д
+                                        </p>
+                                    </span>
                                     <span ng-switch-default >
                                         {{elm[column.name]}}
                                     </span>
                                 </div>
                             </td>
 
-                <!--
+                
                             <td class="col-xs-1">
                                 <div class="btn-toolbar">
                                     <div class="btn-group pull-right">                   
-                                        <i title="Удалить модем" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(modem)" data-target="#deleteModelModal" data-toggle="modal"></i>
+                                        <i title = "Удалить документ" 
+                                           class = "btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                                           ng-click = "deleteEnergyDocument(elm)" 
+                                           data-target = "#deleteModelModal" 
+                                           data-toggle = "modal"></i>
                                     </div>
                                 </div>
                             </td>
-                -->
+                
                         </tr>
                     </table>
                 </div>
@@ -218,12 +229,12 @@
                                 </td>
                                 <td class = "col-sm-9 nmc-text-align-left">
                                     <div class = "form-group noMarginBottom" 
-                                         ng-class = "{'has-error': emptyString(data.currentDocument.name)}">
+                                         ng-class = "{'has-error': emptyString(data.currentDocument.docName)}">
                                         <input  
                                                class = "form-control nmc-text-input-form" 
                                                type = "text" 
                                                id = "inputEnergyDocName" 
-                                               ng-model = "data.currentDocument.name" />
+                                               ng-model = "data.currentDocument.docName" />
                                     </div>
                                 </td>
                             </tr>
@@ -235,7 +246,7 @@
                                     <textarea class = "form-control nmc-textarea-form" 
                                               id = "inputEnergyDocDescription" 
                                               placeholder = "Описание" 
-                                              ng-model = "data.currentDocument.description">
+                                              ng-model = "data.currentDocument.docDescription">
                                     </textarea>
                                 </td>
                             </tr>
@@ -248,10 +259,11 @@
                                     <span class = "form-group" 
                                           >
                                         <input id = "inputEnergyDocDate" 
-                                               class = "form-control nmc-date-input-form nmc-spec-date" 
+                                               class = "form-control nmc-date-input-form" 
                                                type = "text"                                                                                               
-                                               ng-model = "data.currentDocument.passportDateFormatted"
-                                               readonly/>
+                                               ng-model = "data.currentDocument.docDateFormatted"
+                                               readonly
+                                               disabled/>
                                     </span>
                                 </td>
                             </tr>
@@ -273,6 +285,7 @@
 							<input type = "submit" 
                                    class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                    ng-click = "createEnergyDocument(data.currentDocument)"
+                                   ng-disabled = "data.currentDocument.id != null"
                                    value = "Сохранить" />
 						</div>
 						<div class = "pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
@@ -286,5 +299,14 @@
 				</div>
 		</div>
 	</div>
+</div>
+
+<!--    delete -->
+<div nmc-view-delete-modal-window 
+     message = "{{data.currentDeleteMessage}}"      
+     confirm-label = "{{confirmLabel}}"
+     control-code = "{{sumNums}}"
+     is-systemuser = "isSystemuser()"
+     delete-item-click = "deleteHandler(data.currentDeleteItem)">
 </div>
     
