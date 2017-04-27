@@ -1869,25 +1869,19 @@ public class EnergyPassport401_2014_Add {
                 .and().createStringValueElement().columnKey("accounting").keyValueIdx(2)
                 .and().createValueElements(5, PDTableCellValueDouble.class, 3);
 
-            partDynamic.indentAfter(false);
-        }
-
-        {
-            final PDInnerTable innerTable2 = topTable.createPartInnerTable().createInnerTable();
-
-            PDTablePart part =innerTable2.createPartRow("1_total", "");
-            part.createStaticElement("Итого суммарный приход");
-            part.createValueElements(5, PDTableCellValueDoubleAggregation.class)
+            PDTablePart part = innerTable.createPartRow("1_total", "");
+            part.createStaticElement("Итого суммарный приход").cellStyle(PDCellStyle._makeHAligmentRight())
+                .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
                     i.setValueGroup("P_1.*");
                     i.setValueFunction("sum()");
                 });
             part.widthsOfElements(10, 50, 15, 15, 15, 15, 15);
 
-            innerTable2.createPartRowNr("2")
+            innerTable.createPartRowNr("2")
                 .and().createStaticElement("Расход").mergedCells(6);
 
-            innerTable2.createPartRowNr("2.1")
+            innerTable.createPartRowNr("2.1")
                 .and().createStaticElement("Технологическое использование, всего,\n" +
                 "в том числе:")
                 .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
@@ -1896,27 +1890,27 @@ public class EnergyPassport401_2014_Add {
                     i.setValueFunction("sum()");
                 });
 
-            innerTable2.createPartRowNr("2.1.1")
+            innerTable.createPartRowNr("2.1.1")
                 .and().createStaticElement("нетопливное использование (в виде сырья)")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.2")
+            innerTable.createPartRowNr("2.1.2")
                 .and().createStaticElement("нагрев")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.3")
+            innerTable.createPartRowNr("2.1.3")
                 .and().createStaticElement("сушка")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.4")
+            innerTable.createPartRowNr("2.1.4")
                 .and().createStaticElement("обжиг (плавление, отжиг)")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.1.5")
+            innerTable.createPartRowNr("2.1.5")
                 .and().createStaticElement("бытовое использование")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.2")
+            innerTable.createPartRowNr("2.2")
                 .and().createStaticElement("На выработку тепловой энергии, всего,\n" +
                 "в том числе:")
                 .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
@@ -1925,22 +1919,29 @@ public class EnergyPassport401_2014_Add {
                     i.setValueFunction("sum()");
                 });
 
-            innerTable2.createPartRowNr("2.2.1")
+            innerTable.createPartRowNr("2.2.1")
                 .and().createStaticElement("в котельной")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
-            innerTable2.createPartRowNr("2.2.2")
+            innerTable.createPartRowNr("2.2.2")
                 .and().createStaticElement("в собственной тепловой электрической станции (включая выработку электрической энергии)")
                 .and().createValueElements(5, PDTableCellValueDouble.class);
 
 
-            innerTable2.createPartRow("2_total", "")
-                .createStaticElement("Итого суммарный расход")
+            innerTable.createPartRow("2_total", "")
+                .createStaticElement("Итого суммарный расход").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
                     i.setValueGroup("P_2.*");
                     i.setValueFunction("sum()");
                 });
+
+        }
+
+        {
+            final PDInnerTable innerTable2 = topTable.createPartInnerTable().createInnerTable();
+
+
 
         }
         return new EPSectionTemplateFactory(topTable);
