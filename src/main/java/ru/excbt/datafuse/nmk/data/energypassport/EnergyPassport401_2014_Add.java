@@ -1188,10 +1188,10 @@ public class EnergyPassport401_2014_Add {
             partHeader.createStaticElement().caption("Наименование").columnKey("res_name")
                 .and().createStaticElement("Единица измерения")
                 .and().createStaticElement("Предшествующие годы")
-                    .createStaticChild("______").columnKey("YYYY-4")
-                    .createStaticSibling("______").columnKey("YYYY-3")
-                    .createStaticSibling("______").columnKey("YYYY-2")
-                    .createStaticSibling("______").columnKey("YYYY-1")
+                    .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+                    .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+                    .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+                    .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
                 .and().createStaticElement("Отчетный год");
 
             partHeader.widthsOfElements(5, 30, 10, 15, 15, 15, 15, 15);
@@ -1489,10 +1489,10 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-                .createStaticChild("___").columnKey("YYYY-4")
-                .createStaticSibling("___").columnKey("YYYY-3")
-                .createStaticSibling("___").columnKey("YYYY-2")
-                .createStaticSibling("___").columnKey("YYYY-1")
+                .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+                .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+                .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+                .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
             .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
@@ -1619,10 +1619,10 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-            .createStaticChild("___").columnKey("YYYY-4")
-            .createStaticSibling("___").columnKey("YYYY-3")
-            .createStaticSibling("___").columnKey("YYYY-2")
-            .createStaticSibling("___").columnKey("YYYY-1")
+            .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+            .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+            .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+            .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
             .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
@@ -1741,10 +1741,10 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-            .createStaticChild("___").columnKey("YYYY-4")
-            .createStaticSibling("___").columnKey("YYYY-3")
-            .createStaticSibling("___").columnKey("YYYY-2")
-            .createStaticSibling("___").columnKey("YYYY-1")
+            .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+            .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+            .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+            .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
             .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
@@ -1850,10 +1850,10 @@ public class EnergyPassport401_2014_Add {
             partHeader.createStaticElement().caption("Статья").columnKey("accounting");
             partHeader
                 .createStaticElement().caption("Предшествующие годы")
-                .createStaticChild("___").columnKey("YYYY-4")
-                .createStaticSibling("___").columnKey("YYYY-3")
-                .createStaticSibling("___").columnKey("YYYY-2")
-                .createStaticSibling("___").columnKey("YYYY-1")
+                .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
+                .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
+                .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
+                .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
                 .and().createStaticElement("Отчетный год").columnKey("YYYY");
 
             partHeader.widthsOfElements(10, 50, 15, 15, 15, 15, 15);
@@ -2580,10 +2580,10 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Класс напряжения")
             .and().createStaticElement().caption("Динамика изменения показателей по годам")
                 .createStaticChild("предшествующие годы")
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
-                    .createStaticChild("_____").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-4}").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-3}").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-2}").nextKeyValueIdx().andParentCell()
+                    .createStaticChild("{YYYY-1}").nextKeyValueIdx().andParentCell()
                 .andParentCell()
                 .createStaticChild("отчетный год").nextKeyValueIdx().cellStyle(new PDCellStyle().rowSpan(2));
 
@@ -2772,10 +2772,10 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
             .and().createStaticElement("Динамика изменения показателей по годам").nextKeyValueIdx()
                 .createStaticChild("предшествующие годы")
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-4}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-3}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-2}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-1}").applyCreator(creator).andParentCell()
                 .andParentCell()
              .createStaticChild("отчетный год").applyCreator(creator);
 
@@ -2886,10 +2886,10 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
             .and().createStaticElement("Динамика изменения показателей по годам")
                 .createStaticChild("предшествующие годы")
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
-                    .createStaticChild("____").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-4}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-3}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-2}").applyCreator(creator).andParentCell()
+                    .createStaticChild("{YYYY-1}").applyCreator(creator).andParentCell()
                 .andParentCell()
              .createStaticChild("отчетный год").applyCreator(creator);
 
