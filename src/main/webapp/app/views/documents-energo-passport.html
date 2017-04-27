@@ -169,7 +169,7 @@
                      class = "nmc-energo-passport-main-div"
                      ng-show = "!ctrlSettings.passportLoading">
                     <h4>
-                        {{data.currentPassDocSection.preparedSection.caption}}
+<!--                        {{data.currentPassDocSection.preparedSection.caption}}-->
                     </h4>
                     <div ng-if = "data.currentPassDocSection.hasEntries === true">
                         <button class="btn nmc-main-add-button" ng-click = "addEntryInit()">Добавить секцию</button>
@@ -208,10 +208,12 @@
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"
                                          style = "padding: 5px 0;"
-                                         ng-style = "{'text-align': part.cellStyle.halignment}">
+                                         ng-style = "{'text-align': part.cellStyle.halignment}"
+                                         >
                                         <div ng-repeat = "elm in part.elements track by $index"
                                              style = "display: inline-block; padding: 0 10px;"
-                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}">
+                                             ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}"
+                                             ng-class = "{'nmc-energy-doc-h1': elm.cellStyle.header1}">
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
@@ -272,7 +274,7 @@
                                                         {{td.caption}}
                                                     </div>
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'Counter'">
-                                                        {{td.value}}
+                                                        {{td.counterPrefix + td.value}}
                                                     </div>
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
                                                          contenteditable

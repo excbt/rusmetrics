@@ -3028,3 +3028,7 @@ input[type="checkbox"] {
 .nmc-energy-contents-entry:nth-of-type(odd) {    
     background-color: #eee;
 }
+
+.nmc-energy-doc-h1 {
+    font-size: 18px;
+}
