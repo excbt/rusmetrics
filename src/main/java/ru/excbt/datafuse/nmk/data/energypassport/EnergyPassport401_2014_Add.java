@@ -1510,7 +1510,7 @@ public class EnergyPassport401_2014_Add {
 
 
         innerTable.createPartRow("1_total", "")
-            .createStaticElement("Итого суммарный приход")
+            .createStaticElement("Итого суммарный приход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_1.*");
@@ -1585,7 +1585,7 @@ public class EnergyPassport401_2014_Add {
             .and().createValueElements(5, PDTableCellValueDouble.class);
 
         innerTable.createPartRow("2_total", "")
-            .createStaticElement("Итого суммарный расход")
+            .createStaticElement("Итого суммарный расход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_2.*");
@@ -1650,7 +1650,7 @@ public class EnergyPassport401_2014_Add {
 
 
         innerTable.createPartRow("1_total", "")
-            .createStaticElement("Итого суммарный приход")
+            .createStaticElement("Итого суммарный приход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_1.*");
@@ -1706,7 +1706,7 @@ public class EnergyPassport401_2014_Add {
             .and().createValueElements(5, PDTableCellValueDouble.class);
 
         innerTable.createPartRow("2_total", "")
-            .createStaticElement("Итого суммарный расход")
+            .createStaticElement("Итого суммарный расход").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createValueElements(5, PDTableCellValueDoubleAggregation.class)
             .forEach((i) -> {
                 i.setValueGroup("P_2.*");
@@ -2115,7 +2115,7 @@ public class EnergyPassport401_2014_Add {
             pdTable.createPartRow("1.2","2").applyCreator(valuesCreator);
 
             PDTablePart table1TotalPart = pdTable.createPartRow("1_total", "");
-            table1TotalPart.createStaticElement("Итого")
+            table1TotalPart.createStaticElement("Итого").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createStaticElement("").mergedCells(5)
                 .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
@@ -2167,7 +2167,7 @@ public class EnergyPassport401_2014_Add {
             pdTable.createPartRow("2.2","2").applyCreator(valuesCreator);
 
             PDTablePart table2TotalPart = pdTable.createPartRow("2_total", "");
-            table2TotalPart.createStaticElement("Итого")
+            table2TotalPart.createStaticElement("Итого").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createStaticElement("").mergedCells(4)
                 .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
                 .forEach((i) -> {
@@ -2271,7 +2271,7 @@ public class EnergyPassport401_2014_Add {
 
             pdTable.createPartRow().key("DATA_TOTAL")
                 .and().createStaticElement()
-                .and().createStaticElement("Итого").mergedCells(5).cellStyle(new PDCellStyle().hAlignment(HAlignment.RIGHT))
+                .and().createStaticElement("Итого").mergedCells(5).cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().applyCreator(sum6)
                 .and().applyCreator(sum5);
 
