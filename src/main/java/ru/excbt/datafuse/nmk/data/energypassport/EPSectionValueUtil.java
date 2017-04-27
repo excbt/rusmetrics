@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.energypassport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.util.JsonMapperUtils;
@@ -21,7 +22,8 @@ public class EPSectionValueUtil {
     private static final Logger log = LoggerFactory.getLogger(EPSectionValueUtil.class);
 
     static {
-
+        OBJECT_MAPPER.findAndRegisterModules();
+        OBJECT_MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     private EPSectionValueUtil() {
