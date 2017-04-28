@@ -3096,7 +3096,7 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("№ п/п")
             .and().createStaticElement().caption("Единичная мощность, кВА")//.nextKeyValueIdx()
             .and().createStaticElement().caption("Высшее напряжение, кВ")//.nextKeyValueIdx()
-            .and().createStaticElement("Динамика изменения показателей по годам").nextKeyValueIdx()
+            .and().createStaticElement("Динамика изменения показателей по годам")//.nextKeyValueIdx()
                 .createStaticChild("предшествующие годы")
                     .createStaticChild("{YYYY-4}").applyCreator(creator).andParentCell()
                     .createStaticChild("{YYYY-3}").applyCreator(creator).andParentCell()
@@ -3208,8 +3208,8 @@ public class EnergyPassport401_2014_Add {
 
 
         partHeader.createStaticElement().caption("№ п/п")
-            .and().createStaticElement().caption("Единичная мощность, кВА").nextKeyValueIdx()
-            .and().createStaticElement().caption("Высшее напряжение, кВ").nextKeyValueIdx()
+            .and().createStaticElement().caption("Единичная мощность, кВА")//.nextKeyValueIdx()
+            .and().createStaticElement().caption("Высшее напряжение, кВ")//.nextKeyValueIdx()
             .and().createStaticElement("Динамика изменения показателей по годам")
                 .createStaticChild("предшествующие годы")
                     .createStaticChild("{YYYY-4}").applyCreator(creator).andParentCell()
