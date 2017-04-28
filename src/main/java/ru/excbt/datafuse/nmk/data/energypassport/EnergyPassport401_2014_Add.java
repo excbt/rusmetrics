@@ -1816,11 +1816,11 @@ public class EnergyPassport401_2014_Add {
         partHeader.createStaticElement().caption("Статья").columnKey("accounting");
         partHeader
             .createStaticElement().caption("Предшествующие годы")
-                .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
-                .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
-                .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
-                .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
-            .and().createStaticElement("Отчетный год").columnKey("YYYY");
+                .createStaticChild("{YYYY-4}").columnKey("YYYY-4").keyValueIdx(1)
+                .createStaticSibling("{YYYY-3}").columnKey("YYYY-3").keyValueIdx(2)
+                .createStaticSibling("{YYYY-2}").columnKey("YYYY-2").keyValueIdx(3)
+                .createStaticSibling("{YYYY-1}").columnKey("YYYY-1").keyValueIdx(4)
+            .and().createStaticElement("Отчетный год").columnKey("YYYY").keyValueIdx(5);
 
         partHeader.widthsOfElements(10,50,15,15,15,15,15);
 
