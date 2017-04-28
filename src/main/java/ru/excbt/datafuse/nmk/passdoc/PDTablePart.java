@@ -308,7 +308,7 @@ public class PDTablePart implements PDReferable {
         List<T> result = new ArrayList<>();
         for (int i = 1; i <= count ; i++) {
             T element = createValueElement(valueType);
-            element.keyValueIdx(keyValueStarts + i);
+            element.keyValueIdx(keyValueStarts + i - 1);
             result.add(element);
         }
         return result;
