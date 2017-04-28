@@ -1346,9 +1346,9 @@ public class EnergyPassport401_2014_Add {
             final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_5a").createInnerTable();
 
             innerTable.createPartRowInner("_data")
-                .and().createStaticElement("Суммарный показатель")
+                .and().createStaticElement("Суммарный показатель").keyValueIdx(1)
                 .and().createDoubleValueElement().keyValueIdx(1)
-                .and().createStaticElement("Единица измерения")
+                .and().createStaticElement("Единица измерения").keyValueIdx(2)
                 .and().createStringValueElement().keyValueIdx(2)
                 .and().widthsOfElements(30,20,30,20);
         }
