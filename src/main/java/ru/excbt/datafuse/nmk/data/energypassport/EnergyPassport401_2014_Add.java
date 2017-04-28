@@ -2699,11 +2699,11 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+            partHeader.createStaticElement().caption("№ п/п")//.nextKeyValueIdx()
                 .and().createStaticElement().caption("Наименование показателя энергетической эффективности").nextKeyValueIdx()
                 .and().createStaticElement().caption("Единица измерения").nextKeyValueIdx()
                 .and().createStaticElement().caption("Значение показателя")
-                .createStaticChild("фактическое (по узлам (приборам) учета, расчетам)")
+                .createStaticChild("фактическое (по узлам (приборам) учета, расчетам)").nextKeyValueIdx()
                 .andParentCell()
                 .createStaticChild("расчетно-нормативное за отчетный год").nextKeyValueIdx();
 
@@ -2748,7 +2748,7 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п").nextKeyValueIdx()
+            partHeader.createStaticElement().caption("№ п/п")//.nextKeyValueIdx()
                 .and().createStaticElement().caption("Наименование мероприятия").nextKeyValueIdx()
                 .and().createStaticElement().caption("Единица измерения").nextKeyValueIdx()
                 .and().createStaticElement().caption("Фактическая годовая экономия").nextKeyValueIdx()
