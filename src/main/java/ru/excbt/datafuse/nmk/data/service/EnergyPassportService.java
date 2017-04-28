@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 
+import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -212,12 +213,29 @@ public class EnergyPassportService {
             DBExceptionUtils.entityNotFoundException(EnergyPassportSection.class, energyPassportDataDTO.getSectionKey(), "sectionKey");
         }
 
+
         EnergyPassportData passportData;
-        if (energyPassportDataDTO.getId() != null) {
-            passportData = passportDataRepository.findOne(energyPassportDataDTO.getId());
+
+        List<EnergyPassportData> dataList = passportDataRepository.findByPassportIdAndSectionEntry
+            (energyPassportDataDTO.getPassportId(),
+                energyPassportDataDTO.getSectionKey(),
+                energyPassportDataDTO.getSectionEntryId());
+
+        if (dataList.size() > 1) {
+            new PersistenceException("Too many rows for EnergyPassportData");
+        }
+
+        if (dataList.size() == 1) {
+            passportData = dataList.get(0);
         } else {
             passportData = new EnergyPassportData();
             passportData.setPassport(passport);
+        }
+
+        if (energyPassportDataDTO.getId() != null) {
+            if (!energyPassportDataDTO.getId().equals(passportData.getId())) {
+                DBExceptionUtils.entityNotFoundException(EnergyPassportData.class, energyPassportDataDTO.getId());
+            }
         }
 
         passportData.updateFromDTO(energyPassportDataDTO);
