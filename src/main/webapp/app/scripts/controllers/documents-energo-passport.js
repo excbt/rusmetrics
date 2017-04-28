@@ -28,6 +28,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY";
     $scope.ctrlSettings.dateFormatForDatepicker = "yy-mm-dd";
     
+    $scope.ctrlSettings.entryOrderBy = {field: 'entryOrder', asc: true};
+    
     $scope.ctrlSettings.FIRST_STATIC_ELEM = 5;
     $scope.ctrlSettings.STATIC_ELEM = 25;
     $scope.ctrlSettings.BOOLEAN_ELEM = 5;
@@ -348,6 +350,25 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         //perform section data
         var sectionValues = angular.copy($scope.data.passDocValues);
         $scope.data.passDocValues = performLoadedSection(resp.data, sectionValues);
+        
+        //find saved section and reset isChanged flag
+        var savedSection = mainSvc.findItemBy($scope.data.passport.sections, "sectionKey", resp.data.sectionKey);        
+        if (savedSection !== null && resp.data.sectionEntryId === 0) {
+            savedSection.isChanged = false;
+        } else {
+            $scope.data.passport.sections.some(function (section) {
+                if (section.hasEntries !== true) {
+                    return false;
+                }
+                var savedEntry = mainSvc.findItemBy(section.entries, "id", resp.data.sectionEntryId);
+                if (savedEntry !== null) {
+                    savedEntry.isChanged = false;
+                    return true;
+                }
+            });
+        }
+//        $scope.data.currentPassDocSection.isChanged = false;
+        $scope.data.passport.changedSectionCount -= 1;
     }
     
     function successLoadPassportDataCallback(resp) {
@@ -444,6 +465,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         });
 //        result = preparePassDoc(result);
         $scope.data.passport = tmp;
+        $scope.data.passport.changedSectionCount = 0; //passport is not changed
         //TODO: comment
         console.log($scope.data.passport);
 //        console.log(result);
@@ -542,6 +564,12 @@ console.log(docSec);
         changeSection(entry);
         //load entry data
     };
+    
+    $scope.onChange = function () {
+//console.log("onChange");
+        $scope.data.currentPassDocSection.isChanged = true;
+        $scope.data.passport.changedSectionCount += 1;
+    }
     
     $scope.tdBlur = function (cell, values, complexIdx) {
 //console.log(cell);
@@ -835,6 +863,24 @@ console.log(part.innerPdTable.counterValue);
             .then(successPutCallback, errorCallback);
     };
     
+    $scope.savePassportWhole = function () {
+        $scope.data.passport.sections.forEach(function (section) {
+            if (section.isChanged !== true && section.hasEntries !== true) {
+                return;
+            }
+            if (section.hasEntries === true) {
+                section.entries.forEach(function (entry) {
+                    if (entry.isChanged !== true) {
+                        return;
+                    }
+                    $scope.savePassportSection(entry);
+                });
+            } else {
+                $scope.savePassportSection(section);
+            }
+        });
+    }
+    
 // **** work with section entry ***
     
     $scope.emptyString = function (str) {
@@ -863,7 +909,16 @@ console.log(part.innerPdTable.counterValue);
             console.error("не может иметь дочерних секций!");
             return false;
         }
-        $scope.data.currentPassDocSection.entries.push(resp.data);
+        //find entry in entry arr, if entry is absent - add entry, if - present - change entry
+        var savedEntry = mainSvc.findItemBy($scope.data.currentPassDocSection.entries, "id", resp.data.id);
+        if (savedEntry !== null) {
+            savedEntry.version = resp.data.version;
+            savedEntry.entryName = resp.data.entryName;
+            savedEntry.entryDescription = resp.data.entryDescription;
+            savedEntry.entryOrder = resp.data.entryOrder;
+        } else {        
+            $scope.data.currentPassDocSection.entries.push(resp.data);
+        }
         $('#showSectionEntryOptionModal').modal('hide');
         
     }
@@ -922,7 +977,7 @@ console.log(part.innerPdTable.counterValue);
     
     $('#showSectionEntryOptionModal').on('shown.bs.modal', function () {
         $('#inputSectionEntryName').focus();
-        $('#inputSectionOrder').inputmask();
+        $('#inputSectionOrder').inputmask('integer', {min: 1});
     });
 // **** end of work with section entry ***
     
