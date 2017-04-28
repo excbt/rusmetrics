@@ -320,53 +320,61 @@ public class EnergyPassport401_2014_Add {
 
         topTable.createPartLine("2a","")
             .and().createBooleanValueElement().keyValueIdx(1)
-            .and().createStaticElement("ОБЩЕСТВЕННОЕ").keyValueIdx(1)
+            .and().createStaticElement("ОБЩЕСТВЕННОЕ")//.cellStyle(PDCellStyle._makeHAligmentCenter())
+                .keyValueIdx(1)
             .and().createBooleanValueElement().keyValueIdx(2)
-            .and().createStaticElement("ЖИЛОЕ").keyValueIdx(2)
+            .and().createStaticElement("ЖИЛОЕ")//.cellStyle(PDCellStyle._makeHAligmentCenter())
+                .keyValueIdx(2)
             .and().createBooleanValueElement().keyValueIdx(3)
-            .and().createStaticElement("СТРОЕНИЕ, СООРУЖЕНИЕ").keyValueIdx(3);
+            .and().createStaticElement("СТРОЕНИЕ, СООРУЖЕНИЕ")//.cellStyle(PDCellStyle._makeHAligmentCenter())
+                .keyValueIdx(3);
 
         topTable.createPartLine("2b", "")
-            .and().createStaticElement("Здравоохранение")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Жилой дом")
-            .and().createStringValueElement().keyValueIdx(2)
-            .and().createStaticElement()
-            .and().createStringValueElement().keyValueIdx(3);
+            .and().createStaticElement("Здравоохранение").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(1)
+
+            .and().createStaticElement("Жилой дом").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(2)
+
+            .and().createStringValueElement().keyValueIdx(3)
+            .and().createBooleanValueElement().keyValueIdx(4);
 
         topTable.createPartLine("2c", "")
-            .and().createStaticElement("Воспитание и обучение")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Общежитие")
-            .and().createStringValueElement().keyValueIdx(2)
-            .and().createStaticElement()
-            .and().createStringValueElement().keyValueIdx(3);
+            .and().createStaticElement("Воспитание и обучение").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(1)
+
+            .and().createStaticElement("Общежитие").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(2)
+
+            .and().createStringValueElement().keyValueIdx(3)
+            .and().createBooleanValueElement().keyValueIdx(4);
 
 
         topTable.createPartLine("2d", "")
-            .and().createStaticElement("Наука")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Гостиница")
-            .and().createStringValueElement().keyValueIdx(2)
-            .and().createStaticElement()
-            .and().createStringValueElement().keyValueIdx(3);
+            .and().createStaticElement("Наука").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(1)
+
+            .and().createStaticElement("Гостиница").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(2)
+
+            .and().createStringValueElement().keyValueIdx(3)
+            .and().createBooleanValueElement().keyValueIdx(4);
+
 
         topTable.createPartLine("2e", "")
-            .and().createStaticElement("Управленческо-       ");
+            .and().createStaticElement("Управленческо- административное").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(1)
+
+            .and().createStaticElement("Другое").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(2)
+
+            .and().createStringValueElement().keyValueIdx(3)
+            .and().createBooleanValueElement().keyValueIdx(4);
 
         topTable.createPartLine("2f", "")
-            .and().createStaticElement("административное     ")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Другое")
-            .and().createStringValueElement().keyValueIdx(2)
-            .and().createStringValueElement().keyValueIdx(3);
-
-        topTable.createPartLine("2g", "")
-            .and().createStaticElement("Другое               ")
-            .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("                     ")
-            .and().createStaticElement("                     ")
-            .and().createStringValueElement().keyValueIdx(3);
+            .and().createStaticElement("Другое").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createBooleanValueElement().keyValueIdx(1)
+            .and().createStringValueElement().keyValueIdx(2);
 
         topTable.createPartLine("3")
             .and().createStaticElement("Техническое описание объекта (да/нет/значение показателя)");
