@@ -2409,18 +2409,18 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
-            partHeader.createStaticElement().caption("№ п/п");
-            partHeader.createStaticElement().caption("Наименование и источник вторичного (теплового) энергетического ресурса (далее - ВЭР)").columnKey("res_name");
+            partHeader.createStaticElement().caption("№ п/п");//.nextKeyValueIdx();
+            partHeader.createStaticElement().caption("Наименование и источник вторичного (теплового) энергетического ресурса (далее - ВЭР)").columnKey("res_name").nextKeyValueIdx();
             partHeader
                 .createStaticElement("Характеристики ВЭР")
-                .createStaticChild("фазовое состояние").columnKey("phase")
-                .createStaticSibling("расход куб. м/ч").columnKey("consumption")
-                .createStaticSibling("давление, МПа").columnKey("pressure")
-                .createStaticSibling("температура, °C").columnKey("temperature")
-                .createStaticSibling("характерные загрязнители, их концентрация, %").columnKey("pollutants")
-                .and().createStaticElement("Годовой выход ВЭР, Гкал").columnKey("year_output")
-                .and().createStaticElement("Годовое фактическое использование, Гкал").columnKey("year_use")
-                .and().createStaticElement("Примечание").columnKey("annotation");
+                .createStaticChild("фазовое состояние").columnKey("phase").nextKeyValueIdx()
+                .createStaticSibling("расход куб. м/ч").columnKey("consumption").nextKeyValueIdx()
+                .createStaticSibling("давление, МПа").columnKey("pressure").nextKeyValueIdx()
+                .createStaticSibling("температура, °C").columnKey("temperature").nextKeyValueIdx()
+                .createStaticSibling("характерные загрязнители, их концентрация, %").columnKey("pollutants").nextKeyValueIdx()
+                .and().createStaticElement("Годовой выход ВЭР, Гкал").columnKey("year_output").nextKeyValueIdx()
+                .and().createStaticElement("Годовое фактическое использование, Гкал").columnKey("year_use").nextKeyValueIdx()
+                .and().createStaticElement("Примечание").columnKey("annotation").nextKeyValueIdx();
 
             partHeader.widthsOfElements(10, 30, 15, 15, 15, 15, 20, 15, 15, 20);
 
@@ -2444,7 +2444,7 @@ public class EnergyPassport401_2014_Add {
             PDTablePart table1TotalPart = pdTable.createPartRow("1_total", "");
             table1TotalPart.createStaticElement("Итого").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createStaticElement("").mergedCells(5)
-                .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
+                .and().createValueElements(2, PDTableCellValueDoubleAggregation.class,7)
                 .forEach((i) -> {
                     i.setValueGroup("P_1.*");
                     i.setValueFunction("sum()");
@@ -2467,15 +2467,15 @@ public class EnergyPassport401_2014_Add {
             PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
             partHeader.createStaticElement().caption("№ п/п");
-            partHeader.createStaticElement().caption("Наименование альтернативного (местного) или возобновляемого вида ТЭР").columnKey("res_name")
-                .and().createStaticElement("Основные характеристики")
-                .and().createStaticElement("Теплотворная способность, ккал/кг")
-                .and().createStaticElement("Годовая наработка энергоустановки, ч")
-                .and().createStaticElement("КПД энергоустановки, %")
+            partHeader.createStaticElement().caption("Наименование альтернативного (местного) или возобновляемого вида ТЭР").columnKey("res_name").nextKeyValueIdx()
+                .and().createStaticElement("Основные характеристики").nextKeyValueIdx()
+                .and().createStaticElement("Теплотворная способность, ккал/кг").nextKeyValueIdx()
+                .and().createStaticElement("Годовая наработка энергоустановки, ч").nextKeyValueIdx()
+                .and().createStaticElement("КПД энергоустановки, %").nextKeyValueIdx()
                 .and().createStaticElement("Годовой фактический выход энергии за отчетный год")
-                    .createStaticChild("по тепловой энергии, Гкал")
-                    .createStaticSibling("по электрической энергии, МВт·ч")
-                .and().createStaticElement("Примечание").columnKey("annotation");
+                    .createStaticChild("по тепловой энергии, Гкал").nextKeyValueIdx()
+                    .createStaticSibling("по электрической энергии, МВт·ч").nextKeyValueIdx()
+                .and().createStaticElement("Примечание").columnKey("annotation").nextKeyValueIdx();
 
             partHeader.widthsOfElements(10, 30, 15, 15, 15, 15, 15, 15, 20);
 
@@ -2496,7 +2496,7 @@ public class EnergyPassport401_2014_Add {
             PDTablePart table2TotalPart = pdTable.createPartRow("2_total", "");
             table2TotalPart.createStaticElement("Итого").cellStyle(PDCellStyle._makeHAligmentRight())
                 .and().createStaticElement("").mergedCells(4)
-                .and().createValueElements(2, PDTableCellValueDoubleAggregation.class)
+                .and().createValueElements(2, PDTableCellValueDoubleAggregation.class,6)
                 .forEach((i) -> {
                     i.setValueGroup("P_2.*");
                     i.setValueFunction("sum()");
