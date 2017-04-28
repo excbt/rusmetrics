@@ -40,7 +40,7 @@ public class EnergyPassport401_2014_Add {
             "или муниципального образования");
 
         pdTable.createPartLine("1", "")
-            .and().createStringValueElement().cellStyle(PDCellStyle._makeHAligmentCenter());
+            .and().createStringValueElement().cellStyle(PDCellStyle._makeHAligmentCenter().header1());
 
         headerTool(pdTable, "h1-2", "(полное наименование органа государственной власти,\n" +
             "органа местного самоуправления, юридического лица)\n");
