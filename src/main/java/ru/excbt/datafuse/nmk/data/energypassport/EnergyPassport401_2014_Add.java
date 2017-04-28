@@ -2295,7 +2295,7 @@ public class EnergyPassport401_2014_Add {
                 .and().createStaticElement().caption("Наименование (марка) транспортного средства, оборудования").nextKeyValueIdx()
                 .and().createStaticElement("Количество единиц транспортных средств, оборудования").nextKeyValueIdx()
                 .and().createStaticElement("Грузоподъемность, т, пассажиров вместимость, чел.").nextKeyValueIdx()
-                .and().createStaticElement("Объем грузоперевозок, тыс. т-км, тыс. пасс.-км.")
+                .and().createStaticElement("Объем грузоперевозок, тыс. т-км, тыс. пасс.-км.").nextKeyValueIdx()
                 .and().createStaticElement("Сведения об использовании моторного топлива за отчетный год ")
                     //.createStaticChild(" ")
                     .createStaticChild("N п/п").cellStyle(new PDCellStyle().rowSpan(2)).nextKeyValueIdx().andParentCell()
