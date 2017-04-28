@@ -109,13 +109,13 @@
                 
                         </tr>
 
-                        <tr ng-repeat="elm in data.passports | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
-                            <td class="col-xs-1 nmc-td-for-button">
-                                <div class="btn-toolbar">
-                                    <div class="btn-group">
+                        <tr ng-repeat = "elm in data.passports | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+                            <td class = "col-xs-1 nmc-td-for-button">
+                                <div class = "btn-toolbar">
+                                    <div class = "btn-group">
                                         <i title = "Редактировать свойства документа" 
-                                           class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
-                                           ng-click="editEnergyDocument(elm)">
+                                           class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                                           ng-click = "editEnergyDocument(elm)">
                                         </i>
 
                                     </div>
@@ -133,7 +133,7 @@
                                         <input type="checkbox" ng-model="elm[column.name]" disabled/>
                                     </span>
                                     <span ng-switch-when="date">
-                                        {{elm[column.name] | date:'dd.MM.yyyy'}}
+                                        {{elm[column.name] | date: ctrlSettings.dateFormatAtTable}}
                                     </span>
                                     <span ng-switch-when="doctype">
 <!--                                        <img src = "" alt = "Д" class = "img-circle"/>-->
@@ -255,16 +255,17 @@
                                 <td class = "col-sm-3">
                                     <label for = "inputEnergyDocDate" 
                                            class = "nmc-form-label">Дата документа</label>
+                                    <span style = "color:red;">*</span>
                                 </td>
                                 <td class = "col-sm-9 nmc-text-align-left">
                                     <span class = "form-group" 
-                                          >
+                                          ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
                                         <input id = "inputEnergyDocDate" 
-                                               class = "form-control nmc-date-input-form" 
+                                               class = "form-control nmc-date-input-form nmc-spec-date" 
                                                type = "text"                                                                                               
                                                ng-model = "data.currentDocument.docDateFormatted"
                                                readonly
-                                               disabled/>
+                                               />
                                     </span>
                                 </td>
                             </tr>
@@ -285,8 +286,7 @@
                         <div class = "col-xs-offset-6 col-md-3">
 							<input type = "submit" 
                                    class = "btn btn-primary btn-block btn-xs nmc-save-button"
-                                   ng-click = "saveEnergyDocument(data.currentDocument)"
-                                   ng-disabled = "data.currentDocument.id != null"
+                                   ng-click = "saveEnergyDocument(data.currentDocument)"                                   
                                    value = "Сохранить" />
 						</div>
 						<div class = "pull-right col-xs-offset-2 col-md-3 noMargin noPadding">

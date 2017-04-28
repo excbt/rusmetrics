@@ -25,30 +25,60 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
 //        return url;
 //    }
     
-    function createPassport(passportName, passportDescription) {
-        var url = PASSPORT_URL;
+    function prepareDocumentToSaving(doc) {
         var docBody = null;
-        if (!mainSvc.checkUndefinedNull(passportName)) {
-            docBody = {passportName: passportName};
+        if (mainSvc.checkUndefinedNull(doc)) {
+            return null;
         }
-        if (!mainSvc.checkUndefinedNull(passportDescription)) {
+        if (!mainSvc.checkUndefinedNull(doc.id)) {
+            docBody = {id: doc.id};
+        }
+        if (!mainSvc.checkUndefinedNull(doc.passportName)) {
             if (docBody === null) {
                 docBody = {};
             }
-            docBody.description = passportDescription;
+            docBody.passportName = doc.passportName;
         }
-//        url = mainSvc.addParamToURL(url, "passportName", passportName);
-//        url = mainSvc.addParamToURL(url, "description", passportDescription);
+        if (!mainSvc.checkUndefinedNull(doc.description)) {
+            if (docBody === null) {
+                docBody = {};
+            }
+            docBody.description = doc.description;
+        }
+        if (!mainSvc.checkUndefinedNull(doc.passportDate)) {
+            if (docBody === null) {
+                docBody = {};
+            }
+            docBody.passportDate = doc.passportDate;
+        }
+        if (!mainSvc.checkUndefinedNull(doc.version)) {
+            if (docBody === null) {
+                docBody = {};
+            }
+            docBody.version = doc.version;
+        }
+        
+        return docBody;
+    }
+    
+    function createPassport(doc) {
+        var url = PASSPORT_URL;
+        var docBody = prepareDocumentToSaving(doc);
        
         return $http.post(url, docBody);
     }
-/* test    
-    createPassportNew();
-    createPassportNew("Pass name", "pass desc");
-    createPassportNew("Раз раз", "Описание паспорта");
-    createPassportNew("Pass1");
-    createPassportNew(null, "Description 2");
-*/
+    
+    function updatePassport(doc) {
+        if (mainSvc.checkUndefinedNull(doc) || mainSvc.checkUndefinedNull(doc.id)) {
+            var defer = $q.defer();
+            defer.reject("Update: document id is undefined or null!");
+            return defer;
+        }
+        var url = PASSPORT_URL + "/" + doc.id;
+        var docBody = prepareDocumentToSaving(doc);               
+        return $http.put(url, docBody);
+    }
+
     function loadPassports(id) {
         var url = PASSPORT_URL;
         if (!mainSvc.checkUndefinedNull(id)) {
@@ -90,7 +120,19 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             return $http.put(url, entry);
         } else {
             var defer = $q.defer();
-            defer.reject("Passport data is undefined or null!");
+            defer.reject("Entry data is undefined or null!");
+            return defer;
+        }
+    }
+    
+    function deleteEntry(passportId, sectionId, entry) {
+        var url = PASSPORT_URL;
+        if (!mainSvc.checkUndefinedNull(passportId) && !mainSvc.checkUndefinedNull(sectionId) && !mainSvc.checkUndefinedNull(entry)) {
+            url += "/" + passportId + "/section/" + sectionId + "/entries/" + entry.id;
+            return $http.delete(url);
+        } else {
+            var defer = $q.defer();
+            defer.reject("Entry data is undefined or null!");
             return defer;
         }
     }
@@ -111,8 +153,10 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
     service.deletePassport = deletePassport;
     service.loadPassports = loadPassports;
     service.loadPassportData = loadPassportData;
+    service.deleteEntry = deleteEntry;
     service.saveEntry = saveEntry;
     service.savePassport = savePassport;
+    service.updatePassport = updatePassport;
     
     return service;
 }]);

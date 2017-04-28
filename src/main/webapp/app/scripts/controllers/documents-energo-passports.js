@@ -11,7 +11,9 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.ctrlSettings.cssMeasureUnit = "em";
     $scope.ctrlSettings.passportLoading = true;
     $scope.ctrlSettings.emptyString = " ";
-    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY";
+    $scope.ctrlSettings.dateFormat = "YYYY-MM-DD";//"DD.MM.YYYY"; //moment format
+    $scope.ctrlSettings.dateFormatAtTable = "yyyy-MM-dd"; //angular format
+    $scope.ctrlSettings.dateFormatForDatepicker = "yy-mm-dd"; //jquery datepicker format
     
         //model columns
     $scope.ctrlSettings.passportColumns = [        
@@ -94,7 +96,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         $scope.sumNums = tmpCode.result;                    
     };
     
-    $scope.isSystemuser = function(){
+    $scope.isSystemuser = function () {
         return mainSvc.isSystemuser();
     };
     
@@ -120,8 +122,22 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successCreatePassportCallback(resp) {
-        successSavePassportCallback(resp);
+        if (successSavePassportCallback(resp) === false) {
+            return false;
+        }
         $scope.openEnergyDocument(resp.data);
+    }
+    
+    function successUpdatePassportCallback(resp) {
+        if (successSavePassportCallback(resp) === false) {
+            return false;
+        }
+        //find and update doc in doc array
+        var updatingItem = mainSvc.findItemBy($scope.data.passports, "id", resp.data.id);
+        var docIndexAtArr = $scope.data.passports.indexOf(updatingItem);        
+        if (docIndexAtArr > -1) {
+            $scope.data.passports[docIndexAtArr] = angular.copy(resp.data);
+        }
     }
     
     function successDeletePassportCallback(resp) {
@@ -142,15 +158,42 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
             .then(successLoadPassportsCallback, errorCallback);
     }
     
+    function checkDoc(doc) {
+        var checkFlag = true;
+        if (mainSvc.checkUndefinedNull(doc.passportName) || $scope.emptyString(doc.passportName)) {
+            notificationFactory.errorInfo("Ошибка", "Не задано название для документа");
+            checkFlag = false;
+        }
+        if (mainSvc.checkUndefinedNull(doc.type)) {
+            notificationFactory.errorInfo("Ошибка", "Не задан тип для документа");
+            checkFlag = false;
+        }
+        if (mainSvc.checkUndefinedNull(doc.docDateFormatted) || $scope.emptyString(doc.docDateFormatted)) {
+            notificationFactory.errorInfo("Ошибка", "Не задана дата документа");
+            checkFlag = false;
+        }
+        return checkFlag;
+    }
+    
     $scope.saveEnergyDocument = function (doc) { 
 //console.log(doc);
+        if (checkDoc(doc) === false) {
+            return false;
+        }
+        //prepare doc date 
+        var tmpDate = moment(doc.docDateFormatted, $scope.ctrlSettings.dateFormat);
+//console.log(tmpDate);        
+//console.log([tmpDate.year(), tmpDate.month() + 1, tmpDate.date()]);        
+//console.log(doc.passportDate);
+        doc.passportDate = [tmpDate.year(), tmpDate.month() + 1, tmpDate.date()];
+        
         if (mainSvc.checkUndefinedNull(doc.id)) {
-            energoPassportSvc.createPassport(doc.passportName, doc.description)
+            energoPassportSvc.createPassport(doc)
                 .then(successCreatePassportCallback, errorCallback);
     //        $location.path("/documents/energo-passport/new");
         } else {
-            energoPassportSvc.updatePassport(doc.passportName, doc.description)
-                .then(successSavePassportCallback, errorCallback);
+            energoPassportSvc.updatePassport(doc)
+                .then(successUpdatePassportCallback, errorCallback);
         }
     };
     
@@ -172,7 +215,9 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         
     $('#showDocumentPropertiesModal').on("shown.bs.modal", function () {
         $("#inputEnergyDocName").focus();
-        $('#inputEnergyDocDate').datepicker(mainSvc.getDetepickerSettingsFullView());
+        var viewDateformat = mainSvc.getDetepickerSettingsFullView();
+        viewDateformat.dateFormat = $scope.ctrlSettings.dateFormatForDatepicker;
+        $('#inputEnergyDocDate').datepicker(viewDateformat);
     });
     
     function initCtrl() {
