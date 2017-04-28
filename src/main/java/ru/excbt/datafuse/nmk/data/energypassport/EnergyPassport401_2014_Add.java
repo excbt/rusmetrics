@@ -2582,15 +2582,13 @@ public class EnergyPassport401_2014_Add {
 
 
             final Consumer<PDTablePart> sum6 = (p) ->
-                p.createValueElements(6,PDTableCellValueDoubleAggregation.class).forEach((i) -> {
-                    i.nextKeyValueIdx();
+                p.createValueElements(6,PDTableCellValueDoubleAggregation.class,7).forEach((i) -> {
                     i.setValueFunction("sum()");
                     i.setValueGroup("DATA_dr(.)_i1");
                 });
 
             final Consumer<PDTablePart> sum5 = (p) ->
-                p.createValueElements(5,PDTableCellValueDoubleAggregation.class).forEach((i) -> {
-                    i.nextKeyValueIdx();
+                p.createValueElements(5,PDTableCellValueDoubleAggregation.class,13).forEach((i) -> {
                     i.setValueFunction("sum()");
                     i.setValueGroup("DATA_dr(.)_i1");
                 });
