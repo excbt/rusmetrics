@@ -1513,13 +1513,13 @@ public class EnergyPassport401_2014_Add {
 
             partHeader.createStaticElement().caption("№ п/п");
             partHeader.createStaticElement().caption("Наименование").columnKey("res_name")
-                .and().createStaticElement("Единица измерения")
+                .and().createStaticElement("Единица измерения").keyValueIdx(1)
                 .and().createStaticElement("Предшествующие годы")
-                    .createStaticChild("{YYYY-4}").columnKey("YYYY-4")
-                    .createStaticSibling("{YYYY-3}").columnKey("YYYY-3")
-                    .createStaticSibling("{YYYY-2}").columnKey("YYYY-2")
-                    .createStaticSibling("{YYYY-1}").columnKey("YYYY-1")
-                .and().createStaticElement("Отчетный год");
+                    .createStaticChild("{YYYY-4}").columnKey("YYYY-4").keyValueIdx(2)
+                    .createStaticSibling("{YYYY-3}").columnKey("YYYY-3").keyValueIdx(3)
+                    .createStaticSibling("{YYYY-2}").columnKey("YYYY-2").keyValueIdx(4)
+                    .createStaticSibling("{YYYY-1}").columnKey("YYYY-1").keyValueIdx(5)
+                .and().createStaticElement("Отчетный год").keyValueIdx(6);
 
             partHeader.widthsOfElements(5, 30, 10, 15, 15, 15, 15, 15);
 
