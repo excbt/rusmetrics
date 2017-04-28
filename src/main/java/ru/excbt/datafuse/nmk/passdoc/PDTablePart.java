@@ -376,6 +376,13 @@ public class PDTablePart implements PDReferable {
         return ++keyValueIdxCounter;
     }
 
+    public void resetKeyValueIdxCounter (){
+        this.keyValueIdxCounter = 0;
+    }
+    public void initKeyValueIdxCounter(int value) {
+       Preconditions.checkArgument(value >= 1);
+        this.keyValueIdxCounter = value - 1;
+    }
 
 //    public static <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
 //        T result = null;
