@@ -330,20 +330,20 @@ public class EnergyPassport401_2014_Add {
                 .keyValueIdx(3);
 
         topTable.createPartLine("2b", "")
-            .and().createStaticElement("Здравоохранение").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Здравоохранение").keyValueIdx(1).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(1)
 
-            .and().createStaticElement("Жилой дом").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Жилой дом").keyValueIdx(2).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(2)
 
             .and().createStringValueElement().keyValueIdx(3)
             .and().createBooleanValueElement().keyValueIdx(4);
 
         topTable.createPartLine("2c", "")
-            .and().createStaticElement("Воспитание и обучение").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Воспитание и обучение").keyValueIdx(1).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(1)
 
-            .and().createStaticElement("Общежитие").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Общежитие").keyValueIdx(2).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(2)
 
             .and().createStringValueElement().keyValueIdx(3)
@@ -351,10 +351,10 @@ public class EnergyPassport401_2014_Add {
 
 
         topTable.createPartLine("2d", "")
-            .and().createStaticElement("Наука").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Наука").keyValueIdx(1).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(1)
 
-            .and().createStaticElement("Гостиница").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Гостиница").keyValueIdx(2).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(2)
 
             .and().createStringValueElement().keyValueIdx(3)
@@ -362,17 +362,17 @@ public class EnergyPassport401_2014_Add {
 
 
         topTable.createPartLine("2e", "")
-            .and().createStaticElement("Управленческо- административное").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Управленческо- административное").keyValueIdx(1).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(1)
 
-            .and().createStaticElement("Другое").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Другое").keyValueIdx(2).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(2)
 
             .and().createStringValueElement().keyValueIdx(3)
             .and().createBooleanValueElement().keyValueIdx(4);
 
         topTable.createPartLine("2f", "")
-            .and().createStaticElement("Другое").cellStyle(PDCellStyle._makeHAligmentCenter())
+            .and().createStaticElement("Другое").keyValueIdx(1).cellStyle(PDCellStyle._makeHAligmentCenter())
             .and().createBooleanValueElement().keyValueIdx(1)
             .and().createStringValueElement().keyValueIdx(2);
 
@@ -487,27 +487,27 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("Материал наружных стен (есть/нет)");
 
         topTable.createPartLine("3.10a","")
-            .and().createStaticElement("Кирпич")
+            .and().createStaticElement("Кирпич").keyValueIdx(1)
             .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Бетон")
+            .and().createStaticElement("Бетон").keyValueIdx(2)
             .and().createStringValueElement().keyValueIdx(2);
 
         topTable.createPartLine("3.10b","")
-            .and().createStaticElement("Прочий каменный")
+            .and().createStaticElement("Прочий каменный").keyValueIdx(1)
             .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Деревянный")
+            .and().createStaticElement("Деревянный").keyValueIdx(2)
             .and().createStringValueElement().keyValueIdx(2);
 
         topTable.createPartLine("3.10c","")
-            .and().createStaticElement("Деревянно-каменный")
+            .and().createStaticElement("Деревянно-каменный").keyValueIdx(1)
             .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Металлический")
+            .and().createStaticElement("Металлический").keyValueIdx(2)
             .and().createStringValueElement().keyValueIdx(2);
 
         topTable.createPartLine("3.10d","")
-            .and().createStaticElement("Деревянно-каменный")
+            .and().createStaticElement("Деревянно-каменный").keyValueIdx(1)
             .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Металлический")
+            .and().createStaticElement("Металлический").keyValueIdx(2)
             .and().createStringValueElement().keyValueIdx(2);
 
         topTable.createPartLine();
@@ -517,9 +517,9 @@ public class EnergyPassport401_2014_Add {
             .and().createStringValueElement();
 
         topTable.createPartLine("3.10f","")
-            .and().createStaticElement("С теплоизолированным (утепленным) фасадом")
+            .and().createStaticElement("С теплоизолированным (утепленным) фасадом").keyValueIdx(1)
             .and().createStringValueElement().keyValueIdx(1)
-            .and().createStaticElement("Без утепления фасадов теплоизоляционным материалом")
+            .and().createStaticElement("Без утепления фасадов теплоизоляционным материалом").keyValueIdx(2)
             .and().createStringValueElement().keyValueIdx(2);
 
         section_helper1(topTable,"3.11",
