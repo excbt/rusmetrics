@@ -1381,7 +1381,7 @@ public class EnergyPassport401_2014_Add {
             "субъектов Российской Федерации, местных бюджетов\n");
 
         pdTable.createPartLine("1", "")
-            .and().createStringValueElement().cellStyle(PDCellStyle._makeHAligmentCenter());
+            .and().createStringValueElement().cellStyle(PDCellStyle._makeHAligmentCenter().header1());
 
         headerTool(pdTable, "h1-2", "(полное наименование юридического лица)");
 
