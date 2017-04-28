@@ -308,7 +308,7 @@ public class PDTablePart implements PDReferable {
         List<T> result = new ArrayList<>();
         for (int i = 1; i <= count ; i++) {
             T element = createValueElement(valueType);
-            element.keyValueIdx(keyValueStarts + i);
+            element.keyValueIdx(keyValueStarts + i - 1);
             result.add(element);
         }
         return result;
@@ -376,6 +376,13 @@ public class PDTablePart implements PDReferable {
         return ++keyValueIdxCounter;
     }
 
+    public void resetKeyValueIdxCounter (){
+        this.keyValueIdxCounter = 0;
+    }
+    public void initKeyValueIdxCounter(int value) {
+       Preconditions.checkArgument(value >= 1);
+        this.keyValueIdxCounter = value - 1;
+    }
 
 //    public static <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
 //        T result = null;
