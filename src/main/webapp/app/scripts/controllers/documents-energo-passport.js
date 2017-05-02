@@ -34,6 +34,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.ctrlSettings.STATIC_ELEM = 25;
     $scope.ctrlSettings.BOOLEAN_ELEM = 5;
     $scope.ctrlSettings.VALUE_ELEM = 25;
+    
+    $scope.ctrlSettings.sectionLoading = false;//flag of section loading
+    $scope.ctrlSettings.passportSaving = false;
+    $scope.ctrlSettings.sectionSaving = false;
+    
 //    $scope.ctrlSettings.emptyString = " ";
     
 //    $timeout(function () {
@@ -115,6 +120,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     };
     
     function errorCallback(e) {
+        $scope.ctrlSettings.sectionSaving = false;
+        $scope.ctrlSettings.passportSaving = false;
         var errorObj = mainSvc.errorCallbackHandler(e);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     }
@@ -333,11 +340,10 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         //console.log(rowCounter);
     }
     
-    function successPutCallback(resp) {
-        notificationFactory.success();
+    function successPutCallback(resp) {                        
 //        console.log(resp);
         if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
-            console.log("Empty response from server: " + resp);
+            console.warn("Empty response from server: ", resp);
             return false;
         }
         //update passport.passportData
@@ -369,6 +375,20 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
 //        $scope.data.currentPassDocSection.isChanged = false;
         $scope.data.passport.changedSectionCount -= 1;
+//console.log($scope.data.passport.changedSectionCount);        
+//console.log($scope.ctrlSettings.passportSaving === true);        
+        if ($scope.data.passport.changedSectionCount === 0 && $scope.ctrlSettings.passportSaving === true) {
+//console.log("reset passportSaving");            
+            notificationFactory.success();
+            $scope.ctrlSettings.passportSaving = false;
+        }
+        if ($scope.ctrlSettings.sectionSaving === true) {
+//console.log("reset sectionSaving");            
+            notificationFactory.success();
+            $scope.ctrlSettings.sectionSaving = false;
+        }
+//console.log($scope.ctrlSettings);        
+//console.log($scope.data.passport.changedSectionCount);        
     }
     
     function successLoadPassportDataCallback(resp) {
@@ -400,6 +420,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     }
     
     function successLoadSectionEntryDataCallback(resp) {
+        
+        $scope.ctrlSettings.sectionLoading = false;
+        
         if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
             console.warn("Empty response from server: ");
             console.warn(resp);
@@ -511,6 +534,7 @@ console.log(docSec);
     }
     
     function changeSection(part) {
+        $scope.ctrlSettings.sectionLoading = true;
         if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection)) {
             $scope.data.currentPassDocSection.isSelected = false;
         }
@@ -535,6 +559,8 @@ console.log(docSec);
             loadEntryData($scope.data.passport.id, $scope.data.currentPassDocSection.sectionId || $scope.data.currentPassDocSection.id, $scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0);
         } else {
             $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
+            
+            $scope.ctrlSettings.sectionLoading = false;
 
             setSectionStyles($scope.data.currentSectionValues);
 //            $timeout(function () {
@@ -567,9 +593,19 @@ console.log(docSec);
     
     $scope.onChange = function () {
 //console.log("onChange");
+        if (mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.isChanged) || $scope.data.currentPassDocSection.isChanged !== true) {
+            $scope.data.passport.changedSectionCount += 1;
+        }
         $scope.data.currentPassDocSection.isChanged = true;
-        $scope.data.passport.changedSectionCount += 1;
-    }
+        
+    };
+    
+    $scope.isDisabledSaveButtons = function () {
+//console.log($scope.ctrlSettings.sectionSaving === true);        
+//console.log($scope.ctrlSettings.passportSaving === true);
+//console.log(($scope.ctrlSettings.sectionSaving === true) || ($scope.ctrlSettings.passportSaving === true));        
+        return (($scope.ctrlSettings.sectionSaving === true) || ($scope.ctrlSettings.passportSaving === true));
+    };
     
     $scope.tdBlur = function (cell, values, complexIdx) {
 //console.log(cell);
@@ -828,6 +864,16 @@ console.log(newVal);
 console.log(part.innerPdTable.counterValue);        
     };
     
+    $scope.deleteRowFromTableInit = function (part, ind) {
+        $scope.onChange();
+        $scope.deleteRowFromTable(part, ind);
+    }
+    
+    $scope.addRowToTableInit = function (part, ind) {
+        $scope.onChange();
+        $scope.addRowToTable(part, ind);
+    }
+    
     $scope.savePassportSection = function (passportSection) {
 //        console.log(passportSection);
 //        console.log($scope.data.passDocValues[passportSection.preparedSection.sectionKey]);
@@ -857,13 +903,23 @@ console.log(part.innerPdTable.counterValue);
         currentPassportSection.sectionDataJson = JSON.stringify(sectionData);
 //console.log(sectionData);        
 //console.log(currentPassportSection);
-//return;        
+//return;                
         //call save function: passport id, section key, values
         energoPassportSvc.savePassport($scope.data.passport.id, currentPassportSection)
             .then(successPutCallback, errorCallback);
     };
     
+    $scope.savePassportSectionInit = function (passportSection) {
+        if (passportSection.isChanged !== true) {
+            return false;
+        }
+        $scope.ctrlSettings.sectionSaving = true;
+        $scope.savePassportSection(passportSection);
+    }
+    
     $scope.savePassportWhole = function () {
+//        $scope.ctrlSettings.passportSaving = true;
+        var tmpSavingFlag = false;
         $scope.data.passport.sections.forEach(function (section) {
             if (section.isChanged !== true && section.hasEntries !== true) {
                 return;
@@ -873,12 +929,15 @@ console.log(part.innerPdTable.counterValue);
                     if (entry.isChanged !== true) {
                         return;
                     }
+                    tmpSavingFlag = true;
                     $scope.savePassportSection(entry);
                 });
             } else {
+                tmpSavingFlag = true;
                 $scope.savePassportSection(section);
             }
         });
+        $scope.ctrlSettings.passportSaving = tmpSavingFlag;
     }
     
 // **** work with section entry ***
