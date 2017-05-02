@@ -9,6 +9,7 @@ import java.sql.Types;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 
 public class StringArrayUserType implements UserType {
@@ -21,7 +22,7 @@ public class StringArrayUserType implements UserType {
 	/**
 	 * Return the SQL type codes for the columns mapped by this type. The
 	 * codes are defined on <tt>java.sql.Types</tt>.
-	 * 
+	 *
 	 * @return int[] the typecodes
 	 * @see java.sql.Types
 	 */
@@ -32,7 +33,7 @@ public class StringArrayUserType implements UserType {
 
 	/**
 	 * The class returned by <tt>nullSafeGet()</tt>.
-	 * 
+	 *
 	 * @return Class
 	 */
 	@Override
@@ -44,7 +45,7 @@ public class StringArrayUserType implements UserType {
 	 * Retrieve an instance of the mapped class from a JDBC resultset.
 	 * Implementors
 	 * should handle possibility of null values.
-	 * 
+	 *
 	 * @param resultSet
 	 *            a JDBC result set.
 	 * @param names
@@ -65,7 +66,7 @@ public class StringArrayUserType implements UserType {
 	public final Object nullSafeGet(
 			final ResultSet resultSet,
 			final String[] names,
-			final SessionImplementor session,
+			final SharedSessionContractImplementor session,
 			final Object owner) throws HibernateException, SQLException {
 		if (resultSet.wasNull()) {
 			return null;
@@ -81,7 +82,7 @@ public class StringArrayUserType implements UserType {
 	 * should handle possibility of null values. A multi-column type should be
 	 * written
 	 * to parameters starting from <tt>index</tt>.
-	 * 
+	 *
 	 * @param statement
 	 *            a JDBC prepared statement.
 	 * @param value
@@ -99,7 +100,7 @@ public class StringArrayUserType implements UserType {
 	 */
 	@Override
 	public final void nullSafeSet(final PreparedStatement statement, final Object value,
-			final int index, final SessionImplementor session) throws HibernateException, SQLException {
+			final int index, final SharedSessionContractImplementor session) throws HibernateException, SQLException {
 
 		if (value == null) {
 			statement.setNull(index, SQL_TYPES[0]);

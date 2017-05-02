@@ -48,6 +48,7 @@ spring:
             hibernate.hbm2ddl.auto: validate
             hibernate.format-sql: true
             hibernate.show_sql: false
+            hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
 
 #            naming:
 #                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
