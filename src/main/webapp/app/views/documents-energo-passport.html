@@ -27,26 +27,40 @@
             <button class = "btn btn-default"
                     style = "padding: 3px;"
                     ng-class = "{'nmc-main-add-button': data.currentPassDocSection.isChanged}"
-                    ng-click = "savePassportSection(data.currentPassDocSection)"
-                    >Сохранить {{SECTION_NAME_ACC}}</button>
+                    ng-click = "savePassportSectionInit(data.currentPassDocSection)"
+                    ng-disabled = "isDisabledSaveButtons()"
+                    >
+                <i ng-show = "ctrlSettings.sectionSaving === true"
+                   class = "fa fa-spinner fa-spin"></i>
+                Сохранить {{SECTION_NAME_ACC}}
+<!--                {{isDisabledSaveButtons()}}-->
+            </button>
         </li>
         <li style = "padding: 0 10px;">
-            <button class="btn btn-default"
+            <button class = "btn btn-default"
                     style = "padding: 3px;"
                     ng-class = "{'nmc-main-add-button': data.passport.changedSectionCount > 0}"
                     ng-click = "savePassportWhole()"
-                    >Сохранить документ</button>
+                    ng-disabled = "isDisabledSaveButtons()"
+                    >
+                <i ng-hide = "ctrlSettings.passportSaving !== true"
+                   class = "fa fa-spinner fa-spin"></i>
+                Сохранить документ
+<!--                {{isDisabledSaveButtons()}}-->
+            </button>
         </li>
+<!--
         <li style = "padding: 0 10px;">
             <button class="btn btn-default"
                     style = "padding: 3px;"
                     disabled
                     >Отменить изменения</button>
         </li>
+-->
         <li>
             <button class="btn btn-default nmc-cancel-button"
                     style = "padding: 3px 10px;max-width: 240px;"
-                    ng-click="cancelEnergoPassportEdit()">
+                    ng-click = "cancelEnergoPassportEdit()">
                 Вернуться к списку документов
             </button>
         </li>
@@ -61,8 +75,8 @@
             </p>
         </li>
     </ul>
-    <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="documents">
+    <div class = "tab-content">
+      <div role = "tabpanel" class = "tab-pane fade in active" id = "documents">
       </div>
     </div>
 </div>
@@ -178,10 +192,13 @@
                 <div  ng-show="ctrlSettings.passportLoading" class="nmc-loading">
                     <i class="fa fa-spinner fa-spin"></i> Загрузка документа... 
                 </div>
+                <div  ng-show="ctrlSettings.sectionLoading" class="nmc-loading">
+                    <i class="fa fa-spinner fa-spin"></i> Загрузка {{SECTION_NAME_GEN}}... 
+                </div>
 <!--                                PassDoc-->
                 <div id = "passDoc"
                      class = "nmc-energo-passport-main-div"
-                     ng-show = "!ctrlSettings.passportLoading">
+                     ng-show = "!ctrlSettings.passportLoading && !ctrlSettings.sectionLoading">
                     <h4>
 <!--                        {{data.currentPassDocSection.preparedSection.caption}}-->
                     </h4>
@@ -348,7 +365,7 @@
                                                     ng-style = "{'width': '10' + ctrlSettings.cssMeasureUnit, 'max-width': '10' + ctrlSettings.cssMeasureUnit}">
 <!--                                                    ng-attr-rowspan = "{{part.innerPdTable.parts[1].tbody.length}}">                                                    -->
                                                     <i class = "btn btn-xs btn-default btn-xs"
-                                                       ng-click = "deleteRowFromTable(part, $index)"
+                                                       ng-click = "deleteRowFromTableInit(part, $index)"
                                                        >
                                                         Удалить
                                                     </i>
@@ -359,7 +376,7 @@
 <!--                                                    ng-attr-rowspan = "{{part.innerPdTable.parts[1].tbody.length}}">-->
                                                     <i 
                                                        class = "btn btn-xs btn-primary btn-xs"
-                                                       ng-click = "addRowToTable(part, $index)">
+                                                       ng-click = "addRowToTableInit(part, $index)">
                                                         Добавить
                                                     </i>                                                    
                                                 </td>
