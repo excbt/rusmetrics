@@ -60,11 +60,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     //current passport structure which is shown at present moment
     $scope.data.currentPassDocSection = null;
     
-    var setConfirmCode = function(useImprovedMethodFlag) {
+    var setConfirmCode = function (useImprovedMethodFlag) {
         $scope.confirmCode = null;
         var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
         $scope.confirmLabel = tmpCode.label;
-        $scope.sumNums = tmpCode.result;                    
+        $scope.sumNums = tmpCode.result;
     };
     
     $scope.isSystemuser = function () {
@@ -327,20 +327,32 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             console.warn("INNER_TABLE at passport section not found.");
             return;
         }
+        
+        //static row counter - static rows before dynamic part
+        var staticRowCounter = 0;
+        pssDynamicTablePart.innerPdTable.parts.some(function (staticRow) {
+            if (staticRow.partType === 'ROW' && staticRow.dynamic !== true) {
+                staticRowCounter += 1;
+            }
+            if (staticRow.dynamic === true) {
+                return true;
+            }
+        });
+        
         var rCount = 0;
         var dynamicRowPartLength = pssDynamicTablePart.innerPdTable.dynamicRowTemplate.tbody.length;
 //console.log(rowCounter);        
 //console.log(pssDynamicTablePart);        
         for (rCount = 0; rCount <= rowCounter - 2; rCount += 1) {
 //console.log("rCount = " + rCount);            
-            $scope.addRowToTable(pssDynamicTablePart, dynamicRowPartLength * (rCount + 1) - 1);
+            $scope.addRowToTable(pssDynamicTablePart, dynamicRowPartLength * (rCount + 1) - 1 + staticRowCounter);
         }
         //pssDynamicTablePart.innerPdTable.
         
         //console.log(rowCounter);
     }
     
-    function successPutCallback(resp) {                        
+    function successPutCallback(resp) {
 //        console.log(resp);
         if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
             console.warn("Empty response from server: ", resp);
@@ -358,7 +370,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.passDocValues = performLoadedSection(resp.data, sectionValues);
         
         //find saved section and reset isChanged flag
-        var savedSection = mainSvc.findItemBy($scope.data.passport.sections, "sectionKey", resp.data.sectionKey);        
+        var savedSection = mainSvc.findItemBy($scope.data.passport.sections, "sectionKey", resp.data.sectionKey);
         if (savedSection !== null && resp.data.sectionEntryId === 0) {
             savedSection.isChanged = false;
         } else {
@@ -683,13 +695,13 @@ console.log(docSec);
                     //calculate dynamic rows count
                     var counter = 0;
                     part.innerPdTable.parts.forEach(function (innerPart) {
-                        if (innerPart.partType === "ROW" && innerPart.dynamic === true) {                            
-                            counter += 1;                       
+                        if (innerPart.partType === "ROW" && innerPart.dynamic === true) {
+                            counter += 1;
                         }
                     });
-                    part.innerPdTable.counterValue = counter;                    
+                    part.innerPdTable.counterValue = counter;
                 }
-                part.innerPdTable.counterValue += 1;                
+                part.innerPdTable.counterValue += 1;
                 rowElem._dynamicIdx = part.innerPdTable.counterValue;
                 rowElem._complexIdx = rowElem.partKey + addingRow.dynamicSuffix + part.innerPdTable.counterValue + addingRow.valueIdxSuffix + rowElem.keyValueIdx;
                 if (mainSvc.isNumeric(rowElem.valuePackIdx)) {
@@ -714,12 +726,12 @@ console.log(docSec);
         //find static rows
         if (!mainSvc.checkUndefinedNull(rowIndex)) {
             var tmpTbodies = part.innerPdTable.tbodies.splice(rowIndex + 1, part.innerPdTable.tbodies.length);
-            part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);            
+            part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);
             part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(tmpTbodies);
-//console.log("Row index = " + rowIndex);            
-//console.log(tmpTbodies);                        
-//console.log(addingRow.tbody);            
-//console.log(part.innerPdTable.tbodies);            
+//console.log("Row index = " + rowIndex);
+//console.log(tmpTbodies);
+//console.log(addingRow.tbody);
+//console.log(part.innerPdTable.tbodies);
         } else {
             part.innerPdTable.tbodies = part.innerPdTable.tbodies.concat(addingRow.tbody);
         }
@@ -782,7 +794,7 @@ console.log(docSec);
 //                    delete $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][vkey];
 //                }
 //            }
-            var maxDataIdx = part.innerPdTable.counterValue;            
+            var maxDataIdx = part.innerPdTable.counterValue;
             var vkey, dataIndexCounter;
             for (dataIndexCounter = dataIndex; dataIndexCounter < maxDataIdx; dataIndexCounter += 1) {
 //console.log($scope.data.currentSectionValues);                
@@ -801,11 +813,11 @@ console.log(docSec);
 //                        console.log(currentVal);
 //                        console.log("currentVal._complexIdx: " + currentVal._complexIdx);
 //                        console.log("newComplexIdx: " + newComplexIdx);
-console.log(maxDataIdx);                        
-console.log(newComplexIdx);                        
-console.log($scope.data.currentSectionValues);
+//console.log(maxDataIdx);                        
+//console.log(newComplexIdx);                        
+//console.log($scope.data.currentSectionValues);
                         var newVal = angular.copy($scope.data.currentSectionValues[newComplexIdx]);
-console.log(newVal);                                                
+//console.log(newVal);                                                
                         newVal._dynamicIdx = dataIndexCounter;
                         newVal._complexIdx = currentVal._complexIdx;
                         
@@ -832,6 +844,9 @@ console.log(newVal);
         var counter = 0;
         part.innerPdTable.tbodies.forEach(function (row) {
 //            if (row.startPartRow === true) {
+            if (row.dynamic !== true) {
+                return false;
+            }
             row.tds.some(function (td) {
                 if (td.__type === 'Counter') {
                     counter += 1;
@@ -861,18 +876,18 @@ console.log(newVal);
 //        console.log(part.innerPdTable.tbodies);
         
         part.innerPdTable.counterValue = counter;
-console.log(part.innerPdTable.counterValue);        
+//console.log(part.innerPdTable.counterValue);
     };
     
     $scope.deleteRowFromTableInit = function (part, ind) {
         $scope.onChange();
         $scope.deleteRowFromTable(part, ind);
-    }
+    };
     
     $scope.addRowToTableInit = function (part, ind) {
         $scope.onChange();
         $scope.addRowToTable(part, ind);
-    }
+    };
     
     $scope.savePassportSection = function (passportSection) {
 //        console.log(passportSection);
@@ -915,7 +930,7 @@ console.log(part.innerPdTable.counterValue);
         }
         $scope.ctrlSettings.sectionSaving = true;
         $scope.savePassportSection(passportSection);
-    }
+    };
     
     $scope.savePassportWhole = function () {
 //        $scope.ctrlSettings.passportSaving = true;
@@ -938,7 +953,7 @@ console.log(part.innerPdTable.counterValue);
             }
         });
         $scope.ctrlSettings.passportSaving = tmpSavingFlag;
-    }
+    };
     
 // **** work with section entry ***
     
@@ -958,7 +973,7 @@ console.log(part.innerPdTable.counterValue);
     $scope.editEntryInit = function (entry) {
         $scope.data.currentSectionEntry = angular.copy(entry);
         $('#showSectionEntryOptionModal').modal();
-    }
+    };
     
     function successSaveEntryCallback(resp) {
 //        console.log(resp);
@@ -975,7 +990,7 @@ console.log(part.innerPdTable.counterValue);
             savedEntry.entryName = resp.data.entryName;
             savedEntry.entryDescription = resp.data.entryDescription;
             savedEntry.entryOrder = resp.data.entryOrder;
-        } else {        
+        } else {
             $scope.data.currentPassDocSection.entries.push(resp.data);
         }
         $('#showSectionEntryOptionModal').modal('hide');
