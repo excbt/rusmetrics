@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -34,7 +36,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 /**
  * Подписка контейнера на ресурсные системы
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 26.02.2015
@@ -44,10 +46,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @Table(name = "cont_zpoint")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -18,6 +20,7 @@ import java.io.Serializable;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport_data_value")
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EnergyPassportDataValue implements Serializable {
 
     @EmbeddedId

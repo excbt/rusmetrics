@@ -5,16 +5,19 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "report_type")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReportType extends AbstractKeynameEntity implements DevModeObject, DisabledObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6608655097029684171L;
 
