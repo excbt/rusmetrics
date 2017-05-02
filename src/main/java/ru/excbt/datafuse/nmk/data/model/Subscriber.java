@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 /**
@@ -26,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Entity
 @Table(name = "subscriber")
 @JsonInclude(Include.NON_NULL)
-public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject {
+public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject, PersistableBuilder<Subscriber, Long> {
 
 	/**
 	 *
@@ -112,11 +113,6 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	@JsonIgnore
 	@Column(name = "parent_subscriber_id", updatable = false)
 	private Long parentSubscriberId;
-
-	public Subscriber id(Long id) {
-	    this.setId(id);
-	    return this;
-    }
 
 	public String getInfo() {
 		return info;

@@ -14,10 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -65,6 +62,15 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "passport", cascade = CascadeType.ALL)
     private List<EnergyPassportSection> sections = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "energy_passport_cont_object", schema = DBMetadata.SCHEME_PORTAL, //
+        joinColumns = @JoinColumn(name = "passport_id"), //
+        inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
+    @JsonIgnore
+    @Getter
+    @Setter
+    private Set<ContObject> contObjects = new HashSet<>();
 
     public void addSection(EnergyPassportSection energyPassportSection) {
         energyPassportSection.setPassport(this);

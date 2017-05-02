@@ -19,4 +19,8 @@ public interface EnergyPassportRepository extends JpaRepository<EnergyPassport, 
 
     @Query("SELECT ep from EnergyPassport ep WHERE ep.passportTemplate.id = :passportTemplateId AND ep.deleted = 0")
     List<EnergyPassport> findByPassportTemplateId (@Param("passportTemplateId") Long passportTemplateId);
+
+    @Query("SELECT co.id from EnergyPassport ep INNER JOIN ep.contObjects co WHERE ep.id = :id AND ep.deleted = 0")
+    List<Long> findEnergyPassportContObjectIds(@Param("id") Long id);
+
 }

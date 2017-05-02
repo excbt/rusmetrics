@@ -153,4 +153,30 @@ public class EnergyPassportResource extends SubscrApiController {
     }
 
 
+    /**
+     *
+     * @param passportId
+     * @return
+     */
+    @RequestMapping(value = "/{id}/contObjectIds", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getPassportContObjects(@PathVariable("id") Long passportId) {
+
+        return responseOK(() -> energyPassportService.findEnergyPassportContObjectIds(passportId));
+    }
+
+    /**
+     *
+     * @param passportId
+     * @param contObjectIds
+     * @return
+     */
+    @RequestMapping(value = "/{id}/contObjectIds", method = RequestMethod.PUT,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> savePassportContObjects(@PathVariable("id") Long passportId, @RequestBody List<Long> contObjectIds) {
+        return responseUpdate(() ->
+            energyPassportService.linkEnergyPassportToContObjects(passportId, contObjectIds, getCurrentSubscriber()));
+    }
+
+
 }

@@ -18,12 +18,16 @@ import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +52,9 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
     @Autowired
     private EnergyPassportDataRepository energyPassportDataRepository;
+
+    @Autowired
+    private SubscrContObjectService subscrContObjectService;
 
 
     @Test
@@ -333,6 +340,27 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
         _testDeleteJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/section/"+ sectionDTO.get().getId() +
             "/entries/" + entryDto.getId());
+    }
+
+
+    @Test
+    @Transactional
+    public void testPassportContObjects() throws Exception {
+        EnergyPassportDTO passportDTO = energyPassportService.createPassport(EnergyPassport401_2014_Add.ENERGY_DECLARATION, new Subscriber().id(getSubscriberId()));
+        energyPassportRepository.flush();
+
+
+        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
+
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/contObjectIds");
+
+        energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
+        List<Long> linkedContObjectIds = energyPassportService.findEnergyPassportContObjectIds(passportDTO.getId());
+
+        contObjectIds.sort(Comparator.comparingLong(Long::longValue));
+
+        Assert.assertEquals(contObjectIds, linkedContObjectIds);
     }
 
 

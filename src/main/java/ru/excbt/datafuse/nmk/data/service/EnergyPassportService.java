@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class EnergyPassportService {
     private final EnergyPassportDataValueRepository energyPassportDataValueRepository;
     private final EnergyPassportSectionRepository passportSectionRepository;
     private final EnergyPassportSectionEntryRepository sectionEntryRepository;
+    private final SubscrContObjectService subscrContObjectService;
     /**
      * Creates section from section templates
      */
@@ -69,13 +71,15 @@ public class EnergyPassportService {
                                  EnergyPassportDataRepository energyPassportDataRepository,
                                  EnergyPassportDataValueRepository energyPassportDataValueRepository,
                                  EnergyPassportSectionRepository energyPassportSectionRepository,
-                                 EnergyPassportSectionEntryRepository energyPassportSectionEntryRepository) {
+                                 EnergyPassportSectionEntryRepository energyPassportSectionEntryRepository,
+                                 SubscrContObjectService subscrContObjectService) {
         this.passportTemplateRepository = energyPassportTemplateRepository;
         this.passportRepository = energyPassportRepository;
         this.passportDataRepository = energyPassportDataRepository;
         this.energyPassportDataValueRepository = energyPassportDataValueRepository;
         this.passportSectionRepository = energyPassportSectionRepository;
         this.sectionEntryRepository = energyPassportSectionEntryRepository;
+        this.subscrContObjectService = subscrContObjectService;
     }
 
     @Transactional(value = TxConst.TX_DEFAULT)
@@ -553,6 +557,27 @@ public class EnergyPassportService {
             }
         });
         return energyPassportDTO;
+    }
+
+    @Transactional
+    public List<Long> linkEnergyPassportToContObjects (Long energyPassportId, List<Long> contObjectIds, Subscriber subscriber) {
+        Preconditions.checkNotNull(contObjectIds);
+        Preconditions.checkNotNull(subscriber);
+
+        EnergyPassport energyPassport = passportRepository.findOne(energyPassportId);
+        if (energyPassport == null) {
+            DBExceptionUtils.entityNotFoundException(EnergyPassport.class, energyPassportId);
+        }
+        contObjectIds.forEach((i) -> energyPassport.getContObjects().add(new ContObject().id(i)));
+        passportRepository.save(energyPassport);
+
+        return energyPassport.getContObjects().stream().map(ContObject::getId).sorted().collect(Collectors.toList());
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Long> findEnergyPassportContObjectIds (Long energyPassportId) {
+        return passportRepository.findEnergyPassportContObjectIds(energyPassportId).stream().sorted().collect(Collectors.toList());
     }
 
 }

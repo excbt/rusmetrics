@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
@@ -45,7 +46,7 @@ import lombok.Setter;
 
 /**
  * Контейнер учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.02.2015
@@ -59,17 +60,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ContObject extends AbstractAuditableModel
-		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
+		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject, PersistableBuilder<ContObject,Long> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContObject.class);
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2174907606605476227L;
 
 	/**
-	 * 
+	 *
 	 */
 
 	@Column(name = "cont_object_name")
@@ -161,14 +162,14 @@ public class ContObject extends AbstractAuditableModel
 
 	@JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(schema = DBMetadata.SCHEME_PORTAL,  name="cont_object_meter_period", joinColumns=@JoinColumn(name="cont_object_id"), 
+    @JoinTable(schema = DBMetadata.SCHEME_PORTAL,  name="cont_object_meter_period", joinColumns=@JoinColumn(name="cont_object_id"),
     	inverseJoinColumns=@JoinColumn(name="meter_period_setting_id"))
     @MapKeyColumn(name = "cont_service_type")
     private Map<String, MeterPeriodSetting> meterPeriodSettings = new HashMap<>();
 
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContManagement get_activeContManagement() {
@@ -191,7 +192,7 @@ public class ContObject extends AbstractAuditableModel
 
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@JsonIgnore
