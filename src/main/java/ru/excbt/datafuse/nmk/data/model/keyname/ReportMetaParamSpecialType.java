@@ -9,15 +9,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
 @Table(name = "report_meta_param_special_type")
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1513108600723081299L;
 

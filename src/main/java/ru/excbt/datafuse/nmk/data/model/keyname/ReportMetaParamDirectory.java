@@ -7,15 +7,18 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_meta_param_directory")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ReportMetaParamDirectory extends AbstractKeynameEntity {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

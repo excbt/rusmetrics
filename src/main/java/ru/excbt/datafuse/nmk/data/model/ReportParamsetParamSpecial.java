@@ -23,11 +23,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Вариант отчета. Специальные параметры
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 09.06.2015
@@ -37,10 +39,11 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "report_paramset_param_special")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8266275292467053060L;
 
@@ -91,7 +94,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@JsonIgnore
@@ -120,7 +123,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@JsonIgnore
@@ -182,7 +185,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@JsonIgnore
@@ -207,7 +210,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */

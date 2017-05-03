@@ -5,15 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_type")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class SubscrType extends JsonAbstractKeynameEntity {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2818498827737120028L;
 

@@ -9,16 +9,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 @Entity
 @Table(name = "timezone_def")
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class TimezoneDef extends AbstractKeynameEntity implements DeletedMarker {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 341837575197941958L;
 

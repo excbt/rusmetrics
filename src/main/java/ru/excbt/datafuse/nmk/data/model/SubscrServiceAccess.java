@@ -17,11 +17,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Доступ к услугам абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.09.2015
@@ -31,10 +33,11 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "subscr_service_access")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrServiceAccess extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6016201239685238614L;
 
@@ -132,7 +135,7 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param other
 	 * @return
 	 */

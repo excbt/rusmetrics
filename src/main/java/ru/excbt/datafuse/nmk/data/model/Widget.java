@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.model;
 
@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,11 +27,11 @@ import ru.excbt.datafuse.nmk.data.model.support.JsonModel;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.01.2017
- * 
+ *
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -39,10 +41,11 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "_widget")
 @JsonIgnoreProperties(value = { PropertyFilter.DEV_COMMENT_PROPERTY_IGNORE, "deleted" }, ignoreUnknown = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Widget extends AbstractPersistableEntity<Long> implements JsonModel, DeletedMarker {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 226386327909437693L;
 
@@ -83,7 +86,7 @@ public class Widget extends AbstractPersistableEntity<Long> implements JsonModel
 	private Boolean isDefault;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContServiceTypeKey contServiceTypeKey() {

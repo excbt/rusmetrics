@@ -5,16 +5,19 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "session_detail_type")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class SessionDetailType extends JsonAbstractKeynameEntity implements DeletableObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8354332014119723444L;
 

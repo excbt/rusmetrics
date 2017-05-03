@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "report_type")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ReportType extends AbstractKeynameEntity implements DevModeObject, DisabledObject {
 
 	/**

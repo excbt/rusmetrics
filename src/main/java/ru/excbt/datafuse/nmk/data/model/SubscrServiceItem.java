@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Тип услуги абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.09.2015
@@ -34,10 +34,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Entity
 @Table(name = "subscr_service_item")
 @JsonInclude(Include.NON_NULL)
+
 public class SubscrServiceItem extends AbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

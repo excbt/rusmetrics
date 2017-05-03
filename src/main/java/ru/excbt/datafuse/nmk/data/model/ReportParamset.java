@@ -18,6 +18,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -32,7 +34,7 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
 /**
  * Вариант отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -43,10 +45,11 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 @SQLDelete(sql = "UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReportParamset extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -4162460506388144170L;
 

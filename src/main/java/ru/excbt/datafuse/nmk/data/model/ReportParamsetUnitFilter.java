@@ -10,11 +10,13 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 
 /**
  * Фильтр объектов для отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 02.11.2015
@@ -22,10 +24,11 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
  */
 @Entity
 @Table(name = "v_report_paramset_unit_filter")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReportParamsetUnitFilter extends AbstractPersistableEntity<Long> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8161581270266957433L;
 

@@ -40,10 +40,41 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamCategory.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamDirectory.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType.class.getName(), jcacheConfiguration);
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.SessionDetailType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.SubscrPrefCategory.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.SubscrType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.SystemParam.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.TariffOption.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.WeatherProvider.class.getName(), jcacheConfiguration);
+
+
             cm.createCache(ru.excbt.datafuse.nmk.data.model.DeviceModel.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.DeviceObject.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource.class.getName(), jcacheConfiguration);
-            cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportType.class.getName(), jcacheConfiguration);
+
+
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial.class.getName(), jcacheConfiguration);
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportParamset.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ReportParamsetUnitFilter.class.getName(), jcacheConfiguration);
 
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContObject.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContZPoint.class.getName(), jcacheConfiguration);
@@ -67,6 +98,10 @@ public class CacheConfiguration {
             cm.createCache(ru.excbt.datafuse.nmk.data.model.V_AuditUser.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.UserPersistentToken.class.getName(), jcacheConfiguration);
 
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrRso.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrServicePack.class.getName(), jcacheConfiguration);
+
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContEventType.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContManagement.class.getName(), jcacheConfiguration);
 
@@ -76,6 +111,15 @@ public class CacheConfiguration {
             cm.createCache(ru.excbt.datafuse.nmk.data.model.EnergyPassportTemplate.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.EnergyPassportData.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.EnergyPassportDataValue.class.getName(), jcacheConfiguration);
+
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.TemperatureChart.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.TemperatureChartItem.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.WeatherForecast.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.WeatherPlace.class.getName(), jcacheConfiguration);
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.Widget.class.getName(), jcacheConfiguration);
 
             //cm.createCache(com.mycompany.myapp.domain.Authority.class.getName(), jcacheConfiguration);
             //cm.createCache(com.mycompany.myapp.domain.User.class.getName() + ".authorities", jcacheConfiguration);
