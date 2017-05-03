@@ -16,6 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hikari.version>2.4.6</hikari.version>
         <pentaho.version>6.1.0.11-329</pentaho.version>
+        <hibernate.version>5.2.8.Final</hibernate.version>
 	</properties>
 
 	<prerequisites>
@@ -109,6 +110,22 @@
 			<artifactId>spring-tuple</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
+
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.hibernate</groupId>

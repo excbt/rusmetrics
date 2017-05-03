@@ -14,6 +14,9 @@ public class PortalProperties {
     @Getter
     private final Security security = new Security();
 
+    @Getter
+    private final PortalProperties.Cache cache = new PortalProperties.Cache();
+
     public static class Security {
 
         private final RememberMe rememberMe = new RememberMe();
@@ -36,5 +39,70 @@ public class PortalProperties {
             }
         }
     }
+
+    public static class Cache {
+        private final PortalProperties.Cache.Hazelcast hazelcast = new PortalProperties.Cache.Hazelcast();
+        private final PortalProperties.Cache.Ehcache ehcache = new PortalProperties.Cache.Ehcache();
+
+        public Cache() {
+        }
+
+        public PortalProperties.Cache.Hazelcast getHazelcast() {
+            return this.hazelcast;
+        }
+
+        public PortalProperties.Cache.Ehcache getEhcache() {
+            return this.ehcache;
+        }
+
+        public static class Ehcache {
+            private int timeToLiveSeconds = 3600;
+            private long maxEntries = 100L;
+
+            public Ehcache() {
+            }
+
+            public int getTimeToLiveSeconds() {
+                return this.timeToLiveSeconds;
+            }
+
+            public void setTimeToLiveSeconds(int timeToLiveSeconds) {
+                this.timeToLiveSeconds = timeToLiveSeconds;
+            }
+
+            public long getMaxEntries() {
+                return this.maxEntries;
+            }
+
+            public void setMaxEntries(long maxEntries) {
+                this.maxEntries = maxEntries;
+            }
+        }
+
+        public static class Hazelcast {
+            private int timeToLiveSeconds = 3600;
+            private int backupCount = 1;
+
+            public Hazelcast() {
+            }
+
+            public int getTimeToLiveSeconds() {
+                return this.timeToLiveSeconds;
+            }
+
+            public void setTimeToLiveSeconds(int timeToLiveSeconds) {
+                this.timeToLiveSeconds = timeToLiveSeconds;
+            }
+
+            public int getBackupCount() {
+                return this.backupCount;
+            }
+
+            public void setBackupCount(int backupCount) {
+                this.backupCount = backupCount;
+            }
+        }
+    }
+
 
 }

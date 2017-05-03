@@ -15,10 +15,11 @@ import java.time.LocalDate;
 /**
  * Persistent tokens are used by Spring Security to automatically log in users.
  *
- * @see ru.excbt.rusmetrics.cabinet.security.CustomPersistentRememberMeServices
+ * @see ru.excbt.datafuse.nmk.security.CustomPersistentRememberMeServices
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL ,name = "user_persistent_token")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class UserPersistentToken implements Serializable {
 
     private static final long serialVersionUID = 1L;

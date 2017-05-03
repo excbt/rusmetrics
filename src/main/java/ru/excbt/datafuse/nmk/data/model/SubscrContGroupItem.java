@@ -8,11 +8,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Элементы группы
- * 
+ *
  * @author S.Kuzovoy
  * @version 1.0
  * @since 27.05.2015
@@ -20,10 +22,11 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group_item")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrContGroupItem extends AbstractAuditableModel {
 
 	/**
-		 * 
+		 *
 		 */
 	private static final long serialVersionUID = 6212870140304523057L;
 

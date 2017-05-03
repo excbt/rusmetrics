@@ -10,12 +10,14 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 
 /**
  * Источник данных прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.10.2015
@@ -23,10 +25,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
  */
 @Entity
 @Table(name = "device_object_data_source")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DeviceObjectDataSource extends AbstractAuditableModel implements ActiveObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -9218504365025332432L;
 
@@ -114,7 +117,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 	}
 
 	/**
-	 * 
+	 *
 	 * @param other
 	 * @return
 	 */

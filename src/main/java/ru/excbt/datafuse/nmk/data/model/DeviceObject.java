@@ -29,6 +29,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
@@ -49,6 +51,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
  */
 @Entity
 @Table(name = "device_object")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId {
 
     /**

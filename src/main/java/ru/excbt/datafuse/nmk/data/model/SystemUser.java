@@ -10,12 +10,14 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
 /**
  * Системный пользователь
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.03.2015
@@ -23,10 +25,11 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
  */
 @Entity
 @Table(name = "system_user")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SystemUser extends AbstractAuditableModel implements SubscriberUser {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8167917557955085535L;
 

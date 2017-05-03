@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
@@ -22,6 +24,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  */
 @Entity
 @Table(name = "audit_user")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class V_AuditUser implements Serializable {
 
 	/**

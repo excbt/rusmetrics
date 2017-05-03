@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import org.hibernate.annotations.*;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
@@ -8,9 +9,6 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +57,7 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContObject extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject, PersistableBuilder<ContObject,Long> {
 

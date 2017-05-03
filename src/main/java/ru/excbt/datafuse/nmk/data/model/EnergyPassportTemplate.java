@@ -7,6 +7,8 @@ package ru.excbt.datafuse.nmk.data.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import org.modelmapper.ModelMapper;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.DTOModel;
@@ -17,6 +19,9 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.ModelMapperUtil;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,7 @@ import java.util.Optional;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "energy_passport_template")
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EnergyPassportTemplate extends AbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportTemplateDTO> {
 
 

@@ -10,12 +10,14 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContGroupType;
 
 /**
  * Группы объектов учета
- * 
+ *
  * @author S.Kuzovoy
  * @version 1.0
  * @since 27.05.2015
@@ -23,15 +25,16 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContGroupType;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrContGroup extends AbstractAuditableModel {
 
 	/**
-		 * 
+		 *
 		 */
 	private static final long serialVersionUID = 9133971621136169339L;
 
 	/**
-		 * 
+		 *
 		 */
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 /**
  * Контейнер учета - Фиас и гео-информация
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 20.07.2015
@@ -27,10 +29,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Entity
 @Table(name = "cont_object_fias")
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContObjectFias extends AbstractAuditableModel implements DeletableObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4834456607858555535L;
 
