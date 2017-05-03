@@ -26,12 +26,14 @@ public class CacheConfiguration {
 
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
 
-    public CacheConfiguration() {
+    public CacheConfiguration(PortalProperties portalProperties) {
+        PortalProperties.Cache.Ehcache ehcache =
+            portalProperties.getCache().getEhcache();
 
         jcacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(
             CacheConfigurationBuilder.newCacheConfigurationBuilder(Object.class, Object.class,
-                ResourcePoolsBuilder.heap(100))
-                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(3600, TimeUnit.SECONDS)))
+                ResourcePoolsBuilder.heap(ehcache.getMaxEntries()))
+                .withExpiry(Expirations.timeToLiveExpiration(Duration.of(ehcache.getTimeToLiveSeconds(), TimeUnit.SECONDS)))
                 .build());
     }
 

@@ -91,6 +91,11 @@ portal:
             # security key (this key should be unique for your application, and kept secret)
             key: 7e622ab5b0586c431f5180bf656a1d972f167ba5
 
+    cache: # Cache configuration
+        ehcache: # Ehcache configuration
+            time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
+            max-entries: 100 # Number of objects in each cache entry
+
 raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
