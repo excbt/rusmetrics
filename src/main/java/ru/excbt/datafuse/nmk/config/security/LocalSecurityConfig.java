@@ -77,7 +77,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Указываем параметры логина и пароля с формы логина
 				.usernameParameter("j_username").passwordParameter("j_password")
 				.successHandler(authenticationSuccessHandler)
-                .failureHandler(ajaxAuthenticationFailureHandler)
+                //.failureHandler(ajaxAuthenticationFailureHandler)
 				// даем доступ к форме логина всем
 				.permitAll();
 
