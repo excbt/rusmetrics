@@ -10,13 +10,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 /**
  * Тип событий контейнера
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.02.2015
@@ -26,10 +28,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @Table(name = "cont_event_type")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContEventType extends AbstractPersistableEntity<Long> implements DevModeObject, DisabledObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

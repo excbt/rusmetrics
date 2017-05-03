@@ -11,13 +11,15 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 /**
  * Источник данных абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.10.2015
@@ -25,10 +27,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
  */
 @Entity
 @Table(name = "subscr_data_source")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrDataSource extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -200221160904201276L;
 

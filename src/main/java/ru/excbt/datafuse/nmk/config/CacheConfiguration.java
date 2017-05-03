@@ -42,14 +42,33 @@ public class CacheConfiguration {
         return cm -> {
             cm.createCache(ru.excbt.datafuse.nmk.data.model.DeviceModel.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.DeviceObject.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.keyname.ReportType.class.getName(), jcacheConfiguration);
 
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContObject.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContZPoint.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ContZPointMetadata.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContObjectFias.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.ContObjectDaData.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrContObject.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrContGroup.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrDataSource.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrPrefValue.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.Subscriber.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrUser.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SystemUser.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrRole.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrTypePref.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrTypeRole.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.SubscrVCookie.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.V_AuditUser.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.UserPersistentToken.class.getName(), jcacheConfiguration);
+
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ContEventType.class.getName(), jcacheConfiguration);
+            cm.createCache(ru.excbt.datafuse.nmk.data.model.ContManagement.class.getName(), jcacheConfiguration);
 
             cm.createCache(ru.excbt.datafuse.nmk.data.model.EnergyPassport.class.getName(), jcacheConfiguration);
             cm.createCache(ru.excbt.datafuse.nmk.data.model.EnergyPassportSection.class.getName(), jcacheConfiguration);
