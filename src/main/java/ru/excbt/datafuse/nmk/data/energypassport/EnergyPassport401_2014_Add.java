@@ -1536,20 +1536,22 @@ public class EnergyPassport401_2014_Add {
             final String secondS = "на производство дополнительной продукции (работ, услуг)";
 
 
+            final Consumer<PDTableCell<PDTableCellStatic>> centerAlign = (c) -> c.cellStyle(PDCellStyle._makeHAligmentCenter());
+
             TriConsumer<String, String, String> sec = (nr, s, k) -> {
                 pdTable.createPartRowNr(nr)
                     .and().createStaticElement(s)
-                    .and().createStaticElement(k)
+                    .and().createStaticElement(k).applyCreator(centerAlign)
                     .and().applyCreator(rowCreator);
 
                 pdTable.createPartRowNr(nr +".1")
                     .and().createStaticElement(mainS)
-                    .and().createStaticElement(k)
+                    .and().createStaticElement(k).applyCreator(centerAlign)
                     .and().applyCreator(rowCreator);
 
                 pdTable.createPartRowNr(nr +".2")
                     .and().createStaticElement(secondS)
-                    .and().createStaticElement(k)
+                    .and().createStaticElement(k).applyCreator(centerAlign)
                     .and().applyCreator(rowCreator);
 
             };
@@ -1576,17 +1578,17 @@ public class EnergyPassport401_2014_Add {
 
             pdTable.createPartRowNr("5")
                 .and().createStaticElement("Объем производства продукции (работ, услуг) в стоимостном выражении, всего,в том числе:")
-                .and().createStaticElement(EPConstants.KRUB2)
+                .and().createStaticElement(EPConstants.KRUB2).applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRowNr("5.1")
                 .and().createStaticElement("основной продукции (работ, услуг)")
-                .and().createStaticElement(EPConstants.KRUB2)
+                .and().createStaticElement(EPConstants.KRUB2).applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRowNr("5.2")
                 .and().createStaticElement("дополнительной продукции (работ, услуг)")
-                .and().createStaticElement(EPConstants.KRUB2)
+                .and().createStaticElement(EPConstants.KRUB2).applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
 
@@ -1631,22 +1633,22 @@ public class EnergyPassport401_2014_Add {
 
             pdTable.createPartRowNr("30")
                 .and().createStaticElement("Суммарная максимальная мощность энергопринимающих устройств")
-                .and().createStaticElement(EPConstants.KKWH2)
+                .and().createStaticElement(EPConstants.KKWH2).applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRowNr("31")
                 .and().createStaticElement("Суммарная среднегодовая заявленная мощность энергопринимающих устройств")
-                .and().createStaticElement(EPConstants.KKWH2)
+                .and().createStaticElement(EPConstants.KKWH2).applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRowNr("32")
                 .and().createStaticElement("Среднесписочная численность работников, всего, в том числе:")
-                .and().createStaticElement("чел.")
+                .and().createStaticElement("чел.").applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
             pdTable.createPartRowNr("32.1")
                 .and().createStaticElement("производственного персонала")
-                .and().createStaticElement("чел.")
+                .and().createStaticElement("чел.").applyCreator(centerAlign)
                 .and().applyCreator(rowCreator);
 
         }
