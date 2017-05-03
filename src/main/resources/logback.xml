@@ -50,7 +50,7 @@
 	<logger name="org.hibernate.SQL" level="info" />
 
 	<logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
-	<logger name="org.hibernate.engine.internal" level="WARN"/>
+	<!--<logger name="org.hibernate.engine.internal" level="WARN"/>-->
 
 	<logger name="org.springframework.web" level="warn" />
 
