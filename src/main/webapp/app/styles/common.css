@@ -816,6 +816,19 @@ body{
     overflow-y: auto;
 }
 
+/* Навигационная панель с кнопками*/
+.nmc-nav-tabs-buttons {
+    padding-bottom: 5px;
+}
+
+ul.nmc-nav-tabs-buttons > li {
+    padding-right: 10px;
+}
+
+ul.nmc-nav-tabs-buttons > li > button {
+    padding: 3px;
+}
+
 /***********
  * Таблицы
  ***********/
@@ -1646,6 +1659,28 @@ tr.nmc-inactive-price > td {
     background-image: url(../images/cross-12.png);
     background-repeat: no-repeat;
 }
+/* Кнопка Удалить ака Красивый крестик для строк таблиц, например энергетические документы*/
+.nmc-remove-btn{
+    width: 20px;
+    height: 20px;
+/*
+    background-color: transparent;
+    background-image: url(../images/cross-12.png);
+    background-repeat: no-repeat;
+*/
+    background: url(../images/cross-12.png) transparent no-repeat 50%;
+}
+
+.nmc-insert-row-btn{
+    width: 20px;
+    height: 20px;
+/*
+    background-color: transparent;
+    background-image: url(../images/insert-row.png);
+    background-repeat: no-repeat;
+*/
+    background: url(../images/insert-row.png) transparent no-repeat;
+}
 
 /* Кнопка переключатель режимов отображения уведомлений*/
 .nmc-button-notice-toggle{
@@ -2310,6 +2345,7 @@ tr.nmc-bg-distinguish > td {
     font-weight: bold;
     font-size: 14px;
     margin-top: 0;
+    height: 1.5rem; /*Нужно для "Содержания" в энергетических документах, чтобы оно не прыгало при скрытии / отображении*/
 }
 
 .nmc-h4 {
@@ -2905,6 +2941,8 @@ input[type="checkbox"] {
 /*Энергопасспорт - самописный вариант*/
 
 .nmc-energo-table {
+    border: 1px; 
+    background-color: #fff;
 }
 
 .nmc-energo-table > thead > tr > th, .nmc-energo-table > tr > th{
@@ -2929,12 +2967,12 @@ input[type="checkbox"] {
 }
 
 .nmc-energo-passport-maximize {
-    width: 97%;
+    width: 96%;
     margin-left: 0;
 }
 .nmc-energo-contents-minimize {
 /*    min-width: 45px;*/
-    width: 3%;    
+    width: 4%;    
 }
 
 .nmc-div-bordered {
@@ -3031,4 +3069,33 @@ input[type="checkbox"] {
 
 .nmc-energy-doc-h1 {
     font-size: 18px;
+}
+
+.nmc-energy-simple-line {
+    padding: 5px 0; 
+    display: table-row;
+}
+div.nmc-energy-simple-line > div {
+    display: table-cell; 
+    padding: 0 10px; 
+    vertical-align: top;
+}
+
+.nmc-energy-input-text {
+    width: 100%; 
+    border: 0; 
+    border-bottom: 1px solid;
+}
+
+.nmc-energy-inner-table {
+    padding: 10px 0;
+}
+
+.nmc-energy-td-input-text {
+    width: 100%; 
+    border: 0;
+}
+
+.nmc-energy-td-input-checkbox {
+    margin: 4px !important;
 }
