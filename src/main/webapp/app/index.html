@@ -226,7 +226,7 @@
                                     </span>
                                 </a>
                                 <a ng-show="isRma()"
-                                   ng-hide="isTestMode()"
+                                   ng-hide="!isRma() || isTestMode()"
                                    id="energy_main_menu_item"
                                    class="list-group-item nmc-main-menu-item"
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"
@@ -618,7 +618,7 @@
 <!--      <script src="/public/bower_components/qtip2/jquery.qtip.min.js"></script>-->
       <script src="/public/bower_components/qtip2/jquery.qtip.js"></script>
 <!--      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>-->
-      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+<!--      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>-->
 <!--      <script src="/public/bower_components/angular-file-upload/angular-file-upload.min.js"></script>-->
       <script src="/public/bower_components/angular-file-upload/angular-file-upload.js"></script>
 <!--      <script src="/public/bower_components/angular-ui-select/dist/select.min.js"></script>-->

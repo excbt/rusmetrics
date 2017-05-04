@@ -23,7 +23,7 @@ var app = angular
         'daterangepicker',
         'angularUtils.directives.dirPagination',
         'ngIdle',
-        'infinite-scroll',
+        
         'angularFileUpload',
         'leaflet-directive',
         'ui.select',
