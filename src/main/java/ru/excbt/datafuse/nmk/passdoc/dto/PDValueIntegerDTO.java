@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
 import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueInteger;
+import ru.excbt.datafuse.nmk.passdoc.PDValueObj;
 
 import javax.validation.constraints.DecimalMin;
 
 /**
  * Created by kovtonyk on 28.03.2017.
  */
-public class PDValueIntegerDTO extends PDValueDTO {
+public class PDValueIntegerDTO extends PDValueDTO implements PDValueObj<Integer> {
 
     public static String TYPE = "Integer";
 

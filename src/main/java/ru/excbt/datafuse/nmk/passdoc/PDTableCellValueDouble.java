@@ -10,7 +10,7 @@ import lombok.Setter;
  * Created by kovtonyk on 24.03.2017.
  */
 @JsonIgnoreProperties(ignoreUnknown =  true)
-public class PDTableCellValueDouble extends PDTableCell<PDTableCellValueDouble> {
+public class PDTableCellValueDouble extends PDTableCell<PDTableCellValueDouble> implements PDValueObj<Double> {
 
     @Getter
     @Setter

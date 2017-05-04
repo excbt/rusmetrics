@@ -80,7 +80,7 @@ public class EPSectionValueUtil {
             return false;
         }
         Optional<PDTableValueCellsDTO> valueCellsDTO = jsonToValueCellsDTO(json);
-        return valueCellsDTO.map((i) -> i.checkComplexIdxs()).orElse(false);
+        return valueCellsDTO.map((i) -> i.performAllCheck()).orElse(false);
     }
 
 

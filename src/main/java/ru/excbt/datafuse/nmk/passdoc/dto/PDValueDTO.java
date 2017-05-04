@@ -94,6 +94,9 @@ public abstract class PDValueDTO implements ComplexIdx{
         this._packed = tableCell.is_packed();
         this._dynamic = tableCell.is_dynamic();
         this._dynamicIdx = tableCell.get_dynamicIdx();
+    }
+
+    void cloneConstraints(PDTableCell<?> tableCell) {
         if (tableCell.getConstraints() != null) {
             tableCell.getConstraints().forEach((i) -> {
                 PDValueConstraintDTO constraintDTO = new PDValueConstraintDTO();

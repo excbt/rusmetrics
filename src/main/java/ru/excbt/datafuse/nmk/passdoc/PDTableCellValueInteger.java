@@ -8,7 +8,7 @@ import lombok.Setter;
  * Created by kovtonyk on 24.03.2017.
  */
 @JsonIgnoreProperties(ignoreUnknown =  true)
-public class PDTableCellValueInteger extends PDTableCell<PDTableCellValueInteger> implements PDValueObj {
+public class PDTableCellValueInteger extends PDTableCell<PDTableCellValueInteger> implements PDValueObj<Integer> {
 
     @Getter
     @Setter
@@ -19,8 +19,4 @@ public class PDTableCellValueInteger extends PDTableCell<PDTableCellValueInteger
         setCellType(PDCellType.VALUE);
     }
 
-    @Override
-    public Object getValueObj() {
-        return value;
-    }
 }

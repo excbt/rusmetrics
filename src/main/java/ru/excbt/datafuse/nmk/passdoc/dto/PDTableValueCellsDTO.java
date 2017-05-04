@@ -70,11 +70,32 @@ public class PDTableValueCellsDTO {
             throw new UnsupportedOperationException("Class " + pdTableCell.getClass().getSimpleName() + " is not supported yet");
         }
 
+        result.cloneConstraints(pdTableCell);
+
         return result;
     }
 
     public boolean checkComplexIdxs() {
         return CellChecker.checkComplexIdx(elements);
+    }
+
+    public boolean checkConstraints() {
+        boolean result = true;
+        for (PDValueDTO valueDTO: elements) {
+            if (!valueDTO.getConstraints().isEmpty()) {
+                Optional<Boolean> failValue = valueDTO.getConstraints().stream().map((i) -> new PDValueConstraint(i.getValueSubtype()))
+                    .map((i) -> i.check(valueDTO)).filter((i) -> Boolean.FALSE.equals(i)).findFirst();
+                if (failValue.isPresent()) {
+                    result = result && false;
+                }
+            }
+        }
+        return result;
+    }
+
+    public boolean performAllCheck() {
+        return CellChecker.checkComplexIdx(elements) &&
+            checkConstraints();
     }
 
     public List<String> complexIdxs() {
