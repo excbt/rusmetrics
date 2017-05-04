@@ -1,12 +1,16 @@
 package ru.excbt.datafuse.nmk.passdoc.dto;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.passdoc.ComplexIdx;
 import ru.excbt.datafuse.nmk.passdoc.PDCellType;
 import ru.excbt.datafuse.nmk.passdoc.PDConstants;
 import ru.excbt.datafuse.nmk.passdoc.PDTableCell;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kovtonyk on 28.03.2017.
@@ -64,6 +68,12 @@ public abstract class PDValueDTO implements ComplexIdx{
     @Setter
     private int _dynamicIdx;
 
+    @Getter
+    @Setter
+    @JsonInclude(value = Include.NON_EMPTY)
+    private List<PDValueConstraintDTO> constraints = new ArrayList<>();
+
+
 //    @Getter
 //    @Setter
 //    @JsonInclude(value = JsonInclude.Include.NON_DEFAULT)
@@ -84,6 +94,13 @@ public abstract class PDValueDTO implements ComplexIdx{
         this._packed = tableCell.is_packed();
         this._dynamic = tableCell.is_dynamic();
         this._dynamicIdx = tableCell.get_dynamicIdx();
+        if (tableCell.getConstraints() != null) {
+            tableCell.getConstraints().forEach((i) -> {
+                PDValueConstraintDTO constraintDTO = new PDValueConstraintDTO();
+                constraintDTO.setValueSubtype(i.getValueSubtype());
+                this.constraints.add(constraintDTO);
+            });
+        }
     }
 
     @Override

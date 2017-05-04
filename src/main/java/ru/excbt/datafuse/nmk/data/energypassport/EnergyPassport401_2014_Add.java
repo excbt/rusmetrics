@@ -1434,7 +1434,7 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("5.")
             .and().createStaticElement("Доля  государственной (муниципальной) собственности в уставном капитале" +
             "организации, %")
-            .and().createDoubleValueElement();
+            .and().createDoubleValueElement().addConstraint(PDValueConstraint.newPercentConstraint());
 
         topTable.createPartLine("6.")
             .and().createStaticElement("Реквизиты организации:");

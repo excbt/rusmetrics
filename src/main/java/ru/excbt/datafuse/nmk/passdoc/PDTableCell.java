@@ -92,6 +92,16 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     @JsonInclude(value = Include.NON_NULL)
     private PDCellStyle cellStyle = new PDCellStyle();
 
+    @Getter
+    @Setter
+    @JsonInclude(value = Include.NON_EMPTY)
+    private List<PDValueConstraint> constraints = new ArrayList<>();
+
+    public T addConstraint (PDValueConstraint valueConstraint) {
+        this.constraints.add(valueConstraint);
+        return (T) this;
+    }
+
 
     public T width(double value) {
         this.width = value;
