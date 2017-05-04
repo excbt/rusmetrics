@@ -343,7 +343,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
         return child;
     }
 
-    public PDTableCell<T> applyCreator(Consumer<PDTableCell<T>> cellCreator) {
+    public PDTableCell<T> applyCreator(Consumer<PDTableCell<?>> cellCreator) {
         if (cellCreator != null) {
             cellCreator.accept(this);
         }

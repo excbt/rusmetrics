@@ -414,7 +414,7 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("3.6")
             .and().createStaticElement("Год ввода в эксплуатацию")
             .and().createStaticElement()
-            .and().createIntegerValueElement();
+            .and().createIntegerValueElement().applyCreator(CellCreators.constraintYear);
 
         topTable.createPartLine("3.7")
             .and().createStaticElement("Фактический износ")
@@ -424,12 +424,12 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("3.8")
             .and().createStaticElement("Год проведения последнего капитального ремонта")
             .and().createStaticElement()
-            .and().createIntegerValueElement();
+            .and().createIntegerValueElement().addConstraint(PDValueConstraint.newYearConstraint());
 
         topTable.createPartLine("3.8.1")
             .and().createStaticElement("Год проведения последнего текущего ремонта")
             .and().createStaticElement()
-            .and().createStringValueElement();
+            .and().createStringValueElement().addConstraint(PDValueConstraint.newYearConstraint());
 
         topTable.createPartLine("3.8.2")
             .and().createStaticElement("Объем инвестиций на капитальный ремонт")
@@ -724,7 +724,7 @@ public class EnergyPassport401_2014_Add {
         Consumer<PDTablePart> createStaticRub = (p) -> p.createStaticElement(EPConstants.RUB_YEAR);
         section_helper1(topTable, "6.",
             new String[] {"Оплата энергетических ресурсов"},
-            create1EmptyStaticF,
+            PartCreators.create1EmptyStaticF,
             new String[]{"Тепловая энергия",
                 "Электрическая энергия",
                 "Газ",
@@ -956,19 +956,19 @@ public class EnergyPassport401_2014_Add {
 
         section_helper1(topTable, "9.8.",
             new String[] {"Офисная, бытовая и специальная техника (по профилю объекта), класс энергетической эффективности (есть/нет)"},
-            create1EmptyStaticF,
+            PartCreators.create1EmptyStaticF,
             new String[]{"A", "B", "C", "D", "E", "F", "G"},
-            create1EmptyStaticF,
+            PartCreators.create1EmptyStaticF,
             PDTableCellValueBoolean.class,
             PDTableCellValueBoolean.class);
 
         itemCreator(topTable, "9.8.",
-            create1EmptyStaticF,
+            PartCreators.create1EmptyStaticF,
             new String[]{"Отсутствие техники с классом энергоэффективности A+ и A++",
                 "Количество техники с классом энергоэффективности A+ или A++ менее 50%",
                 "Количество техники с классом энергоэффективности A+ или A++ от 50% до 70%",
                 "Вся техника с классом энергоэффективности A+ и A++"},
-            create1EmptyStaticF,
+            PartCreators.create1EmptyStaticF,
             PDTableCellValueString.class,
             7,
             null);
@@ -1091,12 +1091,21 @@ public class EnergyPassport401_2014_Add {
     private String removeLastPoint (String nr) {
         return (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
     }
-    private final static Consumer<PDTablePart> create1EmptyStaticF = (p) -> p.createStaticElement();
-    private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
+
+    private static class CellCreators {
+        private final static Consumer<PDTableCell<?>> constraintYear = (p) -> p.addConstraint(PDValueConstraint.newYearConstraint());
+        private final static Consumer<PDTableCell<?>> constraintPercent = (p) -> p.addConstraint(PDValueConstraint.newPercentConstraint());
+    }
+
+
+    private static class PartCreators {
+        private final static Consumer<PDTablePart> create1EmptyStaticF = (p) -> p.createStaticElement();
+        private final static Consumer<PDTablePart> create2EmptyStaticF = (p) -> p.createStaticElement().and().createStaticElement();
+    }
+
     private final static TriConsumer<PDTable, String, String> tableCreateLineHeader = (t, nr, s) ->
         t.createPartLine(nr, "")
             .and().createStaticElement(s);
-
 
     /**
      *
@@ -1179,7 +1188,7 @@ public class EnergyPassport401_2014_Add {
                                                                                       final Class<M> masterValueType,
                                                                                       final Class<V> valueType) {
 
-        section_helper1(pdTable, masterNr, partHeaders, create1EmptyStaticF, points, create1EmptyStaticF, masterValueType, valueType);
+        section_helper1(pdTable, masterNr, partHeaders, PartCreators.create1EmptyStaticF, points, PartCreators.create1EmptyStaticF, masterValueType, valueType);
     }
 
 
@@ -1189,7 +1198,7 @@ public class EnergyPassport401_2014_Add {
                                                                                       String[] points,
                                                                                       final Class<M> masterValueType,
                                                                                       final Class<V> valueType) {
-        section_helper1(pdTable, masterNr, new String[]{partHeader}, create1EmptyStaticF, points, create1EmptyStaticF, masterValueType, valueType);
+        section_helper1(pdTable, masterNr, new String[]{partHeader}, PartCreators.create1EmptyStaticF, points, PartCreators.create1EmptyStaticF, masterValueType, valueType);
     }
 
 
@@ -1434,7 +1443,7 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("5.")
             .and().createStaticElement("Доля  государственной (муниципальной) собственности в уставном капитале" +
             "организации, %")
-            .and().createDoubleValueElement().addConstraint(PDValueConstraint.newPercentConstraint());
+            .and().createDoubleValueElement().applyCreator(CellCreators.constraintYear);
 
         topTable.createPartLine("6.")
             .and().createStaticElement("Реквизиты организации:");
@@ -1502,7 +1511,7 @@ public class EnergyPassport401_2014_Add {
 
 
         topTable.createPartLine("1h1", "")
-            .applyCreator(create2EmptyStaticF)
+            .applyCreator(PartCreators.create2EmptyStaticF)
             .and().createStaticElement("Таблица 1");
 
 
@@ -1536,7 +1545,7 @@ public class EnergyPassport401_2014_Add {
             final String secondS = "на производство дополнительной продукции (работ, услуг)";
 
 
-            final Consumer<PDTableCell<PDTableCellStatic>> centerAlign = (c) -> c.cellStyle(PDCellStyle._makeHAligmentCenter());
+            final Consumer<PDTableCell<?>> centerAlign = (c) -> c.cellStyle(PDCellStyle._makeHAligmentCenter());
 
             TriConsumer<String, String, String> sec = (nr, s, k) -> {
                 pdTable.createPartRowNr(nr)
@@ -1657,7 +1666,7 @@ public class EnergyPassport401_2014_Add {
             .and().createStaticElement("Сведения об обособленных подразделениях лица,в отношении которого указана информация");
 
         topTable.createPartLine("2h2", "")
-            .applyCreator(create2EmptyStaticF)
+            .applyCreator(PartCreators.create2EmptyStaticF)
             .and().createStaticElement("Таблица 2");
 
         {
@@ -2403,7 +2412,7 @@ public class EnergyPassport401_2014_Add {
         headerTool(topTable, "h1-", "Сведения об использовании вторичных энергетических ресурсов");
 
         topTable.createPartLine("1h1", "")
-            .and().applyCreator(create2EmptyStaticF)
+            .and().applyCreator(PartCreators.create2EmptyStaticF)
             .and().createStaticElement("Таблица 1");
 
         {
@@ -2461,7 +2470,7 @@ public class EnergyPassport401_2014_Add {
             "и возобновляемых источников энергии");
 
 
-        topTable.createPartLine("2h1", "").applyCreator(create2EmptyStaticF).createStaticElement("Таблица 2");
+        topTable.createPartLine("2h1", "").applyCreator(PartCreators.create2EmptyStaticF).createStaticElement("Таблица 2");
 
         {
             final PDTable pdTable = topTable.createPartInnerTable().createInnerTable();
@@ -2737,7 +2746,7 @@ public class EnergyPassport401_2014_Add {
                 idx++;
             }
         }
-        topTable.createPartLine().applyCreator(create1EmptyStaticF)
+        topTable.createPartLine().applyCreator(PartCreators.create1EmptyStaticF)
             .and().createStaticElement("1 т у.т. = 29,31 ГДж");
 
         headerTool(topTable, "h3-", "Сведения о выполненных энергоресурсосберегающих\n" +
@@ -2837,7 +2846,7 @@ public class EnergyPassport401_2014_Add {
 
         }
 
-        topTable.createPartLine().applyCreator(create1EmptyStaticF)
+        topTable.createPartLine().applyCreator(PartCreators.create1EmptyStaticF)
             .and().createStaticElement("1 т у.т. = 29,31 ГДж");
 
 
@@ -3089,7 +3098,7 @@ public class EnergyPassport401_2014_Add {
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
 
-        Consumer<PDTableCell<PDTableCellStatic>> creator = (c) -> {
+        Consumer<PDTableCell<?>> creator = (c) -> {
             c.createStaticChild("количество, шт.").nextKeyValueIdx().andParentCell()
                 .createStaticChild("установленная мощность, кВА").nextKeyValueIdx();
         };
@@ -3203,7 +3212,7 @@ public class EnergyPassport401_2014_Add {
         PDTablePart partHeader = pdTable.createPart(PDPartType.HEADER);
 
 
-        Consumer<PDTableCell<PDTableCellStatic>> creator = (c) -> {
+        Consumer<PDTableCell<?>> creator = (c) -> {
             c.createStaticChild("количество шт./групп").nextKeyValueIdx().andParentCell()
                 .createStaticChild("установленная мощность, Мвар").nextKeyValueIdx();
         };
