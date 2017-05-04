@@ -15,14 +15,15 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.ENTRY_NAME_GEN = "раздела"; /*gentive*/
     $scope.ENTRY_NAME_ACC = "раздел"; /*accusative*/
     $scope.ENTRY_NAME_PL_GEN = "разделов"; /*plural gentive*/
-    $scope.SECTION_NAME = "секция";
-    $scope.SECTION_NAME_GEN = "секции"; /*gentive*/
-    $scope.SECTION_NAME_ACC = "секцию"; /*accusative*/
+    $scope.SECTION_NAME = "приложение";
+    $scope.SECTION_NAME_GEN = "приложения"; /*gentive*/
+    $scope.SECTION_NAME_ACC = "приложение"; /*accusative*/
     
     $scope.showContentsFlag = true;
     
     $scope.ctrlSettings = {};
 //    $scope.ctrlSettings.loading = true;
+    $scope.ctrlSettings.addDelBtnWidth = "4";
     $scope.ctrlSettings.cssMeasureUnit = "rem";
     $scope.ctrlSettings.passportLoading = true;
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY";
@@ -47,9 +48,12 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.data = {};
     
-    $scope.data.isSectionChanged = false; //flag of section data changed
+//    $scope.data.isSectionChanged = false; //flag of section data changed
     
     $scope.data.passport = {};
+    
+    $scope.data.currentTd = {};//current selected TD of table
+    $scope.data.currentRow = {};//current selected row of table
     
     //hash map for passport values
     $scope.data.passDocValues = {};
@@ -59,6 +63,19 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //    $scope.data.passDocStructure = null;
     //current passport structure which is shown at present moment
     $scope.data.currentPassDocSection = null;
+    
+    function locateTdBtns(td, tdInd, rowInd) {
+        if (!(td.hasOwnProperty("isSelected") && td.isSelected === true)) {
+            return;
+        }
+        var tdElem = document.getElementById('td_btns_' + rowInd + '_' + tdInd);
+
+        var offset = {
+            top: $('#' + tdElem.id).parent().offset().top + $('#' + tdElem.id).parent().height(),
+            left: $('#' + tdElem.id).parent().offset().left
+        };
+        $('#' + tdElem.id).offset(offset);
+    }
     
     var setConfirmCode = function (useImprovedMethodFlag) {
         $scope.confirmCode = null;
@@ -105,7 +122,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                     }
                 }
             }
-            
+            $scope.ctrlSettings.sectionLoading = false;
         }, 0);
     }
     
@@ -191,9 +208,14 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         var preparedRows = [];
         performElementsRecursion(tablePart.elements, 0, preparedRows);
         if (tablePart.dynamic === true && preparedRows.length > 0) {
-            preparedRows[0].dynamic = true;
+            //set dynamic flag
+            preparedRows.forEach(function (pr) {
+                pr.dynamic = true;
+            });
+//            preparedRows[0].dynamic = true;
+//            preparedRows[0].canDelete = true;
             preparedRows[0].startPartRow = true;
-            preparedRows[preparedRows.length - 1].dynamic = true;
+//            preparedRows[preparedRows.length - 1].dynamic = true;
             preparedRows[preparedRows.length - 1].canDelete = true;
             preparedRows[preparedRows.length - 1].endPartRow = true;
         }
@@ -366,8 +388,10 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         });
 //console.log($scope.data.passport);
         //perform section data
-        var sectionValues = angular.copy($scope.data.passDocValues);
+//        var sectionValues = angular.copy($scope.data.passDocValues);
+        var sectionValues = $scope.data.passDocValues;
         $scope.data.passDocValues = performLoadedSection(resp.data, sectionValues);
+//console.log($scope.data.passDocValues);        
         
         //find saved section and reset isChanged flag
         var savedSection = mainSvc.findItemBy($scope.data.passport.sections, "sectionKey", resp.data.sectionKey);
@@ -433,7 +457,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     function successLoadSectionEntryDataCallback(resp) {
         
-        $scope.ctrlSettings.sectionLoading = false;
+//        $scope.ctrlSettings.sectionLoading = false;
         
         if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
             console.warn("Empty response from server: ");
@@ -537,7 +561,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     }
     
     function loadSectionData(passportId, docSec) {
-console.log(docSec);
+        console.warn("Need load section data for: ", docSec);
     }
     
     function loadEntryData(passportId, sectionId, entryId) {
@@ -572,7 +596,7 @@ console.log(docSec);
         } else {
             $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
             
-            $scope.ctrlSettings.sectionLoading = false;
+//            $scope.ctrlSettings.sectionLoading = false;
 
             setSectionStyles($scope.data.currentSectionValues);
 //            $timeout(function () {
@@ -583,12 +607,13 @@ console.log(docSec);
     
     $scope.contentsPartSelect = function (part) {
 //        console.log(part);
+        changeSection(part);
         //if previous section was changed - need it save or cancel changes
-        if ($scope.data.isSectionChanged === true) {
+//        if ($scope.data.isSectionChanged === true) {
             //open window with message and to buttons - save and cancel
-        } else {
-            changeSection(part);
-        }
+//        } else {
+//            changeSection(part);
+//        }
         
     };
     
@@ -612,6 +637,13 @@ console.log(docSec);
         
     };
     
+    $scope.onDivChange = function (td, tdInd, rowInd) {
+        $scope.onChange();
+        $timeout(function () {
+            locateTdBtns(td, tdInd, rowInd);
+        });
+    };
+    
     $scope.isDisabledSaveButtons = function () {
 //console.log($scope.ctrlSettings.sectionSaving === true);        
 //console.log($scope.ctrlSettings.passportSaving === true);
@@ -620,10 +652,41 @@ console.log(docSec);
     };
     
     $scope.tdBlur = function (cell, values, complexIdx) {
+        $timeout(function () {
+            cell.isSelected = false;
+        }, 200);
 //console.log(cell);
 //        console.log(values);        
 //        console.log(complexIdx);
         
+    };
+    
+//    $scope.tdSelected = function (td) {
+        
+//        $scope.data.currentTd.isSelected = false;
+//        
+//        $scope.data.currentTd = td;
+//        $scope.data.currentTd.isSelected = true;
+//    };
+    
+    $scope.tdFocused = function (row, td, tdInd, rowInd) {
+        
+        $scope.data.currentTd.isSelected = false;
+        $scope.data.currentRow.isSelected = false;
+        
+        $scope.data.currentTd = td;
+        $scope.data.currentRow = row;
+        $scope.data.currentTd.isSelected = true;
+        $scope.data.currentRow.isSelected = true;
+        
+        $timeout(function () {
+            locateTdBtns(td, tdInd, rowInd);
+        });
+    };
+    
+    $scope.tdClear = function (td) {
+        $scope.data.currentSectionValues[td._complexIdx].value = null;
+        $scope.onChange();
     };
     
     $scope.cancelEnergoPassportEdit = function () {
@@ -650,7 +713,7 @@ console.log(docSec);
         });
     }
     
-    $scope.isAddRowButtonEnable = function (part, rowIndex) {
+    $scope.isAddRowButtonEnable = function (part, row, rowIndex) {
         var result = false,
             lastDynamicIndex = null;
         
@@ -659,9 +722,73 @@ console.log(docSec);
                 lastDynamicIndex = ind;
             }
         });
-        if (lastDynamicIndex === rowIndex) {
+        if (lastDynamicIndex === rowIndex && row.isSelected === true) {
             result = true;
         }
+        return result;
+    };
+    
+    $scope.isAddRowButtonEnableAtTd = function (part, row, rowIndex) {
+        if (mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
+            return false;
+        }
+        var result = false,
+            lastDynamicIndex = null;
+        
+        part.innerPdTable.tbodies.forEach(function (bodyRow, ind) {
+            if (bodyRow.dynamic === true) {
+                lastDynamicIndex = ind;
+            }
+        });
+        if (lastDynamicIndex >= rowIndex && ((lastDynamicIndex - part.innerPdTable.dynamicRowTemplate.tbody.length + 1) <= rowIndex) && row.isSelected === true) {
+            result = true;
+        }
+        return result;
+    };
+    
+    $scope.isDeleteRowButtonEnable = function (part, row, rowIndex) {
+        var result = false;
+//console.log(part.innerPdTable.tbodies);        
+//console.log(part.innerPdTable.dynamicRowTemplate.tbody); 
+        var dynamicRowCounter = 0;
+        part.innerPdTable.tbodies.forEach(function (row) {
+            if (row.hasOwnProperty("dynamic") && row.dynamic === true) {
+                dynamicRowCounter += 1;
+            }
+        });
+        if (dynamicRowCounter <= part.innerPdTable.dynamicRowTemplate.tbody.length) {
+            return false;
+        }
+        
+        if (row.hasOwnProperty("dynamic") && row.hasOwnProperty("canDelete") && row.dynamic === true && row.canDelete === true && row.isSelected === true) {
+            return true;
+        }
+        
+        return result;
+    };
+    
+    $scope.isDeleteRowButtonEnableAtTd = function (part, row, rowIndex) {
+        if (mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
+            return false;
+        }
+        var result = false;
+        var dynamicRowCounter = 0;
+        part.innerPdTable.tbodies.forEach(function (row) {
+            if (row.hasOwnProperty("dynamic") && row.dynamic === true) {
+                dynamicRowCounter += 1;
+            }
+        });
+//console.log(dynamicRowCounter);
+//console.log(part.innerPdTable.dynamicRowTemplate.tbody.length);        
+        if (dynamicRowCounter <= part.innerPdTable.dynamicRowTemplate.tbody.length) {
+            return false;
+        }
+//console.log(row);        
+        if (row.hasOwnProperty("dynamic") && row.hasOwnProperty("isSelected") && row.dynamic === true && row.isSelected === true) {
+            
+            return true;
+        }
+        
         return result;
     };
     
@@ -776,6 +903,7 @@ console.log(docSec);
         
         //search _dynamicIdx for replace data at values array
         var deletedRows = part.innerPdTable.tbodies.splice(ind - partLength + 1, partLength);
+        //var deletedRows = part.innerPdTable.tbodies.splice(ind, partLength);//if delete button is at first row
         var dataIndex = 0;
         deletedRows.forEach(function (deleteRow) {
             deleteRow.tds.some(function (td) {
@@ -879,14 +1007,39 @@ console.log(docSec);
 //console.log(part.innerPdTable.counterValue);
     };
     
+    function findLastDynamicPartIndex(part, ind) {
+        var lastDynamicPartRowIndex = null,
+            rowCounter;
+        for (rowCounter = ind; rowCounter < ind + part.innerPdTable.dynamicRowTemplate.tbody.length; rowCounter += 1) {
+            if (part.innerPdTable.tbodies[rowCounter].endPartRow === true) {
+                lastDynamicPartRowIndex = rowCounter;
+                break;
+            }
+        }
+//console.log(lastDynamicPartRowIndex);
+        return lastDynamicPartRowIndex;
+    }
+    
     $scope.deleteRowFromTableInit = function (part, ind) {
+//console.log("deleteRowFromTableInit");        
         $scope.onChange();
-        $scope.deleteRowFromTable(part, ind);
+        //find last dynamic part row index
+//        var lastDynamicPartRowIndex,
+//            rowCounter;
+//        for (rowCounter = ind; rowCounter < ind + part.innerPdTable.dynamicRowTemplate.tbody.length; rowCounter += 1) {
+//            if (part.innerPdTable.tbodies[rowCounter].endPartRow === true) {
+//                lastDynamicPartRowIndex = rowCounter;
+//                break;
+//            }
+//        }
+        $scope.deleteRowFromTable(part, findLastDynamicPartIndex(part, ind));
     };
     
     $scope.addRowToTableInit = function (part, ind) {
+//console.log("addRowToTableInit");        
         $scope.onChange();
-        $scope.addRowToTable(part, ind);
+        //find last part row index
+        $scope.addRowToTable(part, findLastDynamicPartIndex(part, ind));
     };
     
     $scope.savePassportSection = function (passportSection) {
@@ -895,6 +1048,10 @@ console.log(docSec);
         //prepare value array
         var sectionData = {},
             sectionValues = $scope.data.passDocValues[passportSection.preparedSection.sectionKey][passportSection.preparedSection.sectionEntryId || 0];
+//console.log($scope.data.passDocValues);        
+//console.log(passportSection.preparedSection.sectionKey);
+//console.log(passportSection.preparedSection.sectionEntryId || 0);        
+//console.log(sectionValues);        
         sectionData.version = sectionValues.version;
         delete sectionValues.version;
         sectionData.elements = [];
@@ -1055,6 +1212,35 @@ console.log(docSec);
     });
 // **** end of work with section entry ***
     
+    function getCoords(elem) { // кроме IE8-
+        var box = elem.getBoundingClientRect();
+
+        return {
+            top: box.top + pageYOffset,
+            left: box.left + pageXOffset
+        };
+
+    }
+    
+    function energyDocumentScrolling(arg) {
+//console.log(arg.target.scrollTop);
+//        console.log($('#' + arg.target.id).offset());
+
+        $scope.data.currentPassDocSection.preparedSection.parts.forEach(function (part) {
+            if (part.partType === 'INNER_TABLE') {
+                part.innerPdTable.tbodies.forEach(function (row, rowInd) {
+                    if (row.hasOwnProperty("dynamic") && row.dynamic === true && row.isSelected === true) {
+                        row.tds.forEach(function (td, tdInd) {
+                            locateTdBtns(td, tdInd, rowInd);
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    $('#energyDocument').scroll(energyDocumentScrolling);
+    
     function initCtrl() {
         var routeParams = $routeParams;
         if (routeParams.param === "new") {
@@ -1078,5 +1264,14 @@ app.directive('energyViewCell', [function () {
             cell: "="
         },
         template: "<div style = 'font-size: 12px;'> <p ng-if = 'cell._complexIdx' style = 'margin: 0'>complexIdx = {{cell._complexIdx}},</p> <p ng-if = 'cell.keyValueIdx' style='margin: 0'>keyValueIdx = {{cell.keyValueIdx}},</p> <p ng-if = 'cell._dynamicIdx' style='margin: 0'>dynamicIdx = {{cell._dynamicIdx}}</p></div>"
+    };
+}]);
+
+app.directive('energyViewBtnsAtCell', [function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            console.log(element);
+        }
     };
 }]);
