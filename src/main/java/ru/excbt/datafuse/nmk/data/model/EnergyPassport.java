@@ -18,6 +18,7 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -32,6 +33,7 @@ import java.util.*;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EnergyPassport extends JsonAbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportDTO> {
 
+    public static final int DEFAULT_DOCUMENT_MODE = 1;
 
     @JsonIgnore
     @ManyToOne
@@ -59,6 +61,10 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
+
+    @NotNull
+    @Column(name = "document_mode")
+    private Integer documentMode = DEFAULT_DOCUMENT_MODE;
 
     @Version
     private int version;

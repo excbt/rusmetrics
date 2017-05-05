@@ -36,6 +36,12 @@ public class EPConstants {
     public static final String KT2 = "тыс. т";
     public static final String KNVM2 = "тыс. н. куб. м";
 
+
+    public static class DocumentModes {
+        public static final int DEFAULT = 1;
+        public static final int CONT_OBJECT = 2 ;
+    }
+
     private EPConstants() {
     }
 }

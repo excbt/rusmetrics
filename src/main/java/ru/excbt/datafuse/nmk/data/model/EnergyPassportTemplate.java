@@ -22,6 +22,7 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ import java.util.Optional;
 @Setter
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class EnergyPassportTemplate extends AbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportTemplateDTO> {
+
+    public static final int DEFAULT_DOCUMENT_MODE = 1;
 
 
     @Column(name = "keyname")
@@ -50,6 +53,10 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
 
     @Column(name = "document_date")
     private LocalDate documentDate;
+
+    @NotNull
+    @Column(name = "document_mode")
+    private Integer documentMode = DEFAULT_DOCUMENT_MODE;
 
     @Column(name = "deleted")
     private int deleted;

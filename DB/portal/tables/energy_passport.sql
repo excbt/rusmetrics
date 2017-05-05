@@ -10,7 +10,9 @@ create table portal.energy_passport (
    passport_date        DATE,
    description          TEXT                 null,
    comment              TEXT                 null,
-   organization_id      bigint references organization(id)
+   organization_id      bigint references organization(id),
+   document_mode 		integer NOT NULL DEFAULT 1,
+   passport_state 		integer
 );
 
 comment on table portal.energy_passport is

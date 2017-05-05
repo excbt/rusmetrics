@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.energypassport.EPConstants.DocumentModes;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil.JsonVars;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
@@ -97,6 +98,7 @@ public class EnergyPassportService {
         energyPassport.setPassportTemplate(energyPassportTemplate.get());
         energyPassport.setPassportDate(LocalDate.now());
         energyPassport.setSubscriber(subscriber);
+        energyPassport.setDocumentMode(energyPassportTemplate.get().getDocumentMode());
 
         if (energyPassportVM != null) {
             energyPassport.setPassportName(energyPassportVM.getPassportName());
@@ -177,7 +179,7 @@ public class EnergyPassportService {
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<EnergyPassportDTO> findBySubscriberId(Long subscriberId) {
-        List<EnergyPassportDTO> resultList = passportRepository.findBySubscriberId(subscriberId).stream()
+        List<EnergyPassportDTO> resultList = passportRepository.findBySubscriberId(subscriberId, DocumentModes.DEFAULT).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
         resultList.forEach((p) -> {
             p.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId())));
@@ -188,7 +190,7 @@ public class EnergyPassportService {
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<EnergyPassportShortDTO> findShortBySubscriberId(Long subscriberId) {
-        List<EnergyPassportShortDTO> resultList = passportRepository.findBySubscriberId(subscriberId).stream()
+        List<EnergyPassportShortDTO> resultList = passportRepository.findBySubscriberId(subscriberId, DocumentModes.DEFAULT).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO_Short()).collect(Collectors.toList());
         return resultList;
     }

@@ -14,8 +14,9 @@ import java.util.List;
 @Repository
 public interface EnergyPassportRepository extends JpaRepository<EnergyPassport, Long> {
 
-    @Query("SELECT ep from EnergyPassport ep WHERE ep.subscriber.id = :subscriberId AND ep.deleted = 0")
-    List<EnergyPassport> findBySubscriberId (@Param("subscriberId") Long subscriberId);
+    @Query("SELECT ep from EnergyPassport ep WHERE ep.subscriber.id = :subscriberId AND ep.documentMode = :documentMode " +
+        " AND ep.deleted = 0")
+    List<EnergyPassport> findBySubscriberId (@Param("subscriberId") Long subscriberId, @Param("documentMode") Integer documentMode);
 
     @Query("SELECT ep from EnergyPassport ep WHERE ep.passportTemplate.id = :passportTemplateId AND ep.deleted = 0")
     List<EnergyPassport> findByPassportTemplateId (@Param("passportTemplateId") Long passportTemplateId);
