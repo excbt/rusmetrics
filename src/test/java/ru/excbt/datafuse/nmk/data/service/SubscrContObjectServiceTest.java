@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Tuple;
-import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
+@Transactional
 public class SubscrContObjectServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectServiceTest.class);

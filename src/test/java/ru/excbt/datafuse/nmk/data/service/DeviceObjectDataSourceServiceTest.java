@@ -7,12 +7,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 
 	private final static long TEST_DEVICE_OBJECT_ID = 65836845;
@@ -32,11 +41,11 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
+	@Transactional
 	public void testDeviceObjectDataSource() throws Exception {
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(TEST_DEVICE_OBJECT_ID);
 		assertNotNull(deviceObject);
@@ -57,7 +66,7 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -66,7 +75,7 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override

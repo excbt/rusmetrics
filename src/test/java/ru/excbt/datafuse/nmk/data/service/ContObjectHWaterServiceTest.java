@@ -12,12 +12,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceTypeInfoART;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class ContObjectHWaterServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory
@@ -27,7 +36,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 	private ContServiceDataHWaterDeltaService contObjectHWaterService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -43,6 +52,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Transactional
 	public void testDeltaInfo() throws Exception {
 
 		Map<Long, ContServiceTypeInfoART> resultMap =
@@ -59,6 +69,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Transactional
 	public void testDeltaInfoByCity() throws Exception {
 		Map<Long, ContServiceTypeInfoART> resultMap =
 

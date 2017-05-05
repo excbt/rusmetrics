@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
+import ru.excbt.datafuse.nmk.web.api.EnergyPassportResourceIntTest;
 import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
 
 /**
@@ -25,6 +26,7 @@ import ru.excbt.datafuse.nmk.web.api.EnergyPassportTemplateResourceIntTest;
  */
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class EnergyPassportServiceTest extends JpaSupportTest {
 
     private static final Logger log = LoggerFactory.getLogger(EnergyPassportServiceTest.class);
@@ -39,10 +41,9 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
     private EnergyPassportTemplateService energyPassportTemplateService;
 
     @Test
-    @Transactional
     public void testCreatePassportNew() throws Exception {
         EnergyPassportTemplate energyPassportTemplate = EnergyPassportTemplateResourceIntTest.createEnergyPassportTemplate();
-        energyPassportTemplate.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1));
+        energyPassportTemplate.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1).sectionJson(EnergyPassportResourceIntTest.DUMMY_JSON));
         energyPassportTemplateRepository.saveAndFlush(energyPassportTemplate);
         EnergyPassportDTO energyPassportDTO = energyPassportService.createPassport(energyPassportTemplate.getKeyname(), new Subscriber().id(getSubscriberId()));
         Assert.assertNotNull(energyPassportDTO);
@@ -50,7 +51,6 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
     }
 
     @Test
-    @Transactional
     public void testUpdatingPassportFromTemplate() throws Exception {
         EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
         energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION);

@@ -15,6 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
@@ -22,6 +28,9 @@ import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class ReportServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportServiceTest.class);
@@ -110,13 +119,13 @@ public class ReportServiceTest extends JpaSupportTest {
 	@Test
 	public void testReportCommerceBody() throws IOException {
 		testReportBody(COMMERCE_TEST_PARAMSET_ID, "jasper_reports/nmk_com_report.jasper",
-				ReportTypeKey.COMMERCE_REPORT);
+				ReportTypeKey.COMMERCE_REPORT, false);
 	}
 
 	@Test
 	public void testReportConsT1Body() throws IOException {
 		testReportBody(CONS_T1_TEST_PARAMSET_ID, "jasper_reports/nmk_consolidated_report_1.jasper",
-				ReportTypeKey.CONS_T1_REPORT);
+				ReportTypeKey.CONS_T1_REPORT, false);
 	}
 
 	@Test
@@ -126,12 +135,12 @@ public class ReportServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param filename
 	 * @throws IOException
 	 */
-	private void testReportBody(long reportParamsetId, String filename, ReportTypeKey reportTypeKey)
+	private void testReportBody(long reportParamsetId, String filename, ReportTypeKey reportTypeKey, boolean checkBody)
 			throws IOException {
 		ReportParamset paramset = reportParamsetService.findReportParamset(reportParamsetId);
 		assertNotNull(paramset);
@@ -149,10 +158,15 @@ public class ReportServiceTest extends JpaSupportTest {
 
 		try {
 			byte[] bytes = IOUtils.toByteArray(is);
-			assertArrayEquals(bytes, rtBody.getBodyCompiled());
+			if (checkBody) assertArrayEquals(bytes, rtBody.getBodyCompiled());
 		} finally {
 			is.close();
 		}
 	}
+
+    private void testReportBody(long reportParamsetId, String filename, ReportTypeKey reportTypeKey)
+        throws IOException {
+        testReportBody(reportParamsetId, filename,reportTypeKey,true);
+    }
 
 }

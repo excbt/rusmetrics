@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorReposito
 
 /**
  * Сервис для кэширования уровня событий ContEventLevelColor
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 01.07.2015
@@ -32,7 +32,7 @@ public class ContEventLevelColorService {
 	private ContEventLevelColorRepository contEventLevelColorRepository;
 
 	/**
-	 * 
+	 *
 	 * @param colorKey
 	 * @return
 	 */
@@ -51,7 +51,7 @@ public class ContEventLevelColorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param colorKey
 	 * @return
 	 */
@@ -60,7 +60,7 @@ public class ContEventLevelColorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
