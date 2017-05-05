@@ -826,7 +826,7 @@ ul.nmc-nav-tabs-buttons > li {
 }
 
 ul.nmc-nav-tabs-buttons > li > button {
-    padding: 3px;
+    padding: 3px 10px;
 }
 
 /***********
@@ -2890,6 +2890,7 @@ input[type="checkbox"] {
 
 
 /* Редактор энергопаспорта*/
+/*
 .nmc-energo-passport-row {
     display: table-row;    
 }
@@ -2908,25 +2909,30 @@ input[type="checkbox"] {
     vertical-align: middle;
     text-align: center;
     font-weight: bold;
+*/
 
 /*    border-bottom: 1px solid #d4d4d4;*/
+/*
     border-right: 1px solid #d4d4d4;
 
 }
 
 .nmc-energo-passport-cell {
     display: table-cell;
+*/
 /*
     vertical-align: middle;
     text-align: center;
     font-weight: bold;
 */
+/*
     border-bottom: 1px solid #d4d4d4;
     border-right: 1px solid #d4d4d4;
 }
 
 .nmc-energo-passport-child-cell {
     display: table-cell;
+*/
 /*
     vertical-align: middle;
     text-align: center;
@@ -2936,45 +2942,58 @@ input[type="checkbox"] {
     border-bottom: 1px solid #d4d4d4;
     border-right: 1px solid #d4d4d4;
 */
-}
+/*}*/
 
 /*Энергопасспорт - самописный вариант*/
 
+/* Классы для таблиц документа*/
 .nmc-energo-table {
     border: 1px; 
     background-color: #fff;
 }
 
-.nmc-energo-table > thead > tr > th, .nmc-energo-table > tr > th{
+/*      Заголовок таблицы*/
+.nmc-energo-table > thead > tr > th, .nmc-energo-table > tr > th {
     text-align: center;
     border: 1px solid #646263;
     background-color: #f5f5f5;
 }
-.nmc-energo-table > tbody > tr > td, .nmc-energo-table > tr > td{
+
+/*      Ячейки строк*/
+.nmc-energo-table > tbody > tr > td, .nmc-energo-table > tr > td {
     border: 1px solid #646263;
+    padding: 0 2px;
 }
 
 .nmc-td-no-edit {
     background-color: #f5f5f5;
 }
 
+/*
 .nmc-td-edit {
     background-color: #fff;
 }
+*/
 
+/*
 .nmc-empty-div {
     height: 1.5em;
 }
+*/
 
+/* Разделение окна редактора документа на 2 части и управление отображением в распахнутом / схлопнутом режимах*/
+/*  Распахнутый режим, когда рабочая область документа максимизируется*/
 .nmc-energo-passport-maximize {
     width: 96%;
     margin-left: 0;
 }
+/*  а содержание минимизируется*/
 .nmc-energo-contents-minimize {
 /*    min-width: 45px;*/
     width: 4%;    
 }
 
+/*      Граница ака вертикальная черта по правой границе содержания*/
 .nmc-div-bordered {
     border-right: 1px solid #646263;
 }
@@ -2992,6 +3011,8 @@ input[type="checkbox"] {
     content: "b"
 }
 */
+
+/* Красивый разделитель между содержанием и рабочей областью документа*/
 
 .nmc-div-delimiter {
     position: absolute;
@@ -3051,51 +3072,70 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-.nmc-energy-contents{
+/*  Стили для пунктов содержания*/
+
+.nmc-energy-contents {
     cursor: pointer;
 }
-
+/*  Стили для разделов содержания*/
 .nmc-energy-contents-entry {
     cursor: pointer;
     border-bottom: 1px solid #D2D2D2;
 }
+/*  Подсветка нечетных приложений*/
 .nmc-energy-contents-odd {
     background-color: #eee;
 }
-
+/*  Подсветка нечетных разделов приложений*/
 .nmc-energy-contents-entry:nth-of-type(odd) {    
     background-color: #eee;
 }
 
+/* Стили для заголовка h1*/
 .nmc-energy-doc-h1 {
     font-size: 18px;
 }
 
+/*  Стили для SIMPLE_LINE части документа*/
 .nmc-energy-simple-line {
     padding: 5px 0; 
     display: table-row;
 }
+
+.nmc-energy-simple-line:hover {
+    background-color: #eee;
+}
+
 div.nmc-energy-simple-line > div {
     display: table-cell; 
     padding: 0 10px; 
     vertical-align: top;
 }
-
+/*  Поле для ввода текста в SIMPLE_LINE */
 .nmc-energy-input-text {
     width: 100%; 
     border: 0; 
     border-bottom: 1px solid;
+    background: transparent;
 }
 
+.nmc-energy-input-text:focus {
+    background: #fff;
+}
+/* Класс для табличной части документа - это родитель - parent container - для таблиц класса nmc-energo-table*/
 .nmc-energy-inner-table {
     padding: 10px 0;
 }
-
+/*  Поле для ввода текста в ячейке INNER_TABLE */
 .nmc-energy-td-input-text {
     width: 100%; 
     border: 0;
 }
-
+/*  Чекбокс в ячейке INNER_TABLE */
 .nmc-energy-td-input-checkbox {
     margin: 4px !important;
+}
+
+.nmc-energy-td-counter {
+    text-align: right;
 }

@@ -428,7 +428,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     }
     
     function successLoadPassportDataCallback(resp) {
-        //TODO: comment
 //        console.log(resp);
         //hash map
         var sectionValues = {},
@@ -506,7 +505,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     }
     
     function successLoadPassportCallback(response) {
-        //TODO: comment
 //        console.log(response);
         if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
             console.warn("Loaded passport is empty!");
@@ -655,6 +653,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $timeout(function () {
             cell.isSelected = false;
         }, 200);
+        
+        $scope.data.currentRow.isSelected = false;
 //console.log(cell);
 //        console.log(values);        
 //        console.log(complexIdx);
@@ -1118,10 +1118,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         return mainSvc.checkUndefinedEmptyNullValue(str);
     };
     
-    $scope.selectEntry = function () {
-        //TODO: add code
-    };
-    
     $scope.addEntryInit = function () {
         $scope.data.currentSectionEntry = {};
         $('#showSectionEntryOptionModal').modal();
@@ -1175,7 +1171,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     }
     
     $scope.saveEntry = function (passportId, sectionId, entry) {
-        //TODO: check passportId, sectionId, entry
         if (checkEntry(entry) === false) {
             return false;
         }
@@ -1211,20 +1206,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $('#inputSectionOrder').inputmask('integer', {min: 1});
     });
 // **** end of work with section entry ***
-    
-    function getCoords(elem) { // кроме IE8-
-        var box = elem.getBoundingClientRect();
 
-        return {
-            top: box.top + pageYOffset,
-            left: box.left + pageXOffset
-        };
-
-    }
-    
     function energyDocumentScrolling(arg) {
-//console.log(arg.target.scrollTop);
-//        console.log($('#' + arg.target.id).offset());
 
         $scope.data.currentPassDocSection.preparedSection.parts.forEach(function (part) {
             if (part.partType === 'INNER_TABLE') {
