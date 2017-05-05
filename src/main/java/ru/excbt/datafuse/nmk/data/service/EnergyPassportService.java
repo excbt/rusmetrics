@@ -101,6 +101,9 @@ public class EnergyPassportService {
         if (energyPassportVM != null) {
             energyPassport.setPassportName(energyPassportVM.getPassportName());
             energyPassport.setDescription(energyPassportVM.getDescription());
+            if (energyPassportVM.getPassportDate() != null){
+                energyPassport.setPassportDate(energyPassportVM.getPassportDate());
+            }
             if (energyPassportVM.getOrganizationId() != null) {
                 energyPassport.setOrganization(new Organization().id(energyPassportVM.getOrganizationId()));
             }
