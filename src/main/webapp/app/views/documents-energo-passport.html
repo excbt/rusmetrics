@@ -116,9 +116,31 @@
             <div class = "col-xs-10"
                  ng-class = "{'nmc-energo-passport-maximize': !showContentsFlag}">
                 
-                <h3 class = "nmc-h3">
-                    Документ {{data.passport.passportName}}
-                </h3>
+                <div class = "container-fluid">
+                    <div class = "row">
+                        <div class = "col-xs-9">
+                            <h3 class = "nmc-h3">
+                                Документ {{data.passport.passportName}}
+                            </h3>
+                        </div>    
+                        <div title = "Панель с кнопками"
+                             ng-show = "data.currentRow.dynamic === true && data.currentRow.isSelected === true"                     
+                             class = "col-xs-2"                     
+                             >
+
+<!--
+                            <i 
+                               title = "Удалить строку"
+                               class = "btn btn-xs btn-default nmc-remove-btn">
+                            </i>
+                            <i 
+                               title = "Добавить строку"                                                                
+                                class = "btn btn-xs btn-default nmc-insert-row-btn">
+                            </i>
+-->
+                        </div>
+                    </div>
+                </div>
                 <div  ng-show="ctrlSettings.passportLoading" class="nmc-loading">
                     <i class="fa fa-spinner fa-spin"></i> Загрузка документа... 
                 </div>
@@ -239,7 +261,8 @@
                                                     <div ng-if = "td.cellType !== 'VALUE'">
                                                         {{td.caption}}
                                                     </div>
-                                                    <div ng-if = "td.cellType === 'VALUE' && td.__type === 'Counter'">
+                                                    <div ng-if = "td.cellType === 'VALUE' && td.__type === 'Counter'"
+                                                         class = "nmc-energy-td-counter">
                                                         {{td.counterPrefix + td.value}}                                                        
                                                     </div>
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
