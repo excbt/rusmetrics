@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport_X;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
@@ -15,6 +16,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -177,6 +179,35 @@ public class EnergyPassportResource extends SubscrApiController {
         return responseUpdate(() ->
             energyPassportService.linkEnergyPassportToContObjects(passportId, contObjectIds, getCurrentSubscriber()));
     }
+
+
+    /**
+     *
+     * @param contObjectId
+     * @return
+     */
+    @RequestMapping(value = "/contObject/{contObjectId}", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getContObjectPassport(@PathVariable("contObjectId") Long contObjectId) {
+
+        return responseOK(() -> energyPassportService.findContObjectEnergyPassport(contObjectId));
+    }
+
+
+    /**
+     *
+     * @param contObjectId
+     * @param energyPassportVM
+     * @return
+     */
+    @RequestMapping(value = "/contObject/{contObjectId}", method = RequestMethod.POST,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> createContObjectEnergyPassport(@PathVariable("contObjectId") Long contObjectId,
+        @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
+        ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createContObjectPassport(energyPassportVM, Arrays.asList(contObjectId), getCurrentSubscriber());
+        return responseUpdate(action);
+    }
+
 
 
 }

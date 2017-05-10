@@ -34,6 +34,8 @@ import java.util.*;
 public class EnergyPassport extends JsonAbstractAuditableModel implements DeletedMarker, DTOModel<EnergyPassportDTO> {
 
     public static final int DEFAULT_DOCUMENT_MODE = 1;
+    public static final int DOCUMENT_MODE_1 = 1;
+    public static final int DOCUMENT_MODE_2 = 2;
 
     @JsonIgnore
     @ManyToOne
