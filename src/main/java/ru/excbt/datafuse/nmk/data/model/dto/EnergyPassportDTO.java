@@ -30,6 +30,8 @@ public class EnergyPassportDTO {
 
     private Long organizationId;
 
+    private Integer documentMode;
+
     private int version;
 
     private List<EnergyPassportSectionDTO> sections = new ArrayList<>();
@@ -48,6 +50,7 @@ public class EnergyPassportDTO {
             ", passportDate=" + passportDate +
             ", description='" + description + '\'' +
             ", organizationId=" + organizationId +
+            ", documentMode=" + documentMode +
             ", version=" + version +
             ", sections=" + sections +
             '}';

@@ -18,10 +18,8 @@ import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
@@ -363,5 +361,35 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         Assert.assertEquals(contObjectIds, linkedContObjectIds);
     }
 
+    @Test
+    @Transactional
+    public void testGetContObjectEnergyPassport() throws Exception {
+
+        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+
+        EnergyPassportVM vm = new EnergyPassportVM();
+        vm.setPassportName("Hallo - 1");
+
+        energyPassportService.createContObjectPassport(vm, contObjectIds.subList(0,1), new Subscriber().id(getSubscriberId()));
+
+        energyPassportDataRepository.flush();
+
+        _testGetJson("/api/subscr/energy-passports/contObject/" + contObjectIds.get(0));
+    }
+
+    @Test
+    @Transactional
+    public void testCreateContObjectEnergyPassport() throws Exception {
+
+        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+
+        EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").build();
+
+        RequestExtraInitializer param = (b) -> {
+        };
+
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports/contObject/" + contObjectIds.get(0), vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+
+    }
 
 }

@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.energypassport.EPConstants.DocumentModes;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil.JsonVars;
+import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport_X;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
@@ -583,6 +584,25 @@ public class EnergyPassportService {
     @Transactional(readOnly = true)
     public List<Long> findEnergyPassportContObjectIds (Long energyPassportId) {
         return passportRepository.findEnergyPassportContObjectIds(energyPassportId).stream().sorted().collect(Collectors.toList());
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<EnergyPassportDTO> findContObjectEnergyPassport(Long contObjectId) {
+        List<EnergyPassportDTO> resultList = passportRepository.findContObjectEnergyPassports(contObjectId,DocumentModes.CONT_OBJECT)
+            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
+        resultList.forEach((p) -> {
+            p.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId())));
+            setupPassportVars(p);
+        });
+        return resultList;
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public EnergyPassportDTO createContObjectPassport(EnergyPassportVM energyPassportVM, List<Long> contObjectIds,
+                                                      Subscriber subscriber) {
+        EnergyPassportDTO result = createPassport(EnergyPassport_X.ENERGY_PASSPORT_X, energyPassportVM, subscriber);
+        linkEnergyPassportToContObjects(result.getId(), contObjectIds, subscriber);
+        return result;
     }
 
 }

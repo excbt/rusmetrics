@@ -26,6 +26,8 @@ public class EnergyPassportTemplateDTO {
 
     private LocalDate documentDate;
 
+    private int documentMode;
+
     private int version;
 
     private List<EnergyPassportSectionTemplateDTO> sectionTemplates = new ArrayList<>();
