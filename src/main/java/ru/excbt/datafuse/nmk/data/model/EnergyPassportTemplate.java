@@ -102,6 +102,7 @@ public class EnergyPassportTemplate extends AbstractAuditableModel implements De
         this.documentDate = dto.getDocumentDate();
         this.documentName = dto.getDocumentName();
         this.documentVersion = dto.getDocumentVersion();
+        this.documentMode = dto.getDocumentMode();
         //this.version = dto.getVersion() != null ? dto.getVersion() : 0;
         dto.getSectionTemplates().forEach(i -> addOrUpdateSection(i));
     }

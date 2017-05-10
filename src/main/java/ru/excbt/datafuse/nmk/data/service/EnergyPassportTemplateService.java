@@ -92,6 +92,7 @@ public class EnergyPassportTemplateService {
         templateDTO.setDocumentDate(LocalDate.of(2014,6,30));
         templateDTO.setDocumentName("ПРИКАЗ 401");
         templateDTO.setDescription("ОБ УТВЕРЖДЕНИИ ПОРЯДКА ПРЕДСТАВЛЕНИЯ ИНФОРМАЦИИ ОБ ЭНЕРГОСБЕРЕЖЕНИИ И О ПОВЫШЕНИИ ЭНЕРГЕТИЧЕСКОЙ ЭФФЕКТИВНОСТИ");
+        templateDTO.setDocumentMode(1);
         return templateDTO;
     }
 
@@ -189,5 +190,16 @@ public class EnergyPassportTemplateService {
         EnergyPassportTemplateDTO result = modelMapper.map(template, EnergyPassportTemplateDTO.class);
         return result;
     }
+
+    public EnergyPassportTemplateDTO createNewDTO_XXX() {
+        EnergyPassportTemplateDTO templateDTO = new EnergyPassportTemplateDTO();
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_4()));
+        templateDTO.setDocumentDate(LocalDate.of(2014,6,30));
+        templateDTO.setDocumentName("ПРИКАЗ XXX");
+        templateDTO.setDescription("Энергопаспорт");
+        templateDTO.setDocumentMode(2);
+        return templateDTO;
+    }
+
 
 }
