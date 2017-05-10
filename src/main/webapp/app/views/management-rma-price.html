@@ -52,14 +52,14 @@
 
 <div class="container-fluid">
     <div class="row nmc-main-workspace-header">  
-        <div class="col-xs-4 col-md-4 noPadding marginBottom10 nmc-search-form">
+        <div class="col-xs-4 noPadding marginBottom10 nmc-search-form">
                 <select class="form-control nmc-select-form-for-price" 
                         ng-model="data.currentMode.id" 
                         ng-options="mode.id as mode.subscriberName for mode in data.priceModes" 
                         ng-change="changeMode(data.currentMode.id)">
             </select>
         </div>
-        <div class="col-xs-8 col-md-8">            
+        <div class="col-xs-8">            
             <label>
                 <input id="history-view" 
                        ng-model="ctrlSettings.viewHistoryFlag" 
@@ -77,35 +77,37 @@
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
         <tr class="nmc-main-table-header">
-            <th class="col-xs-1 col-md-1 nmc-td-for-button">
+            <th class="col-xs-1 nmc-td-for-button">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
+            <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class = "column.class">
                 {{column.caption}}                
             </th>
-            <th class="col-xs-1 col-md-6">
+            <th class = "col-xs-6">
             </th>
         </tr>
 </table>
 
 <!-- Область с прокручиваемыми данными-->
-<div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+<div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide = "loading">
     <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table">
         <thead>
             <tr class="nmc-main-table-header nmc-hide">
-                <th class="col-xs-1 col-md-1 nmc-td-for-button">
+                <th class="col-xs-1 nmc-td-for-button">
 
                 </th>
-                <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
+                <th ng-repeat = "column in ctrlSettings.priceListColumns" ng-class = "column.class">
                     {{column.caption}}                
                 </th>
-                <th class="col-xs-1 col-md-6">
+                <th class = "col-xs-6">
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive), 'nmc-inactive-price':priceList.isArchive}" ng-dblclick="dblClickPriceList(priceList)">
-                <td class="col-xs-1 col-md-1 nmc-td-for-button" >
+            <tr ng-repeat = "priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" 
+                ng-class = "{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive), 'nmc-inactive-price':priceList.isArchive}" 
+                ng-dblclick = "dblClickPriceList(priceList)">
+                <td class="col-xs-1 nmc-td-for-button" >
                     <div class="btn-group">
                       <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                         </i>
@@ -136,7 +138,7 @@
                         </span>    
                     </span>
                 </td>
-                <td class="col-xs-1 col-md-6">
+                <td class="col-xs-6">
                     <span ng-if="priceList.isDraft">
                         <i class="pull-right btn btn-xs glyphicon glyphicon-trash" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal"></i>
                     </span>
@@ -175,11 +177,11 @@
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
 
                                                 </td>
-                                                <td class="col-md-10">
+                                                <td class="col-xs-10">
                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
                                                     </span>    
                                                 </td>
-                                                <td class="col-md-1">
+                                                <td class="col-xs-1">
 <!--                                                    {{pack.price.value}} -->
                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(pack.price.priceValue)}">
                                                         <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.priceValue" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
@@ -198,11 +200,11 @@
                                                     <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
                                                             <tr ng-repeat="serv in pack.serviceItems" ng-hide="!serv.isAvailable&&!isSystemuser()">
-                                                                <td class="col-md-11 onlyPaddingLeft5">
+                                                                <td class="col-xs-11 onlyPaddingLeft5">
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="col-md-1">
+                                                                <td class="col-xs-1">
                                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(serv.price.priceValue)}">
                                                                         <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.priceValue" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                                     </div>
@@ -267,28 +269,28 @@
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table ">
                             <thead>
                                 <tr class="nmc-main-table-header">
-                                    <th class="col-md-1 nmc-td-for-button">
+                                    <th class="col-xs-1 nmc-td-for-button">
 <!--                                        <input type="checkbox"/>-->
                                         <i class="btn btn-xs glyphicon glyphicon-duplicate nmc-btn-dup paddingLeft0" title="Клонировать всем" ng-click="selectedAllPressed()"></i>
                                     </th>
-                                    <th class="col-md-1 nmc-td-for-button">
+                                    <th class="col-xs-1 nmc-td-for-button">
 <!--                                        <input type="checkbox"/>-->
                                         <i class="btn btn-xs glyphicon glyphicon-off nmc-btn-on paddingLeft0" title="Активировать все" ng-click="activatedAllPressed()"></i>
                                     </th>
-                                    <th class="col-md-10">
+                                    <th class="col-xs-10">
                                         Абонент
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="client in data.clientsAtWindow" ng-class="{'nmc-tr-odd':($index%2!==1)}">
-                                    <td class="col-md-1 nmc-td-for-button">
+                                    <td class="col-xs-1 nmc-td-for-button">
                                         <input type="checkbox" ng-model="client.selected"/>
                                     </td >
-                                    <td class="col-md-1 nmc-td-for-button">
+                                    <td class="col-xs-1 nmc-td-for-button">
                                         <input type="checkbox" ng-disabled="!client.selected" ng-model="client.activated"/>
                                     </td>
-                                    <td class="col-md-10">
+                                    <td class="col-xs-10">
                                         {{client.subscriberName}}
                                     </td>
                                 </tr>
@@ -347,14 +349,14 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 <!--                            -->
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deletePrice(data.currentPrice)"
 								value="Удалить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#data.currentUser');">
 								Отменить
@@ -384,7 +386,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
@@ -431,12 +433,12 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input id="btnSaveProp" ng-disabled="!data.currentPrice.isDraft" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="savePriceProp(data.currentPrice)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#data.currentPrice')">
 								Отменить

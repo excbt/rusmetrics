@@ -59,15 +59,15 @@ app.controller('MngmtPriceCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'n
         {
             "name": "priceListName",
             "caption": "Наименование",
-            "class": "col-xs-3 col-md-3"
+            "class": "col-xs-3"
         }, {
             "name": "factBeginDate",
             "caption": "Дата ввода",
-            "class": "col-xs-1 col-md-1"
+            "class": "col-xs-1"
         }, {
             "name": "factEndDate",
             "caption": "Дата завершения",
-            "class": "col-xs-1 col-md-1"
+            "class": "col-xs-1"
         }
     ];
     
