@@ -75,6 +75,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             top: $('#' + tdElem.id).parent().offset().top + $('#' + tdElem.id).parent().height(),
             left: $('#' + tdElem.id).parent().offset().left
         };
+console.log(offset);
+console.log(tdElem);
         $('#' + tdElem.id).offset(offset);
     }
     
@@ -319,7 +321,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                 rowCounter = elm._dynamicIdx;
             }
         });
-        
         if (rowCounter <= 1) { //one row is build when template was loaded
             return;
         }
@@ -340,7 +341,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         
         var pssDynamicTablePart = null;
         passportSectionStructure.parts.some(function (part) {
-            if (part.partType === "INNER_TABLE") {
+            if (part.partType === "INNER_TABLE" && !mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
                 pssDynamicTablePart = part;
                 return true;
             }
@@ -363,6 +364,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         });
         
         var rCount = 0;
+//if (mainSvc.checkUndefinedNull(pssDynamicTablePart.innerPdTable.dynamicRowTemplate) || mainSvc.checkUndefinedNull(pssDynamicTablePart.innerPdTable.dynamicRowTemplate.tbody)) {
+//    console.log(loadedSection);
+//    console.log(pssDynamicTablePart);
+//    return;
+//}        
         var dynamicRowPartLength = pssDynamicTablePart.innerPdTable.dynamicRowTemplate.tbody.length;
 //console.log(rowCounter);        
 //console.log(pssDynamicTablePart);        
@@ -689,7 +695,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         
         $timeout(function () {
             locateTdBtns(td, tdInd, rowInd);
-        });
+        }, 100);
     };
     
     $scope.tdClear = function (td) {
