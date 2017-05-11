@@ -2003,39 +2003,39 @@ tr.nmc-inactive-price > td {
 /**************************************************************************************
  *  Разметка модального окна
  ****************************************************************************************/
-.nmc-modal-window{
+.nmc-modal-window {
 }
 
     /* Контейнер для шапки, тела и футера*/
-.nmc-modal-dialog{
-    margin-top: 10%;
+.nmc-modal-dialog {
+    margin-top: 3%;/*10%;*/
     min-width: 341px;
 }
     /* Размер окошка для Температурного графика*/
-.nmc-modal-dialog-temp-sch{
-    margin-top: 10%;
+.nmc-modal-dialog-temp-sch {
+    margin-top: 3%;/*10%;*/
     min-width: 341px;
     width: 500px;
 }
     /* Контейнер для шапки, тела и футера - для диалогов удаления, перемещения и т.д. - чтобы они распологались визиульно по центру экрана*/
-.nmc-modal-dialog-low{
-    margin-top: 20%;
+.nmc-modal-dialog-low {
+    margin-top: 3%;/*20%;*/
 }
 
     /* Классы задающие ширину модального окна*/
-.nmc-modal-wide-dialog{
+.nmc-modal-wide-dialog {
     width: 1100px; 
 }
 
-.nmc-modal-some-wide-dialog{
+.nmc-modal-some-wide-dialog {
     width: 700px; 
 }
 
-.nmc-modal-narrow-dialog{
+.nmc-modal-narrow-dialog {
     width: 300px; 
 }
 
-.nmc-modal-dialog-w450{
+.nmc-modal-dialog-w450 {
     width: 450px; 
 }
 
@@ -2074,7 +2074,7 @@ tr.nmc-inactive-price > td {
 }
 /* поле с таблицей колонок*/    /* поле с таблицей объектов*/
 /* устанавливаем у них прокрутку*/
-.nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list{
+.nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list {
     overflow-y: scroll;
 }
 
@@ -2208,6 +2208,22 @@ tr.nmc-inactive-price > td {
     max-height: 190px; 
     overflow-y: auto;
     margin: 0 0 10px 0;
+}
+
+    /*Модальное окно Варианта отчета*/
+/*"Выбрать все"*/
+.nmc-p-in-modal-select-all {
+    margin-top: 3px;
+    margin-bottom: 0;
+}
+/* Поле ввода шаблона имени файла*/
+.nmc-td-in-modal-input-file-template-label {
+    border-bottom: 0; 
+    padding-bottom: 0 !important;
+}
+
+.nmc-td-in-modal-input-file-template {
+    border-top: 0 !important;
 }
 
 
@@ -2426,6 +2442,16 @@ tr.nmc-bg-distinguish > td {
     width: 12%;
 }
 
+    /* "Звездоска", который отмечаются обязательные поля*/
+.nmc-required-star {
+    color: red;
+}
+
+.nmc-doc-type-sym {
+    padding-bottom: 2px; 
+    border-radius: 45%;
+}
+
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
 /******************************************************************************************************/
 .noMarginTop {
@@ -2494,7 +2520,7 @@ tr.nmc-bg-distinguish > td {
     margin-top: 15px;
 }
 
-.marginTopMinus10{
+.marginTopMinus10 {
     margin-top: -10px;
 }
 
@@ -2600,7 +2626,7 @@ tr.nmc-bg-distinguish > td {
     padding-top: 0px;
 }
 
-.paddingLeft0{
+.paddingLeft0 {
     padding-left: 0;
 }
 
@@ -2968,6 +2994,11 @@ input[type="checkbox"] {
 .nmc-td-no-edit {
     background-color: #f5f5f5;
 }
+/* Область для подстрочных кнопок в ячейках динамической таблицы*/
+.nmc-div-sub-td-btns {
+    position: absolute;
+    opacity: 0.6;
+}
 
 /*
 .nmc-td-edit {
@@ -3134,6 +3165,10 @@ div.nmc-energy-simple-line > div {
 /*  Чекбокс в ячейке INNER_TABLE */
 .nmc-energy-td-input-checkbox {
     margin: 4px !important;
+}
+/*  Поле для ввода многострочного текста в ячейке INNER_TABLE */
+.nmc-energy-td-input-multi-text {
+    min-height: 1.5rem;
 }
 
 .nmc-energy-td-counter {

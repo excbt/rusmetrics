@@ -1,18 +1,18 @@
 <!--Show device options-->
-<div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showDeviceLabel" tabindex="-1" data-backdrop="static">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="showDeviceLabel" class="nmc-h3">
+<div id = "showDeviceModal" class = "modal fade nmc-modal-window" role = "dialog"
+	aria-labelledby = "showDeviceLabel" tabindex = "-1" data-backdrop = "static">
+	<div class = "modal-dialog  modal-content nmc-modal-dialog">
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" class = "close nmc-close-button" data-dismiss = "modal" aria-label = "Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id = "showDeviceLabel" class = "nmc-h3">
 				Прибор
 			</h3>
 		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div role="tabpanel" 
-                 class="nmc-tab-panel">
+		<div class = "modal-body nmc-modal-body paddingLeftRight15">
+            <div role = "tabpanel" 
+                 class = "nmc-tab-panel">
               <!-- Навигационная полоса для варианта отчета-->
-              <ul class="nav nav-tabs" role="tablist">
+              <ul class = "nav nav-tabs" role = "tablist">
                 <li role="presentation" 
                     class="active" 
                     id="main_properties_tab">
@@ -63,12 +63,12 @@
                      id="main_properties">                             
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                                        
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputDeviceModel">Модель</label>
+                                            <td class="col-xs-3"><label for="inputDeviceModel">Модель</label>
                                             </td>
-                                            <td colspan="2" class="nmc-text-align-left col-sm-9">
+                                            <td colspan="2" class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':currentDevice.id == null &&  currentDevice.deviceModelId == null && currentDevice.isManual}">
                                                     <select class="form-control nmc-select-form" 
@@ -83,10 +83,10 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputMode">s/n</label>
+                                            <td class="col-xs-3"><label for="inputMode">s/n</label>
                                             </td>
                                             <td colspan="2" 
-                                                class="col-sm-9 nmc-text-align-left">
+                                                class="col-xs-9 nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
                                                        id="inputSn" 
@@ -142,9 +142,9 @@
                                         </tr>
 <!--
                                         <tr>
-                                            <td colspan="2" class="col-sm-6"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
+                                            <td colspan="2" class="col-xs-6"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                             </td>
-                                            <td class="col-sm-6 nmc-text-align-left">
+                                            <td class="col-xs-6 nmc-text-align-left">
                                                 <input class="form-control nmc-input-data nmc-text-input-form pull-right" 
                                                        type="text" 
                                                        id="inputVerificationInterval"  
@@ -156,11 +156,11 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2" 
-                                                class="col-sm-6">
+                                                class="col-xs-6">
                                                 <label for="inputVerificationDate">Дата очередной плановой поверки
                                                 </label>
                                             </td>
-                                            <td class="col-sm-6 nmc-text-align-left">
+                                            <td class="col-xs-6 nmc-text-align-left">
                                                 <input class="form-control date-picker nmc-input-data nmc-date-input-form pull-right"
                                                        type="text" 
                                                        id="inputVerificationDate" 
@@ -191,14 +191,14 @@
                      id="con_properties">
                       <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table ng-if="currentDevice.deviceModel.isImpulse === true && currentDevice.curDatasource.dataSourceType.isRaw === true"
                                            class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputDevMark" >Тип счетчика импульсов</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <select class="form-control nmc-text-input-form nmc-input-data pull-right"
                                                         id="inputDevModelType"
                                                         ng-disabled="isDeviceDisabled(currentDevice);"
@@ -209,17 +209,16 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <div id="divInputNetDevAddr"
                                                      class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':currentDevice.impulseCounterSlotAddr == null || currentDevice.impulseCounterSlotAddr == ''}">
                                                     <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type="text" 
-                                                           id="inputNetDevAddr"                                            
-                                                           placeholder="" 
+                                                           id="inputNetDevAddr"  
                                                            ng-model="currentDevice.impulseCounterSlotAddr"
                                                            ng-disabled="isDeviceDisabled(currentDevice);"
                                                            />
@@ -227,17 +226,16 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <div id="divInputNetAddrImpDev"
                                                      class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':currentDevice.impulseCounterAddr==null || currentDevice.impulseCounterAddr == ''}">
                                                     <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type="text" 
-                                                           id="inputNetAddrImpDev"                                            
-                                                           placeholder="" 
+                                                           id="inputNetAddrImpDev"  
                                                            ng-model="currentDevice.impulseCounterAddr"
                                                            ng-disabled="isDeviceDisabled(currentDevice);"
                                                            />
@@ -245,11 +243,11 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputTikCost" >Число импульсов в <span ng-bind="(data.deviceMetadataMeasures.all | filter: currentDevice.impulseMu)[0].caption"></span>
                                                 </label>                                               
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <div id="divInputTikCost"
                                                      class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':currentDevice.impulseK == null || currentDevice.impulseK == 0}">
@@ -265,10 +263,10 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputDevMeasure" >Единицы измерения</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <div id="divInputDevMeasure"
                                                      class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':currentDevice.impulseMu == null}">
@@ -286,42 +284,39 @@
                                     <table ng-if = "currentDevice.deviceModel.isImpulse !== true"
                                            class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr ng-if="currentDevice.curDatasource.dataSourceType.isRaw==true">
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputNetAddr" >Сетевой адрес прибора</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputNetAddr"                                            
-                                                       placeholder="" 
+                                                       id="inputNetAddr" 
                                                        ng-model="currentDevice.subscrDataSourceAddr" 
                                                        ng-disabled="!isAdminCanEdit(currentDevice)"
                                                        />
                                             </td>
                                         </tr>
                                         <tr ng-if="currentDevice.curDatasource.dataSourceType.isRaw==true">
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputDeviceLogin" >Логин</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDeviceLogin"                                            
-                                                       placeholder="" 
+                                                       id="inputDeviceLogin"  
                                                        ng-model="currentDevice.deviceLoginInfo.deviceLogin" 
                                                        ng-disabled="!isAdminCanEdit(currentDevice)"
                                                        />
                                             </td>
                                         </tr>
                                         <tr ng-if="currentDevice.curDatasource.dataSourceType.isRaw==true">
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputDevicePassword" >Пароль</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDevicePassword"                                            
-                                                       placeholder="" 
+                                                       id="inputDevicePassword"  
                                                        ng-model="currentDevice.deviceLoginInfo.devicePassword" 
                                                        ng-disabled="!isAdminCanEdit(currentDevice);"
                                                        />
@@ -348,8 +343,7 @@
                                                 class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
-                                                       id="inputTable1h" 
-                                                       placeholder="" 
+                                                       id="inputTable1h"  
                                                        ng-model="currentDevice.dataSourceTable1h" 
                                                        ng-disabled="isDeviceDisabled(currentDevice);"/>
                                             </td>
@@ -361,8 +355,7 @@
                                             <td colspan="2" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
-                                                       id="inputTable24h" 
-                                                       placeholder="" 
+                                                       id="inputTable24h"  
                                                        ng-model="currentDevice.dataSourceTable24h" 
                                                        ng-disabled="isDeviceDisabled(currentDevice);"/>
                                             </td>
@@ -374,8 +367,7 @@
                                             <td colspan="2" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
-                                                       id="inputTable1h" 
-                                                       placeholder="" 
+                                                       id="inputTable1h"  
                                                        ng-model="currentDevice.metaData.vzletTableHour" 
                                                        ng-disabled="isDeviceDisabled(currentDevice);"/>
                                             </td>
@@ -387,8 +379,7 @@
                                             <td colspan="2" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
-                                                       id="inputTable1h" 
-                                                       placeholder="" 
+                                                       id="inputTable1h"  
                                                        ng-model="currentDevice.metaData.vzletTableDay" 
                                                        ng-disabled="isDeviceDisabled(currentDevice);"/>
                                             </td>
@@ -403,31 +394,29 @@
                      id="time_properties">
                       <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputDevicePassword" >Время по часам прибора</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDevicePassword"                                            
-                                                       placeholder="" 
+                                                       id="inputDevicePassword"  
                                                        ng-model="currentDevice.deviceObjectLastInfo.deviceLastTimeStr" 
                                                        disabled
                                                        />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
+                                            <td colspan="2" class="col-xs-6">
                                                 <label for="inputDevicePassword" >Время по часам драйвера во время снятия текущего времени прибора <small>(Драйвер работает в часовом поясе Москвы)</small></label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class="col-xs-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDevicePassword"                                            
-                                                       placeholder="" 
+                                                       id="inputDevicePassword"  
                                                        ng-model="currentDevice.deviceObjectLastInfo.driverLastTimeStr" 
                                                        disabled
                                                        />
@@ -446,14 +435,14 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input ng-show="showOkButton==='true' || isAdminCanEdit(currentDevice)"
                                    type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="btnClick()"
                                 ng-disabled="!isAdminCanEdit(currentDevice);"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-xs-3 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentDevice')">
 								Отменить

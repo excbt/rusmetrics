@@ -149,7 +149,7 @@
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputUserName">Логин</label><span style="color:red;">*</span>
+                                <td class="col-sm-3"><label for="inputUserName">Логин</label><span class = "nmc-required-star">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userName)}">
@@ -158,7 +158,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputFirstName">Имя</label><span style="color:red;">*</span>
+                                <td class="col-sm-3"><label for="inputFirstName">Имя</label><span class = "nmc-required-star">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userNickname)}">
@@ -168,7 +168,7 @@
                             </tr>
 <!--
                             <tr>
-                                <td class="col-sm-3"><label for="inputFirstName">Имя</label><span style="color:red;">*</span>
+                                <td class="col-sm-3"><label for="inputFirstName">Имя</label><span class = "nmc-required-star">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.firstName)}">
@@ -177,7 +177,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputLastName">Фамилия</label><span style="color:red;">*</span>
+                                <td class="col-sm-3"><label for="inputLastName">Фамилия</label><span class = "nmc-required-star">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.lastName)}">
@@ -230,7 +230,7 @@
                             <tr>
                                 <td class="col-sm-3">
                                     <span ng-if="data.currentUser.id==null">
-                                        <label for="inputPassword">Пароль:</label><span style="color:red;">*</span>
+                                        <label for="inputPassword">Пароль:</label><span class = "nmc-required-star">*</span>
                                     </span>
                                     <span ng-if="data.currentUser.id!=null">
                                         <label for="inputPassword">Новый пароль:</label>
@@ -258,7 +258,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    Поля отмеченные <span style="color:red;">*</span> обязательны для заполнения!
+                                    Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
                                 </td>
                             </tr>
                         </table>
