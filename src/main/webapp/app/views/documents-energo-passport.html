@@ -193,7 +193,7 @@
                     <div ng-if = "data.currentPassDocSection.hasEntries !== true"
                          ng-switch = "data.currentPassDocSection.preparedSection.viewType">
                         <div ng-switch-default>
-                            <div ng-repeat = "part in data.currentPassDocSection.preparedSection.parts">
+                            <div ng-repeat = "part in data.currentPassDocSection.preparedSection.parts track by $index" ng-init = "partIndex = $index">
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"                                         
                                          class = "nmc-energy-simple-line"
@@ -263,8 +263,8 @@
                                                         {{td.counterPrefix + td.value}}                                                        
                                                     </div>
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
-                                                         ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
-                                                         ng-change = "onDivChange(td, $index, rowIndex)"
+                                                         ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
+                                                         ng-change = "onDivChange(td, $index, rowIndex, partIndex)"
                                                          contenteditable
                                                          strip-br
                                                          ng-blur = "tdBlur(td)"
@@ -275,14 +275,14 @@
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type === 'Boolean'" 
                                                            type = "checkbox"
                                                            class = "nmc-energy-td-input-checkbox"
-                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
                                                            ng-blur = "tdBlur(td)"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"/>
                                                     
                                                     <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'Counter' && td.__type !== 'Date')" 
                                                            type = "text"
-                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
                                                            data-inputmask = "'alias':'numeric', 'greedy': false"
                                                            class = "nmc-energy-td-input-text"
@@ -293,16 +293,16 @@
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type == 'Date'" 
                                                            ng-attr-id = "{{'date_value_' + prepareComplexIdForSetElemId(td._complexIdx)}}"
                                                            readonly
-                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
                                                            type = "text"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
                                                            class = "nmc-energy-td-input-text"/>
                                                     
                                                     <div ng-show = "trow.dynamic && td.isSelected"
-                                                         ng-attr-id = "{{'td_btns_' + rowIndex + '_' + $index}}"
+                                                         ng-attr-id = "{{'td_btns_' + partIndex + '_'+ rowIndex + '_' + $index}}"
                                                          class = "nmc-div-sub-td-btns">
-                                                        
+<!--                                                        class = "nmc-div-sub-td-btns"-->
 <!--
                                                         <i title = "Очистить поле"
                                                            class = "btn btn-xs nmc-remove-button"

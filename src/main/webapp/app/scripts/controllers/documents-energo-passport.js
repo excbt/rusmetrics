@@ -65,19 +65,24 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     //current passport structure which is shown at present moment
     $scope.data.currentPassDocSection = null;
     
-    function locateTdBtns(td, tdInd, rowInd) {
+    function locateTdBtns(td, tdInd, rowInd, partInd) {
         if (!(td.hasOwnProperty("isSelected") && td.isSelected === true)) {
             return;
         }
-        var tdElem = document.getElementById('td_btns_' + rowInd + '_' + tdInd);
+        var tdElem = document.getElementById('td_btns_' + partInd + '_' + rowInd + '_' + tdInd);
 
         var offset = {
             top: $('#' + tdElem.id).parent().offset().top + $('#' + tdElem.id).parent().height(),
             left: $('#' + tdElem.id).parent().offset().left
         };
-console.log(offset);
-console.log(tdElem);
-        $('#' + tdElem.id).offset(offset);
+//console.log(offset);
+//console.log(tdElem);
+//console.log($('#' + tdElem.id).parent());
+        $timeout(function () {
+            $('#' + tdElem.id).offset(offset);
+//console.log(offset);
+//console.log($('#' + tdElem.id));            
+        }, 100);
     }
     
     var setConfirmCode = function (useImprovedMethodFlag) {
@@ -642,10 +647,10 @@ console.log(tdElem);
         
     };
     
-    $scope.onDivChange = function (td, tdInd, rowInd) {
+    $scope.onDivChange = function (td, tdInd, rowInd, partInd) {
         $scope.onChange();
         $timeout(function () {
-            locateTdBtns(td, tdInd, rowInd);
+            locateTdBtns(td, tdInd, rowInd, partInd);
         });
     };
     
@@ -677,7 +682,7 @@ console.log(tdElem);
 //        $scope.data.currentTd.isSelected = true;
 //    };
     
-    $scope.tdFocused = function (part, row, td, tdInd, rowInd) {
+    $scope.tdFocused = function (part, row, td, tdInd, rowInd, partInd) {
         
         $scope.data.currentTd.isSelected = false;
         $scope.data.currentRow.isSelected = false;
@@ -686,16 +691,14 @@ console.log(tdElem);
         $scope.data.currentPart = part;
         $scope.data.currentRow = row;
         $scope.data.currentTd = td;
-        
-        $timeout(function () {
-            $scope.data.currentTd.isSelected = true;
-        }, 200);
+                
         $scope.data.currentRow.isSelected = true;
         $scope.data.currentPart.isSelected = true;
         
         $timeout(function () {
-            locateTdBtns(td, tdInd, rowInd);
-        }, 100);
+            $scope.data.currentTd.isSelected = true;
+            locateTdBtns(td, tdInd, rowInd, partInd);
+        }, 200);
     };
     
     $scope.tdClear = function (td) {
@@ -1248,12 +1251,12 @@ console.log(tdElem);
 
     function energyDocumentScrolling(arg) {
 
-        $scope.data.currentPassDocSection.preparedSection.parts.forEach(function (part) {
+        $scope.data.currentPassDocSection.preparedSection.parts.forEach(function (part, partInd) {
             if (part.partType === 'INNER_TABLE') {
                 part.innerPdTable.tbodies.forEach(function (row, rowInd) {
                     if (row.hasOwnProperty("dynamic") && row.dynamic === true && row.isSelected === true) {
                         row.tds.forEach(function (td, tdInd) {
-                            locateTdBtns(td, tdInd, rowInd);
+                            locateTdBtns(td, tdInd, rowInd, partInd);
                         });
                     }
                 });
