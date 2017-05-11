@@ -9,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeSmsService;
@@ -16,6 +17,7 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.SubscrControllerTest;
 
+@Transactional
 public class SubscrContEventTypeSmsControllerTest extends SubscrControllerTest {
 
 	@Autowired

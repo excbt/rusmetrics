@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
@@ -28,6 +29,7 @@ import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
 
+@Transactional
 public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrObjectTreeControllerTest.class);
@@ -87,6 +89,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSubscrObjectTreeTemplateCRUD() throws Exception {
 
 		Long templateId = getAnyTemplate();
@@ -108,6 +111,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSubscrObjectTreeCRUD() throws Exception {
 
 		ObjectNameHolder tree = new ObjectNameHolder();
@@ -157,6 +161,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSubscrObjectTreeTemplate2CRUD() throws Exception {
 		List<SubscrObjectTreeTemplate> templates = getTemplates();
 
@@ -233,6 +238,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSubscrObjectTreeTemplateCreateInvalidCheck() throws Exception {
 
 		Long templateId = getAnyTemplate();

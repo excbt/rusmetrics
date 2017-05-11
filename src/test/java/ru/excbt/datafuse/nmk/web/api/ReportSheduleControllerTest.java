@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.jsonpath.JsonPath;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -37,8 +38,9 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-import javax.transaction.Transactional;
 
+
+@Transactional
 public class ReportSheduleControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleControllerTest.class);

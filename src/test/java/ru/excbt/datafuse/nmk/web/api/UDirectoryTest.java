@@ -16,12 +16,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+@Transactional
 public class UDirectoryTest extends AnyControllerTest {
 
 	public final static String DIRECTORY_URL_API = "/api/u_directory";

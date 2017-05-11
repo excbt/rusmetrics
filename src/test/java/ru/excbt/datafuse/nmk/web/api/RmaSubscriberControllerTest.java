@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
+@Transactional
 public class RmaSubscriberControllerTest extends RmaControllerTest {
 
 

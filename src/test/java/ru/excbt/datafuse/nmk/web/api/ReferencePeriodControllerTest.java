@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
@@ -17,8 +18,9 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-import javax.transaction.Transactional;
 
+
+@Transactional
 public class ReferencePeriodControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReferencePeriodControllerTest.class);

@@ -40,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.junit.Assert.*;
 
+@Transactional
 public class SubscrContObjectControllerTest extends AnyControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);

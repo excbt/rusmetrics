@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
@@ -33,9 +34,9 @@ import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
-import javax.transaction.Transactional;
 
 
+@Transactional
 public class ReportParamsetControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetControllerTest.class);

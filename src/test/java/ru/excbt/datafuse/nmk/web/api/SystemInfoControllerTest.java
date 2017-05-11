@@ -4,19 +4,23 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
+@Transactional
 public class SystemInfoControllerTest extends AnyControllerTest {
 
 	@Test
+    @Ignore
 	public void testFullUserInfo() throws Exception {
 		_testGetJson("/api/systemInfo/fullUserInfo");
 	}
@@ -27,6 +31,7 @@ public class SystemInfoControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testChangePassword() throws Exception {
 
 		String urlStr = "/api/systemInfo/passwordChange";

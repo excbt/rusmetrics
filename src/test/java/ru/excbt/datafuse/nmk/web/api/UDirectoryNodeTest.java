@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -20,12 +22,13 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+@Transactional
 public class UDirectoryNodeTest extends AnyControllerTest {
 
-	
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryNodeTest.class);
-	
+
 	@Autowired
 	private UDirectoryNodeService directoryNodeService;
 
@@ -36,22 +39,23 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testUpdate() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		UDirectoryNode directoryNode = directoryNodeService
 				.getRootNode(UDirectoryTestConst.TEST_DIRECTORY_NODE_ID);
-		
+
 		directoryNode.setNodeComment("Node comment " + System.currentTimeMillis());
-		
+
 		for (UDirectoryNode ch : directoryNode.getChildNodes()) {
 			ch.setNodeComment("Node comment " + System.currentTimeMillis());
 		}
-		
-		
+
+
 		String jsonContent = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(directoryNode);
-		
+
 		logger.info("Updated directoryNode JSON: {}", jsonContent);
-		
+
 		String urlStr = String.format(UDirectoryTestConst.DIRECTORY_URL_API
 				+ "/%d/node/%d", UDirectoryTestConst.TEST_DIRECTORY_ID, UDirectoryTestConst.TEST_DIRECTORY_NODE_ID);
 
@@ -63,16 +67,16 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-		resultActionsAll.andExpect(status().isOk());		
-		
+		resultActionsAll.andExpect(status().isOk());
+
 	}
-	
+
 	@Test
 	public void testCreate() throws Exception {
 
 		String urlStr = String.format(UDirectoryTestConst.DIRECTORY_URL_API
 				+ "/%d/node", 19875915);
-		
+
 		String jsonNew = "{\"nodeName\": \"1212\",\"childNodes\": [{\"nodeName\": \"1212.1\",\"childNodes\": [{\"nodeName\": \"1212.1.1\",\"childNodes\": []}]}]}";
 
 		ResultActions resultAction = mockMvc.perform(post(urlStr)
@@ -83,17 +87,17 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
-		resultAction.andExpect(status().isCreated());		
-		
+		resultAction.andExpect(status().isCreated());
+
 		String jsonContent = resultAction.andReturn().getResponse()
 				.getContentAsString();
 		Integer createdId = JsonPath.read(jsonContent,
 				"$.id");
-		logger.info("createdId: {}", createdId);		
+		logger.info("createdId: {}", createdId);
 
-		logger.info("Testing delete Param id: {}", createdId);		
-		
-		
+		logger.info("Testing delete Param id: {}", createdId);
+
+
 	}
-	
+
 }

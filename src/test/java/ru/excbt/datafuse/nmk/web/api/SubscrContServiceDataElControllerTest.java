@@ -5,11 +5,13 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
+@Transactional
 public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 
 	private final static Long TEST_OBJECT_ID = 66948436L;
@@ -66,6 +68,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testElProfileSummary() throws Exception {
 		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElProfile/%s/%d/summary", TEST_OBJECT_ID, PROFILE_TIME_DETAIL, EL_ZPOINT_ID));
@@ -78,6 +81,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testElTechSummary() throws Exception {
 		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElTech/%s/%d/summary", TEST_OBJECT_ID, TECH_TIME_DETAIL, EL_ZPOINT_ID));
@@ -86,6 +90,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testElConsData() throws Exception {
 		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElCons/%s/%d", TEST_OBJECT_ID, CONS_TIME_DETAIL, EL_ZPOINT_ID));
@@ -94,6 +99,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testElConsDataAbs() throws Exception {
 		String url = UrlUtils.apiSubscrUrl(String.format("/%d/serviceElCons/24h_abs/%d", TEST_OBJECT_ID, EL_ZPOINT_ID));
 
@@ -101,6 +107,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testElProfileData() throws Exception {
 		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElProfile/%s/%d", TEST_OBJECT_ID, PROFILE_TIME_DETAIL, EL_ZPOINT_ID));
@@ -109,6 +116,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testElTechData() throws Exception {
 		String url = UrlUtils.apiSubscrUrl(
 				String.format("/%d/serviceElTech/%s/%d", TEST_OBJECT_ID, TECH_TIME_DETAIL, EL_ZPOINT_ID));

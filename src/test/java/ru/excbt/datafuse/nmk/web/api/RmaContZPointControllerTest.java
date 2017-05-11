@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -27,8 +28,8 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-import javax.transaction.Transactional;
 
+@Transactional
 public class RmaContZPointControllerTest extends RmaControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointControllerTest.class);

@@ -11,8 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+@Transactional
 public class SubscrContEventTest extends AnyControllerTest {
 
 	@Test

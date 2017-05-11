@@ -8,12 +8,14 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrSmsLog;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
+@Transactional
 public class SubscrSmsLogControllerTest extends AnyControllerSubscriberTest {
 
 	/**

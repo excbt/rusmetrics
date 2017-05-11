@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
@@ -20,8 +21,8 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.ManualControllerTest;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-import javax.transaction.Transactional;
 
+@Transactional
 public class RmaDataSourceControllerTest extends RmaControllerTest {
 
 //	@Autowired

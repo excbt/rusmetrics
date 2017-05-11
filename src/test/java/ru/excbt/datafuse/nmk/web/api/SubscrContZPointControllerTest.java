@@ -5,9 +5,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
@@ -15,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 
+@Transactional
 public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest {
 
 	private final static long MANUAL_HW_CONT_ZPOINT_ID = 49492462;
@@ -58,11 +61,13 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	}
 
 	@Test
+    @Ignore
 	public void testGetZPointsV_01() throws Exception {
 		_testGetJson("/api/subscr/contObjects/20118678/contZPointsEx ");
 	}
 
 	@Test
+    @Ignore
 	public void testGetZPointsVO() throws Exception {
 		_testGetJson("/api/subscr/contObjects/20118678/contZPoints/vo ");
 	}
