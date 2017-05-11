@@ -649,12 +649,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         return (($scope.ctrlSettings.sectionSaving === true) || ($scope.ctrlSettings.passportSaving === true));
     };
     
-    $scope.tdBlur = function (cell, values, complexIdx) {
+    $scope.tdBlur = function (cell) {
         $timeout(function () {
             cell.isSelected = false;
+//            $scope.data.currentRow.isSelected = false;//Atention: this string break "isDeleteRowButtonEnableAtTd" and "isAddRowButtonEnableAtTd"
         }, 200);
         
-        $scope.data.currentRow.isSelected = false;
+        
 //console.log(cell);
 //        console.log(values);        
 //        console.log(complexIdx);
@@ -676,7 +677,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         
         $scope.data.currentTd = td;
         $scope.data.currentRow = row;
-        $scope.data.currentTd.isSelected = true;
+        $timeout(function () {
+            $scope.data.currentTd.isSelected = true;
+        }, 200);
         $scope.data.currentRow.isSelected = true;
         
         $timeout(function () {
@@ -1036,7 +1039,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     };
     
     $scope.addRowToTableInit = function (part, ind) {
-//console.log("addRowToTableInit");        
+//console.log("addRowToTableInit");
         $scope.onChange();
         //find last part row index
         $scope.addRowToTable(part, findLastDynamicPartIndex(part, ind));

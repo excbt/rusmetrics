@@ -2442,6 +2442,16 @@ tr.nmc-bg-distinguish > td {
     width: 12%;
 }
 
+    /* "Звездоска", который отмечаются обязательные поля*/
+.nmc-required-star {
+    color: red;
+}
+
+.nmc-doc-type-sym {
+    padding-bottom: 2px; 
+    border-radius: 45%;
+}
+
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
 /******************************************************************************************************/
 .noMarginTop {
@@ -2983,6 +2993,11 @@ input[type="checkbox"] {
 
 .nmc-td-no-edit {
     background-color: #f5f5f5;
+}
+/* Область для подстрочных кнопок в ячейках динамической таблицы*/
+.nmc-div-sub-td-btns {
+    position: absolute;
+    opacity: 0.6;
 }
 
 /*
