@@ -123,22 +123,22 @@
                                 Документ {{data.passport.passportName}}
                             </h3>
                         </div>    
-<!--
                         <div title = "Панель с кнопками"
                              ng-show = "data.currentRow.dynamic === true && data.currentRow.isSelected === true && data.currentTd.isSelected === true" 
                              class = "col-xs-1"
                              style = "border: 2px solid orange">
 
-                            <i 
+                            <i ng-if = "isDeleteRowButtonEnableAtBtnPanel(data.currentPart, data.currentRow)"
                                title = "Удалить строку"
-                               class = "btn btn-xs btn-default nmc-remove-btn">
+                               class = "btn btn-xs btn-default nmc-remove-btn"
+                               ng-click = "deleteRowFromTableInitFromBtnPanel(data.currentPart, data.currentRow)">
                             </i>
-                            <i 
+                            <i ng-if = "isAddRowButtonEnableAtBtnPanel(data.currentPart, data.currentRow)"
                                title = "Добавить строку"                                                                
-                                class = "btn btn-xs btn-default nmc-insert-row-btn">
+                               class = "btn btn-xs btn-default nmc-insert-row-btn"
+                               ng-click = "addRowToTableInitFromBtnPanel(data.currentPart, data.currentRow)">
                             </i>
                         </div>
--->
                     </div>
                 </div>
                 <div ng-show = "ctrlSettings.passportLoading" class = "nmc-loading">
@@ -263,26 +263,26 @@
                                                         {{td.counterPrefix + td.value}}                                                        
                                                     </div>
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
-                                                         ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                         ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
                                                          ng-change = "onDivChange(td, $index, rowIndex)"
                                                          contenteditable
                                                          strip-br
                                                          ng-blur = "tdBlur(td)"
                                                          ng-model = "data.currentSectionValues[td._complexIdx].value"
-                                                         
+                                                         class = "nmc-energy-td-input-multi-text"
                                                          >
                                                     </div>
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type === 'Boolean'" 
                                                            type = "checkbox"
                                                            class = "nmc-energy-td-input-checkbox"
-                                                           ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
                                                            ng-change = "onChange()"
                                                            ng-blur = "tdBlur(td)"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"/>
                                                     
                                                     <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'Counter' && td.__type !== 'Date')" 
                                                            type = "text"
-                                                           ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
                                                            ng-change = "onChange()"
                                                            data-inputmask = "'alias':'numeric', 'greedy': false"
                                                            class = "nmc-energy-td-input-text"
@@ -293,7 +293,7 @@
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type == 'Date'" 
                                                            ng-attr-id = "{{'date_value_' + prepareComplexIdForSetElemId(td._complexIdx)}}"
                                                            readonly
-                                                           ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex)"
                                                            ng-change = "onChange()"
                                                            type = "text"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"

@@ -3166,6 +3166,10 @@ div.nmc-energy-simple-line > div {
 .nmc-energy-td-input-checkbox {
     margin: 4px !important;
 }
+/*  Поле для ввода многострочного текста в ячейке INNER_TABLE */
+.nmc-energy-td-input-multi-text {
+    min-height: 1.5rem;
+}
 
 .nmc-energy-td-counter {
     text-align: right;

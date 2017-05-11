@@ -54,6 +54,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.data.currentTd = {};//current selected TD of table
     $scope.data.currentRow = {};//current selected row of table
+    $scope.data.currentPart = {};//current selected part of section
     
     //hash map for passport values
     $scope.data.passDocValues = {};
@@ -670,17 +671,21 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //        $scope.data.currentTd.isSelected = true;
 //    };
     
-    $scope.tdFocused = function (row, td, tdInd, rowInd) {
+    $scope.tdFocused = function (part, row, td, tdInd, rowInd) {
         
         $scope.data.currentTd.isSelected = false;
         $scope.data.currentRow.isSelected = false;
+        $scope.data.currentPart.isSelected = false;
         
-        $scope.data.currentTd = td;
+        $scope.data.currentPart = part;
         $scope.data.currentRow = row;
+        $scope.data.currentTd = td;
+        
         $timeout(function () {
             $scope.data.currentTd.isSelected = true;
         }, 200);
         $scope.data.currentRow.isSelected = true;
+        $scope.data.currentPart.isSelected = true;
         
         $timeout(function () {
             locateTdBtns(td, tdInd, rowInd);
@@ -732,7 +737,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     };
     
     $scope.isAddRowButtonEnableAtTd = function (part, row, rowIndex) {
-        if (mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
+        if (mainSvc.checkUndefinedNull(part.innerPdTable) || mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
             return false;
         }
         var result = false,
@@ -749,10 +754,21 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         return result;
     };
     
+    $scope.isAddRowButtonEnableAtBtnPanel = function (part, row) {
+        if (mainSvc.checkUndefinedNull(part.innerPdTable) || !angular.isArray(part.innerPdTable.tbodies)) {
+            return false;
+        }
+        var rowIndex = part.innerPdTable.tbodies.indexOf(row);
+        return $scope.isAddRowButtonEnableAtTd(part, row, rowIndex);
+    };
+    
     $scope.isDeleteRowButtonEnable = function (part, row, rowIndex) {
         var result = false;
 //console.log(part.innerPdTable.tbodies);        
-//console.log(part.innerPdTable.dynamicRowTemplate.tbody); 
+//console.log(part.innerPdTable.dynamicRowTemplate.tbody);
+        if (mainSvc.checkUndefinedNull(part.innerPdTable) || !angular.isArray(part.innerPdTable.tbodies)) {
+            return false;
+        }
         var dynamicRowCounter = 0;
         part.innerPdTable.tbodies.forEach(function (row) {
             if (row.hasOwnProperty("dynamic") && row.dynamic === true) {
@@ -771,7 +787,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     };
     
     $scope.isDeleteRowButtonEnableAtTd = function (part, row, rowIndex) {
-        if (mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
+        if (mainSvc.checkUndefinedNull(part.innerPdTable) || mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
             return false;
         }
         var result = false;
@@ -793,6 +809,10 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         
         return result;
+    };
+    
+    $scope.isDeleteRowButtonEnableAtBtnPanel = function (part, row) {
+        return $scope.isDeleteRowButtonEnableAtTd(part, row, 0);
     };
     
     /**
@@ -1038,11 +1058,21 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.deleteRowFromTable(part, findLastDynamicPartIndex(part, ind));
     };
     
+    $scope.deleteRowFromTableInitFromBtnPanel = function (part, row) {
+        var rowIndex = part.innerPdTable.tbodies.indexOf(row);
+        $scope.deleteRowFromTableInit(part, rowIndex);
+    };
+    
     $scope.addRowToTableInit = function (part, ind) {
 //console.log("addRowToTableInit");
         $scope.onChange();
         //find last part row index
         $scope.addRowToTable(part, findLastDynamicPartIndex(part, ind));
+    };
+    
+    $scope.addRowToTableInitFromBtnPanel = function (part, row) {
+        var rowIndex = part.innerPdTable.tbodies.indexOf(row);
+        $scope.addRowToTableInit(part, rowIndex);
     };
     
     $scope.savePassportSection = function (passportSection) {
