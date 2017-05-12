@@ -98,6 +98,7 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     private List<PDValueConstraint> constraints = new ArrayList<>();
 
     public T addConstraint (PDValueConstraint valueConstraint) {
+        checkState(this instanceof PDValueObj);
         this.constraints.add(valueConstraint);
         return (T) this;
     }

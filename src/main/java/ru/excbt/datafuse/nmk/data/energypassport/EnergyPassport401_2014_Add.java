@@ -429,7 +429,7 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("3.8.1")
             .and().createStaticElement("Год проведения последнего текущего ремонта")
             .and().createStaticElement()
-            .and().createStringValueElement().addConstraint(PDValueConstraint.newYearConstraint());
+            .and().createIntegerValueElement().addConstraint(PDValueConstraint.newYearConstraint());
 
         topTable.createPartLine("3.8.2")
             .and().createStaticElement("Объем инвестиций на капитальный ремонт")
@@ -1443,7 +1443,7 @@ public class EnergyPassport401_2014_Add {
         topTable.createPartLine("5.")
             .and().createStaticElement("Доля  государственной (муниципальной) собственности в уставном капитале" +
             "организации, %")
-            .and().createDoubleValueElement().applyCreator(CellCreators.constraintYear);
+            .and().createDoubleValueElement().applyCreator(CellCreators.constraintPercent);
 
         topTable.createPartLine("6.")
             .and().createStaticElement("Реквизиты организации:");
