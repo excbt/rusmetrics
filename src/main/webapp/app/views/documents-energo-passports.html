@@ -84,8 +84,8 @@
                                 ng-click = "setOrderBy(column.name)">
                                 {{column.caption}}
                                 <i class = "glyphicon" 
-                                   ng-class = "{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" 
-                                   ng-show = "orderBy.field == '{{column.name}}'">
+                                   ng-class = "{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
+                                   ng-show = "ctrlSettings.orderBy.field == '{{column.name}}'">
                                 </i>
                             </th>
                 
@@ -106,8 +106,8 @@
                                 ng-click = "setOrderBy(column.name)">
                                 {{column.caption}}
                                 <i class = "glyphicon" 
-                                   ng-class = "{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" 
-                                   ng-show = "orderBy.field == '{{column.name}}'">
+                                   ng-class = "{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
+                                   ng-show = "ctrlSettings.orderBy.field == '{{column.name}}'">
                                 </i>
                             </th>
                 
@@ -116,7 +116,7 @@
                 
                         </tr>
 
-                        <tr ng-repeat = "elm in data.passports | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+                        <tr ng-repeat = "elm in data.passports | orderBy : ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc | filter: filter" >
                             <td class = "col-xs-1 nmc-td-for-button">
                                 <div class = "btn-toolbar">
                                     <div class = "btn-group">

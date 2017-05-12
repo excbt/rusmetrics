@@ -15,12 +15,14 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.ctrlSettings.dateFormatAtTable = "yyyy-MM-dd"; //angular format
     $scope.ctrlSettings.dateFormatForDatepicker = "yy-mm-dd"; //jquery datepicker format
     
+    $scope.ctrlSettings.orderBy = {field: 'passportName', asc: true};
+    
         //model columns
     $scope.ctrlSettings.passportColumns = [        
         {
             "name": "type",
             "caption": "Тип",
-            "class": "col-xs-1 nmc-td-for-button nmc-link",
+            "class": "col-xs-1 nmc-td-for-button-checkbox nmc-link",
             "type": "doctype"
         },
         {
@@ -65,6 +67,11 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
             caption: "Проект"
         }
     ];
+        
+    $scope.setOrderBy = function (field) {
+        var asc = $scope.ctrlSettings.orderBy.field === field ? !$scope.ctrlSettings.orderBy.asc : true;
+        $scope.ctrlSettings.orderBy = { field: field, asc: asc };        
+    };
     
     $scope.emptyString = function (str) {
         return mainSvc.checkUndefinedEmptyNullValue(str);
