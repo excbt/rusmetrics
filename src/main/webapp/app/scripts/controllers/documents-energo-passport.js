@@ -118,6 +118,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     function setSectionStyles(sectionData) {
         $timeout(function () {
             $(':input').inputmask();
+            $(':input.nmc-input-percent').inputmask('numeric', {min: 0, max: 100});
+            $(':input.nmc-input-year').inputmask('integer', {min: 2010, max: 2100});
 //                    $(':input').focus();
             var vkey;
             for (vkey in sectionData) {
@@ -1288,7 +1290,7 @@ app.directive('energyViewCell', [function () {
         scope: {
             cell: "="
         },
-        template: "<div style = 'font-size: 12px;'> <p ng-if = 'cell._complexIdx' style = 'margin: 0'>complexIdx = {{cell._complexIdx}},</p> <p ng-if = 'cell.keyValueIdx' style='margin: 0'>keyValueIdx = {{cell.keyValueIdx}},</p> <p ng-if = 'cell._dynamicIdx' style='margin: 0'>dynamicIdx = {{cell._dynamicIdx}}</p></div>"
+        template: "<div style = 'font-size: 12px;'> <p ng-if = 'cell._complexIdx' style = 'margin: 0'>complexIdx = {{cell._complexIdx}},</p> <p ng-if = 'cell.keyValueIdx' style='margin: 0'>keyValueIdx = {{cell.keyValueIdx}},</p> <p ng-if = 'cell._dynamicIdx' style='margin: 0'>dynamicIdx = {{cell._dynamicIdx}}</p><p ng-if = 'cell.constraints' style='margin: 0'>cell = {{cell | json}}</p></div>"
     };
 }]);
 

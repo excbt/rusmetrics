@@ -204,12 +204,36 @@
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
-                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type !== 'Boolean' && elm.__type !== 'Date'" 
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'String'" 
                                                    type = "text"
                                                    ng-change = "onChange()"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
                                                    class = "nmc-energy-input-text"
                                                    ng-style = "{'text-align': elm.cellStyle.halignment}"/>
+                                            
+                                            <input ng-if = "!elm.constraints[0].valueSubtype && elm.cellType === 'VALUE' && (elm.__type !== 'String' && elm.__type !== 'Boolean' && elm.__type !== 'Counter' && elm.__type !== 'Date')" 
+                                                   type = "text"
+                                                   
+                                                   ng-change = "onChange()"
+                                                   data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                   class = "nmc-energy-input-text"
+                                                   
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   />
+                                            
+                                            <input ng-if = "'PERCENT' === elm.constraints[0].valueSubtype && elm.cellType === 'VALUE'" 
+                                                   type = "text"
+                                                   ng-change = "onChange()"
+                                                   class = "nmc-input-percent nmc-energy-input-text"
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   />
+                                            
+                                            <input ng-if = "'YEAR' === elm.constraints[0].valueSubtype && elm.cellType === 'VALUE'" 
+                                                   type = "text"
+                                                   ng-change = "onChange()"
+                                                   class = "nmc-input-year nmc-energy-input-text"
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   />                                                                            
                                             
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'Boolean'" 
                                                    ng-change = "onChange()"
