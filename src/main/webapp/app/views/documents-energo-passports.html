@@ -79,7 +79,7 @@
                             <th class = "col-xs-1 nmc-td-for-button">
 
                             </th>
-                            <th ng-repeat = "column in ctrlSettings.passportColumns" 
+                            <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
                                 ng-class = "column.class" 
                                 ng-click = "setOrderBy(column.name)">
                                 {{column.caption}}
@@ -101,7 +101,7 @@
                             <th class = "col-xs-1 nmc-td-for-button">
 
                             </th>
-                            <th ng-repeat = "column in ctrlSettings.passportColumns" 
+                            <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
                                 ng-class = "column.class" 
                                 ng-click = "setOrderBy(column.name)">
                                 {{column.caption}}
@@ -116,7 +116,7 @@
                 
                         </tr>
 
-                        <tr ng-repeat = "elm in data.passports | orderBy : ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc | filter: filter" >
+                        <tr ng-repeat = "elm in data.passports | orderBy : ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc | filter: filter track by $index">
                             <td class = "col-xs-1 nmc-td-for-button">
                                 <div class = "btn-toolbar">
                                     <div class = "btn-group">
@@ -128,7 +128,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td ng-repeat = "column in ctrlSettings.passportColumns"                                 
+                            <td ng-repeat = "column in ctrlSettings.passportColumns track by $index"                                 
                                 ng-class = "column.class"
                                 ng-click = "openEnergyDocument(elm)">
                                 <div ng-switch on = "column.type">

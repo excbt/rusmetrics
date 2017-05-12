@@ -259,7 +259,7 @@
                                                ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
                                             <thead>
                                                 <tr ng-repeat = "throw in part.innerPdTable.theads track by $index">    
-                                                    <th ng-repeat = "th in throw"
+                                                    <th ng-repeat = "th in throw track by $index"
                                                         ng-attr-rowspan = "{{th._rowSpan}}"
                                                         ng-attr-colspan = "{{th._colSpan}}"
                                                         ng-style = "{'width': th.width + ctrlSettings.cssMeasureUnit, 'max-width': th.width + ctrlSettings.cssMeasureUnit}">
@@ -272,8 +272,8 @@
                                             </thead>
 <!--                                            </thead>    -->
 
-                                            <tr ng-repeat = "trow in part.innerPdTable.tbodies track by $index" ng-init = "rowIndex = $index"
-                                                ng-attr-id = "{{'trow' + $index}}">
+                                            <tr ng-repeat = "trow in part.innerPdTable.tbodies track by $index" ng-init = "rowIndex = $index">
+<!--                                                ng-attr-id = "{{'trow' + $index}}">-->
                                                 <td ng-repeat = "td in trow.tds track by $index"                                                    
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
