@@ -127,7 +127,11 @@ public abstract class PDTableCell<T extends PDTableCell<T>> implements PDReferab
     }
 
     public T cellStyle(PDCellStyle cellStyle) {
-        this.cellStyle = cellStyle;
+        if (this.cellStyle == null) {
+            this.cellStyle = cellStyle;
+        } else {
+            this.cellStyle.copyStyle(cellStyle);
+        }
         return (T) this;
     }
 

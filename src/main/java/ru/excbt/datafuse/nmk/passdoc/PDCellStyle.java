@@ -48,4 +48,17 @@ public class PDCellStyle {
         return new PDCellStyle().hAlignment(HAlignment.CENTER);
     }
 
+    public void copyStyle(PDCellStyle srcStyle) {
+        Preconditions.checkNotNull(srcStyle);
+        if (srcStyle.hAlignment != null) {
+            this.hAlignment = srcStyle.hAlignment;
+        }
+        if (srcStyle.rowSpan != null) {
+            this.rowSpan = srcStyle.rowSpan;
+        }
+        if (srcStyle.rowSpan != null) {
+            this.header1 = srcStyle.header1;
+        }
+    }
+
 }

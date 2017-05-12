@@ -170,7 +170,7 @@ public class PDTable implements PDReferable {
     public PDTablePart createPartRowNr(String nr) {
         String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
         String key = PREFIX + nr2;
-        return createPart(PDPartType.ROW).key(key).createStaticElement(nr).and();
+        return createPart(PDPartType.ROW).key(key).createStaticElement(nr).cellStyle(PDCellStyle._makeHAligmentRight()).and();
     }
 
     public PDTablePart createPartRow(String nr, boolean createStaticNr) {
@@ -178,7 +178,7 @@ public class PDTable implements PDReferable {
         String key = PREFIX + nr2;
         PDTablePart result = createPart(PDPartType.ROW).key(key);
         if (createStaticNr) {
-            result.createStaticElement(nr);
+            result.createStaticElement(nr).cellStyle(PDCellStyle._makeHAligmentRight());
         }
         return result;
     }
