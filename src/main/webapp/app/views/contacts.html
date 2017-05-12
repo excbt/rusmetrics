@@ -66,23 +66,23 @@
 		<!-- Таблица контактов -->
    		<table id="table_contacts_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
     		<tr id="tr_cnt_header" class="nmc-main-table-header">
-    			<th class="col-md-1 nmc-td-for-buttons"></th>
-    			<th class="col-md-4">Имя</th>
-    			<th class="col-md-3">Телефон</th>
-    			<th class="col-md-3">Электронная почта</th>
-    			<th class="col-md-1"></th>
+    			<th class="col-xs-1 nmc-td-for-buttons"></th>
+    			<th class="col-xs-4">Имя</th>
+    			<th class="col-xs-3">Телефон</th>
+    			<th class="col-xs-3">Электронная почта</th>
+    			<th class="col-xs-1"></th>
     		</tr>
         </table>
         <div class="nmc-contacts-main-div">
             <table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">   
                 <tr ng-repeat = "contact in contacts">
-                    <td class="col-md-1 nmc-td-for-buttons">
+                    <td class="col-xs-1 nmc-td-for-buttons">
                         <i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
                     </td>
-                    <td class="col-md-4">{{contact.userName}}</td>
-                    <td class="col-md-3">{{contact.userPhone}}</td>
-                    <td class="col-md-3">{{contact.userEmail}}</td>
-                    <td class="col-md-1 nmc-td-for-buttons">
+                    <td class="col-xs-4">{{contact.userName}}</td>
+                    <td class="col-xs-3">{{contact.userPhone}}</td>
+                    <td class="col-xs-3">{{contact.userEmail}}</td>
+                    <td class="col-xs-1 nmc-td-for-buttons">
                         <i ng-disabled="isROfield()" title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
                     </td>
                 </tr>
@@ -98,19 +98,19 @@
 		</div><br><br>    
 		<table id="table_contact_lists_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
 			<tr id="tr_cnt_header" class="nmc-main-table-header">
-				<th class="col-md-1 nmc-td-for-buttons"></th>
-    			<th class="col-md-10">Имя списка</th>
-    			<th class="col-md-1"></th>
+				<th class="col-xs-1 nmc-td-for-buttons"></th>
+    			<th class="col-xs-10">Имя списка</th>
+    			<th class="col-xs-1"></th>
     		</tr>
         </table>    
         <div class="nmc-contacts-main-div">
             <table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">    
                 <tr ng-repeat = "list in lists">
-                    <td class="col-md-1 nmc-td-for-buttons">
+                    <td class="col-xs-1 nmc-td-for-buttons">
                         <i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
                     </td>
-                    <td class="col-md-10">{{list.groupName}}</td>
-                    <td class="col-md-1 nmc-td-for-buttons">
+                    <td class="col-xs-10">{{list.groupName}}</td>
+                    <td class="col-xs-1 nmc-td-for-buttons">
                         <i ng-disabled="isROfield()" title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
                     </td>
                 </tr>
@@ -130,8 +130,8 @@
     		<br>
  	        	<div class="container-fluid">
  	            	<div class="row-fluid">
-   	               		<div class="col-md-12 well noPaddingBottom marginBottom10">
-    						<div class="col-md-6">
+   	               		<div class="col-xs-12 well noPaddingBottom marginBottom10">
+    						<div class="col-xs-6">
     							<form>
 	    							<label for="inp_cnt_name">Имя:</label>
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': (!currentItem.userName || currentItem.userName == '')}">
@@ -145,7 +145,7 @@
     								<input ng-disabled="isROfield()" id="inp_cnt_email" type="email" class="form-control nmc-text-input-form" ng-model="currentItem.userEmail"/>
     							</form>
     						</div>
-    						<div class="col-md-6">
+    						<div class="col-xs-6">
     							<label for="list_in_window">Включить в группы:</label>
     							<div id="list_in_window" class="panel panel-default nmc-modal-panel-with-table nmc-table-with-chkbx-in-contacts paddingLeft5 paddingRight5">
     								<table id="table_lists_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
@@ -166,14 +166,14 @@
 	    	<div class="modal-footer nmc-modal-footer">
     			<div class="container-fluid  ">
 					<div class="row">
-                       	<div class="col-xs-offset-6 col-md-3">
+                       	<div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="isROfield()"
                                    type="submit"
 								class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="addContact()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button"
 								data-dismiss="modal"
 								ng-click="exit()">
@@ -197,7 +197,7 @@
     		<br>
  	        	<div class="container-fluid nmc-modal-panel">
  	            	<div class="row-fluid">
-   	               		<div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+   	               		<div class="col-xs-12 well noPaddingBottom marginBottom10" style="">
    							<form>
     							<label for = "inp_lst_name">Имя:</label>
    								<input ng-disabled="isROfield()" id = "inp_lst_name" type="text" class="form-control nmc-text-input" ng-model="currentItem.groupName" />
@@ -222,13 +222,13 @@
 	    	<div class="modal-footer nmc-modal-footer">
     			<div class="container-fluid  ">
 					<div class="row">
-                       	<div class="col-xs-offset-4 col-md-5">
+                       	<div class="col-xs-offset-4 col-xs-5">
 							<input ng-disabled="isROfield()"
                                    type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="addList()"
 								value="Сохранить" />
 						</div>
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
 								Отменить
@@ -268,13 +268,13 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="isROfield()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="delContact(currentItem);"
 								value="Удалить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#div_delete_delivery');">
 								Отменить
@@ -318,14 +318,14 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="isROfield()"
                                    type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="delList(currentItem);"
 								value="Удалить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#div_delete_delivery');">
 								Отменить

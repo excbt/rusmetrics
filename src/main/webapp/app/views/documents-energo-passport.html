@@ -8,10 +8,10 @@
             <button class = "btn btn-default"                    
                     ng-class = "{'nmc-main-add-button': data.passport.changedSectionCount > 0}"
                     ng-click = "savePassportWhole()"
-                    ng-disabled = "isDisabledSaveButtons()"
-                    >
+                    ng-disabled = "isDisabledSaveButtons()">
                 <i ng-hide = "ctrlSettings.passportSaving !== true"
-                   class = "fa fa-spinner fa-spin"></i>
+                   class = "fa fa-spinner fa-spin">
+                </i>
                 Сохранить документ
             </button>
         </li>
@@ -19,10 +19,10 @@
             <button class = "btn btn-default"                    
                     ng-class = "{'nmc-main-add-button': data.currentPassDocSection.isChanged}"
                     ng-click = "savePassportSectionInit(data.currentPassDocSection)"
-                    ng-disabled = "isDisabledSaveButtons()"
-                    >
+                    ng-disabled = "isDisabledSaveButtons()">
                 <i ng-show = "ctrlSettings.sectionSaving === true"
-                   class = "fa fa-spinner fa-spin"></i>
+                   class = "fa fa-spinner fa-spin">
+                </i>
                 Сохранить {{SECTION_NAME_ACC}}
             </button>
         </li>
@@ -37,7 +37,8 @@
         <li>
             <button class = "btn btn-default"                    
                     ng-click = "cancelEnergoPassportEdit()">
-                Вернуться к списку документов
+<!--                Вернуться к списку документов-->
+                Закрыть документ
             </button>
         </li>
         <li ng-if = "isSystemuser()"
@@ -104,8 +105,7 @@
             </div>
             <div>
                 <span >
-                    <div title = "Скрыть / показать содержание документа"
-                         class = ""
+                    <div title = "Скрыть / показать содержание документа" 
                          ng-click = "showContentsFlag = !showContentsFlag"
                          ng-class = "{'nmc-div-delimiter-left': showContentsFlag, 'nmc-div-delimiter-right': !showContentsFlag}">
                         <div ng-class = "{'nmc-div-delimiter-inner-left': showContentsFlag, 'nmc-div-delimiter-inner-right': !showContentsFlag}">                 
@@ -124,28 +124,28 @@
                             </h3>
                         </div>    
                         <div title = "Панель с кнопками"
-                             ng-show = "data.currentRow.dynamic === true && data.currentRow.isSelected === true"                     
-                             class = "col-xs-2"                     
-                             >
+                             ng-show = "data.currentRow.dynamic === true && data.currentRow.isSelected === true && data.currentTd.isSelected === true" 
+                             class = "col-xs-1"
+                             style = "border: 2px solid orange">
 
-<!--
-                            <i 
+                            <i ng-if = "isDeleteRowButtonEnableAtBtnPanel(data.currentPart, data.currentRow)"
                                title = "Удалить строку"
-                               class = "btn btn-xs btn-default nmc-remove-btn">
+                               class = "btn btn-xs btn-default nmc-remove-btn"
+                               ng-click = "deleteRowFromTableInitFromBtnPanel(data.currentPart, data.currentRow)">
                             </i>
-                            <i 
+                            <i ng-if = "isAddRowButtonEnableAtBtnPanel(data.currentPart, data.currentRow)"
                                title = "Добавить строку"                                                                
-                                class = "btn btn-xs btn-default nmc-insert-row-btn">
+                               class = "btn btn-xs btn-default nmc-insert-row-btn"
+                               ng-click = "addRowToTableInitFromBtnPanel(data.currentPart, data.currentRow)">
                             </i>
--->
                         </div>
                     </div>
                 </div>
-                <div  ng-show="ctrlSettings.passportLoading" class="nmc-loading">
-                    <i class="fa fa-spinner fa-spin"></i> Загрузка документа... 
+                <div ng-show = "ctrlSettings.passportLoading" class = "nmc-loading">
+                    <i class = "fa fa-spinner fa-spin"></i> Загрузка документа... 
                 </div>
-                <div  ng-show="ctrlSettings.sectionLoading" class="nmc-loading">
-                    <i class="fa fa-spinner fa-spin"></i> Загрузка {{SECTION_NAME_GEN}}... 
+                <div  ng-show = "ctrlSettings.sectionLoading" class = "nmc-loading">
+                    <i class = "fa fa-spinner fa-spin"></i> Загрузка {{SECTION_NAME_GEN}}... 
                 </div>
 <!--                                PassDoc-->
                 <div id = "energyDocument"
@@ -155,7 +155,7 @@
                         <h4>
                             {{data.currentPassDocSection.preparedSection.caption}}
                         </h4>
-                        <button class="btn nmc-main-add-button" ng-click = "addEntryInit()">Добавить {{ENTRY_NAME_ACC}}</button>
+                        <button class = "btn nmc-main-add-button" ng-click = "addEntryInit()">Добавить {{ENTRY_NAME_ACC}}</button>
                         <div>
                             <span ng-show = "data.currentPassDocSection.entries.length > 0">Список {{ENTRY_NAME_PL_GEN}}:</span>
                             <table ng-if = "data.currentPassDocSection.hasEntries === true"
@@ -183,8 +183,7 @@
                                     <td class = "col-xs-2">
                                         <button title = "Удалить"                                                  
                                                 class = "btn btn-xs nmc-remove-button"
-                                                ng-click = "deleteEntryInit(entry)"
-                                                >
+                                                ng-click = "deleteEntryInit(entry)">
                                         </button>
                                     </td>
                                 </tr>
@@ -194,12 +193,11 @@
                     <div ng-if = "data.currentPassDocSection.hasEntries !== true"
                          ng-switch = "data.currentPassDocSection.preparedSection.viewType">
                         <div ng-switch-default>
-                            <div ng-repeat = "part in data.currentPassDocSection.preparedSection.parts">
+                            <div ng-repeat = "part in data.currentPassDocSection.preparedSection.parts track by $index" ng-init = "partIndex = $index">
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"                                         
                                          class = "nmc-energy-simple-line"
-                                         ng-style = "{'text-align': part.cellStyle.halignment}"
-                                         >
+                                         ng-style = "{'text-align': part.cellStyle.halignment}">
                                         <div ng-repeat = "elm in part.elements track by $index"                                             
                                              ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}"
                                              ng-class = "{'nmc-energy-doc-h1': elm.cellStyle.header1}">
@@ -216,8 +214,7 @@
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'Boolean'" 
                                                    ng-change = "onChange()"
                                                    type = "checkbox"
-                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
-                                                   />
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"/>
                                             
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type == 'Date'" 
                                                    ng-change = "onChange()"
@@ -226,6 +223,7 @@
                                                    type = "text"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
                                                    class = "nmc-energy-input-text"/>
+                                            
                                             <div ng-if = "isSystemuser() && DEBUG_MODE === true">
                                                 <energy-view-cell cell = elm></energy-view-cell>
                                             </div>
@@ -235,7 +233,6 @@
                                          class = "nmc-energy-inner-table">
                                         <table class = "nmc-energo-table"                                               
                                                ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
-
                                             <thead>
                                                 <tr ng-repeat = "throw in part.innerPdTable.theads track by $index">    
                                                     <th ng-repeat = "th in throw"
@@ -266,47 +263,46 @@
                                                         {{td.counterPrefix + td.value}}                                                        
                                                     </div>
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
-                                                         ng-focus = "tdFocused(trow, td, $index, rowIndex)"
-                                                         ng-change = "onDivChange(td, $index, rowIndex)"
+                                                         ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
+                                                         ng-change = "onDivChange(td, $index, rowIndex, partIndex)"
                                                          contenteditable
                                                          strip-br
-                                                         ng-blur = "tdBlur(td, data.currentSectionValues[td._complexIdx], td._complexIdx)"
+                                                         ng-blur = "tdBlur(td)"
                                                          ng-model = "data.currentSectionValues[td._complexIdx].value"
-                                                         
+                                                         class = "nmc-energy-td-input-multi-text"
                                                          >
                                                     </div>
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type === 'Boolean'" 
                                                            type = "checkbox"
                                                            class = "nmc-energy-td-input-checkbox"
-                                                           ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
-                                                           ng-blur = "tdBlur(td, data.currentSectionValues[td._complexIdx], td._complexIdx)"
+                                                           ng-blur = "tdBlur(td)"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"/>
+                                                    
                                                     <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'Counter' && td.__type !== 'Date')" 
                                                            type = "text"
-                                                           ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
                                                            data-inputmask = "'alias':'numeric', 'greedy': false"
                                                            class = "nmc-energy-td-input-text"
-                                                           ng-blur = "tdBlur(td, data.currentSectionValues[td._complexIdx], td._complexIdx)"
+                                                           ng-blur = "tdBlur(td)"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
-                                                           
                                                            />
+                                                    
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type == 'Date'" 
                                                            ng-attr-id = "{{'date_value_' + prepareComplexIdForSetElemId(td._complexIdx)}}"
                                                            readonly
-                                                           ng-focus = "tdFocused(trow, td, $index, rowIndex)"
+                                                           ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
                                                            type = "text"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
                                                            class = "nmc-energy-td-input-text"/>
                                                     
                                                     <div ng-show = "trow.dynamic && td.isSelected"
-                                                         ng-attr-id = "{{'td_btns_' + rowIndex + '_' + $index}}"
-                                                         class = ""
-                                                         style = "position: absolute; opacity: 0.6;"                                                         
-                                                         >
-                                                        
+                                                         ng-attr-id = "{{'td_btns_' + partIndex + '_'+ rowIndex + '_' + $index}}"
+                                                         class = "nmc-div-sub-td-btns">
+<!--                                                        class = "nmc-div-sub-td-btns"-->
 <!--
                                                         <i title = "Очистить поле"
                                                            class = "btn btn-xs nmc-remove-button"
@@ -319,16 +315,12 @@
                                                         <i ng-if = "isDeleteRowButtonEnableAtTd(part, trow, rowIndex)"
                                                            title = "Удалить строку"
                                                            class = "btn btn-xs btn-default nmc-remove-btn"
-                                                           ng-click = "deleteRowFromTableInit(part, rowIndex)"
-                                                                >
-                                                            
+                                                           ng-click = "deleteRowFromTableInit(part, rowIndex)">
                                                         </i>
                                                         <i ng-if = "isAddRowButtonEnableAtTd(part, trow, rowIndex)"
                                                            title = "Добавить строку"                                                                
-                                                                class = "btn btn-xs btn-default nmc-insert-row-btn"
-                                                                ng-click = "addRowToTableInit(part, rowIndex)"
-                                                                >
-                                                            
+                                                           class = "btn btn-xs btn-default nmc-insert-row-btn"
+                                                           ng-click = "addRowToTableInit(part, rowIndex)">
                                                         </i>
                                                     </div>                                                    
                                                     
@@ -397,14 +389,14 @@
 		<div class = "modal-body nmc-modal-body paddingLeftRight15">
             <div class = "container-fluid">
                 <div class = "row">
-                    <div class = "col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                         <table class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class = "col-sm-3">
+                                <td class = "col-xs-3">
                                     <label for = "inputSectionEntryName">Название</label>
-                                    <span style = "color:red;">*</span>
+                                    <span class = "nmc-required-star">*</span>
                                 </td>
-                                <td class = "col-sm-9 nmc-text-align-left">
+                                <td class = "col-xs-9 nmc-text-align-left">
                                     <div class = "form-group noMarginBottom" 
                                          ng-class = "{'has-error': emptyString(data.currentSectionEntry.entryName)}">
                                         <input  
@@ -428,24 +420,22 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class = "col-sm-3">
+                                <td class = "col-xs-3">
                                     <label for = "inputSectionOrder" 
                                            class = "nmc-form-label">Порядковый номер</label>
                                 </td>
-                                <td class = "col-sm-9 nmc-text-align-left">
-                                    <span class = "form-group" 
-                                          >
+                                <td class = "col-xs-9 nmc-text-align-left">
+                                    <span class = "form-group">
                                         <input id = "inputSectionOrder" 
                                                class = "form-control nmc-text-input-form nmc-input-digital-data-sm" 
                                                type = "text"                                                
-                                               
                                                ng-model = "data.currentSectionEntry.entryOrder"/>
                                     </span>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan = "2">
-                                    Поля отмеченные <span style = "color:red;">*</span> обязательны для заполнения!
+                                    Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
                                 </td>
                             </tr>
                         </table>
@@ -454,16 +444,16 @@
             </div>
 		</div>
 		<div class = "modal-footer nmc-modal-footer">
-				<div class = "container-fluid  ">
+				<div class = "container-fluid">
 
 					<div class = "row">
-                        <div class = "col-xs-offset-6 col-md-3">
+                        <div class = "col-xs-offset-6 col-xs-3">
 							<input type = "submit" 
                                    class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                    ng-click = "saveEntry(data.passport.id, data.currentPassDocSection.id, data.currentSectionEntry)"
-                                   value = "Сохранить" />
+                                   value = "Сохранить"/>
 						</div>
-						<div class = "pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class = "pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class = "btn btn-default btn-block btn-xs nmc-cancel-button" 
                                     data-dismiss = "modal"
                                     ng-click = "exit('#data.currentSectionEntry')">

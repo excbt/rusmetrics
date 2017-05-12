@@ -38,11 +38,11 @@
 <!--<hr>-->
 
 <div class="row">
-    <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
+    <div class="col-xs-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
         <div class="row nmc-main-workspace-header marginBottom5"
              ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
              >
-            <div class="col-xs-6 col-md-6">
+            <div class="col-xs-6">
                 <div class="btn-group">
                       <button 
                               title="Иерархии объектов" 
@@ -75,14 +75,14 @@
                     </div>
 
             </div>
-            <div class="input-group col-xs-6 col-md-6 filter pull-left nmc-search-form">   
+            <div class="input-group col-xs-6 filter pull-left nmc-search-form">   
             </div>
         </div>
     </div>    
-    <div ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true}">            
+    <div ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true, 'col-xs-9': objectCtrlSettings.isTreeView == true}">            
         <div class="container-fluid" ng-hide="loading">            
             <div class="row nmc-main-workspace-header">
-                <div class="col-xs-2 col-md-2 noPadding" ng-controller="ObjectGroupsCtrl">
+                <div class="col-xs-2 noPadding" ng-controller="ObjectGroupsCtrl">
                     <div class="btn-group" ng-show="objectCtrlSettings.isTreeView != true">
                           <button 
                                   title="Фильтр по группам объектов" 
@@ -113,11 +113,11 @@
                           </ul>
                         </div>   
                 </div>
-                <div class="input-group col-xs-3 col-md-3 filter marginBottom5 pull-left nmc-search-form">   
+                <div class="input-group col-xs-3 filter marginBottom5 pull-left nmc-search-form">   
                     <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                     <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                 </div>                
-                <div class="col-xs-1 col-md-1 nmc-div-refresh">
+                <div class="col-xs-1 nmc-div-refresh">
                     <button title="Обновить" 
                             class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
                             ng-click="refreshObjectsData()"
@@ -125,7 +125,7 @@
                             >
                     </button>
                 </div>
-                <div class="col-md-offset-3 col-xs-2 col-md-2">
+                <div class="col-xs-offset-3 col-xs-2">
                         <label class="nmc-form-label">Всего:</label>
                          <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
                         <span id="timeOutput"></span>
@@ -135,7 +135,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-3 col-md-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
+    <div class="col-xs-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
             <div ng-show="treeLoading" class="nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
         </div>
@@ -151,7 +151,7 @@
               </div>
          </div>
     </div>
-    <div class="paddingLeftRight15" ng-class="{'col-xs-12 col-md-12': objectCtrlSettings.isTreeView != true && objectCtrlSettings.isFullObjectView == true, 'col-xs-9 col-md-9': objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false}">
+    <div class="paddingLeftRight15" ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true && objectCtrlSettings.isFullObjectView == true, 'col-xs-9': objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false}">
         <div ng-show="loading" class="marginBottom5 nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка объектов... 
         </div>
@@ -439,13 +439,13 @@
 		<div class="modal-body nmc-modal-body"><!--  nmc-modal-body"> -->
             <div class="container-fluid"><!--  nmc-modal-panel"> -->
                 <div class="row-fluid">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3">
+                                <td class="col-xs-3">
                                     <label for="labelObjectName">Объект учета</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class="col-xs-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom">
                                        <input class="form-control nmc-text-input-form" 
                                               type="text" 
@@ -458,15 +458,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3">
+                                <td class="col-xs-3">
                                     <label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class="col-xs-9 nmc-text-align-left">
                                 	<input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.customServiceName">
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="col-sm-12">
+                                <td colspan="2" class="col-xs-12">
                                    <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" ng-model="zpointSettings.isManualLoading">Разрешить ручную загрузку данных
                                 </td>
                             </tr>
@@ -489,26 +489,26 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3">
+                                <td class="col-xs-3">
                                 	<label for="inputDevice">Прибор учета</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left ">
+                                <td class="col-xs-9 nmc-text-align-left ">
                                 	<input class="form-control nmc-text-input-form" disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.devCaption">
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3">
+                                <td class="col-xs-3">
                                 	<label for="inputPCO">РСО</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class="col-xs-9 nmc-text-align-left">
                                 	<input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3 ">
+                                <td class="col-xs-3 ">
                                 	<label for="inputRh">Расчётный час : </label>
                                 </td>
-                                <td class="col-sm-9">
+                                <td class="col-xs-9">
                                 	<input disabled="true"
                                 			type="text"
                                 			id="inputRh"
@@ -528,8 +528,8 @@
                             </tr>
                             <tr><td></td><td></td></tr>
                          </table>
-                            	<div class="col-sm-6">Эталонный интервал:</div>
-                   				<div class="col-sm-6">
+                            	<div class="col-xs-6">Эталонный интервал:</div>
+                   				<div class="col-xs-6">
                    				  <div class="progress progress-striped">
                    					<div id="spn_if_manual" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; display: none">
                    						<span><b>Указан вручную</b></span>
@@ -539,11 +539,11 @@
                    					</div>
                    				  </div>
                    				</div>
-        						<div class="form-group col-sm-12 noPadding">
-        								<div class="col-sm-1">
+        						<div class="form-group col-xs-12 noPadding">
+        								<div class="col-xs-1">
         									<label for="inp_ref_range_start">c:</label>
         								</div>
-        								<div class="col-sm-3  noPadding">
+        								<div class="col-xs-3  noPadding">
         									<input id="inp_ref_range_start"
         											type="text"
         											class="form-control nmc-date-input-form"
@@ -554,17 +554,17 @@
                                 type="text" ng-model="psStartDateFormatted"/>
 -->
         								</div>
-        								<div class="form-group col-sm-1">
+        								<div class="form-group col-xs-1">
         									<label for="inp_ref_range_end">по:</label>
         								</div>
-        								<div class="col-sm-3  noPadding">
+        								<div class="col-xs-3  noPadding">
         									<input id="inp_ref_range_end"
         											type="text"
         											class="form-control nmc-date-input-form"
         											ng-model="endDate"
         											disabled />
         								</div>
-        								<div class="col-sm-4">
+        								<div class="col-xs-4">
         							    	<p id="i_ref_range_add"
 		            							title="Изменить эталонный интервал"
     		        							class="btn btn-xs nmc-button-in-modal"
@@ -601,22 +601,17 @@
 						</div>
 					</div>
 				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
+		</div>		
 	</div>
 </div>
 
 <!-- Zpoint's exploatation paramters editing -->
-<div id="showZpointExplParameters"
-		class="modal fade nmc-modal-window"
-		role="dialog"
-		tabindex="-1"
-		aria-labelledby="showZpointOptionLabel"
-      data-backdrop="static"
+<div id = "showZpointExplParameters"
+		class = "modal fade nmc-modal-window"
+		role = "dialog"
+		tabindex = "-1"
+		aria-labelledby = "showZpointOptionLabel"
+      data-backdrop = "static"
      >
 
 	<div class="modal-dialog modal-content nmc-modal-dialog">
@@ -654,8 +649,8 @@
               <div id="myTabContent" class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active" id="summersetup" aria-labelledBy="summersetup-tab">
                 <div class="container-fluid well noPadding">
-                  <div class="col-md-12 noPadding nmc-modal-panel">
-                    <div class="col-md-3 paddingTop10">
+                  <div class="col-xs-12 noPadding nmc-modal-panel">
+                    <div class="col-xs-3 paddingTop10">
                       <div class="well marginBottom10 paddingTop10" style="padding-bottom: 56px;">
                         <div class="row nmc-modal-panel">
                             Метрологический 
@@ -683,10 +678,10 @@
                          </form>
                        </div>
                      </div>
-                     <div class="col-md-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10 nmc-modal-panel">
+                     <div class="col-xs-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10 nmc-modal-panel">
                      <!--                                Строка для режима потребления-->            
                      <div class="row-fluid">
-                       <div class="col-sm-12">
+                       <div class="col-xs-12">
                          <span>Рабочий режим потребления:</span>
                        </div>
                                     <div class="row-fluid">
@@ -795,12 +790,12 @@
                                 </div>  
                             </div>
                            </div>
-                            <div class="col-md-12">
+                            <div class="col-xs-12">
                                 <hr class="nmc-hr-in-modal">
                             </div>    
                             
 <!--                                  Утечки и порывы воды-->
-                            <div class="col-md-12 paddingBottom10 noPadding" >      
+                            <div class="col-xs-12 paddingBottom10 noPadding" >      
                                 <div class="row-fluid">
                                     <div class="row-fluid ">
                                         <div class="col-xs-12 "><h4>Утечки и порывы воды</h4></div>
@@ -825,11 +820,11 @@
                                     </div>
                                 </div>  
                             </div> 
-                            <div class="col-md-12">
+                            <div class="col-xs-12">
                                 <hr class="nmc-hr-in-modal">
                             </div>  
 <!--                                Нарушение эксплуатации  -->
-                            <div class="col-md-12 noPadding paddingBottom10" >      
+                            <div class="col-xs-12 noPadding paddingBottom10" >      
                                 <div class="row-fluid">
                                     <div class="row-fluid">
                                         <div class="col-xs-12"><h4>Нарушение эксплуатации</h4></div>
@@ -859,8 +854,8 @@
                     </div>
                               <div role="tabpanel" class="tab-pane fade" id="wintersetup" aria-labelledBy="wintersetup-tab">
                                   <div class="container-fluid well noPadding">
-                                 <div class="col-md-12 noPadding">
-                                  <div class="col-md-3 paddingTop10">
+                                 <div class="col-xs-12 noPadding">
+                                  <div class="col-xs-3 paddingTop10">
                                       <div class="well marginBottom10 paddingTop10" style="padding-bottom: 56px;">
                                         <div class="row">
                                             Метрологический 
@@ -887,7 +882,7 @@
                                       
                                       </div>
                                 </div>
-                                <div class="col-md-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10">
+                                <div class="col-xs-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10">
                          <!--                                Строка для режима потребления-->            
                                     <div class="row-fluid ">
                                        <div class="col-sx-12">
@@ -1007,12 +1002,12 @@
                                     </div>
                                 </div>  
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-xs-12">
                                 <hr class="nmc-hr-in-modal">
                             </div>  
                             
 <!--                                  Утечки и порывы воды-->
-                            <div class="col-md-12 paddingBottom10 noPadding" >      
+                            <div class="col-xs-12 paddingBottom10 noPadding" >      
                                 <div class="row-fluid">
                                     <div class="row-fluid ">
                                         <div class="col-xs-12 "><h4>Утечки и порывы воды</h4></div>
@@ -1037,11 +1032,11 @@
                                     </div>
                                 </div>  
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-xs-12">
                                 <hr class="nmc-hr-in-modal">
                             </div>  
 <!--                                Нарушение эксплуатации  -->
-                            <div class="col-md-12 noPadding paddingBottom10" >      
+                            <div class="col-xs-12 noPadding paddingBottom10" >      
                                 <div class="row-fluid">
                                     <div class="row-fluid">
                                         <div class="col-xs-12"><h4>Нарушение эксплуатации</h4></div>
@@ -1077,13 +1072,13 @@
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid  ">
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
                                 ng-disabled="!checkZpointSettingsFrom(zpointSettings) || !isAdmin()"   
 								ng-click="updateZpointModeSettings()"
 								value="Сохранить" />
 						</div>
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -1143,18 +1138,18 @@
                      id="main_object_properties">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                                     <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
              <!--                            <tr>
-                                            <td class="col-sm-3"><label for="inputCode">Код объекта</label>
+                                            <td class="col-xs-3"><label for="inputCode">Код объекта</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
+                                            <td class="col-xs-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
                                             </td>
                                         </tr> -->
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                            <td class="col-xs-3"><label for="inputName">Наименование</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
+                                            <td class="col-xs-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
                                             </td>
                                         </tr>
                                         <tr>
@@ -1170,9 +1165,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputAddress">Адрес</label>
+                                            <td class="col-xs-3"><label for="inputAddress">Адрес</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left">
+                                            <td class="col-xs-9 nmc-text-align-left">
                                                 <input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
                                                 <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
                                                     <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
@@ -1183,34 +1178,34 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
+                                            <td class="col-xs-3"><label for="inputCC">Управляющая компания</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left">
+                                            <td class="col-xs-9 nmc-text-align-left">
             <!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
                                                 <select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
+                                            <td class="col-xs-3"><label for="inputMode">Режим функционирования</label>
                                             </td>
-                                            <td class="nmc-text-align-left col-sm-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                            <td class="nmc-text-align-left col-xs-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
                                                 </select>
                                             </td>
                                         </tr>       
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
+                                            <td class="col-xs-3"><label for="inputThv">Температура холодной воды</label>
                                             </td>
-                                            <td class="nmc-text-align-left col-sm-9">
+                                            <td class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
                                                     <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
                                                 </div>
                                             </td>                               
                                         </tr>                           
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
+                                            <td class="col-xs-3"><label for="inputSquare">Отапливаемая площадь</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left">
+                                            <td class="col-xs-9 nmc-text-align-left">
                                                 <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
                                                 <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
                                                 </div>        
@@ -1226,12 +1221,12 @@
                      id="extra_object_properties">
                       <div class="container-fluid">
                           <div class="row">
-                              <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                              <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputBuildingType">Тип здания</label>
+                                            <td class="col-xs-3"><label for="inputBuildingType">Тип здания</label>
                                             </td>
-                                            <td class="nmc-text-align-left col-sm-9">
+                                            <td class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom">
                                                     <select class="form-control nmc-input-data nmc-select-form" 
                                                             id="inputMode" 
@@ -1244,9 +1239,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            <td class="col-xs-3"><label for="inputBuildingCategory">Категория здания</label>
                                             </td>
-                                            <td class="nmc-text-align-left col-sm-9">
+                                            <td class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom">
 <!--                                                    ng-class="{'has-error': emptyString(currentObject.buildingTypeCategory) && currentObject.buildingType}"-->
                                                     <select class="form-control nmc-select-form" 
@@ -1260,9 +1255,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputNumOfStories">Количество этажей</label>
+                                            <td class="col-xs-3"><label for="inputNumOfStories">Количество этажей</label>
                                             </td>
-                                            <td class="nmc-text-align-left col-sm-9">
+                                            <td class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom">
                                                     <input class="form-control nmc-input-digital-data nmc-text-input-form" 
                                                        type="text" 
@@ -1287,12 +1282,12 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="!checkObjectPropertiesForm(currentObject) || !isAdmin()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="updateObject(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -1334,13 +1329,13 @@
             <div class="container-fluid">
 
                 <div class="row">
-                    <div class="col-xs-offset-6 col-md-3">
+                    <div class="col-xs-offset-6 col-xs-3">
                         <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
                             ng-click="confirmAction();"
                             value="Ок" />
                     </div>
 
-                    <div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+                    <div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
                         <button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
                             ng-click="exit('#confirmActionModal');">
                             Отменить
@@ -1387,13 +1382,13 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row marginBottom5">
-                    <div class="col-xs-6 col-md-6 noPadding">
+                    <div class="col-xs-6 noPadding">
                         <input class="form-control nmc-text-input-form"
                                ng-model="data.selectedIndicatorMode.caption"
                                title="Наименование представления"
                                />
                     </div>
-                    <div class="col-xs-6 col-md-6">
+                    <div class="col-xs-6">
 <!--
                         <div ng-if="data.selectedIndicatorMode.isEditMode === true"
                              class="btn-group">
@@ -1487,7 +1482,7 @@
                 </div>
                 <div class="row">
 <!--
-                    <div class="col-sm-3 noPadding sidebar-offcanvas paddingRight10 nmc-mode-menu" ng-cloak>
+                    <div class="col-xs-3 noPadding sidebar-offcanvas paddingRight10 nmc-mode-menu" ng-cloak>
                         <nav class="sidebar-nav nmc-mode-sidebar-nav"
                              role="navigation" 
                              >
@@ -1527,7 +1522,7 @@
                     </div>
 -->
                     <div role="tabpanel" 
-                         class="col-sm-12 noPadding nmc-tab-panel">
+                         class="col-xs-12 noPadding nmc-tab-panel">
                       <!-- Навигационная полоса -->
                       <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" 
@@ -1586,7 +1581,7 @@
                                                 Выбрать все
                                             </label>
                                         </div>
-                                        <div class="col-xs-6 col-md-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+                                        <div class="col-xs-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
         <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
                                             <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                                 <tr ng-repeat="waterColumn in data.selectedIndicatorMode.waterColumns | columnFilter: 'istunable'">
@@ -1602,7 +1597,7 @@
 
                                             </table>
                                         </div>
-                                        <div class="col-xs-6 col-md-6">
+                                        <div class="col-xs-6">
                                             <div>
                                                 <label>Вид показаний</label>
                                                 <select class="form-control nmc-input-data nmc-select-form"
@@ -1646,7 +1641,7 @@
                                                 Выбрать все
                                             </label>
                                         </div>
-                                        <div class="col-xs-6 col-md-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+                                        <div class="col-xs-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
         <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
                                             <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">    
                                                 <tr ng-repeat="electricityColumn in data.selectedIndicatorMode.electricityColumns | columnFilter: 'istunable'">
@@ -1661,7 +1656,7 @@
                                                 </tr>                                        
                                             </table>
                                         </div>
-                                        <div class="col-xs-6 col-md-6">
+                                        <div class="col-xs-6">
                                             <div>
                                                 <label>Режим показаний</label>
                                                 <select class="form-control nmc-select-form"
@@ -1790,24 +1785,24 @@
 
 					<div class="row">
                         <div ng-if="data.selectedIndicatorMode.id"
-                             class="col-xs-offset-3 col-xs-3 col-md-3">
+                             class="col-xs-offset-3 col-xs-3">
 							<input type="submit" class="btn btn-block btn-xs nmc-save-button"
 								ng-click="saveIndicatorPreferencesAs(data.selectedIndicatorMode)"
 								value="Сохранить как"/>
 						</div>
                         <div ng-if="data.selectedIndicatorMode.id"
-                             class="col-xs-3 col-md-3">
+                             class="col-xs-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveIndicatorPreferences(data.selectedIndicatorMode)"
 								value="Сохранить"/>
 						</div>
                         <div ng-if="!data.selectedIndicatorMode.id"
-                             class="col-xs-offset-6 col-xs-3 col-md-3">
+                             class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveIndicatorPreferencesAs(data.selectedIndicatorMode)"
 								value="Сохранить как"/>
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-xs-3 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
 								Отменить
@@ -1883,12 +1878,12 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                         
                             <tr>
-                                <td class="col-sm-3"><label for="inputIndicatorModeCaption">Наименование</label>
+                                <td class="col-xs-3"><label for="inputIndicatorModeCaption">Наименование</label>
                                 </td>
-                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                <td colspan="2" class="col-xs-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" 
                                          ng-class="{'has-error': !(data.selectedIndicatorModeSaveAs.caption >'')}">
                                         <input class="form-control nmc-text-input-form" 
