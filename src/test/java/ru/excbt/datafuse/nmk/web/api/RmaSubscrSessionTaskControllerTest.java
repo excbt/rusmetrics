@@ -4,14 +4,16 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
+@Transactional
 public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -26,7 +28,7 @@ public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -40,7 +42,7 @@ public class RmaSubscrSessionTaskControllerTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

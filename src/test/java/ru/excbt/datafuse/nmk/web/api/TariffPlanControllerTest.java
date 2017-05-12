@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
@@ -31,6 +33,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+@Transactional
 public class TariffPlanControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(TariffPlanControllerTest.class);
@@ -68,6 +71,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testUpdate() throws Exception {
 
 		List<TariffPlan> tariffPlanList = tariffPlanService
@@ -119,6 +123,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testCreate() throws Exception {
 		TariffPlan tariffPlan = new TariffPlan();
 		tariffPlan.setTariffPlanValue(BigDecimal.valueOf(1.1));

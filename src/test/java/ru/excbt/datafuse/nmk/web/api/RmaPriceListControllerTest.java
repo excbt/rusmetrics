@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceItemService;
@@ -19,8 +20,8 @@ import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
-import javax.transaction.Transactional;
 
+@Transactional
 public class RmaPriceListControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
 
 	@Autowired

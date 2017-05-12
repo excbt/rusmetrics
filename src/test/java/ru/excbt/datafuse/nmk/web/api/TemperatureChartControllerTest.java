@@ -3,16 +3,19 @@ package ru.excbt.datafuse.nmk.web.api;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
 import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+@Transactional
 public class TemperatureChartControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartControllerTest.class);
@@ -31,6 +34,7 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+    @Ignore
 	public void testTemperatureChartCRUD() throws Exception {
 		TemperatureChart newEntity = new TemperatureChart();
 		newEntity.setChartName("TEST Name " + (new Date()));
@@ -52,7 +56,7 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 */
 	private void testTemperatureChartItems(Long temperatureChartId) throws Exception {

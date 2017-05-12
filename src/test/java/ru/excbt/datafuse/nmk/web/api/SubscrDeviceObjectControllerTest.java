@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
@@ -24,12 +25,10 @@ import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-import javax.transaction.Transactional;
 
 import static org.junit.Assert.assertTrue;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectControllerTest.class);

@@ -2,12 +2,14 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
@@ -16,6 +18,7 @@ import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder
 
 @WithMockUser(username = "ex1-cab-admin", password = "exbt_123456", roles = { "CONT_OBJECT_ADMIN", "SUBSCR_ADMIN",
 		"SUBSCR_CREATE_CABINET", "SUBSCR_CREATE_CHILD", "SUBSCR_USER", "ZPOINT_ADMIN", })
+@Transactional
 public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 
 	@Autowired
@@ -35,6 +38,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSubscrObjectTreeCRUD() throws Exception {
 
 		ObjectNameHolder tree = new ObjectNameHolder();

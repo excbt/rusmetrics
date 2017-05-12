@@ -71,7 +71,7 @@ public class EnergyPassportTemplateResourceIntTest extends AnyControllerTest {
     public void testGetOne() throws Exception {
         EnergyPassportTemplate entity = createEnergyPassportTemplate();
 
-        EnergyPassportSectionTemplate s1 = entity.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1));
+        EnergyPassportSectionTemplate s1 = entity.createSection((s) -> s.sectionKey("P_1.1").sectionJson(EnergyPassportResourceIntTest.DUMMY_JSON).sectionOrder(1));
         String json = TestUtils.objectToJson(entity);
 
         energyPassportTemplateRepository.saveAndFlush(entity);

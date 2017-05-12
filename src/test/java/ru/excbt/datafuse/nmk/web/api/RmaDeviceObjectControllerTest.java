@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
@@ -27,8 +28,8 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-import javax.transaction.Transactional;
 
+@Transactional
 public class RmaDeviceObjectControllerTest extends RmaControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectControllerTest.class);

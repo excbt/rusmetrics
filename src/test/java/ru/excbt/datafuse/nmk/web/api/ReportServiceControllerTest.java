@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.google.common.primitives.Longs;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
@@ -33,9 +34,10 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
-import javax.transaction.Transactional;
+
 
 // TODO remove unused reports
+@Transactional
 public class ReportServiceControllerTest extends AnyControllerTest {
 
 	public final static String API_REPORT_URL = "/api/reportService";

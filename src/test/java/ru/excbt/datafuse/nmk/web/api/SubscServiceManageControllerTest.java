@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.joda.time.LocalDate;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
@@ -19,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+@Transactional
 public class SubscServiceManageControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
 
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
@@ -85,6 +88,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest implemen
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testManualSubscriberUpdateAccess() throws Exception {
 
 		List<SubscrServicePack> packs = subscrServicePackService.findByKeyname("WEB_TEST_SERVICE");
@@ -121,6 +125,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest implemen
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testCurrentSubscriberUpdateAccess() throws Exception {
 
 		List<SubscrServicePack> packs = subscrServicePackService.findByKeyname("WEB_TEST_SERVICE");

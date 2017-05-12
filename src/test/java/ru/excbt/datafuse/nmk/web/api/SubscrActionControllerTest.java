@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
@@ -22,6 +23,7 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 import com.google.common.primitives.Longs;
 
+@Transactional
 public class SubscrActionControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory
