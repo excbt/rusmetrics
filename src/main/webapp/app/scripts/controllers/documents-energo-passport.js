@@ -1,5 +1,5 @@
 /*jslint node: true, nomen: true*/
-/*global angular, $*/
+/*global angular, $, alert*/
 'use strict';
 var app = angular.module('portalNMC');
 app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout) {
@@ -118,6 +118,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     function setSectionStyles(sectionData) {
         $timeout(function () {
             $(':input').inputmask();
+            $(':input.nmc-input-percent').inputmask('numeric', {min: 0, max: 100});
+            $(':input.nmc-input-year').inputmask('integer', {min: 2010, max: 2100});
 //                    $(':input').focus();
             var vkey;
             for (vkey in sectionData) {
@@ -1266,6 +1268,82 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $('#energyDocument').scroll(energyDocumentScrolling);
     
+    // Функция для добавления обработчиков событий
+    function addHandler(object, event, handler, useCapture) {
+        if (object.addEventListener) {
+            object.addEventListener(event, handler, useCapture || false);
+        } else if (object.attachEvent) {
+            object.attachEvent('on' + event, handler);
+        } else {
+            alert("Add handler is not supported");
+        }
+    }
+    
+    // Функция для удаления обработчиков событий
+    function delHandler(object, event, handler, useCapture) {
+        if (object.removeEventListener) {
+            object.removeEventListener(event, handler, useCapture || false);
+        } else if (object.detachEvent) {
+            object.detachEvent('on' + event, handler);
+        } else {
+            alert("Delete handler is not supported");
+        }
+    }
+    
+/*****************************************************************
+    Обработка нажатия Ctrl + S
+**/
+
+    // Определяем браузеры
+    var ua = navigator.userAgent.toLowerCase();
+    var isIE = (ua.indexOf("msie") !== -1 && ua.indexOf("opera") === -1);
+    var isChrome = (ua.indexOf("chrome") !== -1);
+    var isGecko = (ua.indexOf("gecko") !== -1);
+    
+    function saveFunction() {
+        $scope.savePassportWhole();
+        $scope.$apply();
+    }
+
+    function hotSave(evt) {
+          // Получаем объект event
+        evt = evt || window.event;
+        var key = evt.keyCode || evt.which;
+          // Определяем нажатие Ctrl+S
+        key = !isGecko || isChrome ? (key === 83 ? 1 : 0) : (key === 115 ? 1 : 0);
+        if (evt.ctrlKey && key) {
+                // Блокируем появление диалога о сохранении
+            if (evt.preventDefault) {
+                evt.preventDefault();
+            }
+            evt.returnValue = false;
+                // Запускаем сохранение документа
+            saveFunction();
+                // Возвращаем фокус в окно
+            window.focus();
+            return false;
+        }
+    }
+    
+     // Добавляем обработчики
+    if (isIE || isChrome) {
+        addHandler(document, "keydown", hotSave);
+    } else {
+        addHandler(document, "keypress", hotSave);
+    }
+    
+    $scope.$on('$destroy', function () {
+        // Удаляем обработчики
+        if (isIE || isChrome) {
+            delHandler(document, "keydown", hotSave);
+        } else {
+            delHandler(document, "keypress", hotSave);
+        }
+    });
+/***
+   Конец обработки нажатия клавиш 
+**/
+    
     function initCtrl() {
         var routeParams = $routeParams;
         if (routeParams.param === "new") {
@@ -1288,7 +1366,7 @@ app.directive('energyViewCell', [function () {
         scope: {
             cell: "="
         },
-        template: "<div style = 'font-size: 12px;'> <p ng-if = 'cell._complexIdx' style = 'margin: 0'>complexIdx = {{cell._complexIdx}},</p> <p ng-if = 'cell.keyValueIdx' style='margin: 0'>keyValueIdx = {{cell.keyValueIdx}},</p> <p ng-if = 'cell._dynamicIdx' style='margin: 0'>dynamicIdx = {{cell._dynamicIdx}}</p></div>"
+        template: "<div style = 'font-size: 12px;'> <p ng-if = 'cell._complexIdx' style = 'margin: 0'>complexIdx = {{cell._complexIdx}},</p> <p ng-if = 'cell.keyValueIdx' style='margin: 0'>keyValueIdx = {{cell.keyValueIdx}},</p> <p ng-if = 'cell._dynamicIdx' style='margin: 0'>dynamicIdx = {{cell._dynamicIdx}}</p><p ng-if = 'cell.constraints' style='margin: 0'>cell = {{cell | json}}</p></div>"
     };
 }]);
 

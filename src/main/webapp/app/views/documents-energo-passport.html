@@ -204,12 +204,36 @@
                                             <span ng-if = "elm.cellType !== 'VALUE'"> 
                                                 {{elm.caption}}
                                             </span>
-                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type !== 'Boolean' && elm.__type !== 'Date'" 
+                                            <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'String'" 
                                                    type = "text"
                                                    ng-change = "onChange()"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
                                                    class = "nmc-energy-input-text"
                                                    ng-style = "{'text-align': elm.cellStyle.halignment}"/>
+                                            
+                                            <input ng-if = "!elm.constraints[0].valueSubtype && elm.cellType === 'VALUE' && (elm.__type !== 'String' && elm.__type !== 'Boolean' && elm.__type !== 'Counter' && elm.__type !== 'Date')" 
+                                                   type = "text"
+                                                   
+                                                   ng-change = "onChange()"
+                                                   data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                   class = "nmc-energy-input-text"
+                                                   
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   />
+                                            
+                                            <input ng-if = "'PERCENT' === elm.constraints[0].valueSubtype && elm.cellType === 'VALUE'" 
+                                                   type = "text"
+                                                   ng-change = "onChange()"
+                                                   class = "nmc-input-percent nmc-energy-input-text"
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   />
+                                            
+                                            <input ng-if = "'YEAR' === elm.constraints[0].valueSubtype && elm.cellType === 'VALUE'" 
+                                                   type = "text"
+                                                   ng-change = "onChange()"
+                                                   class = "nmc-input-year nmc-energy-input-text"
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   />                                                                            
                                             
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'Boolean'" 
                                                    ng-change = "onChange()"
@@ -235,7 +259,7 @@
                                                ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
                                             <thead>
                                                 <tr ng-repeat = "throw in part.innerPdTable.theads track by $index">    
-                                                    <th ng-repeat = "th in throw"
+                                                    <th ng-repeat = "th in throw track by $index"
                                                         ng-attr-rowspan = "{{th._rowSpan}}"
                                                         ng-attr-colspan = "{{th._colSpan}}"
                                                         ng-style = "{'width': th.width + ctrlSettings.cssMeasureUnit, 'max-width': th.width + ctrlSettings.cssMeasureUnit}">
@@ -248,8 +272,8 @@
                                             </thead>
 <!--                                            </thead>    -->
 
-                                            <tr ng-repeat = "trow in part.innerPdTable.tbodies track by $index" ng-init = "rowIndex = $index"
-                                                ng-attr-id = "{{'trow' + $index}}">
+                                            <tr ng-repeat = "trow in part.innerPdTable.tbodies track by $index" ng-init = "rowIndex = $index">
+<!--                                                ng-attr-id = "{{'trow' + $index}}">-->
                                                 <td ng-repeat = "td in trow.tds track by $index"                                                    
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"

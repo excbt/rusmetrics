@@ -2988,7 +2988,7 @@ input[type="checkbox"] {
 /*      Ячейки строк*/
 .nmc-energo-table > tbody > tr > td, .nmc-energo-table > tr > td {
     border: 1px solid #646263;
-    padding: 0 2px;
+    padding: 0 4px;
 }
 
 .nmc-td-no-edit {
