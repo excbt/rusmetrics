@@ -56,120 +56,153 @@
 -->
     <div class = "tab-content">
         <div role = "tabpanel" class = "tab-pane fade in active nmc-main-tab-panel" id = "active_energy_documents">
-            <div ng-show = "ctrlSettings.loading" class = "nmc-loading">
-                <i class = "fa fa-spinner fa-spin"></i> Загрузка ... 
-            </div>
-            <div ng-show = "!ctrlSettings.loading">
-                <div class = "row nmc-main-workspace-header">
-                    <div class = "col-xs-3 marginBottom10">
-                        <button class = "btn nmc-main-add-button" ng-click = "createEnergyDocumentInit()">Создать документ</button>
-                    </div>
-                    <div class = "col-xs-7"></div>
-                    <div class = "input-group col-xs-4 filter marginBottom10 pull-left nmc-search-form">   
-                        <span class = "input-group-addon nmc-search-form-addon"><i class = "glyphicon glyphicon-search nmc-search-form-button"></i></span>
-                        <input title = "Введите текст для поиска" type = "text" class = "form-control nmc-text-input-form" ng-model = "filter">
-                    </div>
-                    <div class="col-xs-offset-2 col-xs-2">
-                    </div>
-                </div>
-                
-                                        <!--    Непрокручиваямая шапка -->
-                <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-                        <tr class = "nmc-main-table-header">
-                            <th class = "col-xs-1 nmc-td-for-button">
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = "col-xs-2 noPadding"
+                         ng-class = "{'nmc-hide': !ctrlSettings.isOrganizationShow}">
+                        <h3 class = "nmc-h3">
+                            <span>Организации</span>
+                        </h3>
+                        <div class = "nmc-energo-passport-main-div" 
+                             ng-show = "!ctrlSettings.organizationLoading">
 
-                            </th>
-                            <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
-                                ng-class = "column.class" 
-                                ng-click = "setOrderBy(column.name)">
-                                {{column.caption}}
-                                <i class = "glyphicon" 
-                                   ng-class = "{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
-                                   ng-show = "ctrlSettings.orderBy.field == '{{column.name}}'">
-                                </i>
-                            </th>
-                
-                            <th class = "col-xs-1">
-                            </th>
-                
-                        </tr>
-                </table>
-
-                <div class = "nmc-energo-passport-main-div">
-                    <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
-                        <tr class = "nmc-main-table-header nmc-hide">
-                            <th class = "col-xs-1 nmc-td-for-button">
-
-                            </th>
-                            <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
-                                ng-class = "column.class" 
-                                ng-click = "setOrderBy(column.name)">
-                                {{column.caption}}
-                                <i class = "glyphicon" 
-                                   ng-class = "{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
-                                   ng-show = "ctrlSettings.orderBy.field == '{{column.name}}'">
-                                </i>
-                            </th>
-                
-                            <th class="col-xs-1">
-                            </th>
-                
-                        </tr>
-
-                        <tr ng-repeat = "elm in data.passports | orderBy : ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc | filter: filter track by $index">
-                            <td class = "col-xs-1 nmc-td-for-button">
-                                <div class = "btn-toolbar">
-                                    <div class = "btn-group">
-                                        <i title = "Редактировать свойства документа" 
-                                           class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
-                                           ng-click = "editEnergyDocument(elm)">
-                                        </i>
-
+                            <div class = "container-fluid" 
+                                 ng-repeat = "org in data.organizations track by $index"
+                                 ng-class = "{'nmc-distinguish': p.isSelected}">
+                                <div class = "row nmc-energy-contents"
+                                     ng-click = "organizationSelect(org)"
+                                     ng-class = "{'nmc-bg-distinguish-energy': org.isSelected === true, 'nmc-energy-contents-odd': $odd}">
+                                    <div class = "col-xs-11">
+                                        {{org.caption}}
                                     </div>
                                 </div>
-                            </td>
-                            <td ng-repeat = "column in ctrlSettings.passportColumns track by $index"                                 
-                                ng-class = "column.class"
-                                ng-click = "openEnergyDocument(elm)">
-                                <div ng-switch on = "column.type">
-                                    <span ng-switch-when = "name">
-                                        {{elm[column.name] || "Без названия"}}
-                                        <span ng-show="isSystemuser()"> (id = {{elm['id']}})</span>
-                                    </span>
-                                    <span ng-switch-when = "checkbox">
-                                        <input type = "checkbox" ng-model = "elm[column.name]" disabled/>
-                                    </span>
-                                    <span ng-switch-when = "date">
-                                        {{elm[column.name] | date: ctrlSettings.dateFormatAtTable}}
-                                    </span>
-                                    <span ng-switch-when = "doctype">
-<!--                                        <img src = "" alt = "Д" class = "img-circle"/>-->
-                                        <p class = "btn btn-xs btn-default nmc-doc-type-sym">
-                                            Д
-                                        </p>
-                                    </span>
-                                    <span ng-switch-default >
-                                        {{elm[column.name]}}
-                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = ""
+                         ng-class = "{'col-xs-10': ctrlSettings.isOrganizationShow, 'col-xs-12': !ctrlSettings.isOrganizationShow}">
+                        <div ng-show = "ctrlSettings.loading" class = "nmc-loading">
+                            <i class = "fa fa-spinner fa-spin"></i> Загрузка ... 
+                        </div>
+                        <div ng-show = "!ctrlSettings.loading" class = "paddingLeft10">
+                            <div class = "row nmc-main-workspace-header">
+                                <div class = "col-xs-3 noPadding marginBottom10">
+                                    <button class = "btn nmc-main-add-button" ng-click = "createEnergyDocumentInit()">Создать документ</button>
                                 </div>
-                            </td>
+                                <div class = "col-xs-7"></div>
+                                <div class = "input-group col-xs-4 filter marginBottom10 pull-left nmc-search-form">   
+                                    <span class = "input-group-addon nmc-search-form-addon"><i class = "glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                                    <input title = "Введите текст для поиска" type = "text" class = "form-control nmc-text-input-form" ng-model = "filter">
+                                </div>
+                                <div class="col-xs-offset-2 col-xs-2">
+                                </div>
+                            </div>
 
-                
-                            <td class = "col-xs-1">
-                                <div class = "btn-toolbar">
-                                    <div class = "btn-group pull-right">                   
-                                        <i title = "Удалить документ" 
-                                           class = "btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
-                                           ng-click = "deleteEnergyDocumentInit(elm)" 
-                                           ></i>
+                            <div class = "row">
+
+                                <div class = "col-xs-12 noPadding">
+                                                    <!--    Непрокручиваямая шапка -->
+                                    <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+                                            <tr class = "nmc-main-table-header">
+                                                <th class = "col-xs-1 nmc-td-for-button">
+
+                                                </th>
+                                                <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
+                                                    ng-class = "column.class" 
+                                                    ng-click = "setOrderBy(column.name)">
+                                                    {{column.caption}}
+                                                    <i class = "glyphicon" 
+                                                       ng-class = "{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
+                                                       ng-show = "ctrlSettings.orderBy.field == '{{column.name}}'">
+                                                    </i>
+                                                </th>
+
+                                                <th class = "col-xs-1">
+                                                </th>
+
+                                            </tr>
+                                    </table>
+
+                                    <div class = "nmc-energo-passport-main-div">
+                                        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+                                            <tr class = "nmc-main-table-header nmc-hide">
+                                                <th class = "col-xs-1 nmc-td-for-button">
+
+                                                </th>
+                                                <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
+                                                    ng-class = "column.class" 
+                                                    ng-click = "setOrderBy(column.name)">
+                                                    {{column.caption}}
+                                                    <i class = "glyphicon" 
+                                                       ng-class = "{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
+                                                       ng-show = "ctrlSettings.orderBy.field == '{{column.name}}'">
+                                                    </i>
+                                                </th>
+
+                                                <th class="col-xs-1">
+                                                </th>
+
+                                            </tr>
+
+                                            <tr ng-repeat = "elm in data.passports | orderBy : ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc | filter: filter track by $index">
+                                                <td class = "col-xs-1 nmc-td-for-button">
+                                                    <div class = "btn-toolbar">
+                                                        <div class = "btn-group">
+                                                            <i title = "Редактировать свойства документа" 
+                                                               class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                                                               ng-click = "editEnergyDocument(elm)">
+                                                            </i>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td ng-repeat = "column in ctrlSettings.passportColumns track by $index"                                 
+                                                    ng-class = "column.class"
+                                                    ng-click = "openEnergyDocument(elm)">
+                                                    <div ng-switch on = "column.type">
+                                                        <span ng-switch-when = "name">
+                                                            {{elm[column.name] || "Без названия"}}
+                                                            <span ng-show="isSystemuser()"> (id = {{elm['id']}})</span>
+                                                        </span>
+                                                        <span ng-switch-when = "checkbox">
+                                                            <input type = "checkbox" ng-model = "elm[column.name]" disabled/>
+                                                        </span>
+                                                        <span ng-switch-when = "date">
+                                                            {{elm[column.name] | date: ctrlSettings.dateFormatAtTable}}
+                                                        </span>
+                                                        <span ng-switch-when = "doctype">
+                    <!--                                        <img src = "" alt = "Д" class = "img-circle"/>-->
+                                                            <p class = "btn btn-xs btn-default nmc-doc-type-sym">
+                                                                Д
+                                                            </p>
+                                                        </span>
+                                                        <span ng-switch-default >
+                                                            {{elm[column.name]}}
+                                                        </span>
+                                                    </div>
+                                                </td>
+
+
+                                                <td class = "col-xs-1">
+                                                    <div class = "btn-toolbar">
+                                                        <div class = "btn-group pull-right">                   
+                                                            <i title = "Удалить документ" 
+                                                               class = "btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                                                               ng-click = "deleteEnergyDocumentInit(elm)" 
+                                                               ></i>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
-                            </td>
-                
-                        </tr>
-                    </table>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-                
             </div>
 
 
