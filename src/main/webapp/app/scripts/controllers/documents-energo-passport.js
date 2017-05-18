@@ -70,7 +70,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             return;
         }
         var tdElem = document.getElementById('td_btns_' + partInd + '_' + rowInd + '_' + tdInd);
-
+        if (mainSvc.checkUndefinedNull(tdElem) || mainSvc.checkUndefinedNull(tdElem.id)) {
+            return;
+        }
         var offset = {
             top: $('#' + tdElem.id).parent().offset().top + $('#' + tdElem.id).parent().height(),
             left: $('#' + tdElem.id).parent().offset().left
@@ -707,6 +709,59 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.currentSectionValues[td._complexIdx].value = null;
         $scope.onChange();
     };
+    
+    $scope.tdKeydown = function (event) {
+        console.log(event);
+        
+    };
+/**
+    Обработка нажатия клавиш-стрелок в таблице
+***/
+    function detectColumn(td) {
+        var result = 0, x;
+        while (td = td.previousElementSibling) {
+            ++result;
+        }
+        return result;
+    }
+    
+    $scope.tableKeydown = function (event) {
+//        console.log(event);
+        var needFocusElement = true;        
+        if (!event.shiftKey && !event.altKey && !event.metaKey && !event.ctrlKey) {
+            try {
+                switch (event.keyCode) {
+                case 37: 
+//                    console.log("<-");
+                    needFocusElement = event.target.parentNode.previousElementSibling.querySelector("input");    
+                    break;
+                case 38:
+//                    console.log("^");
+                    needFocusElement = event.target.parentNode.parentNode.previousElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");    
+                    break;    
+                case 39:
+//                    console.log("->");
+                    needFocusElement = event.target.parentNode.nextElementSibling.querySelector("input");    
+                    break;    
+                case 40:
+//                    console.log("V");
+                    needFocusElement = event.target.parentNode.parentNode.nextElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");
+                    break;
+                default:
+                    needFocusElement = false;
+                }
+            } catch (e) {
+                needFocusElement = false;
+            }
+            
+            if (!needFocusElement) return;
+//console.log(needFocusElement);            
+            needFocusElement.focus();
+        }
+        
+    };
+/* Конец обработки кнопок-стрелок */
+
     
     $scope.cancelEnergoPassportEdit = function () {
         $location.path("/documents/energo-passports");

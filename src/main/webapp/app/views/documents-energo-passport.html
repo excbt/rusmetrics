@@ -256,7 +256,8 @@
                                     <div ng-switch-when = "INNER_TABLE"
                                          class = "nmc-energy-inner-table">
                                         <table class = "nmc-energo-table"                                               
-                                               ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
+                                               ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}"
+                                               ng-keydown = "tableKeydown($event)">
                                             <thead>
                                                 <tr ng-repeat = "throw in part.innerPdTable.theads track by $index">    
                                                     <th ng-repeat = "th in throw track by $index"
@@ -278,7 +279,8 @@
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
-                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}">
+                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}"
+                                                    >
                                                     <div ng-if = "td.cellType !== 'VALUE'">
                                                         {{td.caption}}
                                                     </div>
