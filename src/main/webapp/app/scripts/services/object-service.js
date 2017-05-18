@@ -245,7 +245,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             return $http.get(url, httpOptions);
         };
                  
-        var getDeviceModels = function () {
+        var getDeviceModels = function () {            
             var url = urlDeviceModels;
             if (isCancelParamsIncorrect() === true) {
                 return null;

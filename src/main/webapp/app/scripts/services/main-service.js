@@ -710,51 +710,54 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
 //	ERR_INTERNAL(false, "Internal server error"),
 //	ERR_INVALID_STATE(false, "Invalid State Error"),
 //	ERR_USER_ALREADY_EXISTS(false, "User Already Exists");
+    
+    var SUPPORT_STRING = "Обратитесь к поставщику системы.",
+        SUPPORT_STRING_EXT = " В случае повторения ситуации обратитесь к поставщику системы.";
     var DEFAULT_ERROR_MESSAGE = {
         "resultCode": "ERR_DEFAULT",
         "caption": "Непредвиденная ситуация",
-        "description": "Обратитесь к администратору системы."
+        "description": SUPPORT_STRING
     };
     var serverErrors = [
         {
             "resultCode": "ERR_UNCKNOWN",
             "caption": "Неизвестная ошибка",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_ACCESS_DENIED",
             "caption": "Отказано в доступе",
-            "description": "У вас нет прав доступа. Обратитесь к администратору системы."
+            "description": "У вас нет прав доступа. " + SUPPORT_STRING
         },
         {
             "resultCode": "ERR_UNPROCESSABLE_TRANSACTION",
             "caption": "Невозможно выполнить транзакцию",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_DATABASE_ERROR",
             "caption": "Ошибка базы данных",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_BRM_VALIDATION",
             "caption": "Ошибка валидации бизнес-правил",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_VALIDATION",
             "caption": "Ошибка валидации",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_INTERNAL",
             "caption": "Внутренняя ошибка сервера",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_INVALID_STATE",
             "caption": "Ошибка состояния",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_USER_ALREADY_EXISTS",
@@ -764,7 +767,12 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         {
             "resultCode": "ERR_CONNECTION",
             "caption": "Ошибка подключения",
-            "description": "Не удалось получить данные от сервера. Проверьте соединение с сервером."
+            "description": "Не удалось подключиться к серверу. Проверьте соединение с сервером."
+        },
+        {
+            "resultCode": "ERR_BAD_REQUEST",
+            "caption": "Некорректный запрос",
+            "description": "Некорректный запрос к серверу. Проверьте введенные данные и повторите попытку." + SUPPORT_STRING_EXT
         }
     ];
     
@@ -786,6 +794,10 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         var errorCode = "-1";
         if (checkUndefinedNull(e) || checkUndefinedNull(e.data)) {
             errorCode = "ERR_CONNECTION";
+            return getServerErrorByResultCode(errorCode);
+        }
+        if (!checkUndefinedNull(e.status) && e.status === 400) {
+            errorCode = "ERR_BAD_REQUEST";
         }
         if (!checkUndefinedNull(e) && (!checkUndefinedNull(e.resultCode) || (!checkUndefinedNull(e.data) && !checkUndefinedNull(e.data.resultCode)))) {
             errorCode = e.resultCode || e.data.resultCode;

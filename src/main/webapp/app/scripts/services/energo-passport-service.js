@@ -75,7 +75,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             return defer;
         }
         var url = PASSPORT_URL + "/" + doc.id;
-        var docBody = prepareDocumentToSaving(doc);               
+        var docBody = prepareDocumentToSaving(doc);
         return $http.put(url, docBody);
     }
 

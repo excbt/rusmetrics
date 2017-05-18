@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <label for="remember-me" class="col-xs-3 control-label">Запомнить: </label>
                             <div class="col-xs-9">
-                                <input name="remember-me" id="remember-me" type="checkbox" ><br />
+                                <input name="remember-me" id="remember-me" type="checkbox" checked><br />
                                 <input type="hidden" name="${_csrf.parameterName}"
                                 value="${_csrf.token}" />
                             </div>

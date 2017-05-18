@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true, white: true, nomen: true*/
+/*jslint node: true, eqeq: true, white: false, nomen: true*/
 /*global angular, $, moment*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -7,6 +7,10 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.showContents_flag = true;
     
     $scope.ctrlSettings = {};
+    
+    $scope.ctrlSettings.isOrganizationShow = false;
+    $scope.ctrlSettings.organizationLoading = false;
+    
     $scope.ctrlSettings.loading = true;
     $scope.ctrlSettings.cssMeasureUnit = "em";
     $scope.ctrlSettings.passportLoading = true;
@@ -18,7 +22,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.ctrlSettings.orderBy = {field: 'passportName', asc: true};
     
         //model columns
-    $scope.ctrlSettings.passportColumns = [        
+    $scope.ctrlSettings.passportColumns = [
         {
             "name": "type",
             "caption": "Тип",
@@ -38,12 +42,10 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         },
         {
             "name": "passportDate2",
-            "caption": "Дата документа",
+            "caption": "Дата",
             "class": "col-xs-1 nmc-link",
             "type": "date"
         }
-        
-
     ];
         
     
@@ -52,6 +54,26 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
 //    }, 1500);
     
     $scope.data = {};
+//dev    
+    $scope.data.organizations = [
+        {
+            caption: "Организация 1"
+        }, {
+            caption: "Организация 2 ну о-о-о-чень длинное название"
+        }, {
+            caption: "Организация 3 длинное название"
+        }, {
+            caption: "Организация 4"
+        }
+    ];
+    var i = 0;
+    for (i = 0; i < 60; i += 1) {
+        $scope.data.organizations.push({
+            caption: "Организация 4"
+        });
+    }
+//end dev    
+    
     $scope.data.currentDocument = {};
     $scope.data.documentTypes = [
         {
@@ -67,10 +89,12 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
             caption: "Проект"
         }
     ];
+    
+    $scope.data.currentOrganization = {};
         
     $scope.setOrderBy = function (field) {
         var asc = $scope.ctrlSettings.orderBy.field === field ? !$scope.ctrlSettings.orderBy.asc : true;
-        $scope.ctrlSettings.orderBy = { field: field, asc: asc };        
+        $scope.ctrlSettings.orderBy = { field: field, asc: asc };
     };
     
     $scope.emptyString = function (str) {
@@ -79,16 +103,16 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     
     $scope.createEnergyDocumentInit = function () {
 //        $scope.ctrlSettings.passportLoading = true;
-        $scope.data.currentDocument = {}; 
-        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;      
+        $scope.data.currentDocument = {};
+        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
         $('#showDocumentPropertiesModal').modal();
         //$('#editEnergoPassportModal').modal();
     };
     
-    $scope.editEnergyDocument = function (doc) {       
+    $scope.editEnergyDocument = function (doc) {
         $scope.data.currentDocument = angular.copy(doc);
         $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
-        $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat); 
+        $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat);
         $('#showDocumentPropertiesModal').modal();
     };
     
@@ -96,11 +120,11 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         $location.path("/documents/energo-passport/" + doc.id);
     };
     
-    var setConfirmCode = function(useImprovedMethodFlag) {
+    var setConfirmCode = function (useImprovedMethodFlag) {
         $scope.confirmCode = null;
         var tmpCode = mainSvc.getConfirmCode(useImprovedMethodFlag);
         $scope.confirmLabel = tmpCode.label;
-        $scope.sumNums = tmpCode.result;                    
+        $scope.sumNums = tmpCode.result;
     };
     
     $scope.isSystemuser = function () {
@@ -141,7 +165,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         }
         //find and update doc in doc array
         var updatingItem = mainSvc.findItemBy($scope.data.passports, "id", resp.data.id);
-        var docIndexAtArr = $scope.data.passports.indexOf(updatingItem);        
+        var docIndexAtArr = $scope.data.passports.indexOf(updatingItem);
         if (docIndexAtArr > -1) {
             $scope.data.passports[docIndexAtArr] = angular.copy(resp.data);
         }
@@ -182,7 +206,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         return checkFlag;
     }
     
-    $scope.saveEnergyDocument = function (doc) { 
+    $scope.saveEnergyDocument = function (doc) {
 //console.log(doc);
         if (checkDoc(doc) === false) {
             return false;
@@ -211,12 +235,12 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         }
         energoPassportSvc.deletePassport(doc.id)
             .then(successDeletePassportCallback, errorCallback);
-    };    
+    };
     
     $scope.deleteEnergyDocumentInit = function (doc) {
         $scope.data.currentDocument = doc;
-        $scope.data.currentDeleteMessage = doc.passportName || doc.id;        
-        setConfirmCode(true);        
+        $scope.data.currentDeleteMessage = doc.passportName || doc.id;
+        setConfirmCode(true);
         $("#deleteWindowModal").modal();
     };
         
@@ -226,6 +250,30 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         viewDateformat.dateFormat = $scope.ctrlSettings.dateFormatForDatepicker;
         $('#inputEnergyDocDate').datepicker(viewDateformat);
     });
+
+    /***
+    Work with organizations
+    **/
+    
+    //TODO: load organizations
+    function loadOrganizations() {
+        
+    }
+    
+    //TODO: load organization documents
+    function loadOrganiztionDocuments(org) {
+        
+    }
+    
+    $scope.organizationSelect = function (org) {
+        $scope.data.currentOrganization.isSelected = false;//deselect previous organization
+        
+        $scope.data.currentOrganization = org; //set select organization
+        $scope.data.currentOrganization.isSelected = true; //set property of selected org
+        
+        //TODO: load organization documents
+        //loadOrganiztionDocuments(org);
+    };
     
     function initCtrl() {
         loadPassports();

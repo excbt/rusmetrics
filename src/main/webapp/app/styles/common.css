@@ -1276,6 +1276,7 @@ tr.nmc-inactive-price > td {
     font-size: 12px;
     height: 26px;
     padding: 3px;
+    border-radius: 4px !important;
 }
 
 /* выпадающий список на странице с прайсами*/
