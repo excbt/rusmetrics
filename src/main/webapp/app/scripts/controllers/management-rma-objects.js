@@ -1186,6 +1186,8 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
             $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
             $scope.zpointSettings.tChart = null;
+        } else {
+            $scope.zpointSettings.temperatureChartId = null;
         }
         var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
         if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
