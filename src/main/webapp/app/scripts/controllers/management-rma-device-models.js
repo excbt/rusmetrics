@@ -1,8 +1,8 @@
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, es5: true*/
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('MngmtDeviceModelsCtrl', ['$rootScope', '$scope', '$http', 'objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function ($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc) {
+app.controller('MngmtDeviceModelsController', ['$rootScope', '$scope', '$http', 'objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function ($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc) {
 //console.log('Run model management controller.');
     $rootScope.ctxId = "management_rma_device_models_page";
     $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "modelName", "nameColumnName" : "modelName"};
@@ -77,7 +77,8 @@ app.controller('MngmtDeviceModelsCtrl', ['$rootScope', '$scope', '$http', 'objec
 //    get models
     var getModels = function () {
         var targetUrl = $scope.ctrlSettings.modelsUrl;
-        $http.get(targetUrl)
+//        $http.get(targetUrl)
+        objectSvc.getDeviceModels()
             .then(function (response) {
                 if (!mainSvc.checkUndefinedNull(response.data) && angular.isArray(response.data) && response.data.length > 0) {
                     $scope.data.models = response.data;

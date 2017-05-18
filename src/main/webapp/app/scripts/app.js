@@ -66,21 +66,21 @@ app.config(['$routeProvider', function ($routeProvider) {
     
         .when('/documents/energo-passports', {
             templateUrl: 'views/documents-energo-passports.html',
-            controller: 'documentsEnergoPassportsCtrl'            
+            controller: 'documentsEnergoPassportsCtrl'
         })
         .when('/documents/energo-passport/:param', {
             templateUrl: 'views/documents-energo-passport.html',
-            controller: 'documentsEnergoPassportCtrl'            
+            controller: 'documentsEnergoPassportCtrl'
         })
-        .when('/documents/energo-passports1', {
+/*        .when('/documents/energo-passports1', {
             templateUrl: 'views/documents-energo-passports1.html',
-            controller: 'documentsEnergoPassportsCtrl1'            
+            controller: 'documentsEnergoPassportsCtrl1'
         })
         .when('/documents/energo-passports2', {
             templateUrl: 'views/documents-energo-passports2.html',
-            controller: 'documentsEnergoPassportsCtrl2'            
+            controller: 'documentsEnergoPassportsCtrl2'
         })
-    
+*/
         .when('/notices/list', {
             templateUrl: 'views/notice.html',
             controller: 'NoticeCtrl',
@@ -296,7 +296,7 @@ app.config(['$routeProvider', function ($routeProvider) {
         })
         .when('/management/device-models', {
             templateUrl: 'views/management-rma-device-models.html',
-            controller: 'MngmtDeviceModelsCtrl'
+            controller: 'MngmtDeviceModelsController'
         })
         .when('/log/session-log', {
             templateUrl: 'views/log-view-resizable-paged.html',
