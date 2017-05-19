@@ -57,11 +57,20 @@ public class EnergyPassportCli extends PortalToolCli {
     @Override
     protected void doWork(){
         mockUserService.setMockUserId(1000L); // User "SYSTEM"
-        EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
-        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION);
-        EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
-        log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
-        energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());
+        {
+            EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401_1();
+            energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION_1);
+            EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
+            log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
+            energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());
+        }
+        {
+            EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401_2();
+            energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION_2);
+            EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
+            log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
+            energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());
+        }
     }
 
     @Override

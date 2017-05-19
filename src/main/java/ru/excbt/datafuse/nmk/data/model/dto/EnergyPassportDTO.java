@@ -22,6 +22,8 @@ public class EnergyPassportDTO {
 
     private Long passportTemplateId;
 
+    private String templateKeyname;
+
     private String passportName;
 
     private LocalDate passportDate;

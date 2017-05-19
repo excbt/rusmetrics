@@ -97,11 +97,13 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
         if (!result.getSections().stream().filter((i) -> i.getSectionOrder() == null).findFirst().isPresent()) {
             result.getSections().sort(Comparator.comparingInt(EnergyPassportSectionDTO::getSectionOrder));
         }
+        result.setTemplateKeyname(this.passportTemplate.getKeyname());
         return result;
     }
 
     public EnergyPassportShortDTO getDTO_Short() {
         EnergyPassportShortDTO result = ModelMapperUtil.map(this, EnergyPassportShortDTO.class);
+        result.setTemplateKeyname(this.passportTemplate.getKeyname());
         return result;
     }
 

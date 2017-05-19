@@ -63,10 +63,36 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         energyPassportTemplate.createSection((s) -> s.sectionKey("P_1.1").sectionOrder(1).sectionJson(DUMMY_JSON));
         energyPassportTemplateRepository.saveAndFlush(energyPassportTemplate);
 
-        EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").build();
+        EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").templateKeyname(energyPassportTemplate.getKeyname()).build();
 
         RequestExtraInitializer param = (b) -> {
-            b.param("templateKeyname", energyPassportTemplate.getKeyname());
+//            b.param("templateKeyname", energyPassportTemplate.getKeyname());
+        };
+
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+    }
+
+    @Test
+    @Transactional
+    public void testCreatePassport_1() throws Exception {
+
+        EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").templateKeyname("ENERGY_DECLARATION_1").build();
+
+        RequestExtraInitializer param = (b) -> {
+//            b.param("templateKeyname", energyPassportTemplate.getKeyname());
+        };
+
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports", vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+    }
+
+    @Test
+    @Transactional
+    public void testCreatePassport_2() throws Exception {
+
+        EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").templateKeyname("ENERGY_DECLARATION_2").build();
+
+        RequestExtraInitializer param = (b) -> {
+//            b.param("templateKeyname", energyPassportTemplate.getKeyname());
         };
 
         ResultActions resultActions = _testPostJson("/api/subscr/energy-passports", vm, param, ResultActionsTester.TEST_SUCCESSFULL);

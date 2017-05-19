@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.data.energypassport;
 
 import com.google.common.base.Preconditions;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemplateFactory;
 import ru.excbt.datafuse.nmk.passdoc.*;
@@ -21,6 +23,19 @@ public class EnergyPassport401_2014_Add {
 
 
     public final static String ENERGY_DECLARATION = "ENERGY_DECLARATION";
+    public final static String ENERGY_DECLARATION_1 = "ENERGY_DECLARATION_1";
+    public final static String ENERGY_DECLARATION_2 = "ENERGY_DECLARATION_2";
+
+
+
+    public boolean isShortHeaderMode() {
+        return PDKeyHeader.mode.is_shortHeader();
+    }
+
+    public void setShortHeaderMode(boolean shortHeaderMode) {
+        PDKeyHeader.mode.set_shortHeader(shortHeaderMode);
+    }
+
 
 
     public EnergyPassportSectionTemplateFactory section_1_1() {
