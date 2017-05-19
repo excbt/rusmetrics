@@ -262,6 +262,33 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr ng-if = "data.currentDocument.type === 'energydeclair'">
+                                <td class = "col-xs-3">
+                                    <label for = "inputEnergyDocType">Форма</label>
+                                    <span class = "nmc-required-star">*</span>
+                                </td>
+                                <td class = "col-xs-9 nmc-text-align-left">
+                                    <div class = "form-group noMarginBottom" 
+                                         ng-class = "{'has-error': emptyString(data.currentDocument.templateKeyname)}">
+<!--
+                                        <input  
+                                               class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputEnergyDocType" 
+                                               ng-model = "data.currentDocument.type"                                                
+                                               disabled/>
+-->
+                                        <select  
+                                               class = "form-control nmc-select-form"                                                 
+                                               id = "inputEnergyDocType" 
+                                               ng-model = "data.currentDocument.templateKeyname"
+                                                ng-options = "dt.templateKeyname as dt.caption for dt in data.energyDeclarationForms"
+                                                ng-disabled = "data.currentDocument.id">
+                                            
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class = "col-xs-3">
                                     <label for = "inputEnergyDocName">Название</label>

@@ -90,6 +90,19 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         }
     ];
     
+    $scope.data.energyDeclarationForms = [
+        {
+            name: "energydeclair1",
+            caption: "Форма 1",
+            templateKeyname: "ENERGY_DECLARATION_1"
+        },
+        {
+            name: "energydeclair2",
+            caption: "Форма 2",
+            templateKeyname: "ENERGY_DECLARATION_2"
+        }
+    ];
+    
     $scope.data.currentOrganization = {};
         
     $scope.setOrderBy = function (field) {
@@ -105,6 +118,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
 //        $scope.ctrlSettings.passportLoading = true;
         $scope.data.currentDocument = {};
         $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
+        $scope.data.currentDocument.templateKeyname = $scope.data.energyDeclarationForms[0].templateKeyname;
         $('#showDocumentPropertiesModal').modal();
         //$('#editEnergoPassportModal').modal();
     };

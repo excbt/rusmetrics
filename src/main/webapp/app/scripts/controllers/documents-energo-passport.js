@@ -733,7 +733,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                 switch (event.keyCode) {
                 case 37: 
 //                    console.log("<-");
-                    needFocusElement = event.target.parentNode.previousElementSibling.querySelector("input");    
+                    needFocusElement = event.target.parentNode.previousElementSibling.querySelector("input") || event.target.parentNode.previousElementSibling.querySelector(".nmc-energy-td-input-multi-text");    
                     break;
                 case 38:
 //                    console.log("^");
@@ -741,7 +741,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                     break;    
                 case 39:
 //                    console.log("->");
-                    needFocusElement = event.target.parentNode.nextElementSibling.querySelector("input");    
+                    needFocusElement = event.target.parentNode.nextElementSibling.querySelector("input") || event.target.parentNode.nextElementSibling.querySelector(".nmc-energy-td-input-multi-text");    
                     break;    
                 case 40:
 //                    console.log("V");
