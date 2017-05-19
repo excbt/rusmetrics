@@ -22,6 +22,8 @@ public class PDCellStyle {
 
     private Boolean header1;
 
+    private Boolean hidden;
+
     public PDCellStyle hAlignment(HAlignment hAlignment) {
         this.hAlignment = hAlignment;
         return this;
@@ -31,6 +33,11 @@ public class PDCellStyle {
         Preconditions.checkNotNull(rowSpan);
         Preconditions.checkArgument(rowSpan > 0);
         this.rowSpan = rowSpan;
+        return this;
+    }
+
+    public PDCellStyle hidden() {
+        this.hidden = true;
         return this;
     }
 
@@ -46,6 +53,10 @@ public class PDCellStyle {
 
     public static PDCellStyle _makeHAligmentCenter() {
         return new PDCellStyle().hAlignment(HAlignment.CENTER);
+    }
+
+    public static PDCellStyle _makeHidden() {
+        return new PDCellStyle().hidden();
     }
 
     public void copyStyle(PDCellStyle srcStyle) {

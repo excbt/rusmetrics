@@ -1306,20 +1306,22 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
             partHeader
-                .createStaticElement("Вид продукции").keyValueIdx(1)
+                .and().createStaticElement("№ п/п").cellStyle(PDCellStyle._makeHidden()).keyValueIdx(1)
+                .and().createStaticElement("Вид продукции").keyValueIdx(2)
                 .and().createStaticElement()
-                .and().createStaticElement("Объем производства").keyValueIdx(2)
+                .and().createStaticElement("Объем производства").keyValueIdx(3)
                 .and().createStaticElement()
-                .and().createStaticElement("Ед. изм.").keyValueIdx(3)
+                .and().createStaticElement("Ед. изм.").keyValueIdx(4)
                 .and().createStaticElement()
-                .and().widthsOfElements(30,30,30,30,30,30);
+                .and().widthsOfElements(5,30,30,30,30,30,30);
 
-            innerTable.createPartRowInner("_data")
-                .and().createStringValueElement().keyValueIdx(1)
+            innerTable.createPartRowInner("_DATA").dynamic()
+                .createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)
+                .and().createStringValueElement().keyValueIdx(2)
                 .and().createStaticElement()
-                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
                 .and().createStaticElement()
-                .and().createStringValueElement().keyValueIdx(3)
+                .and().createStringValueElement().keyValueIdx(4)
                 .and().createIntegerValueElement();
 
         }
@@ -1332,16 +1334,18 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
             partHeader
-                .createStaticElement("Вид продукции").keyValueIdx(1)
+                .and().createStaticElement("№ п/п").cellStyle(PDCellStyle._makeHidden()).keyValueIdx(1)
+                .and().createStaticElement("Вид продукции").keyValueIdx(2)
                 .and().createStaticElement()
-                .and().createStaticElement("Объем производства").keyValueIdx(2)
+                .and().createStaticElement("Объем производства").keyValueIdx(3)
                 .and().createStaticElement()
-                .and().widthsOfElements(30,20,30,20);
+                .and().widthsOfElements(5,30,20,30,20);
 
-            innerTable.createPartRowInner("_data")
-                .and().createStringValueElement().keyValueIdx(1)
+            innerTable.createPartRowInner("_DATA").dynamic()
+                .and().createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)
+                .and().createStringValueElement().keyValueIdx(2)
                 .and().createStaticElement()
-                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
                 .and().createStaticElement();
         }
 
@@ -1353,23 +1357,25 @@ public class EnergyPassport401_2014_Add {
 
             PDTablePart partHeader = innerTable.createPart(PDPartType.HEADER);
             partHeader
-                .createStaticElement("Вид продукции").keyValueIdx(1)
+                .and().createStaticElement("№ п/п").cellStyle(PDCellStyle._makeHidden()).keyValueIdx(1)
+                .and().createStaticElement("Вид продукции").keyValueIdx(2)
                 .and().createStaticElement()
-                .and().createStaticElement("Объем производства (тыс. руб.) ").keyValueIdx(2)
+                .and().createStaticElement("Объем производства (тыс. руб.) ").keyValueIdx(3)
                 .and().createStaticElement()
-                .and().widthsOfElements(30,20,30,20);
+                .and().widthsOfElements(5,30,20,30,20);
 
-            innerTable.createPartRowInner("_data")
-                .and().createStringValueElement().keyValueIdx(1)
+            innerTable.createPartRowInner("_DATA").dynamic()
+                .and().createValueElement(PDTableCellValueCounter.class).columnKey("nr").keyValueIdx(1)
+                .and().createStringValueElement().keyValueIdx(2)
                 .and().createStaticElement()
-                .and().createDoubleValueElement().keyValueIdx(2)
+                .and().createDoubleValueElement().keyValueIdx(3)
                 .and().createStaticElement();
         }
 
         {
             final PDInnerTable innerTable = topTable.createPartInnerTable().key("P_5a").createInnerTable();
 
-            innerTable.createPartRowInner("_data")
+            innerTable.createPartRowInner("_DATA")
                 .and().createStaticElement("Суммарный показатель").keyValueIdx(1)
                 .and().createDoubleValueElement().keyValueIdx(1)
                 .and().createStaticElement("Единица измерения").keyValueIdx(2)
