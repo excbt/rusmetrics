@@ -117,6 +117,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $('#date_value_' + _complexId).datepicker(datePickerSettings);
     }
     
+    function setFocusOnFirstTextInput() {
+        $timeout(function () {
+            //set focus
+            $(":input:text:first")[0].focus();
+        }, 0);
+    }
+    
     function setSectionStyles(sectionData) {
         $timeout(function () {
             $(':input').inputmask();
@@ -134,7 +141,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                     }
                 }
             }
+
             $scope.ctrlSettings.sectionLoading = false;
+            
+            setFocusOnFirstTextInput();
+            
         }, 0);
     }
     
@@ -468,6 +479,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.ctrlSettings.passportLoading = false;
 //        console.log(passDocData);
         console.log(sectionValues);
+        setFocusOnFirstTextInput();
     }
     
     function successLoadSectionEntryDataCallback(resp) {
@@ -727,22 +739,22 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.tableKeydown = function (event) {
 //        console.log(event);
-        var needFocusElement = true;        
+        var needFocusElement = true;
         if (!event.shiftKey && !event.altKey && !event.metaKey && !event.ctrlKey) {
             try {
                 switch (event.keyCode) {
-                case 37: 
+                case 37:
 //                    console.log("<-");
-                    needFocusElement = event.target.parentNode.previousElementSibling.querySelector("input") || event.target.parentNode.previousElementSibling.querySelector(".nmc-energy-td-input-multi-text");    
+                    needFocusElement = event.target.parentNode.previousElementSibling.querySelector("input") || event.target.parentNode.previousElementSibling.querySelector(".nmc-energy-td-input-multi-text");
                     break;
                 case 38:
 //                    console.log("^");
-                    needFocusElement = event.target.parentNode.parentNode.previousElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");    
-                    break;    
+                    needFocusElement = event.target.parentNode.parentNode.previousElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");
+                    break;
                 case 39:
 //                    console.log("->");
-                    needFocusElement = event.target.parentNode.nextElementSibling.querySelector("input") || event.target.parentNode.nextElementSibling.querySelector(".nmc-energy-td-input-multi-text");    
-                    break;    
+                    needFocusElement = event.target.parentNode.nextElementSibling.querySelector("input") || event.target.parentNode.nextElementSibling.querySelector(".nmc-energy-td-input-multi-text");
+                    break;
                 case 40:
 //                    console.log("V");
                     needFocusElement = event.target.parentNode.parentNode.nextElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");
@@ -754,7 +766,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                 needFocusElement = false;
             }
             
-            if (!needFocusElement) return;
+            if (!needFocusElement) { return; }
 //console.log(needFocusElement);            
             needFocusElement.focus();
         }

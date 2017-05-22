@@ -162,7 +162,7 @@
                                    class = "table table-striped table-condensed table-hover">
                                 <tr ng-repeat = "entry in data.currentPassDocSection.entries | orderBy: ctrlSettings.entryOrderBy.field : !ctrlSettings.entryOrderBy.asc track by $index"
                                     ng-dblclick = "contentsPartEntrySelect(data.currentPassDocSection, entry)">
-                                    <td class = "col-xs-1 nmc-td-for-buttonы">
+                                    <td class = "col-xs-1 nmc-td-for-buttons">
                                         <button ng-attr-title = "{{'Открыть свойства ' + ENTRY_NAME_GEN}}"
                                                 class = "btn btn-xs btn-default glyphicon glyphicon-edit"
                                                 ng-click = "editEntryInit(entry)">

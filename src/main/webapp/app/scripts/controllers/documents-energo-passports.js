@@ -199,7 +199,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     function successLoadPassportsCallback(resp) {
 //console.log(resp);
         var preparedData = prepareEnergydocs(angular.copy(resp.data));
-console.log(preparedData);        
+//console.log(preparedData);        
         $scope.data.passports = preparedData;//angular.copy(resp.data);
         $scope.ctrlSettings.loading = false;
     }
