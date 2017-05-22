@@ -24,7 +24,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         //model columns
     $scope.ctrlSettings.passportColumns = [
         {
-            "name": "type",
+            "name": "templateKeyname",
             "caption": "Тип",
             "class": "col-xs-1 nmc-td-for-button-checkbox nmc-link",
             "type": "doctype"
@@ -90,16 +90,44 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         }
     ];
     
-    $scope.data.energyDeclarationForms = [
+    $scope.data.energyDocumentsForms = [
         {
             name: "energydeclair1",
-            caption: "Форма 1",
-            templateKeyname: "ENERGY_DECLARATION_1"
+            caption: "Энергетическая декларация. Форма 1",
+            shortCaption: "Форма 1",
+            templateKeyname: "ENERGY_DECLARATION_1",
+            symbol: "Д1"
         },
         {
             name: "energydeclair2",
-            caption: "Форма 2",
-            templateKeyname: "ENERGY_DECLARATION_2"
+            caption: "Энергетическая декларация. Форма 2",
+            shortCaption: "Форма 2",
+            templateKeyname: "ENERGY_DECLARATION_2",
+            symbol: "Д2"
+        },
+        {
+            name: "energydeclair",
+            caption: "Энергетическая декларация.",
+            shortCaption: "Общая",
+            templateKeyname: "ENERGY_DECLARATION",
+            symbol: "Д"
+        }
+    ];
+    
+    $scope.data.energyDeclarationForms = [
+        {
+            name: "energydeclair1",
+            caption: "Энергетическая декларация. Форма 1",
+            shortCaption: "Форма 1",
+            templateKeyname: "ENERGY_DECLARATION_1",
+            symbol: "Д1"
+        },
+        {
+            name: "energydeclair2",
+            caption: "Энергетическая декларация. Форма 2",
+            shortCaption: "Форма 2",
+            templateKeyname: "ENERGY_DECLARATION_2",
+            symbol: "Д2"
         }
     ];
     
@@ -145,6 +173,23 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         return mainSvc.isSystemuser();
     };
     
+    function prepareEnergydocs(inputData) {
+        var result = null;
+        if (mainSvc.checkUndefinedNull(inputData) || !angular.isArray(inputData)) {
+            return result;
+        }
+        inputData.forEach(function (elm) {
+            $scope.data.energyDocumentsForms.some(function (docform) {
+                if (docform.templateKeyname === elm.templateKeyname) {
+                    elm.typeTitle = docform.caption;
+                    elm.typeSym = docform.symbol;
+                    return true;
+                }
+            });            
+        });
+        return inputData;
+    }
+    
     function errorCallback(e) {
         $scope.ctrlSettings.loading = false;
         var errorObj = mainSvc.errorCallbackHandler(e);
@@ -152,8 +197,10 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successLoadPassportsCallback(resp) {
-//console.log(resp);        
-        $scope.data.passports = angular.copy(resp.data);
+//console.log(resp);
+        var preparedData = prepareEnergydocs(angular.copy(resp.data));
+console.log(preparedData);        
+        $scope.data.passports = preparedData;//angular.copy(resp.data);
         $scope.ctrlSettings.loading = false;
     }
     

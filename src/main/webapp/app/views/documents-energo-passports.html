@@ -172,8 +172,9 @@
                                                         </span>
                                                         <span ng-switch-when = "doctype">
                     <!--                                        <img src = "" alt = "Д" class = "img-circle"/>-->
-                                                            <p class = "btn btn-xs btn-default nmc-doc-type-sym">
-                                                                Д
+                                                            <p class = "btn btn-xs btn-default nmc-doc-type-sym"
+                                                               ng-attr-title = "{{elm.typeTitle}}">
+                                                                <span ng-bind = "elm.typeSym"></span>
                                                             </p>
                                                         </span>
                                                         <span ng-switch-default >
@@ -282,7 +283,7 @@
                                                class = "form-control nmc-select-form"                                                 
                                                id = "inputEnergyDocType" 
                                                ng-model = "data.currentDocument.templateKeyname"
-                                                ng-options = "dt.templateKeyname as dt.caption for dt in data.energyDeclarationForms"
+                                                ng-options = "dt.templateKeyname as dt.shortCaption for dt in data.energyDeclarationForms"
                                                 ng-disabled = "data.currentDocument.id">
                                             
                                         </select>
