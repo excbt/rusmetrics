@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -274,7 +276,12 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Column(name = "impulse_counter_type")
 	private String impulseCounterType;
 
-
+    @Getter
+    @Setter
+    @Size(min = 1, max = 1)
+    @Pattern(regexp = "^[P|S]{1}$", message ="Must be P or S")
+    @Column(name = "using_attr")
+    private String usingAttr;
 
 	public boolean isMetaVzletExpected() {
 		return ExSystemKey.VZLET.isEquals(exSystemKeyname);
