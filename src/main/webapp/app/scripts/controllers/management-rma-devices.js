@@ -6,11 +6,11 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
 //console.log('Run devices management controller.');
     
     //for testing
-    var impulseDevModel = {
-        modelName: "Импульсный прибор",
-        isImpulse: true,
-        id: 123321
-    };
+//    var impulseDevModel = {
+//        modelName: "Импульсный прибор",
+//        isImpulse: true,
+//        id: 123321
+//    };
     //end testing
     
     $rootScope.ctxId = "management_rma_devices_page";
@@ -162,6 +162,16 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         {
             name: "time_properties_tab",
             tabpanel: "time_properties"
+        }
+    ];
+    
+    $scope.data.deviceSetTypes = [
+        {
+            keyname: "p",
+            caption: "Индивидуальный"
+        }, {
+            keyname: "s",
+            caption: "Общедомовой"
         }
     ];
     
@@ -464,6 +474,10 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
     };
     
+    $scope.deviceSetTypeChange = function () {
+        $cookies.recentSetTypeKeyname = $scope.data.currentObject.setTypeKeyname;
+    };
+    
                 //get device models
     $scope.getDeviceModels = function () {
         objectSvc.getDeviceModels().then(
@@ -534,6 +548,9 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             if ($scope.data.currentModel.isImpulse === true) {
                 setImpulseSettings($scope.data.currentObject, $scope.data.currentModel.isImpulse, $scope.data.currentModel.defaultImpulseK, $scope.data.currentModel.defaultImpulseMu, $scope.data.impulseCounterTypes[0].keyname || null);
             }
+        }
+        if (!mainSvc.checkUndefinedNull($cookies.recentSetTypeKeyname)) {
+            $scope.data.currentObject.setTypeKeyname = $cookies.recentSetTypeKeyname;
         }
         if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)) {
             $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);
@@ -1036,6 +1053,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     
     $scope.isDeviceDisabled = function (device) {
 //console.log(device);        
+//console.log(device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true));        
 //        return !device.isManual;
         return device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
     };

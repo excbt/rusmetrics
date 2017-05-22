@@ -54,7 +54,9 @@ app.directive('nmcShowDeviceModal', function () {
             }
             
             $scope.isDeviceDisabled = function (device) {
-                return $scope.readOnly || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
+//console.log(device);                
+//console.log($scope.readOnly === 'true' || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true));
+                return $scope.readOnly === 'true' || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
             };
             
             $scope.isAdminCanEdit = function (device) {
@@ -137,6 +139,8 @@ app.directive('nmcShowDeviceModal', function () {
 //                console.log($scope.deviceSources);
 //                
 //                console.log($scope.deviceModels);
+//                console.log($scope.readOnly);
+//                console.log($scope.isDeviceDisabled($scope.currentDevice));
             });
             
             $('#showDeviceModal').on('hidden.bs.modal', function () {
