@@ -87,7 +87,9 @@
                         <div ng-show = "!ctrlSettings.loading" class = "paddingLeft10">
                             <div class = "row nmc-main-workspace-header">
                                 <div class = "col-xs-3 noPadding marginBottom10">
-                                    <button class = "btn nmc-main-add-button" ng-click = "createEnergyDocumentInit()">Создать документ</button>
+                                    <button ng-if = "!isReadOnly()"
+                                            class = "btn nmc-main-add-button" 
+                                            ng-click = "createEnergyDocumentInit()">Создать документ</button>
                                 </div>
                                 <div class = "col-xs-7"></div>
                                 <div class = "input-group col-xs-4 filter marginBottom10 pull-left nmc-search-form">   
@@ -191,7 +193,8 @@
                                                 <td class = "col-xs-1">
                                                     <div class = "btn-toolbar">
                                                         <div class = "btn-group pull-right">                   
-                                                            <i title = "Удалить документ" 
+                                                            <i ng-if = "!isReadOnly()"
+                                                               title = "Удалить документ" 
                                                                class = "btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
                                                                ng-click = "deleteEnergyDocumentInit(elm)" 
                                                                ></i>
@@ -288,7 +291,7 @@
                                                id = "inputEnergyDocType" 
                                                ng-model = "data.currentDocument.templateKeyname"
                                                 ng-options = "dt.templateKeyname as dt.shortCaption for dt in data.energyDeclarationForms"
-                                                ng-disabled = "data.currentDocument.id">
+                                                ng-disabled = "data.currentDocument.id || isReadOnly()">
                                             
                                         </select>
                                     </div>
@@ -306,7 +309,8 @@
                                                class = "form-control nmc-text-input-form" 
                                                type = "text" 
                                                id = "inputEnergyDocName" 
-                                               ng-model = "data.currentDocument.passportName" />
+                                               ng-model = "data.currentDocument.passportName" 
+                                               ng-disabled = "isReadOnly()"/>
                                     </div>
                                 </td>
                             </tr>
@@ -318,7 +322,8 @@
                                     <textarea class = "form-control nmc-textarea-form" 
                                               id = "inputEnergyDocDescription" 
                                               placeholder = "Описание" 
-                                              ng-model = "data.currentDocument.description">
+                                              ng-model = "data.currentDocument.description"
+                                              ng-disabled = "isReadOnly()">
                                     </textarea>
                                 </td>
                             </tr>
@@ -335,6 +340,7 @@
                                                class = "form-control nmc-date-input-form nmc-spec-date" 
                                                type = "text"                                                                                               
                                                ng-model = "data.currentDocument.docDateFormatted"
+                                               ng-disabled = "isReadOnly()"
                                                readonly
                                                />
                                     </span>
@@ -355,7 +361,8 @@
 
 					<div class = "row">
                         <div class = "col-xs-offset-6 col-xs-3">
-							<input type = "submit" 
+							<input ng-if = "!isReadOnly()" 
+                                   type = "submit" 
                                    class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                    ng-click = "saveEnergyDocument(data.currentDocument)"                                   
                                    value = "Сохранить" />

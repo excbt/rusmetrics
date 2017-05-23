@@ -225,8 +225,8 @@
                                         Журналы
                                     </span>
                                 </a>
-                                <a ng-show="isRma()"
-                                   ng-hide="!isRma() || isTestMode()"
+                                <a ng-show="!isCabinet() && !isTestMode()"
+                                   
                                    id="energy_main_menu_item"
                                    class="list-group-item nmc-main-menu-item"
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"

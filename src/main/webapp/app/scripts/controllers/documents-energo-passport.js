@@ -124,6 +124,10 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.DEBUG_MODE = !$scope.DEBUG_MODE;
     };
     
+    $scope.isReadOnly = function () {
+        return mainSvc.isReadonly();
+    };
+    
     $scope.prepareComplexIdForSetElemId = function (complexId) {
         var result;
         result = complexId.replace('[', '_');

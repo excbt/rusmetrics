@@ -5,7 +5,8 @@
     <ul class = "nav nav-tabs nmc-nav-tabs-buttons" 
         role = "tablist">
         <li>
-            <button class = "btn btn-default"                    
+            <button ng-if = "!isReadOnly()"
+                    class = "btn btn-default"                    
                     ng-class = "{'nmc-main-add-button': data.passport.changedSectionCount > 0}"
                     ng-click = "savePassportWhole()"
                     ng-disabled = "isDisabledSaveButtons()">
@@ -16,7 +17,8 @@
             </button>
         </li>
         <li>
-            <button class = "btn btn-default"                    
+            <button ng-if = "!isReadOnly()"
+                    class = "btn btn-default"                    
                     ng-class = "{'nmc-main-add-button': data.currentPassDocSection.isChanged}"
                     ng-click = "savePassportSectionInit(data.currentPassDocSection)"
                     ng-disabled = "isDisabledSaveButtons()">
@@ -155,7 +157,9 @@
                         <h4>
                             {{data.currentPassDocSection.preparedSection.caption}}
                         </h4>
-                        <button class = "btn nmc-main-add-button" ng-click = "addEntryInit()">Добавить {{ENTRY_NAME_ACC}}</button>
+                        <button ng-if = "!isReadOnly()"
+                                class = "btn nmc-main-add-button" 
+                                ng-click = "addEntryInit()">Добавить {{ENTRY_NAME_ACC}}</button>
                         <div>
                             <span ng-show = "data.currentPassDocSection.entries.length > 0">Список {{ENTRY_NAME_PL_GEN}}:</span>
                             <table ng-if = "data.currentPassDocSection.hasEntries === true"
@@ -181,7 +185,8 @@
                                         {{entry.entryDescription}}
                                     </td>
                                     <td class = "col-xs-2">
-                                        <button title = "Удалить"                                                  
+                                        <button ng-if = "!isReadOnly()"
+                                                title = "Удалить"                                                  
                                                 class = "btn btn-xs nmc-remove-button"
                                                 ng-click = "deleteEntryInit(entry)">
                                         </button>
@@ -209,7 +214,8 @@
                                                    ng-change = "onChange()"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
                                                    class = "nmc-energy-input-text"
-                                                   ng-style = "{'text-align': elm.cellStyle.halignment}"/>
+                                                   ng-style = "{'text-align': elm.cellStyle.halignment}"
+                                                   ng-disabled = "isReadOnly()"/>
                                             
                                             <input ng-if = "!elm.constraints[0].valueSubtype && elm.cellType === 'VALUE' && (elm.__type !== 'String' && elm.__type !== 'Boolean' && elm.__type !== 'Counter' && elm.__type !== 'Date')" 
                                                    type = "text"
@@ -219,6 +225,7 @@
                                                    class = "nmc-energy-input-text"
                                                    
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   ng-disabled = "isReadOnly()"
                                                    />
                                             
                                             <input ng-if = "'PERCENT' === elm.constraints[0].valueSubtype && elm.cellType === 'VALUE'" 
@@ -226,6 +233,7 @@
                                                    ng-change = "onChange()"
                                                    class = "nmc-input-percent nmc-energy-input-text"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   ng-disabled = "isReadOnly()"
                                                    />
                                             
                                             <input ng-if = "'YEAR' === elm.constraints[0].valueSubtype && elm.cellType === 'VALUE'" 
@@ -233,12 +241,14 @@
                                                    ng-change = "onChange()"
                                                    class = "nmc-input-year nmc-energy-input-text"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   ng-disabled = "isReadOnly()"
                                                    />                                                                            
                                             
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type === 'Boolean'" 
                                                    ng-change = "onChange()"
                                                    type = "checkbox"
-                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"/>
+                                                   ng-model = "data.currentSectionValues[elm._complexIdx].value"
+                                                   ng-disabled = "isReadOnly()"/>
                                             
                                             <input ng-if = "elm.cellType === 'VALUE' && elm.__type == 'Date'" 
                                                    ng-change = "onChange()"
@@ -246,7 +256,8 @@
                                                    readonly
                                                    type = "text"
                                                    ng-model = "data.currentSectionValues[elm._complexIdx].value"
-                                                   class = "nmc-energy-input-text"/>
+                                                   class = "nmc-energy-input-text"
+                                                   ng-disabled = "isReadOnly()"/>
                                             
                                             <div ng-if = "isSystemuser() && DEBUG_MODE === true">
                                                 <energy-view-cell cell = elm></energy-view-cell>
@@ -280,6 +291,7 @@
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
                                                     ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}"
+                                                    ng-disabled = "isReadOnly()"
                                                     >
                                                     <div ng-if = "td.cellType !== 'VALUE'">
                                                         {{td.caption}}
@@ -291,11 +303,11 @@
                                                     <div ng-if = "td.cellType === 'VALUE' && td.__type === 'String'"
                                                          ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                          ng-change = "onDivChange(td, $index, rowIndex, partIndex)"
-                                                         contenteditable
+                                                         ng-attr-contenteditable = "{{!isReadOnly()}}"
                                                          strip-br
                                                          ng-blur = "tdBlur(td)"
                                                          ng-model = "data.currentSectionValues[td._complexIdx].value"
-                                                         class = "nmc-energy-td-input-multi-text"
+                                                         class = "nmc-energy-td-input-multi-text"                                                         
                                                          >
                                                     </div>
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type === 'Boolean'" 
@@ -304,7 +316,8 @@
                                                            ng-focus = "tdFocused(part, trow, td, $index, rowIndex, partIndex)"
                                                            ng-change = "onChange()"
                                                            ng-blur = "tdBlur(td)"
-                                                           ng-model = "data.currentSectionValues[td._complexIdx].value"/>
+                                                           ng-model = "data.currentSectionValues[td._complexIdx].value"
+                                                           ng-disabled = "isReadOnly()"/>
                                                     
                                                     <input ng-if = "td.cellType === 'VALUE' && (td.__type !== 'String' && td.__type !== 'Boolean' && td.__type !== 'Counter' && td.__type !== 'Date')" 
                                                            type = "text"
@@ -314,6 +327,7 @@
                                                            class = "nmc-energy-td-input-text"
                                                            ng-blur = "tdBlur(td)"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
+                                                           ng-disabled = "isReadOnly()"
                                                            />
                                                     
                                                     <input ng-if = "td.cellType === 'VALUE' && td.__type == 'Date'" 
@@ -323,6 +337,7 @@
                                                            ng-change = "onChange()"
                                                            type = "text"
                                                            ng-model = "data.currentSectionValues[td._complexIdx].value"
+                                                           ng-disabled = "isReadOnly()"
                                                            class = "nmc-energy-td-input-text"/>
                                                     
                                                     <div ng-show = "trow.dynamic && td.isSelected"
@@ -429,7 +444,8 @@
                                                class = "form-control nmc-text-input-form" 
                                                type = "text" 
                                                id = "inputSectionEntryName" 
-                                               ng-model = "data.currentSectionEntry.entryName" />
+                                               ng-model = "data.currentSectionEntry.entryName" 
+                                               ng-disabled = "isReadOnly()"/>
                                     </div>
                                 </td>
                             </tr>
@@ -441,7 +457,8 @@
                                     <textarea class = "form-control nmc-textarea-form" 
                                               id = "inputSectionEntryDescription" 
                                               placeholder = "Описание" 
-                                              ng-model = "data.currentSectionEntry.entryDescription">
+                                              ng-model = "data.currentSectionEntry.entryDescription"
+                                              ng-disabled = "isReadOnly()">
                                     </textarea>
                                 </td>
                             </tr>
@@ -476,7 +493,8 @@
 
 					<div class = "row">
                         <div class = "col-xs-offset-6 col-xs-3">
-							<input type = "submit" 
+							<input ng-if = "!isReadOnly()"
+                                   type = "submit" 
                                    class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                    ng-click = "saveEntry(data.passport.id, data.currentPassDocSection.id, data.currentSectionEntry)"
                                    value = "Сохранить"/>
