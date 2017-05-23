@@ -173,20 +173,35 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         return mainSvc.isSystemuser();
     };
     
+    $scope.isReadOnly = function () {
+        return mainSvc.isReadonly();
+    };
+    
+    function prepareEnergydoc(doc) {
+        $scope.data.energyDocumentsForms.some(function (docform) {
+            if (docform.templateKeyname === doc.templateKeyname) {
+                doc.typeTitle = docform.caption;
+                doc.typeSym = docform.symbol;
+                return true;
+            }
+        });
+    }
+    
     function prepareEnergydocs(inputData) {
         var result = null;
         if (mainSvc.checkUndefinedNull(inputData) || !angular.isArray(inputData)) {
             return result;
         }
-        inputData.forEach(function (elm) {
-            $scope.data.energyDocumentsForms.some(function (docform) {
-                if (docform.templateKeyname === elm.templateKeyname) {
-                    elm.typeTitle = docform.caption;
-                    elm.typeSym = docform.symbol;
-                    return true;
-                }
-            });            
-        });
+        inputData.forEach(prepareEnergydoc);
+//        inputData.forEach(function (elm) {
+//            $scope.data.energyDocumentsForms.some(function (docform) {
+//                if (docform.templateKeyname === elm.templateKeyname) {
+//                    elm.typeTitle = docform.caption;
+//                    elm.typeSym = docform.symbol;
+//                    return true;
+//                }
+//            });            
+//        });
         return inputData;
     }
     
@@ -228,7 +243,9 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         var updatingItem = mainSvc.findItemBy($scope.data.passports, "id", resp.data.id);
         var docIndexAtArr = $scope.data.passports.indexOf(updatingItem);
         if (docIndexAtArr > -1) {
-            $scope.data.passports[docIndexAtArr] = angular.copy(resp.data);
+            var tmpDoc = angular.copy(resp.data);
+            prepareEnergydoc(tmpDoc);
+            $scope.data.passports[docIndexAtArr] = tmpDoc;
         }
     }
     
