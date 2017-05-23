@@ -280,8 +280,8 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Setter
     @Size(min = 1, max = 1)
     @Pattern(regexp = "^[P|S]{1}$", message ="Must be P or S")
-    @Column(name = "using_attr")
-    private String usingAttr;
+    @Column(name = "inst_type")
+    private String instType;
 
 	public boolean isMetaVzletExpected() {
 		return ExSystemKey.VZLET.isEquals(exSystemKeyname);
