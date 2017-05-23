@@ -104,7 +104,7 @@
                                                     <!--    Непрокручиваямая шапка -->
                                     <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
                                             <tr class = "nmc-main-table-header">
-                                                <th class = "col-xs-1 nmc-td-for-button">
+                                                <th class = "col-xs-1 nmc-td-for-buttons">
 
                                                 </th>
                                                 <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
@@ -126,7 +126,7 @@
                                     <div class = "nmc-energo-passport-main-div">
                                         <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
                                             <tr class = "nmc-main-table-header nmc-hide">
-                                                <th class = "col-xs-1 nmc-td-for-button">
+                                                <th class = "col-xs-1 nmc-td-for-buttons">
 
                                                 </th>
                                                 <th ng-repeat = "column in ctrlSettings.passportColumns track by $index" 
@@ -145,12 +145,16 @@
                                             </tr>
 
                                             <tr ng-repeat = "elm in data.passports | orderBy : ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc | filter: filter track by $index">
-                                                <td class = "col-xs-1 nmc-td-for-button">
+                                                <td class = "col-xs-1 nmc-td-for-buttons">
                                                     <div class = "btn-toolbar">
                                                         <div class = "btn-group">
-                                                            <i title = "Редактировать свойства документа" 
+                                                            <i title = "Открыть свойства документа" 
                                                                class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
                                                                ng-click = "editEnergyDocument(elm)">
+                                                            </i>
+                                                            <i title = "Редактировать документ"
+                                                               class = "btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table"
+                                                               ng-click = "openEnergyDocument(elm)">
                                                             </i>
 
                                                         </div>
@@ -172,8 +176,9 @@
                                                         </span>
                                                         <span ng-switch-when = "doctype">
                     <!--                                        <img src = "" alt = "Д" class = "img-circle"/>-->
-                                                            <p class = "btn btn-xs btn-default nmc-doc-type-sym">
-                                                                Д
+                                                            <p class = "btn btn-xs btn-default nmc-doc-type-sym"
+                                                               ng-attr-title = "{{elm.typeTitle}}">
+                                                                <span ng-bind = "elm.typeSym"></span>
                                                             </p>
                                                         </span>
                                                         <span ng-switch-default >
@@ -257,6 +262,33 @@
                                                ng-model = "data.currentDocument.type"
                                                 ng-options = "dt.name as dt.caption for dt in data.documentTypes"
                                                disabled>
+                                            
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if = "data.currentDocument.type === 'energydeclair'">
+                                <td class = "col-xs-3">
+                                    <label for = "inputEnergyDocType">Форма</label>
+                                    <span class = "nmc-required-star">*</span>
+                                </td>
+                                <td class = "col-xs-9 nmc-text-align-left">
+                                    <div class = "form-group noMarginBottom" 
+                                         ng-class = "{'has-error': emptyString(data.currentDocument.templateKeyname)}">
+<!--
+                                        <input  
+                                               class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputEnergyDocType" 
+                                               ng-model = "data.currentDocument.type"                                                
+                                               disabled/>
+-->
+                                        <select  
+                                               class = "form-control nmc-select-form"                                                 
+                                               id = "inputEnergyDocType" 
+                                               ng-model = "data.currentDocument.templateKeyname"
+                                                ng-options = "dt.templateKeyname as dt.shortCaption for dt in data.energyDeclarationForms"
+                                                ng-disabled = "data.currentDocument.id">
                                             
                                         </select>
                                     </div>

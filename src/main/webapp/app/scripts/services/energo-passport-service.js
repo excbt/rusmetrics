@@ -51,6 +51,12 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             }
             docBody.passportDate = doc.passportDate;
         }
+        if (!mainSvc.checkUndefinedNull(doc.templateKeyname)) {
+            if (docBody === null) {
+                docBody = {};
+            }
+            docBody.templateKeyname = doc.templateKeyname;
+        }
         if (!mainSvc.checkUndefinedNull(doc.version)) {
             if (docBody === null) {
                 docBody = {};

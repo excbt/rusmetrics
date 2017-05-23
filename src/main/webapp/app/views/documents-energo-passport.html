@@ -162,7 +162,7 @@
                                    class = "table table-striped table-condensed table-hover">
                                 <tr ng-repeat = "entry in data.currentPassDocSection.entries | orderBy: ctrlSettings.entryOrderBy.field : !ctrlSettings.entryOrderBy.asc track by $index"
                                     ng-dblclick = "contentsPartEntrySelect(data.currentPassDocSection, entry)">
-                                    <td class = "col-xs-1 nmc-td-for-buttonы">
+                                    <td class = "col-xs-1 nmc-td-for-buttons">
                                         <button ng-attr-title = "{{'Открыть свойства ' + ENTRY_NAME_GEN}}"
                                                 class = "btn btn-xs btn-default glyphicon glyphicon-edit"
                                                 ng-click = "editEntryInit(entry)">
@@ -256,7 +256,8 @@
                                     <div ng-switch-when = "INNER_TABLE"
                                          class = "nmc-energy-inner-table">
                                         <table class = "nmc-energo-table"                                               
-                                               ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}">
+                                               ng-style = "{'width': table.width + ctrlSettings.cssMeasureUnit, 'max-width': table.maxWidth + ctrlSettings.cssMeasureUnit}"
+                                               ng-keydown = "tableKeydown($event)">
                                             <thead>
                                                 <tr ng-repeat = "throw in part.innerPdTable.theads track by $index">    
                                                     <th ng-repeat = "th in throw track by $index"
@@ -278,7 +279,8 @@
                                                     ng-attr-colspan = "{{td._colSpan}}"
                                                     ng-attr-rowspan = "{{td._rowSpan}}"
                                                     ng-class = "{'nmc-td-no-edit': td.cellType !== 'VALUE' || td.__type === 'Counter'}"
-                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}">
+                                                    ng-style = "{'width': td.width + ctrlSettings.cssMeasureUnit, 'max-width': td.width + ctrlSettings.cssMeasureUnit, 'text-align': td.cellStyle.halignment}"
+                                                    >
                                                     <div ng-if = "td.cellType !== 'VALUE'">
                                                         {{td.caption}}
                                                     </div>
@@ -407,7 +409,7 @@
             </button>
 			<h3 id = "showSectionEntryOptionLabel" 
                 class = "nmc-h3">
-				Секция
+				{{ENTRY_NAME_CAPITAL}}
 			</h3>
 		</div>
 		<div class = "modal-body nmc-modal-body paddingLeftRight15">
@@ -443,6 +445,7 @@
                                     </textarea>
                                 </td>
                             </tr>
+<!--
                             <tr>
                                 <td class = "col-xs-3">
                                     <label for = "inputSectionOrder" 
@@ -457,6 +460,7 @@
                                     </span>
                                 </td>
                             </tr>
+-->
                             <tr>
                                 <td colspan = "2">
                                     Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!

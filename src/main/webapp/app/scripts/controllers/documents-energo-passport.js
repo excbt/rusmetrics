@@ -7,11 +7,33 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
 //    console.log('documentsEnergoPassportCtrl is run');
 //    console.log($location.path);
 //    console.log($routeParams);
-    var INDEX_OF_DEFAULT_SECTION = 0;
+    var INDEX_OF_DEFAULT_SECTION = 0,
+        DEFAULT_SECTION_CAPTIONS = {
+            nom: "раздел",
+            nom_cap: "Раздел",
+            gen: "раздела",
+            acc: "раздел",
+            pl_gen: "разделов"
+        },
+        BUILDING_SECTION_CAPTIONS = {
+            nom: "здание (строение, сооружение)",
+            nom_cap: "Здание (строение, сооружение)",
+            gen: "здания (строения, сооружения)",
+            acc: "здание (строение, сооружение)",
+            pl_gen: "зданий (строений, сооружений)"
+        },
+        DEPARTMENT_SECTION_CAPTIONS = {
+            nom: "промышленное производство (цех, участок)",
+            nom_cap: "Промышленное производство (цех, участок)",
+            gen: "промышленного производства (цеха, участка)",
+            acc: "промышленное производство (цех, участок)",
+            pl_gen: "промышленных производств (цехов, участков)"
+        };
     
     $scope.DEBUG_MODE = false;
     
     $scope.ENTRY_NAME = "раздел"; /*nominative*/
+    $scope.ENTRY_NAME_CAPITAL = "Раздел"; /*nominative, capital letter*/
     $scope.ENTRY_NAME_GEN = "раздела"; /*gentive*/
     $scope.ENTRY_NAME_ACC = "раздел"; /*accusative*/
     $scope.ENTRY_NAME_PL_GEN = "разделов"; /*plural gentive*/
@@ -70,7 +92,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             return;
         }
         var tdElem = document.getElementById('td_btns_' + partInd + '_' + rowInd + '_' + tdInd);
-
+        if (mainSvc.checkUndefinedNull(tdElem) || mainSvc.checkUndefinedNull(tdElem.id)) {
+            return;
+        }
         var offset = {
             top: $('#' + tdElem.id).parent().offset().top + $('#' + tdElem.id).parent().height(),
             left: $('#' + tdElem.id).parent().offset().left
@@ -115,6 +139,13 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $('#date_value_' + _complexId).datepicker(datePickerSettings);
     }
     
+    function setFocusOnFirstTextInput() {
+        $timeout(function () {
+            //set focus
+            $(":input:text:first")[0].focus();
+        }, 0);
+    }
+    
     function setSectionStyles(sectionData) {
         $timeout(function () {
             $(':input').inputmask();
@@ -132,7 +163,11 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                     }
                 }
             }
+
             $scope.ctrlSettings.sectionLoading = false;
+            
+            setFocusOnFirstTextInput();
+            
         }, 0);
     }
     
@@ -466,6 +501,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.ctrlSettings.passportLoading = false;
 //        console.log(passDocData);
         console.log(sectionValues);
+        setFocusOnFirstTextInput();
     }
     
     function successLoadSectionEntryDataCallback(resp) {
@@ -581,6 +617,28 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             .then(successLoadSectionEntryDataCallback, errorCallback);
     }
     
+    function setCaptions(captions) {
+        $scope.ENTRY_NAME = captions.nom; /*nominative*/
+        $scope.ENTRY_NAME_CAPITAL = captions.nom_cap; /*nominative, capital letter*/
+        $scope.ENTRY_NAME_GEN = captions.gen; /*gentive*/
+        $scope.ENTRY_NAME_ACC = captions.acc; /*accusative*/
+        $scope.ENTRY_NAME_PL_GEN = captions.pl_gen; /*plural gentive*/
+    }
+    
+    function changeCaptionsForEntry(section) {
+        switch (section.preparedSection.sectionKey) {
+        case "S_1.3":
+            setCaptions(BUILDING_SECTION_CAPTIONS);
+            break;
+        case "S_1.4":
+            setCaptions(DEPARTMENT_SECTION_CAPTIONS);
+            break;
+        default:
+            setCaptions(DEFAULT_SECTION_CAPTIONS);
+            break;
+        }
+    }
+    
     function changeSection(part) {
         $scope.ctrlSettings.sectionLoading = true;
         if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection)) {
@@ -593,6 +651,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         $scope.data.currentPassDocSection = part;
         $scope.data.currentPassDocSection.isSelected = true;
+        
+        //change captions for different entries
+        changeCaptionsForEntry($scope.data.currentPassDocSection);
         
         //set section values
 //console.log($scope.data.passDocValues);
@@ -707,6 +768,59 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.currentSectionValues[td._complexIdx].value = null;
         $scope.onChange();
     };
+    
+    $scope.tdKeydown = function (event) {
+        console.log(event);
+        
+    };
+/**
+    Обработка нажатия клавиш-стрелок в таблице
+***/
+    function detectColumn(td) {
+        var result = 0, x;
+        while (td = td.previousElementSibling) {
+            ++result;
+        }
+        return result;
+    }
+    
+    $scope.tableKeydown = function (event) {
+//        console.log(event);
+        var needFocusElement = true;
+        if (!event.shiftKey && !event.altKey && !event.metaKey && !event.ctrlKey) {
+            try {
+                switch (event.keyCode) {
+                case 37:
+//                    console.log("<-");
+                    needFocusElement = event.target.parentNode.previousElementSibling.querySelector("input") || event.target.parentNode.previousElementSibling.querySelector(".nmc-energy-td-input-multi-text");
+                    break;
+                case 38:
+//                    console.log("^");
+                    needFocusElement = event.target.parentNode.parentNode.previousElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");
+                    break;
+                case 39:
+//                    console.log("->");
+                    needFocusElement = event.target.parentNode.nextElementSibling.querySelector("input") || event.target.parentNode.nextElementSibling.querySelector(".nmc-energy-td-input-multi-text");
+                    break;
+                case 40:
+//                    console.log("V");
+                    needFocusElement = event.target.parentNode.parentNode.nextElementSibling.querySelectorAll("td")[detectColumn(event.target.parentNode)].querySelector("input");
+                    break;
+                default:
+                    needFocusElement = false;
+                }
+            } catch (e) {
+                needFocusElement = false;
+            }
+            
+            if (!needFocusElement) { return; }
+//console.log(needFocusElement);            
+            needFocusElement.focus();
+        }
+        
+    };
+/* Конец обработки кнопок-стрелок */
+
     
     $scope.cancelEnergoPassportEdit = function () {
         $location.path("/documents/energo-passports");
