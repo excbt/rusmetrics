@@ -86,12 +86,12 @@ public class EnergyPassport401_2014_Add {
         createS_1_2PartsM1(pdTable);
 
         /// Inner 2
-        pdTable.createPartLine("P_2","")
+        pdTable.createPartLine("P_2","2.")
             .and().createStaticElement("Общие сведения о потреблении энергетических ресурсов в отчетном году");
         createS_1_2PartInnerM2(pdTable);
 
 
-        pdTable.createPartLine("P_3","")
+        pdTable.createPartLine("P_3","3.")
             .and().createStaticElement("Наличие собственного источника выработки энергии (есть/нет)")
             .and().createBooleanValueElement();
 
@@ -111,28 +111,48 @@ public class EnergyPassport401_2014_Add {
             .and().createBooleanValueElement();
 
 
-        pdTable.createPartLine()
-            .and().createStaticElement()
+        pdTable.createPartLine("P_4", "4.")
             .and().createStaticElement("Общие сведения об оплате за энергоресурсы");
 
         createS_1_2PartInnerM4(pdTable);
 
-        pdTable.createPartLine("P_5","")
-            .and().createStaticElement("Среднесписочная численность (чел.) Всех работников")
-            .and().createIntegerValueElement();
+        pdTable.createPartLine("P_5","5.")
+            .and().createStaticElement("Среднесписочная численность (чел.)");
+        
+        pdTable.createPartLine("P_5_all","")
+        	.and().createStaticElement("Всех работников")
+        	.and().createIntegerValueElement();
+        
+        pdTable.createPartLine("P_5_visitors","")
+        	.and().createStaticElement("Посетителей")
+        	.and().createIntegerValueElement()
+        	.and().createStaticElement(", в т.ч.");
+        
+        pdTable.createPartLine("P_5_visitors10h","")
+    		.and().createStaticElement("Посетителей присутствующих в заднии менее 10 часов в неделю (чел.)")
+    		.and().createIntegerValueElement();
+        
+        pdTable.createPartLine("P_5_visitors_more_10h","")
+    		.and().createStaticElement("Посетителей присутствующих в заднии более 10 часов в неделю (чел.)")
+    		.and().createIntegerValueElement();
+        
+        pdTable.createPartLine("P_5_tenants","")
+    		.and().createStaticElement("Количество проживающих в учреждении (чел.)")
+    		.and().createIntegerValueElement();
 
-        pdTable.createPartLine("P_6","")
+        pdTable.createPartLine("P_6","6.")
             .and().createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n" +
             "Наличие утвержденной программы энергосбережения\n" +
             "(есть/нет)").and().createBooleanValueElement();
 
-        pdTable.createPartLine("P_7_build","")
-            .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
+        pdTable.createPartLine("P_7_build","7.")
+            .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();        
+        
+        createS_1_2Footer(pdTable);
 
         return new EPSectionTemplateFactory(pdTable);
 
     }
-
 
     private PDTable createS_1_2PartsM1(PDTable pdTable) {
         pdTable.createPartLine("1.").and()
@@ -309,6 +329,47 @@ public class EnergyPassport401_2014_Add {
             .and().createDoubleValueElement().keyValueIdx(1);
 
         return innerTable;
+    }
+    
+    private PDTable createS_1_2Footer(PDTable pdTable) {
+    	
+    	pdTable.createPartLine("P_7_list_count", "")	    	
+	    	.and().createStaticElement("Общее количество листов представляемой информации:")
+			.and().createIntegerValueElement();
+    
+	    pdTable.createPartLine("P_7_filling_date", "")
+			.and().createStaticElement("Дата заполнения (число, месяц, год)")
+			.and().createDateValueElement();	    
+    	
+    	pdTable.createPartLine()
+			.and().createStaticElement()
+			.and().createStaticElement("Лицо, ответственное за обеспечение мероприятий по энергосбережению и повышению энергетической эффективности:");
+    
+	    pdTable.createPartLine("P_7_person_position", "")			
+			.and().createStaticElement("Должность")
+			.and().createStringValueElement();
+	    
+	    pdTable.createPartLine("P_7_person_fullname", "")			
+			.and().createStaticElement("Ф.И.О.")
+			.and().createStringValueElement();
+	    
+	    pdTable.createPartLine()
+			.and().createStaticElement()
+			.and().createStaticElement("Контактная информация:");
+			
+	    pdTable.createPartLine("P_7_person_tel", "")			
+			.and().createStaticElement("Телефон")
+			.and().createStringValueElement();
+	    
+	    pdTable.createPartLine("P_7_person_email", "")		    
+			.and().createStaticElement("Адрес электронной почты")
+			.and().createStringValueElement();
+	    
+	    pdTable.createPartLine("P_7_person_fax", "")		    
+			.and().createStaticElement("Факс")
+			.and().createStringValueElement();
+	    
+    	return pdTable;
     }
 
 
