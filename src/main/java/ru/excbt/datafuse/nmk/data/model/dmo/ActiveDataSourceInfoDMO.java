@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter

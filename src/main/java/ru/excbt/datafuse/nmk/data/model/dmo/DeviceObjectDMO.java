@@ -9,6 +9,7 @@ import lombok.ToString;
 /**
  * Created by kovtonyk on 28.03.2017.
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
 public class DeviceObjectDMO {

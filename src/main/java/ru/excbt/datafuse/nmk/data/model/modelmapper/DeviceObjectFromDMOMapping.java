@@ -6,11 +6,11 @@ import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 
 /**
  * Created by kovtonyk on 29.03.2017.
  */
+@Deprecated
 @Component
 @Slf4j
 public class DeviceObjectFromDMOMapping extends PropertyMapConfigurerSupport<DeviceObjectDMO, DeviceObject> {
