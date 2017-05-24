@@ -16,7 +16,7 @@ public class PDKeyHeaderTest {
         PDKeyHeader header = new PDKeyHeader("2.1", "BlaBlaBla");
 
         Assert.assertEquals("2.1", header.getKey());
-        Assert.assertEquals("2", header.getShortKey());
+        Assert.assertEquals("1", header.getShortKey());
 
 
     }
