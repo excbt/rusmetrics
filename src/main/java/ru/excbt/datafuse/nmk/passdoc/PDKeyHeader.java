@@ -18,24 +18,30 @@ public class PDKeyHeader {
     public static class Mode {
         @Getter
         @Setter
-        private boolean _shortHeader;
+        private boolean _shortKey;
     }
 
     @Getter
     private final String key;
-    private final String fullHeader;
+    private final String header;
 
-    public PDKeyHeader(String key, String fullHeader) {
+    public PDKeyHeader(String key, String header) {
         this.key = key;
-        this.fullHeader = fullHeader;
+        this.header = header;
     }
 
-    public String getHeader() {
-        if (!mode._shortHeader) {
-            return fullHeader;
+    public String getShortKey() {
+        if (!mode._shortKey) {
+            return key;
         }
-        Preconditions.checkNotNull(fullHeader);
-        String[] hh = fullHeader.split(".");
-        return hh.length > 1 ? hh[1] : fullHeader;
+        Preconditions.checkNotNull(key);
+        String[] hh = key.split("\\.");
+        String result = hh.length > 1 ? hh[1] : key;
+        return result != null ? result : key;
+    }
+
+
+    public String getHeader() {
+        return this.header;
     }
 }

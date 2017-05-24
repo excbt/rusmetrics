@@ -28,12 +28,12 @@ public class EnergyPassport401_2014_Add {
 
 
 
-    public boolean isShortHeaderMode() {
-        return PDKeyHeader.mode.is_shortHeader();
+    public boolean isShortKeyMode() {
+        return PDKeyHeader.mode.is_shortKey();
     }
 
-    public void setShortHeaderMode(boolean shortHeaderMode) {
-        PDKeyHeader.mode.set_shortHeader(shortHeaderMode);
+    public void setShortKeyMode(boolean shortKeyMode) {
+        PDKeyHeader.mode.set_shortKey(shortKeyMode);
     }
 
 
@@ -118,24 +118,24 @@ public class EnergyPassport401_2014_Add {
 
         pdTable.createPartLine("P_5","5.")
             .and().createStaticElement("Среднесписочная численность (чел.)");
-        
+
         pdTable.createPartLine("P_5_all","")
         	.and().createStaticElement("Всех работников")
         	.and().createIntegerValueElement();
-        
+
         pdTable.createPartLine("P_5_visitors","")
         	.and().createStaticElement("Посетителей")
         	.and().createIntegerValueElement()
         	.and().createStaticElement(", в т.ч.");
-        
+
         pdTable.createPartLine("P_5_visitors10h","")
     		.and().createStaticElement("Посетителей присутствующих в заднии менее 10 часов в неделю (чел.)")
     		.and().createIntegerValueElement();
-        
+
         pdTable.createPartLine("P_5_visitors_more_10h","")
     		.and().createStaticElement("Посетителей присутствующих в заднии более 10 часов в неделю (чел.)")
     		.and().createIntegerValueElement();
-        
+
         pdTable.createPartLine("P_5_tenants","")
     		.and().createStaticElement("Количество проживающих в учреждении (чел.)")
     		.and().createIntegerValueElement();
@@ -146,8 +146,8 @@ public class EnergyPassport401_2014_Add {
             "(есть/нет)").and().createBooleanValueElement();
 
         pdTable.createPartLine("P_7_build","7.")
-            .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();        
-        
+            .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
+
         createS_1_2Footer(pdTable);
 
         return new EPSectionTemplateFactory(pdTable);
@@ -330,45 +330,45 @@ public class EnergyPassport401_2014_Add {
 
         return innerTable;
     }
-    
+
     private PDTable createS_1_2Footer(PDTable pdTable) {
-    	
-    	pdTable.createPartLine("P_7_list_count", "")	    	
+
+    	pdTable.createPartLine("P_7_list_count", "")
 	    	.and().createStaticElement("Общее количество листов представляемой информации:")
 			.and().createIntegerValueElement();
-    
+
 	    pdTable.createPartLine("P_7_filling_date", "")
 			.and().createStaticElement("Дата заполнения (число, месяц, год)")
-			.and().createDateValueElement();	    
-    	
+			.and().createDateValueElement();
+
     	pdTable.createPartLine()
 			.and().createStaticElement()
 			.and().createStaticElement("Лицо, ответственное за обеспечение мероприятий по энергосбережению и повышению энергетической эффективности:");
-    
-	    pdTable.createPartLine("P_7_person_position", "")			
+
+	    pdTable.createPartLine("P_7_person_position", "")
 			.and().createStaticElement("Должность")
 			.and().createStringValueElement();
-	    
-	    pdTable.createPartLine("P_7_person_fullname", "")			
+
+	    pdTable.createPartLine("P_7_person_fullname", "")
 			.and().createStaticElement("Ф.И.О.")
 			.and().createStringValueElement();
-	    
+
 	    pdTable.createPartLine()
 			.and().createStaticElement()
 			.and().createStaticElement("Контактная информация:");
-			
-	    pdTable.createPartLine("P_7_person_tel", "")			
+
+	    pdTable.createPartLine("P_7_person_tel", "")
 			.and().createStaticElement("Телефон")
 			.and().createStringValueElement();
-	    
-	    pdTable.createPartLine("P_7_person_email", "")		    
+
+	    pdTable.createPartLine("P_7_person_email", "")
 			.and().createStaticElement("Адрес электронной почты")
 			.and().createStringValueElement();
-	    
-	    pdTable.createPartLine("P_7_person_fax", "")		    
+
+	    pdTable.createPartLine("P_7_person_fax", "")
 			.and().createStaticElement("Факс")
 			.and().createStringValueElement();
-	    
+
     	return pdTable;
     }
 
@@ -2473,7 +2473,7 @@ public class EnergyPassport401_2014_Add {
     private BiConsumer<PDTable, PDKeyHeader> tableHeaderCreator = (t, h) -> {
         t.viewType(PDViewType.FORM).sectionKey("S_" + h.getKey())
             .caption(h.getHeader())
-            .shortCaption(h.getKey())
+            .shortCaption(h.getShortKey())
             .sectionNr(h.getKey()
             );
     };
