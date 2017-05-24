@@ -30,6 +30,15 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             pl_gen: "промышленных производств (цехов, участков)"
         };
     
+    /* Const for calc width*/
+    var SHORT_CAPTION_LENGTH = 2, /*caption length at chars*/
+        FIRST_STATIC_ELEM = 5,
+        EMPTY_STATIC_ELEM = 5,
+        STATIC_ELEM = 25,
+        SHORT_STATIC_ELEM = 12, /*half length of static elem*/
+        BOOLEAN_ELEM = 5,
+        VALUE_ELEM = 25;
+    
     $scope.DEBUG_MODE = false;
     
     $scope.ENTRY_NAME = "раздел"; /*nominative*/
@@ -53,10 +62,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     
     $scope.ctrlSettings.entryOrderBy = {field: 'entryOrder', asc: true};
     
-    $scope.ctrlSettings.FIRST_STATIC_ELEM = 5;
-    $scope.ctrlSettings.STATIC_ELEM = 25;
-    $scope.ctrlSettings.BOOLEAN_ELEM = 5;
-    $scope.ctrlSettings.VALUE_ELEM = 25;
     
     $scope.ctrlSettings.sectionLoading = false;//flag of section loading
     $scope.ctrlSettings.passportSaving = false;
@@ -147,7 +152,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $timeout(function () {
             //set focus
             $(":input:text:first")[0].focus();
-        }, 0);
+        }, 10);
     }
     
     function setSectionStyles(sectionData, setFocusOff) {
@@ -179,9 +184,9 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.calcInlineWidth = function (first, elm, count) {
         var result = "inherit";
         if (count > 2) {
-            result = (first ? $scope.ctrlSettings.FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? $scope.ctrlSettings.STATIC_ELEM : (elm.__type === 'Boolean' ? $scope.ctrlSettings.BOOLEAN_ELEM : $scope.ctrlSettings.VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+            result = (first ? FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? (elm.hasOwnProperty("caption") && elm.caption.length > 0 ? (elm.caption.length > SHORT_CAPTION_LENGTH ? STATIC_ELEM : SHORT_STATIC_ELEM) : EMPTY_STATIC_ELEM) : (elm.__type === 'Boolean' ? BOOLEAN_ELEM : VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
         } else {
-            result = first ? $scope.ctrlSettings.FIRST_STATIC_ELEM  + $scope.ctrlSettings.cssMeasureUnit : "95%";
+            result = first ? FIRST_STATIC_ELEM  + $scope.ctrlSettings.cssMeasureUnit : "95%";
         }
         return result;
     };
@@ -351,6 +356,115 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         }
         var tmpSectionData = JSON.parse(loadedSection.sectionDataJson),
             isDynamic = false,
+            /*rowCounter = 0,*/
+            loadedSectionKey = loadedSection.sectionKey;
+        tmpSectionData.elements.some(function (elm) {
+            if (!mainSvc.checkUndefinedNull(elm._dynamic) && elm._dynamic === true) {
+                isDynamic = true;
+                return true;
+            }
+        });
+        if (isDynamic === false) {
+            return;
+        }
+            //data for dynamic part 
+        //arr for save rowCounter for every dynamic part
+        var dynamicPartsRowCounters = {};
+        
+        tmpSectionData.elements.forEach(function (elm) {
+            
+            if (!elm.hasOwnProperty("_dynamicIdx")) {
+                return;
+            }
+            if (!dynamicPartsRowCounters.hasOwnProperty(elm.partKey)) {
+                dynamicPartsRowCounters[elm.partKey] = 0;
+            }
+            if (elm._dynamicIdx > dynamicPartsRowCounters[elm.partKey]) {
+                dynamicPartsRowCounters[elm.partKey] = elm._dynamicIdx;
+            }
+            
+//            if (dynamicPartsRowCounters.hasOwnProperty(elm.partKey)) {
+//                if (elm._dynamicIdx > dynamicPartsRowCounters[elm.partKey]) {
+//                    dynamicPartsRowCounters[elm.partKey] = elm._dynamicIdx;
+//                }                
+//            } else {
+//                
+//            }
+            
+//            if (elm._dynamicIdx > rowCounter) {
+//                rowCounter = elm._dynamicIdx;
+//            }
+        });
+//console.log(dynamicPartsRowCounters);        
+//        if (rowCounter <= 1) { //one row is build when template was loaded
+//            return;
+//        }
+        
+        //rebuild
+        var passportSectionStructure = null;
+        $scope.data.passport.sections.some(function (pds) {
+            if (pds.sectionKey === loadedSectionKey) {
+                passportSectionStructure = pds.preparedSection;
+                return true;
+            }
+        });
+        
+        if (passportSectionStructure === null) {
+            console.warn("Passport section not found: " + loadedSectionKey);
+            return;
+        }
+        
+        var pssDynamicTablePart = null;
+        passportSectionStructure.parts.forEach(function (part) {
+            if (part.partType !== "INNER_TABLE" || mainSvc.checkUndefinedNull(part.innerPdTable.dynamicRowTemplate)) {
+                return;
+            }
+            
+            pssDynamicTablePart = part;
+        
+//            if (pssDynamicTablePart === null) {
+//                console.warn("INNER_TABLE at passport section not found.");
+//                return;
+//            }
+
+            //static row counter - static rows before dynamic part
+            var staticRowCounter = 0;
+            pssDynamicTablePart.innerPdTable.parts.some(function (staticRow) {
+                if (staticRow.partType === 'ROW' && staticRow.dynamic !== true) {
+                    staticRowCounter += 1;
+                }
+                if (staticRow.dynamic === true) {
+                    return true;
+                }
+            });
+
+            var rCount = 0;
+    //if (mainSvc.checkUndefinedNull(pssDynamicTablePart.innerPdTable.dynamicRowTemplate) || mainSvc.checkUndefinedNull(pssDynamicTablePart.innerPdTable.dynamicRowTemplate.tbody)) {
+    //    console.log(loadedSection);
+    //    console.log(pssDynamicTablePart);
+    //    return;
+    //}        
+            var dynamicRowPartLength = pssDynamicTablePart.innerPdTable.dynamicRowTemplate.tbody.length;
+    //console.log(rowCounter);        
+    //console.log(pssDynamicTablePart);        
+            for (rCount = 0; rCount <= dynamicPartsRowCounters[pssDynamicTablePart.innerPdTable.dynamicRowTemplate.key] - 2; rCount += 1) {
+    //console.log("rCount = " + rCount);            
+                $scope.addRowToTable(pssDynamicTablePart, dynamicRowPartLength * (rCount + 1) - 1 + staticRowCounter);
+            }
+            //pssDynamicTablePart.innerPdTable.
+
+            //console.log(rowCounter);
+        });
+    }
+    
+    function rebuildInterfaceWithLoadedData_copy(loadedSection) {
+//console.log("rebuildInterfaceWithLoadedData");
+//console.log(loadedSection);        
+        if (mainSvc.checkUndefinedNull(loadedSection) || mainSvc.checkUndefinedNull(loadedSection.sectionDataJson)) {
+            return;
+        }
+        var tmpSectionData = JSON.parse(loadedSection.sectionDataJson),
+            isDynamic = false,
             rowCounter = 0,
             loadedSectionKey = loadedSection.sectionKey;
         tmpSectionData.elements.some(function (elm) {
@@ -505,7 +619,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
         $scope.ctrlSettings.passportLoading = false;
 //        console.log(passDocData);
-        console.log(sectionValues);
+//        console.log(sectionValues);
         setFocusOnFirstTextInput();
     }
     
@@ -580,7 +694,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.passport = tmp;
         $scope.data.passport.changedSectionCount = 0; //passport is not changed
         //TODO: comment
-        console.log($scope.data.passport);
+//        console.log($scope.data.passport);
 //        console.log(result);
 //return;        
 //        $scope.data.passDocStructure = result;
@@ -848,15 +962,23 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     };
     
     function prepareTableRowCell(cell, row, rowInd) {
-        if (cell.cellType === "VALUE") {
+        if (cell.cellType === "VALUE" || cell.cellType === "STATIC") {
             cell._dynamicIdx = rowInd;
             cell._complexIdx = cell.partKey + row.dynamicSuffix + rowInd + row.valueIdxSuffix + cell.keyValueIdx;
             if (mainSvc.isNumeric(cell.valuePackIdx)) {
                 cell._complexIdx += "[" + cell.valuePackIdx + "]";
             }
             //add value to global array
-            if (!mainSvc.checkUndefinedNull($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey])) {
-                $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0][cell._complexIdx] = angular.copy(cell);
+//console.log($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey]);            
+//            if (!mainSvc.checkUndefinedNull($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey])) {
+//                $scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0][cell._complexIdx] = angular.copy(cell);
+//console.log($scope.data.passDocValues[$scope.data.currentPassDocSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0][cell._complexIdx]);
+//            }
+            
+//console.log($scope.data.currentSectionValues);
+            if (!mainSvc.checkUndefinedNull($scope.data.currentSectionValues) && cell.cellType === "VALUE") {
+                $scope.data.currentSectionValues[cell._complexIdx] = angular.copy(cell);
+//console.log($scope.data.currentSectionValues[cell._complexIdx]);
             }
         }
         if (mainSvc.checkUndefinedNull(cell.elements)) {
@@ -967,6 +1089,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     */
     $scope.addRowToTable = function (part, rowIndex) {
 //console.log("call addRowToTable");        
+//console.log(part);        
         if (part.innerPdTable.parts.length < 2) {
             console.error("Incorrect part.innerPdTable.parts: " + part);
             return false;
@@ -1016,7 +1139,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
             } else {
                 prepareTableRowCell(rowElem, addingRow, part.innerPdTable.counterValue);
             }
-            
+//console.log($scope.data.currentSectionValues);            
         });
         prepareTableRowRecursion(addingRow);
         //find static rows
@@ -1043,6 +1166,8 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     };
     
     $scope.deleteRowFromTable = function (part, ind) {
+//console.log(part);
+//console.log(ind);
         //ind - row index at tbodies, it is not real row index;
         var dynamicRowTemplate = null;
         part.innerPdTable.parts.some(function (part) {
@@ -1098,7 +1223,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
                 for (vkey in  $scope.data.currentSectionValues) {
 //console.log(vkey);
 //console.log($scope.data.currentSectionValues[vkey]);                    
-                    if ($scope.data.currentSectionValues.hasOwnProperty(vkey) && !mainSvc.checkUndefinedNull($scope.data.currentSectionValues[vkey]) && $scope.data.currentSectionValues[vkey].hasOwnProperty("_dynamicIdx") && $scope.data.currentSectionValues[vkey]._dynamicIdx === dataIndexCounter) {
+                    if ($scope.data.currentSectionValues.hasOwnProperty(vkey) && !mainSvc.checkUndefinedNull($scope.data.currentSectionValues[vkey]) && $scope.data.currentSectionValues[vkey].hasOwnProperty("_dynamicIdx") && $scope.data.currentSectionValues[vkey].partKey === dynamicRowTemplate.key && $scope.data.currentSectionValues[vkey]._dynamicIdx === dataIndexCounter) {
                         var currentVal = $scope.data.currentSectionValues[vkey];
                         var newComplexIdx = currentVal.partKey + dynamicRowTemplate.dynamicSuffix + (dataIndexCounter + 1) + dynamicRowTemplate.valueIdxSuffix + currentVal.keyValueIdx;
                         if (mainSvc.isNumeric(currentVal.valuePackIdx)) {
