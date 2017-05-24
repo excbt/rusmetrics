@@ -145,6 +145,11 @@
             <artifactId>hibernate-envers</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -669,10 +674,6 @@
                     <groupId>org.mapstruct</groupId>
                     <artifactId>mapstruct-processor</artifactId>
                     <version>${mapstruct.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-jpamodelgen</artifactId>
                 </dependency>
             </dependencies>
         </profile>
