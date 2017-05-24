@@ -156,7 +156,6 @@ public class SubscrDeviceObjectController extends SubscrApiController {
         /////////////////////////////////////////////
         ApiActionObjectProcess actionProcess = () -> {
             final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
-//            final DeviceObjectDMO deviceObjectDMO = deviceObjectService.convert(deviceObjectDTO);
             DeviceObject result =  deviceObjectService.saveDeviceObjectDTO_lvlS1(deviceObjectDTO);
 
             return result;
