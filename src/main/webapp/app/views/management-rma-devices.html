@@ -393,17 +393,17 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><label for = "inputSetType" >Способ установки</label>
+                                            <td><label for = "inputInstType" >Способ установки</label>
                                             </td>
                                             <td colspan = "2" class = "nmc-text-align-left">
                                                 <div class = "form-group noMarginBottom"> 
 <!--                                                     ng-class="{'has-error': data.currentObject.setTypeKeyname == null}">-->
                                                     <select class = "form-control nmc-select-form" 
-                                                            id = "inputSetType" 
-                                                            ng-model = "data.currentObject.setTypeKeyname" 
-                                                            ng-options = "setType.keyname as setType.caption for setType in data.deviceSetTypes" 
+                                                            id = "inputInstType" 
+                                                            ng-model = "data.currentObject.instType" 
+                                                            ng-options = "instType.keyname as instType.caption for instType in data.deviceInstTypes" 
                                                             ng-disabled = "isDeviceDisabled(data.currentObject);"
-                                                            ng-change = "deviceSetTypeChange()">
+                                                            ng-change = "deviceInstTypeChange()">
                                                     </select>
                                                 </div>
                                             </td>

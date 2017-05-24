@@ -165,12 +165,12 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
     ];
     
-    $scope.data.deviceSetTypes = [
+    $scope.data.deviceInstTypes = [
         {
-            keyname: "p",
+            keyname: "P",
             caption: "Индивидуальный"
         }, {
-            keyname: "s",
+            keyname: "S",
             caption: "Общедомовой"
         }
     ];
@@ -474,8 +474,8 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
     };
     
-    $scope.deviceSetTypeChange = function () {
-        $cookies.recentSetTypeKeyname = $scope.data.currentObject.setTypeKeyname;
+    $scope.deviceInstTypeChange = function () {
+        $cookies.recentInstType = $scope.data.currentObject.instType;
     };
     
                 //get device models
@@ -549,8 +549,8 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
                 setImpulseSettings($scope.data.currentObject, $scope.data.currentModel.isImpulse, $scope.data.currentModel.defaultImpulseK, $scope.data.currentModel.defaultImpulseMu, $scope.data.impulseCounterTypes[0].keyname || null);
             }
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentSetTypeKeyname)) {
-            $scope.data.currentObject.setTypeKeyname = $cookies.recentSetTypeKeyname;
+        if (!mainSvc.checkUndefinedNull($cookies.recentInstType)) {
+            $scope.data.currentObject.instType = $cookies.recentInstType;
         }
         if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)) {
             $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);
