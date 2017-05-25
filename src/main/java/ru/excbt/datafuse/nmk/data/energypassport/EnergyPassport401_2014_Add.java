@@ -129,11 +129,11 @@ public class EnergyPassport401_2014_Add {
         	.and().createStaticElement(", в т.ч.");
 
         pdTable.createPartLine("P_5_visitors10h","")
-    		.and().createStaticElement("Посетителей присутствующих в заднии менее 10 часов в неделю (чел.)")
+    		.and().createStaticElement("Посетителей присутствующих в здании менее 10 часов в неделю (чел.)")
     		.and().createIntegerValueElement();
 
         pdTable.createPartLine("P_5_visitors_more_10h","")
-    		.and().createStaticElement("Посетителей присутствующих в заднии более 10 часов в неделю (чел.)")
+    		.and().createStaticElement("Посетителей присутствующих в здании более 10 часов в неделю (чел.)")
     		.and().createIntegerValueElement();
 
         pdTable.createPartLine("P_5_tenants","")
@@ -141,12 +141,16 @@ public class EnergyPassport401_2014_Add {
     		.and().createIntegerValueElement();
 
         pdTable.createPartLine("P_6","6.")
-            .and().createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n" +
-            "Наличие утвержденной программы энергосбережения\n" +
-            "(есть/нет)").and().createBooleanValueElement();
+            .and().createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n");
+        
+        pdTable.createPartLine("P_6a","")
+        	.and().createStaticElement("Наличие утвержденной программы энергосбережения (есть/нет)").and().createBooleanValueElement();
 
         pdTable.createPartLine("P_7_build","7.")
             .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
+        
+        pdTable.createPartLine("P_7_struct","")
+        	.and().createStaticElement("Количество строений, сооружений обследуемой организации").and().createIntegerValueElement();
 
         createS_1_2Footer(pdTable);
 
@@ -187,7 +191,7 @@ public class EnergyPassport401_2014_Add {
             .createStaticElement("Ф.И.О., должность руководителя").and().createStringValueElement();
 
         pdTable.createPartLine("1.9").and()
-            .createStaticElement(".И.О., должность, телефон, факс,  адрес\n" +
+            .createStaticElement("Ф.И.О., должность, телефон, факс,  адрес\n" +
                 "      электронной  почты  должностного   лица,\n" +
                 "      ответственного за техническое  состояние\n" +
                 "      оборудования\n").and().createStringValueElement();
@@ -699,13 +703,13 @@ public class EnergyPassport401_2014_Add {
             .and().createBooleanValueElement().keyValueIdx(1)
             .and().createStaticElement("Центральное")
             .and().createBooleanValueElement().keyValueIdx(2)
-            .and().createStaticElement("Центральное");
+            .and().createStaticElement("Телефон");
 
         topTable.createPartLine("3.15f","")
             .and().createBooleanValueElement().keyValueIdx(1)
             .and().createStaticElement("Автономное")
             .and().createBooleanValueElement().keyValueIdx(2)
-            .and().createStaticElement("Автономное");
+            .and().createStaticElement("Интернет");
 
 
         section_helper1(topTable,"3.16.",
