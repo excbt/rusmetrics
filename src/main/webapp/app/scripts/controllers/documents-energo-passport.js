@@ -184,7 +184,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
     $scope.calcInlineWidth = function (first, elm, count) {
         var result = "inherit";
         if (count > 2) {
-            result = (first ? FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? (elm.hasOwnProperty("caption") && elm.caption.length > 0 ? (elm.caption.length > SHORT_CAPTION_LENGTH ? STATIC_ELEM : SHORT_STATIC_ELEM) : EMPTY_STATIC_ELEM) : (elm.__type === 'Boolean' ? BOOLEAN_ELEM : VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+            result = (first ? FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? (elm.hasOwnProperty("caption") && elm.caption.length > 0 ? (elm.cellStyle.widthClass === "SHORT_STATIC_ELEM" ? SHORT_STATIC_ELEM : STATIC_ELEM) : EMPTY_STATIC_ELEM) : (elm.__type === 'Boolean' ? BOOLEAN_ELEM : VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
         } else {
             result = first ? FIRST_STATIC_ELEM  + $scope.ctrlSettings.cssMeasureUnit : "95%";
         }
@@ -619,7 +619,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
         $scope.ctrlSettings.passportLoading = false;
 //        console.log(passDocData);
-//        console.log(sectionValues);
+        console.log(sectionValues);
         setFocusOnFirstTextInput();
     }
     
@@ -694,7 +694,7 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPa
         $scope.data.passport = tmp;
         $scope.data.passport.changedSectionCount = 0; //passport is not changed
         //TODO: comment
-//        console.log($scope.data.passport);
+        console.log($scope.data.passport);
 //        console.log(result);
 //return;        
 //        $scope.data.passDocStructure = result;
