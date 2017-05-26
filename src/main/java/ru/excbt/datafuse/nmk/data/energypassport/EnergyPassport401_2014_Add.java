@@ -142,13 +142,13 @@ public class EnergyPassport401_2014_Add {
 
         pdTable.createPartLine("P_6","6.")
             .and().createStaticElement("Программа энергосбережения и повышения энергетической эффективности\n");
-        
+
         pdTable.createPartLine("P_6a","")
         	.and().createStaticElement("Наличие утвержденной программы энергосбережения (есть/нет)").and().createBooleanValueElement();
 
         pdTable.createPartLine("P_7_build","7.")
             .and().createStaticElement("Количество зданий обследуемой организации").and().createIntegerValueElement();
-        
+
         pdTable.createPartLine("P_7_struct","")
         	.and().createStaticElement("Количество строений, сооружений обследуемой организации").and().createIntegerValueElement();
 
@@ -1816,11 +1816,11 @@ public class EnergyPassport401_2014_Add {
             .createStaticSibling().caption("В том числе в составе АИИС").width(10).keyValueIdx(keyValueIdx++);
 
 
-        pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1")
+        pdTable.createPart(PDPartType.ROW).key("P_1").createStaticElement("1").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createStaticElement("Сведения об оснащенности приборами коммерческого учета").mergedCells(7);
 
         /// 1.1
-        pdTable.createPart(PDPartType.ROW).key("P_1.1").createStaticElement("1.1")
+        pdTable.createPart(PDPartType.ROW).key("P_1.1").createStaticElement("1.1").cellStyle(PDCellStyle._makeHAligmentRight())
             .and().createStaticElement("Количество оборудованных узлами (приборами) учета точек приема (поставки), всего,\n" +
             "в том числе:\n")
             .and().createValueElements(6, PDTableCellValueDoubleAggregation.class).forEach(i -> {
