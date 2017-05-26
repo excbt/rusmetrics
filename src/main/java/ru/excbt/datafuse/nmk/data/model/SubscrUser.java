@@ -20,13 +20,15 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
 /**
  * Пользователи абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 26.02.2015
@@ -35,15 +37,16 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 @Entity
 @Table(name = "subscr_user")
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrUser extends JsonAbstractAuditableModel implements SubscriberUser, DeletableObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7393532811974219624L;
 
 	/**
-	 * 
+	 *
 	 */
 
 	@Column(name = "user_name", updatable = false)

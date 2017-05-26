@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, es5: true*/
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -51,23 +51,23 @@ app.controller('MngmtOrganizationsCtrl', ['$rootScope', '$scope', '$http', 'obje
             "class": "col-xs-3 col-md-3",
             "type": "name"
         },
+//        {
+//            "name": "organizationTypeName",
+//            "caption": "Тип организации",
+//            "class": "col-xs-2 col-md-2"
+//        },
         {
-            "name": "organizationTypeName",
-            "caption": "Тип организации",
-            "class": "col-xs-2 col-md-2"
+            "name": "flagRso",
+            "caption": "РСО",
+            "class": "col-xs-1 col-md-1",
+            "type": "checkbox"
         },
-//        {
-//            "name": "flagRso",
-//            "caption": "РСО",
-//            "class": "col-xs-1 col-md-1",
-//            "type": "checkbox"
-//        },
-//        {
-//            "name": "flagCm",
-//            "caption": "УК",
-//            "class": "col-xs-1 col-md-1",
-//            "type": "checkbox"
-//        },
+        {
+            "name": "flagCm",
+            "caption": "УК",
+            "class": "col-xs-1 col-md-1",
+            "type": "checkbox"
+        },
         {
             "name": "organizationDescription",
             "caption": "Описание",
@@ -92,7 +92,7 @@ app.controller('MngmtOrganizationsCtrl', ['$rootScope', '$scope', '$http', 'obje
             .then(function (response) {
     //console.log(response.data);
                 var respData = angular.copy(response.data);
-                respData.forEach(function (org) {
+/*                respData.forEach(function (org) {
                     if (org.flagCm === true) {
                         org.organizationType = "cm";//$scope.ctrlSettings.organizationTypes.cm;
                         org.organizationTypeName = $scope.ctrlSettings.organizationTypes.cm.fullCaption;
@@ -114,6 +114,7 @@ app.controller('MngmtOrganizationsCtrl', ['$rootScope', '$scope', '$http', 'obje
                         return true;
                     }
                 });
+*/
                 $scope.data.organizations = respData;
             },
                 function (e) {
@@ -180,27 +181,27 @@ app.controller('MngmtOrganizationsCtrl', ['$rootScope', '$scope', '$http', 'obje
         if (checkData(obj) == false) {
             return;
         }
-        
+/*        
         //prepare flags
         obj.flagCm = false;
         obj.flagRso = false;
         obj.flagServ = false;
         obj.flagRma = false;
         switch (obj.organizationType) {
-        case "cm":/*$scope.ctrlSettings.organizationTypes.cm*/
+        case "cm"://$scope.ctrlSettings.organizationTypes.cm
             obj.flagCm = true;
             break;
-        case "rso": /*$scope.ctrlSettings.organizationTypes.rso*/
+        case "rso": //$scope.ctrlSettings.organizationTypes.rso
             obj.flagRso = true;
             break;
-        case "serv":/*$scope.ctrlSettings.organizationTypes.serv*/
+        case "serv"://$scope.ctrlSettings.organizationTypes.serv
             obj.flagServ = true;
             break;
-        case "rma":/*$scope.ctrlSettings.organizationTypes.rma*/
+        case "rma"://$scope.ctrlSettings.organizationTypes.rma
             obj.flagRma = true;
             break;
         }
-        
+*/
         var url = $scope.ctrlSettings.organizationsUrl;
         if (angular.isDefined(obj.id) && (obj.id != null)) {
             $scope.updateObject(url, obj);

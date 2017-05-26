@@ -26,8 +26,8 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
  * Контроллер для работы с группой объектов учета
- * 
- * @author S.Kuzovoy
+ *
+ * @author STA.Kuzovoy
  * @version 1.0
  * @since 29.05.2015
  *
@@ -45,7 +45,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{contGroupId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -63,7 +63,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{contGroupId}/contObject/available", method = RequestMethod.GET,
@@ -80,7 +80,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -95,7 +95,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @param contGroup
 	 * @param request
@@ -118,7 +118,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */
@@ -133,7 +133,7 @@ public class SubscrContGroupController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */

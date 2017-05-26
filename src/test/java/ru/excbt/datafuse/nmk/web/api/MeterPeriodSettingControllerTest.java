@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @since 20.02.2017
  *
  */
+@Transactional
 public class MeterPeriodSettingControllerTest extends RmaControllerTest {
 
 	@Autowired

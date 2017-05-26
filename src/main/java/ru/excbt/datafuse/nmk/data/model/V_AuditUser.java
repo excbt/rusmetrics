@@ -10,11 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
  * Пользователь для аудита
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.03.2015
@@ -22,10 +24,11 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  */
 @Entity
 @Table(name = "audit_user")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class V_AuditUser implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3252857396837049517L;
 
@@ -87,6 +90,11 @@ public class V_AuditUser implements Serializable {
 		this.id = srcObject.getId();
 		this.isSystem = srcObject.getIsSystem();
 	}
+
+	public V_AuditUser id(Long id) {
+	    this.setId(id);
+	    return this;
+    }
 
 	public Boolean getIsSystem() {
 		return isSystem;

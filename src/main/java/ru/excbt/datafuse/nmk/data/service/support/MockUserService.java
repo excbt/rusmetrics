@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.service.V_AuditUserService;
 
 /**
  * Класс "заглушка" для работы с пользователем
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
@@ -26,11 +26,11 @@ public class MockUserService {
 
 	private Long mockUserId = null;
 
-	@Autowired
-	private V_AuditUserService auditUserService;
+//	@Autowired
+//	private V_AuditUserService auditUserService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getMockUserId() {
@@ -38,7 +38,7 @@ public class MockUserService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param mockUserId
 	 */
 	public void setMockUserId(Long mockUserId) {
@@ -46,19 +46,19 @@ public class MockUserService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public V_AuditUser getMockAuditUser() {
 		checkState(mockUserId != null, "Mock User Service is Disabled");
 
 		logger.warn("ATTENTION!!! Using MockUser");
-		V_AuditUser result = auditUserService.findOne(mockUserId);
+		V_AuditUser result = new V_AuditUser().id(mockUserId);
 		return result;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isMockUserEnabled() {
@@ -66,7 +66,7 @@ public class MockUserService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SubscrUser getMockSubscrUser() {

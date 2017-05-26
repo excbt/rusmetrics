@@ -4,14 +4,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
 @Table(name = "tariff_option")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class TariffOption extends AbstractKeynameEntity {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6014135039180327715L;
 

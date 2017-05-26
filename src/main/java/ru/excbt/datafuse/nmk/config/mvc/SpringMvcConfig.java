@@ -1,32 +1,26 @@
 package ru.excbt.datafuse.nmk.config.mvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
+
+import java.util.List;
 
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" },
 		excludeFilters = { @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*") })
-@Import({ PropertyConfig.class })
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
@@ -98,10 +92,10 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(webContentInterceptor);
 	}
 
-	/**
-	 * 
-	 * @param registry
-	 */
+//	/**
+//	 *
+//	 * @param registry
+//	 */
 	//	@Override
 	//	public void addViewControllers(ViewControllerRegistry registry) {
 	//		registry.addViewController("/app").setViewName("forward:/app/index.html");
@@ -123,5 +117,19 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 	// // byteArrayHttpMessageConverter.getSupportedMediaTypes().add(xls);
 	// //converters.add(byteArrayHttpMessageConverter);
 	// }
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter<?> converter : converters) {
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+                MappingJackson2HttpMessageConverter jsonMessageConverter  = (MappingJackson2HttpMessageConverter) converter;
+                ObjectMapper objectMapper  = jsonMessageConverter.getObjectMapper();
+                objectMapper.enable(
+                    SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
+                );
+                break;
+            }
+        }
+    }
 
 }

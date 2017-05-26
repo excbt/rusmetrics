@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
@@ -49,8 +50,8 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
-import javax.transaction.Transactional;
 
+@Transactional
 public class SubscrContEventNotificationControllerTest extends AnyControllerTest {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrContEventNotificationControllerTest.class);
@@ -276,6 +277,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 
     @Test
     @Transactional
+    @Ignore
     public void testNotificationsContObjectMonitorV2ByContZPoint() throws Exception {
         List<Long> contObjectIds = findSubscriberContObjectIds();
         assertFalse(contObjectIds.isEmpty());

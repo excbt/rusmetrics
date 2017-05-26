@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -17,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Группа объектов для отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -27,10 +29,11 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "report_paramset_unit")
 @SQLDelete(sql = "UPDATE report_paramset_unit SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ReportParamsetUnit extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 107534288349056624L;
 

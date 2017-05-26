@@ -3,14 +3,17 @@ package ru.excbt.datafuse.nmk.web.api;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
+@Transactional
 public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectPkeControllerTest.class);
@@ -49,6 +52,7 @@ public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testContZPointPkeWarn() throws Exception {
 		long contZPointId = 447697474;
 		String url = String.format("/api/subscr/deviceObjects/pke/byContZPoint/%d/warn", contZPointId);

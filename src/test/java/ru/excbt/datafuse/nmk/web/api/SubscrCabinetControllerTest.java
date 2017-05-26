@@ -15,6 +15,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -23,6 +24,7 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 @WithMockUser(username = "ex1-cab-admin", password = "12345", roles = { "SUBSCR_USER", "SUBSCR_ADMIN",
 		"CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "SUBSCR_CREATE_CHILD", "SUBSCR_CREATE_CABINET" })
+@Transactional
 public class SubscrCabinetControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetControllerTest.class);
@@ -53,6 +55,7 @@ public class SubscrCabinetControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testContObjectInfoList() throws Exception {
 		_testGetJson("/api/subscr/subscrCabinet/contObjectCabinetInfo");
 	}

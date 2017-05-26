@@ -5,15 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_provider")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class WeatherProvider extends AbstractKeynameEntity {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2818619676454494414L;
 

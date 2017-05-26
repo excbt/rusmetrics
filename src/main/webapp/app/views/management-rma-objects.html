@@ -501,25 +501,34 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3">
-                                            <label for="inputTempSch">Температурный график</label>
+                                        <td class = "col-sm-3">
+                                            <label for = "inputTempSch">Температурный график</label>
                                         </td>
-                                        <td class="col-sm-9 nmc-text-align-left">
-                                            <div class="form-group noMarginBottom">
-                                                <ui-select class="nmc-ui-select-form" 
-                                                           ng-model="zpointSettings.tChart" 
-                                                           theme="bootstrap" 
-                                                           ng-disabled="disabled">
-                                                    <ui-select-match placeholder="">{{$select.selected.chartName}}</ui-select-match>
-                                                    <ui-select-choices repeat="sch in zpointSettings.tempSchedules | propsFilter: {chartName: $select.search}">
-                                                      <div ng-bind-html="sch.chartName"></div>
+                                        <td class = "col-sm-9 nmc-text-align-left">
+                                            
+                                            <div class = "input-group noMarginBottom">
+                                                <ui-select class = "nmc-ui-select-form" 
+                                                           ng-model = "zpointSettings.tChart" 
+                                                           theme = "bootstrap" 
+                                                           ng-disabled = "disabled">
+                                                    <ui-select-match placeholder = "">{{$select.selected.chartName}}</ui-select-match>
+                                                    <ui-select-choices repeat = "sch in zpointSettings.tempSchedules | propsFilter: {chartName: $select.search}">
+                                                      <div ng-bind-html = "sch.chartName"></div>
                                                       <small>
-                                                        макс. / мин. : <span ng-bind-html="sch.maxT"></span> / 
-                                                        <span ng-bind-html="sch.minT"></span>  
+                                                        макс. / мин. : <span ng-bind-html = "sch.maxT"></span> / 
+                                                        <span ng-bind-html = "sch.minT"></span>  
                                                       </small>
                                                     </ui-select-choices>
                                                   </ui-select>
+                                                <span class = "input-group-addon nmc-input-form-suffix">
+                                                    <i title = "Очистить поле"
+                                                       class = "btn btn-xs nmc-button-clear-filter"
+                                                       ng-click = "removeTChart(zpointSettings)">
+                                                        <img height = "19" width = "19" src = "images/clear-filter.png" class = "nmc-img-clear-filter">
+                                                    </i>
+                                                </span>
                                             </div>
+                                            
                                         </td>
                                     </tr>
                                     <tr>

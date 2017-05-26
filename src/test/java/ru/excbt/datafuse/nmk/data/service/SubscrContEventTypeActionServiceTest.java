@@ -8,6 +8,12 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
@@ -15,6 +21,9 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class SubscrContEventTypeActionServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
 
 	@Autowired
@@ -27,7 +36,7 @@ public class SubscrContEventTypeActionServiceTest extends JpaSupportTest impleme
 	private SubscrActionUserService subscrActionUserService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

@@ -234,6 +234,18 @@
     </table>
 </div>
 </div>
+
+<div nmc-show-device-modal1
+     current-device = "data.currentObject"
+     device-sources = "data.dataSources"
+     cont-objects = "data.objects"
+     device-models = "data.deviceModels"
+     read-only = "false"
+     show-ok-button = "false"
+     btn-click = "saveDevice(data.currentObject)"
+     >
+</div>
+
 <!--Show device options-->
 <div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showDeviceLabel" tabindex="-1" data-backdrop="static">
@@ -308,14 +320,14 @@
 <!--                                                <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.deviceModelId == null && data.currentObject.isManual}">
 -->                                                    
-                                                <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':!checkModel()}">    
-                                                    <select class="form-control nmc-select-form" 
-                                                            id="inputDeviceModel" 
-                                                            ng-model="data.currentObject.deviceModelId" 
-                                                            ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels" 
-                                                            ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                            ng-change="deviceModelChange()"
+                                                <div class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':!checkModel()}">    
+                                                    <select class = "form-control nmc-select-form" 
+                                                            id = "inputDeviceModel" 
+                                                            ng-model = "data.currentObject.deviceModelId" 
+                                                            ng-options = "model.id as (model.caption || model.modelName) for model in data.deviceModels" 
+                                                            ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                            ng-change = "deviceModelChange()"
                                                             >
                                                     </select>
                                                 </div>
@@ -350,25 +362,25 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td><label for="inputDescription" >Источник данных</label>
+                                            <td><label for = "inputDescription">Источник данных</label>
                                             </td>
-                                            <td colspan="2" class="nmc-text-align-left">
+                                            <td colspan = "2" class = "nmc-text-align-left">
 <!--                                                <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
 -->
-                                                <div class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':!checkDatasource()}">
+                                                <div class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':!checkDatasource()}">
                                                     <select ng-show = "!isDeviceDisabled(data.currentObject)" 
-                                                            class="form-control nmc-select-form"
-                                                            ng-class="{'nmc-bg-distinguish': source._isAnotherSubscriber}"
-                                                            id="inputDataSource" 
-                                                            ng-model="data.currentObject.subscrDataSourceId" 
-                                                            ng-options="source.id as source.dataSourceName for source in data.dataSources" 
-                                                            ng-change="deviceDatasourceChange()">
+                                                            class = "form-control nmc-select-form"
+                                                            ng-class = "{'nmc-bg-distinguish': source._isAnotherSubscriber}"
+                                                            id = "inputDataSource" 
+                                                            ng-model = "data.currentObject.subscrDataSourceId" 
+                                                            ng-options = "source.id as source.dataSourceName for source in data.dataSources" 
+                                                            ng-change = "deviceDatasourceChange()">
                                                     </select>
                                                     <span ng-if = "isDeviceProtoLoaded(data.currentObject)">
                                                         Первичная загрузка - 
-                                                        <span ng-switch on="data.currentObject.exSystemKeyname">
+                                                        <span ng-switch on = "data.currentObject.exSystemKeyname">
                                                             <span ng-switch-when = 'LERS'>
                                                                 ЛЭРС
                                                             </span>
@@ -381,30 +393,58 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
+                                            <td><label for = "inputInstType" >Способ установки</label>
                                             </td>
-                                            <td class="col-sm-6 nmc-text-align-left">
-                                                <input class="form-control nmc-input-data nmc-text-input-form pull-right" 
-                                                       type="text" 
-                                                       id="inputVerificationInterval"  
-                                                       ng-model="data.currentObject.verificationInterval" 
-                                                       data-inputmask="'alias': 'numeric', 'greedy': false" 
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                <div class = "form-group noMarginBottom"> 
+<!--                                                     ng-class="{'has-error': data.currentObject.setTypeKeyname == null}">-->
+                                                    <select class = "form-control nmc-select-form" 
+                                                            id = "inputInstType" 
+                                                            ng-model = "data.currentObject.instType" 
+                                                            ng-options = "instType.keyname as instType.caption for instType in data.deviceInstTypes" 
+                                                            ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                            ng-change = "deviceInstTypeChange()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6"><label for = "inputVerificationInterval">Межповерочный интервал (лет)</label>
+                                            </td>
+                                            <td class = "col-sm-6 nmc-text-align-left">
+                                                <input class = "form-control nmc-input-data nmc-text-input-form pull-right" 
+                                                       type = "text" 
+                                                       id = "inputVerificationInterval"  
+                                                       ng-model = "data.currentObject.verificationInterval" 
+                                                       data-inputmask = "'alias': 'numeric', 'greedy': false" 
+                                                       ng-disabled = "isDeviceDisabled(data.currentObject);"
                                                        />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" 
-                                                class="col-sm-6">
-                                                <label for="inputVerificationDate">Дата очередной плановой поверки
+                                            <td colspan = "2" 
+                                                class = "col-sm-6">
+                                                <label for = "inputVerificationDate">Дата очередной плановой поверки
                                                 </label>
                                             </td>
-                                            <td class="col-sm-6 nmc-text-align-left">
-                                                <input class="form-control date-picker nmc-input-data nmc-date-input-form pull-right"
-                                                       type="text" 
-                                                       id="inputVerificationDate" 
-                                                       ng-model="data.currentObject.verificationDateString" 
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                            <td class = "col-sm-6 nmc-text-align-left">
+                                                <input class = "form-control date-picker nmc-input-data nmc-date-input-form pull-right"
+                                                       type = "text" 
+                                                       id = "inputVerificationDate" 
+                                                       ng-model = "data.currentObject.verificationDateString" 
+                                                       ng-disabled = "isDeviceDisabled(data.currentObject);"/>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "data.currentObject.curDatasource.dataSourceType.isRaw == true">
+                                            <td colspan = "3">
+                                                <input type = "checkbox" 
+                                                       class = "nmc-checkbox-form" 
+                                                       ng-model = "data.currentObject.isTimeSyncEnabled"
+                                                       ng-disabled = "isDeviceDisabled(data.currentObject)"
+                                                       />
+                                                <label for = "inputIsTymeSyncEnabled">
+                                                    Включить автоматическую корректировку даты и времени
+                                                </label>
                                             </td>
                                         </tr>
                                     </table>
@@ -412,67 +452,67 @@
                             </div>  
                         </div>
                   </div>
-                  <div role="tabpanel" 
-                     class="tab-pane fade" 
-                     id="con_properties">
-                      <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
-                                    <table ng-if="data.currentModel.isImpulse === true && data.currentObject.curDatasource.dataSourceType.isRaw === true"
-                                           class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                  <div role = "tabpanel" 
+                     class = "tab-pane fade" 
+                     id = "con_properties">
+                      <div class = "container-fluid">
+                            <div class = "row">
+                                <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table ng-if = "data.currentModel.isImpulse === true && data.currentObject.curDatasource.dataSourceType.isRaw === true"
+                                           class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
-                                                <label for="inputDevMark" >Тип счетчика импульсов</label>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputDevMark" >Тип счетчика импульсов</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
-                                                <select class="form-control nmc-text-input-form nmc-input-data pull-right"
-                                                        id="inputDevModelType"
-                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                        ng-model="data.currentObject.impulseCounterType"
-                                                        ng-options="impulseCounterType.keyname as impulseCounterType.caption for impulseCounterType in data.impulseCounterTypes"
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <select class = "form-control nmc-text-input-form nmc-input-data pull-right"
+                                                        id = "inputDevModelType"
+                                                        ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                        ng-model = "data.currentObject.impulseCounterType"
+                                                        ng-options = "impulseCounterType.keyname as impulseCounterType.caption for impulseCounterType in data.impulseCounterTypes"
                                                         >
                                                 </select>                                                
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
-                                                <label for="inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
-                                                <div id="divInputNetDevAddr"
-                                                     class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':data.currentObject.impulseCounterSlotAddr == null || data.currentObject.impulseCounterSlotAddr == ''}">
-                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                           type="text" 
-                                                           id="inputNetDevAddr"                                            
-                                                           placeholder="" 
-                                                           ng-model="data.currentObject.impulseCounterSlotAddr"
-                                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputNetDevAddr"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseCounterSlotAddr == null || data.currentObject.impulseCounterSlotAddr == ''}">
+                                                    <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type = "text" 
+                                                           id = "inputNetDevAddr"                                            
+                                                           placeholder = "" 
+                                                           ng-model = "data.currentObject.impulseCounterSlotAddr"
+                                                           ng-disabled = "isDeviceDisabled(data.currentObject);"
                                                            />
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
-                                                <label for="inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
-                                                <div id="divInputNetAddrImpDev"
-                                                     class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':data.currentObject.impulseCounterAddr==null || data.currentObject.impulseCounterAddr == ''}">
-                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                           type="text" 
-                                                           id="inputNetAddrImpDev"                                            
-                                                           placeholder="" 
-                                                           ng-model="data.currentObject.impulseCounterAddr"
-                                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputNetAddrImpDev"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseCounterAddr==null || data.currentObject.impulseCounterAddr == ''}">
+                                                    <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type = "text" 
+                                                           id = "inputNetAddrImpDev"                                            
+                                                           placeholder = "" 
+                                                           ng-model = "data.currentObject.impulseCounterAddr"
+                                                           ng-disabled = "isDeviceDisabled(data.currentObject);"
                                                            />
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
-                                                <label for="inputTikCost" >Число импульсов в <span ng-bind="(data.deviceMetadataMeasures.all | filter: data.currentObject.impulseMu)[0].caption"></span>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputTikCost" >Число импульсов в <span ng-bind = "(data.deviceMetadataMeasures.all | filter: data.currentObject.impulseMu)[0].caption"></span>
                                                 </label>
 <!--
                                                 <select class="form-control nmc-text-input-form nmc-input-digital-data"
@@ -484,26 +524,26 @@
                                                 </select>
 -->                                                
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
-                                                <div id="divInputTikCost"
-                                                     class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':data.currentObject.impulseK == null || data.currentObject.impulseK == 0}">
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputTikCost"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseK == null || data.currentObject.impulseK == 0}">
                                                     {{setInputTikCostMask()}}
-                                                    <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                           type="text" 
-                                                           id="inputTikCost"                                                           
-                                                           data-inputmask="'alias':'numeric', 'greedy': false"
-                                                           ng-model="data.currentObject.impulseK"
-                                                           ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                    <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type = "text" 
+                                                           id = "inputTikCost"                                                           
+                                                           data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                           ng-model = "data.currentObject.impulseK"
+                                                           ng-disabled = "isDeviceDisabled(data.currentObject);"
                                                            />
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" class="col-sm-6">
-                                                <label for="inputDevMeasure" >Единицы измерения</label>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputDevMeasure" >Единицы измерения</label>
                                             </td>
-                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
 <!--
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
@@ -513,13 +553,13 @@
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
                                                        />
 -->
-                                                <div id="divInputDevMeasure"
-                                                     class="form-group noMarginBottom" 
-                                                     ng-class="{'has-error':data.currentObject.impulseMu == null}">
-                                                    <select class="form-control nmc-text-input-form nmc-input-data pull-right"
-                                                            id="inputDevMeasure"
-                                                            ng-model="data.currentObject.impulseMu"                                                            
-                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                <div id = "divInputDevMeasure"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseMu == null}">
+                                                    <select class = "form-control nmc-text-input-form nmc-input-data pull-right"
+                                                            id = "inputDevMeasure"
+                                                            ng-model = "data.currentObject.impulseMu"                                                            
+                                                            ng-options = "measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
                                                             disabled
                                                             >
                                                     </select>
@@ -688,13 +728,13 @@
 				<div class="container-fluid  ">
 
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-xs-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveDevice(data.currentObject)"
                                 ng-disabled="isDeviceDisabled(data.currentObject);"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-xs-3 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#data.currentObject')">
 								Отменить
@@ -843,6 +883,7 @@
 	</div>
 </div>
 
+<!--
 <div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="messageForUserLabel" tabindex="-1" data-backdrop="static">
 
@@ -887,6 +928,7 @@
 		</div>
 	</div>
 </div>
+-->
 
 <!--schedule editor-->
 <div id="scheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"

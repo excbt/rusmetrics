@@ -42,7 +42,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	private WeatherForecastService weatherForecastService;
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @return
 	 */
@@ -60,7 +60,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -93,7 +93,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityList
 	 * @return
 	 */
@@ -122,7 +122,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
@@ -136,7 +136,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param id
 	 */
@@ -159,7 +159,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param sstDate
 	 */
@@ -173,13 +173,18 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param sstDate
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void initMonthNoCheck(Long localPlaceId, LocalDate sstDate) {
 		LocalPlace localPlace = localPlaceService.findLocalPlace(localPlaceId);
+
+		if (localPlace == null) {
+		    logger.warn("LocalPlace with ID: {} is not found", localPlaceId);
+		    return;
+        }
 
 		LocalDate beginDate = sstDate.withDayOfMonth(1);
 		LocalDate endDate = beginDate.plusMonths(1);
@@ -200,7 +205,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param sstDate
 	 */
@@ -214,7 +219,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param monthSstList
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)

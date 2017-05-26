@@ -1,5 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
@@ -21,6 +26,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class ContObjectServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContObjectServiceTest.class);
@@ -41,7 +49,7 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	private MeterPeriodSettingService meterPeriodSettingService;
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	@Transactional
@@ -53,7 +61,7 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

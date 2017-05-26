@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,10 +15,11 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_device_object_time_offset")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class V_DeviceObjectTimeOffset implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8234898997252596688L;
 

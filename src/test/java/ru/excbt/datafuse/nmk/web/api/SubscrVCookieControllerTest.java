@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
@@ -13,6 +14,7 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
+@Transactional
 public class SubscrVCookieControllerTest extends RmaControllerTest {
 
 	@Test

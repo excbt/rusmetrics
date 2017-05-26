@@ -9,10 +9,19 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 
 	private final static long RO_DEVICE_OBJECT_ID = 65836845;
@@ -24,10 +33,11 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 	private MeasureUnitService measureUnitService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testUpdate() throws Exception {
 		List<DeviceObjectMetadata> metadataList = deviceObjectMetadataService
 				.selectDeviceObjectMetadata(RO_DEVICE_OBJECT_ID);
@@ -40,11 +50,11 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
+    @Transactional
 	public void testDeepCopy() throws Exception {
 		List<DeviceObjectMetadata> result = deviceObjectMetadataService.copyDeviceObjectMetadata(RO_DEVICE_OBJECT_ID,
 				3L);
@@ -54,26 +64,28 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
+    @Transactional
 	public void testDelete() throws Exception {
 		deviceObjectMetadataService.deleteDeviceObjectMetadata(3L);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testSameMeasureUnits() throws Exception {
 		List<MeasureUnit> measureUnits = measureUnitService.selectMeasureUnitsSame("P_MPA");
 		assertTrue(measureUnits.size() > 0);
 	}
 
 	@Test
+    @Transactional
 	public void testMetadataTransform() throws Exception {
 		deviceObjectMetadataService.deviceObjectMetadataTransform(512075328L);
 	}

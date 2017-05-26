@@ -14,12 +14,14 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 /**
  * Связь абонент-объект учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
@@ -27,10 +29,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
  */
 @Entity
 @Table(name = "subscr_cont_object")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrContObject extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2884596735162334776L;
 

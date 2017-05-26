@@ -247,6 +247,62 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
 //        return result;
 //    };
     
+    //work with date picker
+    
+    var datePickerSettingsFullView = {
+        dateFormat: "dd.mm.yy",
+        firstDay: dateRangeOptsRu.locale.firstDay,
+        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
+        monthNames: dateRangeOptsRu.locale.monthNames,
+        beforeShow: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').css("display", "table");
+            }, 1);
+        },
+        onChangeMonthYear: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').css("display", "table");
+            }, 1);
+        }
+    };
+    
+    var datePickerSettingsMMyyView = {
+        dateFormat: "MM, yy",
+        firstDay: dateRangeOptsRu.locale.firstDay,
+        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
+        monthNames: dateRangeOptsRu.locale.monthNames,
+        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        closeText: "Ок",
+        currentText: "",
+        onClose: function (dateText, inst) {
+            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
+            $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').addClass("nmc-hide");
+            }, 1);
+        },
+        beforeShow: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-calendar').addClass("nmc-hide");
+                $('.ui-datepicker-current').addClass("nmc-hide");
+            }, 1);
+        },
+        onChangeMonthYear: function () {
+            setTimeout(function () {
+                $('.ui-datepicker-current').addClass("nmc-hide");
+                $('.ui-datepicker-calendar').addClass("nmc-hide");
+            }, 1);
+        }
+    };
+    
+    function getDetepickerSettingsFullView() {
+        return angular.copy(datePickerSettingsFullView);
+    }
+    
     var hasMapSettings = function (userInfo) {
         var result = false;
         result = !checkUndefinedNull(userInfo.subscriber);
@@ -654,51 +710,54 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
 //	ERR_INTERNAL(false, "Internal server error"),
 //	ERR_INVALID_STATE(false, "Invalid State Error"),
 //	ERR_USER_ALREADY_EXISTS(false, "User Already Exists");
+    
+    var SUPPORT_STRING = "Обратитесь к поставщику системы.",
+        SUPPORT_STRING_EXT = " В случае повторения ситуации обратитесь к поставщику системы.";
     var DEFAULT_ERROR_MESSAGE = {
         "resultCode": "ERR_DEFAULT",
         "caption": "Непредвиденная ситуация",
-        "description": "Обратитесь к администратору системы."
+        "description": SUPPORT_STRING
     };
     var serverErrors = [
         {
             "resultCode": "ERR_UNCKNOWN",
             "caption": "Неизвестная ошибка",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_ACCESS_DENIED",
             "caption": "Отказано в доступе",
-            "description": "У вас нет прав доступа. Обратитесь к администратору системы."
+            "description": "У вас нет прав доступа. " + SUPPORT_STRING
         },
         {
             "resultCode": "ERR_UNPROCESSABLE_TRANSACTION",
             "caption": "Невозможно выполнить транзакцию",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_DATABASE_ERROR",
             "caption": "Ошибка базы данных",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_BRM_VALIDATION",
             "caption": "Ошибка валидации бизнес-правил",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_VALIDATION",
             "caption": "Ошибка валидации",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_INTERNAL",
             "caption": "Внутренняя ошибка сервера",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_INVALID_STATE",
             "caption": "Ошибка состояния",
-            "description": "Обратитесь к администратору системы."
+            "description": SUPPORT_STRING
         },
         {
             "resultCode": "ERR_USER_ALREADY_EXISTS",
@@ -708,7 +767,12 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         {
             "resultCode": "ERR_CONNECTION",
             "caption": "Ошибка подключения",
-            "description": "Не удалось получить данные от сервера. Проверьте соединение с сервером."
+            "description": "Не удалось подключиться к серверу. Проверьте соединение с сервером."
+        },
+        {
+            "resultCode": "ERR_BAD_REQUEST",
+            "caption": "Некорректный запрос",
+            "description": "Некорректный запрос к серверу. Проверьте введенные данные и повторите попытку." + SUPPORT_STRING_EXT
         }
     ];
     
@@ -730,6 +794,10 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         var errorCode = "-1";
         if (checkUndefinedNull(e) || checkUndefinedNull(e.data)) {
             errorCode = "ERR_CONNECTION";
+            return getServerErrorByResultCode(errorCode);
+        }
+        if (!checkUndefinedNull(e.status) && e.status === 400) {
+            errorCode = "ERR_BAD_REQUEST";
         }
         if (!checkUndefinedNull(e) && (!checkUndefinedNull(e.resultCode) || (!checkUndefinedNull(e.data) && !checkUndefinedNull(e.data.resultCode)))) {
             errorCode = e.resultCode || e.data.resultCode;
@@ -904,6 +972,19 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         }, tDelay);
     };
     
+/**
+    Work with URL 
+*/
+    function addParamToURL(url, paramName, paramValue) {
+        if (checkUndefinedNull(url) || checkUndefinedNull(paramName) || checkUndefinedNull(paramValue)) {
+            return url;
+        }
+        url += ((url.indexOf('?') === -1) ? '?' : '&') + encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue);
+        return url;
+        
+    }
+// end work with URL
+    
     function initSvc() {
         requestCanceler = $q.defer();
         httpOptions = {
@@ -915,6 +996,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     initSvc();
     
     return {
+        addParamToURL,
         checkContext,
         checkEmptyObject,
         checkHHmm,
@@ -929,6 +1011,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         findNodeInTree,
         getConfirmCode,
         getContextIds,
+        getDetepickerSettingsFullView,
         getHtmlLoading,
         getLoadingServicePermissionFlag,
         getLoadedServicePermission,

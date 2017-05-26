@@ -50,7 +50,7 @@
 	<logger name="org.hibernate.SQL" level="info" />
 
 	<logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
-	<logger name="org.hibernate.engine.internal" level="WARN"/>
+	<!--<logger name="org.hibernate.engine.internal" level="WARN"/>-->
 
 	<logger name="org.springframework.web" level="warn" />
 
@@ -62,7 +62,17 @@
 
 	<logger name="ru.excbt.datafuse.slogwriter" level="error" />
 
+
+    <!--Tracing SQL parameters-->
+    <!--<logger name="org.hibernate.SQL" level="debug" />-->
+    <!--<logger name="org.hibernate.type" level="trace" />-->
+
+    <logger name="org.hibernate" level="info" />
+
+    <logger name="org.springframework" level="info" />
     <!--<logger name="org.apache.tomcat.jdbc.pool" level="debug" />-->
+
+    <!--<logger name="ru.excbt.datafuse.nmk" level="debug" />-->
 
 	<root level="info">
 <!-- 		<appender-ref ref="console" /> -->

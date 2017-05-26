@@ -11,45 +11,50 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-      
+
     <!-- dadata service: address help for user -->
     <link href="https://dadata.ru/static/css/lib/suggestions-15.12.css" type="text/css" rel="stylesheet" />
 
 
-    <link rel="icon" type="image/png" href="fv_1.png" />  
+    <link rel="icon" type="image/png" href="fv_1.png" />
     <link rel="stylesheet" href="/public/bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
 <!--    <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css" />-->
       <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.css" />
 <!--    <link rel="stylesheet" href="/public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css"/>-->
       <link rel="stylesheet" href="/public/bower_components/bootstrap-toggle/css/bootstrap-toggle.css"/>
-      
+
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
 <!--    <link rel="stylesheet" href="/public/bower_components/toastr/toastr.min.css"/>  -->
     <link rel="stylesheet" href="/public/bower_components/toastr/toastr.css"/>
 <!--    <link rel="stylesheet" href="styles/main.css"/>-->
-    <link rel="stylesheet" href="styles/common.css"/>  
+    <link rel="stylesheet" href="styles/common.css"/>
 <!--      <link rel="stylesheet" href="/public/bower_components/font-awesome/css/font-awesome.min.css"/>-->
       <link rel="stylesheet" href="/public/bower_components/font-awesome/css/font-awesome.css"/>
 <!--      <link rel="stylesheet" href="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css"/>-->
       <link rel="stylesheet" href="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.css"/>
     <!-- endbuild -->
-    
+
       <link rel="stylesheet" href="/public/bower_components/bootstrap-daterangepicker/daterangepicker.css"/>
       <link rel="stylesheet" href="/public/bower_components/qtip2/jquery.qtip.css"/>
       <link rel="stylesheet" href="/public/vendor_components/leaflet-1.0.0-b1/leaflet.css"/>
       <link rel="stylesheet" href="/public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.css"/>
 <!--      <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.min.css"/>      -->
       <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.css"/>
-      
+
       <script src="/public/vendor_components/RightsJS/right.js"></script>
       <script src="/public/vendor_components/RightsJS/right-resizable.js"></script>
-      
+
       <script src="/public/bower_components/jquery/dist/jquery.js"></script>
 <!--      <script src="/public/bower_components/angular-1.4.1/angular.min.js"></script>-->
       <script src="/public/bower_components/angular-1.4.1/angular.js"></script>
-      
+
+<!--    <link rel="stylesheet" href="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.20/ui-grid.min.css">-->
+<!--    <script data-require="jquery@2.1.3" data-semver="2.1.3" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>-->
+<!--    <script src="https://code.angularjs.org/1.4.0/angular.js"></script>-->
+<!--    <script src="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.21/ui-grid.min.js"></script>-->
+
   </head>
   <body class="nmc-main-window-background" ng-app="portalNMC">
 <!--
@@ -76,7 +81,7 @@
                             </div>
                           <p class="paddingLeft10">Выход из системы будет произведен через {{countdown}} секунд(ы). Для отмены нажмите любую кнопку мыши/клавиатуры.</p>
                       </div>
-                  </div>      
+                  </div>
               </div>
 
         </div>
@@ -84,7 +89,7 @@
     <!-- Add your site or application content here -->
 <!--
 <div ng-class="{'nmc-hide':!mainCtrlSettings.loadingServicePermissionFlag,'nmc-show':mainCtrlSettings.loadingServicePermissionFlag}">
-    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ...
 </div>
 -->
       <!--[if !IE]>-->
@@ -96,29 +101,29 @@
     <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 			<div id="navbar-container" >
 				<div class="navbar-header">
-					<a class="navbar-brand nmc-main-header-brand" href="#/" ng-click="clickMenu('object_menu_item')"></a>				
+					<a class="navbar-brand nmc-main-header-brand" href="#/" ng-click="clickMenu('object_menu_item')"></a>
 				</div>
-			
+
             <div class="collapse navbar-collapse">
-                
+
                 <div class="navbar-text nmc-main-header-title"> Система учета и обработки метрологической информации </div>
                 <div class="">
-                <ul class="nav navbar-nav navbar-right nmc-main-header-menu">	
+                <ul class="nav navbar-nav navbar-right nmc-main-header-menu">
                     <li class="dropdown">
                         <a class="dropdown-toggle "  data-toggle="dropdown" href="" ><span><span
                                 class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
                             </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.subscriberName}})</span></span></a>
                         <ul class="dropdown-menu">
                             <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
-                                title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
-                            </p></a></li>			
+                                title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b>
+                            </p></a></li>
 
-                            <li ng-if="userInfo.isReadonly != true"><a href="" 
+                            <li ng-if="userInfo.isReadonly != true"><a href=""
                                    ng-click="changePasswordInit()"
                                    title='Сменить пароль'
                                    data-target="#changePasswordModal"
                                    data-toggle="modal">
-                                    <p> 
+                                    <p>
                                         <b>Сменить пароль</b>
                                     </p>
                                 </a>
@@ -126,7 +131,7 @@
                             <li><a href="../logout" ng-click="logOut();"
                                 title='logout'><p> <b>Выход </b>
                             </p></a></li>
-                        </ul>    
+                        </ul>
 
                     </li>
                     <li class="marginRight28">
@@ -142,111 +147,126 @@
                     </li>
                 </ul>
                 </div>
-            </div>    
-                
+            </div>
+
 			</div>
-  </div>  
+  </div>
 -->
 <!--   энд оф Навигационная строка в верху страницы    -->
-    
+
     <div class="container-fluid noMargin" >
 
-    <div class="row row-offcanvas row-offcanvas-left">    
-       
+    <div class="row row-offcanvas row-offcanvas-left">
+
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu" 
+        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu"
              ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>
                         <nav class="sidebar-nav"
-                             role="navigation" 
+                             role="navigation"
                              ng-show="!showPrivateOfficeMenu"
                              ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
-   
+
                                 <!-- Объекты, редактирование -->
-                                <a id="object_main_menu_item" 
-                                   class="list-group-item nmc-main-menu-item nmc-hide" 
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"                                   
-                                   href="#/" 
-                                   data-toggle="offcanvas" 
+                                <a id="object_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item nmc-hide"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"
+                                   href="#/"
+                                   data-toggle="offcanvas"
                                    ng-click="clickMenu('object_menu_item'); showAdminSettings = false;">
-                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon" 
+                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
                                        title="Объекты">
                                     </i>
                                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
                                 </a>
-                                
+
                                 <!-- Отчеты -->
-                                <a 
-                                   id="report_main_menu_item" 
-                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                <a
+                                   id="report_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item nmc-hide"
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
 
                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span></a>
-                                
+
                                  <!-- Notices -->
 <!--
-                                <a id="notice_main_menu_item" 
+                                <a id="notice_main_menu_item"
                                    ng-hide="isTestMode()"
-                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                   class="list-group-item nmc-main-menu-item nmc-hide"
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
-                                   href="#/notices/monitor/" 
-                                   data-toggle="offcanvas" 
+                                   href="#/notices/monitor/"
+                                   data-toggle="offcanvas"
                                    ng-click="clickMenu('notice_menu_item')">
                                     <i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i>
                                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span>
-                                </a>                            
+                                </a>
 -->
-                                
+
 <!--                                Настройки-->
-                                <a 
-                                   id="setting_main_menu_item" 
-                                   class="list-group-item nmc-main-menu-item nmc-hide" 
+                                <a
+                                   id="setting_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item nmc-hide"
                                    ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 <a ng-show="!isCabinet()"
                                    ng-hide="isTestMode()"
-                                   id="log_main_menu_item" 
-                                   class="list-group-item nmc-main-menu-item" 
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"                                   
+                                   id="log_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
 
-                                   href="#/log/session-log/" 
-                                   data-toggle="offcanvas" 
-                                   ng-click="clickMenu('log_menu_item')" 
+                                   href="#/log/session-log/"
+                                   data-toggle="offcanvas"
+                                   ng-click="clickMenu('log_menu_item')"
                                    ng-cloak>
                                     <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i>
                                     <span ng-if="mainCtrlSettings.showFullMenuFlag">
                                         Журналы
                                     </span>
                                 </a>
-                                
+                                <a ng-show="!isCabinet() && !isTestMode()"
+                                   
+                                   id="energy_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"
+
+                                   href="#/documents/energo-passports/"
+                                   data-toggle="offcanvas"
+                                   ng-click="clickMenu('energy_menu_item')"
+                                   ng-cloak>
+                                    <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon" title="Энергоэффективность"></i>
+                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
+                                        Энерго - эффективность
+                                    </span>
+                                </a>
+
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
-                                <a id="management_main_menu_item" 
-                                   class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" 
+                                <a id="management_main_menu_item"
+                                   class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide"
                                    ng-class="{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
-                                   href="#/management/objects/" 
-                                   data-toggle="offcanvas" 
-                                   ng-click="clickMenu('admin_menu_item'); showAdminSettings = true"> 
-                                    <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon" 
+                                   href="#/management/objects/"
+                                   data-toggle="offcanvas"
+                                   ng-click="clickMenu('admin_menu_item'); showAdminSettings = true">
+                                    <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon"
                                        title="Управление">
                                     </i>
                                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
                                     <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i>-->
                                 </a>
-                                
+
 <!--
-                                <a id="test_main_menu_item" 
-                                   class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" 
+                                <a id="test_main_menu_item"
+                                   class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide"
                                    ng-class="{ 'nmc-main-menu-item-active': menuMassive.test_menu_item, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
-                                   href="#/test/" 
-                                   data-toggle="offcanvas" 
-                                   ng-click="clickMenu('test_menu_item'); showTest = true"> 
-                                    <i class="glyphicon glyphicon-plane nmc-main-menu-item-icon" 
+                                   href="#/test/"
+                                   data-toggle="offcanvas"
+                                   ng-click="clickMenu('test_menu_item'); showTest = true">
+                                    <i class="glyphicon glyphicon-plane nmc-main-menu-item-icon"
                                        title="Тест">
                                     </i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Тест</span>                                    
+                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Тест</span>
                                 </a>
 -->
 
@@ -258,15 +278,15 @@
 
                                     ng-click="clickMenu('metadata_control_menu_item');"   href="#/" data-toggle="offcanvas">Метаданные</a>
 
-                                    
+
                                 </div>
 -->
 
                             </div>
                         </nav>
-            
+
                         <nav class="sidebar-nav nmc-hide "
-                            role="navigation" ng-class="{'nmc-show':showPrivateOfficeMenu, 'nmc-hide': !showPrivateOfficeMenu}"> 
+                            role="navigation" ng-class="{'nmc-show':showPrivateOfficeMenu, 'nmc-hide': !showPrivateOfficeMenu}">
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
@@ -283,12 +303,13 @@
                                    ng-click="clickMenu('directory_menu_item');" href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
 
                             </div>
-                        </nav>                      
+                        </nav>
             <span class="pull-right"
                   ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
-                <i title="Свернуть / распахнуть меню" 
-                   class="btn btn-lg glyphicon glyphicon-menu-left noPadding" 
-                   ng-click="mainCtrlSettings.showFullMenuFlag = !mainCtrlSettings.showFullMenuFlag" 
+                <i style = "position: absolute; top: 50%; margin-left: -9px;"
+                   title="Свернуть / распахнуть меню"
+                   class="btn btn-lg glyphicon glyphicon-menu-left noPadding"
+                   ng-click="mainCtrlSettings.showFullMenuFlag = !mainCtrlSettings.showFullMenuFlag"
                    ng-class="{'glyphicon-menu-left': mainCtrlSettings.showFullMenuFlag, 'glyphicon-menu-right': !mainCtrlSettings.showFullMenuFlag}">
                 </i>
             </span>
@@ -307,31 +328,31 @@
                 <img class="nmc-img-logo-left-v" src="images/logo-left-v.png"/>
             </div>
 -->
-            <div id="nmcLogoLeft"                 
-                 class="nmc-div-logo-left-h">             
-                <img src="images/logo-left-h.png" 
+            <div id="nmcLogoLeft"
+                 class="nmc-div-logo-left-h">
+                <img src="images/logo-left-h.png"
                      class="nmc-img-logo-left-h-min"
                      ng-class="{'nmc-img-logo-left-h': mainCtrlSettings.showFullMenuFlag}"
                      />
             </div>
-            <nav class="sidebar-nav nmc-nav-user-menu" 
-                 role="navigation"> 
+            <nav class="sidebar-nav nmc-nav-user-menu"
+                 role="navigation">
                 <div id="sidebar-entries" class="list-group dropup noMargin">
-                    <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle" 
+                    <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle"
                        data-toggle="dropdown">
 <!--                        ng-if="!mainCtrlSettings.showFullMenuFlag"-->
-                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon" 
+                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon"
                                    title="Пользовательское меню">
-                                </i>                    
+                                </i>
                                 <span ng-show="mainCtrlSettings.showFullMenuFlag"
                                       ng-attr-title="{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
                                       >
-                                    <span class="nmc-hide" 
+                                    <span class="nmc-hide"
                                           ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}">
                                         <b>{{userInfo.userNameCaption}}</b><br/>
                                     </span>
-                                    <span class="nmc-hide" 
-                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}" 
+                                    <span class="nmc-hide"
+                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}"
                                           ng-show="userInfo.subscriber != null">
                                         {{userInfo.userSubscrCaption}}
                                     </span>
@@ -339,18 +360,18 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}">
-                            <a href="#/private/" 
-                               title='Private office' 
+                            <a href="#/private/"
+                               title='Private office'
                                ng-click="showPrivateOfficeMenu=true;showMenuReport=false;">
-                                <p> <b>Личный кабинет</b> 
-                        </p></a></li>			
+                                <p> <b>Личный кабинет</b>
+                        </p></a></li>
 
-                        <li ng-if="userInfo.isReadonly != true"><a href="" 
+                        <li ng-if="userInfo.isReadonly != true"><a href=""
                                ng-click="changePasswordInit()"
                                title='Сменить пароль'
                                data-target="#changePasswordModal"
                                data-toggle="modal">
-                                <p> 
+                                <p>
                                     <b>Сменить пароль</b>
                                 </p>
                             </a>
@@ -362,19 +383,19 @@
 
                 </div>
             </nav>
-            
-        </div>                
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace" 
+        </div>
+
+        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace"
              ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>
-					
+
 					<div id="main" ng-view></div>
 <!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
         </div>
 
-     </div>    
+     </div>
     </div>
-    
+
         <!--change password window-->
     <div id="changePasswordModal" class="modal fade nmc-modal-window" role="dialog"
         aria-labelledby="changePasswordLabel" tabindex="-1">
@@ -403,10 +424,10 @@
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
                                         <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
-                                            <input class="form-control nmc-text-input-form" 
-                                                   type="password" 
-                                                   id="inputUserInfoPassword" 
-                                                   placeholder="" 
+                                            <input class="form-control nmc-text-input-form"
+                                                   type="password"
+                                                   id="inputUserInfoPassword"
+                                                   placeholder=""
                                                    ng-model="data.userInfo.oldPassword"
                                                    />
                                         </div>
@@ -418,10 +439,10 @@
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
                                         <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
-                                            <input class="form-control nmc-text-input-form" 
-                                                   type="password" 
-                                                   id="inputUserInfoPassword" 
-                                                   placeholder="" 
+                                            <input class="form-control nmc-text-input-form"
+                                                   type="password"
+                                                   id="inputUserInfoPassword"
+                                                   placeholder=""
                                                    ng-model="data.userInfo.newPassword"
                                                    />
                                         </div>
@@ -433,10 +454,10 @@
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
                                         <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
-                                            <input class="form-control nmc-text-input-form" 
-                                                   type="password" 
-                                                   id="confirmUserInfoPassword" 
-                                                   placeholder="Повторите пароль" 
+                                            <input class="form-control nmc-text-input-form"
+                                                   type="password"
+                                                   id="confirmUserInfoPassword"
+                                                   placeholder="Повторите пароль"
                                                    ng-model="data.userInfo.newPasswordConfirm"
                                                    />
                                         </div>
@@ -444,9 +465,9 @@
                                 </tr>
 
                             </table>
-                        </div>    
-                    </div>  
-                </div>        
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer nmc-modal-footer">
                     <div class="container-fluid  ">
@@ -464,30 +485,30 @@
                                 </button>
                             </div>
                         </div>
-                    </div>		
+                    </div>
             </div>
         </div>
     </div>
 
 </div> <!-- end id=wrap -->
-      
+
       <div class="navbar-fixed-bottom row-fluid nmc-main-footer nmc-hide" >
           <div class="container-fluid" >
               <div class="row">
 <!--
                   <nav class="sidebar-nav"
-                             role="navigation" 
+                             role="navigation"
                              ng-show="!showPrivateOfficeMenu">
                             <div id="sidebar-entries" class="list-group">
-   
-                                 Объекты, редактирование 
-                                <a id="object_main_menu_item" 
-                                   class="list-group-item nmc-main-menu-item nmc-hide" 
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide':!isCabinet(),'nmc-show':isCabinet()}"                                   
-                                   href="#/" 
-                                   data-toggle="offcanvas" 
+
+                                 Объекты, редактирование
+                                <a id="object_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item nmc-hide"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide':!isCabinet(),'nmc-show':isCabinet()}"
+                                   href="#/"
+                                   data-toggle="offcanvas"
                                    ng-click="clickMenu('object_menu_item');showAdminSettings=false;">
-                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon" 
+                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
                                        title="Объекты">
                                     </i>
                                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
@@ -498,17 +519,17 @@
 <!--
                   <div class="col-xs-1 noPadding"
                        ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag}">
-                      <ul class="nav navbar-nav navbar-left nmc-main-header-menu">	
+                      <ul class="nav navbar-nav navbar-left nmc-main-header-menu">
                         <li class="dropdown">
-                            <a class="list-group-item nmc-main-menu-item dropdown-toggle" 
+                            <a class="list-group-item nmc-main-menu-item dropdown-toggle"
                                data-toggle="dropdown">
                                 <span>
-                                    <span class="nmc-hide" 
+                                    <span class="nmc-hide"
                                           ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">
                                         <b>{{userInfo.userName}}</b><br/>
                                     </span>
-                                    <span class="nmc-hide" 
-                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" 
+                                    <span class="nmc-hide"
+                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}"
                                           ng-show="userInfo.subscriber!=null">
                                         {{userInfo.subscriber.subscriberName}}
                                     </span>
@@ -516,15 +537,15 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
-                                    title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
-                                </p></a></li>			
+                                    title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b>
+                                </p></a></li>
 
-                                <li ng-if="userInfo.isReadonly != true"><a href="" 
+                                <li ng-if="userInfo.isReadonly != true"><a href=""
                                        ng-click="changePasswordInit()"
                                        title='Сменить пароль'
                                        data-target="#changePasswordModal"
                                        data-toggle="modal">
-                                        <p> 
+                                        <p>
                                             <b>Сменить пароль</b>
                                         </p>
                                     </a>
@@ -532,23 +553,23 @@
                                 <li><a href="../logout" ng-click="logOut();"
                                     title='logout'><p> <b>Выход </b>
                                 </p></a></li>
-                            </ul>    
+                            </ul>
 
                         </li>
                     </ul>
                 </div>
 -->
               </div>
-            
+
 <!--
 			<p class="muted credit">
-              
 
-               </p> 
+
+               </p>
 -->
           </div>
       </div>
-</div>      
+</div>
    <!-- end ng-controller=MainCtrl -->
 <!--</div>-->
 
@@ -564,7 +585,7 @@
 
 <!--    <script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
       <script src="/public/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-      
+
 <!--
     <script src="/public/bower_components/angular-animate/angular-animate.min.js"></script>
     <script src="/public/bower_components/angular-cookies/angular-cookies.min.js"></script>
@@ -587,7 +608,7 @@
     <script src="/public/bower_components/angular-1.4.1/angular-route.js"></script>
     <script src="/public/bower_components/angular-1.4.1/angular-sanitize.js"></script>
     <script src="/public/bower_components/angular-1.4.1/angular-touch.js"></script>
-      
+
 <!--    <script src="/public/bower_components/jquery-ui/jquery-ui.min.js"></script>-->
       <script src="/public/bower_components/jquery-ui/jquery-ui.js"></script>
 <!--    <script src="/public/bower_components/toastr/toastr.min.js"></script>-->
@@ -597,7 +618,7 @@
 <!--      <script src="/public/bower_components/qtip2/jquery.qtip.min.js"></script>-->
       <script src="/public/bower_components/qtip2/jquery.qtip.js"></script>
 <!--      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>-->
-      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+<!--      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>-->
 <!--      <script src="/public/bower_components/angular-file-upload/angular-file-upload.min.js"></script>-->
       <script src="/public/bower_components/angular-file-upload/angular-file-upload.js"></script>
 <!--      <script src="/public/bower_components/angular-ui-select/dist/select.min.js"></script>-->
@@ -615,7 +636,7 @@
       <script src="/public/bower_components/angular-daterangepicker/js/angular-daterangepicker.js"></script>
       <script src="/public/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
       <script src="/public/bower_components/Blob/Blob.js"></script>
-      <script src="/public/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>      
+      <script src="/public/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
 <!--
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
@@ -624,8 +645,8 @@
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.date.extensions.min.js" type="text/javascript"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.regex.extensions.min.js" type="text/javascript"></script>
 -->
-            
-<!--      <script src="/public/bower_components/leaflet/dist/leaflet.js"></script>-->      
+
+<!--      <script src="/public/bower_components/leaflet/dist/leaflet.js"></script>-->
 <!--      <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>-->
     <!-- endbower -->
     <!-- endbuild -->
@@ -634,9 +655,9 @@
 <!--    <script src="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>-->
       <script src="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
 <!--    <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>-->
-    
+
 <!--    <script src="vendor_components/angular-daterangepicker.js"></script>-->
-      
+
       <script src="/public/bower_components/angular-utils-pagination/dirPagination.js"></script>
 <!--      <script src="/public/bower_components/ng-idle/angular-idle.min.js"></script>-->
       <script src="/public/bower_components/ng-idle/angular-idle.js"></script>
@@ -649,7 +670,7 @@
 <!--      <script src="/public/vendor_components/Blob.js-master/Blob.js"></script>-->
       <script src="/public/vendor_components/leaflet-1.0.0-b1/leaflet.js"></script>
       <script src="/public/vendor_components/angular-leaflet-directive-master/dist/angular-leaflet-directive.js"></script>
-<!--      <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>-->      
+<!--      <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>-->
       <script src="/public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.js"></script>
 <!--
       <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
@@ -660,9 +681,9 @@
       <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.regex.extensions.min.js"></script>
 -->
       <script src="/public/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js"></script>
-      
+
 <!--      <script src="http://bouil.github.io/angular-google-chart/ng-google-chart.js"></script>-->
-      
+
 <!--      <script src="vendor_components/jquery.inputmask-3.x/dist/jquery.inputmask.bundle.js" type="text/javascript"></script>-->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -671,67 +692,73 @@
       <!--[if lt IE 10]>
         <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.1/jquery.xdomainrequest.min.js"></script>
       <![endif]-->
-      <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>     
- 		        
+      <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>
+
         <script src="scripts/app.js"></script>
 <!--      <script src="scripts.min/app.min.js"></script>-->
-<!--       <script src="scripts.min/controllers/main.min.js"></script> -->    
-<!--      <script src="scripts.min/controllers/notice.min.js"></script>-->      
+<!--       <script src="scripts.min/controllers/main.min.js"></script> -->
+<!--      <script src="scripts.min/controllers/notice.min.js"></script>-->
 <!--      <script src="scripts_min/controllers/objects.min.js"></script>-->
-      
+
 <!--      Min controllers-->
 <!--        <script src="scripts.min/controllers.min.js"></script>          -->
-      
-<!---->      <script src="scripts/controllers/main.js"></script> 
 
-       <script src="scripts/controllers/notice.js"></script> 
+<!---->      <script src="scripts/controllers/main.js"></script>
 
-     <script src="scripts/controllers/directory.js"></script> 
-     <script src="scripts/controllers/objects.js"></script> 
+       <script src="scripts/controllers/notice.js"></script>
 
-     <script src="scripts/controllers/reports_use_svc.js"></script> 
-     <script src="scripts/controllers/indicator.js"></script> 
-       <script src="scripts/controllers/tariffs.js"></script> 
-       <script src="scripts/controllers/report_settings.js"></script> 
-       <script src="scripts/controllers/param_sets_use_svc.js"></script> 
-       <script src="scripts/controllers/user-info.js"></script> 
-       <script src="scripts/controllers/delivery.js"></script> 
-       <script src="scripts/controllers/contacts.js"></script> 
-       <script src="scripts/controllers/idle.js"></script> 
-       <script src="scripts/controllers/object_groups.js"></script> 
-       <script src="scripts/controllers/monitor.js"></script> 
-       <script src="scripts/controllers/monitor_map.js"></script> 
-       <script src="scripts/controllers/objects_map.js"></script> 
-       <script src="scripts/controllers/management-services.js"></script> 
-       <script src="scripts/controllers/management-rma-objects.js"></script> 
-       <script src="scripts/controllers/management-rma-data-sources.js"></script> 
-       <script src="scripts/controllers/management-rma-clients.js"></script> 
-       <script src="scripts/controllers/management-rma-devices.js"></script> 
-       <script src="scripts/controllers/management-rma-users.js"></script> 
-       <script src="scripts/controllers/management-rma-price.js"></script> 
-       <script src="scripts/controllers/management-rma-organizations.js"></script> 
-       <script src="scripts/controllers/management-rma-temp-sch.js"></script> 
-       <script src="scripts/controllers/management-rma-modems.js"></script> 
-       <script src="scripts/controllers/management-rma-device-models.js"></script> 
-       
-       <script src="scripts/controllers/settings-users.js"></script> 
-       <script src="scripts/controllers/indicator-electricity.js"></script> 
-       <script src="scripts/controllers/indicator-electricity-consumption.js"></script> 
-       <script src="scripts/controllers/indicator-electricity-energy.js"></script> 
-       <script src="scripts/controllers/indicator-electricity-specifications.js"></script> 
-       <script src="scripts/controllers/indicator-electricity-pke.js"></script> 
-       <script src="scripts/controllers/settings-notices.js"></script> 
-       <script src="scripts/controllers/settings-tenants.js"></script> 
-       <script src="scripts/controllers/settings-object-trees.js"></script> 
-       <script src="scripts/controllers/settings-program.js"></script> 
+     <script src="scripts/controllers/directory.js"></script>
+     <script src="scripts/controllers/objects.js"></script>
+
+     <script src="scripts/controllers/reports_use_svc.js"></script>
+     <script src="scripts/controllers/indicator.js"></script>
+       <script src="scripts/controllers/tariffs.js"></script>
+       <script src="scripts/controllers/report_settings.js"></script>
+       <script src="scripts/controllers/param_sets_use_svc.js"></script>
+       <script src="scripts/controllers/user-info.js"></script>
+       <script src="scripts/controllers/delivery.js"></script>
+       <script src="scripts/controllers/contacts.js"></script>
+       <script src="scripts/controllers/idle.js"></script>
+       <script src="scripts/controllers/object_groups.js"></script>
+       <script src="scripts/controllers/monitor.js"></script>
+       <script src="scripts/controllers/monitor_map.js"></script>
+       <script src="scripts/controllers/objects_map.js"></script>
+       <script src="scripts/controllers/management-services.js"></script>
+       <script src="scripts/controllers/management-rma-objects.js"></script>
+       <script src="scripts/controllers/management-rma-data-sources.js"></script>
+       <script src="scripts/controllers/management-rma-clients.js"></script>
+       <script src="scripts/controllers/management-rma-devices.js"></script>
+       <script src="scripts/controllers/management-rma-users.js"></script>
+       <script src="scripts/controllers/management-rma-price.js"></script>
+       <script src="scripts/controllers/management-rma-organizations.js"></script>
+       <script src="scripts/controllers/management-rma-temp-sch.js"></script>
+       <script src="scripts/controllers/management-rma-modems.js"></script>
+       <script src="scripts/controllers/management-rma-device-models.js"></script>
+
+       <script src="scripts/controllers/settings-users.js"></script>
+       <script src="scripts/controllers/indicator-electricity.js"></script>
+       <script src="scripts/controllers/indicator-electricity-consumption.js"></script>
+       <script src="scripts/controllers/indicator-electricity-energy.js"></script>
+       <script src="scripts/controllers/indicator-electricity-specifications.js"></script>
+       <script src="scripts/controllers/indicator-electricity-pke.js"></script>
+       <script src="scripts/controllers/settings-notices.js"></script>
+       <script src="scripts/controllers/settings-tenants.js"></script>
+       <script src="scripts/controllers/settings-object-trees.js"></script>
+       <script src="scripts/controllers/settings-program.js"></script>
        <script src="scripts/controllers/settings-meter-period-setting.js"></script>
-      
-       <script src="scripts/controllers/log-view.js"></script> 
+
+       <script src="scripts/controllers/log-view.js"></script>
        <script src="scripts/controllers/log-sms.js"></script>
       <script src="scripts/controllers/settings-object-view.js"></script>
       <script src="scripts/controllers/about-program.js"></script>
       <script src="scripts/controllers/impulse-indicator.js"></script>
       <script src="scripts/controllers/widget-container.js"></script>
+      <script src="scripts/controllers/documents-energo-passports.js"></script>
+      <script src="scripts/controllers/documents-energo-passport.js"></script>
+<!--
+      <script src="scripts/controllers/documents-energo-passports1.js"></script>
+      <script src="scripts/controllers/documents-energo-passports2.js"></script>
+-->
 <!---->
 <!--      test-->
 <!--
@@ -739,18 +766,18 @@
       <script src="scripts/controllers/chart-line.js"></script>
 -->
 <!--      <script src="widgets/test/test.js"></script> -->
-      
+
 <!--       Directives -->
       <!--      Min directives-->
 <!--        <script src="scripts.min/directives.min.js"></script>-->
-<!---->      
-     <script src="scripts/directives/crud-grid-data-factory.js"></script> 
-     <script src="scripts/directives/crud-grid-directive-directories.js"></script> 
-       <script src="scripts/directives/crud-grid-directive-objects.js"></script> 
-       <script src="scripts/directives/ng-right-click.js"></script> 
-       <script src="scripts/directives/nmc-view-electricity.js"></script> 
-       <script src="scripts/directives/nmc-view-message-for-user.js"></script> 
-       <script src="scripts/directives/nmc-paramset-modal.js"></script> 
+<!---->
+     <script src="scripts/directives/crud-grid-data-factory.js"></script>
+     <script src="scripts/directives/crud-grid-directive-directories.js"></script>
+       <script src="scripts/directives/crud-grid-directive-objects.js"></script>
+       <script src="scripts/directives/ng-right-click.js"></script>
+       <script src="scripts/directives/nmc-view-electricity.js"></script>
+       <script src="scripts/directives/nmc-view-message-for-user.js"></script>
+       <script src="scripts/directives/nmc-paramset-modal.js"></script>
        <script src="scripts/directives/nmc-view-delete-modal-window.js"></script>
       <script src="scripts/directives/nmc-creation-report-modal.js"></script>
       <script src="scripts/directives/nmc-view-device-scheduler.js"></script>
@@ -759,32 +786,34 @@
       <script src="scripts/directives/show-datasource-modal.js"></script>
       <script src="scripts/directives/nmc-upload-files.js"></script>
       <script src="scripts/directives/nmc-view-meter-periods-modal.js"></script>
+      <script src="scripts/directives/contenteditable.js"></script>
 <!---->
-      
+
 <!--       Services -->
       <!--      Min services-->
 <!--        <script src="scripts.min/services.min.js"></script>-->
-<!---->      
-       <script src="scripts/services/notification-factory.js"></script> 
-       <script src="scripts/services/object-service.js"></script> 
-       <script src="scripts/services/monitor-service.js"></script> 
-       <script src="scripts/services/indicator-service.js"></script> 
-       <script src="scripts/services/main-service.js"></script> 
+<!---->
+       <script src="scripts/services/notification-factory.js"></script>
+       <script src="scripts/services/object-service.js"></script>
+       <script src="scripts/services/monitor-service.js"></script>
+       <script src="scripts/services/indicator-service.js"></script>
+       <script src="scripts/services/main-service.js"></script>
        <script src="scripts/services/report-service.js"></script>
        <script src="scripts/services/subscr-cabinets-service.js"></script>
-       <script src="scripts/services/log-service.js"></script> 
+       <script src="scripts/services/log-service.js"></script>
        <script src="scripts/services/security-check-service.js"></script>
       <script src="scripts/services/meter-periods-service.js"></script>
+      <script src="scripts/services/energo-passport-service.js"></script>
 <!---->
 <!--         endbuild -->
-    
-       <script src="scripts/controllers/data-range-settings.js"></script> 
-      
+
+       <script src="scripts/controllers/data-range-settings.js"></script>
+
       <!-- Metrics -->
-      <script src="scripts/metrics.js"></script>
-      
+      <script src="./../api/www-metrics"></script>
+
 <!--      <script src="out.js"></script>-->
-      
+
       <noscript>
           <div>
               <img src="https://mc.yandex.ru/watch/35166690" style="position:absolute; left:-9999px;" alt="" />

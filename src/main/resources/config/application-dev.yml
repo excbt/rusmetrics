@@ -38,13 +38,19 @@ spring:
 #            maximum-pool-size: 5
 #            pool-name: master
 
+    jackson:
+        serialization.write_dates_as_timestamps: false
+
     jpa:
         database-platform: ru.excbt.datafuse.hibernate.dialect.ExPostgreSQLDialect
         database: POSTGRESQL
         properties:
             hibernate.hbm2ddl.auto: validate
             hibernate.format-sql: true
-            hibernate.show_sql: true
+            hibernate.show_sql: false
+            hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+            hibernate.generate_statistics: false
+            #hibernate.cache.use_structured_entries: true
 
 #            naming:
 #                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -81,6 +87,16 @@ portal:
 #            minimum-idle: 3
 #            maximum-pool-size: 5
 #            pool-name: MasterPool
+
+    security:
+        rememberMe:
+            # security key (this key should be unique for your application, and kept secret)
+            key: 7e622ab5b0586c431f5180bf656a1d972f167ba5
+
+    cache: # Cache configuration
+        ehcache: # Ehcache configuration
+            time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
+            max-entries: 100 # Number of objects in each cache entry
 
 raw:
     datasource:

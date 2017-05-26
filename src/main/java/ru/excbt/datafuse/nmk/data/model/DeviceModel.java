@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -30,7 +32,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 /**
  * Модель прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.02.2015
@@ -40,11 +42,12 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @Table(name = "device_model")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DeviceModel extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, ExLabelObject, DevModeObject, DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6370569022830583056L;
 

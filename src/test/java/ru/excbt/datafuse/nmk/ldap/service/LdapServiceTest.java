@@ -10,6 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
@@ -17,6 +23,9 @@ import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class LdapServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(LdapServiceTest.class);
@@ -33,6 +42,7 @@ public class LdapServiceTest extends JpaSupportTest {
 	@Autowired
 	private SubscriberService subscriberService;
 
+    @Ignore
 	@Test
 	public void testAuth() throws Exception {
 		assertNotNull(ldapService);
@@ -103,9 +113,10 @@ public class LdapServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
+    @Ignore
 	@Test
 	public void testCreateCabinetsOU() throws Exception {
 		SubscrUser subscrUser = subscrUserService.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);

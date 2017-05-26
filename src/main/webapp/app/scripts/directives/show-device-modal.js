@@ -20,8 +20,47 @@ app.directive('nmcShowDeviceModal', function () {
         templateUrl: 'scripts/directives/templates/show-device-modal.html',
         controller: ['$scope', 'mainSvc', '$cookies', function ($scope, mainSvc, $cookies) {
             
+            var deviceModalWindowTabs = [
+                {
+                    name: "main_properties_tab",
+                    tabpanel: "main_properties"
+                },
+                {
+                    name: "con_properties_tab",
+                    tabpanel: "con_properties"
+                },
+                {
+                    name: "time_properties_tab",
+                    tabpanel: "time_properties"
+                }
+            ];
+
+            function setActivePropertiesTab(tabName) {
+                deviceModalWindowTabs.forEach(function (tabElem) {
+                    var tab, tabPanel;
+                    tab = document.getElementById(tabElem.name) || null;
+                    tabPanel = document.getElementById(tabElem.tabpanel) || null;
+                    if (tabElem.name.localeCompare(tabName) !== 0) {
+                        tab.classList.remove("active");
+                        tabPanel.classList.remove("active");
+                    } else {
+                        tab.classList.add("active");
+                        tabPanel.classList.add("in");
+                        tabPanel.classList.add("active");
+                    }
+                });
+
+
+            }
+            
             $scope.isDeviceDisabled = function (device) {
-                return $scope.readOnly || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
+//console.log(device);                
+//console.log($scope.readOnly === 'true' || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true));
+                return $scope.readOnly === 'true' || device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true);
+            };
+            
+            $scope.isAdminCanEdit = function (device) {
+                return mainSvc.isAdmin() && !(device.exSystemKeyname === 'VZLET' || device.exSystemKeyname === 'LERS' || (device.isSaving === true));
             };
             
             $scope.isDeviceDataSourceHide = function (device) {
@@ -66,11 +105,46 @@ app.directive('nmcShowDeviceModal', function () {
                     $scope.currentDevice.exSystemKeyname === 'VZLET';
             };
             
+            //date picker
+            $scope.dateOptsParamsetRu = {
+                locale : {
+                    daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+                    firstDay : 1,
+                    monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                            'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                            'Октябрь', 'Ноябрь', 'Декабрь' ]
+                },
+                singleDatePicker: true
+            };
+            
             $('#showDeviceModal').on('shown.bs.modal', function () {
+                $('#inputVerificationInterval').inputmask();
+                $('#inputVerificationDate').datepicker({
+                    dateFormat: "dd.mm.yy",
+                    firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                    dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                    monthNames: $scope.dateOptsParamsetRu.locale.monthNames,
+                    beforeShow: function () {
+                        setTimeout(function () {
+                            $('.ui-datepicker-calendar').css("display", "table");
+                        }, 1);
+                    },
+                    onChangeMonthYear: function () {
+                        setTimeout(function () {
+                            $('.ui-datepicker-calendar').css("display", "table");
+                        }, 1);
+                    }
+                });
 //                console.log($scope.currentDevice);
 //                console.log($scope.deviceSources);
 //                
 //                console.log($scope.deviceModels);
+//                console.log($scope.readOnly);
+//                console.log($scope.isDeviceDisabled($scope.currentDevice));
+            });
+            
+            $('#showDeviceModal').on('hidden.bs.modal', function () {
+                setActivePropertiesTab("main_properties_tab");
             });
             
         }]

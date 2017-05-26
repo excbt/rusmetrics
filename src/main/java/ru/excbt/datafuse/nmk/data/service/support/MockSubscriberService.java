@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
 /**
  * Класс "заглушка" для работы с абонентом
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.05.2015
@@ -31,7 +31,7 @@ public class MockSubscriberService {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getMockSubscriberId() {
@@ -39,7 +39,7 @@ public class MockSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param mockSubscriberId
 	 */
 	public void setMockSubscriberId(Long mockSubscriberId) {
@@ -47,11 +47,15 @@ public class MockSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Subscriber getMockSubscriber() {
-		checkState(mockSubscriberId != null, "Mock Subscriber Service is Disabled");
+	    if (mockSubscriberId == null) {
+            logger.error("Mock Subscriber is disabled. Using temporary Subscriber");
+            return new Subscriber().id(Long.MIN_VALUE);
+        }
+		//checkState(mockSubscriberId != null, "Mock Subscriber Service is Disabled");
 
 		logger.warn("ATTENTION!!! Using MockUser");
 		return subscriberService.selectSubscriber(mockSubscriberId);

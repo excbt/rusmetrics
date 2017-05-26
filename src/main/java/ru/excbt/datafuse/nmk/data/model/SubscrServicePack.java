@@ -17,13 +17,15 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Пакет услуг абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.09.2015
@@ -32,10 +34,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Entity
 @Table(name = "subscr_service_pack")
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrServicePack extends JsonAbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4359901990805548362L;
 

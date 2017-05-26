@@ -163,6 +163,7 @@
                                            ng-model="data.currentOrganization.organizationFullAddress">
                                 </td>
                             </tr>
+<!--
                             <tr>
                                 <td class="col-sm-3"><label for="inputOrgType">Тип организации</label>
                                 </td>
@@ -176,8 +177,8 @@
                                     </select>
                                 </td>
                             </tr>
+-->
                             
-<!--
                             <tr>
                                 <td class="col-sm-3">
                                    <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentOrganization.flagRso">РСО
@@ -194,34 +195,33 @@
                                    
                                 </td>
                             </tr>
--->
                         </table>
                     </div>    
                 </div>  
             </div>        
 		</div>
-		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid  ">
+		<div class = "modal-footer nmc-modal-footer">
+				<div class = "container-fluid">
 
-					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="sendOrganizationToServer(data.currentOrganization)"
-								value="Сохранить" />
+					<div class = "row">
+                        <div class = "col-xs-offset-6 col-xs-3">
+							<input type = "submit" class = "btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click = "sendOrganizationToServer(data.currentOrganization)"
+								value = "Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
-							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#data.currentOrganization')">
+						<div class = "pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class = "btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss = "modal"
+								ng-click = "exit('#data.currentOrganization')">
 								Отменить
 							</button>
 						</div>
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
+		<span class = "alert alert-error dialogErrorMessage"
+			ng-show = "errorOnSubmit"> Request error
+		</span> <span class = "alert alert-error dialogErrorMessage"
+			ng-show = "errorIllegalAccess"> Request illegal access
 		</span>
 	</div>
 </div>

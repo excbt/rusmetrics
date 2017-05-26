@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 /**
  * Данные по адресу для объекта учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.01.2016
@@ -30,10 +32,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Entity
 @Table(name = "cont_object_dadata")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContObjectDaData extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -4366148412088419088L;
 

@@ -421,14 +421,14 @@ body{
 
     /* Разметка страницы Настройки */
 /* Стиль главных дивов разделов "Тарифы" и "Группы объектов"*/
-.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div {
+.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div, .nmc-energo-passport-main-div {
     overflow: auto;
     height: 82vh;
 /*    height:61vh;*/
     min-height: 290px;
 }
 @media (max-height: 800px) {
-    .nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div {
+    .nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div, .nmc-energo-passport-main-div {
         overflow: auto;
         height: 72vh;
     /*    height:61vh;*/
@@ -814,6 +814,19 @@ body{
 .nmc-mode-sidebar-nav {
     max-height: 400px;
     overflow-y: auto;
+}
+
+/* Навигационная панель с кнопками*/
+.nmc-nav-tabs-buttons {
+    padding-bottom: 5px;
+}
+
+ul.nmc-nav-tabs-buttons > li {
+    padding-right: 10px;
+}
+
+ul.nmc-nav-tabs-buttons > li > button {
+    padding: 3px 10px;
 }
 
 /***********
@@ -1263,6 +1276,7 @@ tr.nmc-inactive-price > td {
     font-size: 12px;
     height: 26px;
     padding: 3px;
+    border-radius: 4px !important;
 }
 
 /* выпадающий список на странице с прайсами*/
@@ -1558,7 +1572,7 @@ tr.nmc-inactive-price > td {
     display: inline;
 }
 
-    /*  Контрол для ввода даты в Дополнительных свойствах отчетов */
+    /*  Контрол для ввода даты в Дополнительных свойствах отчетов, Энергетические документы */
 .nmc-spec-date {
     background-color: #fff !important;
     cursor: pointer !important;
@@ -1645,6 +1659,28 @@ tr.nmc-inactive-price > td {
     background-color: transparent;
     background-image: url(../images/cross-12.png);
     background-repeat: no-repeat;
+}
+/* Кнопка Удалить ака Красивый крестик для строк таблиц, например энергетические документы*/
+.nmc-remove-btn{
+    width: 20px;
+    height: 20px;
+/*
+    background-color: transparent;
+    background-image: url(../images/cross-12.png);
+    background-repeat: no-repeat;
+*/
+    background: url(../images/cross-12.png) transparent no-repeat 50%;
+}
+
+.nmc-insert-row-btn{
+    width: 20px;
+    height: 20px;
+/*
+    background-color: transparent;
+    background-image: url(../images/insert-row.png);
+    background-repeat: no-repeat;
+*/
+    background: url(../images/insert-row.png) transparent no-repeat;
 }
 
 /* Кнопка переключатель режимов отображения уведомлений*/
@@ -1968,39 +2004,39 @@ tr.nmc-inactive-price > td {
 /**************************************************************************************
  *  Разметка модального окна
  ****************************************************************************************/
-.nmc-modal-window{
+.nmc-modal-window {
 }
 
     /* Контейнер для шапки, тела и футера*/
-.nmc-modal-dialog{
-    margin-top: 10%;
+.nmc-modal-dialog {
+    margin-top: 3%;/*10%;*/
     min-width: 341px;
 }
     /* Размер окошка для Температурного графика*/
-.nmc-modal-dialog-temp-sch{
-    margin-top: 10%;
+.nmc-modal-dialog-temp-sch {
+    margin-top: 3%;/*10%;*/
     min-width: 341px;
     width: 500px;
 }
     /* Контейнер для шапки, тела и футера - для диалогов удаления, перемещения и т.д. - чтобы они распологались визиульно по центру экрана*/
-.nmc-modal-dialog-low{
-    margin-top: 20%;
+.nmc-modal-dialog-low {
+    margin-top: 3%;/*20%;*/
 }
 
     /* Классы задающие ширину модального окна*/
-.nmc-modal-wide-dialog{
+.nmc-modal-wide-dialog {
     width: 1100px; 
 }
 
-.nmc-modal-some-wide-dialog{
+.nmc-modal-some-wide-dialog {
     width: 700px; 
 }
 
-.nmc-modal-narrow-dialog{
+.nmc-modal-narrow-dialog {
     width: 300px; 
 }
 
-.nmc-modal-dialog-w450{
+.nmc-modal-dialog-w450 {
     width: 450px; 
 }
 
@@ -2039,7 +2075,7 @@ tr.nmc-inactive-price > td {
 }
 /* поле с таблицей колонок*/    /* поле с таблицей объектов*/
 /* устанавливаем у них прокрутку*/
-.nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list{
+.nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list {
     overflow-y: scroll;
 }
 
@@ -2175,6 +2211,22 @@ tr.nmc-inactive-price > td {
     margin: 0 0 10px 0;
 }
 
+    /*Модальное окно Варианта отчета*/
+/*"Выбрать все"*/
+.nmc-p-in-modal-select-all {
+    margin-top: 3px;
+    margin-bottom: 0;
+}
+/* Поле ввода шаблона имени файла*/
+.nmc-td-in-modal-input-file-template-label {
+    border-bottom: 0; 
+    padding-bottom: 0 !important;
+}
+
+.nmc-td-in-modal-input-file-template {
+    border-top: 0 !important;
+}
+
 
 /*******************************************************
 *               Карты
@@ -2288,7 +2340,11 @@ tr.nmc-inactive-price > td {
 tr.nmc-bg-distinguish > td {
     background-color: #D2D2D2 !important;
 }
- 
+/* Энергетические документы - класс, для выделения фона */
+.nmc-bg-distinguish-energy {
+    background-color: #D2D2D2 !important;
+}
+
 /* Заголовки */
 
 .nmc-h1 {
@@ -2306,6 +2362,7 @@ tr.nmc-bg-distinguish > td {
     font-weight: bold;
     font-size: 14px;
     margin-top: 0;
+    height: 1.5rem; /*Нужно для "Содержания" в энергетических документах, чтобы оно не прыгало при скрытии / отображении*/
 }
 
 .nmc-h4 {
@@ -2386,6 +2443,16 @@ tr.nmc-bg-distinguish > td {
     width: 12%;
 }
 
+    /* "Звездоска", который отмечаются обязательные поля*/
+.nmc-required-star {
+    color: red;
+}
+
+.nmc-doc-type-sym {
+    padding-bottom: 2px; 
+    border-radius: 45%;
+}
+
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
 /******************************************************************************************************/
 .noMarginTop {
@@ -2454,7 +2521,7 @@ tr.nmc-bg-distinguish > td {
     margin-top: 15px;
 }
 
-.marginTopMinus10{
+.marginTopMinus10 {
     margin-top: -10px;
 }
 
@@ -2560,7 +2627,7 @@ tr.nmc-bg-distinguish > td {
     padding-top: 0px;
 }
 
-.paddingLeft0{
+.paddingLeft0 {
     padding-left: 0;
 }
 
@@ -2847,3 +2914,264 @@ input[type="checkbox"] {
     display: none;
 }
 /*---  ---*/
+
+
+/* Редактор энергопаспорта*/
+/*
+.nmc-energo-passport-row {
+    display: table-row;    
+}
+
+.nmc-energo-passport-th {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+}
+
+.nmc-energo-passport-child-th {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+*/
+
+/*    border-bottom: 1px solid #d4d4d4;*/
+/*
+    border-right: 1px solid #d4d4d4;
+
+}
+
+.nmc-energo-passport-cell {
+    display: table-cell;
+*/
+/*
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+*/
+/*
+    border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+}
+
+.nmc-energo-passport-child-cell {
+    display: table-cell;
+*/
+/*
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+*/
+/*
+    border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+*/
+/*}*/
+
+/*Энергопасспорт - самописный вариант*/
+
+/* Классы для таблиц документа*/
+.nmc-energo-table {
+    border: 1px; 
+    background-color: #fff;
+}
+
+/*      Заголовок таблицы*/
+.nmc-energo-table > thead > tr > th, .nmc-energo-table > tr > th {
+    text-align: center;
+    border: 1px solid #646263;
+    background-color: #f5f5f5;
+}
+
+/*      Ячейки строк*/
+.nmc-energo-table > tbody > tr > td, .nmc-energo-table > tr > td {
+    border: 1px solid #646263;
+    padding: 0 4px;
+}
+
+.nmc-td-no-edit {
+    background-color: #f5f5f5;
+}
+/* Область для подстрочных кнопок в ячейках динамической таблицы*/
+.nmc-div-sub-td-btns {
+    position: absolute;
+    opacity: 0.6;
+}
+
+/*
+.nmc-td-edit {
+    background-color: #fff;
+}
+*/
+
+/*
+.nmc-empty-div {
+    height: 1.5em;
+}
+*/
+
+/* Разделение окна редактора документа на 2 части и управление отображением в распахнутом / схлопнутом режимах*/
+/*  Распахнутый режим, когда рабочая область документа максимизируется*/
+.nmc-energo-passport-maximize {
+    width: 96%;
+    margin-left: 0;
+}
+/*  а содержание минимизируется*/
+.nmc-energo-contents-minimize {
+/*    min-width: 45px;*/
+    width: 4%;    
+}
+
+/*      Граница ака вертикальная черта по правой границе содержания*/
+.nmc-div-bordered {
+    border-right: 1px solid #646263;
+}
+
+/*
+.nmc-div-bordered:after {
+    position: fixed;
+    top: 45%;
+    content: "a"
+}
+
+.nmc-div-bordered:before {
+    position: fixed;
+    top: 50%;
+    content: "b"
+}
+*/
+
+/* Красивый разделитель между содержанием и рабочей областью документа*/
+
+.nmc-div-delimiter {
+    position: absolute;
+    top: 51.5%;
+/*    z-index: 1;*/
+    margin-left: -6px;
+    border: 1px solid #337ab7;/*#646263;*/
+    background-color: #337ab7;/*#646263;*/
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-left {
+    position: absolute;
+    top: 48%;
+    margin-left: -6px;
+    border: 1px solid #646263;
+    background-color: #646263;
+    display: inline-block;
+    width: 10px;
+    height: 50px;
+    border-radius: 5px;
+    padding-top: 19px;
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-inner-left {
+    border: 5px solid transparent; 
+    border-right: 5px solid  lightblue;/*#337ab7;*/
+    position: relative;
+    left: -4px;
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-right {
+    position: absolute;
+    top: 48%;
+    margin-left: -6px;
+    border: 1px solid #646263;
+    background-color: #646263;
+    display: inline-block;
+    width: 10px;
+    height: 50px;
+    border-radius: 5px;
+    padding-top: 19px;
+    cursor: pointer;
+}
+
+.nmc-div-delimiter-inner-right {
+    border: 5px solid transparent; 
+    border-left: 5px solid lightblue;/*#337ab7;*/
+    position: relative;
+    right: -2px;
+    cursor: pointer;
+}
+
+/*  Стили для пунктов содержания*/
+
+.nmc-energy-contents {
+    cursor: pointer;
+}
+/*  Стили для разделов содержания*/
+.nmc-energy-contents-entry {
+    cursor: pointer;
+    border-bottom: 1px solid #D2D2D2;
+}
+/*  Подсветка нечетных приложений*/
+.nmc-energy-contents-odd {
+    background-color: #eee;
+}
+/*  Подсветка нечетных разделов приложений*/
+.nmc-energy-contents-entry:nth-of-type(odd) {    
+    background-color: #eee;
+}
+
+/* Стили для заголовка h1*/
+.nmc-energy-doc-h1 {
+    font-size: 18px;
+}
+
+/*  Стили для SIMPLE_LINE части документа*/
+.nmc-energy-simple-line {
+    padding: 5px 0; 
+    display: table-row;
+}
+
+.nmc-energy-simple-line:hover {
+    background-color: #eee;
+}
+
+div.nmc-energy-simple-line > div {
+    display: table-cell; 
+    padding: 0 10px; 
+    vertical-align: top;
+}
+/*  Поле для ввода текста в SIMPLE_LINE */
+.nmc-energy-input-text {
+    width: 100%; 
+    border: 0; 
+    border-bottom: 1px solid;
+    background: transparent;
+}
+
+.nmc-energy-input-text:focus {
+    background: #fff;
+}
+/* Класс для табличной части документа - это родитель - parent container - для таблиц класса nmc-energo-table*/
+.nmc-energy-inner-table {
+    padding: 10px 0;
+}
+/*  Поле для ввода текста в ячейке INNER_TABLE */
+.nmc-energy-td-input-text {
+    width: 100%; 
+    border: 0;
+}
+/*  Чекбокс в ячейке INNER_TABLE */
+.nmc-energy-td-input-checkbox {
+    margin: 4px !important;
+}
+/*  Поле для ввода многострочного текста в ячейке INNER_TABLE */
+.nmc-energy-td-input-multi-text {
+    min-height: 1.5rem;
+}
+
+.nmc-energy-td-counter {
+    text-align: right;
+}

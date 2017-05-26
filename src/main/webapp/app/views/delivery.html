@@ -82,19 +82,19 @@
 		<!-- Таблица со списком рассылок -->
    		<table id="table_deliveries_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
     		<tr id="tr_dlv_header" class="nmc-main-table-header">
-    			<th class="col-md-1 nmc-td-for-buttons">&nbsp</th>
-    			<th class="col-md-2">Название</th>
-    			<th class="col-md-8">Описание</th>
-    			<th class="col-md-1">&nbsp</th>
+    			<th class="col-xs-1 nmc-td-for-buttons">&nbsp</th>
+    			<th class="col-xs-2">Название</th>
+    			<th class="col-xs-8">Описание</th>
+    			<th class="col-xs-1">&nbsp</th>
        		</tr>
         </table>
         <div class="nmc-delivery-settings-main-div">
             <table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
                 <tr ng-repeat = "rep_shdl in rep_shdls">
-                    <td class="col-md-1 nmc-td-for-buttons"><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
-                    <td class="col-md-2">{{rep_shdl.name}}</td>
-                    <td class="col-md-8">{{rep_shdl.description}}</td>
-                    <td class="col-md-1 nmc-td-for-buttons"><i ng-disabled="isROfield()" title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+                    <td class="col-xs-1 nmc-td-for-buttons"><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+                    <td class="col-xs-2">{{rep_shdl.name}}</td>
+                    <td class="col-xs-8">{{rep_shdl.description}}</td>
+                    <td class="col-xs-1 nmc-td-for-buttons"><i ng-disabled="isROfield()" title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
                 </tr>
             </table>
         </div>    
@@ -114,12 +114,12 @@
     		<div class="modal_body nmc-modal-body">
  	        	<div class="container-fluid">
  	            	<div class="row-fluid">
-   	               		<div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
+   	               		<div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
    	               			<form>
 		   	               		<table class="table table-lighter table-hover table-condensed table-striped nmc-modal-main-table">
 	   	               				<tr>
 	   	               					<td>
-		   	               					<div class="form-group col-sm-12">
+		   	               					<div class="form-group col-xs-12">
 		    									<label for="inp_dlvr_name">Название:</label>
 		   										<input ng-disabled="isROfield()"
                                                        id="inp_dlvr_name"
@@ -132,7 +132,7 @@
 	   	               				</tr>
 	   	               				<tr>
 	   	               					<td>
-	   	               						<div class="form-group col-sm-12">
+	   	               						<div class="form-group col-xs-12">
 	   	               							<label for="inp_dlvr_descr">Описание:</label>
 	   	               							<textarea ng-disabled="isROfield()"
                                                           id="txtarea_dlvr_descr"
@@ -146,7 +146,7 @@
 	   	               				</tr>
 	   	               				<tr>
 	   	               					<td>
-		   	               					<div class="form-group pull-left col-sm-6">
+		   	               					<div class="form-group pull-left col-xs-6">
 		   	               						<label for="slct_rep_type">Тип отчёта:</label>
 		   	               							<select ng-disabled="isROfield()"
                                                             id="slct_rep_type"
@@ -156,7 +156,7 @@
 		   	               									ng-change="changeReportType(false)">
 		   	               							</select>
 		   	               					</div>
-		   	               					<div class="form-group col-sm-6">
+		   	               					<div class="form-group col-xs-6">
 		   	               						<label for="slct_rep_tmpl_var">Вариант отчета:</label>
 		   	               						<select id="slct_rep_tmpl_var"                                                        
 		   	               								disabled
@@ -169,7 +169,7 @@
 	   	               				</tr>
 	   	               				<tr>
 	   	               					<td>
-		   	               					<div class="form-group pull-left col-sm-6">
+		   	               					<div class="form-group pull-left col-xs-6">
 		   	               						<label for="slct_period">Периодичность запуска</label>
 		   	               							<select ng-disabled="isROfield()"
                                                             id="slct_period"
@@ -179,7 +179,7 @@
 		   	               									ng-change="activatePeriod()">
 		   	               							</select>
 		   	               					</div>
-	   	               						<div id ="div_day" class="form-group col-sm-3">
+	   	               						<div id ="div_day" class="form-group col-xs-3">
 	   	               							<div id="div_day_of_month" style="display:none">
 	   	               							<label for="inp_day">Число:</label>
 	   	               								<input id="inp_day"
@@ -216,7 +216,7 @@
 	   	               							<div id="div_daily" style="display:none">&nbsp</div> 
 	   	               						</div>
 	   	               						<label for="div_time">Время:</label>
-	   	               						<div id="div_time" class="input-group col-sm-3">
+	   	               						<div id="div_time" class="input-group col-xs-3">
 	   	               							<input id="inp_hour"
 	   	               									type="text"
 	   	               									disabled
@@ -237,7 +237,7 @@
 	   	               					<td id="td_rcpt">
 	   	               						<div id="div_rcpt_form" class="form-group">
 	   	               							<div id="div_rcpt_form_inps">
-	   	               								<div id="div_dlvr_type_slct" class="form-group pull-left col-sm-6">
+	   	               								<div id="div_dlvr_type_slct" class="form-group pull-left col-xs-6">
 	   	               									<label for="slct_dlvr_type">Тип рассылки:</label>
 	   	               									<select ng-disabled="isROfield()"
                                                                 id="slct_dlvr_type"
@@ -247,7 +247,7 @@
 		   	               										ng-change="changeSheduleAction()">
 				   	               						</select>
 				   	               					</div>
-	   		    	           						<div id="div_rcpt_slct" class = "form-group col-sm-6">	   	               						
+	   		    	           						<div id="div_rcpt_slct" class = "form-group col-xs-6">	   	               						
 		   		    	           						<label for = "slct_rcpt">Списки получателей:</label>
 	   	        	    	   							<select id = "slct_rcpt"
 	   	        	    	   									disabled
@@ -256,7 +256,7 @@
 	   	        	    	   									ng-options="dlvr_list.id as dlvr_list.groupName for dlvr_list in dlvr_lists">
 	   	               									</select>
 	   	               								</div>
-	   	               								<div id="div_rcpt_email" class="form-group col-sm-6" style="display:none">
+	   	               								<div id="div_rcpt_email" class="form-group col-xs-6" style="display:none">
 	   	               									<label for="inp_rcpt_email">Адрес электронной почты:</label>
 	   	               									<input id="inp_rcpt_email"
 	   	               											type="email"
@@ -272,7 +272,7 @@
 	   	               				<tr>
 	   	               					<td id="td_dlvr_begin">
 	   	               						<div id="div_dlvr_begin" class="form-group">
-	   	               							<div id="div_dlvr_begin_input" class="form-group pull-left col-sm-6">
+	   	               							<div id="div_dlvr_begin_input" class="form-group pull-left col-xs-6">
 	   	               							<label for="inp_dlvr_begin">Начало действия рассылки:</label>
 	   	               								<input ng-disabled="isROfield()"
                                                            id="inp_dlvr_begin"
@@ -280,7 +280,7 @@
 	   	               										class="form-control  nmc-date-input-form"
 	   	               										ng-model="start_date">
 	   	               							</div>
-	   	               							<div id="div_dlvr_end_input" class="form-group pull-left col-sm-6">
+	   	               							<div id="div_dlvr_end_input" class="form-group pull-left col-xs-6">
 	   	               							<label for="inp_dlvr_begin">Окончание действия рассылки:</label>
 	   	               								<input ng-disabled="isROfield()"
                                                            id="inp_dlvr_end"
@@ -301,14 +301,14 @@
 	    	<div class="modal-footer nmc-modal-footer">
     			<div class="container-fluid">
 					<div class="row">
-                       	<div class="col-xs-offset-6 col-md-3">
+                       	<div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="isROfield()"
                                    type="submit" 
                                    class="btn btn-primary btn-block btn-xs nmc-save-button"
 								    ng-click="dlvrSave()"
 								    value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -347,13 +347,13 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3">
 							<input ng-disabled="isROfield()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="delReportShedule(cur_rep_shdl);"
 								value="Удалить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#div_delete_delivery');">
 								Отменить

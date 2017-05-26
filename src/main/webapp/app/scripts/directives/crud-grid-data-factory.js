@@ -1,4 +1,4 @@
-/*jslint node: true*/
+/*jslint node: true, es5: true*/
 /*global angular*/
 'use strict';
 

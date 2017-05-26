@@ -13,6 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
@@ -20,6 +26,9 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class ContZPointServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointServiceTest.class);
@@ -36,10 +45,11 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	private DeviceModelService deviceModelService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
 	public void testCreateManualZPoint() throws Exception {
 		ContZPoint contZPoint = contZPointService.createManualZPoint(MANUAL_CONT_OBJECT_ID, ContServiceTypeKey.HEAT,
 				LocalDate.now(), 1, null, null);
@@ -49,7 +59,7 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param contServiceTypeKey
 	 * @param tsNumber
@@ -73,7 +83,7 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contServiceTypeKeys
 	 * @param tsNumber
@@ -90,11 +100,12 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	@Ignore
+    @Transactional
 	public void testObj() throws Exception {
 		Long contObjectId = Long.valueOf(60696286);
 		Long deviceModelId = Long.valueOf(29779958);
@@ -109,15 +120,18 @@ public class ContZPointServiceTest extends JpaSupportTest {
 
 	@Test
 	@Ignore
+    @Transactional
 	public void testDelTemp() throws Exception {
 		contZPointService.deleteOnePermanent(66183371L);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
+    @Transactional
+    @Ignore
 	public void testGetDeviceObjectIds() throws Exception {
 		List<Long> deviceObjects = contZPointService.selectDeviceObjectIds(159919982);
 		assertFalse(deviceObjects.isEmpty());

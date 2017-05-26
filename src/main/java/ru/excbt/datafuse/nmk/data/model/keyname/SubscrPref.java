@@ -7,16 +7,19 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_pref")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class SubscrPref extends JsonAbstractKeynameEntity implements DisabledObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 322159788896491335L;
 

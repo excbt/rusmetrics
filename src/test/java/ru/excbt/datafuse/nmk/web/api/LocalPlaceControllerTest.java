@@ -8,12 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceTemperatureSstService;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.SubscrControllerTest;
 
+@Transactional
 public class LocalPlaceControllerTest extends SubscrControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceControllerTest.class);
@@ -22,7 +24,7 @@ public class LocalPlaceControllerTest extends SubscrControllerTest {
 	private LocalPlaceTemperatureSstService localPlaceTemperatureSstService;
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -31,7 +33,7 @@ public class LocalPlaceControllerTest extends SubscrControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -45,7 +47,7 @@ public class LocalPlaceControllerTest extends SubscrControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

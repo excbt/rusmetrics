@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -56,7 +57,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Сервис по работе с объектом учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 05.02.2015
@@ -115,7 +116,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	private MeterPeriodSettingRepository meterPeriodSettingRepository;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -129,7 +130,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -139,7 +140,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -260,7 +261,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -348,7 +349,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -379,7 +380,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 * @param subscrEndDate
 	 */
@@ -393,7 +394,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -419,7 +420,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -429,7 +430,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -464,7 +465,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -476,7 +477,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 */
 	private ContObjectFias createConfObjectFias(ContObject contObject) {
@@ -489,7 +490,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contObjectFias
 	 */
@@ -501,7 +502,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 */
 	private void contObjectFiasSetRefreshFlag(ContObject contObject) {
@@ -520,7 +521,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectDaData
 	 * @return
 	 */
@@ -533,7 +534,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectWrappers
 	 * @return
 	 */
@@ -554,7 +555,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 */
 	@Deprecated
@@ -578,7 +579,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 * @return
 	 */
@@ -628,7 +629,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -640,7 +641,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -671,7 +672,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -682,7 +683,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -693,7 +694,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -704,7 +705,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -715,7 +716,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param currentDate
 	 * @return
@@ -736,25 +737,25 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectMeterPeriodSettingsDTO
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void updateMeterPeriodSettings(ContObjectMeterPeriodSettingsDTO contObjectMeterPeriodSettingsDTO) {
-		
+
 		List<ContObject> contObjectList = new ArrayList<>();
-		
+
 		if (contObjectMeterPeriodSettingsDTO.isSingle()) {
 			ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
 			if (contObject == null) {
-				entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
+				DBExceptionUtils.entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
 			}
 			contObjectList.add(contObject);
 		} else if (contObjectMeterPeriodSettingsDTO.isMulti()) {
 			contObjectList.addAll(contObjectRepository.findAll(contObjectMeterPeriodSettingsDTO.getContObjectIds()));
 		}
-		
+
 		contObjectList.forEach((contObject) -> {
 			if (Boolean.TRUE.equals(contObjectMeterPeriodSettingsDTO.getReplace())) {
 				contObject.getMeterPeriodSettings().clear();
@@ -770,7 +771,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @return
 	 */
@@ -786,7 +787,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			Long id = (Long) i.get(0);
 			try {
 				MeterPeriodSetting m = (MeterPeriodSetting) i.get(2);
-				resultMap.get(id).putSetting((String) i.get(1), m.getId());				
+				resultMap.get(id).putSetting((String) i.get(1), m.getId());
 			} catch (Exception e) {
 				logger.error("V0:{}, V1:{}, V2:{}", i.get(0), i.get(1), i.get(2));
 				throw e;
@@ -797,9 +798,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		return resultMap.entrySet().stream().map(m -> m.getValue()).collect(Collectors.toList());
 	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -816,6 +817,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		return settings;
 	}
-	
-	
+
+
 }

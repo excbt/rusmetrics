@@ -1,0 +1,439 @@
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="object_list_2nd_menu_item" role="presentation" class=""><a id="monitorTab" class="nmc-main-tab-button" href="#/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Список объектов</a></li>
+        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
+        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
+        
+        <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/objects/demo-map/" 
+               aria-controls="objects_map" 
+               role="tab" 
+               data-target="#objects_map" 
+               data-toggle="tab"
+               >
+                Демо-карта
+            </a>
+        </li>
+<!--
+        <li ng-hide="isTestMode() || !isRma() || objects.length <= 0" role="presentation" class="pull-right">
+            <i               
+               title="Загрузка показаний из файлов"               
+               class="btn btn-sm glyphicon glyphicon-download-alt gly-rotate-180"
+               aria-controls="upload_files" 
+               role="tab"
+               data-target="#upLoadFilesModal" 
+               data-toggle="modal">                
+            </i>
+        </li>
+-->
+        <li id="document_list_2nd_menu_item" role="presentation" class="active"><a id="documentTab" class="nmc-main-tab-button" href="" aria-controls="documents" data-target="#documents" role="tab" data-toggle="tab">Документы</a></li>
+    </ul> 
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="documents">
+      </div>
+    </div>
+</div>
+
+<div role="tabpanel" class="nmc-tab-panel">
+
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li id="document_energo_passport_3rd_menu_item" 
+        role="presentation" 
+        class="active">
+        <a class="nmc-tab-button" 
+           href="" 
+           aria-controls="energo_passports" 
+           data-target="#energo_passports" 
+           role="tab" 
+           data-toggle="tab">Энергетические паспорта
+        </a>
+      </li>
+   <li id="document_energo_declaration_3rd_menu_item" 
+       role="presentation" 
+       class="">
+       <a class="nmc-tab-button" 
+          href="#/documents/energo-declarations/" 
+          aria-controls="energo_declarations" 
+          data-target="#energo_declarations" 
+          role="tab" 
+          data-toggle="tab">Энергетические декларации</a></li>  
+  </ul>
+<div class="tab-content">
+<!--            Активные варианты-->
+            <div role="tabpanel" class="tab-pane fade in active nmc-main-tab-panel nmc-report-settings-main-div" id="active_paramsets">
+                <div  ng-show="ctrlSettings.loading" class="nmc-loading">
+                    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+                </div>
+                <div ng-show="!ctrlSettings.loading">
+                <div class="row nmc-main-workspace-header">
+                    <div class="col-xs-3 marginBottom10">
+                        <button class="btn nmc-main-add-button" ng-click="addPassport()">Создать паспорт</button>
+                    </div>
+                    <div class="col-xs-7"></div>
+                    <div class="input-group col-xs-4 filter marginBottom10 pull-left nmc-search-form">   
+                        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                        <input title="Введите текст для поиска" type="text" class="form-control nmc-text-input-form" ng-model="filter">
+                    </div>
+                    <div class="col-xs-offset-2 col-xs-2">
+                    </div>
+                </div>
+            </div>
+<!--
+                <div id="grid1" 
+                     ui-grid="gridOptions" 
+                     class="grid">
+                </div>
+-->
+        </div>
+</div>
+    
+    
+<script 
+        type = "text/ng-template" 
+        id = "header-template.html">
+        <div class="ui-grid-header custom-ui-grid-header">
+            <div class="ui-grid-top-panel">
+                <div class="ui-grid-header-viewport">
+                    <div class="ui-grid-header-canvas" 
+                         style="width: 100%">
+                        <div class="ui-grid-header-cell-wrapper" 
+                             style="display: block;" 
+                             ng-style="colContainer.headerCellWrapperStyle()">
+                            <div class="ui-grid-header-cell-row" 
+                                 style="display: block; border-bottom: 1px solid;border-bottom-color: #d4d4d4;"
+                                 ng-style = "{'max-width': grid.options.headerDef._totalWidth + '%'}">
+                                <div  class="ui-grid-header-cell" 
+                                     ng-repeat="col in grid.options.headerDef.elements track by $index" 
+                                     col-name="{{col.name}}"
+                                     ng-style = "{'max-width': col._totalWidth + '%'}">                                    
+                                    <div class="ui-grid-cell-contents" 
+                                         data-ng-bind="col.caption"
+                                         style = "text-align: center; border-bottom: 1px solid #d4d4d4;">
+                                    </div>
+                                    <div  class="ui-grid-header-cell" 
+                                        ng-repeat="ccol in col.elements track by $index"
+                                        col-name="{{ccol.name}}"
+                                         ng-style = "{'max-width': ccol._totalWidth + '%'}">                                    
+                                        <div class="ui-grid-cell-contents" 
+                                         data-ng-bind="ccol.caption"
+                                             style = "text-align: center; border-bottom: 1px solid #d4d4d4;">
+                                        </div>
+                                        <div  class="ui-grid-header-cell" 
+                                            ng-repeat="cccol in ccol.elements track by $index"
+                                            col-name="{{cccol.name}}"
+                                            ng-style = "{'max-width': cccol._totalWidth + '%'}">                                    
+                                            <div class="ui-grid-cell-contents" 
+                                             data-ng-bind="cccol.caption">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<!--
+                            <div class="ui-grid-header-cell-row">
+                                <div class="ui-grid-header-cell ui-grid-clearfix" 
+                                            ng-repeat="col in colContainer.renderedColumns track by col.colDef.name" 
+                                            ui-grid-header-cell col="col" super-col-width-update1 render-index="$index">
+                                </div>
+                            </div>
+-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    
+<div id="editEnergoPassportModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog"
+	 aria-labelledby="editEnergoPassportLabel" 
+     tabindex="-1"
+     data-backdrop="static"
+     >
+    
+    <div class="col-xs-2">
+    </div> 
+    <div class="modal-sm col-xs-2" 
+         ng-class="{'nmc-hide': showContents_flag, 'nmc-show':!showContents_flag}">
+    </div>
+    <div class="modal-dialog modal-content modal-sm col-xs-2 noPadding nmc-modal-dialog" 
+         ng-class="{'nmc-hide': !showContents_flag, 'nmc-show': showContents_flag}">
+            <div class="modal-header nmc-modal-header">
+                <h3 class="nmc-h3">Содержание</h3>
+            </div>
+            <div class="modal-body nmc-modal-body">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" 
+                             style="">
+                            <table id="table_objects_in_window" 
+                                   class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                                <tr ng-repeat="part in data.contents">
+                                    <td>
+<!--                                        <input type="checkbox" 
+                                               ng-model="object.selected" 
+                                               class="nmc-checkbox-form"/>
+-->
+                                        {{part.caption}}
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer nmc-modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+<!--
+                        <div class="col-xs-4 noPadding">
+                            <input class="pull-left nmc-checkbox-form" 
+                                   ng-model="ctrlSettings.selectedAll" 
+                                   type="checkbox" 
+                                   ng-click="selectAllAvailableEntities()"/>
+                            <p style="margin-bottom: 0; margin-top: 3px;">
+                                Выбрать все
+                            </p>
+                        </div>
+                        <div class="col-xs-offset-1 col-xs-3 noPadding">
+                            <input type="submit" 
+                                   class="btn btn-block btn-xs nmc-add-button-in-modal"
+                                   ng-click="addSelectedEntities()"
+                                   value="Добавить" />
+                        </div>
+-->
+
+                        <div class="pull-right col-xs-offset-1 col-xs-3 noPadding">
+                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right"
+                                    ng-click="showContents_flag = false"
+                                    title = "Скрыть содержание">                                
+                            </button>
+                        </div>
+
+                    </div>
+                </div>		
+            </div>
+
+    </div>
+
+	<div class="modal-dialog  modal-content col-xs-7 noPadding nmc-modal-dialog nmc-modal-wide-dialog"
+         ng-class = "{'col-xs-9': !showContents_flag}">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 id="createParamsetLabel" 
+                class="nmc-h3">
+				Энергетический паспорт
+			</h3>
+            
+		</div>
+		<div class="modal-body paddingLeftRight15 nmc-modal-body">                     
+            <div role="tabpanel" 
+                 class="nmc-tab-panel">
+              <!-- Навигационная полоса для варианта отчета-->
+<!--
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" 
+                    class="active" 
+                    id="main_properties_tab">
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="main_properties" 
+                       data-target="#main_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       ng-click="set_of_objects_flag=false;showContents_flag=false;">Основные свойства
+                    </a>
+                  </li>
+                <li role="presentation" 
+                    id="extra_properties_tab" 
+                    class="nmc-hide" 
+                    ng-class="{'nmc-hide':!currentReportType.reportMetaParamSpecialList_flag, 'nmc-show':currentReportType.reportMetaParamSpecialList_flag}"> 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="extra_properties" 
+                       data-target="#extra_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       ng-click="set_of_objects_flag=false;showContents_flag=false;">Дополнительные свойства
+                    </a>
+                  </li>  
+                <li role="presentation" 
+                    id="set_of_objects_tab">
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="set_of_objects" 
+                       data-target="#set_of_objects" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       ng-click="set_of_objects_flag=true;" >Выбор объектов
+                    </a>
+                  </li>
+              </ul>
+-->
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Варианты отчетов-->
+                <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="main_properties">            
+                    <div class="container-fluid noPadding">
+                        <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp"
+                             style = "margin-bottom: 30px;">
+                            <div class = "col-xs-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table noPadding" 
+                                 style = "">
+<!--
+                                <div id = "grid" 
+                                     ui-grid = "gridOptions" 
+                                     class = "grid ">
+                                </div>
+-->
+<!--                                Table-->
+                            <div>
+<!--                                Header-->
+                            
+                                <div class = "nmc-energo-passport-row"
+                                     ng-style = "{'max-width': header._totalWidth + ctrlSettings.cssMeasureUnit, 'width': header._totalWidth + ctrlSettings.cssMeasureUnit}">
+                                <div class = "nmc-energo-passport-th"
+                                     ng-repeat = "col in header.elements"
+                                     
+                                     ng-style = "{'max-width': col._totalWidth + ctrlSettings.cssMeasureUnit, 'width': col._totalWidth + ctrlSettings.cssMeasureUnit}">
+                                    <div>
+                                        {{col.caption}}
+                                    </div>
+                                    
+                                    <div class = "nmc-energo-passport-child-th"
+                                         ng-repeat = "ccol in col.elements"
+                                         
+                                         ng-style = "{'max-width': ccol._totalWidth + ctrlSettings.cssMeasureUnit, 'width': ccol._totalWidth + ctrlSettings.cssMeasureUnit}">
+                                        <div>
+                                        {{ccol.caption}}
+                                        </div>
+                                        <div class = "nmc-energo-passport-child-th "
+                                             ng-repeat = "cccol in ccol.elements"
+                                             
+                                             ng-style = "{'max-width': cccol._totalWidth + ctrlSettings.cssMeasureUnit, 'width': cccol._totalWidth + ctrlSettings.cssMeasureUnit}">
+                                            <div>
+                                            {{cccol.caption}}
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                
+<!--                                Rows-->                                
+                                <div class = "nmc-energo-passport-row"
+                                     ng-repeat = "row in data.rows"
+                                     style = ""
+                                     ng-style = "{'max-width': header._totalWidth + ctrlSettings.cssMeasureUnit, 'width': header._totalWidth + ctrlSettings.cssMeasureUnit}">
+                                    <div class = "nmc-energo-passport-cell"
+                                         ng-repeat = "elem in row.elements"
+                                         
+                                         ng-style = "{'max-width': row._columnWidths[$index] + ctrlSettings.cssMeasureUnit, 'width': row._columnWidths[$index] + ctrlSettings.cssMeasureUnit}">
+                                        <div>
+                                            {{elem.caption}}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div><!-- End table -->
+                            </div> 
+                        </div>
+
+                    </div>
+                  </div> 
+<!--                  Вкладка с дополнительными свойствами -->
+                  <div role="tabpanel" 
+                       class="tab-pane fade " 
+                       id="extra_properties">
+                       <div class="container-fluid noPadding">
+                            <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
+                                <div class="col-xs-12 noPadding marginBottom10 nmc-modal-panel-with-table" 
+                                     style="">    
+
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+<!--               Вкладка с выбранными объектами   -->
+                <div role="tabpanel" 
+                     class="tab-pane fade " 
+                     id="set_of_objects">
+                    <div class="container-fluid noPadding">
+                        <div class="row-fluid ">
+                        </div>
+                    </div>
+                </div>    
+                </div>
+                </div>	
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+					<div class="row">
+<!--
+                        <div class="col-xs-3">
+                            <div class="btn-group">
+                              <button title="Добавить объекты" 
+                                      type="button" 
+                                      class="btn btn-xs nmc-add-button-in-modal dropdown-toggle" 
+                                      data-toggle="dropdown" 
+                                      aria-haspopup="true" 
+                                      aria-expanded="false" 
+                                      ng-click="prepareObjectsList()" 
+                                      ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">
+                                  Добавить объекты
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="" ng-click="viewAvailableObjects(false);">Из списка объектов</a></li>
+                                <li><a href="" ng-click="viewAvailableObjects(true);">Из группы объектов</a></li> 
+                              </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+							<button ng-disabled="currentReportType.reportType=='COMMERCE_REPORT' || currentReportType.reportType=='COMMERCE_REPORT_M_V'" 
+                                    class="btn btn-default btn-block btn-xs nmc-save-button" 
+                                    ng-click="checkAndRunParamset(currentReportType, currentObject, true)">
+                                Предпросмотр
+                            </button>    
+						</div>
+-->
+                        
+                        <div class="pull-left col-xs-offset-1 col-xs-3 noPadding">
+                            <button ng-show = "showContents_flag === false"
+                                    class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-left"
+                                    ng-click="showContents_flag = true"
+                                    title = "Показать содержание">                                
+                            </button>
+                        </div>
+                        <div class="col-xs-3">
+							<input ng-disabled="isDisabled()" 
+                                   type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button" 
+                                   ng-click="" 
+                                   value="Сохранить" 
+                                />
+						</div>
+						<div class=" pull-right col-xs-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
+                                    data-dismiss="modal" 
+                                    ng-click="exit('#currentObject');setDefault();">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
@@ -12,8 +13,8 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-import javax.transaction.Transactional;
 
+@Transactional
 public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 
 	private final static long DEV_RMA_DEVICE_OBJECT_ID = 737;

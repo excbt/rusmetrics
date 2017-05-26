@@ -27,6 +27,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@Transactional
 public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
 
 	private static final Logger log = LoggerFactory.getLogger(RmaSubscrContObjectControllerTest.class);

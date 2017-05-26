@@ -43,6 +43,19 @@
                data-toggle="modal">                
             </i>
         </li>
+<!--
+        <li id = "document_list_2nd_menu_item" role = "presentation" class = "">
+            <a id = "documentTab" 
+               class = "nmc-main-tab-button" 
+               href = "#/documents/energo-passports/" 
+               aria-controls = "documents" 
+               data-target = "#documents" 
+               role = "tab" 
+               data-toggle = "tab">
+                Документы
+            </a>
+        </li>
+-->
     </ul>    
 <!--
     <div class="nav-tabs col-xs-1">
@@ -1463,8 +1476,12 @@
             {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
         </span>
     </div>
-    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
-      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'subscr_object_tree_items_renderer.html'">
+    <ol ui-tree-nodes="options" 
+        ng-model="item.childObjectList" 
+        ng-class="{hidden: collapsed}">
+      <li ng-repeat="item in item.childObjectList" 
+          ui-tree-node 
+          ng-include="'subscr_object_tree_items_renderer.html'">
       </li>
     </ol>
 </script>

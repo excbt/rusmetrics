@@ -26,8 +26,8 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с группами ContGroup объектов ContObject
- * 
- * @author S.Kuzovoy
+ *
+ * @author STATIC.Kuzovoy
  * @version 1.0
  * @since 27.05.2015
  *
@@ -45,7 +45,7 @@ public class ContGroupService implements SecuredRoles {
 	private SubscrContGroupItemRepository contGroupItemRepository;
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -64,7 +64,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -75,7 +75,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param SubscrContGroup
 	 * @return
 	 */
@@ -91,7 +91,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroup
 	 * @return
 	 */
@@ -107,7 +107,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -134,7 +134,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetUnitId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -164,7 +164,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param objectId
 	 * @return
@@ -177,7 +177,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -202,7 +202,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -215,7 +215,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -235,7 +235,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */
@@ -247,7 +247,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @return
 	 */
@@ -259,7 +259,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contGroupId
 	 * @param SubscriberId
 	 * @return
@@ -273,7 +273,7 @@ public class ContGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param SubscriberId
 	 * @return
 	 */

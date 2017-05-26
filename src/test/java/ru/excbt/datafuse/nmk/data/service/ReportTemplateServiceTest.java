@@ -19,6 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -29,6 +35,9 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
+@Transactional
 public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateServiceTest.class);
@@ -161,7 +170,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -189,7 +198,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void testLoadedReportTemplateBody() {

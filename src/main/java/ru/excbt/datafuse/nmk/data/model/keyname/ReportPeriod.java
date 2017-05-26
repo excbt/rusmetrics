@@ -5,15 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "report_period")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ReportPeriod extends AbstractKeynameEntity implements DisabledObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7709872986189209116L;
 
