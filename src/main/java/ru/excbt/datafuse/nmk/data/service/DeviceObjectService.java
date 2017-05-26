@@ -25,7 +25,6 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
-import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
@@ -35,6 +34,7 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.V_DeviceObjectTimeOffsetRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
+import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 
 /**
  * Сервис для работы с приборами
@@ -79,6 +79,8 @@ public class DeviceObjectService implements SecuredRoles {
 
     @Autowired
     private ModelMapper modelMapper;
+	@Autowired
+	private DeviceObjectMapper deviceObjectMapper;
 
 
 	/**
@@ -337,7 +339,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 		checkNotNull(deviceObject);
 
-		modelMapper.map(deviceObjectDTO, deviceObject);
+		deviceObjectMapper.updateDeviceObjectFromDto(deviceObjectDTO, deviceObject);
 
 		if (deviceObjectDTO.getDeviceLoginInfo() != null && SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
 		    deviceObject.setDevicePassword(deviceObjectDTO.getDeviceLoginInfo().getDevicePassword());
@@ -370,30 +372,33 @@ public class DeviceObjectService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public DeviceObject saveDeviceObjectDMO(DeviceObjectDMO deviceObjectDMO) {
+	public DeviceObject saveDeviceObjectDTO_lvlS1(DeviceObjectDTO deviceObjectDTO) {
 		// Checking
-		checkNotNull(deviceObjectDMO, "Argument DeviceObject is NULL");
+		checkNotNull(deviceObjectDTO, "Argument DeviceObject is NULL");
 
-		DeviceObject deviceObject = deviceObjectDMO.isNew() ? null
-				: selectDeviceObject(deviceObjectDMO.getId());
+		DeviceObject deviceObject = deviceObjectDTO.isNew() ? null
+				: selectDeviceObject(deviceObjectDTO.getId());
 
 		checkNotNull(deviceObject);
 
-		modelMapper.map(deviceObjectDMO, deviceObject);
+		deviceObject.setIsTimeSyncEnabled(deviceObjectDTO.getIsTimeSyncEnabled());
+		deviceObject.setIsHexPassword(deviceObjectDTO.getIsHexPassword());
+		deviceObject.setVersion(deviceObjectDTO.getVersion());
 
-		if (deviceObjectDMO.getDeviceLoginInfo() != null && SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-		    deviceObject.setDevicePassword(deviceObjectDMO.getDeviceLoginInfo().getDevicePassword());
-		    deviceObject.setDeviceLogin(deviceObjectDMO.getDeviceLoginInfo().getDeviceLogin());
+
+		if (deviceObjectDTO.getDeviceLoginInfo() != null && SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+		    deviceObject.setDevicePassword(deviceObjectDTO.getDeviceLoginInfo().getDevicePassword());
+		    deviceObject.setDeviceLogin(deviceObjectDTO.getDeviceLoginInfo().getDeviceLogin());
         }
 
 		deviceObjectRepository.save(deviceObject);
 
 		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
 
-        if (deviceObjectDataSource != null && deviceObjectDMO.getEditDataSourceInfo() != null &&
-                deviceObjectDataSource.getId().equals(deviceObjectDMO.getEditDataSourceInfo().getId())) {
-            if (deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
-                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDMO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
+                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getId())) {
+            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
 
             deviceObjectDataSourceRepository.save(deviceObjectDataSource);
         }
@@ -411,12 +416,12 @@ public class DeviceObjectService implements SecuredRoles {
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObjectDTO findDeviceObjectDTO(Long id) {
         DeviceObject deviceObject = selectDeviceObject(id);
-        return deviceObject != null ? modelMapper.map(deviceObject, DeviceObjectDTO.class) : null;
+        return deviceObjectMapper.deviceObjectToDeviceObjectDTO(deviceObject);
     }
 
-    public DeviceObjectDMO convert (DeviceObjectDTO deviceObjectDTO) {
-	    return modelMapper.map(deviceObjectDTO, DeviceObjectDMO.class);
-    }
+//    public DeviceObjectDMO convert (DeviceObjectDTO deviceObjectDTO) {
+//	    return modelMapper.map(deviceObjectDTO, DeviceObjectDMO.class);
+//    }
 
 	/**
 	 *
