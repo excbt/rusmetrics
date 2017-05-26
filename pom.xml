@@ -17,7 +17,7 @@
 		<hikari.version>2.4.6</hikari.version>
         <pentaho.version>6.1.0.11-329</pentaho.version>
         <hibernate.version>5.2.8.Final</hibernate.version>
-        <mapstruct.version>1.1.0.Final</mapstruct.version>
+        <mapstruct.version>1.2.0.Beta2</mapstruct.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
         <lombok.version>1.16.14</lombok.version>
 	</properties>
