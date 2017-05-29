@@ -114,6 +114,10 @@ public class DeviceObjectDTO {
     @Setter
     private ActiveDataSourceInfoDTO editDataSourceInfo;
 
+    @Getter
+    @Setter
+    private String instType;
+
     @JsonIgnore
     public boolean isNew() {
         return id == null;

@@ -119,7 +119,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> saveDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
 
 		checkNotNull(deviceObject);
@@ -134,10 +134,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		/////////////////////////////////////////////
 		ApiActionObjectProcess actionProcess = () -> {
 
-			ContObject contObject = contObjectService.findContObject(contObjectId);
-			deviceObject.setContObject(contObject);
-			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
-			deviceObject.setDeviceModel(deviceModel);
+			deviceObject.setContObject(new ContObject().id(contObjectId));
+			deviceObject.setDeviceModel(new DeviceModel().id(deviceObject.getDeviceModelId()));
 
 			ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
 
@@ -432,13 +430,12 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param requestEntity
-	 * @param request
-	 * @return
-	 */
+    /**
+     *
+     * @param requestEntity
+     * @param request
+     * @return
+     */
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {

@@ -20,16 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
-import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
-import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingLogService;
-import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
-import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
-import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -77,6 +71,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	protected SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
+
+    @Autowired
+	protected HeatRadiatorTypeService heatRadiatorTypeService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -141,7 +138,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
     @RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
         produces = APPLICATION_JSON_UTF8)
-    public ResponseEntity<?> saveDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+    public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
                                               @PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
 
         checkNotNull(deviceObject);
@@ -324,8 +321,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceModels() {
 		ApiActionObjectProcess actionProcess = () -> {
-			List<DeviceModel> deviceModels = deviceModelService.findDeviceModelAll();
-			deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);
+			List<DeviceModelDTO> deviceModels = deviceModelService.findDeviceModelDTOs();
 			if (!currentSubscriberService.isSystemUser()) {
 				deviceModels = ObjectFilters.devModeFilter(deviceModels);
 			}
@@ -343,7 +339,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceModel(@PathVariable("id") Long deviceModelId) {
 		ApiActionObjectProcess actionProcess = () -> {
-			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceModelId);
+			DeviceModelDTO deviceModel = deviceModelService.findDeviceModelDTO(deviceModelId);
 			return deviceModel;
 		};
 		return responseOK(actionProcess);
@@ -358,6 +354,17 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	public ResponseEntity<?> getDeviceModelTypes() {
 		return responseOK(() -> deviceModelService.findDeviceModelTypes());
 	}
+
+
+    /**
+     *
+     * @return
+     */
+    @RequestMapping(value = "/deviceObjects/heatRadiatorTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getHeatRadiatorTypes() {
+        return responseOK(() -> heatRadiatorTypeService.findAllHeatRadiators());
+    }
+
 
 	/**
 	 *

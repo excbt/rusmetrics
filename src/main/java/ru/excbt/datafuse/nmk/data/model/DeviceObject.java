@@ -33,6 +33,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
@@ -98,11 +100,11 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	 * @since dd.02.2016
 	 *
 	 */
-	@Getter
-    @Setter
-	@JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @NoArgsConstructor
     @ToString
+    @Getter
+    @Setter
 	public static class DeviceLoginInfo implements Serializable {
 
 		/**
@@ -133,8 +135,9 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@Transient
 	private ActiveDataSourceInfoDTO editDataSourceInfo = new ActiveDataSourceInfoDTO();
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne (fetch = FetchType.EAGER)
 	@JoinColumn(name = "device_model_id", nullable = false)
+    //@Fetch(value = FetchMode.SUBSELECT)
     @Getter
     @Setter
 	private DeviceModel deviceModel;
@@ -276,12 +279,28 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Column(name = "impulse_counter_type")
 	private String impulseCounterType;
 
-    @Getter
-    @Setter
     @Size(min = 1, max = 1)
     @Pattern(regexp = "^[P|S]{1}$", message ="Must be P or S")
     @Column(name = "inst_type")
+    @Getter
+    @Setter
     private String instType;
+
+    @ManyToOne
+    @JoinColumn(name = "heat_radiator_type_id", nullable = true)
+    @Getter
+    @Setter
+    private HeatRadiatorType heatRadiatorType;
+
+    @Column(name = "heat_radiator_power", nullable = false, columnDefinition = "numeric(12,2)", precision = 12, scale = 2 )
+    @Getter
+    @Setter
+    private Double heatRadiatorPower;
+
+    @Column(name = "heat_radiator_type_id", insertable = false, updatable = false)
+    @Getter
+    @Setter
+    private Long heatRadiatorTypeId;
 
 	public boolean isMetaVzletExpected() {
 		return ExSystemKey.VZLET.isEquals(exSystemKeyname);

@@ -18,13 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
-import ru.excbt.datafuse.nmk.data.model.DeviceModel;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
-import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
@@ -257,6 +251,10 @@ public class DeviceObjectService implements SecuredRoles {
 		if (deviceObject.getDeviceObjectLastInfo() != null) {
 			deviceObject.getDeviceObjectLastInfo().setDeviceObject(deviceObject);
 		}
+
+		if (deviceObject.getHeatRadiatorTypeId() != null) {
+		    deviceObject.setHeatRadiatorType(new HeatRadiatorType().id(deviceObject.getHeatRadiatorTypeId()));
+        }
 
 		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
 		if (deviceObjectDataSource != null) {

@@ -147,6 +147,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 			_testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/deviceModels/" + deviceModels.get(0).getId()));
 		}
 
+
+        _testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/deviceModels/" + 129265814));
+
 	}
 
 	/**
@@ -190,4 +193,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/impulseCounterTypes"));
 	}
 
+
+    @Test
+    public void testHeatRadiatorTypes() throws Exception {
+	    _testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/heatRadiatorTypes"));
+    }
 }
