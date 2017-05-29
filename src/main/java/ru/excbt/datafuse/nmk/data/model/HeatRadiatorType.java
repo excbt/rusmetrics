@@ -6,6 +6,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 
 import javax.persistence.*;
 
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "heat_radiator_type")
 @Getter
 @Setter
-public class HeatRadiatorType  {
+public class HeatRadiatorType implements PersistableBuilder<HeatRadiatorType, Long> {
 
     @Id
     @SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id", allocationSize = 1)

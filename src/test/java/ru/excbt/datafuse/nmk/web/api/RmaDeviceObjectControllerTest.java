@@ -13,12 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.DeviceModel;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
-import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
-import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.types.DeviceModelType;
+import ru.excbt.datafuse.nmk.data.repository.HeatRadiatorTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
@@ -49,13 +46,19 @@ public class RmaDeviceObjectControllerTest extends RmaControllerTest {
 	@Autowired
 	private SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
 
+    @Autowired
+	private HeatRadiatorTypeRepository heatRadiatorTypeRepository;
+
     /*
 
      */
 	@Test
-	@Ignore
+	//@Ignore
     @Transactional
 	public void testDeviceObjectUpdate() throws Exception {
+
+
+
 		String url = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
 
@@ -77,6 +80,14 @@ public class RmaDeviceObjectControllerTest extends RmaControllerTest {
 		deviceObject.getDeviceLoginInfo().setDeviceLogin("login_12345");
 		deviceObject.getDeviceLoginInfo().setDevicePassword("pass_12345");
 
+
+		HeatRadiatorType heatRadiatorType = new HeatRadiatorType();
+		heatRadiatorType.setTypeName("Тестовый тип");
+        heatRadiatorTypeRepository.saveAndFlush(heatRadiatorType);
+        assertNotNull(heatRadiatorType.getId());
+
+        deviceObject.setHeatRadiatorTypeId(heatRadiatorType.getId());
+
 		RequestExtraInitializer paramInit = (builder) -> {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
@@ -85,6 +96,8 @@ public class RmaDeviceObjectControllerTest extends RmaControllerTest {
 			builder.param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis());
 		};
 		_testUpdateJson(url, deviceObject, paramInit);
+
+		_testGetJson(url);
 	}
 
     /*
