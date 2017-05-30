@@ -89,7 +89,11 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         {
             name: "deviceContObjectCaption",
             caption: "Объект",
-            headerClass: "col-xs-4 col-md-4"
+            headerClass: "col-xs-3 col-md-3"
+        }, {
+            name: "deviceObjectName",
+            caption: "Наименование",
+            headerClass: "col-xs-2 col-md-2"
         }, {
             name: "deviceModelCaption",
             caption: "Модель",
@@ -101,7 +105,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }, {
             name: "deviceDatasourceCaption",
             caption: "Источник данных",
-            headerClass: "col-xs-3 col-md-3"
+            headerClass: "col-xs-2 col-md-2"
             
         }, {
             name: "deviceTimeOffsetString",
@@ -507,7 +511,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             }
             
             if (!mainSvc.checkUndefinedNull($cookies.recentHeaterTypeId) && $scope.deviceIsSpreader()) {
-                $scope.data.currentObject.heatRadiatorTypeId = $cookies.recentHeaterTypeId;
+                $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.recentHeaterTypeId);
             }
             
             setInputmask();
@@ -599,7 +603,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
         
         if (!mainSvc.checkUndefinedNull($cookies.recentHeaterTypeId) && $scope.deviceIsSpreader()) {
-            $scope.data.currentObject.heatRadiatorTypeId = $cookies.recentHeaterTypeId;
+            $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.recentHeaterTypeId);
         }
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
@@ -659,6 +663,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     
     $scope.selectHeaterType = function () {
         $cookies.recentHeaterTypeId = $scope.data.currentObject.heatRadiatorTypeId;
+        objectSvc.addRecentHeaterType($scope.data.currentObject.heatRadiatorTypeId);
     };
     
     function checkDeviceImpulseProperties(device) {
@@ -1154,6 +1159,11 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             return false;
         }
         return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType === 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable === true;
+    };
+    
+    $scope.recentHeaterGrouping = function (item) {
+        var rhTypes = objectSvc.getRecentHeaterTypes();
+        return rhTypes.indexOf(item.id) > -1 ? "Недавно использованные" : undefined;
     };
     
     
