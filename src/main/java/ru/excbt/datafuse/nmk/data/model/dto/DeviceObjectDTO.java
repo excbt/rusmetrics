@@ -118,6 +118,10 @@ public class DeviceObjectDTO {
     @Setter
     private String instType;
 
+    @Getter
+    @Setter
+    private String deviceObjectName;
+
     @JsonIgnore
     public boolean isNew() {
         return id == null;

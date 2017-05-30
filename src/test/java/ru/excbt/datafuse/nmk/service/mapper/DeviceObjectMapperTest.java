@@ -28,8 +28,10 @@ public class DeviceObjectMapperTest extends JpaConfigTest {
         DeviceObject object = new DeviceObject();
         object.setId(100L);
         object.setExCode("MY_CODE");
+        object.setDeviceObjectName("MyName");
         DeviceObjectDTO dto = deviceObjectMapper.deviceObjectToDeviceObjectDTO(object);
         Assert.assertEquals(object.getId(), dto.getId());
         Assert.assertEquals(object.getExCode(), dto.getExCode());
+        Assert.assertEquals(object.getDeviceObjectName(), dto.getDeviceObjectName());
     }
 }

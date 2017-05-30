@@ -29,6 +29,7 @@ public interface DeviceObjectMapper {
     @Mapping(target = "contObject", ignore = true)
     @Mapping(target = "deviceObjectDataSources", ignore = true)
     @Mapping(target = "deviceModel", source = "deviceModelId")
+    @Mapping(target = "deviceObjectName", source = "deviceObjectName")
     void updateDeviceObjectFromDto(DeviceObjectDTO dto,
                                    @MappingTarget DeviceObject deviceObject);
 

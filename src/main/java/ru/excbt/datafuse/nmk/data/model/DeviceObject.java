@@ -302,6 +302,11 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Setter
     private Long heatRadiatorTypeId;
 
+    @Column(name = "device_object_name")
+    @Getter
+    @Setter
+    private String deviceObjectName;
+
 	public boolean isMetaVzletExpected() {
 		return ExSystemKey.VZLET.isEquals(exSystemKeyname);
 	}
