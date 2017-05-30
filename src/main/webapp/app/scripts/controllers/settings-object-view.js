@@ -1754,6 +1754,9 @@ angular.module('portalNMC')
                     if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.deviceModel)) {
                         $scope.data.deviceModelsForCurDevice = [$scope.data.currentDevice.deviceModel];
                     }
+                    if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.heatRadiatorType)) {
+                        $scope.data.heaterTypesForCurDevice = [$scope.data.currentDevice.heatRadiatorType];
+                    }
                     if (!mainSvc.checkUndefinedNull($scope.data.currentDevice.verificationDate)) {
                         $scope.data.currentDevice.verificationDateString = mainSvc.dateFormating($scope.data.currentDevice.verificationDate, $scope.objectCtrlSettings.dateFormat);
                     }
