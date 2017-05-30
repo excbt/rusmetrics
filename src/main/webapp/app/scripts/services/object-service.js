@@ -14,6 +14,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
             OBJECT_PER_SCROLL = 42,
             RECENT_HEATER_TYPE_ARR_LENGTH = 5; //length of recentHeaterTypes
+                 //Device types
+        var HEAT_DISTRIBUTOR = "HEAT_DISTRIBUTOR";//
                  
         var BROADCASTS = {};
         BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
@@ -64,6 +66,16 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         var buildingTypes = [],
             buildingCategories = [],
             recentHeaterTypes = [];
+                 
+        var deviceInstTypes = [
+            {
+                keyname: "P",
+                caption: "Индивидуальный"
+            }, {
+                keyname: "S",
+                caption: "Общедомовой"
+            }
+        ];
         
         //request canceling params
         var requestCanceler = null;
@@ -150,10 +162,15 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         function getBuildingCategories() {
             return buildingCategories;
         }
+                 
         function getBuildingTypes() {
             return buildingTypes;
         }
         
+        function getDeviceInstTypes() {
+            return deviceInstTypes;
+        }
+                 
         var getRsoOrganizations = function () {
             var url = urlRsoOrganizations;
             if (isCancelParamsIncorrect() === true) {
@@ -935,6 +952,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
                     
         return {
             BROADCASTS,
+            HEAT_DISTRIBUTOR,
             OBJECT_PER_SCROLL,
             addRecentHeaterType,
             createTree,
@@ -949,6 +967,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             getCmOrganizationsWithId,
             getCurrentObject,
             getDatasourcesUrl,
+            getDeviceInstTypes,
             getDeviceModels,
             /*getDeviceModelTypes,*/
             getDeviceSchedulerSettings,

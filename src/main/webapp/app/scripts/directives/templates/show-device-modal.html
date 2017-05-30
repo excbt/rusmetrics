@@ -96,6 +96,18 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="col-sm-3"><label for="inputDeviceCaption">Наименование</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputDeviceCaption"                                                         
+                                                       ng-model="currentDevice.deviceObjectName" 
+                                                       ng-disabled="isDeviceDisabled(currentDevice);">
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td><label for="inputComment" >Объект</label>
                                             </td>
                                             <td colspan="2" class="nmc-text-align-left">
@@ -110,7 +122,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr ng-if = "!deviceIsSpreader()">
                                             <td><label for="inputDescription" >Источник данных</label>
                                             </td>
                                             <td colspan="2" class="nmc-text-align-left">
@@ -169,6 +181,64 @@
                                             </td>
                                         </tr>
 -->
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td><label for = "inputDescription">Прибор отопления</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error':!checkHeaterDevice()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "currentDevice.heatRadiatorTypeId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled="isDeviceDisabled(currentDevice)"
+                                                               on-select = "selectHeaterType()">
+                                                        <ui-select-match>{{$select.selected.typeName}}</ui-select-match>
+                                                        <ui-select-choices group-by = "recentHeaterGrouping"
+                                                                           repeat = "heater.id as heater in heaterTypes | propsFilter: {typeName: $select.search}">
+                                                          <div ng-bind-html = "heater.typeName"></div>
+                                                        </ui-select-choices>
+                                                      </ui-select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td class = "col-sm-3"><label for="inputHeaterPower">Мощность</label>
+                                            </td>
+                                            <td colspan = "2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                
+                                                <div class = "input-group nmc-input-data pull-right">
+                                                    <input class = "form-control nmc-input-data nmc-text-input-form" 
+                                                           type = "text" 
+                                                           id = "inputHeaterPower"                                                         
+                                                           ng-model="currentDevice.heatRadiatorPower"
+                                                           data-inputmask = "'alias': 'numeric', 'greedy': false"
+                                                           ng-disabled="isDeviceDisabled(currentDevice);">
+                                                    <span class = "input-group-addon nmc-addon-label">Вт</span>
+                                                    
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for = "inputInstType" >Способ установки</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                <div class = "form-group noMarginBottom"> 
+<!--                                                     ng-class="{'has-error': data.currentObject.setTypeKeyname == null}">-->
+                                                    <select class = "form-control nmc-select-form" 
+                                                            id = "inputInstType" 
+                                                            ng-model = "currentDevice.instType" 
+                                                            ng-options = "instType.keyname as instType.caption for instType in dirData.deviceInstTypes" 
+                                                            ng-disabled = "isDeviceDisabled(currentDevice);"
+                                                            ng-change = "deviceInstTypeChange()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
                                         <tr ng-if = "currentDevice.curDatasource.dataSourceType.isRaw == true">
                                             <td colspan="3" >
                                                 <input type="checkbox" 

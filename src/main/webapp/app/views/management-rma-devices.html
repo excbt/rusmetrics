@@ -332,39 +332,9 @@
                                                         <ui-select-choices group-by = "recentHeaterGrouping"
                                                                            repeat = "heater.id as heater in data.heaterTypes | propsFilter: {typeName: $select.search}">
                                                           <div ng-bind-html = "heater.typeName"></div>
-<!--
-                                                          <small>
-                                                            макс. / мин. : <span ng-bind-html = "sch.maxT"></span> / 
-                                                            <span ng-bind-html = "sch.minT"></span>  
-                                                          </small>
--->
                                                         </ui-select-choices>
                                                       </ui-select>
-<!--
-                                                    <span class = "input-group-addon nmc-input-form-suffix">
-                                                        <i title = "Очистить поле"
-                                                           class = "btn btn-xs nmc-button-clear-filter"
-                                                           ng-click = "removeTChart(zpointSettings)">
-                                                            <img height = "19" width = "19" src = "images/clear-filter.png" class = "nmc-img-clear-filter">
-                                                        </i>
-                                                    </span>
--->
                                                 </div>
-                                                
-<!--
-                                                <div class = "form-group noMarginBottom" 
-                                                     ng-class = "{'has-error':!checkHeaterDevice()}">
-                                                    <select ng-show = "!isDeviceDisabled(data.currentObject)" 
-                                                            class = "form-control nmc-select-form"
-                                                            
-                                                            id = "inputHeaterDevice" 
-                                                            ng-model = "data.currentObject.heatRadiatorTypeId" 
-                                                            ng-options = "heater.id as heater.typeName for heater in data.heaterTypes" 
-                                                            ng-change = "deviceHeaterChange()">
-                                                    </select>
-                                                    
-                                                </div>                                    
--->
                                             </td>
                                         </tr>
                                         <tr ng-if = "deviceIsSpreader()">

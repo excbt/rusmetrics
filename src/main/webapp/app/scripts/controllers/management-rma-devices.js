@@ -18,8 +18,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     var SESSION_TASK_URL = "../api/rma/subscrSessionTask",
         SESSION_DETAIL_TYPE_URL = SESSION_TASK_URL + "/contZPointSessionDetailType/byDeviceObject",
         SESSION_DETAIL_TYPE_FOR_DEVICE_URL = SESSION_TASK_URL + "/sessionDetailTypes/byDeviceObject",
-        REFRESH_PERIOD = 10000,//10 sec
-        HEAT_DISTRIBUTOR = "HEAT_DISTRIBUTOR"; //Heat device type
+        REFRESH_PERIOD = 10000;//10 sec        
     
     var interval = null;//interval for load session data
     
@@ -171,15 +170,16 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
     ];
     
-    $scope.data.deviceInstTypes = [
-        {
-            keyname: "P",
-            caption: "Индивидуальный"
-        }, {
-            keyname: "S",
-            caption: "Общедомовой"
-        }
-    ];
+    $scope.data.deviceInstTypes = objectSvc.getDeviceInstTypes();
+//    [
+//        {
+//            keyname: "P",
+//            caption: "Индивидуальный"
+//        }, {
+//            keyname: "S",
+//            caption: "Общедомовой"
+//        }
+//    ];
     
     function setActivePropertiesTab(tabName) {
         $scope.data.deviceModalWindowTabs.forEach(function (tabElem) {
@@ -424,7 +424,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
 /** Speaders and Heaters
 */
     $scope.deviceIsSpreader = function () {
-        return (!mainSvc.checkUndefinedNull($scope.data.currentModel) && !mainSvc.checkUndefinedNull($scope.data.currentModel.deviceType) && $scope.data.currentModel.deviceType === HEAT_DISTRIBUTOR);
+        return (!mainSvc.checkUndefinedNull($scope.data.currentModel) && !mainSvc.checkUndefinedNull($scope.data.currentModel.deviceType) && $scope.data.currentModel.deviceType === objectSvc.HEAT_DISTRIBUTOR);
     };
     
     $scope.checkHeaterDevice = function () {

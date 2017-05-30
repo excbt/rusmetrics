@@ -11,6 +11,7 @@ app.directive('nmcShowDeviceModal', function () {
             deviceSources: "=",
             deviceModels: "=",
             contObjects: "=",
+            heaterTypes: "=",
             
             readOnly: "@",
             btnClick: "&",
@@ -18,7 +19,10 @@ app.directive('nmcShowDeviceModal', function () {
             showOkButton: "@"
         },
         templateUrl: 'scripts/directives/templates/show-device-modal.html',
-        controller: ['$scope', 'mainSvc', '$cookies', function ($scope, mainSvc, $cookies) {
+        controller: ['$scope', 'mainSvc', '$cookies', 'objectSvc', '$timeout', function ($scope, mainSvc, $cookies, objectSvc, $timeout) {
+            
+            $scope.dirData = {};
+            $scope.dirData.deviceInstTypes = objectSvc.getDeviceInstTypes();
             
             var deviceModalWindowTabs = [
                 {
@@ -51,6 +55,12 @@ app.directive('nmcShowDeviceModal', function () {
                 });
 
 
+            }
+            
+            function setInputmask() {
+                $timeout(function () {
+                    $('#inputHeaterPower').inputmask();
+                });
             }
             
             $scope.isDeviceDisabled = function (device) {
@@ -105,6 +115,15 @@ app.directive('nmcShowDeviceModal', function () {
                     $scope.currentDevice.exSystemKeyname === 'VZLET';
             };
             
+            $scope.deviceIsSpreader = function () {
+                return (!mainSvc.checkUndefinedNull($scope.dirData.currentModel) && !mainSvc.checkUndefinedNull($scope.dirData.currentModel.deviceType) && $scope.dirData.currentModel.deviceType === objectSvc.HEAT_DISTRIBUTOR);
+            };
+            
+            $scope.recentHeaterGrouping = function (item) {
+                var rhTypes = objectSvc.getRecentHeaterTypes();
+                return rhTypes.indexOf(item.id) > -1 ? "Недавно использованные" : undefined;
+            };
+            
             //date picker
             $scope.dateOptsParamsetRu = {
                 locale : {
@@ -118,6 +137,12 @@ app.directive('nmcShowDeviceModal', function () {
             };
             
             $('#showDeviceModal').on('shown.bs.modal', function () {
+                
+                $scope.dirData.currentModel = mainSvc.findItemBy($scope.deviceModels, 'id', $scope.currentDevice.deviceModelId);
+                $scope.currentDevice.subscrDataSourceId = Number($scope.currentDevice.activeDataSource.subscrDataSource.id);
+                $scope.$apply();
+                
+                setInputmask();
                 $('#inputVerificationInterval').inputmask();
                 $('#inputVerificationDate').datepicker({
                     dateFormat: "dd.mm.yy",
