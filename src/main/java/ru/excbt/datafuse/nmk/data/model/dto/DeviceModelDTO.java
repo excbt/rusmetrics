@@ -45,6 +45,8 @@ public class DeviceModelDTO implements DevModeObject {
 
     private String defaultImpulseMu;
 
+    private String deviceType;
+
     private Map<Long,Double> heatRadiatorKcs = new HashMap<>();
 
 }
