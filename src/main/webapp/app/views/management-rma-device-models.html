@@ -6,43 +6,43 @@
 
   <!-- Навигационная полоса -->
     <ul class = "nav nav-tabs" role = "tablist">
-        <li id="objects_edit_2nd_menu_item" role="presentation"><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+        <li id = "objects_edit_2nd_menu_item" role = "presentation"><a id = "objectsTab" class = "nmc-main-tab-button" href = "#/management/objects/" aria-controls = "objects" data-target = "#objects" role = "tab" data-toggle = "tab">Объекты</a></li>
 <!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
-        <li id="data_sources_2nd_menu_item" role="presentation"><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
-        <li id="devices_2nd_menu_item" role="presentation"><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
-        <li ng-if="isSystemuser()"
-            ng-hide="isTestMode()"
-            id="modems_edit_2nd_menu_item" role="presentation">
-            <a class="nmc-main-tab-button" 
-               href="#/management/modems/" 
-               aria-controls="modems" 
-               role="tab" 
-               data-target="#modems" 
-               data-toggle="tab">Модемы
+        <li id = "data_sources_2nd_menu_item" role = "presentation"><a id = "datasourcesTab" class = "nmc-main-tab-button" href = "#/management/datasources/" aria-controls = "datasources" data-target = "#datasources" role = "tab" data-toggle = "tab">Источники данных</a>           </li>
+        <li id = "devices_2nd_menu_item" role = "presentation"><a id = "devicesTab" class = "nmc-main-tab-button" href = "#/management/devices/" aria-controls = "devices" data-target = "#devices" role = "tab" data-toggle = "tab">Приборы</a></li>
+        <li ng-if = "isSystemuser()"
+            ng-hide = "isTestMode()"
+            id = "modems_edit_2nd_menu_item" role = "presentation">
+            <a class = "nmc-main-tab-button" 
+               href = "#/management/modems/" 
+               aria-controls = "modems" 
+               role = "tab" 
+               data-target = "#modems" 
+               data-toggle = "tab">Модемы
             </a>
         </li>
-        <li ng-if="isSystemuser()"
-            ng-hide="isTestMode()"
-            id="models_edit_2nd_menu_item" 
-            role="presentation"
-            class="active">
-            <a class="nmc-main-tab-button"  
+        <li ng-if = "isSystemuser()"
+            ng-hide = "isTestMode()"
+            id = "models_edit_2nd_menu_item" 
+            role = "presentation"
+            class = "active">
+            <a class = "nmc-main-tab-button"  
                >Модели приборов
             </a>
         </li>
-        <li id="organizations_edit_2nd_menu_item" role="presentation">
-            <a class="nmc-main-tab-button" 
-               href="#/management/organizations/" 
-               aria-controls="organizations" 
-               role="tab" 
-               data-target="#organizations" 
-               data-toggle="tab">Организации
+        <li id = "organizations_edit_2nd_menu_item" role = "presentation">
+            <a class = "nmc-main-tab-button" 
+               href = "#/management/organizations/" 
+               aria-controls = "organizations" 
+               role = "tab" 
+               data-target = "#organizations" 
+               data-toggle = "tab">Организации
             </a>
         </li>
-        <li id="clients_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-        <li id="temperature_schedules_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
+        <li id = "clients_edit_2nd_menu_item" role = "presentation"><a class = "nmc-main-tab-button" href = "#/management/clients/" aria-controls = "clients" role = "tab" data-target = "#clients" data-toggle = "tab">Абоненты</a></li>
+        <li id = "users_edit_2nd_menu_item" role = "presentation"><a class = "nmc-main-tab-button" href = "#/management/users/" aria-controls = "users" role = "tab" data-target = "#users" data-toggle = "tab">Пользователи</a></li>
+        <li id = "users_edit_2nd_menu_item" role = "presentation"><a class = "nmc-main-tab-button" href = "#/management/price/" aria-controls = "price" role = "tab" data-target = "#price" data-toggle = "tab">Прайс-листы</a></li>
+        <li id = "temperature_schedules_2nd_menu_item" role = "presentation"><a class = "nmc-main-tab-button" href = "#/management/temp-sch/" aria-controls = "price" role = "tab" data-target = "#price" data-toggle = "tab">Температурные графики</a></li>
 
     </ul>
 
@@ -74,9 +74,9 @@
             <th class = "col-xs-1 nmc-td-for-button">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.modelColumns track by $index" ng-class="column.class" ng-click="setOrderBy(column.name)">
+            <th ng-repeat = "column in ctrlSettings.modelColumns track by $index" ng-class = "column.class" ng-click = "setOrderBy(column.name)">
                 {{column.caption}}
-                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                <i class = "glyphicon" ng-class = "{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show = "orderBy.field == '{{column.name}}'"></i>
             </th>
 <!--
             <th class="col-xs-1">
@@ -85,15 +85,15 @@
         </tr>
 </table>
 
-<div class="nmc-data-sources-main-div">
-    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
-        <tr class="nmc-main-table-header nmc-hide">
-            <th class="col-xs-1 nmc-td-for-button">
+<div class = "nmc-data-sources-main-div">
+    <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class = "nmc-main-table-header nmc-hide">
+            <th class = "col-xs-1 nmc-td-for-button">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.modelColumns track by $index" ng-class="column.class" ng-click="setOrderBy(column.name)">
+            <th ng-repeat = "column in ctrlSettings.modelColumns track by $index" ng-class = "column.class" ng-click = "setOrderBy(column.name)">
                 {{column.caption}}
-                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                <i class = "glyphicon" ng-class = "{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show = "orderBy.field == '{{column.name}}'"></i>
             </th>
 <!--
             <th class="col-xs-1">
@@ -101,22 +101,22 @@
 -->
         </tr>
 
-        <tr ng-repeat="model in data.models | orderBy:orderBy.field:!orderBy.asc | filter: filter track by $index">
-            <td class="col-xs-1 nmc-td-for-button">
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <i title="Свойства модели прибора" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(model)" data-target="#showModelOptionModal" data-toggle="modal"></i>
+        <tr ng-repeat = "model in data.models | orderBy:orderBy.field:!orderBy.asc | filter: filter track by $index">
+            <td class = "col-xs-1 nmc-td-for-button">
+                <div class = "btn-toolbar">
+                    <div class = "btn-group">
+                        <i title = "Свойства модели прибора" class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click = "selectedItem(model)" data-target = "#showModelOptionModal" data-toggle = "modal"></i>
                         
                     </div>
                 </div>
             </td>
-            <td ng-repeat="column in ctrlSettings.modelColumns track by $index">
+            <td ng-repeat = "column in ctrlSettings.modelColumns track by $index">
 <!--                ng-class="column.class"-->
-                <div ng-switch on="column.type">
-                    <span ng-switch-when="name">{{model[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{model['id']}})</span>
+                <div ng-switch on = "column.type">
+                    <span ng-switch-when = "name">{{model[column.name] || "Без названия"}}<span ng-show = "isSystemuser()"> (id = {{model['id']}})</span>
                     </span>
-                    <span ng-switch-when="checkbox">
-                        <input type="checkbox" ng-model="model[column.name]" disabled/>
+                    <span ng-switch-when = "checkbox">
+                        <input type = "checkbox" ng-model = "model[column.name]" disabled/>
                     </span>
                     <span ng-switch-default >
                         {{model[column.name]}}
@@ -138,120 +138,120 @@
 </div>
 
 <!--Show model options-->
-<div id="showModelOptionModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showModelOptionLabel" tabindex="-1" data-backdrop="static">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="showModelOptionLabel" class="nmc-h3">
+<div id = "showModelOptionModal" class = "modal fade nmc-modal-window" role = "dialog"
+	aria-labelledby = "showModelOptionLabel" tabindex = "-1" data-backdrop = "static">
+	<div class = "modal-dialog  modal-content nmc-modal-dialog">
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" class = "close nmc-close-button" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+			<h3 id = "showModelOptionLabel" class = "nmc-h3">
 				Модель
 			</h3>
 		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+		<div class = "modal-body nmc-modal-body paddingLeftRight15">
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                        <table class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td colspan="2" class="col-sm-3">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentModel.isImpulse">Импульсный прибор
-                                </td>                                
-                            </tr> 
-                            <tr>
-                                <td class="col-sm-3"><label for="inputModelName">modelName</label>
+                                <td colspan = "2" class = "col-sm-3">
+                                   <input type = "checkbox" class = "nmc-checkbox-form" ng-model = "data.currentModel.isImpulse">Импульсный прибор
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error':!(data.currentModel.modelName > '')}">
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" id="inputModelName"
-                                               ng-model="data.currentModel.modelName"/>
+                            </tr>
+                            <tr>
+                                <td class = "col-sm-3"><label for = "inputModelName">modelName</label>
+                                </td>
+                                <td class = "col-sm-9 nmc-text-align-left">
+                                    <div class = "form-group noMarginBottom" 
+                                         ng-class = "{'has-error':!(data.currentModel.modelName > '')}">
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" id = "inputModelName"
+                                               ng-model = "data.currentModel.modelName"/>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputCaption">Caption</label>
+                                <td class = "col-sm-3"><label for = "inputCaption">Caption</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" 
                                          ng-class="{'has-error':!(data.currentModel.caption > '')}">
 -->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputCaption" 
-                                               ng-model="data.currentModel.caption"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputCaption" 
+                                               ng-model = "data.currentModel.caption"/>
 <!--                                    </div>                                        -->
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputKeyname">Keyname</label>
+                                <td class = "col-sm-3"><label for = "inputKeyname">Keyname</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.keyname > '')}">-->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputKeyname" 
-                                               ng-model="data.currentModel.keyname"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputKeyname" 
+                                               ng-model = "data.currentModel.keyname"/>
 <!--                                    </div>-->
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputExCode">exCode</label>
+                                <td class = "col-sm-3"><label for = "inputExCode">exCode</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exCode > '')}">-->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputExCode" 
-                                               ng-model="data.currentModel.exCode"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputExCode" 
+                                               ng-model = "data.currentModel.exCode"/>
 <!--                                    </div>-->
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputKeyname">exLabel</label>
+                                <td class = "col-sm-3"><label for = "inputKeyname">exLabel</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exLabel > '')}">-->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputExLabel" 
-                                               ng-model="data.currentModel.exLabel"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputExLabel" 
+                                               ng-model = "data.currentModel.exLabel"/>
 <!--                                    </div>-->
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputExSystem">exSystem</label>
+                                <td class = "col-sm-3"><label for = "inputExSystem">exSystem</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputExSystem" 
-                                               ng-model="data.currentModel.exSystem"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputExSystem" 
+                                               ng-model = "data.currentModel.exSystem"/>
 <!--                                    </div>-->
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputMDT">Model driver type</label>
+                                <td class = "col-sm-3"><label for = "inputMDT">Model driver type</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputMDT" 
-                                               ng-model="data.currentModel.modelDriverType"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputMDT" 
+                                               ng-model = "data.currentModel.modelDriverType"/>
 <!--                                    </div>-->
                                 </td>
                             </tr>
-                            <tr ng-show="data.currentModel.isImpulse === true">
-                                <td class="col-sm-3"><label for="inputDIK">Default impulse K</label>
+                            <tr ng-show = "data.currentModel.isImpulse === true">
+                                <td class = "col-sm-3"><label for = "inputDIK">Default impulse K</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
+                                <td class = "col-sm-9 nmc-text-align-left">
 <!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModel.exSystem > '')}">-->
-                                        <input class="form-control nmc-text-input-form" 
-                                               type="text" 
-                                               id="inputDIK" 
-                                               ng-model="data.currentModel.defaultImpulseK"/>
+                                        <input class = "form-control nmc-text-input-form" 
+                                               type = "text" 
+                                               id = "inputDIK" 
+                                               ng-model = "data.currentModel.defaultImpulseK"/>
 <!--                                    </div>-->
                                 </td>
                             </tr>

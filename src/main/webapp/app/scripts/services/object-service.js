@@ -12,7 +12,9 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             }
         ];
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
-            OBJECT_PER_SCROLL = 42;
+            OBJECT_PER_SCROLL = 42,
+            RECENT_HEATER_TYPE_ARR_LENGTH = 5; //length of recentHeaterTypes
+                 
         var BROADCASTS = {};
         BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
         BROADCASTS.BUILDING_CATEGORIES_LOADED = "objectSvc:buildingCategoriesLoaded";
@@ -28,6 +30,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             urlDeviceModels = urlRma + urlDeviceObjects + '/deviceModels',
             urlDeviceModelTypes = urlRma + urlDeviceObjects + '/deviceModelTypes',
             urlImpulseCounterTypes = urlRma + urlDeviceObjects + '/impulseCounterTypes',
+            urlHeaterTypes = urlRma + urlDeviceObjects + '/heatRadiatorTypes',
             urlDeviceMetaDataVzlet = '/metaVzlet',
             urlDeviceMetaDataSuffix = '/metadata',
             urlZpointMetaDataSuffix = '/metadata',
@@ -59,7 +62,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
 
         var objectSvcSettings = {};
         var buildingTypes = [],
-            buildingCategories = [];
+            buildingCategories = [],
+            recentHeaterTypes = [];
         
         //request canceling params
         var requestCanceler = null;
@@ -245,7 +249,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             return $http.get(url, httpOptions);
         };
                  
-        var getDeviceModels = function () {            
+        var getDeviceModels = function () {
             var url = urlDeviceModels;
             if (isCancelParamsIncorrect() === true) {
                 return null;
@@ -263,6 +267,14 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
                  
         function getImpulseCounterTypes() {
             var url = urlImpulseCounterTypes;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        }
+                 
+        function getHeaterTypes() {
+            var url = urlHeaterTypes;
             if (isCancelParamsIncorrect() === true) {
                 return null;
             }
@@ -887,6 +899,20 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             var url = urlSubscrContObjects + '/' + meterPeriodData.contObjectId + meterPeriodSuffix;
             return $http.put(url, meterPeriodData);
         }
+/**                 
+    Heater types.
+    
+*/
+        function getRecentHeaterTypes() {
+            return recentHeaterTypes;
+        }
+                 
+        function addRecentHeaterType(heaterType) {
+            if (recentHeaterTypes.length >= RECENT_HEATER_TYPE_ARR_LENGTH) {
+                recentHeaterTypes.shift();
+            }
+            recentHeaterTypes.push(heaterType);
+        }
                  
         
         //service initialization
@@ -926,6 +952,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             /*getDeviceModelTypes,*/
             getDeviceSchedulerSettings,
             getImpulseCounterTypes,
+            getHeaterTypes,
             getMeterPeriodByObject,
             getObject,
             getObjectConsumingData,

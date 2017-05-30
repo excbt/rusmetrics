@@ -247,40 +247,40 @@
 </div>
 
 <!--Show device options-->
-<div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showDeviceLabel" tabindex="-1" data-backdrop="static">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="showDeviceLabel" class="nmc-h3">
+<div id = "showDeviceModal" class = "modal fade nmc-modal-window" role = "dialog"
+	aria-labelledby = "showDeviceLabel" tabindex = "-1" data-backdrop = "static">
+	<div class = "modal-dialog  modal-content nmc-modal-dialog">
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" class = "close nmc-close-button" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+			<h3 id = "showDeviceLabel" class = "nmc-h3">
 				Прибор
 			</h3>
 		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div role="tabpanel" 
-                 class="nmc-tab-panel">
+		<div class = "modal-body nmc-modal-body paddingLeftRight15">
+            <div role = "tabpanel" 
+                 class = "nmc-tab-panel">
               <!-- Навигационная полоса для варианта отчета-->
-              <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" 
-                    class="active" 
-                    id="main_properties_tab">
-                    <a class="nmc-tab-button" 
-                       href="" 
-                       aria-controls="main_properties" 
-                       data-target="#main_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
+              <ul class = "nav nav-tabs" role = "tablist">
+                <li role = "presentation" 
+                    class = "active" 
+                    id = "main_properties_tab">
+                    <a class = "nmc-tab-button" 
+                       href = "" 
+                       aria-controls = "main_properties" 
+                       data-target = "#main_properties" 
+                       role = "tab" 
+                       data-toggle = "tab" 
                        >Основные свойства
                     </a>
                   </li>
-                <li role="presentation" 
-                    id="con_properties_tab"                     
-                    class="nmc-hide" 
-                    ng-class="{'nmc-hide' : !isAvailableConPropertiesTab(), 'nmc-show' : isAvailableConPropertiesTab()}"
+                <li role = "presentation" 
+                    id = "con_properties_tab"                     
+                    class = "nmc-hide" 
+                    ng-class = "{'nmc-hide' : !isAvailableConPropertiesTab(), 'nmc-show' : isAvailableConPropertiesTab()}"
                     > 
-                    <a class="nmc-tab-button"
-                       href="" 
-                       aria-controls="con_properties" 
+                    <a class = "nmc-tab-button"
+                       href = "" 
+                       aria-controls = "con_properties" 
                        data-target="#con_properties" 
                        role="tab" 
                        data-toggle="tab" 
@@ -361,7 +361,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr ng-if = "!deviceIsSpreader()">
                                             <td><label for = "inputDescription">Источник данных</label>
                                             </td>
                                             <td colspan = "2" class = "nmc-text-align-left">
@@ -390,6 +390,77 @@
                                                         </span>
                                                     </span>
                                                 </div>                                    
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td><label for = "inputDescription">Прибор отопления</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error':!checkHeaterDevice()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "data.currentObject.heatRadiatorTypeId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled = "disabled"
+                                                               on-select = "selectHeaterType()">
+                                                        <ui-select-match placeholder = "">{{$select.selected.typeName}}</ui-select-match>
+                                                        <ui-select-choices repeat = "heater.id as heater in data.heaterTypes | propsFilter: {typeName: $select.search}">
+                                                          <div ng-bind-html = "heater.typeName"></div>
+<!--
+                                                          <small>
+                                                            макс. / мин. : <span ng-bind-html = "sch.maxT"></span> / 
+                                                            <span ng-bind-html = "sch.minT"></span>  
+                                                          </small>
+-->
+                                                        </ui-select-choices>
+                                                      </ui-select>
+<!--
+                                                    <span class = "input-group-addon nmc-input-form-suffix">
+                                                        <i title = "Очистить поле"
+                                                           class = "btn btn-xs nmc-button-clear-filter"
+                                                           ng-click = "removeTChart(zpointSettings)">
+                                                            <img height = "19" width = "19" src = "images/clear-filter.png" class = "nmc-img-clear-filter">
+                                                        </i>
+                                                    </span>
+-->
+                                                </div>
+                                                
+<!--
+                                                <div class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':!checkHeaterDevice()}">
+                                                    <select ng-show = "!isDeviceDisabled(data.currentObject)" 
+                                                            class = "form-control nmc-select-form"
+                                                            
+                                                            id = "inputHeaterDevice" 
+                                                            ng-model = "data.currentObject.heatRadiatorTypeId" 
+                                                            ng-options = "heater.id as heater.typeName for heater in data.heaterTypes" 
+                                                            ng-change = "deviceHeaterChange()">
+                                                    </select>
+                                                    
+                                                </div>                                    
+-->
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td class = "col-sm-3"><label for="inputHeaterPower">Мощность</label>
+                                            </td>
+                                            <td colspan = "2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                
+                                                <div class = "input-group nmc-input-data pull-right">
+                                                    <input class = "form-control nmc-input-data nmc-text-input-form" 
+                                                           type = "text" 
+                                                           id = "inputHeaterPower"                                                         
+                                                           ng-model="data.currentObject.heatRadiatorPower"
+                                                           data-inputmask = "'alias': 'numeric', 'greedy': false"
+                                                           ng-disabled="isDeviceDisabled(data.currentObject);">
+                                                    <span class = "input-group-addon nmc-addon-label">Вт</span>
+                                                    
+                                                </div>
+                                                
                                             </td>
                                         </tr>
                                         <tr>
