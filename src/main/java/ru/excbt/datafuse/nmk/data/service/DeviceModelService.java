@@ -17,12 +17,10 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceModelHeatRadiator;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
-import ru.excbt.datafuse.nmk.data.model.keyname.DeviceModelType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ImpulseCounterType;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelHeatRadiatorRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.DeviceModelTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ImpulseCounterTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -41,7 +39,6 @@ public class DeviceModelService extends AbstractService implements SecuredRoles 
 
 	private final DeviceModelRepository deviceModelRepository;
 
-	private final DeviceModelTypeRepository deviceModelTypeRepository;
 
 	private final ImpulseCounterTypeRepository impulseCounterTypeRepository;
 
@@ -67,12 +64,10 @@ public class DeviceModelService extends AbstractService implements SecuredRoles 
 
 	@Autowired
     public DeviceModelService(DeviceModelRepository deviceModelRepository,
-                              DeviceModelTypeRepository deviceModelTypeRepository,
                               ImpulseCounterTypeRepository impulseCounterTypeRepository,
                               DeviceModelMapper deviceModelMapper,
                               DeviceModelHeatRadiatorRepository deviceModelHeatRadiatorRepository) {
 	    this.deviceModelRepository = deviceModelRepository;
-	    this.deviceModelTypeRepository = deviceModelTypeRepository;
 	    this.impulseCounterTypeRepository = impulseCounterTypeRepository;
 	    this.deviceModelMapper = deviceModelMapper;
 	    this.deviceModelHeatRadiatorRepository = deviceModelHeatRadiatorRepository;
@@ -194,14 +189,14 @@ public class DeviceModelService extends AbstractService implements SecuredRoles 
         return resultList;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<DeviceModelType> findDeviceModelTypes() {
-		return deviceModelTypeRepository.selectAll();
-	}
+//	/**
+//	 *
+//	 * @return
+//	 */
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public List<DeviceModelDataType> findDeviceModelTypes() {
+//		return deviceModelDataTypeRepository.selectAll();
+//	}
 
 	/**
 	 *

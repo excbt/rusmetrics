@@ -76,6 +76,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	protected HeatRadiatorTypeService heatRadiatorTypeService;
 
     @Autowired
+    protected DeviceDataTypeService deviceDataTypeService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
 	/**
@@ -352,7 +355,17 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	@RequestMapping(value = "/deviceObjects/deviceModelTypes", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceModelTypes() {
-		return responseOK(() -> deviceModelService.findDeviceModelTypes());
+		return responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceDataTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceDataTypes() {
+		return responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
 	}
 
 

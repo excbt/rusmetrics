@@ -128,13 +128,13 @@ public class DeviceModel extends AbstractAuditableModel
 	private String deviceType;
 
 	@ElementCollection
-	@CollectionTable(schema = DBMetadata.SCHEME_PORTAL, name = "device_model_type_group",
+	@CollectionTable(schema = DBMetadata.SCHEME_PORTAL, name = "device_model_data_type",
 			joinColumns = @JoinColumn(name = "device_model_id"))
-	@Column(name = "device_model_type")
+	@Column(name = "device_data_type")
 	//@Fetch(value = FetchMode.SUBSELECT)
     @Getter
     @Setter
-	private Set<String> deviceModelTypes = new HashSet<>();
+	private Set<String> deviceDataTypes = new HashSet<>();
 
 
 //    @ElementCollection

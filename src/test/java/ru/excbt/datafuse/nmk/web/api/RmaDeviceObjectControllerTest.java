@@ -1,17 +1,11 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.types.DeviceModelType;
@@ -21,9 +15,12 @@ import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
+
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 
 @Transactional
@@ -315,7 +312,7 @@ public class RmaDeviceObjectControllerTest extends RmaControllerTest {
 
 		if (!deviceModels.isEmpty()) {
 			DeviceModel deviceModel = deviceModels.get(0);
-			deviceModel.getDeviceModelTypes().add(DeviceModelType.WATER.name());
+			deviceModel.getDeviceDataTypes().add(DeviceModelType.WATER.name());
 
 			_testUpdateJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels/" + deviceModel.getId()), deviceModel);
 
@@ -333,7 +330,7 @@ public class RmaDeviceObjectControllerTest extends RmaControllerTest {
 
 		DeviceModel deviceModel = new DeviceModel();
 		deviceModel.setModelName("TEST AK");
-		deviceModel.getDeviceModelTypes().add(DeviceModelType.WATER.name());
+		deviceModel.getDeviceDataTypes().add(DeviceModelType.WATER.name());
 
 		_testCreateJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels"), deviceModel);
 
