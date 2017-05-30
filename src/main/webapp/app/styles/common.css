@@ -1469,6 +1469,11 @@ tr.nmc-inactive-price > td {
     border-radius: 4px !important;
 /*    background-color: #f9dd72;*/
 }
+/* метка позади контрола input*/
+.nmc-addon-label {
+    font-size: 12px;
+    padding: 0;
+}
 
 /*  текст перед контролом input*/
 .nmc-input-form-addon {
