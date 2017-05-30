@@ -369,7 +369,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN, ROLE_SUBSCR_ADMIN })
 	public DeviceObject saveDeviceObjectDMO(DeviceObjectDMO deviceObjectDMO) {
 		// Checking
 		checkNotNull(deviceObjectDMO, "Argument DeviceObject is NULL");
