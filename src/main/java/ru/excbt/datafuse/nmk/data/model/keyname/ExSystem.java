@@ -6,14 +6,15 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
-@Table(name = "ex_system")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "ex_system")
 public class ExSystem extends AbstractKeynameEntity {
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7700237687698913901L;
 
