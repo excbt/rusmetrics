@@ -1,21 +1,9 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.postgresql.util.PSQLException;
@@ -25,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWaterImport;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -39,12 +26,25 @@ import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.12.2016
- * 
+ *
  */
 @Service
 public class ContServiceDataHWaterImportService implements SecuredRoles {
@@ -72,7 +72,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 		private final List<ServiceDataImportInfo> serviceDataImportInfos;
 
 		/**
-		 * 
+		 *
 		 */
 		public Task(List<ServiceDataImportInfo> serviceDataImportInfos) {
 			checkNotNull(serviceDataImportInfos);
@@ -101,7 +101,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param serviceDataImportInfos
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -120,7 +120,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			session.status(SLogSessionStatuses.GENERATING.getKeyname(),
 					"Загрузка файла: " + importInfo.getUserFileName());
 
-			session.web().trace("Проверка файла на валидность");
+			session.web().trace("Проверка целостности данных файла");
 
 			boolean checkCsvSeparators = false;
 			try {
@@ -141,14 +141,19 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 						"Check CSV separators error", importInfo.getUserFileName()));
 			}
 
-			session.web().trace("Проверка файла на валидность пройдена");
+			session.web().trace("Проверка целостности данных файла пройдена");
 
-			session.web().trace("Обработка данных файла");
 
+            session.web().trace("Преобразование данных файла");
+
+			// Reading CSV from FILE
 			List<ContServiceDataHWaterImport> inDataHWaterImport;
 			try (FileInputStream fio = new FileInputStream(importInfo.getInternalFileName())) {
 				inDataHWaterImport = hWatersCsvService.parseDataHWaterImportCsv(fio);
-			} catch (IOException e) {
+			} catch (Exception e) {
+			    if (e instanceof RuntimeJsonMappingException) {
+                    session.web().trace("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());
+                }
 				failSession(session, importInfo, "Ошибка. Данные из файла не могут быть обработаны");
 				logger.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
 						session.getSessionUUID(), e.getMessage());
@@ -156,7 +161,9 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 						String.format(IMPORT_EXCEPTION_TEMPLATE, "Parsing error", importInfo.getUserFileName()));
 			}
 
-			session.web().trace("Данные считаны. Проверка данных на валидность");
+            session.web().trace("Преобразование данных файла пройдена");
+
+			session.web().trace("Данные преобразованы. Проверка данных на валидность");
 
 			if (inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null)
 					.count() > 0) {
@@ -267,7 +274,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param session
 	 * @param message
 	 * @param importInfo
@@ -279,7 +286,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param session
 	 * @param importInfo
 	 */
@@ -289,7 +296,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param serviceDataImportInfos
 	 * @return
 	 */

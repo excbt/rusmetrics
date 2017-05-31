@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 
 /**
  * Класс для работы с экспортом данных данных по воде
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.07.2015
@@ -47,7 +47,7 @@ public class HWatersCsvService {
 	private final TimeZoneService timeZoneService;
 
 	/**
-	 * 
+	 *
 	 */
 	@Inject
 	public HWatersCsvService(TimeZoneService timeZoneService) {
@@ -55,7 +55,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contServiceDataHWaterList
 	 * @return
 	 * @throws JsonProcessingException
@@ -78,7 +78,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contServiceDataHWaterList
 	 * @return
 	 * @throws JsonProcessingException
@@ -101,7 +101,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputStream
 	 * @return
 	 * @throws IOException
@@ -128,14 +128,14 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputStream
 	 * @return
 	 * @throws IOException
 	 * @throws JsonProcessingException
 	 */
 	public List<ContServiceDataHWaterImport> parseDataHWaterImportCsv(InputStream inputStream)
-			throws JsonProcessingException, IOException {
+			throws IOException {
 
 		CsvMapper mapper = new CsvMapper();
 		mapper.addMixIn(ContServiceDataHWaterImport.class, ContServiceDataHWaterImport_CsvFormat.class);
@@ -155,7 +155,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param file
 	 * @return
 	 * @throws FileNotFoundException
@@ -170,7 +170,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param byteArray
 	 * @return
 	 * @throws FileNotFoundException
@@ -185,7 +185,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reader
 	 * @return
 	 * @throws IOException

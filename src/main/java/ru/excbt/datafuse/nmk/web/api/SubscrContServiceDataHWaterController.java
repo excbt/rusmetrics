@@ -90,7 +90,7 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 /**
  * Контроллер для работы с данными по теплоснабжению для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.03.2015
@@ -110,50 +110,66 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(ReportService.DATE_TEMPLATE);
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ContZPointService contZPointService;
+
+	private final HWatersCsvService hWatersCsvService;
+
+	private final WebAppPropsService webAppPropsService;
+
+	private final CurrentSubscriberService currentSubscriberService;
+
+	private final ContServiceDataHWaterService contServiceDataHWaterService;
+
+	private final ContServiceDataHWaterDeltaService contObjectHWaterDeltaService;
+
+	private final SubscrContObjectService subscrContObjectService;
+
+	private final ContServiceDataHWaterImportService contServiceDataHWaterImportService;
+
+	private final SubscriberExecutorService subscriberExecutorService;
+
+	private final SubscrDataSourceService subscrDataSourceService;
+
 
 	@Autowired
-	private HWatersCsvService hWatersCsvService;
+    public SubscrContServiceDataHWaterController(ContZPointService contZPointService,
+                                                 HWatersCsvService hWatersCsvService,
+                                                 WebAppPropsService webAppPropsService,
+                                                 CurrentSubscriberService currentSubscriberService,
+                                                 ContServiceDataHWaterService contServiceDataHWaterService,
+                                                 ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
+                                                 SubscrContObjectService subscrContObjectService,
+                                                 ContServiceDataHWaterImportService contServiceDataHWaterImportService,
+                                                 SubscriberExecutorService subscriberExecutorService,
+                                                 SubscrDataSourceService subscrDataSourceService) {
+        this.contZPointService = contZPointService;
+        this.hWatersCsvService = hWatersCsvService;
+        this.webAppPropsService = webAppPropsService;
+        this.currentSubscriberService = currentSubscriberService;
+        this.contServiceDataHWaterService = contServiceDataHWaterService;
+        this.contObjectHWaterDeltaService = contObjectHWaterDeltaService;
+        this.subscrContObjectService = subscrContObjectService;
+        this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
+        this.subscriberExecutorService = subscriberExecutorService;
+        this.subscrDataSourceService = subscrDataSourceService;
+    }
 
-	@Autowired
-	private WebAppPropsService webAppPropsService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private ContServiceDataHWaterService contServiceDataHWaterService;
-
-	@Autowired
-	private ContServiceDataHWaterDeltaService contObjectHWaterDeltaService;
-
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
-
-	@Autowired
-	private ContServiceDataHWaterImportService contServiceDataHWaterImportService;
-
-	@Autowired
-	private SubscriberExecutorService subscriberExecutorService;
-
-	@Autowired
-	private SubscrDataSourceService subscrDataSourceService;
-
-	/**
-	 * 
-	 * @param serviceType
-	 * @param zPointId
-	 * @param timeDetailType
-	 * @param beginDateS
-	 * @param endDateS
-	 * @return
-	 */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getDataHWater(@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
-			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param timeDetailType
+     * @param fromDateStr
+     * @param toDateStr
+     * @return
+     */
+    @RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getDataHWater(@PathVariable("contObjectId") long contObjectId,
+                                           @PathVariable("contZPointId") long contZPointId,
+                                           @PathVariable("timeDetailType") String timeDetailType,
+                                           @RequestParam("beginDate") String fromDateStr,
+                                           @RequestParam("endDate") String toDateStr) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -205,15 +221,17 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	}
 
-	/**
-	 * 
-	 * @param serviceType
-	 * @param zPointId
-	 * @param timeDetailType
-	 * @param beginDateS
-	 * @param endDateS
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param timeDetailType
+     * @param fromDateStr
+     * @param toDateStr
+     * @param dataDateSort
+     * @param pageable
+     * @return
+     */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
@@ -275,15 +293,15 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	}
 
-	/**
-	 * 
-	 * @param serviceType
-	 * @param zPointId
-	 * @param timeDetailType
-	 * @param beginDateS
-	 * @param endDateS
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param timeDetailType
+     * @param beginDateS
+     * @param endDateS
+     * @return
+     */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary",
 			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataHWaterSummary(@PathVariable("contObjectId") long contObjectId,
@@ -362,16 +380,17 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		return a == null || b == null ? null : b.subtract(a);
 	}
 
-	/**
-	 * 
-	 * @param serviceType
-	 * @param zPointId
-	 * @param timeDetailType
-	 * @param beginDateS
-	 * @param endDateS
-	 * @return
-	 * @throws IOException
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param timeDetailType
+     * @param beginDateS
+     * @param endDateS
+     * @param request
+     * @param response
+     * @throws IOException
+     */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv", method = RequestMethod.GET)
 	public void getDataHWater_CsvAbsDownload(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
@@ -449,7 +468,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -507,7 +526,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -602,7 +621,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param multipartFile
@@ -673,7 +692,10 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
+     * Input file type:
+     * {DEVICE_OBJECT_SERIAL}_{CONT_ZPOINT_TS_NR}_other
+     *
 	 * @param multipartFiles
 	 * @return
 	 */
@@ -841,7 +863,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -862,7 +884,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param filename
 	 * @return
 	 */
@@ -883,7 +905,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -957,7 +979,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateFromStr
 	 * @param dateToStr
 	 * @return
@@ -991,7 +1013,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param dateFromStr
 	 * @param dateToStr
@@ -1024,13 +1046,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param dateFromStr
-	 * @param dateToStr
-	 * @return
-	 */
+    /**
+     *
+     * @param dateFromStr
+     * @param dateToStr
+     * @param cityFiasStr
+     * @return
+     */
 	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/city", method = RequestMethod.GET)
 	public ResponseEntity<?> getContObjectsServiceTypeInfoCity(@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr, @RequestParam("cityFias") String cityFiasStr) {
