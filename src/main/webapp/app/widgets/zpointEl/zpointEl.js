@@ -633,19 +633,19 @@ angular.module('zpointElWidget', ['angularWidget', 'chart.js'])
             $scope.data.elTariffNumber = elTariffNumber;
             tmpData.some(function (elm) {
                 elTariffCounter = 0;
-                if (angular.isNumber(elm.p_Ap1) && elm.p_Ap1 > 0) {
+                if (angular.isNumber(elm.p_Ap1)) {
                     elTariffCounter += 1;
                 }
-                if (angular.isNumber(elm.p_Ap2) && elm.p_Ap2 > 0) {
+                if (angular.isNumber(elm.p_Ap2)) {
                     elTariffCounter += 1;
                 }
-                if (angular.isNumber(elm.p_Ap3) && elm.p_Ap3 > 0) {
+                if (angular.isNumber(elm.p_Ap3)) {
                     elTariffCounter += 1;
                 }
-                if (angular.isNumber(elm.p_Ap4) && elm.p_Ap4 > 0) {
+                if (angular.isNumber(elm.p_Ap4)) {
                     elTariffCounter += 1;
                 }
-                if (angular.isNumber(elm.p_Ap5) && elm.p_Ap5 > 0) {
+                if (angular.isNumber(elm.p_Ap5)) {
                     elTariffCounter += 1;
                 }
                 if (elTariffCounter > elTariffNumber) {
