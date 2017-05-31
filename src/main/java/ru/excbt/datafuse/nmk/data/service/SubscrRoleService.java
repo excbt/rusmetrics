@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,11 +12,12 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
+import ru.excbt.datafuse.nmk.security.AdminUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с ролями абонентов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.03.2015
@@ -28,7 +30,7 @@ public class SubscrRoleService {
 	private SubscrRoleRepository subscrRoleRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -38,7 +40,7 @@ public class SubscrRoleService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -49,19 +51,18 @@ public class SubscrRoleService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param canCreateCabinet
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrRole> subscrAdminRoles(boolean canCreateCabinet) {
 		List<SubscrRole> allRoles = findAllRoles();
+
+		List<String> adminRoles = AdminUtils.makeSubscrAdminAuthsNoChild().stream().map((i) -> i.getAuthority()).collect(Collectors.toList());
+
 		return allRoles.stream()
-				.filter(i -> SecuredRoles.ROLE_SUBSCR_USER.equals(i.getRoleName())
-						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getRoleName())
-						|| SecuredRoles.ROLE_CONT_OBJECT_ADMIN.equals(i.getRoleName())
-						|| SecuredRoles.ROLE_ZPOINT_ADMIN.equals(i.getRoleName())
-						|| SecuredRoles.ROLE_SUBSCR.equals(i.getRoleName())
+				.filter(i -> adminRoles.contains(i.getRoleName())
 						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CHILD.equals(i.getRoleName()))
 						|| (canCreateCabinet && SecuredRoles.ROLE_SUBSCR_CREATE_CABINET.equals(i.getRoleName())))
 				.collect(Collectors.toList());
@@ -73,7 +74,7 @@ public class SubscrRoleService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -82,7 +83,7 @@ public class SubscrRoleService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param canCreateCabinet
 	 * @return
 	 */
@@ -101,7 +102,7 @@ public class SubscrRoleService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -112,7 +113,7 @@ public class SubscrRoleService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)

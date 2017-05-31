@@ -8,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  * Утилиты для работы с правами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 05.08.2015
@@ -21,7 +21,7 @@ public class AdminUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static List<GrantedAuthority> makeAdminAuths() {
@@ -40,4 +40,17 @@ public class AdminUtils {
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_CREATE_CABINET));
 		return grantedAuths;
 	}
+
+
+    public static List<GrantedAuthority> makeSubscrAdminAuthsNoChild() {
+        List<GrantedAuthority> grantedAuths = new ArrayList<>();
+        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR));
+        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_ADMIN));
+        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_USER));
+        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_CONT_OBJECT_ADMIN));
+        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ZPOINT_ADMIN));
+        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN));
+        return grantedAuths;
+    }
+
 }
