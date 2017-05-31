@@ -381,7 +381,7 @@ angular.module('portalNMC')
 //                                        "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
 //                                "</i>";
                     trHTML += "<li>";
-                    if (zpoint.isImpulse === true) {
+                    if (zpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
                         trHTML += "<a href='#/objects/impulse-indicators/";
                     } else if (zpoint.zpointType === 'el') {
                         trHTML += "<a href='#/objects/indicator-electricity/";
@@ -915,6 +915,10 @@ angular.module('portalNMC')
                                     zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
                                     zpoint.devCaption = zPointsByObject[i].deviceObjects[0].deviceModel.modelName || "";
                                     zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
+                                    zpoint.isSpreader = zPointsByObject[i].deviceObjects[0].deviceModel.deviceType === objectSvc.HEAT_DISTRIBUTOR;
+                                    if (zpoint.isSpreader === true) {
+                                        zpoint.measureUnitCaption = "Гкал";
+                                    }
                                     if (zpoint.isImpulse === true) {
                                         if (!mainSvc.checkUndefinedNull(measureUnits)) {
                                             measureUnits.all.some(function (mu) {
@@ -1216,7 +1220,7 @@ angular.module('portalNMC')
 //                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                 var url = "#/objects";
 
-                if ($scope.currentZpoint.isImpulse === true) {
+                if ($scope.currentZpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
                     url += "/impulse-indicators";
                 } else if ($scope.currentZpoint.zpointType === 'el') {
                     url += "/indicator-electricity";

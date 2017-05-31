@@ -980,6 +980,10 @@ app.directive('crudGridObjects', function () {
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')) {
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
                                         zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
+                                        zpoint.isSpreader = zPointsByObject[i].deviceObjects[0].deviceModel.deviceType === objectSvc.HEAT_DISTRIBUTOR;
+                                        if (zpoint.isSpreader === true) {
+                                            zpoint.measureUnitCaption = "Гкал";
+                                        }
                                         if (zpoint.isImpulse === true) {
                                             if (!mainSvc.checkUndefinedNull(measureUnits)) {
                                                 measureUnits.all.some(function (mu) {
@@ -1393,7 +1397,7 @@ app.directive('crudGridObjects', function () {
 
                     var url = "#/objects";
 //                    url += "/impulse-indicators";
-                    if ($scope.currentZpoint.isImpulse === true) {
+                    if ($scope.currentZpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
                         url += "/impulse-indicators";
                     } else if ($scope.currentZpoint.zpointType === 'el') {
                         url += "/indicator-electricity";
