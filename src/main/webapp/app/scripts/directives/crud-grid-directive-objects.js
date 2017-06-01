@@ -406,6 +406,19 @@ app.directive('crudGridObjects', function () {
                 
 //console.log(objectSvc.promise);
                 
+                function setEventsForObjects(objectArr) {
+                    objectArr.forEach(function (element) {
+                        if (!mainSvc.checkUndefinedNull(element.contObjectStats) && !mainSvc.checkUndefinedNull(element.contObjectStats.contEventLevelColor) && (element.contObjectStats.contEventLevelColor === "RED" || element.contObjectStats.contEventLevelColor === "YELLOW")) {
+                            $timeout(function () {
+                                setEventsForObject(element.id);
+                            }, 10);
+                        } else {
+                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+                        }
+                    });
+                }
+                
                 var successGetObjectsCallback = function (response) {
                     console.time("Object perform");
                     $scope.messages.noObjects = "Объектов нет.";
@@ -438,17 +451,18 @@ app.directive('crudGridObjects', function () {
                    
                     $scope.loading = false;
                     $scope.objectsOnPage = tempArr;
-                    tempArr.forEach(function (element) {
-                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-//                            monitorSvc.getMonitorEventsForObject(element);
-                            $timeout(function () {
-                                setEventsForObject(element.id);
-                            }, 10);
-                        } else {
-                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
-                        }
-                    });
+                    setEventsForObjects(tempArr);
+//                    tempArr.forEach(function (element) {                        
+//                        if (!mainSvc.checkUndefinedNull(element.contObjectStats) && !mainSvc.checkUndefinedNull(element.contObjectStats.contEventLevelColor) && (element.contObjectStats.contEventLevelColor === "RED" || element.contObjectStats.contEventLevelColor === "YELLOW")) {
+////                            monitorSvc.getMonitorEventsForObject(element);
+//                            $timeout(function () {
+//                                setEventsForObject(element.id);
+//                            }, 10);
+//                        } else {
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+//                        }
+//                    });
 //                    makeObjectTable(tempArr, true);
 //                    $scope.loading = false;  
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
@@ -1669,17 +1683,18 @@ app.directive('crudGridObjects', function () {
                             }
                         });
                     }
-                    tempArr.forEach(function (element) {
-                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-    //                                monitorSvc.getMonitorEventsForObject(element);
-                            $timeout(function () {
-                                setEventsForObject(element.id);
-                            }, 10);
-                        } else {
-                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
-                        }
-                    });
+                    setEventsForObjects(tempArr);
+//                    tempArr.forEach(function (element) {
+//                        if (!mainSvc.checkUndefinedNull(element.contObjectStats) && !mainSvc.checkUndefinedNull(element.contObjectStats.contEventLevelColor) &&(element.contObjectStats.contEventLevelColor === "RED" || element.contObjectStats.contEventLevelColor === "YELLOW")) {
+//    //                                monitorSvc.getMonitorEventsForObject(element);
+//                            $timeout(function () {
+//                                setEventsForObject(element.id);
+//                            }, 10);
+//                        } else {
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
+//                        }
+//                    });
                     $scope.objectsOnPage = tempArr;
                 };
                 
@@ -1737,17 +1752,18 @@ app.directive('crudGridObjects', function () {
                         }
                         var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                        tempArr.forEach(function (element) {
-                            if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-//                                monitorSvc.getMonitorEventsForObject(element);
-                                $timeout(function () {
-                                    setEventsForObject(element.id);
-                                }, 10);
-                            } else {
-                                element.monitorEvents = "На объекте нет нештатных ситуаций";
-                                $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
-                            }
-                        });
+                        setEventsForObjects(tempArr);
+//                        tempArr.forEach(function (element) {
+//                            if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
+////                                monitorSvc.getMonitorEventsForObject(element);
+//                                $timeout(function () {
+//                                    setEventsForObject(element.id);
+//                                }, 10);
+//                            } else {
+//                                element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                                $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+//                            }
+//                        });
                         
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
@@ -1786,17 +1802,18 @@ app.directive('crudGridObjects', function () {
                                         
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                    tempArr.forEach(function (element) {
-                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-//                            monitorSvc.getMonitorEventsForObject(element);
-                            $timeout(function () {
-                                setEventsForObject(element.id);
-                            }, 10);
-                        } else {
-                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
-                        }
-                    });
+                    setEventsForObjects(tempArr);
+//                    tempArr.forEach(function (element) {
+//                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
+////                            monitorSvc.getMonitorEventsForObject(element);
+//                            $timeout(function () {
+//                                setEventsForObject(element.id);
+//                            }, 10);
+//                        } else {
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+//                        }
+//                    });
                     
                     if (endIndex >= ($scope.objects.length)) {
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
