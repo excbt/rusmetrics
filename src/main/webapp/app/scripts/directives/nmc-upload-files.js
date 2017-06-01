@@ -10,7 +10,7 @@ angular.module("portalNMC")
             templateUrl: "scripts/directives/templates/nmc-upload-files-template.html",
             controller: ['$scope', 'FileUploader', 'mainSvc', 'notificationFactory', '$timeout', function ($scope, FileUploader, mainSvc, notificationFactory, $timeout) {
 //console.log($scope);                
-                $scope.serverUrl = "../api/subscr/service/datahwater/contObjects/importData";
+                $scope.serverUrl = "../api/subscr/service-data/cont-objects/import";//service/datahwater/contObjects/importData";
                 $scope.messages = [];
                 
                 function errorCallback(e) {
