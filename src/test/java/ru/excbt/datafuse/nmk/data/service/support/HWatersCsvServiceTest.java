@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
@@ -29,7 +30,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
 @Transactional
 public class HWatersCsvServiceTest extends JpaConfigTest {
 
-	@Inject
+	@Autowired
 	private HWatersCsvService service;
 
 	/**

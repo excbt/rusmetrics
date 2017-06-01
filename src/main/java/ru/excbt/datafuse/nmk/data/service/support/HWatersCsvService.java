@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -49,7 +50,7 @@ public class HWatersCsvService {
 	/**
 	 *
 	 */
-	@Inject
+	@Autowired
 	public HWatersCsvService(TimeZoneService timeZoneService) {
 		this.timeZoneService = timeZoneService;
 	}

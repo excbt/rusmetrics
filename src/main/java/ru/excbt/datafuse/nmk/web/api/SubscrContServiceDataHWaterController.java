@@ -739,7 +739,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
 			for (String s : nameParts) {
-				logger.info("Name parts: {}", s);
+				logger.debug("Name parts: {}", s);
 			}
 
 		}
@@ -748,7 +748,10 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
 		}
 
-		logger.info("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
+
+		// HWaterImport
+
+		logger.debug("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
 				fileNameData.stream().map(i -> i[1]).collect(Collectors.toList()));
 
 		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
@@ -861,6 +864,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		return responseOK();
 
 	}
+
 
 	/**
 	 *
