@@ -369,9 +369,19 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }, errorProtoCallback);
     }
     
+//    var testHeaterTypes = [
+//        {
+//            "id": 229187470, "typeName": "Радиатор чугунный1", "typeDescription": null, "modelName": "РЧ-1"
+//        },
+//        {"id": 229187471, "typeName": "Конвектор панельный1", "typeDescription": null, "modelName": "КП-1"},
+//        {"id": 229187473, "typeName": "Конвектор алюминиевый1", "typeDescription": null, "modelName": "КА-1"},
+//        {"id": 229258741, "typeName": "Радиаторы 1231", "typeDescription": null, "modelName": null}
+//    ];
+    
     function getHeaterTypes() {
         objectSvc.getHeaterTypes().then(function (response) {
             $scope.data.heaterTypes = response.data;
+//            $scope.data.heaterTypes = $scope.data.heaterTypes.concat(testHeaterTypes);
             getImpulseCounterTypes();
         }, errorProtoCallback);
     }
@@ -698,6 +708,10 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
         if (device.id === null && !$scope.deviceIsSpreader() && mainSvc.checkUndefinedNull(device.subscrDataSourceId) && device.isManual) {
             notificationFactory.errorInfo("Ошибка", "Не задан источник данных");
+            checkDsourceFlag = false;
+        }
+        if (device.id === null && $scope.deviceIsSpreader() && mainSvc.checkUndefinedNull(device.heatRadiatorTypeId) && device.isManual) {
+            notificationFactory.errorInfo("Ошибка", "Не задан прибор отопления");
             checkDsourceFlag = false;
         }
         if (device.id === null && mainSvc.checkUndefinedNull(device.deviceModelId) && device.isManual) {
@@ -1164,6 +1178,11 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     $scope.recentHeaterGrouping = function (item) {
         var rhTypes = objectSvc.getRecentHeaterTypes();
         return rhTypes.indexOf(item.id) > -1 ? "Недавно использованные" : undefined;
+    };
+    
+    $scope.recentHeaterGroupFilter = function (groups) {
+        mainSvc.sortItemsBy(groups, "name");
+        return groups.reverse();
     };
     
     
