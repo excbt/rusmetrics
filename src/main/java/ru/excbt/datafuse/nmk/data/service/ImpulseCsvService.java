@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ImpulseCsvService {
     private final TimeZoneService timeZoneService;
 
+    public static final String CSV_HEADER = "comment,login,dataDate,dataValue";
+
     public ImpulseCsvService(TimeZoneService timeZoneService) {
         this.timeZoneService = timeZoneService;
     }

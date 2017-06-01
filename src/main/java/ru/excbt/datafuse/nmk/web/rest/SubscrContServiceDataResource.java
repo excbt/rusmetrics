@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterController;
+import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataImpulseController;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
@@ -33,15 +35,19 @@ public class SubscrContServiceDataResource extends SubscrApiController {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataResource.class);
 
-    private final SubscrContServiceDataHWaterController subscrContServiceDataHWaterController;
-
-
     private final WebAppPropsService webAppPropsService;
 
+    private final SubscrContServiceDataHWaterController subscrContServiceDataHWaterController;
+    private final SubscrContServiceDataImpulseController subscrContServiceDataImpulseController;
+
+
     public SubscrContServiceDataResource(WebAppPropsService webAppPropsService,
-                                         SubscrContServiceDataHWaterController subscrContServiceDataHWaterController) {
-        this.subscrContServiceDataHWaterController = subscrContServiceDataHWaterController;
+                                         SubscrContServiceDataHWaterController subscrContServiceDataHWaterController,
+                                         SubscrContServiceDataImpulseController subscrContServiceDataImpulseController) {
         this.webAppPropsService = webAppPropsService;
+        this.subscrContServiceDataHWaterController = subscrContServiceDataHWaterController;
+        this.subscrContServiceDataImpulseController = subscrContServiceDataImpulseController;
+
     }
 
     @RequestMapping(value = "/service-data/cont-objects/import", method = RequestMethod.POST,
@@ -65,16 +71,16 @@ public class SubscrContServiceDataResource extends SubscrApiController {
             try {
                 try {
                     if (multipartFile.getInputStream().markSupported()) {
+
                         multipartFile.getInputStream().mark(512);
+                        InputStreamReader isr = new InputStreamReader(multipartFile.getInputStream());
+                        BufferedReader reader = new BufferedReader(isr);
+                        String header = reader.readLine();
+                        log.debug("FILE_HEADER: {}", header);
+                        fileHeaders.add(header);
+                    } else {
+                        log.error("MARK IS NOT SUPPORTED:");
                     }
-
-                    InputStreamReader isr = new InputStreamReader(multipartFile.getInputStream());
-                    BufferedReader reader = new BufferedReader(isr);
-                    String header = reader.readLine();
-
-                    log.debug("FILE_HEADER: {}", header);
-
-                    fileHeaders.add(header);
 
                 } finally {
                     if (multipartFile.getInputStream().markSupported()) {
@@ -82,7 +88,7 @@ public class SubscrContServiceDataResource extends SubscrApiController {
                     }
                 }
 
-                log.info("MARK SUPPORTED:{}", multipartFile.getInputStream().markSupported());
+
             }
             catch (IOException e) {
                 log.error("Internal server error: file upload: \n{}", e.getMessage());
@@ -100,6 +106,10 @@ public class SubscrContServiceDataResource extends SubscrApiController {
 
         if (headerSet.contains(HWatersCsvService.CSV_HEADER)) {
             return subscrContServiceDataHWaterController.importDataHWaterMultipleFiles(multipartFiles);
+        }
+
+        if (headerSet.contains(ImpulseCsvService.CSV_HEADER)) {
+            return subscrContServiceDataImpulseController.importDataImpulseMultipleFilesCl(multipartFiles);
         }
 
         return responseBadRequest();

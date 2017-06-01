@@ -281,8 +281,6 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
         byte[] fileBytes = hWatersCsvService.writeDataHWaterToCsv(dataHWater);
 
-        // Processing POST
-
         MockMultipartFile[] result = new MockMultipartFile[fileNames.length];
         int idx = 0;
         for (String fileName : fileNames) {
@@ -307,10 +305,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
             "AK-SERIAL-777_1_abracadabra.csv", "AK-SERIAL-777_1_abracadabra2.csv");
 
 		// Processing POST
-
 		String url = "/api/subscr/service/datahwater/contObjects/importData";
-		//				apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
-		//				MANUAL_HW_CONT_ZPOINT_ID));
 
 		ResultActions resultActions = mockMvc.perform(
 				MockMvcRequestBuilders.fileUpload(url).file(mockMFiles[0]).file(mockMFiles[1]).with(testSecurityContext()));
