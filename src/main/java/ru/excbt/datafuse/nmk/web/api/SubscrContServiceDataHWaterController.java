@@ -24,6 +24,7 @@ import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.Builder;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
@@ -71,12 +72,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberExecutorService;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -711,51 +707,54 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		SubscriberParam subscriberParam = getSubscriberParam();
 
+        List<CsvUtils.CheckFileResult> checkFileResults = CsvUtils.checkCsvFiles(multipartFiles);
+        List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
+
+        if (isNotPassed.size() > 0) {
+            return responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
+        }
+
+        class FileNameData {
+           final String fileName;
+           final String deviceSerial;
+           final String tsNumber;
+
+            public FileNameData(String fileName, String deviceSerial, String tsNumber) {
+                this.fileName = fileName;
+                this.deviceSerial = deviceSerial;
+                this.tsNumber = tsNumber;
+            }
+        }
+
 		List<String> fileNameErrorDesc = new ArrayList<>();
-		List<String[]> fileNameData = new ArrayList<>();
-		final int __filenameIdx = 0;
-		final int __deviceIdx = 1;
-		final int __tsNumIdx = 2;
+		List<FileNameData> fileNameDataList = new ArrayList<>();
 
-		// Check file names
-		for (MultipartFile multipartFile : multipartFiles) {
+        checkFileResults.forEach((i) -> {
+            String[] nameParts = i.getFileName().split("_");
+            if (nameParts == null || nameParts.length < 2) {
+                fileNameErrorDesc.add("Некоррекное имя файла: " + i.getFileName()+ ". Ожидается {#Серийный номер прибора}_{#Теплосистемы}_......");
+                return;
+            }
 
-			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
-			logger.debug("Checking file to import {}", fileName);
-			if (fileName == null) {
-				return responseBadRequest();
-			}
+            fileNameDataList.add(new FileNameData(i.getFileName(), nameParts[0] , nameParts[1]));
+            for (String s : nameParts) {
+                logger.debug("Name parts: {}", s);
+            }
 
-			if (!"csv".equalsIgnoreCase(FilenameUtils.getExtension(fileName))) {
-				fileNameErrorDesc.add("Некоррекный тип файла: " + fileName + ". Ожидается расширение CSV");
-				continue;
-			}
+        });
 
-			String[] nameParts = fileName.split("_");
-			if (nameParts == null || nameParts.length < 2) {
-				fileNameErrorDesc.add("Некоррекное имя файла: " + fileName);
-				continue;
-			}
-
-			fileNameData.add(new String[] { fileName, nameParts[0], nameParts[1] });
-			for (String s : nameParts) {
-				logger.debug("Name parts: {}", s);
-			}
-
-		}
-
-		if (fileNameErrorDesc.size() > 0 || fileNameData.size() == 0) {
-			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
-		}
+        if (fileNameErrorDesc.size() > 0 || fileNameDataList.size() == 0) {
+            return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
+        }
 
 
 		// HWaterImport
 
 		logger.debug("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
-				fileNameData.stream().map(i -> i[1]).collect(Collectors.toList()));
+				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
-				getSubscriberParam(), fileNameData.stream().map(i -> i[1]).collect(Collectors.toList()));
+				getSubscriberParam(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
@@ -764,24 +763,24 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		Map<String, Tuple> filenameDBInfos = new HashMap<>();
 
-		for (String[] s : fileNameData) {
+		for (FileNameData data : fileNameDataList) {
 
 			final List<Tuple> checkRows = deviceObjectsData.stream()
-					.filter(i -> s[__deviceIdx].equals(i.get("deviceObjectNumber").toString())
-							&& s[__tsNumIdx].equals(i.get("tsNumber").toString()))
+					.filter(i -> data.deviceSerial.equals(i.get("deviceObjectNumber").toString())
+							&& data.tsNumber.equals(i.get("tsNumber").toString()))
 					.collect(Collectors.toList());
 
 			if (checkRows.size() == 0) {
 				fileNameErrorDesc
 						.add(String.format("Точка учета с прибором № %s и теплосистемой № %s не найдена. Файл: %s",
-								s[__deviceIdx], s[__tsNumIdx], s[__filenameIdx]));
+								data.deviceSerial, data.tsNumber, data.fileName));
 				continue;
 			}
 
 			if (checkRows.size() > 1) {
 				fileNameErrorDesc
 						.add(String.format("Точка учета с прибором № %s и теплосистемой № %s не уникальна. Файл: %s",
-								s[__deviceIdx], s[__tsNumIdx], s[__filenameIdx]));
+                            data.deviceSerial, data.tsNumber, data.fileName));
 				continue;
 			}
 
@@ -790,11 +789,11 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			if (!Boolean.TRUE.equals(DBRowUtils.asBoolean(row.get("isManualLoading")))) {
 				fileNameErrorDesc.add(String.format(
 						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
-						s[__deviceIdx], s[__tsNumIdx], s[__filenameIdx]));
+                    data.deviceSerial, data.tsNumber, data.fileName));
 				continue;
 			}
 
-			filenameDBInfos.put(s[__filenameIdx], row);
+			filenameDBInfos.put(data.fileName, row);
 
 		}
 
@@ -804,14 +803,14 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
 				.map(i -> DBRowUtils.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
 
-		if (!canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
+		if (!checkContZPoints.isEmpty() && !canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
 			fileNameErrorDesc.add("Нет доступа к точке учета");
 		}
 
 		List<Long> availableDataSourceIds = subscrDataSourceService
 				.selectDataSourceIdsBySubscriber(subscriberParam.getSubscriberId());
 
-		if (!AbstractService.checkIds(checkDataSourceIds, availableDataSourceIds)) {
+		if (!checkDataSourceIds.isEmpty() && !AbstractService.checkIds(checkDataSourceIds, availableDataSourceIds)) {
 			fileNameErrorDesc.add("Нет доступа к источнику данных");
 		}
 

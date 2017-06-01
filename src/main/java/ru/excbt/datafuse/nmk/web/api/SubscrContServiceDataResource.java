@@ -23,9 +23,12 @@ public class SubscrContServiceDataResource extends SubscrApiController {
         this.subscrContServiceDataHWaterController = subscrContServiceDataHWaterController;
     }
 
-    @RequestMapping(value = "/service/contObjects/importData", method = RequestMethod.POST,
+    @RequestMapping(value = "/u-service/contObjects/importData", method = RequestMethod.POST,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> importDataMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
+
+
+
         return subscrContServiceDataHWaterController.importDataHWaterMultipleFiles(multipartFiles);
     }
 

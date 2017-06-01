@@ -309,6 +309,39 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	@Test
+	public void testManualLoadDataMultipleFilesInvalid() throws Exception {
+
+		// Prepare File
+		LocalDatePeriod dp = LocalDatePeriod.builder().dateFrom("2014-04-01").dateTo("2014-04-30").build()
+				.buildEndOfDay();
+		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
+				TimeDetailKey.TYPE_24H, dp);
+
+		byte[] fileBytes = HWatersCsvService.writeDataHWaterToCsv(dataHWater);
+
+		// Processing POST
+
+		String firstFilename = "AK-SERIAL-xxx1_abracadabra.csv";
+		String secondFilename = "AK-SERIALS-xxx_1_abracadabra2.csv";
+
+		MockMultipartFile firstFile = new MockMultipartFile("files", firstFilename, "text/plain", fileBytes);
+		MockMultipartFile secondFile = new MockMultipartFile("files", secondFilename, "text/plain", fileBytes);
+
+		String url = "/api/subscr/service/datahwater/contObjects/importData";
+		//				apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
+		//				MANUAL_HW_CONT_ZPOINT_ID));
+
+		ResultActions resultActions = mockMvc.perform(
+				MockMvcRequestBuilders.fileUpload(url).file(firstFile).file(secondFile).with(testSecurityContext()));
+
+		resultActions.andDo(MockMvcResultHandlers.print());
+		resultActions.andExpect(status().is4xxClientError());
+		String resultContent = resultActions.andReturn().getResponse().getContentAsString();
+
+
+	}
+
 	@Override
 	public long getSubscriberId() {
 		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
