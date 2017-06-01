@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -55,16 +57,13 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	private ContServiceDataHWaterService service;
 
 	@Autowired
-	private TimeZoneService timeZoneService;
-
-	@Autowired
 	private WebAppPropsService webAppPropsService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
-	private HWatersCsvService HWatersCsvService;
+	private HWatersCsvService hWatersCsvService;
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
@@ -133,7 +132,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
 				TimeDetailKey.TYPE_24H, dp);
 
-		byte[] fileBytes = HWatersCsvService.writeDataHWaterToCsv(dataHWater);
+		byte[] fileBytes = hWatersCsvService.writeDataHWaterToCsv(dataHWater);
 
 		String srcFilename = webAppPropsService.getHWatersCsvOutputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(728L, 123L);
@@ -271,6 +270,31 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+
+	public static MockMultipartFile[] makeMultipartFileCsv(ContServiceDataHWaterService hWaterService,
+                                                        HWatersCsvService hWatersCsvService,
+                                                        String ... fileNames) throws JsonProcessingException {
+        LocalDatePeriod dp = LocalDatePeriod.builder().dateFrom("2014-04-01").dateTo("2014-04-30").build()
+            .buildEndOfDay();
+        List<ContServiceDataHWater> dataHWater = hWaterService.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
+            TimeDetailKey.TYPE_24H, dp);
+
+        byte[] fileBytes = hWatersCsvService.writeDataHWaterToCsv(dataHWater);
+
+        // Processing POST
+
+        MockMultipartFile[] result = new MockMultipartFile[fileNames.length];
+        int idx = 0;
+        for (String fileName : fileNames) {
+            MockMultipartFile mmFile = new MockMultipartFile("files", fileName, "text/plain", fileBytes);
+            result[idx++] = mmFile;
+        }
+
+        return result;
+
+    }
+
+
 	/**
 	 *
 	 * @throws Exception
@@ -279,27 +303,17 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	public void testManualLoadDataMultipleFiles() throws Exception {
 
 		// Prepare File
-		LocalDatePeriod dp = LocalDatePeriod.builder().dateFrom("2014-04-01").dateTo("2014-04-30").build()
-				.buildEndOfDay();
-		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
-				TimeDetailKey.TYPE_24H, dp);
-
-		byte[] fileBytes = HWatersCsvService.writeDataHWaterToCsv(dataHWater);
+        MockMultipartFile[] mockMFiles = makeMultipartFileCsv(service, hWatersCsvService,
+            "AK-SERIAL-777_1_abracadabra.csv", "AK-SERIAL-777_1_abracadabra2.csv");
 
 		// Processing POST
-
-		String firstFilename = "AK-SERIAL-777_1_abracadabra.csv";
-		String secondFilename = "AK-SERIAL-777_1_abracadabra2.csv";
-
-		MockMultipartFile firstFile = new MockMultipartFile("files", firstFilename, "text/plain", fileBytes);
-		MockMultipartFile secondFile = new MockMultipartFile("files", secondFilename, "text/plain", fileBytes);
 
 		String url = "/api/subscr/service/datahwater/contObjects/importData";
 		//				apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
 		//				MANUAL_HW_CONT_ZPOINT_ID));
 
 		ResultActions resultActions = mockMvc.perform(
-				MockMvcRequestBuilders.fileUpload(url).file(firstFile).file(secondFile).with(testSecurityContext()));
+				MockMvcRequestBuilders.fileUpload(url).file(mockMFiles[0]).file(mockMFiles[1]).with(testSecurityContext()));
 
 		resultActions.andDo(MockMvcResultHandlers.print());
 		resultActions.andExpect(status().is2xxSuccessful());
@@ -313,33 +327,19 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	public void testManualLoadDataMultipleFilesInvalid() throws Exception {
 
 		// Prepare File
-		LocalDatePeriod dp = LocalDatePeriod.builder().dateFrom("2014-04-01").dateTo("2014-04-30").build()
-				.buildEndOfDay();
-		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
-				TimeDetailKey.TYPE_24H, dp);
 
-		byte[] fileBytes = HWatersCsvService.writeDataHWaterToCsv(dataHWater);
-
-		// Processing POST
-
-		String firstFilename = "AK-SERIAL-xxx1_abracadabra.csv";
-		String secondFilename = "AK-SERIALS-xxx_1_abracadabra2.csv";
-
-		MockMultipartFile firstFile = new MockMultipartFile("files", firstFilename, "text/plain", fileBytes);
-		MockMultipartFile secondFile = new MockMultipartFile("files", secondFilename, "text/plain", fileBytes);
+        MockMultipartFile[] mockMFiles = makeMultipartFileCsv(service, hWatersCsvService,
+            "AK-SERIAL-xxx1_abracadabra.csv", "AK-SERIALS-xxx_1_abracadabra2.csv");
 
 		String url = "/api/subscr/service/datahwater/contObjects/importData";
 		//				apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
 		//				MANUAL_HW_CONT_ZPOINT_ID));
 
 		ResultActions resultActions = mockMvc.perform(
-				MockMvcRequestBuilders.fileUpload(url).file(firstFile).file(secondFile).with(testSecurityContext()));
+				MockMvcRequestBuilders.fileUpload(url).file(mockMFiles[0]).file(mockMFiles[1]).with(testSecurityContext()));
 
 		resultActions.andDo(MockMvcResultHandlers.print());
 		resultActions.andExpect(status().is4xxClientError());
-		String resultContent = resultActions.andReturn().getResponse().getContentAsString();
-
-
 	}
 
 	@Override

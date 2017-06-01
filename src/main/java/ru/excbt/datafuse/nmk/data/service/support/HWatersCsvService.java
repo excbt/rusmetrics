@@ -45,6 +45,8 @@ public class HWatersCsvService {
 
 	public static final MediaType MEDIA_TYPE_CSV = MediaType.valueOf("text/csv");
 
+	public static final String CSV_HEADER = "date,detail_type,work_time,failTime,h_delta,h_in,h_out,m_delta,m_in,m_out,p_delta,p_in,p_out,t_cold,t_in,t_out,t_outdoor,v_delta,v_in,v_out";
+
 	private final TimeZoneService timeZoneService;
 
 	/**
