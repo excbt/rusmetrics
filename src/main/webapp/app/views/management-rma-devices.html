@@ -348,6 +348,7 @@
                                                                on-select = "selectHeaterType()">
                                                         <ui-select-match>{{$select.selected.typeName}}</ui-select-match>
                                                         <ui-select-choices group-by = "recentHeaterGrouping"
+                                                                           group-filter = "recentHeaterGroupFilter"
                                                                            repeat = "heater.id as heater in data.heaterTypes | propsFilter: {typeName: $select.search}">
                                                           <div ng-bind-html = "heater.typeName"></div>
                                                         </ui-select-choices>
