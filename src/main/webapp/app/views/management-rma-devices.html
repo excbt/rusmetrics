@@ -230,6 +230,7 @@
 <!--                                                <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.deviceModelId == null && data.currentObject.isManual}">
 -->                                                    
+<!--
                                                 <div class = "form-group noMarginBottom" 
                                                      ng-class = "{'has-error':!checkModel()}">    
                                                     <select class = "form-control nmc-select-form" 
@@ -241,6 +242,23 @@
                                                             >
                                                     </select>
                                                 </div>
+-->
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error': !checkModel()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "data.currentObject.deviceModelId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                               on-select = "deviceModelChange()">
+                                                        <ui-select-match>{{$select.selected.caption || $select.selected.modelName}}</ui-select-match>
+                                                        <ui-select-choices repeat = "model.id as model in data.deviceModels | propsFilter: {modelName: $select.search}">
+                                                          <div ng-bind-html = "model.caption || model.modelName"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                
                                             </td>
                                         </tr>
                                         <tr>
