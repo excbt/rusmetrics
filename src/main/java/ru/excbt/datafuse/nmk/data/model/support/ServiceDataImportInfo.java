@@ -1,14 +1,14 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.model.support;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.12.2016
- * 
+ *
  */
 public class ServiceDataImportInfo {
 
@@ -28,15 +28,17 @@ public class ServiceDataImportInfo {
 
 	private final String userFileName;
 
-	/**
-	 * @param subscriberId
-	 * @param contObjectId
-	 * @param contZPointId
-	 * @param deviceObjectId
-	 * @param dataSourceId
-	 * @param authorId
-	 * @param fileName
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param contObjectId
+     * @param contZPointId
+     * @param deviceObjectId
+     * @param dataSourceId
+     * @param authorId
+     * @param userFileName
+     * @param internalFileName
+     */
 	public ServiceDataImportInfo(Long subscriberId, Long contObjectId, Long contZPointId, Long deviceObjectId,
 			Long dataSourceId, Long authorId, String userFileName, String internalFileName) {
 		super();

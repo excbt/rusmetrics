@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api;
 
@@ -17,19 +17,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataImpulseService;
+import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.10.2016
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
@@ -39,7 +46,7 @@ public class SubscrContServiceDataImpulseController extends SubscrContServiceDat
 	private ContServiceDataImpulseService contServiceDataImpulseService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -74,5 +81,28 @@ public class SubscrContServiceDataImpulseController extends SubscrContServiceDat
 		return resultResponse;
 
 	}
+
+
+    @RequestMapping(value = "/service/serviceImpulse/contObjects/importData-cl", method = RequestMethod.POST,
+        produces = APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> importDataImpulseMultipleFilesCl(@RequestParam("files") MultipartFile[] multipartFiles) {
+
+        checkNotNull(multipartFiles);
+
+        if (multipartFiles.length == 0) {
+            return responseBadRequest();
+        }
+
+        SubscriberParam subscriberParam = getSubscriberParam();
+
+        List<CsvUtils.CheckFileResult> checkFileResults = CsvUtils.checkCsvFiles(multipartFiles);
+        List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
+
+        if (isNotPassed.size() > 0) {
+            return responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
+        }
+
+	    return responseOK();
+    }
 
 }
