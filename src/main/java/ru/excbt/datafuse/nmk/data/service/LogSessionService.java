@@ -1,6 +1,16 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
+import ru.excbt.datafuse.nmk.data.repository.LogSessionRepository;
+import ru.excbt.datafuse.nmk.data.repository.LogSessionStepRepository;
+import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +19,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.LogSession;
-import ru.excbt.datafuse.nmk.data.model.LogSessionStep;
-import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
-import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
-import ru.excbt.datafuse.nmk.data.repository.LogSessionRepository;
-import ru.excbt.datafuse.nmk.data.repository.LogSessionStepRepository;
-import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class LogSessionService extends AbstractService {
@@ -45,7 +40,7 @@ public class LogSessionService extends AbstractService {
 	private V_FullUserInfoRepository fullUserInfoRepository;
 
 	/**
-	 * 
+	 *
 	 * @param logSessionList
 	 */
 	private void loadLogSessionProps(final List<LogSession> logSessionList) {
@@ -86,7 +81,7 @@ public class LogSessionService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localDatePeriod
 	 * @return
 	 */
@@ -105,8 +100,31 @@ public class LogSessionService extends AbstractService {
 		return preResult.stream().map(i -> new LogSessionVO(i)).collect(Collectors.toList());
 	}
 
+    /**
+     *
+     * @param dataSourceIds
+     * @param authorIds
+     * @param localDatePeriod
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<LogSessionVO> selectLogSessions(List<Long> dataSourceIds, List<Long> authorIds,
+                                                LocalDatePeriod localDatePeriod) {
+        checkNotNull(localDatePeriod);
+        if (localDatePeriod.isInvalidEq() || dataSourceIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<LogSession> preResult = logSessionRepository.selectLogSessions(dataSourceIds, authorIds,
+            localDatePeriod.getDateFrom(), localDatePeriod.getDateTo());
+
+        loadLogSessionProps(preResult);
+
+        return preResult.stream().map(i -> new LogSessionVO(i)).collect(Collectors.toList());
+    }
+
 	/**
-	 * 
+	 *
 	 * @param localDatePeriod
 	 * @param contObjectIds
 	 * @return
@@ -128,8 +146,35 @@ public class LogSessionService extends AbstractService {
 		return preResult.stream().map(i -> new LogSessionVO(i)).collect(Collectors.toList());
 	}
 
+    /**
+     *
+     * @param dataSourceIds
+     * @param authorIds
+     * @param localDatePeriod
+     * @param contObjectIds
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<LogSessionVO> selectLogSessions(List<Long> dataSourceIds,
+                                                List<Long> authorIds,
+                                                LocalDatePeriod localDatePeriod,
+                                                List<Long> contObjectIds) {
+        checkNotNull(localDatePeriod);
+        checkNotNull(contObjectIds);
+        if (localDatePeriod.isInvalidEq() || dataSourceIds.isEmpty() || contObjectIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<LogSession> preResult = logSessionRepository.selectLogSessions(dataSourceIds, authorIds,
+            localDatePeriod.getDateFrom(), localDatePeriod.getDateTo(), contObjectIds);
+
+        loadLogSessionProps(preResult);
+
+        return preResult.stream().map(i -> new LogSessionVO(i)).collect(Collectors.toList());
+    }
+
 	/**
-	 * 
+	 *
 	 * @param sessionId
 	 * @return
 	 */

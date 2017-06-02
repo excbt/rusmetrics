@@ -12,12 +12,14 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
-@JsonPropertyOrder({ "comment", "login", "dataDate", "dataValue"})
+@JsonPropertyOrder({ "comment", "login", "serial", "dataDate", "dataValue"})
 public class ContServiceDataImpulseUCsv {
 
     private String comment;
 
     private String login;
+
+    private String serial;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataDate;

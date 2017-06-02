@@ -98,6 +98,8 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterController.class);
 
+
+
 	public static final String HEAT = "heat";
 	public static final String HW = "hw";
 	public static final String CW = "cw";

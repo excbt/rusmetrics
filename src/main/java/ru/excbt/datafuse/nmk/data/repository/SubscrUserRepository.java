@@ -20,13 +20,16 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
  */
 public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long> {
 
-	public List<SubscrUser> findByUserNameIgnoreCase(String userName);
+	List<SubscrUser> findByUserNameIgnoreCase(String userName);
 
     Optional<SubscrUser> findOneByUserNameIgnoreCase(String userName);
 
 	@Query("SELECT u.subscrRoles FROM SubscrUser u WHERE u.id = :subscrUserId ")
-	public List<SubscrRole> selectSubscrRoles(@Param("subscrUserId") long subscrUserId);
+	List<SubscrRole> selectSubscrRoles(@Param("subscrUserId") long subscrUserId);
 
 	@Query("SELECT u FROM SubscrUser u WHERE u.subscriberId = :subscriberId ORDER BY u.id ")
-	public List<SubscrUser> selectBySubscriberId(@Param("subscriberId") Long subscriberId);
+	List<SubscrUser> selectBySubscriberId(@Param("subscriberId") Long subscriberId);
+
+	@Query("SELECT u.id FROM SubscrUser u INNER JOIN u.subscriber s WHERE u.subscriber.id = :subscriberId OR (s.rmaSubscriberId = :subscriberId)")
+	List<Long> findUserIdsBySubscriberOrRmaId(@Param("subscriberId") Long subscriberId);
 }

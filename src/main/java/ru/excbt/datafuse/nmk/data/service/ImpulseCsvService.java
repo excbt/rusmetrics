@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ImpulseCsvService {
     private final TimeZoneService timeZoneService;
 
-    public static final String CSV_HEADER = "comment,login,dataDate,dataValue";
+    public static final String CSV_HEADER = "comment,login,serial,dataDate,dataValue";
 
     public static final String FILE_STARTS = "icl";
 

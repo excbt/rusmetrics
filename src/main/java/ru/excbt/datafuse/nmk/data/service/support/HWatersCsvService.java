@@ -164,8 +164,8 @@ public class HWatersCsvService {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public boolean checkCsvSeparators(String file) throws FileNotFoundException, IOException {
-		boolean result = true;
+	public static boolean checkCsvSeparators(String file) throws IOException {
+		boolean result;
 		try (Reader reader = new FileReader(file)) {
 			result = checkCsvSeparatorReader(reader);
 		}
@@ -179,7 +179,7 @@ public class HWatersCsvService {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
+	public static boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
 		boolean result = true;
 		try (InputStream is = new ByteArrayInputStream(byteArray)) {
 			result = checkCsvSeparatorReader(new InputStreamReader(is));
@@ -193,7 +193,7 @@ public class HWatersCsvService {
 	 * @return
 	 * @throws IOException
 	 */
-	private boolean checkCsvSeparatorReader(Reader reader) throws IOException {
+	private static boolean checkCsvSeparatorReader(Reader reader) throws IOException {
 		boolean result = true;
 		try (BufferedReader br = new BufferedReader(reader)) {
 			String header = br.readLine();
