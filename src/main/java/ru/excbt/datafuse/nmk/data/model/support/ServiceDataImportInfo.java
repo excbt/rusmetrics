@@ -25,7 +25,7 @@ public class ServiceDataImportInfo extends FileImportInfo {
 
 	private final Long dataSourceId;
 
-    private final Long authorId;
+    //private final Long authorId;
 
 
     /**
@@ -35,14 +35,12 @@ public class ServiceDataImportInfo extends FileImportInfo {
      * @param contZPointId
      * @param deviceObjectId
      * @param dataSourceId
-     * @param authorId
      * @param userFileName
      * @param internalFileName
      */
     public ServiceDataImportInfo(Long subscriberId, Long contObjectId, Long contZPointId, Long deviceObjectId,
-                                 Long dataSourceId, Long authorId, String userFileName, String internalFileName) {
+                                 Long dataSourceId, String userFileName, String internalFileName) {
         super(internalFileName, userFileName);
-        this.authorId = subscriberId;
         this.subscriberId = subscriberId;
         this.contObjectId = contObjectId;
         this.contZPointId = contZPointId;

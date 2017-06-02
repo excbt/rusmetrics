@@ -31,7 +31,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +49,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Service
 public class ContServiceDataHWaterImportService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterImportService.class);
+	private static final Logger log = LoggerFactory.getLogger(ContServiceDataHWaterImportService.class);
 
 //	private final static String IMPORT_ERROR_TEMPLATE = "Ошибка импорта данных. Файл %s";
 //	private final static String IMPORT_COMPLETE_TEMPLATE = "Данные из файла %s успешно загружены";
@@ -75,16 +74,18 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public void importData(final List<ServiceDataImportInfo> serviceDataImportInfos) {
+	public void importData(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
 
 		Date createdDate = new Date();
 
 		for (ServiceDataImportInfo importInfo : serviceDataImportInfos) {
 
+		    String msg = String.format("Пользователь ID %d Загрузка файла %s ",
+                subscriberId, FilenameUtils.getName(importInfo.getInternalFileName()));
+
 			SLogSessionT1 session = sLogWriterService.newSessionWebT1(importInfo.getDataSourceId(),
-					importInfo.getDeviceObjectId(), String.format("Пользователь ID %d Загрузка файла %s ",
-							importInfo.getAuthorId(), FilenameUtils.getName(importInfo.getInternalFileName())),
-					importInfo.getAuthorId());
+					importInfo.getDeviceObjectId(), msg,
+                subscriberId);
 
 			session.status(SLogSessionStatuses.GENERATING.getKeyname(),
 					"Загрузка файла: " + importInfo.getUserFileName());
@@ -124,7 +125,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
                     session.web().trace("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());
                 }
 				failSession(session, importInfo, "Ошибка. Данные из файла не могут быть обработаны");
-				logger.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
+				log.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
 						session.getSessionUUID(), e.getMessage());
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Parsing error", importInfo.getUserFileName()));
@@ -184,7 +185,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			inDataHWaterImport.forEach(i -> {
 				i.setContZPointId(importInfo.getContZPointId());
 				i.setDeviceObjectId(importInfo.getDeviceObjectId());
-				i.setCreatedBy(importInfo.getAuthorId());
+				i.setCreatedBy(subscriberId);
 				i.setCreatedDate(createdDate);
 				i.setTrxId(session.getSessionUUID());
 			});
@@ -209,7 +210,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
 			} catch (Exception e) {
 				failSession(session, importInfo, "Ошибка. Загрузка в БД временно не возможна");
-				logger.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+				log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), e);
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
@@ -220,14 +221,14 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			// Call Stored proc
 			try {
-				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import");
+				log.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import");
 				contServiceDataHWaterImportRepository.processImport(session.getSessionUUID().toString());
-				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import SUCCESS");
+				log.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import SUCCESS");
 			} catch (Exception e) {
 
 				PSQLException pe = DBExceptionUtils.getPSQLException(e);
 				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
-				logger.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+				log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
 
 				session.web().trace("Ошибка при обновлении данных");
@@ -269,19 +270,23 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	 * @param serviceDataImportInfos
 	 * @return
 	 */
-	public Callable<Boolean> newTask(final List<ServiceDataImportInfo> serviceDataImportInfos) {
+	public Callable<Boolean> newImportTask(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
 		return () -> {
-            logger.debug("Start HWaterImportTask");
-            if (serviceDataImportInfos.isEmpty()) {
-                return Boolean.FALSE;
-            }
-            logger.debug("Import Data");
             try {
-                importData(serviceDataImportInfos);
-            } catch (Exception e) {
-                return Boolean.FALSE;
+                log.debug("Start HWaterImportTask");
+                if (serviceDataImportInfos.isEmpty()) {
+                    return Boolean.FALSE;
+                }
+                log.debug("Import Data");
+                try {
+                    importData(subscriberId, serviceDataImportInfos);
+                } catch (Exception e) {
+                    return Boolean.FALSE;
+                }
+                return Boolean.TRUE;
+            } finally {
+                log.debug("Finish HWaterImportTask");
             }
-            return Boolean.TRUE;
         };
 	}
 
