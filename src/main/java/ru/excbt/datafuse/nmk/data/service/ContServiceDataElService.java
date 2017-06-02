@@ -1,14 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -18,9 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.ImmutableSet;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
@@ -38,9 +27,18 @@ import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Сервис по работе с данными по электроснабжению
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
@@ -59,38 +57,46 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 	private static final Set<String> EL_SERVICE_TYPE_SET = ImmutableSet.of(ContServiceTypeKey.EL.getKeyname());
 
-	@Autowired
-	private ContServiceDataElConsRepository contServiceDataElConsRepository;
+	private final ContServiceDataElConsRepository contServiceDataElConsRepository;
+
+	private final ContServiceDataElTechRepository contServiceDataElTechRepository;
+
+	private final ContServiceDataElProfileRepository contServiceDataElProfileRepository;
+
 
 	@Autowired
-	private ContServiceDataElTechRepository contServiceDataElTechRepository;
+    public ContServiceDataElService(ContServiceDataElConsRepository contServiceDataElConsRepository,
+                                    ContServiceDataElTechRepository contServiceDataElTechRepository,
+                                    ContServiceDataElProfileRepository contServiceDataElProfileRepository) {
+        this.contServiceDataElConsRepository = contServiceDataElConsRepository;
+        this.contServiceDataElTechRepository = contServiceDataElTechRepository;
+        this.contServiceDataElProfileRepository = contServiceDataElProfileRepository;
+    }
 
-	@Autowired
-	private ContServiceDataElProfileRepository contServiceDataElProfileRepository;
-
-	/**
-	 * 
+    /**
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
 	 * @param pageRequest
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<ContServiceDataElCons> selectConsByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
-			LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
-		checkArgument(contZPointId > 0);
-		checkNotNull(timeDetail);
-		checkNotNull(localDatePeriod);
-		checkArgument(localDatePeriod.isValidEq(), "LocalDatePeriod is invalid");
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public Page<ContServiceDataElCons> selectConsByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
+                                                              LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 
-		return contServiceDataElConsRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(),
-				localDatePeriod.getDateFrom(), localDatePeriod.getDateTo(), pageRequest);
+        checkArgument(contZPointId > 0);
+        checkNotNull(timeDetail);
+        checkNotNull(localDatePeriod);
+        checkArgument(localDatePeriod.isValidEq(), "LocalDatePeriod is invalid");
 
-	}
+        return contServiceDataElConsRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(),
+            localDatePeriod.getDateFrom(), localDatePeriod.getDateTo(), pageRequest);
+
+    }
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -110,7 +116,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -181,7 +187,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param diffs
 	 * @param firstData
 	 * @param lastData
@@ -211,7 +217,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param columnHelper
 	 * @param queryResults
 	 * @return
@@ -248,7 +254,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param period
@@ -272,7 +278,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -296,7 +302,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -320,7 +326,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -344,7 +350,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -365,7 +371,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -385,7 +391,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -459,7 +465,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -481,7 +487,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -501,7 +507,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param localDatePeriod
@@ -542,7 +548,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetail
 	 * @param period
@@ -574,7 +580,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -587,7 +593,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param fromDateTime
 	 * @return
@@ -615,7 +621,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param idServiceTypePairs
 	 * @return
 	 */

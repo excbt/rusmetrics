@@ -57,6 +57,9 @@ public class ImpulseCsvServiceTest extends JpaConfigTest {
         List<ContServiceDataImpulseUCsv> impulseList = new ArrayList<>();
 
         ContServiceDataImpulseUCsv impulse = new ContServiceDataImpulseUCsv();
+        impulse.setComment("Призвольвольный комментарий");
+        impulse.setLogin("1000076");
+        impulse.setSerial("1705");
         impulse.setDataDate(LocalDate.now());
         impulse.setDataValue(123.0);
         impulseList.add(impulse);

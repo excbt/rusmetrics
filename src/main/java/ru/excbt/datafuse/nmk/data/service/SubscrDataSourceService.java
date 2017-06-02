@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -26,7 +27,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с источниками данных абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.10.2015
@@ -45,7 +46,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSource
 	 */
 	private void initSubscrDataSource(SubscrDataSource subscrDataSource) {
@@ -67,7 +68,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSource
 	 * @return
 	 */
@@ -85,7 +86,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSource
 	 * @return
 	 */
@@ -103,7 +104,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dataSourceId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -118,7 +119,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -128,7 +129,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ids
 	 * @return
 	 */
@@ -142,7 +143,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -153,7 +154,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param keyname
 	 * @return
@@ -169,7 +170,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dataSourceId
 	 * @return
 	 */
@@ -177,4 +178,11 @@ public class SubscrDataSourceService implements SecuredRoles {
 	public SubscrDataSource findOne(Long dataSourceId) {
 		return subscrDataSourceRepository.findOne(dataSourceId);
 	}
+
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Long csvFileId() {
+	    return subscrDataSourceRepository.findByKeyname("CSV_FILE").map(SubscrDataSource::getId).orElse(0L);
+    }
+
 }

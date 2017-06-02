@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulse_CsvFormat;
+import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 
 import java.util.List;
@@ -21,14 +22,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ImpulseCsvService {
     private final TimeZoneService timeZoneService;
 
-    public static final String CSV_HEADER = "comment,login,dataDate,dataValue";
+    public static final String CSV_HEADER = "comment,login,serial,dataDate,dataValue";
+
+    public static final String FILE_STARTS = "icl";
 
     public ImpulseCsvService(TimeZoneService timeZoneService) {
         this.timeZoneService = timeZoneService;
     }
 
-
-
+    /**
+     *
+     * @param contServiceDataImpulseList
+     * @return
+     * @throws JsonProcessingException
+     */
     public byte[] writeDataToCsv(List<ContServiceDataImpulse> contServiceDataImpulseList)
         throws JsonProcessingException {
         checkNotNull(contServiceDataImpulseList);
@@ -47,6 +54,12 @@ public class ImpulseCsvService {
         return byteArray;
     }
 
+    /**
+     *
+     * @param csvUList
+     * @return
+     * @throws JsonProcessingException
+     */
     public byte[] writeDataToUCsv(List<ContServiceDataImpulseUCsv> csvUList)
         throws JsonProcessingException {
         checkNotNull(csvUList);
@@ -61,6 +74,10 @@ public class ImpulseCsvService {
         byte[] byteArray = mapper.writer(schema).writeValueAsBytes(csvUList);
 
         return byteArray;
+    }
+
+    public static boolean fileStarts(String fileName) {
+        return CsvUtils.extractFileName(fileName).toLowerCase().startsWith(FILE_STARTS.toLowerCase());
     }
 
 }

@@ -19,20 +19,30 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.service.LogSessionService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/rma/logSessions")
 public class RmaSubscrLogSessionController extends SubscrApiController {
 
-	@Autowired
-	private LogSessionService logSessionService;
+	private final LogSessionService logSessionService;
+
+	private final SubscrDataSourceService subscrDataSourceService;
+
+	private final SubscrUserService subscrUserService;
 
 	@Autowired
-	private SubscrDataSourceService subscrDataSourceService;
+    public RmaSubscrLogSessionController(LogSessionService logSessionService,
+                                         SubscrDataSourceService subscrDataSourceService,
+                                         SubscrUserService subscrUserService) {
+        this.logSessionService = logSessionService;
+        this.subscrDataSourceService = subscrDataSourceService;
+        this.subscrUserService = subscrUserService;
+    }
 
-	/**
-	 * 
+    /**
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return
@@ -55,21 +65,26 @@ public class RmaSubscrLogSessionController extends SubscrApiController {
 
 		List<Long> dataSourceIds = subscrDataSourceService.selectDataSourceIdsBySubscriber(getSubscriberId());
 
+		List<Long> authorIds = subscrUserService.findUserIdsBySubscriberOrRmaId(getSubscriberId());
+		if (authorIds.isEmpty()) authorIds.add(0L);
+
+        //dataSourceIds.add(subscrDataSourceService.csvFileId());
+
 		if (contObjectIds != null && contObjectIds.size() > 0) {
 			if (!canAccessContObject(contObjectIds.toArray(new Long[] {}))) {
 				return responseForbidden();
 			}
 		}
 
-		List<LogSessionVO> resultList = new ArrayList<>();
+		List<LogSessionVO> resultList;
 
 		if (contObjectIds != null && contObjectIds.size() > 0) {
-			resultList = logSessionService.selectLogSessions(dataSourceIds,
+			resultList = logSessionService.selectLogSessions(dataSourceIds, authorIds,
 					datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectIds);
 
 		} else {
 
-			resultList = logSessionService.selectLogSessions(dataSourceIds,
+			resultList = logSessionService.selectLogSessions(dataSourceIds, authorIds,
 					datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		}
@@ -78,7 +93,7 @@ public class RmaSubscrLogSessionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param logSessionId
 	 * @return
 	 */

@@ -157,54 +157,5 @@ public class HWatersCsvService {
 		return parsedData;
 	}
 
-	/**
-	 *
-	 * @param file
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public boolean checkCsvSeparators(String file) throws FileNotFoundException, IOException {
-		boolean result = true;
-		try (Reader reader = new FileReader(file)) {
-			result = checkCsvSeparatorReader(reader);
-		}
-		return result;
-	}
-
-	/**
-	 *
-	 * @param byteArray
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
-		boolean result = true;
-		try (InputStream is = new ByteArrayInputStream(byteArray)) {
-			result = checkCsvSeparatorReader(new InputStreamReader(is));
-		}
-		return result;
-	}
-
-	/**
-	 *
-	 * @param reader
-	 * @return
-	 * @throws IOException
-	 */
-	private boolean checkCsvSeparatorReader(Reader reader) throws IOException {
-		boolean result = true;
-		try (BufferedReader br = new BufferedReader(reader)) {
-			String header = br.readLine();
-			int checkCnt = StringUtils.countOccurrencesOf(header, ",");
-			String line;
-			while (result && (line = br.readLine()) != null) {
-				int lineCnt = StringUtils.countOccurrencesOf(line, ",");
-				result = result & (lineCnt == checkCnt);
-			}
-		}
-		return result;
-	}
 
 }

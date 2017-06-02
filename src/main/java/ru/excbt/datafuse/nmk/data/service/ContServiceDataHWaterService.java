@@ -60,7 +60,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис по работе с данными по горячей воде
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.03.2015
@@ -92,7 +92,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	private HWatersCsvService hWatersCsvService;
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -109,7 +109,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
@@ -129,7 +129,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -150,7 +150,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
@@ -170,7 +170,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param datePeriod
@@ -189,7 +189,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
@@ -210,7 +210,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param datePeriod
@@ -231,7 +231,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -244,7 +244,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -271,7 +271,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param fromDateTime
 	 * @return
@@ -291,7 +291,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param fromDateTime
 	 * @return
@@ -302,7 +302,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -316,7 +316,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -329,7 +329,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -447,7 +447,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param localDateTime
 	 * @return
@@ -467,7 +467,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param localDateTime
 	 * @return
@@ -514,7 +514,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -548,7 +548,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param inData
 	 */
@@ -601,7 +601,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param localDatePeriod
 	 * @param outFile
@@ -642,12 +642,11 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		return deleteCandidate;
 	}
 
-	/**
-	 * 
-	 * @param contZpointId
-	 * @param fromDateTime
-	 * @return
-	 */
+    /**
+     *
+     * @param contZpointId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<TimeDetailLastDate> selectTimeDetailLastDate(long contZpointId) {
 		checkArgument(contZpointId > 0);
@@ -672,7 +671,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointIds
 	 * @return
 	 */
@@ -690,7 +689,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param idServiceTypePairs
 	 * @return
 	 */

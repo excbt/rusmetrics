@@ -19,8 +19,10 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,6 +52,41 @@ public class SubscrContServiceDataResource extends SubscrApiController {
 
     }
 
+
+    /**
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    private String readHeaders(InputStream inputStream) throws IOException {
+        String header = null;
+        try {
+            if (inputStream.markSupported()) {
+
+                inputStream.mark(512);
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(isr);
+                header = reader.readLine();
+                log.debug("FILE_HEADER: {}", header);
+            } else {
+                log.warn("MARK IS NOT SUPPORTED:");
+            }
+
+        } finally {
+            if (inputStream.markSupported()) {
+                inputStream.reset();
+            }
+        }
+        return header;
+    }
+
+
+    /**
+     *
+     * @param multipartFiles
+     * @return
+     */
     @RequestMapping(value = "/service-data/cont-objects/import", method = RequestMethod.POST,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> importDataMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
@@ -63,29 +100,22 @@ public class SubscrContServiceDataResource extends SubscrApiController {
             return responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
         }
 
-
         // See what is in the uploaded file
 
-        List<String> fileHeaders = new ArrayList<>();
+        Set<String> fileHeaders = new HashSet<>();
+
         for (MultipartFile multipartFile : multipartFiles) {
             try {
-                try {
-                    if (multipartFile.getInputStream().markSupported()) {
+                String header = readHeaders(multipartFile.getInputStream());
+                if (header != null && !header.isEmpty()) {
+                    fileHeaders.add(header);
+                    continue;
+                }
 
-                        multipartFile.getInputStream().mark(512);
-                        InputStreamReader isr = new InputStreamReader(multipartFile.getInputStream());
-                        BufferedReader reader = new BufferedReader(isr);
-                        String header = reader.readLine();
-                        log.debug("FILE_HEADER: {}", header);
-                        fileHeaders.add(header);
-                    } else {
-                        log.error("MARK IS NOT SUPPORTED:");
-                    }
-
-                } finally {
-                    if (multipartFile.getInputStream().markSupported()) {
-                        multipartFile.getInputStream().reset();
-                    }
+                if (ImpulseCsvService.fileStarts(multipartFile.getOriginalFilename())) {
+                    fileHeaders.add(ImpulseCsvService.CSV_HEADER);
+                } else {
+                    fileHeaders.add(HWatersCsvService.CSV_HEADER);
                 }
 
 
@@ -97,22 +127,23 @@ public class SubscrContServiceDataResource extends SubscrApiController {
         }
 
 
-        Set<String> headerSet = fileHeaders.stream().collect(Collectors.toSet());
-
-        if (headerSet.size() > 1) {
+        if (fileHeaders.size() > 1) {
             return responseBadRequest(ApiResult.badRequest("Одновременная загрузка разных файлов импорта не поддерживается"));
         }
 
 
-        if (headerSet.contains(HWatersCsvService.CSV_HEADER)) {
+        if (fileHeaders.contains(HWatersCsvService.CSV_HEADER)) {
             return subscrContServiceDataHWaterController.importDataHWaterMultipleFiles(multipartFiles);
         }
 
-        if (headerSet.contains(ImpulseCsvService.CSV_HEADER)) {
+        if (fileHeaders.contains(ImpulseCsvService.CSV_HEADER)) {
             return subscrContServiceDataImpulseController.importDataImpulseMultipleFilesCl(multipartFiles);
         }
 
-        return responseBadRequest();
+
+
+        //return responseBadRequest();
+        return subscrContServiceDataHWaterController.importDataHWaterMultipleFiles(multipartFiles);
 
     }
 

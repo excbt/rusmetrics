@@ -24,7 +24,6 @@ import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import lombok.Builder;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
@@ -97,6 +96,8 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterController.class);
+
+
 
 	public static final String HEAT = "heat";
 	public static final String HW = "hw";
@@ -850,13 +851,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
 					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")),
 					DBRowUtils.asLong(row.get("deviceObjectId")), DBRowUtils.asLong(row.get("subscrDataSourceId")),
-					subscriberParam.getSubscrUserId(), fileName, internalFilename);
+                fileName, internalFilename);
 
 			serviceDataImportInfos.add(importInfo);
 
 		}
 
-		Callable<Boolean> task = contServiceDataHWaterImportService.newTask(serviceDataImportInfos);
+		Callable<Boolean> task = contServiceDataHWaterImportService.submitImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
 
 		subscriberExecutorService.submit(subscriberParam.getSubscriberId(), task);
 
