@@ -77,4 +77,23 @@ public class CsvUtils {
 
     }
 
+
+    /**
+     *
+     * @param fileName
+     * @return
+     */
+    public static String extractFileName(String fileName) {
+        return fileName != null ? FilenameUtils.getName(fileName) : "";
+    }
+
+    /**
+     *
+     * @param fileName
+     * @return
+     */
+    public static String extractFileExtention(String fileName) {
+        return fileName != null ? FilenameUtils.getExtension(fileName) : "";
+    }
+
 }
