@@ -5,8 +5,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,5 +97,57 @@ public class CsvUtils {
     public static String extractFileExtention(String fileName) {
         return fileName != null ? FilenameUtils.getExtension(fileName) : "";
     }
+
+
+    /**
+     *
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean checkCsvSeparators(String file) throws IOException {
+        boolean result;
+        try (Reader reader = new FileReader(file)) {
+            result = checkCsvSeparatorReader(reader);
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param byteArray
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
+        boolean result = true;
+        try (InputStream is = new ByteArrayInputStream(byteArray)) {
+            result = checkCsvSeparatorReader(new InputStreamReader(is));
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param reader
+     * @return
+     * @throws IOException
+     */
+    private static boolean checkCsvSeparatorReader(Reader reader) throws IOException {
+        boolean result = true;
+        try (BufferedReader br = new BufferedReader(reader)) {
+            String header = br.readLine();
+            int checkCnt = StringUtils.countOccurrencesOf(header, ",");
+            String line;
+            while (result && (line = br.readLine()) != null) {
+                int lineCnt = StringUtils.countOccurrencesOf(line, ",");
+                result = result & (lineCnt == checkCnt);
+            }
+        }
+        return result;
+    }
+
 
 }

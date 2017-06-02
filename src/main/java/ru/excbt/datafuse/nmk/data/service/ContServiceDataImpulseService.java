@@ -6,7 +6,6 @@ package ru.excbt.datafuse.nmk.data.service;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -16,11 +15,10 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceRepository;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
+import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
@@ -30,7 +28,6 @@ import javax.persistence.PersistenceException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -94,9 +91,14 @@ public class ContServiceDataImpulseService implements SecuredRoles {
     }
 
 
+    /**
+     *
+     * @param subscriberId aka authorId
+     * @param fileImportInfos
+     */
     @Transactional(value = TxConst.TX_DEFAULT)
     @Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-    public void importData(final long authorId, final List<FileImportInfo> fileImportInfos) {
+    public void importData(final long subscriberId, final List<FileImportInfo> fileImportInfos) {
 
 
         Long csvDataSourceId = subscrDataSourceService.csvFileId();
@@ -108,38 +110,23 @@ public class ContServiceDataImpulseService implements SecuredRoles {
         for (FileImportInfo importInfo : fileImportInfos) {
 
             String msg = String.format("Пользователь ID %d Загрузка файла %s ",
-                authorId, FilenameUtils.getName(importInfo.getInternalFileName()));
+                subscriberId, FilenameUtils.getName(importInfo.getInternalFileName()));
+
+            String errorMessage = String.format(FileImportInfo.IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName());
+            String completeMessage = String.format(FileImportInfo.IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName());
 
             log.debug("Log message", msg);
 
             SLogSessionT1 session = sLogWriterService.newSessionWebT1(csvDataSourceId,
-                null, msg, authorId);
+                null, msg, subscriberId);
 
             session.status(SLogSessionStatuses.GENERATING.getKeyname(),
                 "Загрузка файла: " + importInfo.getUserFileName());
 
 
-            boolean checkCsvSeparators = false;
-            try {
-                checkCsvSeparators = HWatersCsvService.checkCsvSeparators(importInfo.getInternalFileName());
-            } catch (FileNotFoundException e1) {
-                failSession(session, importInfo, "Ошибка. Файл не может быть проверен");
-                throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
-                    "Check CSV separators error", importInfo.getUserFileName()));
-            } catch (IOException e1) {
-                failSession(session, importInfo, "Ошибка. Файл не может быть проверен");
-                throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
-                    "Check CSV separators error", importInfo.getUserFileName()));
-            }
+            SLogSessionUtils.checkCsvSeparators(session, importInfo);
 
-
-            if (!checkCsvSeparators) {
-                failSession(session, importInfo, "Ошибка. Файл не содержит полных данных");
-                throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
-                    "Check CSV separators error", importInfo.getUserFileName()));
-            }
-
-            completeSession(session, importInfo);
+            SLogSessionUtils.completeSession(session, completeMessage);
 
         }
 
@@ -170,30 +157,6 @@ public class ContServiceDataImpulseService implements SecuredRoles {
             }
         });
     }
-
-
-    /**
-     *
-     * @param session
-     * @param message
-     * @param importInfo
-     */
-    private void failSession(SLogSessionT1 session, FileImportInfo importInfo, String message) {
-        session.web().trace(message);
-        session.status(SLogSessionStatuses.FAILURE.getKeyname(),
-            String.format(FileImportInfo.IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-    }
-
-    /**
-     *
-     * @param session
-     * @param importInfo
-     */
-    private void completeSession(SLogSessionT1 session, FileImportInfo importInfo) {
-        session.status(SLogSessionStatuses.COMPLETE.getKeyname(),
-            String.format(FileImportInfo.IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName()));
-    }
-
 
 
 }

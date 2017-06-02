@@ -20,8 +20,10 @@ import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterImportRepository;
+import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
@@ -83,6 +85,10 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 		    String msg = String.format("Пользователь ID %d Загрузка файла %s ",
                 subscriberId, FilenameUtils.getName(importInfo.getInternalFileName()));
 
+
+		    String errorMessage = String.format(FileImportInfo.IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName());
+		    String completeMessage = String.format(FileImportInfo.IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName());
+
 			SLogSessionT1 session = sLogWriterService.newSessionWebT1(importInfo.getDataSourceId(),
 					importInfo.getDeviceObjectId(), msg,
                 subscriberId);
@@ -92,24 +98,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			session.web().trace("Проверка целостности данных файла");
 
-			boolean checkCsvSeparators = false;
-			try {
-				checkCsvSeparators = hWatersCsvService.checkCsvSeparators(importInfo.getInternalFileName());
-			} catch (FileNotFoundException e1) {
-				failSession(session, importInfo, "Ошибка. Файл не может быть проверен");
-				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
-						"Check CSV separators error", importInfo.getUserFileName()));
-			} catch (IOException e1) {
-				failSession(session, importInfo, "Ошибка. Файл не может быть проверен");
-				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
-						"Check CSV separators error", importInfo.getUserFileName()));
-			}
-
-			if (!checkCsvSeparators) {
-				failSession(session, importInfo, "Ошибка. Файл не содержит полных данных");
-				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
-						"Check CSV separators error", importInfo.getUserFileName()));
-			}
+			SLogSessionUtils.checkCsvSeparators(session, importInfo);
 
 			session.web().trace("Проверка целостности данных файла пройдена");
 
@@ -124,7 +113,10 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			    if (e instanceof RuntimeJsonMappingException) {
                     session.web().trace("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());
                 }
-				failSession(session, importInfo, "Ошибка. Данные из файла не могут быть обработаны");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Данные из файла не могут быть обработаны", errorMessage);
+
 				log.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
 						session.getSessionUUID(), e.getMessage());
 				throw new IllegalArgumentException(
@@ -137,7 +129,10 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null)
 					.count() > 0) {
-				failSession(session, importInfo, "Ошибка. Не задано значение detail_type");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Не задано значение detail_type", errorMessage);
+
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
@@ -145,13 +140,19 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			List<String> timeDetailTypes = inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct()
 					.collect(Collectors.toList());
 			if (timeDetailTypes.size() > 1 || timeDetailTypes.get(0) == null) {
-				failSession(session, importInfo, "Ошибка. В файле задано более 2-х типов detail_type");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. В файле задано более 2-х типов detail_type", errorMessage);
+
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
 
 			if (inDataHWaterImport.stream().map(i -> i.getDataDate()).distinct().filter(s -> s == null).count() > 0) {
-				failSession(session, importInfo, "Ошибка. Найдено пустое значение date");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Найдено пустое значение date", errorMessage);
+
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
@@ -159,7 +160,10 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(timeDetailTypes.get(0));
 
 			if (timeDetailKey == null) {
-				failSession(session, importInfo, "Ошибка. Не найдено значение detail_type=" + timeDetailTypes.get(0));
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Не найдено значение detail_type=" + timeDetailTypes.get(0), errorMessage);
+
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
@@ -168,7 +172,10 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			ContZPoint zpoint = contZPointService.findOne(importInfo.getContZPointId());
 
 			if (zpoint == null) {
-				failSession(session, importInfo, "Ошибка. Точка учета не найдена");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Точка учета не найдена", errorMessage);
+
 				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "ContZPoint is not found",
 						importInfo.getUserFileName()));
 			}
@@ -177,8 +184,11 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 					zpoint.getTsNumber()));
 
 			if (!BooleanUtils.isTrue(zpoint.getIsManualLoading())) {
-				failSession(session, importInfo, "Ошибка. Точка учета не поддерживает импорт данных");
-				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Точка учета не поддерживает импорт данных", errorMessage);
+
+                throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
 						"ContZPoint is support import", importInfo.getUserFileName()));
 			}
 
@@ -209,8 +219,11 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			try {
 				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
 			} catch (Exception e) {
-				failSession(session, importInfo, "Ошибка. Загрузка в БД временно не возможна");
-				log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Загрузка в БД временно не возможна", errorMessage);
+
+                log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), e);
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
@@ -232,37 +245,17 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
 
 				session.web().trace("Ошибка при обновлении данных");
-				failSession(session, importInfo, sqlExceptiomMessage);
+
+                SLogSessionUtils.failSession(session,
+                    sqlExceptiomMessage, errorMessage);
 
 				throw new IllegalArgumentException(
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
 			}
 
 			session.web().trace("Обновление данных успешно завершено");
-			completeSession(session, importInfo);
+            SLogSessionUtils.completeSession(session, completeMessage);
 		}
-	}
-
-	/**
-	 *
-	 * @param session
-	 * @param message
-	 * @param importInfo
-	 */
-	private void failSession(SLogSessionT1 session, ServiceDataImportInfo importInfo, String message) {
-		session.web().trace(message);
-		session.status(SLogSessionStatuses.FAILURE.getKeyname(),
-				String.format(FileImportInfo.IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-	}
-
-	/**
-	 *
-	 * @param session
-	 * @param importInfo
-	 */
-	private void completeSession(SLogSessionT1 session, ServiceDataImportInfo importInfo) {
-		session.status(SLogSessionStatuses.COMPLETE.getKeyname(),
-				String.format(FileImportInfo.IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName()));
 	}
 
 	/**
@@ -270,7 +263,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	 * @param serviceDataImportInfos
 	 * @return
 	 */
-	public Callable<Boolean> newImportTask(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
+	public Callable<Boolean> submitImportTask(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
 		return () -> {
             try {
                 log.debug("Start HWaterImportTask");

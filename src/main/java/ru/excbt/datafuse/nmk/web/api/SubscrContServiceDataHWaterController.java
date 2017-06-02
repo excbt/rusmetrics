@@ -857,7 +857,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		}
 
-		Callable<Boolean> task = contServiceDataHWaterImportService.newImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
+		Callable<Boolean> task = contServiceDataHWaterImportService.submitImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
 
 		subscriberExecutorService.submit(subscriberParam.getSubscriberId(), task);
 
