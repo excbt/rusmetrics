@@ -381,7 +381,7 @@ angular.module('portalNMC')
 //                                        "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
 //                                "</i>";
                     trHTML += "<li>";
-                    if (zpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
+                    if (zpoint.isImpulse === true || zpoint.isSpreader === true) {
                         trHTML += "<a href='#/objects/impulse-indicators/";
                     } else if (zpoint.zpointType === 'el') {
                         trHTML += "<a href='#/objects/indicator-electricity/";
