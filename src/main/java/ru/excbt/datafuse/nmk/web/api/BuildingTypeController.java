@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api;
 
@@ -17,13 +17,14 @@ import ru.excbt.datafuse.nmk.data.model.dto.BuildingTypeDto;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingType;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingTypeCategory;
 import ru.excbt.datafuse.nmk.data.service.BuildingTypeService;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2016
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/api/subscr/service/buildingType")
@@ -33,7 +34,7 @@ public class BuildingTypeController extends WebApiController {
 	private BuildingTypeService buildingTypeService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -44,7 +45,7 @@ public class BuildingTypeController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/category/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

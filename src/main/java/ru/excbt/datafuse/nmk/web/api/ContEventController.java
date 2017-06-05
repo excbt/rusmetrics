@@ -13,10 +13,11 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
  * Контроллер для работы с объектом учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.06.2015
@@ -33,7 +34,7 @@ public class ContEventController extends WebApiController {
 	private ContEventTypeService contEventTypeService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

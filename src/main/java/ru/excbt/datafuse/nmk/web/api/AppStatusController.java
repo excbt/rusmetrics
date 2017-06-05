@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.service.support.AppVersionService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 @Controller
 @RequestMapping("/api/appStatus")
@@ -19,7 +20,7 @@ public class AppStatusController extends WebApiController {
 	private AppVersionService appVersionService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/version", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -34,7 +35,7 @@ public class AppStatusController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param httpSession
 	 * @return
 	 */
@@ -51,7 +52,7 @@ public class AppStatusController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param httpSession
 	 * @return
 	 */

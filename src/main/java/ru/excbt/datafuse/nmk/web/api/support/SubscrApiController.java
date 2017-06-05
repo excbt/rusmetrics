@@ -7,7 +7,6 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
-import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Базовый класс для контроллера с абонентом
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 20.07.2015
@@ -33,7 +32,7 @@ import static com.google.common.base.Preconditions.*;
 public class SubscrApiController extends WebApiController {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrApiController.class);
-	
+
 	@Autowired
 	protected SubscriberService subscriberService;
 
@@ -47,7 +46,7 @@ public class SubscrApiController extends WebApiController {
 	protected SubscrContObjectService subscrContObjectService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -58,7 +57,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -80,7 +79,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointIds
 	 * @return
 	 */
@@ -92,7 +91,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointIds
 	 * @return
 	 */
@@ -103,7 +102,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected long getCurrentSubscriberId() {
@@ -111,7 +110,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected long getSubscriberId() {
@@ -119,7 +118,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected SubscriberParam getSubscriberParam() {
@@ -127,7 +126,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected Long getCurrentSubscUserId() {
@@ -135,7 +134,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected Subscriber getCurrentSubscriber() {
@@ -143,7 +142,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected Long getRmaSubscriberId() {
@@ -158,7 +157,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected LocalDate getCurrentSubscriberLocalDate() {
@@ -167,7 +166,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected Date getCurrentSubscriberDate() {
@@ -176,7 +175,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ZonedDateTime getSubscriberZonedDateTime() {
@@ -185,7 +184,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -195,7 +194,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectList
 	 * @return
 	 */
@@ -211,7 +210,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param objectList
 	 * @return
@@ -226,7 +225,7 @@ public class SubscrApiController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected boolean isSystemUser() {

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 @Transactional
 public class SubscrContEventTest extends AnyControllerTest {

@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
  * Контроллер для замера отклика системы
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.11.2015
@@ -26,7 +27,7 @@ public class BenchmarkController extends WebApiController {
 	private BenchmarkService benchmarkService;
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -43,7 +44,7 @@ public class BenchmarkController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

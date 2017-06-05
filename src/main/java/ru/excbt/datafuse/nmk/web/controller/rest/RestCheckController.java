@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.excbt.datafuse.nmk.web.api.WebApiController;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 @Controller

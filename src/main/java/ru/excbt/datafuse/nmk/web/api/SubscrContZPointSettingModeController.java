@@ -21,10 +21,11 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
  * Контроллер для работы с настройками точки учета для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 01.04.2015
@@ -43,7 +44,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	private ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -70,7 +71,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param id

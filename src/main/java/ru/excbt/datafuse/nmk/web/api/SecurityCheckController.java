@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 @Controller
 @RequestMapping(value = "/api/securityCheck")
@@ -21,7 +22,7 @@ public class SecurityCheckController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/isAuthenticated", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

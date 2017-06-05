@@ -18,10 +18,11 @@ import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.ReportWizardParam;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
  * Контроллер для работы с конструктором отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.04.2015
@@ -40,7 +41,7 @@ public class ReportWizardController extends WebApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -50,7 +51,7 @@ public class ReportWizardController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)

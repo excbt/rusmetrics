@@ -27,10 +27,11 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
  * Контроллер для работы с расписанием отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.04.2015
@@ -52,7 +53,7 @@ public class ReportSheduleController extends WebApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -70,7 +71,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -85,7 +86,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
@@ -99,7 +100,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
@@ -112,7 +113,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return
@@ -173,7 +174,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @param reportParamset
 	 * @return

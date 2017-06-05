@@ -37,7 +37,6 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
@@ -49,6 +48,7 @@ import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 
 @Transactional
