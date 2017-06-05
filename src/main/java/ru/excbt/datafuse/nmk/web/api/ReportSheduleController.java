@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -105,7 +106,7 @@ public class ReportSheduleController extends AbstractApiResource {
 
 		ApiActionVoidProcess actionProcess = () -> reportSheduleService.deleteOne(reportSheduleId);
 
-		return WebApiHelper.processResponceApiActionDelete(actionProcess);
+		return ApiActionTool.processResponceApiActionDelete(actionProcess);
 	}
 
     /**

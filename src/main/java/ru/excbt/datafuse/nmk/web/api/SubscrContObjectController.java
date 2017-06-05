@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Arrays;
 import java.util.List;
@@ -103,7 +104,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionOk(action);
+		return ApiActionTool.processResponceApiActionOk(action);
 
 		//return responseOK(contObjectService.wrapContObjectsStats(resultList));
 		//return responseOK(contObjectService.wrapContObjectsMonitorVO(resultList));
@@ -187,7 +188,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 
@@ -245,7 +246,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**

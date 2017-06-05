@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -102,7 +103,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 
@@ -139,7 +140,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 
 	}
 
@@ -156,7 +157,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 				subscrActionGroupService.deleteOne(id);
 			}
 		};
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
     /**
@@ -253,7 +254,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(userAction);
+		return ApiActionTool.processResponceApiActionCreate(userAction);
 
 	}
 
@@ -272,7 +273,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 }

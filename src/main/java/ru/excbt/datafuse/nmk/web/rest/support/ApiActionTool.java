@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest.support;
 
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
@@ -28,15 +28,15 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Утилита для выполнения запросов контроллеров
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.05.2015
  *
  */
-public class WebApiHelper {
+public class ApiActionTool {
 
-	private static final Logger logger = LoggerFactory.getLogger(WebApiHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApiActionTool.class);
 
 	public static class ProcessResponseHelper<T> {
 		private final ResponseEntity<T> response;
@@ -57,7 +57,7 @@ public class WebApiHelper {
 
 	}
 
-	private WebApiHelper() {
+	private ApiActionTool() {
 
 	}
 
@@ -84,12 +84,12 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since 28.09.2016
-	 * 
+	 *
 	 * @param <T>
 	 */
 	private static abstract class ApiActionProcessWrapper<T> implements ApiActionAdapter {
@@ -114,12 +114,12 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since 29.09.2016
-	 * 
+	 *
 	 * @param <T>
 	 * @param <K>
 	 */
@@ -138,18 +138,18 @@ public class WebApiHelper {
 		public abstract T processAndReturnResult();
 	}
 
-	/**
-	 * 
-	 * @param service
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @param successStatus
+     * @return
+     */
 	private static ResponseEntity<?> _processResponceApiAction(ApiAction action, HttpStatus successStatus) {
 		return _processResponceApiAction(action, successStatus, null);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 * @param successStatus
 	 * @param extraCheck
@@ -192,12 +192,12 @@ public class WebApiHelper {
 		}
 	}
 
-	/**
-	 * 
-	 * @param service
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @param successStatus
+     * @return
+     */
 	@Deprecated
 	private static ResponseEntity<?> _processResponceApiActionBody(ApiAction action, HttpStatus successStatus) {
 
@@ -218,12 +218,11 @@ public class WebApiHelper {
 
 	}
 
-	/**
-	 * 
-	 * @param action
-	 * @param successStatus
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @return
+     */
 	private static ApiProcessResult _internalProcess(ApiAction action) {
 		checkNotNull(action);
 
@@ -254,12 +253,11 @@ public class WebApiHelper {
 		return new ApiProcessResult();
 	}
 
-	/**
-	 * 
-	 * @param service
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @return
+     */
 	public static ResponseEntity<?> processResponceApiActionCreate(ApiActionLocation action) {
 
 		checkNotNull(action);
@@ -279,7 +277,7 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 * @param uriLocation
 	 * @return
@@ -328,7 +326,7 @@ public class WebApiHelper {
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @param uriLocationSupplier
 	 * @return
@@ -376,19 +374,18 @@ public class WebApiHelper {
 
 	}
 
-	/**
-	 * 
-	 * @param action
-	 * @param successStatus
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @return
+     */
 	@Deprecated
 	protected static ResponseEntity<?> processResponceApiActionOkBody(ApiAction action) {
 		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -397,7 +394,7 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -406,28 +403,26 @@ public class WebApiHelper {
 		return _processResponceApiAction(createWrapper(actionProcess), HttpStatus.OK, extraCheck);
 	}
 
-	/**
-	 * 
-	 * @param action
-	 * @param successStatus
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @return
+     */
 	public static ResponseEntity<?> processResponceApiActionOk(ApiAction action) {
 		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
-	/**
-	 * 
-	 * @param action
-	 * @param successStatus
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @return
+     */
 	public static ResponseEntity<?> processResponceApiActionDelete(ApiAction action) {
 		return _processResponceApiAction(action, HttpStatus.NO_CONTENT);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -436,7 +431,7 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 * @return
 	 */
@@ -444,18 +439,17 @@ public class WebApiHelper {
 		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
-	/**
-	 * 
-	 * @param action
-	 * @param successStatus
-	 * @return
-	 */
+    /**
+     *
+     * @param action
+     * @return
+     */
 	public static ResponseEntity<?> processResponceApiActionUpdate(ApiAction action) {
 		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -464,7 +458,7 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -474,7 +468,7 @@ public class WebApiHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */

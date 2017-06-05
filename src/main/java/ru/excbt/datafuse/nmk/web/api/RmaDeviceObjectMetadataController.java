@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.List;
 
@@ -111,7 +112,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 				return deviceObjectMetadataService.updateDeviceObjectMetadata(deviceObjectId, entity);
 			}
 		};
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionOk(action);
+		return ApiActionTool.processResponceApiActionOk(action);
 	}
 
 }

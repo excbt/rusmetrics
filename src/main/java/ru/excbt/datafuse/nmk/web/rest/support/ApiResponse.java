@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.web.api.WebApiHelper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
@@ -71,7 +70,7 @@ public class ApiResponse {
 	 * @return
 	 */
 	public static <T> ResponseEntity<?> responseOK(final ApiActionProcess<T> actionProcess) {
-		return WebApiHelper.processResponceApiActionOk(actionProcess);
+		return ApiActionTool.processResponceApiActionOk(actionProcess);
 	}
 
     /**
@@ -82,7 +81,7 @@ public class ApiResponse {
 	 */
 	public static <T> ResponseEntity<?> responseOK(final ApiActionProcess<T> actionProcess,
                                                    Function<T, ResponseEntity<?>> extraCheck) {
-		return WebApiHelper.processResponceApiActionOk(actionProcess, extraCheck);
+		return ApiActionTool.processResponceApiActionOk(actionProcess, extraCheck);
 	}
 
     /**
@@ -108,7 +107,7 @@ public class ApiResponse {
 	 * @return
 	 */
 	public static <T> ResponseEntity<?> responseUpdate(final ApiActionProcess<T> actionProcess) {
-		return WebApiHelper.processResponceApiActionUpdate(actionProcess);
+		return ApiActionTool.processResponceApiActionUpdate(actionProcess);
 	}
 
     /**
@@ -119,7 +118,7 @@ public class ApiResponse {
 	 */
 	public static <T> ResponseEntity<?> responseUpdate(final ApiActionProcess<T> actionProcess,
                                                        Function<T, ResponseEntity<?>> extraCheck) {
-		return WebApiHelper.processResponceApiActionUpdate(actionProcess, extraCheck);
+		return ApiActionTool.processResponceApiActionUpdate(actionProcess, extraCheck);
 	}
 
     /**
@@ -129,7 +128,7 @@ public class ApiResponse {
 	 */
 	public static <T extends ModelIdable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
         final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
-		return WebApiHelper.processResponceApiActionCreate(actionProcess, uriLocationSupplier);
+		return ApiActionTool.processResponceApiActionCreate(actionProcess, uriLocationSupplier);
 
 	}
 
@@ -138,7 +137,7 @@ public class ApiResponse {
 	 * @return
 	 */
 	public static <T> ResponseEntity<?> responseDelete(final ApiActionProcess<T> actionProcess) {
-		return WebApiHelper.processResponceApiActionDelete(actionProcess);
+		return ApiActionTool.processResponceApiActionDelete(actionProcess);
 	}
 
     /**
