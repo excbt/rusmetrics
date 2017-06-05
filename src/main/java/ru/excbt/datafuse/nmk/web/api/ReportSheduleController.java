@@ -13,7 +13,6 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
@@ -36,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/reportShedule")
-public class ReportSheduleController extends AbstractApiResource {
+public class ReportSheduleController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleController.class);
 

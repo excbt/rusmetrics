@@ -10,7 +10,6 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -26,7 +25,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/contEvent")
-public class ContEventController extends AbstractApiResource {
+public class ContEventController {
 
 	@Autowired
 	private ContEventService contEventService;

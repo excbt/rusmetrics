@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.service.support.AppVersionService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/api/appStatus")
-public class AppStatusController extends AbstractApiResource {
+public class AppStatusController {
 
 	@Autowired
 	private AppVersionService appVersionService;

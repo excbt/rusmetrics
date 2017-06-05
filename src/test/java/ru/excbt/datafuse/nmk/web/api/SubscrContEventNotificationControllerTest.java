@@ -49,7 +49,6 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 
 
 @Transactional

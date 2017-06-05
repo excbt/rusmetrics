@@ -7,13 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 @Controller
 @RequestMapping(value = "/api/securityCheck")
-public class SecurityCheckController extends AbstractApiResource {
+public class SecurityCheckController {
 
 	private boolean isAuthenthicated() {
 		return SecurityContextHolder.getContext().getAuthentication() != null &&

@@ -15,7 +15,6 @@ import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 
 
 import javax.persistence.EntityManager;

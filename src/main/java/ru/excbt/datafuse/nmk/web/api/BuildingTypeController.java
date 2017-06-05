@@ -16,7 +16,6 @@ import ru.excbt.datafuse.nmk.data.model.keyname.BuildingType;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingTypeCategory;
 import ru.excbt.datafuse.nmk.data.service.BuildingTypeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
@@ -34,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr/service/buildingType")
-public class BuildingTypeController extends AbstractApiResource {
+public class BuildingTypeController {
 
 	@Autowired
 	private BuildingTypeService buildingTypeService;
