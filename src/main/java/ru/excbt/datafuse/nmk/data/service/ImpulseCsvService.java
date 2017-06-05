@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,6 +13,9 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulse_CsvFormat
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -79,5 +84,34 @@ public class ImpulseCsvService {
     public static boolean fileStarts(String fileName) {
         return CsvUtils.extractFileName(fileName).toLowerCase().startsWith(FILE_STARTS.toLowerCase());
     }
+
+
+    /**
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     * @throws JsonProcessingException
+     */
+    public List<ContServiceDataImpulseUCsv> parseDataImpulseUCsvImport(InputStream inputStream)
+        throws IOException {
+
+        CsvMapper mapper = new CsvMapper();
+        mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
+        mapper.findAndRegisterModules();
+        CsvSchema schema = mapper.schemaFor(ContServiceDataImpulseUCsv.class).withHeader();
+        ObjectReader reader = mapper.readerFor(ContServiceDataImpulseUCsv.class).with(schema);
+
+        MappingIterator<ContServiceDataImpulseUCsv> iterator = null;
+        List<ContServiceDataImpulseUCsv> parsedData = new ArrayList<>();
+
+        iterator = reader.readValues(inputStream);
+        while (iterator.hasNext()) {
+            ContServiceDataImpulseUCsv d = iterator.next();
+            parsedData.add(d);
+        }
+        return parsedData;
+    }
+
 
 }

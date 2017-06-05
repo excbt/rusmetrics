@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -57,20 +58,30 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 //	private final static String IMPORT_COMPLETE_TEMPLATE = "Данные из файла %s успешно загружены";
 //	private final static String IMPORT_EXCEPTION_TEMPLATE = "Data Import Error. %s. File: %s";
 
-	@Autowired
-	private ContServiceDataHWaterImportRepository contServiceDataHWaterImportRepository;
+	private final ContServiceDataHWaterImportRepository contServiceDataHWaterImportRepository;
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ContZPointService contZPointService;
 
-	@Autowired
-	private HWatersCsvService hWatersCsvService;
-
-	@Autowired
-	private SLogWriterService sLogWriterService;
+	private final HWatersCsvService hWatersCsvService;
 
 
-	/**
+	private final SLogWriterService sLogWriterService;
+
+    private final SubscriberExecutorService subscriberExecutorService;
+
+    public ContServiceDataHWaterImportService(ContServiceDataHWaterImportRepository contServiceDataHWaterImportRepository,
+                                              ContZPointService contZPointService,
+                                              HWatersCsvService hWatersCsvService,
+                                              SLogWriterService sLogWriterService,
+                                              SubscriberExecutorService subscriberExecutorService) {
+        this.contServiceDataHWaterImportRepository = contServiceDataHWaterImportRepository;
+        this.contZPointService = contZPointService;
+        this.hWatersCsvService = hWatersCsvService;
+        this.sLogWriterService = sLogWriterService;
+        this.subscriberExecutorService = subscriberExecutorService;
+    }
+
+    /**
 	 *
 	 * @param serviceDataImportInfos
 	 */
@@ -96,13 +107,9 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			session.status(SLogSessionStatuses.GENERATING.getKeyname(),
 					"Загрузка файла: " + importInfo.getUserFileName());
 
-			session.web().trace("Проверка целостности данных файла");
-
+			session.web().trace("Проверка целостности CSV файла");
 			SLogSessionUtils.checkCsvSeparators(session, importInfo);
-
-			session.web().trace("Проверка целостности данных файла пройдена");
-
-
+			session.web().trace("Проверка целостности CSV пройдена");
             session.web().trace("Преобразование данных файла");
 
 			// Reading CSV from FILE
@@ -123,7 +130,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Parsing error", importInfo.getUserFileName()));
 			}
 
-            session.web().trace("Преобразование данных файла пройдена");
+            session.web().trace("Преобразование данных файла завершено");
 
 			session.web().trace("Данные преобразованы. Проверка данных на валидность");
 
@@ -263,8 +270,8 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	 * @param serviceDataImportInfos
 	 * @return
 	 */
-	public Callable<Boolean> submitImportTask(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
-		return () -> {
+	public Future<Boolean> submitImportTask(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
+        return subscriberExecutorService.submit(subscriberId, () -> {
             try {
                 log.debug("Start HWaterImportTask");
                 if (serviceDataImportInfos.isEmpty()) {
@@ -280,7 +287,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
             } finally {
                 log.debug("Finish HWaterImportTask");
             }
-        };
-	}
+        });
+    }
 
 }

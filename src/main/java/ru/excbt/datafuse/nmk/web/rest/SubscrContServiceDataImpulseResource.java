@@ -1,7 +1,7 @@
 /**
  *
  */
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -54,16 +54,16 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataImpulseController extends AbstractContServiceDataResource {
+public class SubscrContServiceDataImpulseResource extends AbstractContServiceDataResource {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataImpulseController.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataImpulseResource.class);
 
 	private final ContServiceDataImpulseService contServiceDataImpulseService;
 
 	private final WebAppPropsService webAppPropsService;
 
 	@Autowired
-    public SubscrContServiceDataImpulseController(ContServiceDataImpulseService contServiceDataImpulseService, WebAppPropsService webAppPropsService) {
+    public SubscrContServiceDataImpulseResource(ContServiceDataImpulseService contServiceDataImpulseService, WebAppPropsService webAppPropsService) {
         this.contServiceDataImpulseService = contServiceDataImpulseService;
         this.webAppPropsService = webAppPropsService;
     }

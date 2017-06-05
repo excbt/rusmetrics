@@ -15,7 +15,6 @@ import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterControllerTest;
-import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataImpulseController;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataImpulseControllerTest;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
