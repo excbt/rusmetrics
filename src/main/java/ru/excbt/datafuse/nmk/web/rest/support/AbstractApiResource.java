@@ -45,8 +45,6 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class AbstractApiResource {
 
-	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(ReportService.DATE_TEMPLATE);
-
 
 	@Autowired
 	protected ModelMapper modelMapper;

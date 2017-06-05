@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.utils.ApiJodaDateFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,8 +82,8 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 			DateTime startD = null;
 			DateTime endD = null;
 			try {
-				startD = DATE_FORMATTER.parseDateTime(startDateStr);
-				endD = DATE_FORMATTER.parseDateTime(endDateStr);
+				startD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(startDateStr);
+				endD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(endDateStr);
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().body(
 						String.format("Invalid parameters startDateStr:{}, endDateStr:{}", startDateStr, endDateStr));
@@ -136,8 +137,8 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 			DateTime startD = null;
 			DateTime endD = null;
 			try {
-				startD = DATE_FORMATTER.parseDateTime(startDateStr);
-				endD = DATE_FORMATTER.parseDateTime(endDateStr);
+				startD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(startDateStr);
+				endD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(endDateStr);
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().body(
 						String.format("Invalid parameters startDateStr:{}, endDateStr:{}", startDateStr, endDateStr));
