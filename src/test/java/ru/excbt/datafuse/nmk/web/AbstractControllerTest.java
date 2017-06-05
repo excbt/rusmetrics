@@ -15,7 +15,8 @@ import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -78,7 +79,7 @@ public class AbstractControllerTest {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
 			resultActions.andExpect(status().isOk())
-					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+					.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 		};
 
 		ResultActions resultActions = _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
@@ -100,7 +101,7 @@ public class AbstractControllerTest {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
 			resultActions.andExpect(status().isOk())
-			.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+			.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 		};
 
 		return _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
@@ -120,7 +121,7 @@ public class AbstractControllerTest {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
 			resultActions.andExpect(status().isOk())
-					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+					.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 		};
 
 		ResultActions resultActions = _testGet(url, requestExtraInitializer, resultActionsTester);

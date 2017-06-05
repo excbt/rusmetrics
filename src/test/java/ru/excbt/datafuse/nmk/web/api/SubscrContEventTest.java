@@ -1,19 +1,18 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
 public class SubscrContEventTest extends AnyControllerTest {
@@ -34,7 +33,7 @@ public class SubscrContEventTest extends AnyControllerTest {
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 	}
 
 	@Test
@@ -47,7 +46,7 @@ public class SubscrContEventTest extends AnyControllerTest {
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 	}
 
 	@Test
@@ -60,7 +59,7 @@ public class SubscrContEventTest extends AnyControllerTest {
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 	}
 
 	@Test

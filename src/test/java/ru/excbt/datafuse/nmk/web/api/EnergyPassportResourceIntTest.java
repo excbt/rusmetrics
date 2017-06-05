@@ -377,7 +377,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
         energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
 
-        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/contObjectIds");
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/cont-object-ids");
 
         energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
         List<Long> linkedContObjectIds = energyPassportService.findEnergyPassportContObjectIds(passportDTO.getId());
@@ -400,7 +400,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
 
         energyPassportDataRepository.flush();
 
-        _testGetJson("/api/subscr/energy-passports/contObject/" + contObjectIds.get(0));
+        _testGetJson("/api/subscr/energy-passports/cont-objects/" + contObjectIds.get(0));
     }
 
     @Test
@@ -414,7 +414,27 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         RequestExtraInitializer param = (b) -> {
         };
 
-        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports/contObject/" + contObjectIds.get(0), vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+        ResultActions resultActions = _testPostJson("/api/subscr/energy-passports/cont-objects/" + contObjectIds.get(0), vm, param, ResultActionsTester.TEST_SUCCESSFULL);
+
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateContObjectEnergyPassport() throws Exception {
+
+        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+
+        EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").passportDate(LocalDate.now()).build();
+        EnergyPassportDTO dto = energyPassportService.createContObjectPassport(vm, contObjectIds.subList(0,1), new Subscriber().id(getSubscriberId()));
+
+        energyPassportDataRepository.flush();
+
+        vm = EnergyPassportVM.builder().passportName("bla-bla-bla").passportDate(LocalDate.now()).id(dto.getId()).build();
+
+        RequestExtraInitializer param = (b) -> {
+        };
+
+        _testUpdateJson("/api/subscr/energy-passports/cont-objects/" + contObjectIds.get(0), vm, param, ResultActionsTester.TEST_SUCCESSFULL);
 
     }
 
