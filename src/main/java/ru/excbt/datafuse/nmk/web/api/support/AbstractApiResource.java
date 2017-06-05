@@ -43,7 +43,7 @@ import static com.google.common.base.Preconditions.*;
  * @since 02.04.2015
  *
  */
-public class WebApiController {
+public class AbstractApiResource {
 
 	public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
 

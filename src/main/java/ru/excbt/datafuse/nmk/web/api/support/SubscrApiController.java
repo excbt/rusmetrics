@@ -1,5 +1,9 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
@@ -8,18 +12,13 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Базовый класс для контроллера с абонентом
@@ -29,7 +28,7 @@ import static com.google.common.base.Preconditions.*;
  * @since 20.07.2015
  *
  */
-public class SubscrApiController extends WebApiController {
+public class SubscrApiController extends AbstractApiResource {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrApiController.class);
 

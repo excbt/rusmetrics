@@ -1,10 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с настройками точки учета для абонента
@@ -33,7 +32,7 @@ import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointSettingModeController extends WebApiController {
+public class SubscrContZPointSettingModeController extends AbstractApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointSettingModeController.class);
 

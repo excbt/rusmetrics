@@ -6,10 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
 
 /**
  * Контроллер для замера отклика системы
@@ -21,7 +20,7 @@ import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
  */
 @Controller
 @RequestMapping("/api/benchmark")
-public class BenchmarkController extends WebApiController {
+public class BenchmarkController extends AbstractApiResource {
 
 	@Autowired
 	private BenchmarkService benchmarkService;

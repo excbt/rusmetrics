@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +8,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.ReportWizardParam;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с конструктором отчетов
@@ -30,7 +29,7 @@ import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
  */
 @Controller
 @RequestMapping(value = "/api/reportWizard")
-public class ReportWizardController extends WebApiController {
+public class ReportWizardController extends AbstractApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportWizardController.class);
 

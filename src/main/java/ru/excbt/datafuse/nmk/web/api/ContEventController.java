@@ -1,19 +1,18 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
+
+import java.util.List;
 
 /**
  * Контроллер для работы с объектом учета
@@ -25,7 +24,7 @@ import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
  */
 @Controller
 @RequestMapping(value = "/api/contEvent")
-public class ContEventController extends WebApiController {
+public class ContEventController extends AbstractApiResource {
 
 	@Autowired
 	private ContEventService contEventService;
