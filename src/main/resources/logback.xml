@@ -72,7 +72,7 @@
     <logger name="org.springframework" level="info" />
     <!--<logger name="org.apache.tomcat.jdbc.pool" level="debug" />-->
 
-    <logger name="ru.excbt.datafuse.nmk" level="debug" />
+    <!--<logger name="ru.excbt.datafuse.nmk" level="debug" />-->
 
 	<root level="info">
 <!-- 		<appender-ref ref="console" /> -->

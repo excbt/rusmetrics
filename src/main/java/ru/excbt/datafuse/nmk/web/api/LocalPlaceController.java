@@ -11,9 +11,11 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceTemperatureSstService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -33,14 +35,14 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/localPlaces/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/localPlaces/all", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLocalPlace() {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return localPlaceService.selectLocalPlaces();
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -50,14 +52,14 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/{localPlaceId}/sst", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLocalPlaceSst(@PathVariable("localPlaceId") Long localPlaceId,
 			@RequestParam("sstDateStr") String sstDateStr) {
 
 		JodaTimeParser<LocalDate> parser = JodaTimeParser.parseLocalDate(sstDateStr);
 
 		if (parser.isEmpty()) {
-			return responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
 		}
 
 		ApiActionObjectProcess action = () -> {
@@ -75,7 +77,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 			return resultList;
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 	/**
@@ -85,19 +87,19 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/{localPlaceId}/sst/{sstId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putLocalPlaceTemperatureSst(@PathVariable("localPlaceId") Long localPlaceId,
 			@PathVariable("sstId") Long sstId, @RequestBody LocalPlaceTemperatureSst requestEntity) {
 
 		if (!sstId.equals(requestEntity.getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return localPlaceTemperatureSstService.saveSst(requestEntity);
 		};
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 	}
 
 	/**
@@ -107,21 +109,21 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/{localPlaceId}/sst/array", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putLocalPlaceTemperatureSstList(@PathVariable("localPlaceId") Long localPlaceId,
 			@RequestParam("sstDateStr") String sstDateStr, @RequestBody List<LocalPlaceTemperatureSst> requestEntity) {
 
 		JodaTimeParser<LocalDate> parser = JodaTimeParser.parseLocalDate(sstDateStr);
 
 		if (parser.isEmpty()) {
-			return responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return localPlaceTemperatureSstService.saveSstList(requestEntity);
 		};
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 	}
 
 }

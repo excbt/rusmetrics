@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -102,7 +103,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
@@ -127,7 +128,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
@@ -165,7 +166,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
@@ -316,18 +317,18 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 		logger.debug("Processing Report with params: {}", paramJson);
 
 		if (!reportMakerParam.isParamsetValid() || !reportMakerParam.isSubscriberValid()) {
-			return responseBadRequest(ApiResult.validationError("Report Maker Param is not valid"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report Maker Param is not valid"));
 		}
 
 		boolean checkParamsCommon = reportMakerParam.isAllCommonRequiredParamsExists();
 		boolean checParamsSpecial = reportMakerParam.isAllSpecialRequiredParamsExists();
 
 		if (!checkParamsCommon) {
-			return responseBadRequest(ApiResult.validationError("Report Maker Param: Common params is not valid"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report Maker Param: Common params is not valid"));
 		}
 
 		if (!checParamsSpecial) {
-			return responseBadRequest(ApiResult.validationError("Report Maker Param: Special params is not valid"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report Maker Param: Special params is not valid"));
 		}
 
 		byte[] byteArray = null;
@@ -339,7 +340,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 		}
 
 		if (byteArray == null || byteArray.length == 0) {
-			return responseInternalServerError(ApiResult.internalError("Report Maker result is empty"));
+			return ApiResponse.responseInternalServerError(ApiResult.internalError("Report Maker result is empty"));
 		}
 
 		InputStream is = new ByteArrayInputStream(byteArray);
@@ -354,7 +355,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 		boolean makeAttach = !reportMakerParam.isPreviewMode();
 
-		return processDownloadInputStream(is, mediaType, byteArray.length, outputFilename, makeAttach);
+		return ApiResponse.processDownloadInputStream(is, mediaType, byteArray.length, outputFilename, makeAttach);
 
 	}
 
@@ -454,7 +455,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 			HttpServletRequest request) throws IOException {
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
@@ -484,7 +485,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);

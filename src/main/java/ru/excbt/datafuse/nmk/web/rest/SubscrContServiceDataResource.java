@@ -11,10 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterController;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataImpulseController;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import java.io.BufferedReader;
@@ -87,7 +89,7 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/service-data/cont-objects/import", method = RequestMethod.POST,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> importDataMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 
@@ -96,7 +98,7 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
         List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
 
         if (isNotPassed.size() > 0) {
-            return responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
+            return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
         }
 
         // See what is in the uploaded file
@@ -121,13 +123,13 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
             }
             catch (IOException e) {
                 log.error("Internal server error: file upload: \n{}", e.getMessage());
-                return responseInternalServerError(ApiResult.error(e, "Internal server error: file upload "));
+                return ApiResponse.responseInternalServerError(ApiResult.error(e, "Internal server error: file upload "));
             }
         }
 
 
         if (fileHeaders.size() > 1) {
-            return responseBadRequest(ApiResult.badRequest("Одновременная загрузка разных файлов импорта не поддерживается"));
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Одновременная загрузка разных файлов импорта не поддерживается"));
         }
 
 

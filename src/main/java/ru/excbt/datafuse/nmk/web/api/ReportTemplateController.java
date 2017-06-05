@@ -12,8 +12,11 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,19 +48,19 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @param reportUrlName
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyList(@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(), reportTypeKey,
 					ReportConstants.IS_ACTIVE);
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
@@ -65,19 +68,19 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyArchList(@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(), reportTypeKey,
 					ReportConstants.IS_NOT_ACTIVE);
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
@@ -88,19 +91,19 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportTemplateService.findOne(reportTemplateId);
 		};
-		return responseOK(actionProcess, (x) -> x == null ? responseBadRequest() : null);
+		return ApiResponse.responseOK(actionProcess, (x) -> x == null ? ApiResponse.responseBadRequest() : null);
 
 	}
 
@@ -112,14 +115,14 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return updateInternal(reportTemplateId, reportTemplate, reportTypeKey);
@@ -132,13 +135,13 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportTemplateId") long reportTemplateId) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return deleteInternal(reportTemplateId);
@@ -158,7 +161,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -182,7 +185,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 			reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 			return reportTemplateService.updateOne(reportTemplate);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 	}
 
@@ -191,7 +194,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> moveToArchive(
 			@RequestParam(value = "reportTemplateId", required = true) final Long reportTemplateId) {
 
@@ -200,7 +203,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportTemplateService.moveToArchive(reportTemplateId);
 		};
-		return responseUpdate(actionProcess,
+		return ApiResponse.responseUpdate(actionProcess,
 				(x) -> x == null
 						? ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
 								.body(ApiResult.build(ApiResultCode.ERR_BRM_VALIDATION,
@@ -225,13 +228,14 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 		//		return responeResult;
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param srcId
+     * @param reportTemplate
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(@PathVariable(value = "srcId") final Long srcId,
 			@RequestBody final ReportTemplate reportTemplate, HttpServletRequest request) {
 
@@ -242,7 +246,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 		ApiActionProcess<ReportTemplate> actionProcess = () -> reportTemplateService.createByTemplate(srcId,
 				reportTemplate, currentSubscriberService.getSubscriber());
 
-		return responseCreate(actionProcess, () -> {
+		return ApiResponse.responseCreate(actionProcess, () -> {
 			return "/api/reportTemplate" + ReportConstants.getReportTypeURL(reportTemplate.getReportTypeKeyname());
 		});
 

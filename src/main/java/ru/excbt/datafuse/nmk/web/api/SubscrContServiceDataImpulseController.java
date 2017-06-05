@@ -31,9 +31,11 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataImpulseService;
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractContServiceDataResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import java.io.File;
@@ -78,12 +80,12 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceImpulse/{timeDetailType}/{contZPointId}/paged",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataImpulsePaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		RequestPageDataSelector<ContServiceDataImpulse> dataSelector = new RequestPageDataSelector<ContServiceDataImpulse>() {
 
@@ -110,13 +112,13 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
      * @return
      */
     @RequestMapping(value = "/service/serviceImpulse/contObjects/importData-cl", method = RequestMethod.POST,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> importDataImpulseMultipleFilesCl(@RequestParam("files") MultipartFile[] multipartFiles) {
 
         checkNotNull(multipartFiles);
 
         if (multipartFiles.length == 0) {
-            return responseBadRequest();
+            return ApiResponse.responseBadRequest();
         }
 
         SubscriberParam subscriberParam = getSubscriberParam();
@@ -125,7 +127,7 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
         List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
 
         if (isNotPassed.size() > 0) {
-            return responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
+            return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
         }
 
         // Processing files
@@ -148,7 +150,7 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
                 String digestMD5 = FileWriterUtils.writeFile(multipartFile.getInputStream(), inFile);
             } catch (IOException e) {
                 log.error("Exception:{}", e);
-                return responseInternalServerError(ApiResult.error(e));
+                return ApiResponse.responseInternalServerError(ApiResult.error(e));
             }
 
             FileImportInfo fileImportInfo = FileImportInfo.builder().internalFileName(internalFilename)
@@ -160,7 +162,7 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
 
         contServiceDataImpulseService.submitImportTask(getCurrentSubscUserId(), fileImportInfos);
 
-	    return responseOK();
+	    return ApiResponse.responseOK();
     }
 
 }

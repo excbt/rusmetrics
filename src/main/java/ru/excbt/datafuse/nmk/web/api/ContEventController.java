@@ -9,8 +9,9 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/contEvent")
-public class ContEventController extends AbstractApiResource {
+public class ContEventController {
 
 	@Autowired
 	private ContEventService contEventService;
@@ -36,13 +37,13 @@ public class ContEventController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventTypes() {
 		ApiActionObjectProcess action = () -> {
 			List<ContEventType> vList = contEventTypeService.selectBaseContEventTypes();
 			return ObjectFilters.disabledFilter(vList);
 		};
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 }

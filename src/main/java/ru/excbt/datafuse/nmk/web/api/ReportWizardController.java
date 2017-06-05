@@ -13,9 +13,10 @@ import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.ReportWizardParam;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/reportWizard")
-public class ReportWizardController extends AbstractApiResource {
+public class ReportWizardController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportWizardController.class);
 
@@ -43,7 +44,7 @@ public class ReportWizardController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
 		ReportColumnSettings result = reportWizardService.getReportColumnSettings();
 		return ResponseEntity.ok(result);
@@ -53,7 +54,7 @@ public class ReportWizardController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createWizardCommerceReport(@RequestBody final ReportWizardParam reportWizardParam) {
 
 		checkNotNull(reportWizardParam);
@@ -72,7 +73,7 @@ public class ReportWizardController extends AbstractApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 

@@ -14,7 +14,9 @@ import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.service.LogSessionService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLogSessionVO(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
@@ -56,7 +58,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkPeriod = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkPeriod = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkPeriod != null) {
 			return checkPeriod;
 		}
@@ -70,7 +72,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 		if (contObjectIds != null && contObjectIds.size() > 0) {
 			if (!canAccessContObject(contObjectIds.toArray(new Long[] {}))) {
-				return responseForbidden();
+				return ApiResponse.responseForbidden();
 			}
 		}
 
@@ -87,7 +89,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 		}
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -96,10 +98,10 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{logSessionId}/steps", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLogSessionStep(@PathVariable("logSessionId") Long logSessionId) {
 		List<LogSessionStep> resultList = logSessionService.selectLogSessionSteps(logSessionId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

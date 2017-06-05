@@ -11,10 +11,13 @@ import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.service.SubscrVCookieService;
 import ru.excbt.datafuse.nmk.data.service.WidgetMetaService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -36,12 +39,12 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> readSubscrVCookie(@RequestParam(name = "vcMode", required = false) String vcMode,
 			@RequestParam(name = "vcKey", required = false) String vcKey) {
 
 		if (vcKey != null && vcMode == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookie(getSubscriberParam());
@@ -50,7 +53,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
 				.filter(i -> vcKey == null || vcKey.equals(i.getVcKey())).collect(Collectors.toList());
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -58,22 +61,22 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 * @param requestEntities
 	 * @return
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/list", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrVCookie(@RequestBody List<SubscrVCookie> requestEntities) {
 
 		checkNotNull(requestEntities);
 
 		for (SubscrVCookie vc : requestEntities) {
 			if (!vc.isNew()) {
-				return responseBadRequest(ApiResult.validationError("id is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("id is null"));
 			}
 
 			if (vc.getVcKey() == null) {
-				return responseBadRequest(ApiResult.validationError("vcKey is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcKey is null"));
 			}
 
 			if (vc.getVcMode() == null) {
-				return responseBadRequest(ApiResult.validationError("vcMode is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcMode is null"));
 			}
 
 			vc.setSubscriberId(getSubscriberId());
@@ -90,7 +93,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -145,12 +148,12 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> readSubscrVCookieUser(@RequestParam(name = "vcMode", required = false) String vcMode,
 			@RequestParam(name = "vcKey", required = false) String vcKey) {
 
 		if (vcKey != null && vcMode == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookieByUser(getSubscriberParam());
@@ -159,7 +162,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
 				.filter(i -> vcKey == null || vcKey.equals(i.getVcKey())).collect(Collectors.toList());
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -167,22 +170,22 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 * @param requestEntities
 	 * @return
 	 */
-	@RequestMapping(value = "/user/list", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/user/list", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrVCookieUser(@RequestBody List<SubscrVCookie> requestEntities) {
 
 		checkNotNull(requestEntities);
 
 		for (SubscrVCookie vc : requestEntities) {
 			if (!vc.isNew()) {
-				return responseBadRequest(ApiResult.validationError("id is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("id is null"));
 			}
 
 			if (vc.getVcKey() == null) {
-				return responseBadRequest(ApiResult.validationError("vcKey is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcKey is null"));
 			}
 
 			if (vc.getVcMode() == null) {
-				return responseBadRequest(ApiResult.validationError("vcMode is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcMode is null"));
 			}
 
 			SubscriberParam sParam = getSubscriberParam();
@@ -201,15 +204,15 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> widgetList() {
-		return responseOK(() -> widgetMetaService.selectAllWidgets());
+		return ApiResponse.responseOK(() -> widgetMetaService.selectAllWidgets());
 	}
 }

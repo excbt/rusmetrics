@@ -15,8 +15,11 @@ import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.RawModemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -50,21 +53,21 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSources() {
 		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(getCurrentSubscriberId());
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
-	/**
-	 *
-	 * @param subscrDataSourceId
-	 * @return
-	 */
-	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param dataSourceId
+     * @return
+     */
+	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSource(@PathVariable("dataSourceId") Long dataSourceId) {
 		SubscrDataSource result = subscrDataSourceService.findOne(dataSourceId);
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -72,13 +75,13 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @param subscrDataSource
 	 * @return
 	 */
-	@RequestMapping(value = "/dataSources", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/dataSources", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDataSource(@RequestBody SubscrDataSource subscrDataSource,
 			HttpServletRequest request) {
 		checkNotNull(subscrDataSource);
 
 		if (subscrDataSource.getDataSourceTypeKey() == null) {
-			return responseBadRequest(ApiResult.validationError("dataSourceKey is null"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("dataSourceKey is null"));
 		}
 
 		subscrDataSource.setSubscriberId(getCurrentSubscriberId());
@@ -100,7 +103,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -109,7 +112,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @param subscrDataSource
 	 * @return
 	 */
-	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDataSource(@PathVariable("dataSourceId") Long subscrDataSourceId,
 			@RequestBody SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSourceId);
@@ -127,7 +130,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -136,7 +139,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteDataSource(@PathVariable("dataSourceId") Long subscrDataSourceId) {
 
 		checkNotNull(subscrDataSourceId);
@@ -150,18 +153,18 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/dataSourceTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/dataSourceTypes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSourceTypes() {
 		List<DataSourceType> result = dataSourceTypeRepository.findAll();
 		result.sort((a, b) -> Integer.compare(a.getTypeOrder(), b.getTypeOrder()));
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -169,10 +172,10 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getRawModemModel() {
 		List<RawModemModel> resultList = rawModemService.selectRawModels();
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -181,10 +184,10 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
 		RawModemModel resultList = rawModemService.selectRawModel(rawModemModelId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -194,12 +197,12 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId,
 			@RequestBody RawModemModel requestEntity) {
 
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<RawModemModel>(requestEntity) {
@@ -211,7 +214,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -225,11 +228,11 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 			@RequestBody RawModemModel requestEntity, HttpServletRequest request) {
 
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (requestEntity.getRawModemType() == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<RawModemModel, Long>(requestEntity, request) {
@@ -245,7 +248,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 
 	}
 
@@ -255,11 +258,11 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
 
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = new ApiActionAdapter() {
@@ -270,7 +273,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -278,7 +281,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/rawModemModelIdentity", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getRawModemIdentity() {
 
 		class RawModemIdentity {
@@ -305,7 +308,7 @@ public class SubscrDataSourceController extends AbstractSubscrApiResource {
 
 		List<RawModemIdentity> result = Arrays.asList(serial, macImei, macAddr);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

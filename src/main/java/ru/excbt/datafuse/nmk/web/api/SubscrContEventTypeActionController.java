@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeActionService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -43,17 +46,17 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 	@RequestMapping(value = "/actions/available", method = RequestMethod.GET)
 	public ResponseEntity<?> getAvailableContEventTypes() {
 		List<ContEventType> result = subscrContEventTypeActionService.selectAvailableContEventTypes();
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
-	/**
-	 *
-	 * @param contEventTypeId
-	 * @param smsAddrList
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/{contEventTypeId}/actions", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param contEventTypeId
+     * @param actionList
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/{contEventTypeId}/actions", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrContEventTypeActions(
 			@PathVariable(value = "contEventTypeId") Long contEventTypeId,
 			@RequestBody List<SubscrContEventTypeAction> actionList, HttpServletRequest request) {
@@ -67,7 +70,7 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 				.filter(i -> i.getId().equals(contEventTypeId)).findFirst();
 
 		if (!checkContEventType.isPresent()) {
-			return responseBadRequest(ApiResult.validationError("contEventTypeId = %d is not found", contEventTypeId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("contEventTypeId = %d is not found", contEventTypeId));
 		}
 
 		ContEventType contEventType = checkContEventType.get();
@@ -81,7 +84,7 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -93,7 +96,7 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 	public ResponseEntity<?> getContEventTypeActions(@PathVariable(value = "contEventTypeId") Long contEventTypeId) {
 		List<SubscrContEventTypeAction> result = subscrContEventTypeActionService
 				.selectSubscrContEventTypeActions(getCurrentSubscriberId(), contEventTypeId);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

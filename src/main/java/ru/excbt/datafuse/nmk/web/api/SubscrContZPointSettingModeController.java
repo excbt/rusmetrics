@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.List;
 
@@ -49,7 +52,7 @@ public class SubscrContZPointSettingModeController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -78,7 +81,7 @@ public class SubscrContZPointSettingModeController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode/{id}",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("id") long id,
 			@RequestBody ContZPointSettingMode settingMode) {
@@ -111,7 +114,9 @@ public class SubscrContZPointSettingModeController extends AbstractSubscrApiReso
 		}
 
 		settingMode.setContZPoint(contZPoint);
-		prepareAuditableProps(currentSetting, settingMode);
+
+		AuditableTools.copyAuditableProps(currentSetting, settingMode);
+
 
 		ApiAction action = new AbstractEntityApiAction<ContZPointSettingMode>(settingMode) {
 
@@ -121,7 +126,7 @@ public class SubscrContZPointSettingModeController extends AbstractSubscrApiReso
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 

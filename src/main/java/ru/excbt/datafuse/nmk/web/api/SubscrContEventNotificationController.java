@@ -26,8 +26,11 @@ import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +82,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationsAll() {
 
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
@@ -98,7 +101,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @param pageable
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/paged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/paged", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsGetPaged(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr,
@@ -108,7 +111,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 			@RequestParam(value = "contEventDeviations", required = false) String[] contEventDeviations,
 			@RequestParam(value = "isNew", required = false) Boolean isNew,
 			@RequestParam(value = "sortDesc", required = false, defaultValue = "true") Boolean sortDesc,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		List<Long> contObjectIdList = contObjectIds == null ? null : Arrays.asList(contObjectIds);
 		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays.asList(contEventTypeIds);
@@ -154,7 +157,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationGetOne(@PathVariable("id") Long id) {
 
 		checkNotNull(id);
@@ -176,7 +179,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @param notificationIds
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsUpdateRevisionFalse(
 			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
 			@RequestParam(value = "isNew", required = false, defaultValue = "false") Boolean isNew) {
@@ -200,7 +203,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(process);
+		return ApiActionTool.processResponceApiActionUpdate(process);
 
 	}
 
@@ -210,7 +213,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsUpdateRevisionTrue(
 			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
 			@RequestParam(value = "isNew", required = false, defaultValue = "true") Boolean isNew) {
@@ -231,16 +234,21 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(process);
+		return ApiActionTool.processResponceApiActionUpdate(process);
 
 	}
 
-	/**
-	 *
-	 * @param notificationIds
-	 * @return
-	 */
-	@RequestMapping(value = "/notifications/revision/all", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param fromDateStr
+     * @param toDateStr
+     * @param contObjectIds
+     * @param contEventTypeIds
+     * @param isNew
+     * @param revisionIsNew
+     * @return
+     */
+	@RequestMapping(value = "/notifications/revision/all", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsUpdateRevisionAll(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr,
@@ -285,7 +293,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(process);
+		return ApiActionTool.processResponceApiActionUpdate(process);
 	}
 
 	/**
@@ -375,7 +383,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> cityMonitorContEventsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
@@ -408,7 +416,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/cityStatusCollapseV2", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> cityMonitorContEventsStatusCollapseV2(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
@@ -441,7 +449,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes/statusCollapse",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> monitorContEventTypesStatusCollapse(
 			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
@@ -470,7 +478,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEvents", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsContObjectMonitorEvents(
 			@PathVariable(value = "contObjectId") Long contObjectId) {
 
@@ -487,7 +495,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEventsV2", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsContObjectMonitorV2Events(
 			@PathVariable(value = "contObjectId") Long contObjectId) {
 
@@ -496,7 +504,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContObject(contObjectId);
 
 		if (resultList.isEmpty()) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
@@ -507,7 +515,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsContObjectMonitorV2EventsByContZPoint(
 			@PathVariable(value = "contObjectId") Long contObjectId,
             @PathVariable(value = "contZPointId") Long contZPointId) {
@@ -518,7 +526,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContZPoint(contObjectId,contZPointId);
 
 		if (resultList.isEmpty()) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
@@ -532,7 +540,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@Deprecated
-	@RequestMapping(value = "/notifications/monitorColor", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/monitorColor", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsMonitorColor(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr) {
@@ -567,20 +575,20 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/categories", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/categories", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventCategory() {
 		List<ContEventCategory> xList = contEventService.selectContEventCategoryList();
-		return responseOK(ObjectFilters.deletedFilter(xList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(xList));
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/deviations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/deviations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventDeviation() {
 		List<ContEventDeviation> resultList = contEventService.findContEventDeviation();
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

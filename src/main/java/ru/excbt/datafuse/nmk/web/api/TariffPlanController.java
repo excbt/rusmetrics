@@ -15,8 +15,11 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -57,7 +60,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/option", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/option", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> tariffOptionGet() {
 		return ResponseEntity.ok(tariffOptionRepository.selectAll());
 	}
@@ -66,7 +69,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/type", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/type", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> tariffTypeGet() {
 		return ResponseEntity.ok(tariffTypeRepository.findAll());
 	}
@@ -75,7 +78,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/rso", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/rso", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> rsoGet() {
 		// subscriberService.selectRsoOrganizations(currentSubscriberService.getSubscriberId())
 		return ResponseEntity.ok(organizationService.selectRsoOrganizations(getSubscriberParam()));
@@ -85,10 +88,10 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll() {
 		List<?> resultList = tariffPlanService.selectTariffPlanList(getCurrentSubscriberId());
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -96,7 +99,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 * @param rsoOrganizationId
 	 * @return
 	 */
-	@RequestMapping(value = "/default/rso", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/default/rso", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll(@RequestParam("rsoOrganizationId") long rsoOrganizationId) {
 		List<?> resultList = tariffPlanService.selectTariffPlanList(rsoOrganizationId);
 		return ResponseEntity.ok(resultList);
@@ -107,7 +110,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneTariff(@PathVariable("tariffPlanId") long tariffPlanId,
 			@RequestParam(value = "rsoOrganizationId", required = true) Long rsoOrganizationId,
 			@RequestParam(value = "tariffTypeId", required = true) Long tariffTypeId,
@@ -129,7 +132,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
-				return responseBadRequest(ApiResult.validationError("Invalid rsoOrganizationId"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -137,7 +140,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return responseBadRequest(ApiResult.validationError("Invalid tariffTypeId"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid tariffTypeId"));
 			}
 
 			tariffPlan.setTariffType(tt);
@@ -148,7 +151,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			for (long contObjectId : contObjectIds) {
 				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
-					return responseBadRequest(ApiResult.validationError("Invalid ContObjectId"));
+					return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
@@ -165,7 +168,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 
@@ -174,7 +177,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneTariff(
 			@RequestParam(value = "rsoOrganizationId", required = true) Long rsoOrganizationId,
 			@RequestParam(value = "tariffTypeId", required = true) Long tariffTypeId,
@@ -193,7 +196,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
-				return responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
+				return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -201,7 +204,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return responseBadRequest(ApiResult.badRequest("Invalid tariffTypeId"));
+				return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid tariffTypeId"));
 			}
 			tariffPlan.setTariffType(tt);
 		}
@@ -211,7 +214,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			for (long contObjectId : contObjectIds) {
 				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
-					return responseBadRequest(ApiResult.badRequest("Invalid ContObjectId"));
+					return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
@@ -237,16 +240,16 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 
 	}
 
-	/**
-	 *
-	 * @param tariffPlan
-	 * @return
-	 */
-	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param tariffPlanId
+     * @return
+     */
+	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneTariff(@PathVariable("tariffPlanId") final long tariffPlanId) {
 
 		ApiAction action = new ApiActionAdapter() {
@@ -258,7 +261,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 
 	}
 
@@ -267,7 +270,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 * @param tariffPlanId
 	 * @return
 	 */
-	@RequestMapping(value = "/{tariffPlanId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{tariffPlanId}/contObject", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTariffPlanContObjects(@PathVariable("tariffPlanId") long tariffPlanId) {
 
 		List<ContObject> contObjectList = tariffPlanService.selectTariffPlanContObjects(tariffPlanId,
@@ -282,7 +285,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{tariffPlanId}/contObject/available", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTariffPlanAvailableContObjects(@PathVariable("tariffPlanId") long tariffPlanId) {
 
 		List<ContObject> contObjectList = tariffPlanService.selectTariffPlanAvailableContObjects(tariffPlanId,
@@ -300,7 +303,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
 		List<Organization> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
 				: ObjectFilters.devModeFilter(rsOrganizations);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 }

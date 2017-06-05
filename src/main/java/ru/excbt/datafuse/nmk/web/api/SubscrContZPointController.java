@@ -18,9 +18,12 @@ import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,10 +69,10 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(zpList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -78,10 +81,10 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsEx", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(zpList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -90,10 +93,10 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(zpList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -102,22 +105,21 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsStatInfo", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointStatInfo> resultList = contZPointService.selectContZPointStatInfo(contObjectId);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param contZPointId
-	 * @param id
-	 * @param settingMode
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param contZPoint
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPoint contZPoint) {
 
@@ -142,7 +144,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -152,7 +154,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -162,22 +164,22 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
 
 		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
-		return responseOK(currentContZPoint);
+		return ApiResponse.responseOK(currentContZPoint);
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints() {
 
 		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getCurrentSubscriberId());
 
-		return responseOK(contZPoints);
+		return ApiResponse.responseOK(contZPoints);
 	}
 
 	/**
@@ -185,13 +187,13 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/zpoints/shortInfo", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsInfo() {
 
 		List<ContZPointShortInfo> contZPoints = subscrContObjectService
 				.selectSubscriberContZPointShortInfo(getCurrentSubscriberId());
 
-		return responseOK(contZPoints);
+		return ApiResponse.responseOK(contZPoints);
 	}
 
 	/**
@@ -199,11 +201,11 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/contServiceTypes", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContServieTypes() {
 		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
 
-		return responseOK(contServiceTypes);
+		return ApiResponse.responseOK(contServiceTypes);
 	}
 
 	/**
@@ -212,13 +214,13 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/timeDetailLastDate", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId) {
 
 		List<Pair<String, Long>> idPairList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
 
 		if (idPairList == null || idPairList.size() == 0) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		HashMap<Long, List<TimeDetailLastDate>> resultHWater = contServiceDataHWaterService
@@ -227,7 +229,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		HashMap<Long, List<TimeDetailLastDate>> resultEl = contServiceDataElService
 				.selectTimeDetailLastDateMapByPair(idPairList);
 
-		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
+		return ApiResponse.responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
 	}
 
 	/**
@@ -237,7 +239,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/timeDetailLastDate",
 			method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -252,7 +254,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		HashMap<Long, List<TimeDetailLastDate>> resultEl = contServiceDataElService
 				.selectTimeDetailLastDateMapByPair(idPairList);
 
-		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
+		return ApiResponse.responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
 
 	}
 
@@ -269,7 +271,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 
 		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -279,7 +281,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -287,7 +289,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		List<ContZPointMetadata> result = contZPointMetadataService.selectContZPointMetadata(contZPointId);
@@ -296,7 +298,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			result = contZPointMetadataService.selectNewMetadata(contZPointId, true);
 		}
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 
 	}
 
@@ -307,7 +309,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/measureUnits",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointMetadatameasureUnits(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId,
 			@RequestParam(value = "measureUnit", required = false) String measureUnit) {
@@ -319,7 +321,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			resultList = measureUnitService.selectMeasureUnits();
 		}
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -329,7 +331,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/srcProp",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointMetadataSrcProp(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -337,14 +339,14 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
 		List<DeviceMetadataInfo> result = contZPointMetadataService.buildSrcPropsDeviceMapping(metadataList);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -354,7 +356,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/destProp",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointMetadataDestProp(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -362,14 +364,14 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
 		List<EntityColumn> result = contZPointMetadataService.buildDestProps(metadataList);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -379,7 +381,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/destDb",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointMetadataDestDB(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -387,12 +389,12 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<EntityColumn> result = contZPointMetadataService.selectContZPointDestDB(contZPointId);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

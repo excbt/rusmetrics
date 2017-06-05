@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.service.TimezoneDefService;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/timezoneDef")
-public class TimezoneDefController extends AbstractApiResource {
+public class TimezoneDefController {
 
 	@Autowired
 	private TimezoneDefService timezoneDefService;
@@ -33,6 +33,6 @@ public class TimezoneDefController extends AbstractApiResource {
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<?> getTimezoneDef() {
 		List<TimezoneDef> resultList = timezoneDefService.selectTimeZoneDefs();
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 }

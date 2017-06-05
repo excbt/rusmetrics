@@ -15,10 +15,13 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPrefService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +45,12 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrPrefValues() {
 
 		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -55,7 +58,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 	 * @param subscrPrefKeyname
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrPrefValue", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrPrefValue", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrPrefValue(@RequestParam("subscrPrefKeyname") String subscrPrefKeyname) {
 
 		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
@@ -64,10 +67,10 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 				.filter(i -> i.getSubscrPrefKeyname().equals(subscrPrefKeyname)).findFirst();
 
 		if (result.isPresent()) {
-			return responseOK(ObjectFilters.deletedFilter(result.get()));
+			return ApiResponse.responseOK(ObjectFilters.deletedFilter(result.get()));
 		}
 
-		return responseOK();
+		return ApiResponse.responseOK();
 	}
 
 	/**
@@ -75,13 +78,13 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrPrefValues/objectTreeTypes", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrPrefObjectTreeTypes(@RequestParam("subscrPrefKeyname") String subscrPrefKeyname) {
 
 		List<String> treeTypes = subscrPrefService.selectSubscrPrefTreeTypes(subscrPrefKeyname);
 
 		if (treeTypes.isEmpty()) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		List<SubscrObjectTree> treeList = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
@@ -89,15 +92,15 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 		List<SubscrObjectTree> resultList = treeList.stream().filter(i -> treeTypes.contains(i.getObjectTreeType()))
 				.collect(Collectors.toList());
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
-	/**
-	 *
-	 * @param requestEntity
-	 * @return
-	 */
-	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param requestEntityList
+     * @return
+     */
+	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrPrefValue(@RequestBody List<SubscrPrefValue> requestEntityList) {
 
 		checkNotNull(requestEntityList);
@@ -106,7 +109,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 
 		for (SubscrPrefValue v : requestEntityList) {
 			if (v.getSubscriberId() == null || !v.getSubscriberId().equals(subscriberParam.getSubscriberId())) {
-				return responseBadRequest(ApiResult.validationError("Invalid subscriberId in request"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid subscriberId in request"));
 			}
 		}
 
@@ -119,7 +122,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 }

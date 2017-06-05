@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.utils.ApiJodaDateFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +48,7 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(@PathVariable("contObjectId") long contObjectId) {
 		List<ContEvent> result = contEventService.findEventsByContObjectId(contObjectId);
 		return ResponseEntity.ok(result);
@@ -56,20 +58,20 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		Page<ContEvent> result = contEventService.selectEventsBySubscriber(getCurrentSubscriberId());
 		return ResponseEntity.ok(Lists.newArrayList(result.iterator()));
 	}
 
-	/**
-	 *
-	 * @param startDate
-	 * @param endDate
-	 * @param contObjectIds
-	 * @return
-	 */
-	@RequestMapping(value = "/contObjects/eventsFilter", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param startDateStr
+     * @param endDateStr
+     * @param contObjectIds
+     * @return
+     */
+	@RequestMapping(value = "/contObjects/eventsFilter", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> eventsFilter(@RequestParam(value = "startDate", required = false) String startDateStr,
 			@RequestParam(value = "endDate", required = false) String endDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds) {
@@ -80,8 +82,8 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 			DateTime startD = null;
 			DateTime endD = null;
 			try {
-				startD = DATE_FORMATTER.parseDateTime(startDateStr);
-				endD = DATE_FORMATTER.parseDateTime(endDateStr);
+				startD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(startDateStr);
+				endD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(endDateStr);
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().body(
 						String.format("Invalid parameters startDateStr:{}, endDateStr:{}", startDateStr, endDateStr));
@@ -114,19 +116,20 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 	}
 
-	/**
-	 *
-	 * @param startDate
-	 * @param endDate
-	 * @param contObjectIds
-	 * @return
-	 */
+    /**
+     *
+     * @param startDateStr
+     * @param endDateStr
+     * @param contObjectIds
+     * @param pageable
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/eventsFilterPaged", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> eventsFilterPaged(@RequestParam(value = "startDate", required = false) String startDateStr,
 			@RequestParam(value = "endDate", required = false) String endDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		List<Long> contObjectList = contObjectIds != null ? Arrays.asList(contObjectIds) : new ArrayList<Long>();
 
@@ -134,8 +137,8 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 			DateTime startD = null;
 			DateTime endD = null;
 			try {
-				startD = DATE_FORMATTER.parseDateTime(startDateStr);
-				endD = DATE_FORMATTER.parseDateTime(endDateStr);
+				startD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(startDateStr);
+				endD = ApiJodaDateFormatter.DATE_FORMATTER.parseDateTime(endDateStr);
 			} catch (Exception e) {
 				return ResponseEntity.badRequest().body(
 						String.format("Invalid parameters startDateStr:{}, endDateStr:{}", startDateStr, endDateStr));

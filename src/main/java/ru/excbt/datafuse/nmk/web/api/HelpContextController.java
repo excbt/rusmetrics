@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.HelpContext;
 import ru.excbt.datafuse.nmk.data.service.HelpContextService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 @Controller
 @RequestMapping(value = "/api/help")
@@ -55,7 +57,7 @@ public class HelpContextController extends AbstractSubscrApiResource {
 	 * @param anchorId
 	 * @return
 	 */
-	@RequestMapping(value = "/jmp/{anchorId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/jmp/{anchorId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public String getHelpContextJmp(@PathVariable("anchorId") String anchorId) {
 
 		HelpContext helpContext = helpContextService.findByAnchorId(anchorId);
@@ -118,18 +120,18 @@ public class HelpContextController extends AbstractSubscrApiResource {
 	 * @param anchorId
 	 * @return
 	 */
-	@RequestMapping(value = "/info/{anchorId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/info/{anchorId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getHelpContextInfo(@PathVariable("anchorId") String anchorId) {
 
 		if (!helpContextService.isHelpContextSetup()) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		HelpContext helpContext = helpContextService.findByAnchorId(anchorId);
 		if (helpContext == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
-		return responseOK(helpContext);
+		return ApiResponse.responseOK(helpContext);
 	}
 
 }

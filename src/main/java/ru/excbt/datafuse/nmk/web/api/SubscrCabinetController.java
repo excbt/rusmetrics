@@ -16,10 +16,13 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -44,25 +47,24 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	@Autowired
 	private SubscrCabinetService subscrCabinetService;
 
-	/**
-	 *
-	 * @param xId
-	 * @return
-	 */
-	@RequestMapping(value = "/contObjectCabinetInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @return
+     */
+	@RequestMapping(value = "/contObjectCabinetInfo", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectCabinetInfo() {
 		List<ContObjectCabinetInfo> resultList = subscrCabinetService
 				.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 		checkNotNull(resultList);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
-	/**
-	 *
-	 * @param requestEntity
-	 * @return
-	 */
-	@RequestMapping(value = "/create", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param cabinetContObjectList
+     * @return
+     */
+	@RequestMapping(value = "/create", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putCreateContObjectCabinetInfo(@RequestBody final List<Long> cabinetContObjectList) {
 
 		final List<Exception> errExceptions = new ArrayList<>();
@@ -81,19 +83,19 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 			return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 		};
 
-		ResponseEntity<?> result = responseUpdate(actionProcess, (x) -> {
+		ResponseEntity<?> result = ApiResponse.responseUpdate(actionProcess, (x) -> {
 			return errExceptions.isEmpty() ? null : ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(x);
 		});
 
 		return result;
 	}
 
-	/**
-	 *
-	 * @param requestEntity
-	 * @return
-	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param childSubscriberList
+     * @return
+     */
+	@RequestMapping(value = "/delete", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putDeleteContObjectCabinetInfo(@RequestBody final List<Long> childSubscriberList) {
 
 		ApiAction action = new ApiActionEntityAdapter<List<ContObjectCabinetInfo>>() {
@@ -111,7 +113,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 			}
 		};
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -120,7 +122,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	 * @param requestEntity
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrUser(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestBody SubscrUserWrapper requestEntity) {
 
@@ -129,7 +131,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 		checkNotNull(requestEntity.getSubscrUser());
 
 		if (!subscrUserId.equals(requestEntity.getSubscrUser().getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<SubscrUserWrapper>(requestEntity) {
@@ -140,7 +142,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -148,16 +150,16 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	 * @param subscrUserId
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrUser/{subscrUserId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
 		SubscrUser subscrUser = subscrCabinetService.selectCabinelSubscrUser(subscrUserId);
 		if (subscrUser == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		SubscrUserWrapper result = new SubscrUserWrapper(subscrUser);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -165,7 +167,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	 * @param subscrUserIds
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUser/resetPassword", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrUser/resetPassword", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrUserResetPassword(@RequestBody final List<Long> subscrUserIds) {
 
 		ApiAction action = new ApiActionEntityAdapter<List<ContObjectCabinetInfo>>() {
@@ -185,7 +187,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -193,7 +195,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	 * @param subscrUserIds
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUser/sendPassword", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrUser/sendPassword", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrUserPasswordNotification(@RequestBody final List<Long> subscrUserIds) {
 
 		ApiAction action = new ApiActionEntityAdapter<List<Long>>() {
@@ -214,7 +216,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 }

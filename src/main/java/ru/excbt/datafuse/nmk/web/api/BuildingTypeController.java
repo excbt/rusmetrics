@@ -3,6 +3,7 @@
  */
 package ru.excbt.datafuse.nmk.web.api;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,9 +15,14 @@ import ru.excbt.datafuse.nmk.data.model.dto.BuildingTypeDto;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingType;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingTypeCategory;
 import ru.excbt.datafuse.nmk.data.service.BuildingTypeService;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  *
@@ -27,19 +33,35 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/subscr/service/buildingType")
-public class BuildingTypeController extends AbstractApiResource {
+public class BuildingTypeController {
 
 	@Autowired
 	private BuildingTypeService buildingTypeService;
 
-	/**
+    @Autowired
+    protected ModelMapper modelMapper;
+
+    /**
+     *
+     * @param srcStream
+     * @param destClass
+     * @return
+     */
+    private <S, M> List<M> makeModelMapper(Stream<S> srcStream, Class<M> destClass) {
+        checkNotNull(srcStream);
+        return srcStream.map((i) -> modelMapper.map(i, destClass)).collect(Collectors.toList());
+    }
+
+
+
+    /**
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getBuildingType() {
 		List<BuildingType> resultList = buildingTypeService.selectAllBuildingTypes();
-		return responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
+		return ApiResponse.responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
 				BuildingTypeDto.class));
 	}
 
@@ -47,10 +69,10 @@ public class BuildingTypeController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/category/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/category/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getBuildingTypeCategory() {
 		List<BuildingTypeCategory> resultList = buildingTypeService.selectAllBuildingTypeCategories();
-		return responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
+		return ApiResponse.responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
 				BuildingTypeCategoryDto.class));
 	}
 
