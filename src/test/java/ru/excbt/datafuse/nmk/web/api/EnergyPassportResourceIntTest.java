@@ -377,7 +377,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
         energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
 
-        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/contObjectIds");
+        _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/cont-object-ids");
 
         energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
         List<Long> linkedContObjectIds = energyPassportService.findEnergyPassportContObjectIds(passportDTO.getId());

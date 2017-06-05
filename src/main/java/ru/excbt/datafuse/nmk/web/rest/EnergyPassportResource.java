@@ -162,7 +162,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @param passportId
      * @return
      */
-    @RequestMapping(value = "/{id}/contObjectIds", method = RequestMethod.GET,
+    @RequestMapping(value = "/{id}/cont-object-ids", method = RequestMethod.GET,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getPassportContObjects(@PathVariable("id") Long passportId) {
 
@@ -175,7 +175,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @param contObjectIds
      * @return
      */
-    @RequestMapping(value = "/{id}/contObjectIds", method = RequestMethod.PUT,
+    @RequestMapping(value = "/{id}/cont-object-ids", method = RequestMethod.PUT,
         produces = APPLICATION_JSON_UTF8)
     public ResponseEntity<?> savePassportContObjects(@PathVariable("id") Long passportId, @RequestBody List<Long> contObjectIds) {
         return responseUpdate(() ->
