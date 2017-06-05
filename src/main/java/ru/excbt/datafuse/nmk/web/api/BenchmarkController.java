@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
@@ -30,7 +31,7 @@ public class BenchmarkController extends AbstractApiResource {
 	 * @param subscriberId
 	 * @return
 	 */
-	@RequestMapping(value = "/init/{subscriberId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/init/{subscriberId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> initBenchmark(@PathVariable("subscriberId") Long subscriberId) {
 		try {
 			benchmarkService.setBenchmarkSubscriberId(subscriberId);
@@ -46,7 +47,7 @@ public class BenchmarkController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getStatus() {
 		Long subscriberId = null;
 		try {

@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.data.service.MeasureUnitService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -42,7 +43,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects/metadata/measureUnits", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeasureUnits(
 			@RequestParam(value = "measureUnit", required = false) String measureUnit) {
 
@@ -61,7 +62,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects/metadata/contServiceTypes", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContServiceType() {
 
 		List<ContServiceType> resultList = contServiceTypeService.selectContServiceType();
@@ -76,7 +77,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metadata",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -97,7 +98,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metadata",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObjectMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody List<DeviceObjectMetadata> DeviceObjectMetadataList) {
@@ -119,7 +120,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}/metadata",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectMetadataByContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 

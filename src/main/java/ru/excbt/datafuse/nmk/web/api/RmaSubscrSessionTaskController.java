@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SessionDetailTypeInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SessionDetailTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrSessionTaskService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -49,7 +50,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrSessionTask(@PathVariable("id") Long id) {
 		SubscrSessionTask result = subscrSessionTaskService.findSubscrSessionTask(id);
 		return responseOK(ObjectFilters.deletedFilter(result));
@@ -61,7 +62,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> postSubscrSessionTask(
 			@RequestBody SubscrSessionTask requestEntity, HttpServletRequest request) {
 
@@ -94,7 +95,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contZPointSessionDetailType/byDeviceObject/{deviceObjectId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointSessionDetailType(@PathVariable("deviceObjectId") Long deviceObjectId) {
 		List<ContZPoint> contZPoints = contZPointService.selectContPointsByDeviceObject(deviceObjectId);
 
@@ -124,7 +125,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/sessionDetailTypes/byDeviceObject/{deviceObjectId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSessionDetailType(@PathVariable("deviceObjectId") Long deviceObjectId) {
 		List<ContZPoint> contZPoints = contZPointService.selectContPointsByDeviceObject(deviceObjectId);
 
@@ -158,7 +159,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscrSessionTaskId}/logSessions", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrSessionTaskLogSession(
 			@PathVariable("subscrSessionTaskId") Long subscrSessionTaskId) {
 		List<LogSession> result = subscrSessionTaskService.selectTaskLogSessions(subscrSessionTaskId);

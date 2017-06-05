@@ -31,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataImpulseService;
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractContServiceDataResource;
@@ -78,12 +79,12 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceImpulse/{timeDetailType}/{contZPointId}/paged",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataImpulsePaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		RequestPageDataSelector<ContServiceDataImpulse> dataSelector = new RequestPageDataSelector<ContServiceDataImpulse>() {
 
@@ -110,7 +111,7 @@ public class SubscrContServiceDataImpulseController extends AbstractContServiceD
      * @return
      */
     @RequestMapping(value = "/service/serviceImpulse/contObjects/importData-cl", method = RequestMethod.POST,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> importDataImpulseMultipleFilesCl(@RequestParam("files") MultipartFile[] multipartFiles) {
 
         checkNotNull(multipartFiles);

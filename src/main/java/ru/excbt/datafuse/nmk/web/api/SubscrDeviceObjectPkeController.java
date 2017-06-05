@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService.PkeWarnSearchConditions;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
@@ -39,7 +40,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 	 * @param endDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/{deviceObjectId}/warn", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{deviceObjectId}/warn", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectPkeWarn(@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestParam("beginDate") String beginDateStr, @RequestParam("endDate") String endDateStr,
 			@RequestParam(value = "pkeTypeKeynames", required = false) String[] pkeTypeKeynames) {
@@ -71,7 +72,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/byContZPoint/{contZPointId}/warn", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPOintObjectPkeWarn(@PathVariable("contZPointId") Long contZPointId,
 			@RequestParam("beginDate") String beginDateStr, @RequestParam("endDate") String endDateStr,
 			@RequestParam(value = "pkeTypeKeynames", required = false) String[] pkeTypeKeynames) {
@@ -112,7 +113,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectPkeType() {
 		List<DeviceObjectPkeType> resultList = deviceObjectPkeService.selectDeviceObjectPkeType();
 		return responseOK(ObjectFilters.deletedFilter(resultList));

@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 
@@ -48,7 +49,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportType() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -66,7 +67,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/reportTypesParams", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/reportTypesParams", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportTypeParams() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -82,7 +83,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/reportPeriod", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/reportPeriod", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportPeriods() {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportPeriodService.selectReportPeriods();
@@ -94,7 +95,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/reportSheduleType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/reportSheduleType", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleTypeJson() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -108,7 +109,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/reportActionType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/reportActionType", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportActionTypeJson() {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportSheduleTypeRepository.findAll();

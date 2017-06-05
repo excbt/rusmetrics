@@ -31,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
@@ -57,7 +58,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
@@ -80,7 +81,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -118,7 +119,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      * @return
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
 
@@ -170,7 +171,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      * @return
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
@@ -185,7 +186,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      * @param request
      * @return
      */
-	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceObject(
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
@@ -248,7 +249,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
@@ -272,7 +273,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjects() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -317,7 +318,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingSettings",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody DeviceObjectLoadingSettings requestEntity) {
@@ -364,7 +365,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@RequestMapping(
 			value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource/loadingSettings",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObjectDataSourceLoadingSettings(
 			@PathVariable("contObjectId") Long contObjectId, @PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody SubscrDataSourceLoadingSettings requestEntity) {
@@ -412,7 +413,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceModel(@PathVariable("id") Long deviceModelId,
 			@RequestBody DeviceModel requestEntity) {
 
@@ -437,7 +438,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      * @return
      */
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {
 
 		if (!isSystemUser()) {
@@ -457,7 +458,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteDeviceModel(@PathVariable("id") Long deviceModelId) {
 
 		if (!isSystemUser()) {

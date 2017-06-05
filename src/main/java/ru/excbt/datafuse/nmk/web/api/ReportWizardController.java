@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.ReportWizardParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -43,7 +44,7 @@ public class ReportWizardController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
 		ReportColumnSettings result = reportWizardService.getReportColumnSettings();
 		return ResponseEntity.ok(result);
@@ -53,7 +54,7 @@ public class ReportWizardController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createWizardCommerceReport(@RequestBody final ReportWizardParam reportWizardParam) {
 
 		checkNotNull(reportWizardParam);

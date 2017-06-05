@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -43,7 +44,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/{contGroupId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{contGroupId}/contObject", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getGroupContObjects(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
@@ -62,7 +63,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contGroupId}/contObject/available", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAvailableContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
@@ -78,7 +79,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberGroups() {
 
 		ApiActionObjectProcess action = () -> {
@@ -96,7 +97,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createGroup(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestBody final SubscrContGroup contGroup, final HttpServletRequest request) {
@@ -117,7 +118,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	 * @param contGroupId
 	 * @return
 	 */
-	@RequestMapping(value = "{contGroupId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "{contGroupId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteGroup(@PathVariable(value = "contGroupId") final Long contGroupId) {
 
 		ApiActionVoidProcess action = () -> {
@@ -132,7 +133,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	 * @param contGroupId
 	 * @return
 	 */
-	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateGroup(@PathVariable(value = "contGroupId") final Long contGroupId,
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestBody final SubscrContGroup contGroup) {

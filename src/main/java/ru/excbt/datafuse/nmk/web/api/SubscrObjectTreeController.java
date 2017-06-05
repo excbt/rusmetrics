@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -89,7 +90,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId) {
 
@@ -111,7 +112,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeList(@PathVariable("objectTreeType") String objectTreeType) {
 
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
@@ -133,7 +134,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(
 			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeContObjects(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId) {
@@ -209,7 +210,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/contObjects/free",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeContObjectsFree(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId) {
 
@@ -277,7 +278,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@RequestBody ObjectNameHolder requestBody, HttpServletRequest request) {
 
@@ -324,7 +325,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@RequestBody SubscrObjectTree requestEntity) {
@@ -363,7 +364,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}",
-			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId) {
 
@@ -399,7 +400,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(
 			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}",
-			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteSubscrObjectTreeChildNode(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId) {
@@ -438,7 +439,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(
 			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/add",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrObjectTreeContObjectsAdd(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
@@ -490,7 +491,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(
 			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/remove",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putSubscrObjectTreeContObjectsRemove(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
@@ -555,7 +556,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(
 			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/cityStatusCollapse",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeMonitor(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,
@@ -597,7 +598,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(
 			value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/node/{childSubscrObjectTreeId}/contObjects/cityStatusCollapseV2",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeMonitorV2(@PathVariable("objectTreeType") String objectTreeType,
 			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
 			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId,

@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -61,7 +62,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @param reportUrlName
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyList(@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -81,7 +82,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
@@ -98,7 +99,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @param reportUrlName
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyArchList(@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -117,7 +118,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
@@ -138,7 +139,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
@@ -161,7 +162,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
@@ -186,7 +187,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
@@ -207,7 +208,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
@@ -221,13 +222,13 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		return responseDelete(actionProcess);
 	}
 
-	/**
-	 *
-	 * @param reportTemplateId
-	 * @param reportTemplate
-	 * @param reportType
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @param reportParamset
+     * @param contObjectIds
+     * @return
+     */
 	private ResponseEntity<?> updateInternal(final Long reportParamsetId, final ReportParamset reportParamset,
 			final Long[] contObjectIds) {
 
@@ -249,13 +250,14 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplateId
-	 * @param reportTemplate
-	 * @param reportType
-	 * @return
-	 */
+    /**
+     *
+     * @param reportTemplateId
+     * @param reportParamset
+     * @param contObjectIds
+     * @param request
+     * @return
+     */
 	private ResponseEntity<?> createInternal(final Long reportTemplateId, final ReportParamset reportParamset,
 			final Long[] contObjectIds, HttpServletRequest request) {
 
@@ -287,13 +289,15 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param srcId
+     * @param contObjectIds
+     * @param reportParamset
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(@PathVariable(value = "srcId") Long srcId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset, HttpServletRequest request) {
@@ -337,7 +341,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectUnits(@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
@@ -349,7 +353,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject/available", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAvailableContObjectUnits(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
@@ -366,7 +370,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> addReportParamsetContObject(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId) {
@@ -393,7 +397,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject/{contObjectId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportParamsetContObject(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@PathVariable(value = "contObjectId") Long contObjectId) {
@@ -408,12 +412,12 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplateId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param reportParamsetId
+     * @return
+     */
+	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> moveToArchive(
 			@RequestParam(value = "reportParamsetId", required = true) final Long reportParamsetId) {
 
@@ -436,14 +440,14 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		return responeResult;
 	}
 
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param contObjectId
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @param contObjectIds
+     * @return
+     */
 	@RequestMapping(value = "/{reportParamsetId}/contObjects", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateReportParamsetContObjects(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = true) Long[] contObjectIds) {
@@ -468,7 +472,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamsetContextLaunch() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -501,7 +505,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/directoryParamItems/{paramDirectoryKeyname}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamDirectoryItems(
 			@PathVariable("paramDirectoryKeyname") String paramDirectoryKeyname) {
 

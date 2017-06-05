@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
@@ -24,7 +25,7 @@ public class SecurityCheckController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/isAuthenticated", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/isAuthenticated", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getIsAuthenticated() {
 		if (isAuthenthicated()) {
 			return responseOK(ApiResult.ok("Is Authenticated OK"));

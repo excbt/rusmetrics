@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -47,7 +48,7 @@ public class UDirectoryNodeController extends AbstractSubscrApiResource {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll(@PathVariable("directoryId") long directoryId) {
 
 		logger.trace("getAll DirectoryNode ID {}", directoryId);
@@ -76,7 +77,7 @@ public class UDirectoryNodeController extends AbstractSubscrApiResource {
 	 * @param uDirectoryNode
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node/{id}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(@PathVariable("directoryId") final long directoryId, @PathVariable("id") long id,
 			@RequestBody UDirectoryNode uDirectoryNode) {
 
@@ -106,7 +107,7 @@ public class UDirectoryNodeController extends AbstractSubscrApiResource {
 	 * @param uDirectoryNode
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(@PathVariable("directoryId") final long directoryId,
 			@RequestBody UDirectoryNode uDirectoryNode, HttpServletRequest request) {
 

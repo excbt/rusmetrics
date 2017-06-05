@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -46,7 +47,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll(@PathVariable("directoryId") long directoryId) {
 		List<UDirectoryParam> result = directoryParamService.selectDirectoryParams(directoryId);
 		return ResponseEntity.ok(result);
@@ -57,7 +58,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("directoryId") long directoryId, @PathVariable("id") long id) {
 
 		UDirectoryParam result = directoryParamService.findOne(id);
@@ -74,7 +75,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 	 * @param uDirectoryParam
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(@PathVariable("directoryId") long directoryId, @PathVariable("id") long id,
 			@RequestBody UDirectoryParam uDirectoryParam) {
 
@@ -104,7 +105,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 	 * @param uDirectoryParam
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(@PathVariable("directoryId") long directoryId,
 			@RequestBody UDirectoryParam uDirectoryParam, HttpServletRequest request) {
 
@@ -139,7 +140,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{directoryId}/param/{paramId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") long directoryId,
 			@PathVariable("paramId") final long paramId) {
 

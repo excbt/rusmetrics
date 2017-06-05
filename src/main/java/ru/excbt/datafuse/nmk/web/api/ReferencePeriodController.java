@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReferencePeriodService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -41,14 +42,14 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 	@Autowired
 	private ContZPointService contZPointService;
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param zpointId
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/referencePeriod",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLastReferencePeriod(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId) {
 
@@ -58,28 +59,28 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 		return responseOK(actionProcess);
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param zpointId
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param referencePeriodId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/referencePeriod/{id}",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("id") long referencePeriodId) {
 
 		return responseOK(() -> referencePeriodService.findOne(referencePeriodId));
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param zpointId
-	 * @return
-	 */
+    /**
+     *
+     * @param referencePeriodId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/zpoints/referencePeriod/{id}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOneShort(@PathVariable("id") long referencePeriodId) {
 
 		return responseOK(() -> referencePeriodService.findOne(referencePeriodId));
@@ -108,14 +109,16 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 		return null;
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param referencePeriod
+     * @param request
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/referencePeriod",
-			method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") final Long contZPointId, final @RequestBody ReferencePeriod referencePeriod,
 			final HttpServletRequest request) {
@@ -139,14 +142,17 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param referencePeriodId
+     * @param referencePeriod
+     * @param request
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/referencePeriod/{referencePeriodId}",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("referencePeriodId") Long referencePeriodId,
 			@RequestBody ReferencePeriod referencePeriod, HttpServletRequest request) {
@@ -172,14 +178,15 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @param referencePeriodId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/referencePeriod/{referencePeriodId}",
-			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId,
 			@PathVariable("referencePeriodId") final Long referencePeriodId) {

@@ -45,21 +45,8 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class AbstractApiResource {
 
-	public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
-
-	public static final int DEFAULT_PAGE_SIZE = 100;
-
 	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(ReportService.DATE_TEMPLATE);
 
-	public final static String MIME_ZIP = "application/zip";
-	public final static String MIME_PDF = "application/pdf";
-	public final static String MIME_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	public final static String MIME_XLS = "application/vnd.ms-excel";
-
-	public final static String MIME_CSV = "text/csv";
-	public final static String MIME_TEXT = "text/html";
-
-	public final static String FILE_CSV_EXT = ".csv";
 
 	@Autowired
 	protected ModelMapper modelMapper;
@@ -206,11 +193,10 @@ public abstract class AbstractApiResource {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResult);
 	}
 
-	/**
-	 *
-	 * @param apiResult
-	 * @return
-	 */
+    /**
+     *
+     * @return
+     */
 	protected ResponseEntity<?> responseInternalServerError() {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
@@ -248,13 +234,12 @@ public abstract class AbstractApiResource {
 		return processDownloadResource(isr, mediaType, contentLength, filename, makeAttach);
 	}
 
-	/**
-	 *
-	 * @param resource
-	 * @param mediaType
-	 * @param file
-	 * @return
-	 */
+    /**
+     *
+     * @param file
+     * @param mediaType
+     * @return
+     */
 	protected ResponseEntity<?> processDownloadFile(File file, MediaType mediaType) {
 		checkNotNull(file);
 		FileSystemResource fsr = new FileSystemResource(file);
@@ -291,13 +276,11 @@ public abstract class AbstractApiResource {
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 
-	/**
-	 *
-	 * @param datePeriodParser
-	 * @param dateFromStr
-	 * @param dateToStr
-	 * @return
-	 */
+    /**
+     *
+     * @param datePeriodParser
+     * @return
+     */
 	protected ResponseEntity<?> checkDatePeriodArguments(LocalDatePeriodParser datePeriodParser) {
 		if (!datePeriodParser.isOk()) {
 			return ResponseEntity.badRequest()

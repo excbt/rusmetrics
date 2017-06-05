@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 /**
@@ -23,7 +24,7 @@ public class ContServiceDataSubscrResource extends AbstractSubscrApiResource {
 
 
     @RequestMapping(value = "/{contObjectId}/u-service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getDataHWater(@PathVariable("contObjectId") long contObjectId,
                                            @PathVariable("contZPointId") long contZPointId,
                                            @PathVariable("timeDetailType") String timeDetailType,

@@ -4,6 +4,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -48,7 +49,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	 * @param contObject
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createContObject(
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
 			final @RequestBody ContObject contObject, HttpServletRequest request) {
@@ -88,7 +89,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
      * @return
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteContObject(@PathVariable("contObjectId") Long contObjectId) {
 
 		checkNotNull(contObjectId);
@@ -115,7 +116,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
      * @param contObjectIds
      * @return
      */
-	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
 
 		checkNotNull(contObjectIds);
@@ -142,7 +143,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	 * @return
 	 */
 	@Override
-	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 		List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);
@@ -154,7 +155,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 		checkNotNull(subscriberId);
@@ -169,7 +170,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
@@ -183,7 +184,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrContObjects(@PathVariable("subscriberId") Long subscriberId,
 			@RequestBody List<Long> contObjectIds) {
 
@@ -215,7 +216,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/subscribers", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
 		List<Long> resultList = subscrContObjectService.selectContObjectSubscriberIdsByRma(getRmaSubscriberId(),
 				contObjectId);

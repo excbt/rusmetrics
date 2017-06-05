@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -104,7 +105,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getFullUserInfo() {
 
 		V_FullUserInfo result = currentSubscriberService.getFullUserInfo();
@@ -118,7 +119,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/readOnlyMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/readOnlyMode", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getUserRights() {
 		UserDetails userDetails = currentSubscriberService.getCurrentUserDetails();
 
@@ -138,7 +139,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/samlAuthMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/samlAuthMode", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSamlAuth() {
 		Authentication auth = currentSubscriberUserDetailsService.getAuthentication();
 
@@ -155,7 +156,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 * @param newPassword
 	 * @return
 	 */
-	@RequestMapping(value = "/passwordChange", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/passwordChange", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePassword(
 			@RequestParam(value = "oldPassword", required = true) final String oldPassword,
 			@RequestParam(value = "newPassword", required = true) final String newPassword) {
@@ -184,7 +185,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/serverName", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/serverName", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getServerName() {
 		String serverName = systemParamService.getParamValueAsString("SERVER_NAME");
 		return ResponseEntity.ok(serverName);
@@ -194,7 +195,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/invalidateAllSessions", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/invalidateAllSessions", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getInvalidateSessions() {
 		if (!isSystemUser()) {
 			return responseForbidden();
@@ -218,7 +219,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getIsCMode() {
 		return responseOK(getSubscriberParam().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
 	}
@@ -227,7 +228,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@GetMapping(value = "/exSystem", produces = APPLICATION_JSON_UTF8)
+	@GetMapping(value = "/exSystem", produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getExSystem() {
 		List<ExSystem> exSystems = exSystemRepository.findAll();
 

@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 
@@ -36,7 +37,7 @@ public class ContEventController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventTypes() {
 		ApiActionObjectProcess action = () -> {
 			List<ContEventType> vList = contEventTypeService.selectBaseContEventTypes();

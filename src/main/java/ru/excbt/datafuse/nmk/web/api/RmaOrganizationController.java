@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -28,12 +29,11 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	@Autowired
 	private OrganizationService organizationService;
 
-	/**
-	 *
-	 * @param xId
-	 * @return
-	 */
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @return
+     */
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationsGet() {
 		List<Organization> resultList = organizationService.selectOrganizations(getSubscriberParam());
 		return responseOK(ObjectFilters.deletedFilter(resultList));
@@ -44,7 +44,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	 * @param organizationId
 	 * @return
 	 */
-	@RequestMapping(value = "/{organizationId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{organizationId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationGet(@PathVariable("organizationId") Long organizationId) {
 		Organization result = organizationService.selectOrganization(organizationId);
 		return responseOK(result);
@@ -56,7 +56,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	 * @param requestEntity
 	 * @return
 	 */
-	@RequestMapping(value = "/{organizationId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{organizationId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> OrganizationPut(@PathVariable("organizationId") Long organizationId,
 			@RequestBody Organization requestEntity) {
 
@@ -96,7 +96,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationPost(@RequestBody Organization requestEntity, HttpServletRequest request) {
 
 		if (!requestEntity.isNew()) {
@@ -128,13 +128,12 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 *
-	 * @param organizationId
-	 * @param requestEntity
-	 * @return
-	 */
-	@RequestMapping(value = "/{organizationId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param organizationId
+     * @return
+     */
+	@RequestMapping(value = "/{organizationId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> OrganizationDelete(@PathVariable("organizationId") Long organizationId) {
 
 		Organization organization = organizationService.selectOrganization(organizationId);

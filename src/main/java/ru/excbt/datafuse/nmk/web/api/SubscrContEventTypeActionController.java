@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeActionService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -46,14 +47,14 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 		return responseOK(result);
 	}
 
-	/**
-	 *
-	 * @param contEventTypeId
-	 * @param smsAddrList
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/{contEventTypeId}/actions", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param contEventTypeId
+     * @param actionList
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/{contEventTypeId}/actions", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrContEventTypeActions(
 			@PathVariable(value = "contEventTypeId") Long contEventTypeId,
 			@RequestBody List<SubscrContEventTypeAction> actionList, HttpServletRequest request) {

@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeSmsService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -65,7 +66,7 @@ public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource 
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/contEventTypes", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contEventTypes", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrContEventTypeSms(@RequestParam(value = "contEventTypeId") Long contEventTypeId,
 			@RequestBody List<SubscrContEventTypeSmsAddr> smsAddrList, HttpServletRequest request) {
 

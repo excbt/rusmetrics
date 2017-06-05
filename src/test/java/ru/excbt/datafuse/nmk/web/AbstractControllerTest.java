@@ -79,7 +79,7 @@ public class AbstractControllerTest {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
 			resultActions.andExpect(status().isOk())
-					.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
+					.andExpect(content().contentType(ApiConst.APPLICATION_JSON_UTF8));
 		};
 
 		ResultActions resultActions = _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
@@ -101,7 +101,7 @@ public class AbstractControllerTest {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
 			resultActions.andExpect(status().isOk())
-			.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
+			.andExpect(content().contentType(ApiConst.APPLICATION_JSON_UTF8));
 		};
 
 		return _testGetResultActions(url, requestExtraInitializer, resultActionsTester);
@@ -121,7 +121,7 @@ public class AbstractControllerTest {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
 			resultActions.andExpect(status().isOk())
-					.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
+					.andExpect(content().contentType(ApiConst.APPLICATION_JSON_UTF8));
 		};
 
 		ResultActions resultActions = _testGet(url, requestExtraInitializer, resultActionsTester);

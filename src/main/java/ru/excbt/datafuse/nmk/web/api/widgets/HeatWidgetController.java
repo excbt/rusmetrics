@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api.widgets;
 
@@ -21,14 +21,15 @@ import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.widget.HeatWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.12.2016
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/api/subscr/widgets/heat/{contZpointId}")
@@ -41,12 +42,12 @@ public class HeatWidgetController extends WidgetController {
 	private ContObjectService contObjectService;
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param mode
 	 * @return
 	 */
-	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
@@ -66,11 +67,11 @@ public class HeatWidgetController extends WidgetController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
-	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {

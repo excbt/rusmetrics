@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -102,11 +103,10 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 		return responseOK(subscriberServiceAccessList(subscriberId));
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @return
+     */
 	@RequestMapping(value = "/manage/service/access", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServiceAccess() {
 		return responseOK(subscriberServiceAccessList(getCurrentSubscriberId()));
@@ -139,7 +139,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/manage/service/access", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscriberServiceAccess(@PathVariable("subscriberId") Long subscriberId,
 			@RequestBody final List<SubscrServiceAccess> subscriberAccessList) {
 
@@ -161,7 +161,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 * @param subscriberAccessList
 	 * @return
 	 */
-	@RequestMapping(value = "/manage/service/access", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/manage/service/access", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateCurrentServiceAccess(
 			@RequestBody final List<SubscrServiceAccess> subscriberAccessList) {
 

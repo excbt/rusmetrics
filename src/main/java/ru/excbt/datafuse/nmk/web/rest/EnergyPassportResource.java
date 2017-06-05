@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
@@ -32,7 +33,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> createEnergyPassport(@RequestParam(name = "templateKeyname", required = false) String templateKeyname,
                                                   @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
 
@@ -45,7 +46,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> updateEnergyPassport(@PathVariable("id") Long id, @RequestBody EnergyPassportVM energyPassportVM) {
         if (!id.equals(energyPassportVM.getId())) {
             return responseBadRequest();
@@ -55,7 +56,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
     }
 
     @RequestMapping(method = RequestMethod.PUT,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> updateEnergyPassport(@RequestBody EnergyPassportVM energyPassportVM) {
         if (energyPassportVM.getId() == null) {
             return responseBadRequest();
@@ -65,14 +66,14 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassport(@PathVariable("id") Long id) {
         EnergyPassportDTO result = energyPassportService.find(id);
         return responseOK(result);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassports() {
         List<EnergyPassportShortDTO> result = energyPassportService.findShortBySubscriberId(getSubscriberId());
         return responseOK(result);
@@ -80,14 +81,14 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> deleteEnergyPassport(@PathVariable("id") Long id) {
         ApiActionVoidProcess process = () -> energyPassportService.delete(id, getCurrentSubscriber());
         return responseOK(process);
     }
 
     @RequestMapping(value = "/{id}/data", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getPassportSectionsData(@PathVariable("id") Long passportId,
                                                      @RequestParam(name = "sectionId", required = false) Long sectionId,
                                                      @RequestParam(name = "sectionEntryId", required = false) Long sectionEntryId) {
@@ -102,7 +103,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
 
 
     @RequestMapping(value = "/{id}/data", method = RequestMethod.PUT,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> updatePassportSectionData(@PathVariable("id") Long passportId,
                                                        @RequestBody @Valid EnergyPassportDataDTO energyPassportDataDTO) {
         energyPassportDataDTO.setPassportId(passportId);
@@ -118,7 +119,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
 
 
     @RequestMapping(value = "/{id}/section/{sectionId}/entries", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getPassportSectionsEntries(@PathVariable("id") Long passportId,
                                                         @PathVariable(name = "sectionId") Long sectionId) {
         List<EnergyPassportSectionEntryDTO> entries = energyPassportService.findSectionEntries(sectionId);
@@ -126,7 +127,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
     }
 
     @RequestMapping(value = "/{id}/section/{sectionId}/entries", method = RequestMethod.PUT,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> updatePassportSectionsEntries(@PathVariable("id") Long passportId,
                                                            @PathVariable(name = "sectionId") Long sectionId,
                                                            @RequestBody @Valid EnergyPassportSectionEntryDTO entryDTO) {
@@ -148,7 +149,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/{id}/section/{sectionId}/entries/{entryId}", method = RequestMethod.DELETE,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> deletePassportSectionsEntry(@PathVariable("id") Long passportId,
                                                           @PathVariable(name = "sectionId") Long sectionId,
                                                           @PathVariable(name = "entryId") Long entryId) {
@@ -163,7 +164,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/{id}/cont-object-ids", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getPassportContObjects(@PathVariable("id") Long passportId) {
 
         return responseOK(() -> energyPassportService.findEnergyPassportContObjectIds(passportId));
@@ -176,7 +177,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/{id}/cont-object-ids", method = RequestMethod.PUT,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> savePassportContObjects(@PathVariable("id") Long passportId, @RequestBody List<Long> contObjectIds) {
         return responseUpdate(() ->
             energyPassportService.linkEnergyPassportToContObjects(passportId, contObjectIds, getCurrentSubscriber()));
@@ -189,7 +190,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/cont-objects/{contObjectId}", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getContObjectPassport(@PathVariable("contObjectId") Long contObjectId) {
 
         return responseOK(() -> energyPassportService.findContObjectEnergyPassport(contObjectId));
@@ -203,7 +204,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/cont-objects/{contObjectId}", method = RequestMethod.POST,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> createContObjectEnergyPassport(@PathVariable("contObjectId") Long contObjectId,
         @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
         ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createContObjectPassport(energyPassportVM, Arrays.asList(contObjectId), getCurrentSubscriber());
@@ -218,7 +219,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/cont-objects/{contObjectId}", method = RequestMethod.PUT,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> updateContObjectEnergyPassport(@PathVariable("contObjectId") Long contObjectId,
         @RequestBody(required = false) EnergyPassportVM energyPassportVM) {
 

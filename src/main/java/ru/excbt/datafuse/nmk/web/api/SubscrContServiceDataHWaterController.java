@@ -34,6 +34,7 @@ import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
@@ -127,7 +128,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @return
      */
     @RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getDataHWater(@PathVariable("contObjectId") long contObjectId,
                                            @PathVariable("contZPointId") long contZPointId,
                                            @PathVariable("timeDetailType") String timeDetailType,
@@ -196,12 +197,12 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @return
      */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -266,7 +267,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @return
      */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataHWaterSummary(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String beginDateS, @RequestParam("endDate") String endDateS) {
@@ -413,7 +414,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		byte[] byteArray = hWatersCsvService.writeDataHWaterToCsvAbs(cvsDataList);
 
-		response.setContentType(MIME_CSV);
+		response.setContentType(ApiConst.MIME_CSV);
 		response.setContentLength(byteArray.length);
 
 		String outputFilename = String.format("HWaters_(contObject_%d)_(contZPoint_%d)_%s_(%s-%s).csv", contObjectId,
@@ -497,7 +498,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv",
-			method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> uploadManualDataHWater(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("file") MultipartFile multipartFile) {
@@ -591,7 +592,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/csv",
-			method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> uploadManualDataHWaterUniversal(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestParam("file") MultipartFile multipartFile) {
 
@@ -663,7 +664,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/service/datahwater/contObjects/importData", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 		checkNotNull(multipartFiles);
@@ -836,7 +837,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOutCsvDownloadsAvailable() {
 
 		List<File> listFiles = HWatersCsvFileUtils.getOutFiles(webAppPropsService,
@@ -884,7 +885,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv",
-			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteManualDataHWater(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String dateFromStr, @RequestParam("endDate") String dateToStr) {

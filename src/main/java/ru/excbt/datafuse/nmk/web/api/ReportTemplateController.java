@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -45,7 +46,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @param reportUrlName
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyList(@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -65,7 +66,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyArchList(@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -88,7 +89,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
@@ -112,7 +113,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
@@ -132,7 +133,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportTemplateId") long reportTemplateId) {
 
@@ -191,7 +192,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> moveToArchive(
 			@RequestParam(value = "reportTemplateId", required = true) final Long reportTemplateId) {
 
@@ -225,13 +226,14 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 		//		return responeResult;
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param srcId
+     * @param reportTemplate
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(@PathVariable(value = "srcId") final Long srcId,
 			@RequestBody final ReportTemplate reportTemplate, HttpServletRequest request) {
 

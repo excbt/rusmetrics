@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrSmsLog;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.SubscrSmsLogService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class SubscrSmsLogController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrSmsLog(@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 

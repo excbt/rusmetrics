@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
@@ -33,13 +34,13 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	@Autowired
 	private MeterPeriodSettingService meterPeriodSettingService;
 
-	/**
-	 *
-	 * @param requestEntity
-	 * @return
-	 */
+    /**
+     *
+     * @param meterPeriodSettingDTO
+     * @return
+     */
 	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateMeterPeriodSetting(
 			@Valid @RequestBody MeterPeriodSettingDTO meterPeriodSettingDTO) {
 
@@ -60,7 +61,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createMeterPeriodSetting(
 			@Valid @RequestBody MeterPeriodSettingDTO meterPeriodSettingDTO, HttpServletRequest request) {
 
@@ -81,7 +82,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/meter-period-settings/{id}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteMeterPeriodSetting(@PathVariable("id") Long id) {
 		return responseOK(() -> {
 			meterPeriodSettingService.delete(id);
@@ -95,7 +96,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/meter-period-settings/{id}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeterPeriodSetting(@PathVariable("id") Long id) {
 		MeterPeriodSettingDTO result = meterPeriodSettingService.findOne(id);
 		return result != null ? responseOK(result) : responseNotFound();
@@ -106,7 +107,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeterPeriodSetting() {
 		List<MeterPeriodSettingDTO> result = meterPeriodSettingService.findBySubscriberId(getSubscriberParam());
 		return responseOK(result);

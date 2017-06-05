@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -47,7 +48,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDirectoryNodes(@PathVariable("id") long directoryId) {
 		UDirectory dir = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 		checkNotNull(dir);
@@ -61,7 +62,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("id") long directoryId) {
 
 		if (directoryService.checkAvailableDirectory(getCurrentSubscriberId(), directoryId)) {
@@ -79,20 +80,20 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll() {
 		List<UDirectory> result = directoryService.findAll(getCurrentSubscriberId());
 		checkNotNull(result);
 		return ResponseEntity.ok(result);
 	}
 
-	/**
-	 *
-	 * @param directoryId
-	 * @param uDirectory
-	 * @return
-	 */
-	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param id
+     * @param uDirectory
+     * @return
+     */
+	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(@PathVariable("directoryId") long id, @RequestBody UDirectory uDirectory) {
 
 		checkNotNull(uDirectory);
@@ -117,7 +118,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(@RequestBody UDirectory uDirectory, HttpServletRequest request) {
 
 		checkNotNull(uDirectory);
@@ -140,12 +141,12 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param directoryId
+     * @return
+     */
+	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") final long directoryId) {
 
 		ApiAction action = new ApiActionAdapter() {

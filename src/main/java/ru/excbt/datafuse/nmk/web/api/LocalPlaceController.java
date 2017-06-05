@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceTemperatureSstService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -33,7 +34,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/localPlaces/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/localPlaces/all", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLocalPlace() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -50,7 +51,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/{localPlaceId}/sst", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLocalPlaceSst(@PathVariable("localPlaceId") Long localPlaceId,
 			@RequestParam("sstDateStr") String sstDateStr) {
 
@@ -85,7 +86,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/{localPlaceId}/sst/{sstId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putLocalPlaceTemperatureSst(@PathVariable("localPlaceId") Long localPlaceId,
 			@PathVariable("sstId") Long sstId, @RequestBody LocalPlaceTemperatureSst requestEntity) {
 
@@ -107,7 +108,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/{localPlaceId}/sst/array", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putLocalPlaceTemperatureSstList(@PathVariable("localPlaceId") Long localPlaceId,
 			@RequestParam("sstDateStr") String sstDateStr, @RequestBody List<LocalPlaceTemperatureSst> requestEntity) {
 

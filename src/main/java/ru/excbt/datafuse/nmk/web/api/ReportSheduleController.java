@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -50,7 +51,7 @@ public class ReportSheduleController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -68,7 +69,7 @@ public class ReportSheduleController extends AbstractApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportShedule() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -84,7 +85,7 @@ public class ReportSheduleController extends AbstractApiResource {
 	 * @param reportSheduleId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleOne(@PathVariable(value = "reportSheduleId") Long reportSheduleId) {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -98,7 +99,7 @@ public class ReportSheduleController extends AbstractApiResource {
 	 * @param reportSheduleId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportShedule(@PathVariable(value = "reportSheduleId") final Long reportSheduleId) {
 
 		ApiActionVoidProcess actionProcess = () -> reportSheduleService.deleteOne(reportSheduleId);
@@ -106,13 +107,15 @@ public class ReportSheduleController extends AbstractApiResource {
 		return WebApiHelper.processResponceApiActionDelete(actionProcess);
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param reportTemplateId
+     * @param reportParamsetId
+     * @param reportShedule
+     * @param request
+     * @return
+     */
+	@RequestMapping(method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneShedule(
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,
@@ -167,13 +170,15 @@ public class ReportSheduleController extends AbstractApiResource {
 		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 *
-	 * @param reportSheduleId
-	 * @param reportParamset
-	 * @return
-	 */
-	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param reportSheduleId
+     * @param reportTemplateId
+     * @param reportParamsetId
+     * @param reportShedule
+     * @return
+     */
+	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneShedule(@PathVariable(value = "reportSheduleId") Long reportSheduleId,
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,

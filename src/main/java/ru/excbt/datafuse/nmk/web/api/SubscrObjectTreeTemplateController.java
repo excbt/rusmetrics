@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class SubscrObjectTreeTemplateController extends AbstractSubscrApiResourc
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrObjectTreeTemplates", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscrObjectTreeTemplates", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeTemplate() {
 
 		List<SubscrObjectTreeTemplate> resultList = subscrObjectTreeTemplateService
@@ -39,7 +40,7 @@ public class SubscrObjectTreeTemplateController extends AbstractSubscrApiResourc
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTreeTemplates/{templateId}/items", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrObjectTreeTemplateItem(@PathVariable("templateId") Long templateId) {
 		List<SubscrObjectTreeTemplateItem> resultList = subscrObjectTreeTemplateService
 				.selectSubscrObjectTreeTemplateItems(templateId);

@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -47,7 +48,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/groups", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findAllGroups() {
 		List<SubscrActionGroup> resultList = subscrActionGroupService.findAll(getCurrentSubscriberId());
 		return ResponseEntity.ok(resultList);
@@ -58,7 +59,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/groups/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/groups/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findOneGroup(@PathVariable("id") long id) {
 		return ResponseEntity.ok(subscrActionGroupService.findOne(id));
 	}
@@ -68,7 +69,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/groups/{id}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/groups/{id}/users", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findUsersByGroup(@PathVariable("id") long id) {
 		return ResponseEntity.ok(subscrActionUserGroupService.selectUsersByGroup(id));
 	}
@@ -79,7 +80,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 * @param entity
 	 * @return
 	 */
-	@RequestMapping(value = "/groups/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/groups/{id}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneGroup(@PathVariable("id") long id,
 			@RequestParam(value = "subscrUserIds", required = false) Long[] subscrUserIds,
 			@RequestBody SubscrActionGroup entity) {
@@ -105,13 +106,14 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/groups", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param subscrUserIds
+     * @param entity
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/groups", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneGroup(
 			@RequestParam(value = "subscrUserIds", required = false) Long[] subscrUserIds,
 			@RequestBody SubscrActionGroup entity, HttpServletRequest request) {
@@ -141,13 +143,12 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/groups/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param id
+     * @return
+     */
+	@RequestMapping(value = "/groups/{id}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneGroup(@PathVariable("id") final long id) {
 		ApiAction action = new ApiActionAdapter() {
 			@Override
@@ -162,7 +163,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findAllUsers() {
 		List<SubscrActionUser> resultList = subscrActionUserService.findAll(getCurrentSubscriberId());
 		return ResponseEntity.ok(resultList);
@@ -173,7 +174,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findOneUser(@PathVariable("id") long id) {
 		return ResponseEntity.ok(subscrActionUserService.findOne(id));
 	}
@@ -183,7 +184,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/users/{id}/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/users/{id}/groups", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findGroupsByUser(@PathVariable("id") long id) {
 		return ResponseEntity.ok(subscrActionUserGroupService.selectGroupsByUser(id));
 	}
@@ -194,7 +195,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 * @param entity
 	 * @return
 	 */
-	@RequestMapping(value = "/users/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneUser(@PathVariable("id") long id,
 			@RequestParam(value = "subscrGroupIds", required = false) Long[] subscrGroupIds,
 			@RequestBody SubscrActionUser entity) {
@@ -219,13 +220,14 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/users", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param subscrGroupIds
+     * @param entity
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/users", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneUser(
 			@RequestParam(value = "subscrGroupIds", required = false) Long[] subscrGroupIds,
 			@RequestBody SubscrActionUser entity, HttpServletRequest request) {
@@ -255,13 +257,12 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param id
+     * @return
+     */
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneUser(@PathVariable("id") long id) {
 		final long finalId = id;
 		ApiAction action = new ApiActionAdapter() {

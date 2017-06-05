@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.service.SubscrVCookieService;
 import ru.excbt.datafuse.nmk.data.service.WidgetMetaService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -36,7 +37,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> readSubscrVCookie(@RequestParam(name = "vcMode", required = false) String vcMode,
 			@RequestParam(name = "vcKey", required = false) String vcKey) {
 
@@ -58,7 +59,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 * @param requestEntities
 	 * @return
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/list", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrVCookie(@RequestBody List<SubscrVCookie> requestEntities) {
 
 		checkNotNull(requestEntities);
@@ -145,7 +146,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> readSubscrVCookieUser(@RequestParam(name = "vcMode", required = false) String vcMode,
 			@RequestParam(name = "vcKey", required = false) String vcKey) {
 
@@ -167,7 +168,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 * @param requestEntities
 	 * @return
 	 */
-	@RequestMapping(value = "/user/list", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/user/list", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscrVCookieUser(@RequestBody List<SubscrVCookie> requestEntities) {
 
 		checkNotNull(requestEntities);
@@ -208,7 +209,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> widgetList() {
 		return responseOK(() -> widgetMetaService.selectAllWidgets());
 	}

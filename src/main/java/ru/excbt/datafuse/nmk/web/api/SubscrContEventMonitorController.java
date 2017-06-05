@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class SubscrContEventMonitorController extends AbstractSubscrApiResource 
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> cityMonitorContEventsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,

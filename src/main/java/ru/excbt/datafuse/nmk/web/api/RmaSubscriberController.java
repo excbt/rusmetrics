@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -30,7 +31,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 /**
  * Контроллер для работы абонентами для РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.10.2015
@@ -49,7 +50,7 @@ public class RmaSubscriberController extends SubscriberController {
 	private RmaSubscriberService rmaSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers", method = RequestMethod.GET)
@@ -65,7 +66,7 @@ public class RmaSubscriberController extends SubscriberController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @return
 	 */
@@ -86,12 +87,12 @@ public class RmaSubscriberController extends SubscriberController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriber
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/subscribers", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscribers", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscriber(@RequestBody Subscriber rSubscriber, HttpServletRequest request) {
 
 		checkNotNull(rSubscriber);
@@ -113,15 +114,14 @@ public class RmaSubscriberController extends SubscriberController {
 		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 * 
-	 * @param rSubscriberId
-	 * @param rSubscriber
-	 * @param request
-	 * @return
-	 */
+    /**
+     *
+     * @param rSubscriberId
+     * @param rSubscriber
+     * @return
+     */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestBody Subscriber rSubscriber) {
 
@@ -141,12 +141,12 @@ public class RmaSubscriberController extends SubscriberController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
@@ -169,10 +169,10 @@ public class RmaSubscriberController extends SubscriberController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
 		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
 		return responseOK(organizations);

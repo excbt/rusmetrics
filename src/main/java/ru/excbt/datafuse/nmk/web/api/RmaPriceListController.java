@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -105,7 +106,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/priceList/subscribers", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/priceList/subscribers", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListSubscribers() {
 		List<PriceListSubscriber> resultList = new ArrayList<>();
 
@@ -132,7 +133,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/priceList/rma", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/priceList/rma", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListRma() {
 		List<PriceListSubscriber> resultList = new ArrayList<>();
 
@@ -153,7 +154,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @param subscriberId
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceList(@PathVariable("subscriberId") Long subscriberId) {
 
 		List<SubscrPriceList> subscrPriceLists = new ArrayList<>();
@@ -199,7 +200,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId, @RequestBody SubscrPriceList priceList) {
 
@@ -241,7 +242,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deletePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId) {
 		checkNotNull(subscriberId);
@@ -286,7 +287,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @param srcPriceListId
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDraftPriceList(@PathVariable("subscriberId") Long subscriberId,
 			@RequestParam(value = "srcPriceListId", required = true) Long srcPriceListId, HttpServletRequest reques) {
 
@@ -309,15 +310,16 @@ public class RmaPriceListController extends SubscrPriceListController {
 		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param priceListId
-	 * @param priceList
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param priceListId
+     * @param subscriberIds
+     * @param activeIds
+     * @return
+     */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/subscr", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrPriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId, @RequestParam("subscriberIds") Long[] subscriberIds,
 			@RequestParam(value = "activeIds", required = false) Long[] activeIds) {
@@ -363,7 +365,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/activate", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> activatePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId) {
 
@@ -400,7 +402,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListItems(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("subscrPriceListId") Long subscrPriceListId) {
 
@@ -430,7 +432,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePriceItems(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("subscrPriceListId") Long subscrPriceListId,
 			@RequestBody List<SubscrPriceItemVO> subscrPriceItemVOs) {

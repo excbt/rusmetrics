@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterController;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataImpulseController;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -87,7 +88,7 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
      * @return
      */
     @RequestMapping(value = "/service-data/cont-objects/import", method = RequestMethod.POST,
-        produces = APPLICATION_JSON_UTF8)
+        produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> importDataMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 

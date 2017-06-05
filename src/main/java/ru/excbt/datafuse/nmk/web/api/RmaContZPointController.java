@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 
 /**
  * Контроллер для работы с точками учета для РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
@@ -36,11 +37,11 @@ public class RmaContZPointController extends SubscrContZPointController {
 	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointController.class);
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPoint contZPoint) {
 
@@ -68,13 +69,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPoint
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@RequestBody ContZPoint contZPoint, HttpServletRequest request) {
 
@@ -104,15 +105,14 @@ public class RmaContZPointController extends SubscrContZPointController {
 		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param contZPointId
-	 * @param contZPoint
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -140,15 +140,15 @@ public class RmaContZPointController extends SubscrContZPointController {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param requestEntity
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody List<ContZPointMetadata> requestEntity) {
 
