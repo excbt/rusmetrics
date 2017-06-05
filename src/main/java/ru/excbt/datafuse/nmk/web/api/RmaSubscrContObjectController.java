@@ -1,8 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
-import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -10,7 +8,6 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -22,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -95,7 +92,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		checkNotNull(contObjectId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
@@ -122,7 +119,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		checkNotNull(contObjectIds);
 
 		if (!canAccessContObject(contObjectIds)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
@@ -147,7 +144,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 		List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);
-		return responseOK(contObjectService.wrapContObjectsStats(resultList));
+		return ApiResponse.responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
@@ -162,7 +159,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 		List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
-		return responseOK(contObjectService.wrapContObjectsStats(resultList));
+		return ApiResponse.responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
@@ -176,7 +173,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
 				getCurrentSubscriberId());
 
-		return responseOK(contObjectService.wrapContObjectsStats(resultList));
+		return ApiResponse.responseOK(contObjectService.wrapContObjectsStats(resultList));
 	}
 
 	/**
@@ -220,7 +217,7 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
 		List<Long> resultList = subscrContObjectService.selectContObjectSubscriberIdsByRma(getRmaSubscriberId(),
 				contObjectId);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 

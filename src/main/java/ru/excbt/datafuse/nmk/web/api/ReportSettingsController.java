@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 			return result;
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 			resultReports = filterObjectAccess(resultReports);
 			return resultReports;
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportPeriodService.selectReportPeriods();
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportActionTypeRepository.findAll();
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
@@ -114,7 +115,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportSheduleTypeRepository.findAll();
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 }

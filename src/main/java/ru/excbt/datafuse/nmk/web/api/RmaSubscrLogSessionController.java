@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkPeriod = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkPeriod = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkPeriod != null) {
 			return checkPeriod;
 		}
@@ -71,7 +72,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 		if (contObjectIds != null && contObjectIds.size() > 0) {
 			if (!canAccessContObject(contObjectIds.toArray(new Long[] {}))) {
-				return responseForbidden();
+				return ApiResponse.responseForbidden();
 			}
 		}
 
@@ -88,7 +89,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 		}
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getLogSessionStep(@PathVariable("logSessionId") Long logSessionId) {
 		List<LogSessionStep> resultList = logSessionService.selectLogSessionSteps(logSessionId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

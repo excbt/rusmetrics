@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 			return localPlaceService.selectLocalPlaces();
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 		JodaTimeParser<LocalDate> parser = JodaTimeParser.parseLocalDate(sstDateStr);
 
 		if (parser.isEmpty()) {
-			return responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
 		}
 
 		ApiActionObjectProcess action = () -> {
@@ -76,7 +77,7 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 			return resultList;
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 	/**
@@ -91,14 +92,14 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 			@PathVariable("sstId") Long sstId, @RequestBody LocalPlaceTemperatureSst requestEntity) {
 
 		if (!sstId.equals(requestEntity.getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return localPlaceTemperatureSstService.saveSst(requestEntity);
 		};
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 	}
 
 	/**
@@ -115,14 +116,14 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 		JodaTimeParser<LocalDate> parser = JodaTimeParser.parseLocalDate(sstDateStr);
 
 		if (parser.isEmpty()) {
-			return responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("sstDateStr is not valud"));
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return localPlaceTemperatureSstService.saveSstList(requestEntity);
 		};
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 	}
 
 }

@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -45,7 +46,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 			@Valid @RequestBody MeterPeriodSettingDTO meterPeriodSettingDTO) {
 
 		if (meterPeriodSettingDTO.getId() == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionProcess<MeterPeriodSettingDTO> process = () -> {
@@ -66,14 +67,14 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 			@Valid @RequestBody MeterPeriodSettingDTO meterPeriodSettingDTO, HttpServletRequest request) {
 
 		if (meterPeriodSettingDTO.getId() != null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionProcess<MeterPeriodSettingDTO> process = () -> {
 			return meterPeriodSettingService.save(meterPeriodSettingDTO);
 		};
 
-		return responseCreate(process, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(process, () -> request.getRequestURI());
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/meter-period-settings/{id}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteMeterPeriodSetting(@PathVariable("id") Long id) {
-		return responseOK(() -> {
+		return ApiResponse.responseOK(() -> {
 			meterPeriodSettingService.delete(id);
 			return null;
 		});
@@ -99,7 +100,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeterPeriodSetting(@PathVariable("id") Long id) {
 		MeterPeriodSettingDTO result = meterPeriodSettingService.findOne(id);
-		return result != null ? responseOK(result) : responseNotFound();
+		return result != null ? ApiResponse.responseOK(result) : ApiResponse.responseNotFound();
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeterPeriodSetting() {
 		List<MeterPeriodSettingDTO> result = meterPeriodSettingService.findBySubscriberId(getSubscriberParam());
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.BuildingTypeCategory;
 import ru.excbt.datafuse.nmk.data.service.BuildingTypeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class BuildingTypeController extends AbstractApiResource {
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getBuildingType() {
 		List<BuildingType> resultList = buildingTypeService.selectAllBuildingTypes();
-		return responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
+		return ApiResponse.responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
 				BuildingTypeDto.class));
 	}
 
@@ -51,7 +52,7 @@ public class BuildingTypeController extends AbstractApiResource {
 	@RequestMapping(value = "/category/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getBuildingTypeCategory() {
 		List<BuildingTypeCategory> resultList = buildingTypeService.selectAllBuildingTypeCategories();
-		return responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
+		return ApiResponse.responseOK(makeModelMapper(resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE),
 				BuildingTypeCategoryDto.class));
 	}
 

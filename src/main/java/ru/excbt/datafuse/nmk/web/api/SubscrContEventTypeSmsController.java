@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -45,7 +46,7 @@ public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource 
 	@RequestMapping(value = "/availableContEventTypes", method = RequestMethod.GET)
 	public ResponseEntity<?> getAvailableSmsContEventTypes() {
 		List<ContEventType> result = subscrContEventTypeSmsService.selectAvailableContEventTypes();
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource 
 	public ResponseEntity<?> getSmsContEventTypes() {
 		List<SubscrContEventTypeSms> result = subscrContEventTypeSmsService
 				.selectSubscrContEventTypeSms(getCurrentSubscriberId());
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource 
 				.filter(i -> i.getId().equals(contEventTypeId)).findFirst();
 
 		if (!checkContEventType.isPresent()) {
-			return responseBadRequest(ApiResult.validationError("contEventTypeId = %d is not found", contEventTypeId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("contEventTypeId = %d is not found", contEventTypeId));
 		}
 
 		ContEventType contEventType = checkContEventType.get();

@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  * Контроллер для работы с точками учета для РМА
@@ -50,13 +51,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPoint);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return contZPointService.updateOne(contZPoint);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(contZPoint) {
 		//			@Override
@@ -86,7 +87,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return contZPointService.createOne(contObjectId, contZPoint);
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContZPoint, Long>(contZPoint, request) {
 		//
@@ -120,13 +121,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionVoidProcess actionProcess = () -> {
 			contZPointService.deleteOne(contZPointId);
 		};
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 
 		//		ApiAction action = new ApiActionAdapter() {
 		//
@@ -156,17 +157,17 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (!canAccessContZPoint(contZPointId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new ApiActionEntityAdapter<List<ContZPointMetadata>>(requestEntity) {
 		//

@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -117,14 +118,14 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObject(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ContObject result = contObjectService.findContObject(contObjectId);
 
 		List<?> wrappedList = contObjectService.wrapContObjectsMonitorVO(Arrays.asList(result));
 
-		return responseOK(wrappedList.isEmpty() ? null : wrappedList.get(0));
+		return ApiResponse.responseOK(wrappedList.isEmpty() ? null : wrappedList.get(0));
 	}
 
 
@@ -138,13 +139,13 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjectFias(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ContObjectFias result = contObjectService.findContObjectFias(contObjectId);
 
 		if (result == null) {
-			return responseNoContent();
+			return ApiResponse.responseNoContent();
 		}
 
 		return ResponseEntity.ok(result);
@@ -165,11 +166,11 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 		checkNotNull(contObject);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (contObject.isNew()) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<ContObjectWrapper>() {
@@ -199,7 +200,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjectSettingModeType() {
 
 		List<ContObjectSettingModeType> resultList = contObjectService.selectContObjectSettingModeType();
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -221,13 +222,13 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 				: (contObjectIds != null ? Arrays.asList(contObjectIds) : null));
 
 		if (contObjectIdList == null || contObjectIdList.isEmpty()) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		Optional<Long> checkAccess = contObjectIdList.stream().filter((i) -> !canAccessContObject(i)).findAny();
 
 		if (checkAccess.isPresent()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = new AbstractEntityApiAction<List<Long>>() {
@@ -258,7 +259,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> organizations = organizationService.selectCmOrganizations(getSubscriberParam());
 		organizationService.checkAndEnhanceOrganizations(organizations, organizationId);
-		return responseOK(organizations);
+		return ApiResponse.responseOK(organizations);
 	}
 
 	/**
@@ -271,7 +272,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
 		organizationService.checkAndEnhanceOrganizations(organizations, organizationId);
-		return responseOK(organizations);
+		return ApiResponse.responseOK(organizations);
 	}
 
 	/**
@@ -284,12 +285,12 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionProcess<ContObjectMeterPeriodSettingsDTO> process = () -> contObjectService.getContObjectMeterPeriodSettings(contObjectId);
 
-		return responseOK(process);
+		return ApiResponse.responseOK(process);
 	}
 
 	/**
@@ -304,15 +305,15 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
 
 		if (settings.isSingle() == false) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (!contObjectId.equals(settings.getContObjectId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionProcess<ContObject> process = () -> {
@@ -320,7 +321,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			return contObjectService.findContObject(settings.getContObjectId());
 		};
 
-		return responseUpdate(process);
+		return ApiResponse.responseUpdate(process);
 	}
 
 	/**
@@ -332,7 +333,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjectMeterPeriodSetting() {
 		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 		List<ContObjectMeterPeriodSettingsDTO> result = contObjectService.findMeterPeriodSettings(ids);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -344,17 +345,17 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> updateContObjectMeterPeriodSetting(
 			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
 		if (settings.isMulti() == false) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (!canAccessContObject(settings.getContObjectIds())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 		ApiActionProcess<List<ContObjectMeterPeriodSettingsDTO>> process = () -> {
 			contObjectService.updateMeterPeriodSettings(settings);
 			return contObjectService.findMeterPeriodSettings(settings.getContObjectIds());
 		};
-		return responseOK(process);
+		return ApiResponse.responseOK(process);
 	}
 
 }

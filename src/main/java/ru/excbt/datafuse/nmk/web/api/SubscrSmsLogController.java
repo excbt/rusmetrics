@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.SubscrSmsLogService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -39,13 +40,13 @@ public class SubscrSmsLogController extends AbstractSubscrApiResource {
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkPeriod = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkPeriod = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkPeriod != null) {
 			return checkPeriod;
 		}
 
 		List<SubscrSmsLog> resultList = subscrSmsLogService.selectSmsLog(getRmaSubscriberId(),
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay());
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 }

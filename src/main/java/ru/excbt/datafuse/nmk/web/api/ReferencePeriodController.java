@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.ReferencePeriodService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -56,7 +57,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> referencePeriodService
 				.selectLastReferencePeriod(currentSubscriberService.getSubscriberId(), contZPointId);
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
     /**
@@ -71,7 +72,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getOne(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("id") long referencePeriodId) {
 
-		return responseOK(() -> referencePeriodService.findOne(referencePeriodId));
+		return ApiResponse.responseOK(() -> referencePeriodService.findOne(referencePeriodId));
 	}
 
     /**
@@ -83,7 +84,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOneShort(@PathVariable("id") long referencePeriodId) {
 
-		return responseOK(() -> referencePeriodService.findOne(referencePeriodId));
+		return ApiResponse.responseOK(() -> referencePeriodService.findOne(referencePeriodId));
 	}
 
 	/**
@@ -138,7 +139,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 			return referencePeriodService.createOne(referencePeriod);
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 	}
 
@@ -174,7 +175,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 			return referencePeriodService.updateOne(referencePeriod);
 		};
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 	}
 
@@ -202,6 +203,6 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 
 		ApiActionVoidProcess actionProcess = () -> referencePeriodService.deleteOne(referencePeriodId);
 
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 	}
 }

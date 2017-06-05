@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class SubscrObjectTreeTemplateController extends AbstractSubscrApiResourc
 
 		List<SubscrObjectTreeTemplate> resultList = subscrObjectTreeTemplateService
 				.selectRmaSubscriberTemplates(getSubscriberParam());
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -44,7 +45,7 @@ public class SubscrObjectTreeTemplateController extends AbstractSubscrApiResourc
 	public ResponseEntity<?> getSubscrObjectTreeTemplateItem(@PathVariable("templateId") Long templateId) {
 		List<SubscrObjectTreeTemplateItem> resultList = subscrObjectTreeTemplateService
 				.selectSubscrObjectTreeTemplateItems(templateId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -67,10 +68,10 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
+		return ApiResponse.responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
 				ReportConstants.IS_ACTIVE, currentSubscriberService.getSubscriberId()));
 
 	}
@@ -88,10 +89,10 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return responseOK(() -> reportParamsetService.findReportParamset(reportParamsetId));
+		return ApiResponse.responseOK(() -> reportParamsetService.findReportParamset(reportParamsetId));
 	}
 
 	/**
@@ -104,10 +105,10 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
+		return ApiResponse.responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
 				ReportConstants.IS_NOT_ACTIVE, currentSubscriberService.getSubscriberId()));
 	}
 
@@ -124,10 +125,10 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return responseOK(() -> reportParamsetService.findReportParamset(reportParamsetId));
+		return ApiResponse.responseOK(() -> reportParamsetService.findReportParamset(reportParamsetId));
 	}
 
 	/**
@@ -147,7 +148,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return createInternal(reportTemplateId, reportParamset, contObjectIds, request);
@@ -171,7 +172,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
@@ -193,12 +194,12 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ApiActionVoidProcess actionProcess = () -> reportParamsetService.deleteReportParamset(reportParamsetId);
 
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 	}
 
 	/**
@@ -214,12 +215,12 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ApiActionVoidProcess actionProcess = () -> reportParamsetService.deleteReportParamset(reportParamsetId);
 
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 	}
 
     /**
@@ -285,7 +286,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		ApiActionProcess<ReportParamset> actionProcess = () -> reportParamsetService
 				.createReportParamset(reportParamset, contObjectIds);
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 	}
 
@@ -345,7 +346,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjectUnits(@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
-		return responseOK(() -> reportParamsetService.selectParamsetContObjects(reportParamsetId));
+		return ApiResponse.responseOK(() -> reportParamsetService.selectParamsetContObjects(reportParamsetId));
 	}
 
 	/**
@@ -359,7 +360,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		checkNotNull(reportParamsetId);
 
-		return responseOK(() -> reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
+		return ApiResponse.responseOK(() -> reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
 				currentSubscriberService.getSubscriberId()));
 	}
 
@@ -386,7 +387,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> reportParamsetService.addUnitToParamset(reportParamsetId,
 				contObjectId);
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 	}
 
@@ -408,7 +409,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		ApiActionVoidProcess actionProcess = () -> reportParamsetService.deleteUnitFromParamset(reportParamsetId,
 				contObjectId);
 
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 
 	}
 
@@ -464,7 +465,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		ApiActionVoidProcess actionProcess = () -> reportParamsetService.updateUnitToParamset(reportParamsetId,
 				contObjectIds);
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 	}
 
@@ -496,7 +497,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 			return ObjectFilters.deletedFilter(result);
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -509,8 +510,8 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getReportParamDirectoryItems(
 			@PathVariable("paramDirectoryKeyname") String paramDirectoryKeyname) {
 
-		return responseOK(() -> reportParamsetService.selectReportMetaParamItems(paramDirectoryKeyname), (l) -> {
-			return l.isEmpty() ? responseBadRequest() : null;
+		return ApiResponse.responseOK(() -> reportParamsetService.selectReportMetaParamItems(paramDirectoryKeyname), (l) -> {
+			return l.isEmpty() ? ApiResponse.responseBadRequest() : null;
 		});
 	}
 

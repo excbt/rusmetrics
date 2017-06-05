@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,7 +37,7 @@ public class TemperatureChartController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsAll() {
 		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsInfo();
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
     /**
@@ -114,7 +115,7 @@ public class TemperatureChartController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChart(@PathVariable("temperatureChartId") Long temperatureChartId) {
 		TemperatureChart result = temperatureChartService.selectTemperatureChart(temperatureChartId);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class TemperatureChartController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartItem(@PathVariable("temperatureChartId") Long temperatureChartId) {
 		List<TemperatureChartItem> resultList = temperatureChartService.selectTemperatureChartItems(temperatureChartId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -212,7 +213,7 @@ public class TemperatureChartController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsByContZPointId(@PathVariable("contZPointId") Long contZPointId) {
 		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsByContZPointId(contZPointId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -224,7 +225,7 @@ public class TemperatureChartController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsByContObjectId(@PathVariable("contObjectId") Long contObjectId) {
 		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsByContObjectId(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

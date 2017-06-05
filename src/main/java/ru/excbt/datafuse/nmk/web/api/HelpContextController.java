@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.HelpContext;
 import ru.excbt.datafuse.nmk.data.service.HelpContextService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 @Controller
 @RequestMapping(value = "/api/help")
@@ -123,14 +124,14 @@ public class HelpContextController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getHelpContextInfo(@PathVariable("anchorId") String anchorId) {
 
 		if (!helpContextService.isHelpContextSetup()) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		HelpContext helpContext = helpContextService.findByAnchorId(anchorId);
 		if (helpContext == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
-		return responseOK(helpContext);
+		return ApiResponse.responseOK(helpContext);
 	}
 
 }

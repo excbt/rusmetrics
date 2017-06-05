@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV2Service;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class WidgetController extends AbstractSubscrApiResource {
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
@@ -58,7 +59,7 @@ public class WidgetController extends AbstractSubscrApiResource {
 		Map<String, Object> result = new HashMap<>();
 		result.put("color", getMonitorColorValue(contObjectId, contZpointId).getKeyname());
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**

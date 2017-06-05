@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.service.support.AppVersionService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpSession;
 
@@ -31,7 +32,7 @@ public class AppStatusController extends AbstractApiResource {
 			return appVersionService.getAppVersion();
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class AppStatusController extends AbstractApiResource {
 
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
     /**
@@ -62,7 +63,7 @@ public class AppStatusController extends AbstractApiResource {
 			return appVersionService.getAppModulesInfo();
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 }

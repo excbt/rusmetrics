@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -42,7 +43,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 			@RequestParam(name = "vcKey", required = false) String vcKey) {
 
 		if (vcKey != null && vcMode == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookie(getSubscriberParam());
@@ -51,7 +52,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
 				.filter(i -> vcKey == null || vcKey.equals(i.getVcKey())).collect(Collectors.toList());
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -66,15 +67,15 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 
 		for (SubscrVCookie vc : requestEntities) {
 			if (!vc.isNew()) {
-				return responseBadRequest(ApiResult.validationError("id is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("id is null"));
 			}
 
 			if (vc.getVcKey() == null) {
-				return responseBadRequest(ApiResult.validationError("vcKey is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcKey is null"));
 			}
 
 			if (vc.getVcMode() == null) {
-				return responseBadRequest(ApiResult.validationError("vcMode is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcMode is null"));
 			}
 
 			vc.setSubscriberId(getSubscriberId());
@@ -151,7 +152,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 			@RequestParam(name = "vcKey", required = false) String vcKey) {
 
 		if (vcKey != null && vcMode == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookieByUser(getSubscriberParam());
@@ -160,7 +161,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
 				.filter(i -> vcKey == null || vcKey.equals(i.getVcKey())).collect(Collectors.toList());
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -175,15 +176,15 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 
 		for (SubscrVCookie vc : requestEntities) {
 			if (!vc.isNew()) {
-				return responseBadRequest(ApiResult.validationError("id is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("id is null"));
 			}
 
 			if (vc.getVcKey() == null) {
-				return responseBadRequest(ApiResult.validationError("vcKey is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcKey is null"));
 			}
 
 			if (vc.getVcMode() == null) {
-				return responseBadRequest(ApiResult.validationError("vcMode is null"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("vcMode is null"));
 			}
 
 			SubscriberParam sParam = getSubscriberParam();
@@ -211,6 +212,6 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> widgetList() {
-		return responseOK(() -> widgetMetaService.selectAllWidgets());
+		return ApiResponse.responseOK(() -> widgetMetaService.selectAllWidgets());
 	}
 }

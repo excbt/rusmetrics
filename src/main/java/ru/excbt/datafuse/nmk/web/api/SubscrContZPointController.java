@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(zpList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(zpList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(zpList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointStatInfo> resultList = contZPointService.selectContZPointStatInfo(contObjectId);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
     /**
@@ -162,10 +163,10 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
 
 		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
-		return responseOK(currentContZPoint);
+		return ApiResponse.responseOK(currentContZPoint);
 	}
 
 	/**
@@ -177,7 +178,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 
 		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getCurrentSubscriberId());
 
-		return responseOK(contZPoints);
+		return ApiResponse.responseOK(contZPoints);
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		List<ContZPointShortInfo> contZPoints = subscrContObjectService
 				.selectSubscriberContZPointShortInfo(getCurrentSubscriberId());
 
-		return responseOK(contZPoints);
+		return ApiResponse.responseOK(contZPoints);
 	}
 
 	/**
@@ -203,7 +204,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContServieTypes() {
 		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
 
-		return responseOK(contServiceTypes);
+		return ApiResponse.responseOK(contServiceTypes);
 	}
 
 	/**
@@ -218,7 +219,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		List<Pair<String, Long>> idPairList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
 
 		if (idPairList == null || idPairList.size() == 0) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		HashMap<Long, List<TimeDetailLastDate>> resultHWater = contServiceDataHWaterService
@@ -227,7 +228,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		HashMap<Long, List<TimeDetailLastDate>> resultEl = contServiceDataElService
 				.selectTimeDetailLastDateMapByPair(idPairList);
 
-		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
+		return ApiResponse.responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
 	}
 
 	/**
@@ -252,7 +253,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		HashMap<Long, List<TimeDetailLastDate>> resultEl = contServiceDataElService
 				.selectTimeDetailLastDateMapByPair(idPairList);
 
-		return responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
+		return ApiResponse.responseOK(ImmutableMap.builder().putAll(resultHWater).putAll(resultEl).build());
 
 	}
 
@@ -269,7 +270,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 
 		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -287,7 +288,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		List<ContZPointMetadata> result = contZPointMetadataService.selectContZPointMetadata(contZPointId);
@@ -296,7 +297,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			result = contZPointMetadataService.selectNewMetadata(contZPointId, true);
 		}
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 
 	}
 
@@ -319,7 +320,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			resultList = measureUnitService.selectMeasureUnits();
 		}
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -337,14 +338,14 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
 		List<DeviceMetadataInfo> result = contZPointMetadataService.buildSrcPropsDeviceMapping(metadataList);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -362,14 +363,14 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
 		List<EntityColumn> result = contZPointMetadataService.buildDestProps(metadataList);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -387,12 +388,12 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<EntityColumn> result = contZPointMetadataService.selectContZPointDestDB(contZPointId);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.Sea
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -502,7 +503,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContObject(contObjectId);
 
 		if (resultList.isEmpty()) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
@@ -524,7 +525,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContZPoint(contObjectId,contZPointId);
 
 		if (resultList.isEmpty()) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
@@ -576,7 +577,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	@RequestMapping(value = "/categories", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventCategory() {
 		List<ContEventCategory> xList = contEventService.selectContEventCategoryList();
-		return responseOK(ObjectFilters.deletedFilter(xList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(xList));
 	}
 
 	/**
@@ -586,7 +587,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	@RequestMapping(value = "/deviations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventDeviation() {
 		List<ContEventDeviation> resultList = contEventService.findContEventDeviation();
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
@@ -91,12 +92,12 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
 
-		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 
     /**
@@ -112,7 +113,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 
 
         if (!canAccessContObject(contObjectId)) {
-            return responseForbidden();
+            return ApiResponse.responseForbidden();
         }
 
         ApiActionProcess<DeviceObject> actionProcess = () -> {
@@ -127,15 +128,15 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 
         Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
             if (x == null) {
-                return responseNoContent();
+                return ApiResponse.responseNoContent();
             }
             if (x.getContObject() == null || !x.getContObject().getId().equals(contObjectId)) {
-                return responseBadRequest();
+                return ApiResponse.responseBadRequest();
             }
             return null;
         };
 
-        return responseOK(actionProcess, extraCheck);
+        return ApiResponse.responseOK(actionProcess, extraCheck);
 
     }
 
@@ -150,7 +151,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
         checkArgument(deviceObject.getId().equals(deviceObjectId));
 
         if (!canAccessContObject(contObjectId)) {
-            return responseForbidden();
+            return ApiResponse.responseForbidden();
         }
 
         /////////////////////////////////////////////
@@ -160,7 +161,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 
             return result;
         };
-        return responseUpdate(actionProcess);
+        return ApiResponse.responseUpdate(actionProcess);
 
     }
 
@@ -176,7 +177,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObjectMetaVzlet result = deviceObjectService.selectDeviceObjectMetaVzlet(deviceObjectId);
@@ -196,7 +197,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId, @PathVariable("entityId") Long entityId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObjectMetaVzlet result = deviceObjectService.selectDeviceObjectMetaVzlet(deviceObjectId);
@@ -219,11 +220,11 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@RequestBody DeviceObjectMetaVzlet deviceObjectMetaVzlet, HttpServletRequest request) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (!deviceObjectMetaVzlet.isNew()) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
@@ -264,11 +265,11 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@RequestBody DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (deviceObjectMetaVzlet.isNew()) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
@@ -297,7 +298,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = (ApiActionAdapter) () -> deviceObjectService.deleteDeviceObjectMetaVzlet(deviceObjectId);
@@ -330,7 +331,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			}
 			return deviceModels;
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -345,7 +346,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			DeviceModelDTO deviceModel = deviceModelService.findDeviceModelDTO(deviceModelId);
 			return deviceModel;
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -355,7 +356,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/deviceObjects/deviceModelTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceModelTypes() {
-		return responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
+		return ApiResponse.responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
 	}
 
 	/**
@@ -365,7 +366,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/deviceObjects/deviceDataTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceDataTypes() {
-		return responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
+		return ApiResponse.responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
 	}
 
 
@@ -375,7 +376,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
      */
     @RequestMapping(value = "/deviceObjects/heatRadiatorTypes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getHeatRadiatorTypes() {
-        return responseOK(() -> heatRadiatorTypeService.findAllHeatRadiators());
+        return ApiResponse.responseOK(() -> heatRadiatorTypeService.findAllHeatRadiators());
     }
 
 
@@ -386,7 +387,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/deviceObjects/impulseCounterTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceImpulseCounterTypes() {
-		return responseOK(() -> deviceModelService.findImpulseCounterTypes());
+		return ApiResponse.responseOK(() -> deviceModelService.findImpulseCounterTypes());
 	}
 
 
@@ -402,18 +403,18 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
-			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
 
 		DeviceObjectLoadingSettings result = deviceObjectLoadingSettingsService
 				.getDeviceObjectLoadingSettings(deviceObject);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -429,16 +430,16 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
-			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
 
 		if (deviceObject.getActiveDataSource() == null) {
-			return responseBadRequest(ApiResult.badRequest("SubscrDataSource is not set"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("SubscrDataSource is not set"));
 		}
 
 		SubscrDataSource subscrDataSource = deviceObject.getActiveDataSource().getSubscrDataSource();
@@ -446,7 +447,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 		SubscrDataSourceLoadingSettings result = subscrDataSourceLoadingSettingsService
 				.getSubscrDataSourceLoadingSettings(subscrDataSource);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -461,17 +462,17 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
-			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
 
 		DeviceObjectLoadingLog result = deviceObjectLoadingLogService.getDeviceObjectLoadingLog(deviceObject);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -501,12 +502,12 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(getCurrentSubscriberId());
@@ -520,7 +521,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			}
 		}
 
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 }

@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService.PkeWarnSearchCo
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkPeriod = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkPeriod = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkPeriod != null) {
 			return checkPeriod;
 		}
@@ -60,7 +61,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 
 		List<DeviceObjectPkeWarn> resultList = deviceObjectPkeService.selectDeviceObjectPkeWarn(searchConditions);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 		if (contZPoint == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (!canAccessContObject(contZPoint.getContObjectId())) {
@@ -88,14 +89,14 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 
 		List<Long> deviceObjectIds = contZPointService.selectDeviceObjectIds(contZPointId);
 		if (deviceObjectIds.size() != 1) {
-			return responseInternalServerError(ApiResult.internalError("Invalid deviceObject and contZPoint link"));
+			return ApiResponse.responseInternalServerError(ApiResult.internalError("Invalid deviceObject and contZPoint link"));
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(beginDateStr, endDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkPeriod = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkPeriod = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkPeriod != null) {
 			return checkPeriod;
 		}
@@ -106,7 +107,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 
 		List<DeviceObjectPkeWarn> resultList = deviceObjectPkeService.selectDeviceObjectPkeWarn(searchConditions);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectPkeType() {
 		List<DeviceObjectPkeType> resultList = deviceObjectPkeService.selectDeviceObjectPkeType();
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

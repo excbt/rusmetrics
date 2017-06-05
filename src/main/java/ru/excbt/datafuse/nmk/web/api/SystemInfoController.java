@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +125,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 		UserDetails userDetails = currentSubscriberService.getCurrentUserDetails();
 
 		if (userDetails == null) {
-			return responseOK(new ReadOnlyMode(true));
+			return ApiResponse.responseOK(new ReadOnlyMode(true));
 		}
 
 		Optional<String> adminRole = userDetails.getAuthorities().stream()
@@ -132,7 +133,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getAuthority()))
 				.map((i) -> i.getAuthority()).findFirst();
 
-		return responseOK(new ReadOnlyMode(!adminRole.isPresent()));
+		return ApiResponse.responseOK(new ReadOnlyMode(!adminRole.isPresent()));
 	}
 
 	/**
@@ -144,10 +145,10 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 		Authentication auth = currentSubscriberUserDetailsService.getAuthentication();
 
 		if (auth == null) {
-			return responseOK(new SamlAuthMode(false));
+			return ApiResponse.responseOK(new SamlAuthMode(false));
 		}
 
-		return responseOK(new SamlAuthMode(auth.getCredentials() instanceof SAMLCredential));
+		return ApiResponse.responseOK(new SamlAuthMode(auth.getCredentials() instanceof SAMLCredential));
 	}
 
 	/**
@@ -162,12 +163,12 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 			@RequestParam(value = "newPassword", required = true) final String newPassword) {
 
 		if (oldPassword == null || newPassword == null || oldPassword.equals(newPassword)) {
-			return responseBadRequest(ApiResult.validationError("request params is not valid"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("request params is not valid"));
 		}
 
 		V_FullUserInfo fullUserInfo = currentSubscriberService.getFullUserInfo();
 		if (fullUserInfo == null) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		String username = fullUserInfo.getUserName();
@@ -175,10 +176,10 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 		boolean changeResult = ldapService.changePassword(username, oldPassword, newPassword);
 		if (changeResult) {
 			subscrUserService.clearSubscrUserPassword(fullUserInfo.getId());
-			return responseOK(ApiResult.ok("Password successfully changed"));
+			return ApiResponse.responseOK(ApiResult.ok("Password successfully changed"));
 		}
 
-		return responseBadRequest();
+		return ApiResponse.responseBadRequest();
 	}
 
 	/**
@@ -198,7 +199,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/invalidateAllSessions", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getInvalidateSessions() {
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<SessionInformation> activeSessions = new ArrayList<>();
@@ -212,7 +213,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 			i.expireNow();
 		});
 
-		return responseOK(ApiResult.ok("Invalidated sessions: " + activeSessions.size()));
+		return ApiResponse.responseOK(ApiResult.ok("Invalidated sessions: " + activeSessions.size()));
 	}
 
 	/**
@@ -221,7 +222,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getIsCMode() {
-		return responseOK(getSubscriberParam().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
+		return ApiResponse.responseOK(getSubscriberParam().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
 	}
 
 	/**
@@ -235,7 +236,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			return exSystems.stream().map(i -> modelMapper.map(i, ExSystemDto.class)).collect(Collectors.toList());
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 

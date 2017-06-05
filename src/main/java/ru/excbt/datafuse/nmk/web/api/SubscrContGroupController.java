@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,7 +56,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 
 		//List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
 
-		return responseOK(action);// ResponseEntity.ok(resultList);
+		return ApiResponse.responseOK(action);// ResponseEntity.ok(resultList);
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 			return contGroupService.selectAvailableContGroupObjects(getSubscriberParam(), contGroupId);
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 			return contGroupService.selectSubscriberGroups(getSubscriberParam());
 		};
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 
 	}
 
@@ -109,7 +110,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 			return contGroupService.createOne(contGroup, contObjectIds);
 		};
 
-		return responseCreate(process, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(process, () -> request.getRequestURI());
 
 	}
 

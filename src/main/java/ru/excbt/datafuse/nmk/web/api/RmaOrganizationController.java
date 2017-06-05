@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,7 +37,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationsGet() {
 		List<Organization> resultList = organizationService.selectOrganizations(getSubscriberParam());
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -47,7 +48,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/{organizationId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationGet(@PathVariable("organizationId") Long organizationId) {
 		Organization result = organizationService.selectOrganization(organizationId);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -62,11 +63,11 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 
 		Organization checkOrganization = organizationService.selectOrganization(organizationId);
 		if (checkOrganization == null || organizationId == null || !organizationId.equals(checkOrganization.getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (Boolean.TRUE.equals(checkOrganization.getIsCommon())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		SubscriberParam subscriberParam = getSubscriberParam();
@@ -76,7 +77,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 
 		if (checkOrganization.getRmaSubscriberId() == null
 				|| !checkOrganization.getRmaSubscriberId().equals(requestEntity.getRmaSubscriberId())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<Organization>(requestEntity) {
@@ -100,11 +101,11 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> organizationPost(@RequestBody Organization requestEntity, HttpServletRequest request) {
 
 		if (!requestEntity.isNew()) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (Boolean.TRUE.equals(requestEntity.getIsCommon())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		SubscriberParam subscriberParam = getSubscriberParam();
@@ -138,16 +139,16 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 
 		Organization organization = organizationService.selectOrganization(organizationId);
 		if (organization == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (Boolean.TRUE.equals(organization.getIsCommon())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (organization.getRmaSubscriberId() == null
 				|| !organization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = new ApiActionAdapter() {

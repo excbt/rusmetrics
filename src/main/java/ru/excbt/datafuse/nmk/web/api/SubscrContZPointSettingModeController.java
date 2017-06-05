@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
@@ -112,7 +113,9 @@ public class SubscrContZPointSettingModeController extends AbstractSubscrApiReso
 		}
 
 		settingMode.setContZPoint(contZPoint);
-		prepareAuditableProps(currentSetting, settingMode);
+
+		AuditableTools.copyAuditableProps(currentSetting, settingMode);
+
 
 		ApiAction action = new AbstractEntityApiAction<ContZPointSettingMode>(settingMode) {
 

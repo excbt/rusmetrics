@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 			resultList = measureUnitService.selectMeasureUnits();
 		}
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 
 		List<ContServiceType> resultList = contServiceTypeService.selectContServiceType();
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -82,12 +83,12 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<DeviceObjectMetadata> resultList = deviceObjectMetadataService.selectDeviceObjectMetadata(deviceObjectId);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -125,7 +126,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<List<DeviceObjectMetadata>>() {

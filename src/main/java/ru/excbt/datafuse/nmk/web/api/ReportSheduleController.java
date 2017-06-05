@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -61,7 +62,7 @@ public class ReportSheduleController extends AbstractApiResource {
 			return result;
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
@@ -77,7 +78,7 @@ public class ReportSheduleController extends AbstractApiResource {
 					.selectReportShedule(currentSubscriberService.getSubscriberId());
 			return result;
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -91,7 +92,7 @@ public class ReportSheduleController extends AbstractApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportSheduleService.findOne(reportSheduleId);
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class ReportSheduleController extends AbstractApiResource {
 
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 		//		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
 		//		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
@@ -209,7 +210,7 @@ public class ReportSheduleController extends AbstractApiResource {
 
 			return reportSheduleService.updateOne(reportShedule);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
 		//		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());

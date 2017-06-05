@@ -37,6 +37,7 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import javax.persistence.Tuple;
@@ -225,24 +226,24 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", fromDateStr, toDateStr));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			return responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
 		}
 
 		if (contZPoint.getContObject() == null || contZPoint.getContObject().getId() != contObjectId) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
@@ -281,24 +282,24 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			return responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
 		}
 
 		if (contZPoint.getContObject() == null || contZPoint.getContObject().getId() != contObjectId) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
 		LocalDatePeriod period = LocalDatePeriod.builder().dateFrom(beginDateS).dateTo(endDateS).build();
 
 		if (period.isInvalidEq()) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("Invalid parameters beginDateS: %s, endDateS:%s", beginDateS, endDateS));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("Invalid parameters timeDetailType:%s", timeDetailType));
 		}
 
@@ -447,7 +448,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -455,18 +456,18 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		checkNotNull(datePeriodParser);
 
 		if (!datePeriodParser.isOk()) {
-			return responseBadRequest(ApiResult.validationError("Invalid parameters fromDateStr:%s and toDateStr:%s",
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid parameters fromDateStr:%s and toDateStr:%s",
 					fromDateStr, toDateStr));
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", fromDateStr, toDateStr));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		LocalDatePeriod ldp = datePeriodParser.getLocalDatePeriod();
@@ -478,7 +479,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		try {
 			csaBytes = hWatersCsvService.writeDataHWaterToCsv(dataHWaterList);
 		} catch (JsonProcessingException e) {
-			return responseInternalServerError(ApiResult.error(e));
+			return ApiResponse.responseInternalServerError(ApiResult.error(e));
 		}
 
 		ByteArrayInputStream is = new ByteArrayInputStream(csaBytes);
@@ -486,7 +487,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		String outputFilename = String.format("HWaters_(contObject_%d)_(contZPoint_%d)_%s_(%s-%s)_noabs.csv",
 				contObjectId, contObjectId, timeDetailType, ldp.getDateFromStr(), ldp.getDateToStr());
 
-		return processDownloadInputStream(is, HWatersCsvService.MEDIA_TYPE_CSV, csaBytes.length, outputFilename);
+		return ApiResponse.processDownloadInputStream(is, HWatersCsvService.MEDIA_TYPE_CSV, csaBytes.length, outputFilename);
 	}
 
 	/**
@@ -504,7 +505,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@RequestParam("file") MultipartFile multipartFile) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		checkArgument(contObjectId > 0);
@@ -518,7 +519,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String inFilename = webAppPropsService.getHWatersCsvInputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -531,7 +532,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			String digestMD5 = FileWriterUtils.writeFile(multipartFile.getInputStream(), inFile);
 		} catch (IOException e) {
 			logger.error("Exception:{}", e);
-			return responseInternalServerError(ApiResult.error(e));
+			return ApiResponse.responseInternalServerError(ApiResult.error(e));
 		}
 
 		List<ContServiceDataHWater> inData;
@@ -539,7 +540,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			inData = hWatersCsvService.parseDataHWaterCsv(fio);
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
-			return responseInternalServerError(ApiResult.error(e));
+			return ApiResponse.responseInternalServerError(ApiResult.error(e));
 		}
 
 		if (inData.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null).count() > 0) {
@@ -565,7 +566,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			return resultFileInfo;
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
 		//
@@ -597,7 +598,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@PathVariable("contZPointId") Long contZPointId, @RequestParam("file") MultipartFile multipartFile) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		checkArgument(contObjectId > 0);
@@ -606,7 +607,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String inFilename = webAppPropsService.getHWatersCsvInputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -619,7 +620,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			String digestMD5 = FileWriterUtils.writeFile(multipartFile.getInputStream(), inFile);
 		} catch (IOException e) {
 			logger.error("Exception:{}", e);
-			return responseInternalServerError(ApiResult.error(e));
+			return ApiResponse.responseInternalServerError(ApiResult.error(e));
 		}
 
 		List<ContServiceDataHWater> inData;
@@ -627,7 +628,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			inData = hWatersCsvService.parseDataHWaterCsv(fio);
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
-			return responseInternalServerError(ApiResult.error(e));
+			return ApiResponse.responseInternalServerError(ApiResult.error(e));
 		}
 
 		if (inData.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null).count() > 0) {
@@ -670,7 +671,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		checkNotNull(multipartFiles);
 
 		if (multipartFiles.length == 0) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		SubscriberParam subscriberParam = getSubscriberParam();
@@ -679,7 +680,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
         List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
 
         if (isNotPassed.size() > 0) {
-            return responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
+            return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
         }
 
         class FileNameData {
@@ -712,7 +713,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
         });
 
         if (fileNameErrorDesc.size() > 0 || fileNameDataList.size() == 0) {
-            return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
+            return ApiResponse.responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
         }
 
 
@@ -783,7 +784,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		if (fileNameErrorDesc.size() > 0) {
-			return responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest(fileNameErrorDesc));
 		}
 
 		// All conditions is passed
@@ -808,7 +809,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 				String digestMD5 = FileWriterUtils.writeFile(multipartFile.getInputStream(), inFile);
 			} catch (IOException e) {
 				logger.error("Exception:{}", e);
-				return responseInternalServerError(ApiResult.error(e));
+				return ApiResponse.responseInternalServerError(ApiResult.error(e));
 			}
 
 			Tuple row = filenameDBInfos.get(fileName);
@@ -828,7 +829,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		subscriberExecutorService.submit(subscriberParam.getSubscriberId(), task);
 
-		return responseOK();
+		return ApiResponse.responseOK();
 
 	}
 
@@ -844,7 +845,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 				currentSubscriberService.getSubscriberId());
 
 		if (listFiles == null || listFiles.isEmpty()) {
-			return responseNotFound();
+			return ApiResponse.responseNotFound();
 		}
 
 		List<FileInfoMD5> resultFiles = listFiles.stream().map((i) -> {
@@ -868,10 +869,10 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 				filename);
 
 		if (file == null) {
-			return responseBadRequest(ApiResult.build(ApiResultCode.ERR_VALIDATION, "File not found"));
+			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_VALIDATION, "File not found"));
 		}
 
-		return processDownloadFile(file, HWatersCsvService.MEDIA_TYPE_CSV);
+		return ApiResponse.processDownloadFile(file, HWatersCsvService.MEDIA_TYPE_CSV);
 
 	}
 
@@ -891,7 +892,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@RequestParam("beginDate") String dateFromStr, @RequestParam("endDate") String dateToStr) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		checkNotNull(timeDetailType);
@@ -909,12 +910,12 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", dateFromStr, dateToStr));
 		}
 
 		if (TimeDetailKey.searchKeyname(timeDetailType) == null) {
-			return responseBadRequest(ApiResult.badRequest("TimeDetailKey %s is not supported", timeDetailType));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("TimeDetailKey %s is not supported", timeDetailType));
 		}
 
 		//		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
@@ -924,7 +925,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String outFilename = webAppPropsService.getHWatersCsvOutputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -967,12 +968,12 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		checkNotNull(datePeriodParser);
 
 		if (!datePeriodParser.isOk()) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("Invalid parameters dateFrom:%s and dateTo:%s", dateFromStr, dateToStr));
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Invalid parameters dateFrom:%s is greater than dateTo:%s", dateFromStr, dateToStr));
 		}
 
@@ -980,7 +981,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 				.getAllCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -998,14 +999,14 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		checkNotNull(dateToStr);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(dateFromStr, dateToStr);
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkDatePeriodResponse = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkDatePeriodResponse = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkDatePeriodResponse != null) {
 			return checkDatePeriodResponse;
 		}
@@ -1014,7 +1015,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 				.getContObjectServiceTypeInfo(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectId);
 
-		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
+		return ApiResponse.responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
 	}
 
     /**
@@ -1036,7 +1037,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		checkNotNull(datePeriodParser);
 
-		ResponseEntity<?> checkDatePeriodResponse = checkDatePeriodArguments(datePeriodParser);
+		ResponseEntity<?> checkDatePeriodResponse = ApiResponse.checkDatePeriodArguments(datePeriodParser);
 		if (checkDatePeriodResponse != null) {
 			return checkDatePeriodResponse;
 		}
@@ -1045,14 +1046,14 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		try {
 			cityFiasUUID = UUID.fromString(cityFiasStr);
 		} catch (Exception e) {
-			return responseBadRequest(ApiResult.validationError("cityFias is not valid UUID"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("cityFias is not valid UUID"));
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
 				.getOneCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), cityFiasUUID);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 }

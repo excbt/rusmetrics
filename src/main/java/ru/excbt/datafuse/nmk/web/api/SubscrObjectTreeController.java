@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -97,11 +98,11 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		SubscrObjectTree result = subscrObjectTreeService.selectSubscrObjectTree(rootSubscrObjectTreeId);
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -118,11 +119,11 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -142,13 +143,13 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<ContObject> result = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
 				childSubscrObjectTreeId);
 
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -167,7 +168,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		////
@@ -200,7 +201,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			resultList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId(), resultContObjectIds);
 		}
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<Long> contObjectIds = subscrObjectTreeContObjectService
@@ -229,7 +230,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		List<ContObject> result = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
 				contObjectIds);
 
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -246,7 +247,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<Long> treeContObjectIds = subscrObjectTreeContObjectService
@@ -268,7 +269,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 		List<ContObject> result = viewContObjects;
 
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -287,7 +288,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		SubscrObjectTree subscrObjectTree = subscrObjectTreeService.newSubscrObjectTree(getSubscriberParam(),
@@ -336,7 +337,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -371,7 +372,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -408,7 +409,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -450,7 +451,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -463,7 +464,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 		for (Long id : contObjectIds) {
 			if (existsingContObjectIds.contains(id)) {
-				return responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) already linked", id));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) already linked", id));
 			}
 		}
 
@@ -502,7 +503,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -515,7 +516,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 		for (Long id : contObjectIds) {
 			if (!existsingContObjectIds.contains(id)) {
-				return responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) is not linked", id));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) is not linked", id));
 			}
 		}
 
@@ -542,7 +543,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 		Long rmaSubscriberId = getRmaSubscriberId();
 		if (!subscrObjectTreeService.checkValidSubscriberOk(getSubscriberParam(), subscrObjectTreeId)) {
-			return responseBadRequest(ApiResult.badRequest(INVALID_SUBSCRIBER_MSG, rmaSubscriberId));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest(INVALID_SUBSCRIBER_MSG, rmaSubscriberId));
 		}
 		return null;
 	}
@@ -567,7 +568,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -586,7 +587,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -609,7 +610,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -628,7 +629,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

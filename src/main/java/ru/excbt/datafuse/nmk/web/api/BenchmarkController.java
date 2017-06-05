@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  * Контроллер для замера отклика системы
@@ -37,10 +38,10 @@ public class BenchmarkController extends AbstractApiResource {
 			benchmarkService.setBenchmarkSubscriberId(subscriberId);
 		} catch (Exception e) {
 			benchmarkService.reset();
-			return responseBadRequest(ApiResult.validationError("Init Benchmark fail"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Init Benchmark fail"));
 		}
 
-		return responseOK(ApiResult.ok("Init Benchmark successfully"));
+		return ApiResponse.responseOK(ApiResult.ok("Init Benchmark successfully"));
 	}
 
 	/**
@@ -53,10 +54,10 @@ public class BenchmarkController extends AbstractApiResource {
 		try {
 			subscriberId = benchmarkService.getBenchmarkSubscriberId();
 		} catch (Exception e) {
-			return responseBadRequest(ApiResult.invalidState("Benchmark is not init"));
+			return ApiResponse.responseBadRequest(ApiResult.invalidState("Benchmark is not init"));
 		}
 
-		return responseOK(ApiResult.ok("Benchmark init to :" + subscriberId));
+		return ApiResponse.responseOK(ApiResult.ok("Benchmark init to :" + subscriberId));
 	}
 
 }

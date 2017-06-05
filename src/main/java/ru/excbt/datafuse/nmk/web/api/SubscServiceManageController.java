@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getServicePacks() {
 		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList(getSubscriberParam());
 		List<SubscrServicePack> result = ObjectFilters.activeFilter(packList);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getServiceItems() {
 		List<SubscrServiceItem> itemList = subscrServiceItemService.selectServiceItemList();
 		List<SubscrServiceItem> result = ObjectFilters.activeFilter(itemList);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 		} else {
 			priceItems = subscrPriceListService.selectActiveSubscrPriceListItemVOs(getCurrentSubscriberId());
 		}
-		return responseOK(priceItems);
+		return ApiResponse.responseOK(priceItems);
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/manage/service/access", method = RequestMethod.GET)
 	public ResponseEntity<?> getSubscriberServiceAccess(@PathVariable("subscriberId") Long subscriberId) {
-		return responseOK(subscriberServiceAccessList(subscriberId));
+		return ApiResponse.responseOK(subscriberServiceAccessList(subscriberId));
 	}
 
     /**
@@ -109,7 +110,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
      */
 	@RequestMapping(value = "/manage/service/access", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServiceAccess() {
-		return responseOK(subscriberServiceAccessList(getCurrentSubscriberId()));
+		return ApiResponse.responseOK(subscriberServiceAccessList(getCurrentSubscriberId()));
 	}
 
 	/**
@@ -188,7 +189,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 				.selectSubscriberPermissions(getCurrentSubscriberId(), getCurrentSubscriberLocalDate());
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
 				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 				getSubscriberLocalDate(subscriberId));
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
 				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

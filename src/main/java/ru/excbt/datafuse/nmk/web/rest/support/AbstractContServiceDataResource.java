@@ -69,24 +69,24 @@ public abstract class AbstractContServiceDataResource extends AbstractSubscrApiR
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", fromDateStr, toDateStr));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			return responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
 		}
 
 		if (contZPoint.getContObject() == null || contZPoint.getContObject().getId() != contObjectId) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
@@ -130,24 +130,24 @@ public abstract class AbstractContServiceDataResource extends AbstractSubscrApiR
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", fromDateStr, toDateStr));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			return responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
 		}
 
 		if (contZPoint.getContObject() == null || contZPoint.getContObject().getId() != contObjectId) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 

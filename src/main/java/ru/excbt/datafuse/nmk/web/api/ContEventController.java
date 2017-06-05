@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class ContEventController extends AbstractApiResource {
 			List<ContEventType> vList = contEventTypeService.selectBaseContEventTypes();
 			return ObjectFilters.disabledFilter(vList);
 		};
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 }

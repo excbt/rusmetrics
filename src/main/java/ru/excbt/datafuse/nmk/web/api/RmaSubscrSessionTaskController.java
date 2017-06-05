@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrSessionTask(@PathVariable("id") Long id) {
 		SubscrSessionTask result = subscrSessionTaskService.findSubscrSessionTask(id);
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 		subscrSessionTaskService.initTask(getSubscriberParam(), requestEntity);
 
 		if (!subscrSessionTaskService.checkTaskValid(requestEntity)) {
-			return responseBadRequest(ApiResult.validationError("SubscrSessionTask enity is not valid"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("SubscrSessionTask enity is not valid"));
 		}
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrSessionTask, Long>(requestEntity, request) {
@@ -103,7 +104,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 				.toArray(new Long[] {});
 
 		if (contZPointIds == null || contZPointIds.length == 0) {
-			return responseOK(new ArrayList<>());
+			return ApiResponse.responseOK(new ArrayList<>());
 		}
 
 		//		if (!canAccessContZPoint(contZPointIds)) {
@@ -116,7 +117,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 			return new ContZPointSessionDetailType(i, sessionDetailTypes);
 		}).collect(Collectors.toList());
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -133,7 +134,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 				.toArray(new Long[] {});
 
 		if (contZPointIds == null || contZPointIds.length == 0) {
-			return responseOK(new ArrayList<>());
+			return ApiResponse.responseOK(new ArrayList<>());
 		}
 
 		//		if (!canAccessContZPoint(contZPointIds)) {
@@ -150,7 +151,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 		List<SessionDetailTypeInfo> resultList = sessionDetailTypeService
 				.selectByContServiceType(contServiceTypes);
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -163,7 +164,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getSubscrSessionTaskLogSession(
 			@PathVariable("subscrSessionTaskId") Long subscrSessionTaskId) {
 		List<LogSession> result = subscrSessionTaskService.selectTaskLogSessions(subscrSessionTaskId);
-		return responseOK(ObjectFilters.deletedFilter(result));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 }

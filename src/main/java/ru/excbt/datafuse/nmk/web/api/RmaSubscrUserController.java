@@ -20,10 +20,11 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  * Контроллер для работы с пользователями абонентов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.10.2015
@@ -54,7 +55,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @return
 	 */
@@ -63,21 +64,21 @@ public class RmaSubscrUserController extends SubscrUserController {
 		checkNotNull(rSubscriberId);
 
 		if (!currentSubscriberService.isRma()) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null || subscriber.getRmaSubscriberId() == null
 				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(rSubscriberId);
-		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @param request
 	 * @return
@@ -91,14 +92,14 @@ public class RmaSubscrUserController extends SubscrUserController {
 
 		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null) {
-			return responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
 
 		return createSubscrUserInternal(subscriber, isAdmin, isReadonly, subscrUser, newPassword, request);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @param subscrUser
 	 * @return
@@ -118,14 +119,14 @@ public class RmaSubscrUserController extends SubscrUserController {
 
 		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null) {
-			return responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
 
 		return updateSubscrUserInternal(subscriber, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @param isPermanent
 	 * @return
@@ -140,7 +141,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @return
 	 */
@@ -151,7 +152,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 		List<SubscrUser> subscrUsers = subscrUserService.findByUsername(username);
 		UsernameCheck validator = new UsernameCheck(username, !subscrUsers.isEmpty());
 
-		return responseOK(validator);
+		return ApiResponse.responseOK(validator);
 	}
 
 }

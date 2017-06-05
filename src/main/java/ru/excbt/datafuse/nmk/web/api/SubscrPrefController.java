@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 
 		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -65,10 +66,10 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 				.filter(i -> i.getSubscrPrefKeyname().equals(subscrPrefKeyname)).findFirst();
 
 		if (result.isPresent()) {
-			return responseOK(ObjectFilters.deletedFilter(result.get()));
+			return ApiResponse.responseOK(ObjectFilters.deletedFilter(result.get()));
 		}
 
-		return responseOK();
+		return ApiResponse.responseOK();
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 		List<String> treeTypes = subscrPrefService.selectSubscrPrefTreeTypes(subscrPrefKeyname);
 
 		if (treeTypes.isEmpty()) {
-			return responseOK();
+			return ApiResponse.responseOK();
 		}
 
 		List<SubscrObjectTree> treeList = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
@@ -90,7 +91,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 		List<SubscrObjectTree> resultList = treeList.stream().filter(i -> treeTypes.contains(i.getObjectTreeType()))
 				.collect(Collectors.toList());
 
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
     /**
@@ -107,7 +108,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 
 		for (SubscrPrefValue v : requestEntityList) {
 			if (v.getSubscriberId() == null || !v.getSubscriberId().equals(subscriberParam.getSubscriberId())) {
-				return responseBadRequest(ApiResult.validationError("Invalid subscriberId in request"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid subscriberId in request"));
 			}
 		}
 

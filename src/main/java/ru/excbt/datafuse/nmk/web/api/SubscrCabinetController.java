@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 		List<ContObjectCabinetInfo> resultList = subscrCabinetService
 				.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 		checkNotNull(resultList);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
     /**
@@ -81,7 +82,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 			return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
 		};
 
-		ResponseEntity<?> result = responseUpdate(actionProcess, (x) -> {
+		ResponseEntity<?> result = ApiResponse.responseUpdate(actionProcess, (x) -> {
 			return errExceptions.isEmpty() ? null : ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(x);
 		});
 
@@ -129,7 +130,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 		checkNotNull(requestEntity.getSubscrUser());
 
 		if (!subscrUserId.equals(requestEntity.getSubscrUser().getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<SubscrUserWrapper>(requestEntity) {
@@ -152,12 +153,12 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
 		SubscrUser subscrUser = subscrCabinetService.selectCabinelSubscrUser(subscrUserId);
 		if (subscrUser == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		SubscrUserWrapper result = new SubscrUserWrapper(subscrUser);
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**

@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -89,7 +90,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll() {
 		List<?> resultList = tariffPlanService.selectTariffPlanList(getCurrentSubscriberId());
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -130,7 +131,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
-				return responseBadRequest(ApiResult.validationError("Invalid rsoOrganizationId"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -138,7 +139,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return responseBadRequest(ApiResult.validationError("Invalid tariffTypeId"));
+				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid tariffTypeId"));
 			}
 
 			tariffPlan.setTariffType(tt);
@@ -149,7 +150,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			for (long contObjectId : contObjectIds) {
 				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
-					return responseBadRequest(ApiResult.validationError("Invalid ContObjectId"));
+					return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
@@ -194,7 +195,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
-				return responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
+				return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -202,7 +203,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return responseBadRequest(ApiResult.badRequest("Invalid tariffTypeId"));
+				return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid tariffTypeId"));
 			}
 			tariffPlan.setTariffType(tt);
 		}
@@ -212,7 +213,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			for (long contObjectId : contObjectIds) {
 				ContObject co = contObjectService.findContObject(contObjectId);
 				if (co == null) {
-					return responseBadRequest(ApiResult.badRequest("Invalid ContObjectId"));
+					return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
@@ -301,7 +302,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
 		List<Organization> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
 				: ObjectFilters.devModeFilter(rsOrganizations);
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 }

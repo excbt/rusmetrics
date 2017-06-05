@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  * Контроллер для работы абонентами для РМА
@@ -56,13 +57,13 @@ public class RmaSubscriberController extends SubscriberController {
 	@RequestMapping(value = "/subscribers", method = RequestMethod.GET)
 	public ResponseEntity<?> getRmaSubscribers() {
 		if (!currentSubscriberService.isRma()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<Subscriber> subscriberList = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
 		List<Subscriber> resultList = ObjectFilters.deletedFilter(subscriberList);
 
-		return responseOK(subscriberService.enhanceSubscriber(resultList));
+		return ApiResponse.responseOK(subscriberService.enhanceSubscriber(resultList));
 	}
 
 	/**
@@ -74,16 +75,16 @@ public class RmaSubscriberController extends SubscriberController {
 	public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
 		if (!currentSubscriberService.isRma()) {
 			logger.warn("Current User is not RMA");
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 
 		if (subscriber.getRmaSubscriberId() == null
 				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
-		return responseOK(subscriber);
+		return ApiResponse.responseOK(subscriber);
 	}
 
 	/**
@@ -175,7 +176,7 @@ public class RmaSubscriberController extends SubscriberController {
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
 		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
-		return responseOK(organizations);
+		return ApiResponse.responseOK(organizations);
 	}
 
 }

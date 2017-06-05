@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.service.widget.HwWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  *
@@ -56,13 +57,13 @@ public class HwWidgetController extends WidgetController {
 	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
 
 		if (contObjectId == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		//		contServiceDataHWaterService.selectLast
@@ -85,7 +86,7 @@ public class HwWidgetController extends WidgetController {
 			result.put("lastHwData", resultData.get(0));
 		}
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
@@ -98,11 +99,11 @@ public class HwWidgetController extends WidgetController {
 	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		if (mode == null || !hwWidgetService.isModeSupported(mode)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
@@ -110,7 +111,7 @@ public class HwWidgetController extends WidgetController {
 		ApiActionProcess<List<ContServiceDataHWater>> action = () -> hwWidgetService.selectChartData(contZpointId,
 				subscriberDateTime, mode.toUpperCase());
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 
 	}
 

@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportTemplateService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
@@ -30,28 +31,28 @@ public class EnergyPassportTemplateResource extends AbstractSubscrApiResource {
     			produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassportTemplates() {
     	List<EnergyPassportTemplateDTO> resultList = energyPassportTemplateService.findAllTemplates();
-    		return responseOK(resultList);
+    		return ApiResponse.responseOK(resultList);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET,
     			produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassportTemplate(@PathVariable("id") Long id) {
     	EnergyPassportTemplateDTO result = energyPassportTemplateService.findOneTemplate(id);
-    	return result != null ? responseOK(result) : responseNoContent();
+    	return result != null ? ApiResponse.responseOK(result) : ApiResponse.responseNoContent();
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET,
         produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassportTemplateNew() {
         EnergyPassportTemplateDTO templateDTO = energyPassportTemplateService.createNewDTO_401();
-        return responseOK(templateDTO);
+        return ApiResponse.responseOK(templateDTO);
     }
 
     @RequestMapping(value = "/newData", method = RequestMethod.GET,
         produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> getEnergyPassportTemplateValues() {
         List<EnergyPassportDataDTO> dataDTOs = energyPassportTemplateService.createNewData();
-        return responseOK(dataDTOs);
+        return ApiResponse.responseOK(dataDTOs);
     }
 
 

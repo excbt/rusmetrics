@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.widget.ElWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  *
@@ -52,11 +53,11 @@ public class ElWidgetController extends WidgetController {
 	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		if (mode == null || !elWidgetService.isModeSupported(mode)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ZonedDateTime d = getSubscriberZonedDateTime();
@@ -64,7 +65,7 @@ public class ElWidgetController extends WidgetController {
 		ApiActionProcess<List<ContServiceDataElCons>> action = () -> ObjectFilters
 				.deletedFilter(elWidgetService.selectChartData(contZpointId, d, mode.toUpperCase()));
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 	}
 
 	/**
@@ -76,13 +77,13 @@ public class ElWidgetController extends WidgetController {
 	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
 
 		if (contObjectId == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
@@ -96,7 +97,7 @@ public class ElWidgetController extends WidgetController {
 				.compareTo(LocalDateUtils.asLocalDate(weatherForecast.getForecastDateTime())) == 0) {
 			result.put("forecastTemp", weatherForecast.getTemperatureValue());
 		}
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 }

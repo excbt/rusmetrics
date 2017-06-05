@@ -36,6 +36,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  * Контроллер для работы с приборами для РМА
@@ -62,7 +63,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -72,7 +73,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			}
 			return ObjectFilters.deletedFilter(deviceObjects);
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
@@ -86,7 +87,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionProcess<DeviceObject> actionProcess = () -> {
@@ -99,15 +100,15 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
 			if (x == null) {
-				return responseNoContent();
+				return ApiResponse.responseNoContent();
 			}
 			if (x.getContObject() == null || !contObjectId.equals(x.getContObject().getId())) {
-				return responseBadRequest();
+				return ApiResponse.responseBadRequest();
 			}
 			return null;
 		};
 
-		return responseOK(actionProcess, extraCheck);
+		return ApiResponse.responseOK(actionProcess, extraCheck);
 
 	}
 
@@ -129,7 +130,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		checkArgument(deviceObject.getId().equals(deviceObjectId));
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		/////////////////////////////////////////////
@@ -159,7 +160,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			result.shareDeviceLoginInfo();
 			return result;
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 	}
 
@@ -208,7 +209,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		checkNotNull(deviceObject.getDeviceModelId());
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionProcess<DeviceObject> actionProcess = () -> {
@@ -238,7 +239,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 	}
 
@@ -255,7 +256,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionVoidProcess actionProcess = () -> {
@@ -265,7 +266,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 				deviceObjectService.deleteDeviceObject(deviceObjectId);
 			}
 		};
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 
 	}
 
@@ -306,7 +307,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return deviceObjectVOs;
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
@@ -327,23 +328,23 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		checkNotNull(deviceObjectId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
-			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
 
 		if (!requestEntity.isNew() && !deviceObjectId.equals(requestEntity.getDeviceObjectId())) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.badRequest("Wrong deviceObjectId (%d) in deviceObjectLoadingSettings ", deviceObjectId));
 		}
 
 		requestEntity.setDeviceObject(deviceObject);
 
 		ApiActionObjectProcess actionProcess = () -> deviceObjectLoadingSettingsService.saveOne(requestEntity);
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
 		//
@@ -374,18 +375,18 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		checkNotNull(deviceObjectId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
-			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+			return ApiResponse.responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
 
 		SubscrDataSource subscrDataSource = deviceObject.getActiveDataSource().getSubscrDataSource();
 
 		if (!requestEntity.isNew() && !subscrDataSource.getId().equals(requestEntity.getSubscrDataSourceId())) {
-			return responseBadRequest(ApiResult
+			return ApiResponse.responseBadRequest(ApiResult
 					.badRequest("Wrong subscrDataSourceId (%d) in subscrDataSourceLoadingSettings ", deviceObjectId));
 		}
 
@@ -393,7 +394,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		ApiActionObjectProcess actionProcess = () -> subscrDataSourceLoadingSettingsService
 				.saveSubscrDataSourceLoadingSettings(requestEntity);
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new ApiActionEntityAdapter<SubscrDataSourceLoadingSettings>(requestEntity) {
 		//
@@ -418,16 +419,16 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			@RequestBody DeviceModel requestEntity) {
 
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (deviceModelId == null || !deviceModelId.equals(requestEntity.getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> deviceModelService.save(requestEntity);
 
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 	}
 
@@ -442,14 +443,14 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {
 
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionProcess<DeviceModel> actionProcess = () -> {
 			return deviceModelService.save(requestEntity);
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 	}
 
 	/**
@@ -462,7 +463,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	public ResponseEntity<?> deleteDeviceModel(@PathVariable("id") Long deviceModelId) {
 
 		if (!isSystemUser()) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionVoidProcess actionProcess = () -> {
@@ -471,7 +472,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceModelService.save(deviceModel);
 		};
 
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 
 	}
 
