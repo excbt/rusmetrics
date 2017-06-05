@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportTemplateService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 import java.util.List;
 

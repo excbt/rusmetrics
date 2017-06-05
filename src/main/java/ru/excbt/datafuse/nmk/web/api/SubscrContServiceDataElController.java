@@ -18,7 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractContServiceDataResource;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractContServiceDataResource;
 import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;

@@ -14,7 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.BuildingTypeDto;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingType;
 import ru.excbt.datafuse.nmk.data.model.keyname.BuildingTypeCategory;
 import ru.excbt.datafuse.nmk.data.service.BuildingTypeService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 
 import java.util.List;
 

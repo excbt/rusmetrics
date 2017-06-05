@@ -11,7 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceTemperatureSstService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 

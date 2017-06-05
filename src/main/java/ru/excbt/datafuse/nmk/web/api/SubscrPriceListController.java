@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 /**
  * Контроллер для работы с прайс листами для абонента

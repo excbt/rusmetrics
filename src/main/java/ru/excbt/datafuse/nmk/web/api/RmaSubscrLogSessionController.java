@@ -14,7 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.service.LogSessionService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 import java.util.List;
 

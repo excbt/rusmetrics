@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api.support;
+package ru.excbt.datafuse.nmk.web.rest.support;
 
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
