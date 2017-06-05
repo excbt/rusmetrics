@@ -1,23 +1,10 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -28,17 +15,18 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с тарифными планами для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.04.2015
@@ -46,7 +34,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @RestController
 @RequestMapping(value = "/api/subscr/tariff")
-public class TariffPlanController extends SubscrApiController {
+public class TariffPlanController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(TariffPlanController.class);
 
@@ -66,7 +54,7 @@ public class TariffPlanController extends SubscrApiController {
 	private OrganizationService organizationService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/option", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -75,7 +63,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/type", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -84,7 +72,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/rso", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -94,7 +82,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -104,7 +92,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rsoOrganizationId
 	 * @return
 	 */
@@ -115,7 +103,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlan
 	 * @return
 	 */
@@ -182,7 +170,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlan
 	 * @return
 	 */
@@ -254,7 +242,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlan
 	 * @return
 	 */
@@ -275,7 +263,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlanId
 	 * @return
 	 */
@@ -289,7 +277,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlanId
 	 * @return
 	 */
@@ -304,7 +292,7 @@ public class TariffPlanController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/rsoOrganizations", method = RequestMethod.GET)

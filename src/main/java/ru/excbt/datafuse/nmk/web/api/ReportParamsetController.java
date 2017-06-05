@@ -1,30 +1,14 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -35,20 +19,21 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с набором параметров отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.04.2015
@@ -56,7 +41,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/reportParamset")
-public class ReportParamsetController extends SubscrApiController {
+public class ReportParamsetController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetController.class);
 
@@ -72,7 +57,7 @@ public class ReportParamsetController extends SubscrApiController {
 	private ReportTypeService reportTypeService;
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @return
 	 */
@@ -90,7 +75,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @return
@@ -109,7 +94,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @return
 	 */
@@ -126,7 +111,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @return
@@ -145,7 +130,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportTemplateId
 	 * @param contObjectIds
@@ -168,7 +153,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @param contObjectIds
@@ -195,7 +180,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @return
@@ -216,7 +201,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @return
@@ -237,7 +222,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param reportTemplate
 	 * @param reportType
@@ -265,7 +250,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param reportTemplate
 	 * @param reportType
@@ -303,7 +288,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return
@@ -348,7 +333,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.GET,
@@ -360,7 +345,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject/available", method = RequestMethod.GET,
@@ -375,7 +360,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectId
 	 * @return
@@ -402,7 +387,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectId
 	 * @return
@@ -424,7 +409,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -452,7 +437,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectId
 	 * @return
@@ -480,7 +465,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -511,7 +496,7 @@ public class ReportParamsetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param paramDirectoryKeyname
 	 * @return
 	 */

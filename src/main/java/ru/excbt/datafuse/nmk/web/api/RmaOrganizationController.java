@@ -1,9 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +9,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/rma/organizations")
-public class RmaOrganizationController extends SubscrApiController {
+public class RmaOrganizationController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaOrganizationController.class);
 
@@ -35,7 +29,7 @@ public class RmaOrganizationController extends SubscrApiController {
 	private OrganizationService organizationService;
 
 	/**
-	 * 
+	 *
 	 * @param xId
 	 * @return
 	 */
@@ -46,7 +40,7 @@ public class RmaOrganizationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @return
 	 */
@@ -57,7 +51,7 @@ public class RmaOrganizationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @param requestEntity
 	 * @return
@@ -97,7 +91,7 @@ public class RmaOrganizationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @param request
 	 * @return
@@ -135,7 +129,7 @@ public class RmaOrganizationController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @param requestEntity
 	 * @return

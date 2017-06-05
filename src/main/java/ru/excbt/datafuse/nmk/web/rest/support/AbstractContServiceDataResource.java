@@ -1,7 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api.support;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+package ru.excbt.datafuse.nmk.web.rest.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,28 +7,33 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
+import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Базовый класс для доступа к данным для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
  *
  */
-public class SubscrContServiceDataWebApiController extends SubscrApiController {
+public abstract class AbstractContServiceDataResource extends AbstractSubscrApiResource {
 
 	@Autowired
 	private ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -100,7 +102,7 @@ public class SubscrContServiceDataWebApiController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType

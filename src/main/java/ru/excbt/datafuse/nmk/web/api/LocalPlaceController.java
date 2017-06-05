@@ -1,30 +1,25 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.support.JodaTimeParser;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceService;
 import ru.excbt.datafuse.nmk.data.service.LocalPlaceTemperatureSstService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/rma")
-public class LocalPlaceController extends SubscrApiController {
+public class LocalPlaceController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceController.class);
 
@@ -35,7 +30,7 @@ public class LocalPlaceController extends SubscrApiController {
 	private LocalPlaceTemperatureSstService localPlaceTemperatureSstService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/localPlaces/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -49,7 +44,7 @@ public class LocalPlaceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param sstDateStr
 	 * @return
@@ -84,7 +79,7 @@ public class LocalPlaceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param requestEntity
 	 * @return
@@ -106,7 +101,7 @@ public class LocalPlaceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param localPlaceId
 	 * @param requestEntity
 	 * @return

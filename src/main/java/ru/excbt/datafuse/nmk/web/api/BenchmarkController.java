@@ -6,13 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 /**
  * Контроллер для замера отклика системы
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.11.2015
@@ -20,13 +20,13 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
  */
 @Controller
 @RequestMapping("/api/benchmark")
-public class BenchmarkController extends WebApiController {
+public class BenchmarkController extends AbstractApiResource {
 
 	@Autowired
 	private BenchmarkService benchmarkService;
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -43,7 +43,7 @@ public class BenchmarkController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

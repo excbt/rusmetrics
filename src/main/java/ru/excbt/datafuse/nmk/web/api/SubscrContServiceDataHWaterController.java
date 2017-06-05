@@ -1,29 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
-import javax.persistence.Tuple;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.uuid.Generators;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
@@ -47,41 +25,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.uuid.Generators;
-
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
-import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
+import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterDeltaService;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterImportService;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.data.service.ReportService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberExecutorService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
+
+import javax.persistence.Tuple;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с данными по теплоснабжению для абонента
@@ -93,7 +59,7 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataHWaterController extends SubscrApiController {
+public class SubscrContServiceDataHWaterController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterController.class);
 

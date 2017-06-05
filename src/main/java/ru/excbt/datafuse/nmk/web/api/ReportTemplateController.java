@@ -1,38 +1,28 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с шаблонами отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.04.2015
@@ -40,7 +30,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
-public class ReportTemplateController extends SubscrApiController {
+public class ReportTemplateController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateController.class);
 
@@ -51,7 +41,7 @@ public class ReportTemplateController extends SubscrApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @return
 	 */
@@ -72,7 +62,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -92,7 +82,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportTemplateId
 	 * @return
@@ -115,7 +105,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportTemplateId
 	 * @param reportTemplate
@@ -136,7 +126,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportTemplateId
 	 * @return
@@ -155,7 +145,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -172,7 +162,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param reportTemplate
 	 * @param reportType
@@ -197,7 +187,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -236,7 +226,7 @@ public class ReportTemplateController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return

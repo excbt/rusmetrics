@@ -1,11 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
@@ -29,29 +22,18 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
-import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
+import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
-import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
-import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
-import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV2Service;
-import ru.excbt.datafuse.nmk.data.service.ContEventService;
-import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с уведомлениями абонента
@@ -63,7 +45,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping("/api/subscr/contEvent")
-public class SubscrContEventNotificationController extends SubscrApiController {
+public class SubscrContEventNotificationController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationController.class);
 

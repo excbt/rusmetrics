@@ -1,10 +1,11 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest.support;
 
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.web.api.WebApiHelper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
@@ -36,13 +37,13 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Базовый класс для контроллера
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 02.04.2015
  *
  */
-public class WebApiController {
+public abstract class AbstractApiResource {
 
 	public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
 
@@ -64,7 +65,7 @@ public class WebApiController {
 	protected ModelMapper modelMapper;
 
 	/**
-	 * 
+	 *
 	 * @param currentEntity
 	 * @param newEntity
 	 */
@@ -73,7 +74,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ResponseEntity<?> responseForbidden() {
@@ -81,7 +82,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ResponseEntity<?> responseNotFound() {
@@ -89,7 +90,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ResponseEntity<?> responseNoContent() {
@@ -97,7 +98,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ResponseEntity<?> responseBadRequest() {
@@ -105,7 +106,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ResponseEntity<?> responseOK() {
@@ -113,7 +114,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected <T> ResponseEntity<?> responseOK(final ApiActionProcess<T> actionProcess) {
@@ -121,7 +122,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @param extraCheck
 	 * @return
@@ -132,7 +133,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected ResponseEntity<?> responseOK(Object body) {
@@ -140,7 +141,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param apiResult
 	 * @return
 	 */
@@ -149,7 +150,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -158,7 +159,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @param extraCheck
 	 * @return
@@ -169,7 +170,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param actionProcess
 	 * @return
 	 */
@@ -180,7 +181,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	protected <T> ResponseEntity<?> responseDelete(final ApiActionProcess<T> actionProcess) {
@@ -188,7 +189,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param apiResult
 	 * @return
 	 */
@@ -197,7 +198,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param apiResult
 	 * @return
 	 */
@@ -206,7 +207,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param apiResult
 	 * @return
 	 */
@@ -215,7 +216,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param is
 	 * @param mediaType
 	 * @param contentLength
@@ -231,7 +232,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param is
 	 * @param mediaType
 	 * @param contentLength
@@ -248,7 +249,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param resource
 	 * @param mediaType
 	 * @param file
@@ -261,7 +262,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param resource
 	 * @param mediaType
 	 * @param contentLength
@@ -291,7 +292,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param datePeriodParser
 	 * @param dateFromStr
 	 * @param dateToStr
@@ -316,7 +317,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param resource
 	 * @param mediaType
 	 * @param contentLength
@@ -330,7 +331,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcList
 	 * @param destClass
 	 * @return
@@ -341,7 +342,7 @@ public class WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcStream
 	 * @param destClass
 	 * @return

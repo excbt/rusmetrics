@@ -1,11 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.LogSession;
@@ -25,14 +18,19 @@ import ru.excbt.datafuse.nmk.data.model.support.SessionDetailTypeInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SessionDetailTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrSessionTaskService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/api/rma/subscrSessionTask")
-public class RmaSubscrSessionTaskController extends SubscrApiController {
+public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrSessionTaskController.class);
 
@@ -46,7 +44,7 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 	private SessionDetailTypeService sessionDetailTypeService;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -58,7 +56,7 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @return
 	 */
@@ -91,7 +89,7 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -121,7 +119,7 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -155,7 +153,7 @@ public class RmaSubscrSessionTaskController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrSessionTaskId
 	 * @return
 	 */

@@ -1,36 +1,31 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Контроллер для работы с расписанием отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.04.2015
@@ -38,7 +33,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
  */
 @Controller
 @RequestMapping(value = "/api/reportShedule")
-public class ReportSheduleController extends WebApiController {
+public class ReportSheduleController extends AbstractApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleController.class);
 
@@ -52,7 +47,7 @@ public class ReportSheduleController extends WebApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -70,7 +65,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -85,7 +80,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
@@ -99,7 +94,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
@@ -112,7 +107,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return
@@ -173,7 +168,7 @@ public class ReportSheduleController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @param reportParamset
 	 * @return

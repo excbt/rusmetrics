@@ -1,38 +1,28 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с заданиями абонентов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.04.2015
@@ -40,7 +30,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping("/api/subscr/subscrAction")
-public class SubscrActionController extends SubscrApiController {
+public class SubscrActionController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrActionController.class);
 
@@ -54,7 +44,7 @@ public class SubscrActionController extends SubscrApiController {
 	private SubscrActionUserGroupService subscrActionUserGroupService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -64,7 +54,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -74,7 +64,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -84,7 +74,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param entity
 	 * @return
@@ -116,7 +106,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return
@@ -152,7 +142,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return
@@ -169,7 +159,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -179,7 +169,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -189,7 +179,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -199,7 +189,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param entity
 	 * @return
@@ -230,7 +220,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return
@@ -266,7 +256,7 @@ public class SubscrActionController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplareId
 	 * @param reportTemplate
 	 * @return

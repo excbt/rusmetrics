@@ -1,17 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
@@ -36,12 +18,17 @@ import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы с отчетами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.04.2015
@@ -49,7 +36,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/reportService")
-public class ReportServiceController extends SubscrApiController {
+public class ReportServiceController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportServiceController.class);
 
@@ -68,7 +55,7 @@ public class ReportServiceController extends SubscrApiController {
 	private ReportPeriodService reportPeriodService;
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -80,7 +67,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -103,7 +90,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param request
 	 * @return
@@ -127,7 +114,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @param request
@@ -151,7 +138,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @param contObjectIds
@@ -196,7 +183,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 * @param reportParamset
@@ -224,7 +211,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 * @param reportParamset
@@ -252,7 +239,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 * @param reportParamset
@@ -281,7 +268,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 * @param reportParamset
@@ -310,7 +297,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportMakerParam
 	 * @param reportMaker
 	 * @param request
@@ -372,7 +359,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */
@@ -381,7 +368,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param defaultFileName
 	 * @return
 	 */
@@ -397,7 +384,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 */
 	private void setupReportParamset(ReportParamset reportParamset) {
@@ -414,7 +401,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 * @param reportParamset
@@ -453,7 +440,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @param contObjectId
@@ -482,7 +469,7 @@ public class ReportServiceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportUrlName
 	 * @param reportParamsetId
 	 * @param contObjectId

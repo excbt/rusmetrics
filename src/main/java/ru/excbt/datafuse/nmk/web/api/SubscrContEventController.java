@@ -1,9 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +14,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.google.common.collect.Lists;
-
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Контроллер для работы с контейнерами учета для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.02.2015
@@ -35,7 +33,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContEventController extends SubscrApiController {
+public class SubscrContEventController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventController.class);
 
@@ -43,7 +41,7 @@ public class SubscrContEventController extends SubscrApiController {
 	private ContEventService contEventService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -55,7 +53,7 @@ public class SubscrContEventController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -65,7 +63,7 @@ public class SubscrContEventController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param startDate
 	 * @param endDate
 	 * @param contObjectIds
@@ -117,7 +115,7 @@ public class SubscrContEventController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param startDate
 	 * @param endDate
 	 * @param contObjectIds

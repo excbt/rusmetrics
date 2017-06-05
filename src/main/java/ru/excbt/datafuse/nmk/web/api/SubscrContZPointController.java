@@ -1,51 +1,36 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.google.common.collect.ImmutableMap;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
-import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
-import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
-import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
+import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
-import ru.excbt.datafuse.nmk.data.service.ContZPointMetadataService;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
-import ru.excbt.datafuse.nmk.data.service.MeasureUnitService;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с точками учета для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 26.02.2015
@@ -53,7 +38,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointController extends SubscrApiController {
+public class SubscrContZPointController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointController.class);
 
@@ -76,7 +61,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	protected OrganizationService organizationService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -88,7 +73,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -100,7 +85,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -112,7 +97,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -124,7 +109,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param id
@@ -161,7 +146,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -184,7 +169,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -196,7 +181,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/zpoints/shortInfo", method = RequestMethod.GET,
@@ -210,7 +195,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/contServiceTypes", method = RequestMethod.GET,
@@ -222,7 +207,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -246,7 +231,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -272,7 +257,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/rsoOrganizations", method = RequestMethod.GET)
@@ -288,7 +273,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -316,7 +301,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -338,7 +323,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -363,7 +348,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -388,7 +373,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return

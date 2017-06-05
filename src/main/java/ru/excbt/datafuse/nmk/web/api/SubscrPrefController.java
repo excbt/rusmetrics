@@ -1,11 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +9,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPrefService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrPrefController extends SubscrApiController {
+public class SubscrPrefController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrPrefController.class);
 
@@ -40,7 +39,7 @@ public class SubscrPrefController extends SubscrApiController {
 	private SubscrObjectTreeService subscrObjectTreeService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -52,7 +51,7 @@ public class SubscrPrefController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPrefKeyname
 	 * @return
 	 */
@@ -72,7 +71,7 @@ public class SubscrPrefController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrPrefValues/objectTreeTypes", method = RequestMethod.GET,
@@ -94,7 +93,7 @@ public class SubscrPrefController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @return
 	 */

@@ -1,10 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +9,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с настройками точки учета для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 01.04.2015
@@ -32,7 +32,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointSettingModeController extends WebApiController {
+public class SubscrContZPointSettingModeController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointSettingModeController.class);
 
@@ -43,7 +43,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	private ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @return
@@ -70,7 +70,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param id

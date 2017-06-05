@@ -1,13 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
@@ -24,24 +15,25 @@ import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.RawModemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Класс для доступа к источника данных
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.10.2015
  *
  */
-public class SubscrDataSourceController extends SubscrApiController {
+public class SubscrDataSourceController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDataSourceController.class);
 
@@ -55,7 +47,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	private RawModemService rawModemService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -65,7 +57,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSourceId
 	 * @return
 	 */
@@ -76,7 +68,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSource
 	 * @return
 	 */
@@ -112,7 +104,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSourceId
 	 * @param subscrDataSource
 	 * @return
@@ -139,7 +131,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSourceId
 	 * @return
 	 */
@@ -162,7 +154,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSourceTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -173,7 +165,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.GET,
@@ -184,7 +176,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rawModemModelId
 	 * @return
 	 */
@@ -196,7 +188,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rawModemModelId
 	 * @param requestEntity
 	 * @return
@@ -223,7 +215,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @param request
 	 * @return
@@ -258,7 +250,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rawModemModelId
 	 * @return
 	 */
@@ -282,7 +274,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/rawModemModelIdentity", method = RequestMethod.GET,

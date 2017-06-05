@@ -4,16 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
-import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport_X;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -24,7 +23,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/subscr/energy-passports")
-public class EnergyPassportResource extends SubscrApiController {
+public class EnergyPassportResource extends AbstractSubscrApiResource {
 
     private final EnergyPassportService energyPassportService;
 

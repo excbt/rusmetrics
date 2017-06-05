@@ -1,25 +1,25 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.service.support.AppVersionService;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/api/appStatus")
-public class AppStatusController extends WebApiController {
+public class AppStatusController extends AbstractApiResource {
 
 	@Autowired
 	private AppVersionService appVersionService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/version", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -34,7 +34,7 @@ public class AppStatusController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param httpSession
 	 * @return
 	 */
@@ -51,7 +51,7 @@ public class AppStatusController extends WebApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param httpSession
 	 * @return
 	 */
