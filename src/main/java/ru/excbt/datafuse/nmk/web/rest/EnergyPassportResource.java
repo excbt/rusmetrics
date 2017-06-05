@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -212,7 +212,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
 
 
     /**
-     * 
+     *
      * @param contObjectId
      * @param energyPassportVM
      * @return
