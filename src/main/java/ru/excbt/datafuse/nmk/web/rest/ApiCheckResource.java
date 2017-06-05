@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.controller.rest;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 @Controller
 @RequestMapping(value = "/rest/check")
-public class RestCheckController {
+public class ApiCheckResource {
 
 	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
