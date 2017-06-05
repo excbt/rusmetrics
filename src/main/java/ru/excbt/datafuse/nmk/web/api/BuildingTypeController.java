@@ -3,6 +3,7 @@
  */
 package ru.excbt.datafuse.nmk.web.api;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,10 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  *
@@ -34,7 +39,23 @@ public class BuildingTypeController extends AbstractApiResource {
 	@Autowired
 	private BuildingTypeService buildingTypeService;
 
-	/**
+    @Autowired
+    protected ModelMapper modelMapper;
+
+    /**
+     *
+     * @param srcStream
+     * @param destClass
+     * @return
+     */
+    private <S, M> List<M> makeModelMapper(Stream<S> srcStream, Class<M> destClass) {
+        checkNotNull(srcStream);
+        return srcStream.map((i) -> modelMapper.map(i, destClass)).collect(Collectors.toList());
+    }
+
+
+
+    /**
 	 *
 	 * @return
 	 */
