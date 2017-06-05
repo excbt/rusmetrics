@@ -89,11 +89,11 @@ public abstract class AbstractSubscrApiResource {
 		return subscrContObjectService.canAccessContZPoint(getCurrentSubscriberId(), contZPointIds);
 	}
 
-	/**
-	 *
-	 * @param contZPointIds
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointId
+     * @return
+     */
 	protected boolean canAccessContZPoint(Long contZPointId) {
 		checkNotNull(contZPointId);
 		Long[] contObjectIds = new Long[] { contZPointId };
@@ -208,12 +208,13 @@ public abstract class AbstractSubscrApiResource {
 		return filterObjectAccess(objectList, getSubscriberParam());
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param objectList
-	 * @return
-	 */
+    /**
+     * 
+     * @param objectList
+     * @param subscriberParam
+     * @param <T>
+     * @return
+     */
 	protected <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam) {
 		checkNotNull(objectList);
 
