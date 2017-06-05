@@ -35,7 +35,7 @@ import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiController;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractContServiceDataResource;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import javax.persistence.Tuple;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataImpulseController extends SubscrContServiceDataWebApiController {
+public class SubscrContServiceDataImpulseController extends AbstractContServiceDataResource {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataImpulseController.class);
 

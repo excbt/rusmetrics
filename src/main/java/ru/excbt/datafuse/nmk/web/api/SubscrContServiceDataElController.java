@@ -1,9 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
@@ -23,14 +18,18 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractContServiceDataResource;
 import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiController;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с данными по электричеству для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
@@ -38,13 +37,13 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiControll
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataElController extends SubscrContServiceDataWebApiController {
+public class SubscrContServiceDataElController extends AbstractContServiceDataResource {
 
 	@Autowired
 	private ContServiceDataElService contServiceDataElService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -81,7 +80,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -114,7 +113,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -146,7 +145,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -183,7 +182,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -215,7 +214,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -247,7 +246,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -285,7 +284,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType

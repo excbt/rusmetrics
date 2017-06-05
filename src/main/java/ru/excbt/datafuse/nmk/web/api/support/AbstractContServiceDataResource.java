@@ -19,19 +19,19 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 
 /**
  * Базовый класс для доступа к данным для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
  *
  */
-public class SubscrContServiceDataWebApiController extends SubscrApiController {
+public class AbstractContServiceDataResource extends SubscrApiController {
 
 	@Autowired
 	private ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -100,7 +100,7 @@ public class SubscrContServiceDataWebApiController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
