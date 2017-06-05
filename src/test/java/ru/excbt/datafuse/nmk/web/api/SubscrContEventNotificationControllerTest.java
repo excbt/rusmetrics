@@ -48,7 +48,7 @@ import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-import ru.excbt.datafuse.nmk.web.api.support.WebApiController;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractApiResource;
 
 
 @Transactional
@@ -158,7 +158,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(AbstractApiResource.APPLICATION_JSON_UTF8));
 	}
 
 	/**

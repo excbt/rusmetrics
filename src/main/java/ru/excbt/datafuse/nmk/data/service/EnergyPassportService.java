@@ -534,17 +534,19 @@ public class EnergyPassportService {
             "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "февраля"};
 
         Properties vars = new Properties();
-        int yyyy = energyPassport.getPassportDate().getYear();
-        int dd = energyPassport.getPassportDate().getDayOfMonth();
-        int mm = energyPassport.getPassportDate().getMonth().getValue();
-        vars.put(Pattern.quote(JsonVars.DD), Integer.toString(dd));
-        vars.put(Pattern.quote(JsonVars.MONTH1), monthNames[mm - 1]);
-        vars.put(Pattern.quote(JsonVars.YYYY), Integer.toString(yyyy));
-        vars.put(Pattern.quote(JsonVars.YYYY_1), Integer.toString(yyyy-1));
-        vars.put(Pattern.quote(JsonVars.YYYY_2), Integer.toString(yyyy-2));
-        vars.put(Pattern.quote(JsonVars.YYYY_3), Integer.toString(yyyy-3));
-        vars.put(Pattern.quote(JsonVars.YYYY_4), Integer.toString(yyyy-4));
-        vars.put(Pattern.quote(JsonVars.YYYY_5), Integer.toString(yyyy-5));
+        if (energyPassport.getPassportDate() != null) {
+            int yyyy = energyPassport.getPassportDate().getYear();
+            int dd = energyPassport.getPassportDate().getDayOfMonth();
+            int mm = energyPassport.getPassportDate().getMonth().getValue();
+            vars.put(Pattern.quote(JsonVars.DD), Integer.toString(dd));
+            vars.put(Pattern.quote(JsonVars.MONTH1), monthNames[mm - 1]);
+            vars.put(Pattern.quote(JsonVars.YYYY), Integer.toString(yyyy));
+            vars.put(Pattern.quote(JsonVars.YYYY_1), Integer.toString(yyyy-1));
+            vars.put(Pattern.quote(JsonVars.YYYY_2), Integer.toString(yyyy-2));
+            vars.put(Pattern.quote(JsonVars.YYYY_3), Integer.toString(yyyy-3));
+            vars.put(Pattern.quote(JsonVars.YYYY_4), Integer.toString(yyyy-4));
+            vars.put(Pattern.quote(JsonVars.YYYY_5), Integer.toString(yyyy-5));
+        }
         return vars;
     }
 
