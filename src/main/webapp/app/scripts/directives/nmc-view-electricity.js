@@ -13,7 +13,7 @@ app.directive('nmcViewElectricity', function () {
             chartFlag: "=chart"
         },
         templateUrl: 'scripts/directives/templates/nmc-view-electricity.html',
-        controller: ['$scope, $element, $attrs, $http, notificationFactory, mainSvc, $timeout, $window', function ($scope, $element, $attrs, $http, notificationFactory, mainSvc, $timeout, $window) {
+        controller: ['$scope', '$element', '$attrs', '$http', 'notificationFactory', 'mainSvc', '$timeout', function ($scope, $element, $attrs, $http, notificationFactory, mainSvc, $timeout) {
             
             $scope.dirSettings = {};
             $scope.dirSettings.userFormat = "DD.MM.YYYY"; //date format
