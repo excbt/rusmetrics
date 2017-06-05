@@ -13,15 +13,14 @@ import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterController;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataImpulseController;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataResource extends SubscrApiController {
+public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
 
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataResource.class);

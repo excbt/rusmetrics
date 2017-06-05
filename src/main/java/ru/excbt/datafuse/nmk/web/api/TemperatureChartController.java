@@ -1,9 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
 import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/rma")
-public class TemperatureChartController extends SubscrApiController {
+public class TemperatureChartController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartController.class);
 
@@ -35,7 +28,7 @@ public class TemperatureChartController extends SubscrApiController {
 	private TemperatureChartService temperatureChartService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -45,7 +38,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param requestEntity
 	 * @param request
@@ -71,7 +64,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param requestEntity
 	 * @return
@@ -92,7 +85,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @return
 	 */
@@ -112,7 +105,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -124,7 +117,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @return
 	 */
@@ -136,7 +129,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param requestEntity
 	 * @param request
@@ -166,7 +159,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartItemId
 	 * @param requestEntity
 	 * @return
@@ -188,7 +181,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param temperatureChartItemId
 	 * @return
@@ -210,7 +203,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -222,7 +215,7 @@ public class TemperatureChartController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */

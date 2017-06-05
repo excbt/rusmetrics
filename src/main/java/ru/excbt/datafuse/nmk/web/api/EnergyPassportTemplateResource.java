@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportTemplateDTO;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportTemplateService;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/energy-passport-templates")
-public class EnergyPassportTemplateResource extends SubscrApiController {
+public class EnergyPassportTemplateResource extends AbstractSubscrApiResource {
 
     private final EnergyPassportTemplateService energyPassportTemplateService;
 

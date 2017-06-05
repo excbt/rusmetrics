@@ -1,12 +1,7 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api;
-
-import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
-import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,28 +10,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
+import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import java.util.List;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 20.02.2017
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class MeterPeriodSettingController extends SubscrApiController {
+public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private MeterPeriodSettingService meterPeriodSettingService;
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @return
 	 */
@@ -57,7 +55,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param meterPeriodSettingDTO
 	 * @param request
 	 * @return
@@ -68,8 +66,8 @@ public class MeterPeriodSettingController extends SubscrApiController {
 
 		if (meterPeriodSettingDTO.getId() != null) {
 			return responseBadRequest();
-		}		
-		
+		}
+
 		ApiActionProcess<MeterPeriodSettingDTO> process = () -> {
 			return meterPeriodSettingService.save(meterPeriodSettingDTO);
 		};
@@ -78,7 +76,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -92,7 +90,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -104,7 +102,7 @@ public class MeterPeriodSettingController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.GET,

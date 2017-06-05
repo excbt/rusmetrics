@@ -1,9 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,25 +10,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
-import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServicePriceService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для работы с управляющими организациями для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.09.2015
@@ -40,7 +35,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscServiceManageController extends SubscrApiController {
+public class SubscServiceManageController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscServiceManageController.class);
 
@@ -60,7 +55,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	private SubscrPriceListService subscrPriceListService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/manage/service/servicePackList", method = RequestMethod.GET)
@@ -71,7 +66,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/manage/service/serviceItemList", method = RequestMethod.GET)
@@ -82,7 +77,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/manage/service/servicePriceList", method = RequestMethod.GET)
@@ -98,7 +93,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -108,7 +103,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -118,7 +113,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -138,7 +133,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscriberAccessList
 	 * @return
@@ -162,7 +157,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberAccessList
 	 * @return
 	 */
@@ -184,7 +179,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/manage/service/permissions", method = RequestMethod.GET)
@@ -197,7 +192,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */

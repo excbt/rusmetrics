@@ -1,13 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +9,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Контроллер для работы параметрами унивесального справочника
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.03.2015
@@ -39,7 +30,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryParamController extends SubscrApiController {
+public class UDirectoryParamController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(UDirectoryParamController.class);
 
@@ -50,7 +41,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	private UDirectoryService directoryService;
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @return
 	 */
@@ -61,7 +52,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @return
 	 */
@@ -76,7 +67,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @param id
 	 * @param uDirectoryParam
@@ -107,7 +98,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @param uDirectoryParam
 	 * @return
@@ -141,7 +132,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @param paramId
 	 * @return

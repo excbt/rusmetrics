@@ -1,32 +1,30 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.service.SubscrVCookieService;
 import ru.excbt.datafuse.nmk.data.service.WidgetMetaService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping(value = "/api/subscr/vcookie")
-public class SubscrVCookieController extends SubscrApiController {
+public class SubscrVCookieController extends AbstractSubscrApiResource {
 
 	@Inject
 	private SubscrVCookieService subscrVCookieService;
@@ -35,7 +33,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	private WidgetMetaService widgetMetaService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -56,7 +54,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntities
 	 * @return
 	 */
@@ -96,7 +94,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntities
 	 * @param request
 	 * @return
@@ -144,7 +142,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/user", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -165,7 +163,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntities
 	 * @return
 	 */
@@ -207,7 +205,7 @@ public class SubscrVCookieController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/widgets/list", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)

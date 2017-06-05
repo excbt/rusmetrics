@@ -1,25 +1,10 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
@@ -28,23 +13,20 @@ import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrObjectTreeController extends SubscrApiController {
+public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 	private static final String INVALID_SUBSCRIBER_MSG = "Invalid subscriberId (%d)";
 
@@ -67,8 +49,8 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	protected SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since 08.04.2016
@@ -100,7 +82,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 	/**
 	 * Same as RmaSubscrObjectTreeController
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @return
@@ -122,8 +104,8 @@ public class SubscrObjectTreeController extends SubscrApiController {
 
 	/**
 	 * Same as RmaSubscrObjectTreeController
-	 * 
-	 * 
+	 *
+	 *
 	 * @param objectTreeType
 	 * @return
 	 */
@@ -142,7 +124,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
@@ -168,7 +150,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
@@ -220,7 +202,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @return
@@ -249,7 +231,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @return
@@ -280,7 +262,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 			viewContObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
 					treeContObjectIds);
 		}
-		////		
+		////
 
 		List<ContObject> result = viewContObjects;
 
@@ -288,7 +270,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestBody
 	 * @param request
 	 * @return
@@ -334,7 +316,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param requestEntity
@@ -374,7 +356,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @return
@@ -408,7 +390,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
@@ -446,7 +428,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
@@ -498,7 +480,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
@@ -550,7 +532,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -564,7 +546,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId
@@ -606,7 +588,7 @@ public class SubscrObjectTreeController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
 	 * @param childSubscrObjectTreeId

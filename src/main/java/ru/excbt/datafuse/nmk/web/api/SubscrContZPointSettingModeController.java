@@ -13,8 +13,8 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 
 import java.util.List;
@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointSettingModeController extends AbstractApiResource {
+public class SubscrContZPointSettingModeController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointSettingModeController.class);
 

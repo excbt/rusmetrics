@@ -1,12 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +10,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * 
- * 
+ *
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 28.04.2016
@@ -39,7 +37,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/subscr/subscrCabinet")
-public class SubscrCabinetController extends SubscrApiController {
+public class SubscrCabinetController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetController.class);
 
@@ -47,7 +45,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	private SubscrCabinetService subscrCabinetService;
 
 	/**
-	 * 
+	 *
 	 * @param xId
 	 * @return
 	 */
@@ -60,7 +58,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @return
 	 */
@@ -72,7 +70,7 @@ public class SubscrCabinetController extends SubscrApiController {
 		ApiActionObjectProcess actionProcess = () -> {
 			for (Long contObjectId : cabinetContObjectList) {
 				try {
-					//SubscrCabinetInfo cabinetInfo = 
+					//SubscrCabinetInfo cabinetInfo =
 					subscrCabinetService.createSubscrUserCabinet(getCurrentSubscriber(), new Long[] { contObjectId });
 				} catch (PersistenceException e) {
 					errExceptions.add(e);
@@ -91,7 +89,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestEntity
 	 * @return
 	 */
@@ -105,7 +103,7 @@ public class SubscrCabinetController extends SubscrApiController {
 
 				for (Long childSubscriberId : childSubscriberList) {
 					try {
-						//SubscrCabinetInfo cabinetInfo = 
+						//SubscrCabinetInfo cabinetInfo =
 						subscrCabinetService.deleteSubscrUserCabinet(childSubscriberId);
 					} catch (PersistenceException e) {
 					}
@@ -117,7 +115,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @param requestEntity
 	 * @return
@@ -146,7 +144,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -163,7 +161,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserIds
 	 * @return
 	 */
@@ -191,7 +189,7 @@ public class SubscrCabinetController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserIds
 	 * @return
 	 */

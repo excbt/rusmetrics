@@ -1,10 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
 import ru.excbt.datafuse.nmk.data.model.keyname.ExSystem;
@@ -29,13 +23,18 @@ import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для получения информации по системе
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 28.04.2015
@@ -43,7 +42,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/systemInfo")
-public class SystemInfoController extends SubscrApiController {
+public class SystemInfoController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private SystemParamService systemParamService;
@@ -64,7 +63,7 @@ public class SystemInfoController extends SubscrApiController {
 	private ModelMapper modelMapper;
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -81,7 +80,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -102,7 +101,7 @@ public class SystemInfoController extends SubscrApiController {
 	private LdapService ldapService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -116,7 +115,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/readOnlyMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -136,7 +135,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/samlAuthMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -151,7 +150,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param oldPassword
 	 * @param newPassword
 	 * @return
@@ -182,7 +181,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/serverName", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -192,7 +191,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/invalidateAllSessions", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -216,7 +215,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
@@ -225,7 +224,7 @@ public class SystemInfoController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@GetMapping(value = "/exSystem", produces = APPLICATION_JSON_UTF8)

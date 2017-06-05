@@ -1,10 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.LogSessionStep;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
@@ -20,11 +14,15 @@ import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.service.LogSessionService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping(value = "/api/rma/logSessions")
-public class RmaSubscrLogSessionController extends SubscrApiController {
+public class RmaSubscrLogSessionController extends AbstractSubscrApiResource {
 
 	private final LogSessionService logSessionService;
 

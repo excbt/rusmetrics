@@ -1,12 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,19 +7,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeSmsService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с настройками смс уведомлений
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.12.2015
@@ -34,13 +32,13 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping("/api/subscr/contEventSms")
-public class SubscrContEventTypeSmsController extends SubscrApiController {
+public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private SubscrContEventTypeSmsService subscrContEventTypeSmsService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/availableContEventTypes", method = RequestMethod.GET)
@@ -50,7 +48,7 @@ public class SubscrContEventTypeSmsController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/contEventTypes", method = RequestMethod.GET)
@@ -61,7 +59,7 @@ public class SubscrContEventTypeSmsController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventTypeId
 	 * @param smsAddrList
 	 * @param request

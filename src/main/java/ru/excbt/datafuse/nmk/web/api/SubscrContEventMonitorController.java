@@ -1,31 +1,30 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationStatusV2Service;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping("/api/subscr/contEventMonitor")
-public class SubscrContEventMonitorController extends SubscrApiController {
+public class SubscrContEventMonitorController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
 	/**
-	 * 
+	 *
 	 * @param fromDateStr
 	 * @param toDateStr
 	 * @return

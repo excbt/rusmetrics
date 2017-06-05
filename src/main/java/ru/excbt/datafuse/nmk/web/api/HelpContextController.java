@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.HelpContext;
 import ru.excbt.datafuse.nmk.data.service.HelpContextService;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractSubscrApiResource;
 
 @Controller
 @RequestMapping(value = "/api/help")
-public class HelpContextController extends SubscrApiController {
+public class HelpContextController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(HelpContextController.class);
 
@@ -27,7 +26,7 @@ public class HelpContextController extends SubscrApiController {
 	private HelpContextService helpContextService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isHelpContextSetupEnable() {
@@ -40,7 +39,7 @@ public class HelpContextController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -52,7 +51,7 @@ public class HelpContextController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param anchorId
 	 * @return
 	 */
@@ -67,7 +66,7 @@ public class HelpContextController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param anchorId
 	 * @return
 	 */
@@ -81,7 +80,7 @@ public class HelpContextController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param anchorId
 	 * @return
 	 */
@@ -96,7 +95,7 @@ public class HelpContextController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param anchorId
 	 * @param model
 	 * @return
@@ -115,7 +114,7 @@ public class HelpContextController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param anchorId
 	 * @return
 	 */

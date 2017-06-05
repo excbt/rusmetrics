@@ -28,9 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 20.07.2015
  *
  */
-public class SubscrApiController extends AbstractApiResource {
+public abstract class AbstractSubscrApiResource extends AbstractApiResource {
 
-	private static final Logger log = LoggerFactory.getLogger(SubscrApiController.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractSubscrApiResource.class);
 
 	@Autowired
 	protected SubscriberService subscriberService;

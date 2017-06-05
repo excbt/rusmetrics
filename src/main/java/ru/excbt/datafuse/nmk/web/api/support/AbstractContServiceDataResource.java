@@ -1,8 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,12 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Базовый класс для доступа к данным для абонента
@@ -25,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
  * @since 15.12.2015
  *
  */
-public class AbstractContServiceDataResource extends SubscrApiController {
+public abstract class AbstractContServiceDataResource extends AbstractSubscrApiResource {
 
 	@Autowired
 	private ContZPointService contZPointService;
