@@ -81,6 +81,10 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'documentsEnergoPassportsCtrl2'
         })
 */
+        .when('/documents/object-passport/:param', {
+            templateUrl: 'views/documents-object-passport.html',
+            controller: 'documentsObjectPassportCtrl'
+        })
         .when('/notices/list', {
             templateUrl: 'views/notice.html',
             controller: 'NoticeCtrl',
