@@ -5,9 +5,9 @@ var app = angular.module('portalNMC');
 app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function (mainSvc, $http, $q, $timeout) {
     var service = {};
     
-    var PASSPORT_URL_OLD = "../api/energy-passport-templates",
-        PASSPORT_URL_OLD_NEW = PASSPORT_URL_OLD + "/new",
-        PASSPORT_URL = "../api/subscr/energy-passports",
+//    var PASSPORT_URL_OLD = "../api/energy-passport-templates",
+//        PASSPORT_URL_OLD_NEW = PASSPORT_URL_OLD + "/new",
+    var PASSPORT_URL = "../api/subscr/energy-passports",
         CONT_OBJECT_PASSPORT_URL = PASSPORT_URL + "/cont-objects";
     
 //    var documentTypes = [
@@ -72,9 +72,9 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         return energyDeclarationForms;
     }
     
-    function createPassportOld() {
-        return $http.get(PASSPORT_URL_OLD_NEW);
-    }
+//    function createPassportOld() {
+//        return $http.get(PASSPORT_URL_OLD_NEW);
+//    }
     
 //    function addQueryParam(url, paramName, paramValue) {
 //        if (!mainSvc.checkUndefinedNull(paramValue)) {

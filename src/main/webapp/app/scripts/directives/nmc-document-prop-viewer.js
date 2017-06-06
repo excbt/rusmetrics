@@ -17,6 +17,7 @@ angular.module('portalNMC').directive('nmcDocumentPropViewer', function () {
             
             $scope.data = {};
             $scope.data.documentTypes = energoPassportSvc.getDocumentTypes();
+            $scope.data.energyDeclarationForms = energoPassportSvc.getEnergyDeclarationForms();
             
 //            $scope.isReadOnly = function () {
 //                return mainSvc.isReadonly();

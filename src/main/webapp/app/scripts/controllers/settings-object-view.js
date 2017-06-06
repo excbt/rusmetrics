@@ -3151,7 +3151,7 @@ angular.module('portalNMC')
             }
                 
             function loadContObjectPassports(contObject) {                
-                
+                $scope.data.currentContObjectPassports = [];
                 if (passportRequestCanceller !== null) {
                     passportRequestCanceller.resolve();
                 }

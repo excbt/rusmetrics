@@ -3,7 +3,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout) {
+app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', '$scope', function ($location, mainSvc, $scope) {
     
     $scope.isReadOnly = function () {
         return mainSvc.isReadonly();
