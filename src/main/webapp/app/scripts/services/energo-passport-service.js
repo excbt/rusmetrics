@@ -2,12 +2,75 @@
 /*global angular*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $http, $q) {
+app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function (mainSvc, $http, $q, $timeout) {
     var service = {};
     
     var PASSPORT_URL_OLD = "../api/energy-passport-templates",
         PASSPORT_URL_OLD_NEW = PASSPORT_URL_OLD + "/new",
-        PASSPORT_URL = "../api/subscr/energy-passports";
+        PASSPORT_URL = "../api/subscr/energy-passports",
+        CONT_OBJECT_PASSPORT_URL = PASSPORT_URL + "/cont-objects";
+    
+//    var documentTypes = [
+//        {
+//            name: "energydeclair",
+//            caption: "Энергетическая декларация"
+//        },
+//        {
+//            name: "energypassport",
+//            caption: "Энергопаспорт"
+//        },
+//        {
+//            name: "project",
+//            caption: "Проект"
+//        },
+//        {
+//            name: "objectpassport",
+//            caption: "Паспорт объекта"
+//        }
+//    ];
+    var documentTypes = {
+        ENERGY_DECLARATION: {
+            keyname: "ENERGY_DECLARATION",
+            caption: "Энергетическая декларация"
+        },
+        ENERGY_PASSPORT: {
+            keyname: "ENERGY_PASSPORT",
+            caption: "Энергопаспорт"
+        },
+        PROJECT: {
+            keyname: "PROJECT",
+            caption: "Проект"
+        },
+        OBJECT_PASSPORT: {
+            keyname: "OBJECT_PASSPORT",
+            caption: "Паспорт объекта"
+        }
+    };
+    
+    var energyDeclarationForms = {
+        ENERGY_DECLARATION_1: {
+            name: "energydeclair1",
+            caption: "Энергетическая декларация. Форма 1",
+            shortCaption: "Форма 1",
+            templateKeyname: "ENERGY_DECLARATION_1",
+            symbol: "Д1"
+        },
+        ENERGY_DECLARATION_2: {
+            name: "energydeclair2",
+            caption: "Энергетическая декларация. Форма 2",
+            shortCaption: "Форма 2",
+            templateKeyname: "ENERGY_DECLARATION_2",
+            symbol: "Д2"
+        }
+    };
+    
+    function getDocumentTypes() {
+        return documentTypes;
+    }
+    
+    function getEnergyDeclarationForms() {
+        return energyDeclarationForms;
+    }
     
     function createPassportOld() {
         return $http.get(PASSPORT_URL_OLD_NEW);
@@ -74,6 +137,13 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
         return $http.post(url, docBody);
     }
     
+    function createContObjectPassport(doc, contObjectId) {
+        var url = CONT_OBJECT_PASSPORT_URL + "/" + contObjectId;
+        var docBody = prepareDocumentToSaving(doc);
+       
+        return $http.post(url, docBody);
+    }
+    
     function updatePassport(doc) {
         if (mainSvc.checkUndefinedNull(doc) || mainSvc.checkUndefinedNull(doc.id)) {
             var defer = $q.defer();
@@ -81,6 +151,17 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
             return defer;
         }
         var url = PASSPORT_URL + "/" + doc.id;
+        var docBody = prepareDocumentToSaving(doc);
+        return $http.put(url, docBody);
+    }
+    
+    function updateContObjectPassport(doc, contObjectId) {
+        if (mainSvc.checkUndefinedNull(doc) || mainSvc.checkUndefinedNull(doc.id)) {
+            var defer = $q.defer();
+            defer.reject("Update: document id is undefined or null!");
+            return defer;
+        }
+        var url = CONT_OBJECT_PASSPORT_URL + "/" + contObjectId;
         var docBody = prepareDocumentToSaving(doc);
         return $http.put(url, docBody);
     }
@@ -155,13 +236,47 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', function (mainSvc, $
         }
     }
     
+/**
+    Cont object passports
+*/
+    function loadContObjectPassports(contObjectId, httpOptions) {
+        var url = CONT_OBJECT_PASSPORT_URL + "/" + contObjectId;
+//            var url = urlPassport + '/' + contObject.id + '/passports';
+        return $http.get(url, httpOptions);
+
+        //test
+//        var passports = [
+//            {
+//                caption: "Passport 1"
+//            },
+//            {
+//                caption: "Passport 2"
+//            },
+//            {
+//                caption: "Паспорт 3"
+//            }
+//        ];
+//
+//        var defer = $q.defer();
+//        $timeout(function () {
+//            defer.resolve({data: passports});
+//        }, 1500);
+//
+//        return defer.promise;
+    }
+    
+    service.createContObjectPassport = createContObjectPassport;
     service.createPassport = createPassport;
     service.deletePassport = deletePassport;
+    service.getDocumentTypes = getDocumentTypes;
+    service.getEnergyDeclarationForms = getEnergyDeclarationForms;
+    service.loadContObjectPassports = loadContObjectPassports;
     service.loadPassports = loadPassports;
     service.loadPassportData = loadPassportData;
     service.deleteEntry = deleteEntry;
     service.saveEntry = saveEntry;
     service.savePassport = savePassport;
+    service.updateContObjectPassport = updateContObjectPassport;
     service.updatePassport = updatePassport;
     
     return service;

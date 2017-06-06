@@ -6,7 +6,10 @@ app.directive('nmcDocumentViewer', function () {
     return {
         restrict: "AEC",
         replace: false,
-        scope: {},
+        scope: {
+            isReadOnly: "&",
+            closeDocument: "&"
+        },
         templateUrl: 'scripts/directives/templates/nmc-document-viewer.html',
         controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout) {
     
@@ -135,9 +138,9 @@ app.directive('nmcDocumentViewer', function () {
                 $scope.DEBUG_MODE = !$scope.DEBUG_MODE;
             };
 
-            $scope.isReadOnly = function () {
-                return mainSvc.isReadonly();
-            };
+//            $scope.isReadOnly = function () {
+//                return mainSvc.isReadonly();
+//            };
 
             $scope.prepareComplexIdForSetElemId = function (complexId) {
                 var result;
@@ -963,9 +966,9 @@ app.directive('nmcDocumentViewer', function () {
         /* Конец обработки кнопок-стрелок */
 
 
-            $scope.cancelEnergoPassportEdit = function () {
-                $location.path("/documents/energo-passports");
-            };
+//            $scope.cancelEnergoPassportEdit = function () {
+//                $location.path("/documents/energo-passports");
+//            };
 
             function prepareTableRowCell(cell, row, rowInd) {
                 if (cell.cellType === "VALUE" || cell.cellType === "STATIC") {
