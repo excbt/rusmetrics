@@ -5,7 +5,6 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import org.apache.commons.io.FilenameUtils;
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import javax.persistence.PersistenceException;
 import java.io.CharConversionException;
@@ -139,7 +137,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 SystemUser systemUser = systemUserRepository.findOne(subscrUserId);
                 if (systemUser == null) {
                     log.error("subscrUser is not found");
-                    throw new InvalidStateException("subscrUserId=" + subscrUserId + " is not found");
+                    throw new IllegalStateException("subscrUserId=" + subscrUserId + " is not found");
                 } else {
                     rmaSubscriberId = systemUser.getSubscriber().getIsRma() ? systemUser.getSubscriber().getId() :
                         systemUser.getSubscriber().getRmaSubscriberId();
