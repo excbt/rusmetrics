@@ -113,7 +113,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrUser findOne(Long subscrUserId) {
-		return subscrUserRepository.findOne(subscrUserId);
+        SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
+        return subscrUser;
 	}
 
 	/**

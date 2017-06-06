@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -34,7 +33,6 @@ public class BenchmarkContServiceDataHWaterController extends SubscrContServiceD
                                                  ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
                                                  SubscrContObjectService subscrContObjectService,
                                                  ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscriberExecutorService subscriberExecutorService,
                                                  SubscrDataSourceService subscrDataSourceService,
                                                  BenchmarkService benchmarkService) {
         super(contZPointService,
@@ -45,7 +43,6 @@ public class BenchmarkContServiceDataHWaterController extends SubscrContServiceD
             contObjectHWaterDeltaService,
             subscrContObjectService,
             contServiceDataHWaterImportService,
-            subscriberExecutorService,
             subscrDataSourceService);
         this.benchmarkService = benchmarkService;
     }

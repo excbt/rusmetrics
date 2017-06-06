@@ -48,6 +48,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
@@ -92,8 +93,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private final ContServiceDataHWaterImportService contServiceDataHWaterImportService;
 
-	private final SubscriberExecutorService subscriberExecutorService;
-
 	private final SubscrDataSourceService subscrDataSourceService;
 
 
@@ -106,7 +105,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
                                                  ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
                                                  SubscrContObjectService subscrContObjectService,
                                                  ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscriberExecutorService subscriberExecutorService,
                                                  SubscrDataSourceService subscrDataSourceService) {
         this.contZPointService = contZPointService;
         this.hWatersCsvService = hWatersCsvService;
@@ -116,7 +114,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
         this.contObjectHWaterDeltaService = contObjectHWaterDeltaService;
         this.subscrContObjectService = subscrContObjectService;
         this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
-        this.subscriberExecutorService = subscriberExecutorService;
         this.subscrDataSourceService = subscrDataSourceService;
     }
 
@@ -826,9 +823,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		}
 
-		Callable<Boolean> task = contServiceDataHWaterImportService.submitImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
-
-		subscriberExecutorService.submit(subscriberParam.getSubscriberId(), task);
+		contServiceDataHWaterImportService.submitImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
 
 		return ApiResponse.responseOK();
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -17,10 +18,13 @@ public class ContServiceDataImpulseUCsv {
 
     private String comment;
 
+    @NotNull
     private String login;
 
+    @NotNull
     private String serial;
 
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataDate;
 
