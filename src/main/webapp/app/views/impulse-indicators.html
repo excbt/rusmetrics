@@ -200,7 +200,7 @@
                 <tr ng-class="tableDef.headerClassTR">
 <!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate', column.headerClass}"-->
 <!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}"-->
-                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'"  
+                    <th ng-repeat="column in tableDef.columns | columnFilter: 'isvisible'"  
                         ng-attr-id="{{'indicators_head_'+column.fieldName}}"                         
                         ng-class = "column.headerClass"
                         ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
@@ -214,7 +214,7 @@
                 </tr>
                 <tr ng-if="deviceMu" 
                     ng-class="tableDef.headerClassTR">
-                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'"  
+                    <th ng-repeat="column in tableDef.columns | columnFilter: 'isvisible'"  
                         ng-attr-id="{{'indicators_head1_'+column.fieldName}}"                         
                         ng-class = "column.headerClass"
                         ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">                        
@@ -252,7 +252,7 @@
                    ng-class="tableDef.tableClass">
     <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                 <tr ng-class = "tableDef.headerClassTR">
-                    <th ng-repeat = "column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: 'isvisible'" 
                         ng-class = "column.headerClass" 
                         ng-attr-id = "{{'indicators_th_' + column.fieldName}}">
                         {{column.header}}
@@ -261,7 +261,7 @@
 
                 </tr>
                 <tr ng-class = "tableDef.headerClassTR">
-                    <th ng-repeat = "column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: 'isvisible'" 
                         ng-class = "column.headerClass" 
                         ng-attr-id = "{{'indicators_th_' + column.fieldName}}">
                         {{column.header}}
@@ -288,7 +288,7 @@
                     current-page="pagination.current"
                     ng-class="indicator.dataClass"
                     >
-                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                    <td ng-repeat="column in tableDef.columns | columnFilter: 'isvisible'" 
                         class="nmc-text-align-right" 
                         ng-class="column.headerClass" 
                         ng-attr-id="{{'indicators_td_'+column.fieldName}}">
