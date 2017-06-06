@@ -19,11 +19,13 @@ public class SLogSessionUtils {
     /**
      *
      * @param session
-     * @param traceMessage
+     * @param errorMessage
      * @param statusMessage
      */
-    public static void failSession(SLogSession session, String traceMessage, String statusMessage) {
-        session.web().trace(traceMessage);
+    public static void failSession(SLogSession session, String errorMessage, String statusMessage) {
+        if (errorMessage != null) {
+            session.web().error(errorMessage);
+        }
         session.status(SLogSessionStatuses.FAILURE.getKeyname(),statusMessage);
     }
 
@@ -33,6 +35,7 @@ public class SLogSessionUtils {
      * @param statusMsg
      */
     public static void completeSession(SLogSession session, String statusMsg) {
+        session.web().info(statusMsg);
         session.status(SLogSessionStatuses.COMPLETE.getKeyname(), statusMsg);
     }
 
