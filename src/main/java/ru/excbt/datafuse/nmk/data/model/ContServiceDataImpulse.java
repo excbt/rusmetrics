@@ -52,7 +52,7 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	private String timeDetailType;
 
 	@Column(name = "data_value", columnDefinition = "numeric")
-	private BigDecimal dataValue;
+	private Double dataValue;
 
 	@JsonIgnore
 	@Version
