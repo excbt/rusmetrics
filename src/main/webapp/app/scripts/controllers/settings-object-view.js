@@ -10,9 +10,11 @@ angular.module('portalNMC')
                 VCOOKIE_URL = "../api/subscr/vcookie",
                 USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
                 OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
-                WIDGETS_URL = "../api/subscr/vcookie/widgets/list";
+                WIDGETS_URL = "../api/subscr/vcookie/widgets/list",
+                OBJECT_PASSPORT_CREATION_WINDOW_NAME = 'objectPassport';
 
-            var measureUnits = null;
+            var measureUnits = null,
+                objectPassportCreationWindow = null;
 
             $scope.crudTableName = objectSvc.getObjectsUrl();
 
@@ -3094,9 +3096,22 @@ angular.module('portalNMC')
                 return mainSvc.isReadonly() || (!mainSvc.checkUndefinedNull(passport.id) && !passport.isActive);
             }
             
-            $scope.openContObjectPassport = function (doc) {
-                window.open("#/documents/object-passport/" + doc.id + "?active=" + doc.isActive, '_blank');
+            $scope.openContObjectPassport = function (doc, object) {
+                var objectParam = "new";
+                if (!mainSvc.checkUndefinedNull(object) && !mainSvc.checkUndefinedNull(object.id)) {
+                    objectParam = object.id;
+                }
+                var winName = "_blank";
+                if (objectPassportCreationWindow !== null) {                    
+                    winName = OBJECT_PASSPORT_CREATION_WINDOW_NAME;
+                    objectPassportCreationWindow = null;
+                }
+                window.open("#/settings/object-passport/" + objectParam + "/" + doc.id, winName);
             };
+                
+//            $scope.openContObjectPassport_old = function (doc) {
+//                window.open("#/documents/object-passport/" + doc.id + "?active=" + doc.isActive, '_blank');
+//            };
                 
             function successLoadPassportsCallback(resp) {
                 if (!angular.isArray(resp.data) || resp.data.length <= 0) {
@@ -3215,6 +3230,9 @@ angular.module('portalNMC')
 //console.log(doc.parentObject);   
 //return;                
                 if (mainSvc.checkUndefinedNull(doc.id)) {
+                    
+                    objectPassportCreationWindow = window.open("", OBJECT_PASSPORT_CREATION_WINDOW_NAME);
+//                    return;
                     energoPassportSvc.createContObjectPassport(doc, doc.parentObject.id)
                         .then(successCreatePassportCallback, errorCallback);
             //        $location.path("/documents/energo-passport/new");
