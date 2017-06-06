@@ -246,9 +246,11 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				log.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import SUCCESS");
 			} catch (Exception e) {
 
-				PSQLException pe = DBExceptionUtils.getPSQLException(e);
-				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
-				log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+//				PSQLException pe = DBExceptionUtils.getPSQLException(e);
+//				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
+                String sqlExceptiomMessage =  DBExceptionUtils.getPSQLExceptionMessage(e);
+
+              log.error("Hwater Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
 
 				session.web().trace("Ошибка при обновлении данных");

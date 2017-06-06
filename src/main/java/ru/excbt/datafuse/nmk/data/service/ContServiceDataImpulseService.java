@@ -5,6 +5,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import org.apache.commons.io.FilenameUtils;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +15,19 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseImportRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
+import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
-import ru.excbt.datafuse.slogwriter.service.SLogSession;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 import sun.plugin.dom.exception.InvalidStateException;
@@ -38,8 +35,7 @@ import sun.plugin.dom.exception.InvalidStateException;
 import javax.persistence.PersistenceException;
 import java.io.CharConversionException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -59,6 +55,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
     private static final Logger log = LoggerFactory.getLogger(ContServiceDataImpulseService.class);
 
     public static final int SERIAL_LEN = 4;
+    public static final TimeDetailKey CSV_TIME_DETAIL = TimeDetailKey.TYPE_1MON_ABS;
 
 
 	private final ContServiceDataImpulseRepository contServiceDataImpulseRepository;
@@ -74,6 +71,9 @@ public class ContServiceDataImpulseService implements SecuredRoles {
     private final SubscrUserRepository subscrUserRepository;
     private final SystemUserRepository systemUserRepository;
     private final DeviceObjectService deviceObjectService;
+    private final ContZPointService contZPointService;
+
+    private final ContServiceDataImpulseImportRepository impulseImportRepository;
 
 
     @Autowired
@@ -84,7 +84,9 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                                          ImpulseCsvService impulseCsvService,
                                          SubscrUserRepository subscrUserRepository,
                                          SystemUserRepository systemUserRepository,
-                                         DeviceObjectService deviceObjectService) {
+                                         DeviceObjectService deviceObjectService,
+                                         ContZPointService contZPointService,
+                                         ContServiceDataImpulseImportRepository contServiceDataImpulseImportRepository) {
         this.contServiceDataImpulseRepository = contServiceDataImpulseRepository;
         this.subscriberExecutorService = subscriberExecutorService;
         this.sLogWriterService = sLogWriterService;
@@ -93,6 +95,8 @@ public class ContServiceDataImpulseService implements SecuredRoles {
         this.subscrUserRepository = subscrUserRepository;
         this.systemUserRepository = systemUserRepository;
         this.deviceObjectService = deviceObjectService;
+        this.contZPointService = contZPointService;
+        this.impulseImportRepository = contServiceDataImpulseImportRepository;
     }
 
     /**
@@ -280,6 +284,94 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
             session.web().trace("Проверка приборов прошла успешно");
 
+
+            session.web().trace("Поиск точек учета");
+
+
+            List<ContServiceDataImpulseImport> impulseImportList = new ArrayList<>();
+
+            for (ContServiceDataImpulseUCsv data : inDataImport) {
+                DeviceObject deviceObject = deviceObjectMap.get(data.getSerial());
+
+                if (deviceObject == null) {
+                    session.web().error("Внутренняя ошибка. Не найден прибор " + data.getSerial());
+                    SLogSessionUtils.failSession(session,
+                        errorMessage, errorStatusMessage);
+                    return;
+
+                }
+
+                List<ContZPoint> contZPoints = contZPointService.selectContPointsByDeviceObject(deviceObject.getId());
+                if (contZPoints.size() == 0) {
+                    session.web().error("Не найдена точка учета для прибора:" + data.getSerial());
+                    SLogSessionUtils.failSession(session,
+                        errorMessage, errorStatusMessage);
+                    return;
+                }
+                if (contZPoints.size() > 1) {
+                    session.web().error("Точка учета для прибора:" + data.getSerial() + " не уникальна");
+                    SLogSessionUtils.failSession(session,
+                        errorMessage, errorStatusMessage);
+                    return;
+                }
+
+                ContZPoint contZPoint = contZPoints.get(0);
+                if (!Boolean.TRUE.equals(contZPoint.getIsManualLoading())) {
+                    session.web().error("Точка учета для прибора: " + data.getSerial() + " не поддерживает прямую загрузку.");
+                    SLogSessionUtils.failSession(session,
+                        errorMessage, errorStatusMessage);
+                    return;
+                }
+
+
+                ContServiceDataImpulseImport impulseImport = new ContServiceDataImpulseImport();
+                impulseImport.setContZpointId(contZPoint.getId());
+                impulseImport.setDeviceObjectId(deviceObject.getId());
+                impulseImport.setDataValue(data.getDataValue());
+                if (data.getDataDate() != null) {
+                    impulseImport.setDataDate(data.getDataDate().atTime(0, 0));
+                }
+                impulseImport.setTimeDetailType(CSV_TIME_DETAIL.keyName());
+                impulseImport.setCreatedBy(subscrUserId);
+                impulseImport.setCreatedDate(LocalDateTime.now());
+                impulseImport.setLastModifiedBy(subscrUserId);
+                impulseImport.setLastModifiedDate(LocalDateTime.now());
+                impulseImport.setTrxId(session.getSessionUUID());
+                impulseImportList.add(impulseImport);
+            }
+
+            try {
+
+                impulseImportRepository.save(impulseImportList);
+            } catch (IllegalStateException e) {
+                session.web().error("Ошибка при загрузке данных");
+                SLogSessionUtils.failSession(session,
+                    errorMessage, errorStatusMessage);
+                return;
+            }
+
+            session.web().trace("Все точки учета найдены");
+
+            session.web().trace("Обновление данных запущено");
+            try {
+                log.debug("processImport.Calling Stored proc portal.process_service_data_impulse_import");
+                impulseImportRepository.processImport(session.getSessionUUID().toString());
+                log.debug("processImport.Calling Stored proc portal.process_service_data_impulse_import SUCCESS");
+            } catch (Exception e) {
+                String sqlExceptiomMessage =  DBExceptionUtils.getPSQLExceptionMessage(e);
+                log.error("Impulse Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+                    e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
+
+                session.web().trace("Ошибка при обновлении данных");
+
+                SLogSessionUtils.failSession(session,
+                    sqlExceptiomMessage, errorMessage);
+
+                throw new IllegalArgumentException(
+                    String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
+            }
+
+            session.web().trace("Обновление данных успешно завершено");
 
             SLogSessionUtils.completeSession(session, completeStatusMessage);
         }

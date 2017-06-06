@@ -13,8 +13,10 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.joda.time.DateTime;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
@@ -48,7 +50,7 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
-	@Column(name = "data_value")
+	@Column(name = "data_value", columnDefinition = "numeric")
 	private BigDecimal dataValue;
 
 	@JsonIgnore
@@ -58,6 +60,12 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
+
+    @JsonProperty
+    @Override
+    public DateTime getLastModifiedDate() {
+        return super.getLastModifiedDate();
+    }
 
 
 

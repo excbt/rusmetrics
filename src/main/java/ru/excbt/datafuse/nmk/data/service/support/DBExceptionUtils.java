@@ -39,6 +39,13 @@ public class DBExceptionUtils {
         return pe;
     }
 
+    public static String getPSQLExceptionMessage(Exception e) {
+        PSQLException pe = getPSQLException(e);
+        String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
+        return sqlExceptiomMessage;
+    }
+
+
     /**
      * @param clazz
      * @param id
