@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 /**
  * Класс для работы полями БД
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.08.2015
@@ -18,7 +18,7 @@ public class DBRowUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */
@@ -38,7 +38,7 @@ public class DBRowUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */
@@ -48,7 +48,7 @@ public class DBRowUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */
@@ -65,8 +65,21 @@ public class DBRowUtils {
 		throw new IllegalArgumentException();
 	}
 
+	public static Double asDouble(Object arg) {
+		if (arg == null) {
+			return null;
+		}
+		if (arg instanceof BigDecimal) {
+			return ((BigDecimal) arg).doubleValue();
+		}
+		if (arg instanceof Double) {
+			return (Double) arg;
+		}
+		throw new IllegalArgumentException();
+	}
+
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */
@@ -78,7 +91,7 @@ public class DBRowUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */
@@ -90,7 +103,7 @@ public class DBRowUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */

@@ -14,12 +14,14 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 /**
  * Электричество - технические характеристики
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
@@ -27,12 +29,16 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
  */
 @Entity
 @Table(name = "cont_service_data_el_tech")
+@Getter
+@Setter
 public class ContServiceDataElTech extends AbstractAuditableModel implements DataDateFormatter {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1354288648021141991L;
+
+	private static final double DIV_VALUE = 1000.00;
 
 	@Column(name = "data_date")
 	private Date dataDate;
@@ -62,191 +68,50 @@ public class ContServiceDataElTech extends AbstractAuditableModel implements Dat
 	@Column(name = "deleted")
 	private int deleted;
 
-	@Column(name = "u_1")
-	private BigDecimal u1;
+	@Column(name = "u_1", columnDefinition = "numeric")
+	private Double u1;
 
-	@Column(name = "u_2")
-	private BigDecimal u2;
+	@Column(name = "u_2", columnDefinition = "numeric")
+	private Double u2;
 
-	@Column(name = "u_3")
-	private BigDecimal u3;
+	@Column(name = "u_3", columnDefinition = "numeric")
+	private Double u3;
 
-	@Column(name = "i_1")
-	private BigDecimal i1;
+	@Column(name = "i_1", columnDefinition = "numeric")
+	private Double i1;
 
-	@Column(name = "i_2")
-	private BigDecimal i2;
+	@Column(name = "i_2", columnDefinition = "numeric")
+	private Double i2;
 
-	@Column(name = "i_3")
-	private BigDecimal i3;
+	@Column(name = "i_3", columnDefinition = "numeric")
+	private Double i3;
 
-	@Column(name = "k_1")
-	private BigDecimal k1;
+	@Column(name = "k_1", columnDefinition = "numeric")
+	private Double k1;
 
-	@Column(name = "k_2")
-	private BigDecimal k2;
+	@Column(name = "k_2", columnDefinition = "numeric")
+	private Double k2;
 
-	@Column(name = "k_3")
-	private BigDecimal k3;
+	@Column(name = "k_3", columnDefinition = "numeric")
+	private Double k3;
 
-	@Column(name = "frequency")
-	private BigDecimal frequency;
+	@Column(name = "frequency", columnDefinition = "numeric")
+	private Double frequency;
 
-	@Column(name = "device_temp")
-	private BigDecimal deviceTemp;
+	@Column(name = "device_temp", columnDefinition = "numeric")
+	private Double deviceTemp;
 
-	@Override
-	public Date getDataDate() {
-		return dataDate;
+
+	public Double getI1_c() {
+		return this.i1 == null ? null : (this.i1 / DIV_VALUE);// .divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
 	}
 
-	public void setDataDate(Date dataDate) {
-		this.dataDate = dataDate;
+	public Double getI2_c() {
+		return this.i2 == null ? null : (this.i2 / DIV_VALUE); //.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
 	}
 
-	public DeviceObject getDeviceObject() {
-		return deviceObject;
-	}
-
-	public void setDeviceObject(DeviceObject deviceObject) {
-		this.deviceObject = deviceObject;
-	}
-
-	public ContZPoint getContZPoint() {
-		return contZPoint;
-	}
-
-	public void setContZPoint(ContZPoint contZPoint) {
-		this.contZPoint = contZPoint;
-	}
-
-	public Long getContZPointId() {
-		return contZPointId;
-	}
-
-	public void setContZPointId(Long contZPointId) {
-		this.contZPointId = contZPointId;
-	}
-
-	@Override
-	public String getTimeDetailType() {
-		return timeDetailType;
-	}
-
-	public void setTimeDetailType(String timeDetailType) {
-		this.timeDetailType = timeDetailType;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public BigDecimal getU1() {
-		return u1;
-	}
-
-	public void setU1(BigDecimal u1) {
-		this.u1 = u1;
-	}
-
-	public BigDecimal getU2() {
-		return u2;
-	}
-
-	public void setU2(BigDecimal u2) {
-		this.u2 = u2;
-	}
-
-	public BigDecimal getU3() {
-		return u3;
-	}
-
-	public void setU3(BigDecimal u3) {
-		this.u3 = u3;
-	}
-
-	public BigDecimal getI1() {
-		return i1;
-	}
-
-	public void setI1(BigDecimal i1) {
-		this.i1 = i1;
-	}
-
-	public BigDecimal getI2() {
-		return i2;
-	}
-
-	public void setI2(BigDecimal i2) {
-		this.i2 = i2;
-	}
-
-	public BigDecimal getI3() {
-		return i3;
-	}
-
-	public void setI3(BigDecimal i3) {
-		this.i3 = i3;
-	}
-
-	public BigDecimal getK1() {
-		return k1;
-	}
-
-	public void setK1(BigDecimal k1) {
-		this.k1 = k1;
-	}
-
-	public BigDecimal getK2() {
-		return k2;
-	}
-
-	public void setK2(BigDecimal k2) {
-		this.k2 = k2;
-	}
-
-	public BigDecimal getK3() {
-		return k3;
-	}
-
-	public void setK3(BigDecimal k3) {
-		this.k3 = k3;
-	}
-
-	public BigDecimal getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(BigDecimal frequency) {
-		this.frequency = frequency;
-	}
-
-	public BigDecimal getDeviceTemp() {
-		return deviceTemp;
-	}
-
-	public void setDeviceTemp(BigDecimal deviceTemp) {
-		this.deviceTemp = deviceTemp;
-	}
-
-	public BigDecimal getI1_c() {
-		return this.i1 == null ? null : this.i1.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
-	}
-
-	public BigDecimal getI2_c() {
-		return this.i2 == null ? null : this.i2.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
-	}
-
-	public BigDecimal getI3_c() {
-		return this.i3 == null ? null : this.i3.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
-	}
-
-	public int getDeleted() {
-		return deleted;
+	public Double getI3_c() {
+		return this.i3 == null ? null : (this.i3 / DIV_VALUE); //.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
 	}
 
 }

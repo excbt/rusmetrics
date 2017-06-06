@@ -8,6 +8,8 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
@@ -15,10 +17,12 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "device_object_pke_type")
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class DeviceObjectPkeType extends AbstractKeynameEntity implements DeletableObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1824978628446972924L;
 
@@ -43,62 +47,5 @@ public class DeviceObjectPkeType extends AbstractKeynameEntity implements Deleta
 	@Column(name = "deleted")
 	private int deleted;
 
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	public String getPkeTypeDescription() {
-		return pkeTypeDescription;
-	}
-
-	public void setPkeTypeDescription(String pkeTypeDescription) {
-		this.pkeTypeDescription = pkeTypeDescription;
-	}
-
-	public String getPkeTypeComment() {
-		return pkeTypeComment;
-	}
-
-	public void setPkeTypeComment(String pkeTypeComment) {
-		this.pkeTypeComment = pkeTypeComment;
-	}
-
-	public String getPkeTypeCode() {
-		return pkeTypeCode;
-	}
-
-	public void setPkeTypeCode(String pkeTypeCode) {
-		this.pkeTypeCode = pkeTypeCode;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMeasureUnit() {
-		return measureUnit;
-	}
-
-	public void setMeasureUnit(String measureUnit) {
-		this.measureUnit = measureUnit;
-	}
 
 }
