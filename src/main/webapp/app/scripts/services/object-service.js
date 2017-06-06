@@ -51,9 +51,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             urlBuildingCategories = urlSubscr + '/service/buildingType/category/list',
         //meter periods urls
             meterPeriodSuffix = '/meterPeriodSettings',
-            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix,
-        //passports    
-            urlPassport = urlSubscrContObjects;
+            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
