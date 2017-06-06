@@ -248,7 +248,7 @@ public class EnergyPassportTemplateService {
 
     public EnergyPassportTemplateDTO createNewDTO_XXX() {
         EnergyPassportTemplateDTO templateDTO = new EnergyPassportTemplateDTO();
-        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_4()));
+        templateDTO.addSection(createSectionDTO(energyPassport401_2014_add.section_1_3()));
         templateDTO.setDocumentDate(LocalDate.of(2014,6,30));
         templateDTO.setDocumentName("ПРИКАЗ XXX");
         templateDTO.setDescription("Энергопаспорт");
