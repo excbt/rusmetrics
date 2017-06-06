@@ -19,6 +19,7 @@ import lombok.Setter;
 import org.joda.time.DateTime;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 /**
  *
@@ -62,9 +63,15 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	private int deleted;
 
     @JsonProperty
-    @Override
-    public DateTime getLastModifiedDate() {
-        return super.getLastModifiedDate();
+    public Date getInsertDate() {
+        DateTime dateTime = super.getCreatedDate();
+        return dateTime != null ? dateTime.toDate() : null;
+    }
+
+    @JsonProperty
+    public String getInsertDateStr() {
+        DateTime dateTime = super.getCreatedDate();
+        return dateTime != null ? DateFormatUtils.formatDateTime(dateTime.toDate(), DateFormatUtils.DATE_FORMAT_STR_FULL) : null;
     }
 
 

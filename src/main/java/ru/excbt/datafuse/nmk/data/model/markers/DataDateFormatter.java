@@ -9,10 +9,10 @@ public interface DataDateFormatter extends TimeDetailTypeObject {
 	public Date getDataDate();
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	public default String getDataDateString() {
+	default String getDataDateString() {
 
 		TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(getTimeDetailType());
 		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
