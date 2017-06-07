@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true, nomen: true*/
+/*jslint node: true, eqeq: true, nomen: true, es5: true*/
 /*global angular, moment, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -137,9 +137,7 @@ app.controller('ParamSetsCtrl', ['$scope', '$rootScope', '$resource', '$http', '
         $scope.setCurrentServiceType($scope.contServiceTypes[0]);
     
         var filtredCategories = $filter('withReportTypes')($scope.categories);
-        if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
-            filtredCategories[0].class = "active";
-        }
+        reportSvc.setActiveReportCategory(filtredCategories);
         $scope.setCurrentCategory(filtredCategories[0]);
         
         //report types
@@ -1396,9 +1394,13 @@ app.controller('ParamSetsCtrl', ['$scope', '$rootScope', '$resource', '$http', '
     $scope.setCurrentServiceType($scope.contServiceTypes[0]);
     
     var filtredCategories = $filter('withReportTypes')($scope.categories);
-    if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
-        filtredCategories[0].class = "active";
-    }
+    reportSvc.setActiveReportCategory(filtredCategories);
+//    if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
+//        filtredCategories.forEach(function (fc) {
+//            fc.class = "";
+//        });
+//        filtredCategories[0].class = "active";
+//    }
     $scope.setCurrentCategory(filtredCategories[0]);
     
     // ****************************************************************
