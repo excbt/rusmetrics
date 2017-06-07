@@ -2686,8 +2686,12 @@ angular.module('portalNMC')
                     if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0) {
                         return false;
                     }
-//console.log(resp.data);                        
-                    var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+//console.log(resp.data);     
+                    try {
+                        var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+                    } catch(err) {
+                        console.error("objectIndicatorModeKeyname parse error: ", err);
+                    }
                     $scope.data.indicatorModes.some(function (imode) {
                         if (imode.keyname === objectIndicatorModeKeyname) {
                             imode.isCurrentMode = true;
