@@ -266,38 +266,38 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         }
     };
     
-    var datePickerSettingsMMyyView = {
-        dateFormat: "MM, yy",
-        firstDay: dateRangeOptsRu.locale.firstDay,
-        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
-        monthNames: dateRangeOptsRu.locale.monthNames,
-        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-        changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true,
-        closeText: "Ок",
-        currentText: "",
-        onClose: function (dateText, inst) {
-            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-            $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
-            $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
-            setTimeout(function () {
-                $('.ui-datepicker-calendar').addClass("nmc-hide");
-            }, 1);
-        },
-        beforeShow: function () {
-            setTimeout(function () {
-                $('.ui-datepicker-calendar').addClass("nmc-hide");
-                $('.ui-datepicker-current').addClass("nmc-hide");
-            }, 1);
-        },
-        onChangeMonthYear: function () {
-            setTimeout(function () {
-                $('.ui-datepicker-current').addClass("nmc-hide");
-                $('.ui-datepicker-calendar').addClass("nmc-hide");
-            }, 1);
-        }
-    };
+//    var datePickerSettingsMMyyView = {
+//        dateFormat: "MM, yy",
+//        firstDay: dateRangeOptsRu.locale.firstDay,
+//        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
+//        monthNames: dateRangeOptsRu.locale.monthNames,
+//        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+//        changeMonth: true,
+//        changeYear: true,
+//        showButtonPanel: true,
+//        closeText: "Ок",
+//        currentText: "",
+//        onClose: function (dateText, inst) {
+//            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+//            $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
+//            $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
+//            setTimeout(function () {
+//                $('.ui-datepicker-calendar').addClass("nmc-hide");
+//            }, 1);
+//        },
+//        beforeShow: function () {
+//            setTimeout(function () {
+//                $('.ui-datepicker-calendar').addClass("nmc-hide");
+//                $('.ui-datepicker-current').addClass("nmc-hide");
+//            }, 1);
+//        },
+//        onChangeMonthYear: function () {
+//            setTimeout(function () {
+//                $('.ui-datepicker-current').addClass("nmc-hide");
+//                $('.ui-datepicker-calendar').addClass("nmc-hide");
+//            }, 1);
+//        }
+//    };
     
     function getDetepickerSettingsFullView() {
         return angular.copy(datePickerSettingsFullView);
@@ -996,51 +996,51 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     initSvc();
     
     return {
-        addParamToURL,
-        checkContext,
-        checkEmptyObject,
-        checkHHmm,
-        checkNumericValue,
-        checkPositiveNumberValue,
-        checkStrForDate,
-        checkUndefinedEmptyNullValue,
-        checkUndefinedNull,        
-        dateFormating,
-        errorCallbackHandler,
-        findItemBy,
-        findNodeInTree,
-        getConfirmCode,
-        getContextIds,
-        getDetepickerSettingsFullView,
-        getHtmlLoading,
-        getLoadingServicePermissionFlag,
-        getLoadedServicePermission,
-        getMonitorMapSettings,
-        getObjectMapSettings,
-        getDateRangeOptions,
-        getRequestCanceler,
-        getServerTimeZone,
-        getServerErrorByResultCode,        
-        getUseColorHighlightIndicatorData,
-        getUserServicesPermissions,
-        getUseTest,
-        getViewSystemInfo,
-        isAdmin,
-        isCabinet,
-        isNumeric,
-        isPositiveNumberValue,
-        isRma,
-        isReadonly,
-        isSystemuser,
-        isTestMode,
-        prepareTimeOffset,
-        setMonitorMapSettings,
-        setObjectMapSettings,
-        setToolTip,
-        sortItemsBy,
-        sortNumericItemsBy,
-        sortOrganizationsByName,
-        sortTreeNodesBy,
-        strDateToUTC
+        addParamToURL: addParamToURL,
+        checkContext: checkContext,
+        checkEmptyObject: checkEmptyObject,
+        checkHHmm: checkHHmm,
+        checkNumericValue: checkNumericValue,
+        checkPositiveNumberValue: checkPositiveNumberValue,
+        checkStrForDate: checkStrForDate,
+        checkUndefinedEmptyNullValue: checkUndefinedEmptyNullValue,
+        checkUndefinedNull: checkUndefinedNull,
+        dateFormating: dateFormating,
+        errorCallbackHandler: errorCallbackHandler,
+        findItemBy: findItemBy,
+        findNodeInTree: findNodeInTree,
+        getConfirmCode: getConfirmCode,
+        getContextIds: getContextIds,
+        getDetepickerSettingsFullView: getDetepickerSettingsFullView,
+        getHtmlLoading: getHtmlLoading,
+        getLoadingServicePermissionFlag: getLoadingServicePermissionFlag,
+        getLoadedServicePermission: getLoadedServicePermission,
+        getMonitorMapSettings: getMonitorMapSettings,
+        getObjectMapSettings: getObjectMapSettings,
+        getDateRangeOptions: getDateRangeOptions,
+        getRequestCanceler: getRequestCanceler,
+        getServerTimeZone: getServerTimeZone,
+        getServerErrorByResultCode: getServerErrorByResultCode,
+        getUseColorHighlightIndicatorData: getUseColorHighlightIndicatorData,
+        getUserServicesPermissions: getUserServicesPermissions,
+        getUseTest: getUseTest,
+        getViewSystemInfo: getViewSystemInfo,
+        isAdmin: isAdmin,
+        isCabinet: isCabinet,
+        isNumeric: isNumeric,
+        isPositiveNumberValue: isPositiveNumberValue,
+        isRma: isRma,
+        isReadonly: isReadonly,
+        isSystemuser: isSystemuser,
+        isTestMode: isTestMode,
+        prepareTimeOffset: prepareTimeOffset,
+        setMonitorMapSettings: setMonitorMapSettings,
+        setObjectMapSettings: setObjectMapSettings,
+        setToolTip: setToolTip,
+        sortItemsBy: sortItemsBy,
+        sortNumericItemsBy: sortNumericItemsBy,
+        sortOrganizationsByName: sortOrganizationsByName,
+        sortTreeNodesBy: sortTreeNodesBy,
+        strDateToUTC: strDateToUTC
     };
 }]);
