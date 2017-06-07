@@ -3091,21 +3091,22 @@ angular.module('portalNMC')
                     return false;
                 }
                 // find active passport
-                var tmp = resp.data,
-                    activePassport = resp.data[0];
-                tmp.forEach(function (passport) {
-                    if (passport.passportDate2 > activePassport.passportDate2) {
-                        activePassport = passport;
-                    } else if (passport.passportDate2 === activePassport.passportDate2) {
-                        if (passport.id > activePassport.id) {
-                            activePassport = passport;
-                        }
-                    }
-                });
+//                var tmp = resp.data,
+//                    activePassport = resp.data[0];
+//                tmp.forEach(function (passport) {
+//                    if (passport.passportDate2 > activePassport.passportDate2) {
+//                        activePassport = passport;
+//                    } else if (passport.passportDate2 === activePassport.passportDate2) {
+//                        if (passport.id > activePassport.id) {
+//                            activePassport = passport;
+//                        }
+//                    }
+//                });
+                var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
                 activePassport.isActive = true;
-                mainSvc.sortItemsBy(tmp, "isActive");
-                tmp.reverse();
-                $scope.data.currentContObjectPassports = tmp;
+                mainSvc.sortItemsBy(resp.data, "isActive");
+                resp.data.reverse();
+                $scope.data.currentContObjectPassports = resp.data;
             }
                 
             function successSavePassportCallback(resp) {

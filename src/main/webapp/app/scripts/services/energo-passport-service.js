@@ -265,9 +265,30 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
 //        return defer.promise;
     }
     
+    function findContObjectActivePassport(passportArr) {
+        if (mainSvc.checkUndefinedNull(passportArr) || !angular.isArray(passportArr) || passportArr.length <= 0) {
+            return null;
+        }
+        // find active passport
+        var tmp = passportArr,
+            activePassport = passportArr[0];
+        tmp.forEach(function (passport) {
+            if (passport.passportDate2 > activePassport.passportDate2) {
+                activePassport = passport;
+            } else if (passport.passportDate2 === activePassport.passportDate2) {
+                if (passport.id > activePassport.id) {
+                    activePassport = passport;
+                }
+            }
+        });
+        
+        return activePassport;
+    }
+    
     service.createContObjectPassport = createContObjectPassport;
     service.createPassport = createPassport;
     service.deletePassport = deletePassport;
+    service.findContObjectActivePassport = findContObjectActivePassport;
     service.getDocumentTypes = getDocumentTypes;
     service.getEnergyDeclarationForms = getEnergyDeclarationForms;
     service.loadContObjectPassports = loadContObjectPassports;
