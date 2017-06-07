@@ -225,30 +225,30 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	private ContServiceDataElCons consColumnHelperReader(ColumnHelper columnHelper, Object[] queryResults) {
 		ContServiceDataElCons result = new ContServiceDataElCons();
 
-		result.setP_Ap1(columnHelper.getResult(queryResults, "p_Ap1"));
-		result.setP_An1(columnHelper.getResult(queryResults, "p_An1"));
-		result.setQ_Rp1(columnHelper.getResult(queryResults, "q_Rp1"));
-		result.setQ_Rn1(columnHelper.getResult(queryResults, "q_Rn1"));
+		result.setP_Ap1(columnHelper.getResultDouble(queryResults, "p_Ap1"));
+		result.setP_An1(columnHelper.getResultDouble(queryResults, "p_An1"));
+		result.setQ_Rp1(columnHelper.getResultDouble(queryResults, "q_Rp1"));
+		result.setQ_Rn1(columnHelper.getResultDouble(queryResults, "q_Rn1"));
 
-		result.setP_Ap2(columnHelper.getResult(queryResults, "p_Ap2"));
-		result.setP_An2(columnHelper.getResult(queryResults, "p_An2"));
-		result.setQ_Rp2(columnHelper.getResult(queryResults, "q_Rp2"));
-		result.setQ_Rn2(columnHelper.getResult(queryResults, "q_Rn2"));
+		result.setP_Ap2(columnHelper.getResultDouble(queryResults, "p_Ap2"));
+		result.setP_An2(columnHelper.getResultDouble(queryResults, "p_An2"));
+		result.setQ_Rp2(columnHelper.getResultDouble(queryResults, "q_Rp2"));
+		result.setQ_Rn2(columnHelper.getResultDouble(queryResults, "q_Rn2"));
 
-		result.setP_Ap3(columnHelper.getResult(queryResults, "p_Ap3"));
-		result.setP_An3(columnHelper.getResult(queryResults, "p_An3"));
-		result.setQ_Rp3(columnHelper.getResult(queryResults, "q_Rp3"));
-		result.setQ_Rn3(columnHelper.getResult(queryResults, "q_Rn3"));
+		result.setP_Ap3(columnHelper.getResultDouble(queryResults, "p_Ap3"));
+		result.setP_An3(columnHelper.getResultDouble(queryResults, "p_An3"));
+		result.setQ_Rp3(columnHelper.getResultDouble(queryResults, "q_Rp3"));
+		result.setQ_Rn3(columnHelper.getResultDouble(queryResults, "q_Rn3"));
 
-		result.setP_Ap4(columnHelper.getResult(queryResults, "p_Ap4"));
-		result.setP_An4(columnHelper.getResult(queryResults, "p_An4"));
-		result.setQ_Rp4(columnHelper.getResult(queryResults, "q_Rp4"));
-		result.setQ_Rn4(columnHelper.getResult(queryResults, "q_Rn4"));
+		result.setP_Ap4(columnHelper.getResultDouble(queryResults, "p_Ap4"));
+		result.setP_An4(columnHelper.getResultDouble(queryResults, "p_An4"));
+		result.setQ_Rp4(columnHelper.getResultDouble(queryResults, "q_Rp4"));
+		result.setQ_Rn4(columnHelper.getResultDouble(queryResults, "q_Rn4"));
 
-		result.setP_Ap(columnHelper.getResult(queryResults, "p_Ap"));
-		result.setP_An(columnHelper.getResult(queryResults, "p_An"));
-		result.setQ_Rp(columnHelper.getResult(queryResults, "q_Rp"));
-		result.setQ_Rn(columnHelper.getResult(queryResults, "q_Rn"));
+		result.setP_Ap(columnHelper.getResultDouble(queryResults, "p_Ap"));
+		result.setP_An(columnHelper.getResultDouble(queryResults, "p_An"));
+		result.setQ_Rp(columnHelper.getResultDouble(queryResults, "q_Rp"));
+		result.setQ_Rn(columnHelper.getResultDouble(queryResults, "q_Rn"));
 
 		return result;
 	}
@@ -448,17 +448,17 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 				ContServiceDataElTech.class);
 
 		ContServiceDataElTech result = new ContServiceDataElTech();
-		result.setU1(columnHelper.getResult(queryResults, "u1"));
-		result.setU2(columnHelper.getResult(queryResults, "u2"));
-		result.setU3(columnHelper.getResult(queryResults, "u3"));
+		result.setU1(columnHelper.getResultDouble(queryResults, "u1"));
+		result.setU2(columnHelper.getResultDouble(queryResults, "u2"));
+		result.setU3(columnHelper.getResultDouble(queryResults, "u3"));
 
-		result.setI1(columnHelper.getResult(queryResults, "i1"));
-		result.setI2(columnHelper.getResult(queryResults, "i2"));
-		result.setI3(columnHelper.getResult(queryResults, "i3"));
+		result.setI1(columnHelper.getResultDouble(queryResults, "i1"));
+		result.setI2(columnHelper.getResultDouble(queryResults, "i2"));
+		result.setI3(columnHelper.getResultDouble(queryResults, "i3"));
 
-		result.setK1(columnHelper.getResult(queryResults, "k1"));
-		result.setK2(columnHelper.getResult(queryResults, "k2"));
-		result.setK3(columnHelper.getResult(queryResults, "k3"));
+		result.setK1(columnHelper.getResultDouble(queryResults, "k1"));
+		result.setK2(columnHelper.getResultDouble(queryResults, "k2"));
+		result.setK3(columnHelper.getResultDouble(queryResults, "k3"));
 
 		return result;
 
@@ -570,10 +570,10 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 				ContServiceDataElProfile.class);
 
 		ContServiceDataElProfile result = new ContServiceDataElProfile();
-		result.setP_Ap(columnHelper.getResult(queryResults, "p_Ap"));
-		result.setP_An(columnHelper.getResult(queryResults, "p_An"));
-		result.setQ_Rp(columnHelper.getResult(queryResults, "q_Rp"));
-		result.setQ_Rn(columnHelper.getResult(queryResults, "q_Rn"));
+		result.setP_Ap(columnHelper.getResultDouble(queryResults, "p_Ap"));
+		result.setP_An(columnHelper.getResultDouble(queryResults, "p_An"));
+		result.setQ_Rp(columnHelper.getResultDouble(queryResults, "q_Rp"));
+		result.setQ_Rn(columnHelper.getResultDouble(queryResults, "q_Rn"));
 
 		return result;
 

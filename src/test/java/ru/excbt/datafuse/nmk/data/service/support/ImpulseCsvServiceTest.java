@@ -42,7 +42,7 @@ public class ImpulseCsvServiceTest extends JpaConfigTest {
 
         ContServiceDataImpulse impulse = new ContServiceDataImpulse();
         impulse.setDataDate(new Date());
-        impulse.setDataValue(new BigDecimal(123));
+        impulse.setDataValue(123.0);
         impulseList.add(impulse);
 
         String s = new String(impulseCsvService.writeDataToCsv(impulseList));

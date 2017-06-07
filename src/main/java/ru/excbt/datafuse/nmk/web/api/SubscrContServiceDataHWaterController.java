@@ -327,11 +327,11 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		if (firstAbs != null && lastAbs != null) {
 
-			diffs.setM_in(processDelta(firstAbs.getM_in(), lastAbs.getM_in()));
-			diffs.setM_out(processDelta(firstAbs.getM_out(), lastAbs.getM_out()));
-			diffs.setV_in(processDelta(firstAbs.getV_in(), lastAbs.getV_in()));
-			diffs.setV_out(processDelta(firstAbs.getV_out(), lastAbs.getV_out()));
-			diffs.setH_delta(processDelta(firstAbs.getH_delta(), lastAbs.getH_delta()));
+			diffs.setM_in(processDeltaDouble(firstAbs.getM_in(), lastAbs.getM_in()));
+			diffs.setM_out(processDeltaDouble(firstAbs.getM_out(), lastAbs.getM_out()));
+			diffs.setV_in(processDeltaDouble(firstAbs.getV_in(), lastAbs.getV_in()));
+			diffs.setV_out(processDeltaDouble(firstAbs.getV_out(), lastAbs.getV_out()));
+			diffs.setH_delta(processDeltaDouble(firstAbs.getH_delta(), lastAbs.getH_delta()));
 
 		}
 		result.setDiffs(diffs);
@@ -341,6 +341,10 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private BigDecimal processDelta(BigDecimal a, BigDecimal b) {
 		return a == null || b == null ? null : b.subtract(a);
+	}
+
+	private Double processDeltaDouble(Double a, Double b) {
+		return a == null || b == null ? null : b - a;
 	}
 
     /**
