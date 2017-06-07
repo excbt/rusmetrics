@@ -139,7 +139,9 @@ app.directive('nmcShowDeviceModal', function () {
             $('#showDeviceModal').on('shown.bs.modal', function () {
                 
                 $scope.dirData.currentModel = mainSvc.findItemBy($scope.deviceModels, 'id', $scope.currentDevice.deviceModelId);
-                $scope.currentDevice.subscrDataSourceId = Number($scope.currentDevice.activeDataSource.subscrDataSource.id);
+                if (!mainSvc.checkUndefinedNull($scope.currentDevice.activeDataSource) && !mainSvc.checkUndefinedNull($scope.currentDevice.activeDataSource.subscrDataSource)) {
+                    $scope.currentDevice.subscrDataSourceId = Number($scope.currentDevice.activeDataSource.subscrDataSource.id);
+                }
                 $scope.$apply();
                 
                 setInputmask();
