@@ -492,6 +492,16 @@ app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudG
                 "message": messageForUser};
     };
     
+    
+    function setActiveReportCategory(filtredCategories) {
+        if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
+            filtredCategories.forEach(function (fc) {
+                fc.class = "";
+            });
+            filtredCategories[0].class = "active";
+        }
+    }
+    
     //init service
     var initService = function () {
         
@@ -519,7 +529,8 @@ app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudG
         getReportTypesIsLoaded: getReportTypesIsLoaded,
         getRequestCanceler: getRequestCanceler,
         getResourceCategories: getResourceCategories,
-        loadReportsContextLaunch: loadReportsContextLaunch
+        loadReportsContextLaunch: loadReportsContextLaunch,
+        setActiveReportCategory: setActiveReportCategory
     };
 }]);
 

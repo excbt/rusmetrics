@@ -29,18 +29,19 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
             return false;
         }
         // find active passport
-        var tmp = resp.data,
-            activePassport = resp.data[0];
-        tmp.forEach(function (passport) {
-            if (passport.passportDate2 > activePassport.passportDate2) {
-                activePassport = passport;
-            } else if (passport.passportDate2 === activePassport.passportDate2) {
-                if (passport.id > activePassport.id) {
-                    activePassport = passport;
-                }
-            }
-        });
-        if (activePassport.id === Number($routeParams.param)) {
+//        var tmp = resp.data,
+//            activePassport = resp.data[0];
+//        tmp.forEach(function (passport) {
+//            if (passport.passportDate2 > activePassport.passportDate2) {
+//                activePassport = passport;
+//            } else if (passport.passportDate2 === activePassport.passportDate2) {
+//                if (passport.id > activePassport.id) {
+//                    activePassport = passport;
+//                }
+//            }
+//        });
+        var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+        if (activePassport !== null && activePassport.id === Number($routeParams.param)) {
             $scope.isActivePassport = true;
         }
     }

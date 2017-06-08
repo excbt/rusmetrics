@@ -813,38 +813,6 @@ angular.module('portalNMC')
                 }, function (e) { console.log(e); });
             }
 
-            function addTimeOffset(val, label) {
-                var result = "";
-                if (val > 0) {
-                    if (val < 10) {
-                        result += "0";
-                    }
-                    result += val + label;
-                }
-                return result;
-            }
-
-            function prepareTimeOffset1(rawTimeOffset) {
-                var result = null;
-                if (!mainSvc.checkUndefinedNull(rawTimeOffset)) {
-//console.log(rawTimeOffset);
-                    if (rawTimeOffset.timeDeltaSign === 1) {
-                        result = "+";
-                    } else {
-                        result = "-";
-                    }
-
-                    result += addTimeOffset(rawTimeOffset.years, "г ");
-                    result += addTimeOffset(rawTimeOffset.mons, "М ");
-                    result += addTimeOffset(rawTimeOffset.days, "д ");
-                    result += addTimeOffset(rawTimeOffset.hh, "ч ");
-                    result += addTimeOffset(rawTimeOffset.mm, "м ");
-                    result += addTimeOffset(rawTimeOffset.ss, "с ");
-
-                }
-                return result;
-            }
-
             function prepareTimeOffset(rawTimeOffset) {
                 return mainSvc.prepareTimeOffset(rawTimeOffset);
             }
@@ -2322,7 +2290,7 @@ angular.module('portalNMC')
 
             var DEFAULT_INDICATOR_MODE = {
 
-                    keyname: "INDICATOR_MODE_" + (new Date).getTime(),
+                    keyname: "INDICATOR_MODE_" + (new Date()).getTime(),
                     caption: "Новое представление 1",
                     class: "nmc-mode-menu-item-active",
                     isActive: true,
@@ -2463,7 +2431,7 @@ angular.module('portalNMC')
             $scope.addIndicatorMode = function () {
                 var newMode = {
 
-                    keyname: "INDICATOR_MODE_" + (new Date).getTime(),
+                    keyname: "INDICATOR_MODE_" + (new Date()).getTime(),
                     caption: "Представление " + ($scope.data.indicatorModes.length + 1),
                     waterColumns: angular.copy(waterColumns),
                     indicatorHwKind: "24h",
@@ -2590,7 +2558,7 @@ angular.module('portalNMC')
 
             $scope.saveIndicatorPreferencesAsInit = function (mode) {
                 $scope.data.selectedIndicatorModeSaveAs = angular.copy(mode);
-                $scope.data.selectedIndicatorModeSaveAs.keyname = "INDICATOR_MODE_" + (new Date).getTime();
+                $scope.data.selectedIndicatorModeSaveAs.keyname = "INDICATOR_MODE_" + (new Date()).getTime();
                 $('#editIndicatorModeModal').modal();
             };
 
@@ -2600,7 +2568,7 @@ angular.module('portalNMC')
                     return false;
                 }
                 $scope.data.selectedIndicatorModeSaveAs = angular.copy(mode);
-                $scope.data.selectedIndicatorModeSaveAs.keyname = "INDICATOR_MODE_" + (new Date).getTime();
+                $scope.data.selectedIndicatorModeSaveAs.keyname = "INDICATOR_MODE_" + (new Date()).getTime();
                 if (mainSvc.checkUndefinedNull($scope.data.selectedIndicatorModeSaveAs)) {
                     console.log("$scope.data.selectedIndicatorModeSaveAs is undefined or null!");
                     return false;
@@ -2718,8 +2686,12 @@ angular.module('portalNMC')
                     if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || resp.data.length === 0) {
                         return false;
                     }
-//console.log(resp.data);                        
-                    var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+//console.log(resp.data);     
+                    try {
+                        var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+                    } catch(err) {
+                        console.error("objectIndicatorModeKeyname parse error: ", err);
+                    }
                     $scope.data.indicatorModes.some(function (imode) {
                         if (imode.keyname === objectIndicatorModeKeyname) {
                             imode.isCurrentMode = true;
@@ -3094,7 +3066,7 @@ angular.module('portalNMC')
             
             $scope.isReadOnlyPassport = function (passport) {
                 return mainSvc.isReadonly() || (!mainSvc.checkUndefinedNull(passport.id) && !passport.isActive);
-            }
+            };
             
             $scope.openContObjectPassport = function (doc, object) {
                 var objectParam = "new";
@@ -3102,7 +3074,7 @@ angular.module('portalNMC')
                     objectParam = object.id;
                 }
                 var winName = "_blank";
-                if (objectPassportCreationWindow !== null) {                    
+                if (objectPassportCreationWindow !== null) {
                     winName = OBJECT_PASSPORT_CREATION_WINDOW_NAME;
                     objectPassportCreationWindow = null;
                 }
@@ -3119,21 +3091,22 @@ angular.module('portalNMC')
                     return false;
                 }
                 // find active passport
-                var tmp = resp.data,
-                    activePassport = resp.data[0];
-                tmp.forEach(function (passport) {
-                    if (passport.passportDate2 > activePassport.passportDate2) {
-                        activePassport = passport;
-                    } else if (passport.passportDate2 === activePassport.passportDate2) {
-                        if (passport.id > activePassport.id) {
-                            activePassport = passport;
-                        }
-                    }
-                });
+//                var tmp = resp.data,
+//                    activePassport = resp.data[0];
+//                tmp.forEach(function (passport) {
+//                    if (passport.passportDate2 > activePassport.passportDate2) {
+//                        activePassport = passport;
+//                    } else if (passport.passportDate2 === activePassport.passportDate2) {
+//                        if (passport.id > activePassport.id) {
+//                            activePassport = passport;
+//                        }
+//                    }
+//                });
+                var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
                 activePassport.isActive = true;
-                mainSvc.sortItemsBy(tmp, "isActive");
-                tmp.reverse();
-                $scope.data.currentContObjectPassports = tmp;                
+                mainSvc.sortItemsBy(resp.data, "isActive");
+                resp.data.reverse();
+                $scope.data.currentContObjectPassports = resp.data;
             }
                 
             function successSavePassportCallback(resp) {
@@ -3141,7 +3114,7 @@ angular.module('portalNMC')
                     console.error("Incorrect response from server:");
                     console.error(resp);
                     return false;
-                }                
+                }
             }
 
             function successCreatePassportCallback(resp) {
@@ -3160,12 +3133,12 @@ angular.module('portalNMC')
                 //find and update doc in doc array
                 var updatingItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
                 var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(updatingItem);
-                if (docIndexAtArr > -1) {                    
+                if (docIndexAtArr > -1) {
                     $scope.data.currentContObjectPassports[docIndexAtArr] = angular.copy(resp.data);
                 }
             }
                 
-            function loadContObjectPassports(contObject) {                
+            function loadContObjectPassports(contObject) {
                 $scope.data.currentContObjectPassports = [];
                 if (passportRequestCanceller !== null) {
                     passportRequestCanceller.resolve();
@@ -3179,9 +3152,9 @@ angular.module('portalNMC')
                 energoPassportSvc.loadContObjectPassports(contObject, httpOptions)
                     .then(successLoadPassportsCallback, errorCallback);
                 
-            }            
+            }
                 
-            $scope.createContObjectPassportInit = function (object) {          
+            $scope.createContObjectPassportInit = function (object) {
                 $scope.data.currentDocument = {};
                 $scope.data.currentDocument.parentObject = object;
                 $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;

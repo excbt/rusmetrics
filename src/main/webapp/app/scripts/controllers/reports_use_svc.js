@@ -102,9 +102,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     
     function initialInstallCategory() {
         var filtredCategories = $filter('notEmptyCategories')($scope.categories);
-        if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
-            filtredCategories[0].class = "active";
-        }
+        reportSvc.setActiveReportCategory(filtredCategories);
+//        if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
+//            filtredCategories[0].class = "active";
+//        }
 //console.log($scope.categories);
 //console.log(filtredCategories);        
 //console.log("SetCurrentCategory after reportSvc:reportTypesIsLoaded");        
