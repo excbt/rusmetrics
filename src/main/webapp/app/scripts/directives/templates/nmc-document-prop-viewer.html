@@ -126,6 +126,32 @@
                                     </span>
                                 </td>
                             </tr>
+<!--
+                            <tr ng-if = "!currentDocument.id && currentDocument.type === data.documentTypes.OBJECT_PASSPORT.keyname">
+                                <td colspan = "2" class = "col-xs-12">
+                                    <input type= "checkbox" 
+                                           class="nmc-checkbox-form" 
+                                           ng-model="currentDocument.isRunDataCoping"
+                                           ng-disabled="isReadOnly()"
+                                           />
+                                    <label>
+                                        Скопировать данные из предыдущего паспорта.
+                                    </label>
+                                </td>                                
+                            </tr>
+                            <tr ng-if = "!currentDocument.id && currentDocument.type === data.documentTypes.OBJECT_PASSPORT.keyname">
+                                <td colspan = "2" class = "col-xs-12">
+                                    <input type= "checkbox" 
+                                           class="nmc-checkbox-form" 
+                                           ng-model="currentDocument.isRunDataCoping"
+                                           ng-disabled="isReadOnly()"
+                                           />
+                                    <label>
+                                        Импортировать данные из паспортов объектов учета.
+                                    </label>
+                                </td>                                
+                            </tr>
+-->
                             <tr>
                                 <td colspan = "2">
                                     Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!

@@ -11,7 +11,7 @@ app.directive('nmcDocumentViewer', function () {
             closeDocument: "&"
         },
         templateUrl: 'scripts/directives/templates/nmc-document-viewer.html',
-        controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout) {
+        controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', 'objectSvc', '$q', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout, objectSvc, $q) {
     
 //    console.log('documentsEnergoPassportCtrl is run');
 //    console.log($location.path);
@@ -47,6 +47,10 @@ app.directive('nmcDocumentViewer', function () {
                 SHORT_STATIC_ELEM = 12, /*half length of static elem*/
                 BOOLEAN_ELEM = 5,
                 VALUE_ELEM = 25;
+            
+            /*dir settings*/
+            var isObjectImportEnable = false,
+                passportRequestCanceller = null;
 
             $scope.DEBUG_MODE = false;
 
@@ -75,6 +79,8 @@ app.directive('nmcDocumentViewer', function () {
             $scope.ctrlSettings.sectionLoading = false;//flag of section loading
             $scope.ctrlSettings.passportSaving = false;
             $scope.ctrlSettings.sectionSaving = false;
+                        
+            $scope.ctrlSettings.passportImportLoading = false;//cont object passport import flag
 
         //    $scope.ctrlSettings.emptyString = " ";
 
@@ -87,6 +93,8 @@ app.directive('nmcDocumentViewer', function () {
         //    $scope.data.isSectionChanged = false; //flag of section data changed
 
             $scope.data.passport = {};
+            $scope.data.objectPassport = {}; //imported contObject passport struct
+            $scope.data.currentObjPassDocSection = {};//selected section of contObject passport
 
             $scope.data.currentTd = {};//current selected TD of table
             $scope.data.currentRow = {};//current selected row of table
@@ -100,6 +108,10 @@ app.directive('nmcDocumentViewer', function () {
         //    $scope.data.passDocStructure = null;
             //current passport structure which is shown at present moment
             $scope.data.currentPassDocSection = null;
+            
+            $scope.isObjectImportButtonEnableAtBtnPanel = function () {
+                return isObjectImportEnable;
+            };
 
             function locateTdBtns(td, tdInd, rowInd, partInd) {
                 if (!(td.hasOwnProperty("isSelected") && td.isSelected === true)) {
@@ -203,6 +215,7 @@ app.directive('nmcDocumentViewer', function () {
             function errorCallback(e) {
                 $scope.ctrlSettings.sectionSaving = false;
                 $scope.ctrlSettings.passportSaving = false;
+                $scope.ctrlSettings.passportImportLoading = false;
                 var errorObj = mainSvc.errorCallbackHandler(e);
                 notificationFactory.errorInfo(errorObj.caption, errorObj.description);
             }
@@ -768,6 +781,17 @@ app.directive('nmcDocumentViewer', function () {
                     break;
                 }
             }
+            
+            function changeAvailablesForEntry(section) {
+                isObjectImportEnable = false;
+                switch (section.preparedSection.sectionKey) {
+                case "S_1.3":
+                    if (!mainSvc.checkUndefinedNull(section.preparedSection.sectionEntryId)) {
+                        isObjectImportEnable = true;
+                    }
+                    break;
+                }
+            }
 
             function changeSection(part) {
                 $scope.ctrlSettings.sectionLoading = true;
@@ -782,6 +806,7 @@ app.directive('nmcDocumentViewer', function () {
                 $scope.data.currentPassDocSection = part;
                 $scope.data.currentPassDocSection.isSelected = true;
 
+                changeAvailablesForEntry($scope.data.currentPassDocSection);
                 //change captions for different entries
                 changeCaptionsForEntry($scope.data.currentPassDocSection);
 
@@ -1616,10 +1641,181 @@ app.directive('nmcDocumentViewer', function () {
                 } else {
                     delHandler(document, "keypress", hotSave);
                 }
+                
+                if (passportRequestCanceller !== null) {
+                    passportRequestCanceller.resolve();
+                }
             });
         /***
            Конец обработки нажатия клавиш 
         **/
+            
+            /**
+            Импорт данных для объектов
+            */
+            
+            $scope.data.currentContObjectPassports = [];
+            
+            function successLoadPassportsCallback(resp) {
+                if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data) || resp.data.length <= 0) {
+                    return false;
+                }
+                var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+                activePassport.isActive = true;
+                mainSvc.sortItemsBy(resp.data, "isActive");
+                resp.data.reverse();
+                $scope.data.currentContObjectPassports = resp.data;
+            }
+            
+            $scope.importObjectDataInitFromBtnPanel = function () {
+                //get objects                
+                objectSvc.getPromise().then(function (resp) {
+                    $scope.data.objects = resp.data;
+                });
+                //open import window
+                $scope.data.importStruct = {};
+                $('#showObjectImportPropertiesModal').modal();
+                //load passports
+                
+            };
+            
+            function loadContObjectPassports(contObject) {
+                if (mainSvc.checkUndefinedNull(contObject)) {
+                    console.warn("Object is undefined or null: ", contObject);
+                    return false;
+                }
+                $scope.data.currentContObjectPassports = [];
+                if (passportRequestCanceller !== null) {
+                    passportRequestCanceller.resolve();
+                }
+                
+                passportRequestCanceller = $q.defer();
+                var httpOptions = {
+                    timeout: passportRequestCanceller.promise
+                };
+                
+                energoPassportSvc.loadContObjectPassports(contObject, httpOptions)
+                    .then(successLoadPassportsCallback, errorCallback);
+                
+            }
+            
+            $scope.objectChange = function (objId) {
+                $scope.data.currentContObjectPassports = [];
+                $scope.data.importStruct.passportId = null;
+                loadContObjectPassports(objId);
+            };
+            
+            function successLoadContObjectPassportDataCallback(resp) {
+        //        console.log(resp);
+                //hash map
+                var sectionValues = {},
+                    passDocData = angular.copy(resp.data);
+                $scope.data.objectPassport.passportData = angular.copy(resp.data);
+                passDocData.forEach(function (dataElm) {
+                    //fill hash map
+                    sectionValues = performLoadedSection(dataElm, sectionValues);
+                });
+                var currentContObjectSectionValues = sectionValues[$scope.data.currentObjPassDocSection.preparedSection.sectionKey][$scope.data.currentObjPassDocSection.preparedSection.sectionEntryId || 0];
+                
+                //importing values
+                var curSecKey = null,
+                    isChanged = false;
+                for (curSecKey in $scope.data.currentSectionValues) {
+                    if ($scope.data.currentSectionValues.hasOwnProperty(curSecKey) && currentContObjectSectionValues.hasOwnProperty(curSecKey) && curSecKey !== "version") {
+//                        console.log($scope.data.currentSectionValues[curSecKey]);
+                        $scope.data.currentSectionValues[curSecKey].value = currentContObjectSectionValues[curSecKey].value;
+                        isChanged = true;
+                    }
+                }
+                
+                if (isChanged === true) {
+                    //set section and document change flag
+                    $scope.onChange();
+                }
+                
+                //close importing window
+                $scope.ctrlSettings.passportImportLoading = false;
+                $('#showObjectImportPropertiesModal').modal('hide');
+                
+                //reset contObject passport structs
+                $scope.data.objectPassport = {};
+                $scope.data.currentObjPassDocSection = {};
+            }
+            
+            function loadContObjectPassportData(passport) {
+                energoPassportSvc.loadPassportData(passport.id)
+                    .then(successLoadContObjectPassportDataCallback, errorCallback);
+            }
+            
+            function successLoadContObjectPassport(response) {
+        //        console.log(response);
+                if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data)) {
+                    console.warn("Loaded passport is empty!");
+                    return false;
+                }
+
+                var result = [],
+                    tmp = angular.copy(response.data);
+
+                //$scope.data.passport = angular.copy(response.data);
+
+                tmp.sections.forEach(function (secTempl) {
+                    secTempl.preparedSection = preparePassDoc(JSON.parse(secTempl.sectionJson));
+                    result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
+                });
+        //        result = preparePassDoc(result);
+                $scope.data.objectPassport = tmp;
+                //$scope.data.passport.changedSectionCount = 0; //passport is not changed
+                //TODO: comment
+                console.log($scope.data.objectPassport);
+        
+                if ($scope.data.objectPassport.sections.length >= 1) {
+                    $scope.data.currentObjPassDocSection = $scope.data.objectPassport.sections[INDEX_OF_DEFAULT_SECTION];
+                    $scope.data.currentObjPassDocSection.isSelected = true;
+                }
+
+                //load passport data
+                loadContObjectPassportData(response.data);
+
+        //        $scope.ctrlSettings.passportLoading = false;
+            }
+            
+            function loadContObjectPassport(passportId) {
+                energoPassportSvc.loadPassports(passportId)
+                    .then(successLoadContObjectPassport, errorCallback);
+            }
+            
+            function checkImportInputData(inputStruct) {
+                var result = true;
+                if (mainSvc.checkUndefinedNull(inputStruct)) {
+                    notificationFactory.errorInfo("Некорректные данные", "Неправильно задана структура данных. Переоткройте окно и повторите попытку. В случае повторения ошибки обратитесь к поставщику системы.");
+                    return false;
+                }
+                if (mainSvc.checkUndefinedNull(inputStruct.objectId)) {
+                    notificationFactory.errorInfo("Некорректные данные", "Не задан объект учета.");
+                    result = false;
+                }
+                if (mainSvc.checkUndefinedNull(inputStruct.passportId)) {
+                    notificationFactory.errorInfo("Некорректные данные", "Не задан пасспорт объекта учета.");
+                    result = false;
+                }
+                return result;
+            }
+            
+            $scope.importContObjectPassport = function (inputStruct) {
+                //check input struct
+                if (checkImportInputData(inputStruct) === false) {
+                    return false;
+                }
+                $scope.ctrlSettings.passportImportLoading = true;
+                //load cont object passport data
+                loadContObjectPassport(inputStruct.passportId);
+                //replace current section data for cont object passport data
+            };
+            
+            /***
+            Конец Импорта данных для объектов
+            */
 
             function initCtrl() {
                 var routeParams = $routeParams;
