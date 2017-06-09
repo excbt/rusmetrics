@@ -24,6 +24,8 @@ public class MockUserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MockUserService.class);
 
+	public static final long SYSTEM_USER = 1000L;
+
 	private Long mockUserId = null;
 
 //	@Autowired
