@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_full_user_info")
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class V_FullUserInfo implements Serializable {
 
 	/**

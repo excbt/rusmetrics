@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_zpoint_metadata")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ContZPointMetadata extends AbstractAuditableModel {
 
 	/**

@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_device_object_time_offset")
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class V_DeviceObjectTimeOffset implements Serializable {
 
 	/**

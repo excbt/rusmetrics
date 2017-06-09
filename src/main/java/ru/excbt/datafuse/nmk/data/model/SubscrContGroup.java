@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContGroupType;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrContGroup extends AbstractAuditableModel {
 
 	/**

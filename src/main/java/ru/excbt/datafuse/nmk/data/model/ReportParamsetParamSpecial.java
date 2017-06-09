@@ -39,7 +39,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "report_paramset_param_special")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	/**

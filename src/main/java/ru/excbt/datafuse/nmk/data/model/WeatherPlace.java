@@ -16,7 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_place")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class WeatherPlace extends AbstractAuditableModel implements DisabledObject, DeletableObjectId {
 
 	/**

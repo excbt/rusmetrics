@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "temperature_chart_item")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class TemperatureChartItem extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**

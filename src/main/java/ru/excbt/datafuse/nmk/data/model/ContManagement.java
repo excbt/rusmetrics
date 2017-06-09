@@ -34,7 +34,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "cont_management")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ContManagement extends AbstractAuditableModel {
 
 	/**

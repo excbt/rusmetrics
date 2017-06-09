@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Entity
 @Table(name = "subscriber")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject, PersistableBuilder<Subscriber, Long> {
 
 	/**

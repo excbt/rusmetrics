@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_rso")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrRso extends AbstractAuditableModel {
 
 	/**

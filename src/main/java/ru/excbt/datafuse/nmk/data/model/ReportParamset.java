@@ -45,7 +45,7 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 @SQLDelete(sql = "UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ReportParamset extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**

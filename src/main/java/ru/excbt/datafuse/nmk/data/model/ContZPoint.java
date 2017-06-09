@@ -46,7 +46,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @Table(name = "cont_zpoint")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId {
 
 	/**

@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_forecast_calc")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class WeatherForecastCalc extends AbstractAuditableModel {
 
 	/**

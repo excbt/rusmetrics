@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
  */
 @Entity
 @Table(name = "subscr_cont_object")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrContObject extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**

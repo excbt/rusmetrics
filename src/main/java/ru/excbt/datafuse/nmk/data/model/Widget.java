@@ -41,7 +41,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "_widget")
 @JsonIgnoreProperties(value = { PropertyFilter.DEV_COMMENT_PROPERTY_IGNORE, "deleted" }, ignoreUnknown = true)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class Widget extends AbstractPersistableEntity<Long> implements JsonModel, DeletedMarker {
 
 	/**
