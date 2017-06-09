@@ -110,7 +110,7 @@ app.directive('nmcDocumentViewer', function () {
             $scope.data.currentPassDocSection = null;
             
             $scope.isObjectImportButtonEnableAtBtnPanel = function () {
-                return isObjectImportEnable && !$scope.ctrlSettings.passportLoading && !$scope.ctrlSettings.sectionLoading;
+                return !$scope.isReadOnly() && isObjectImportEnable && !$scope.ctrlSettings.passportLoading && !$scope.ctrlSettings.sectionLoading;
             };
 
             function locateTdBtns(td, tdInd, rowInd, partInd) {
@@ -695,6 +695,17 @@ app.directive('nmcDocumentViewer', function () {
                 energoPassportSvc.loadPassportData(passport.id)
                     .then(successLoadPassportDataCallback, errorCallback);
             }
+            
+            function changeSectionAvailables(section) {
+                isObjectImportEnable = false;
+                switch (section.preparedSection.sectionKey) {
+                case "S_1.3":
+                    if (!mainSvc.checkUndefinedNull(section.preparedSection.sectionEntryId) || $scope.data.passport.templateKeyname === "ENERGY_PASSPORT_X") {
+                        isObjectImportEnable = true;
+                    }
+                    break;
+                }
+            }
 
             function successLoadPassportCallback(response) {
         //        console.log(response);
@@ -722,10 +733,12 @@ app.directive('nmcDocumentViewer', function () {
         //        $scope.data.passDocStructure = result;
         //        if ($scope.data.passDocStructure.length >= 1) {
                 if ($scope.data.passport.sections.length >= 1) {
+//                    changeSection($scope.data.passport.sections[INDEX_OF_DEFAULT_SECTION]);
                     $scope.data.currentPassDocSection = $scope.data.passport.sections[INDEX_OF_DEFAULT_SECTION]; //$scope.data.passDocStructure[INDEX_OF_DEFAULT_SECTION];
         //            if (mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.values)) {
         //                $scope.data.currentPassDocSection.values = {};
         //            }
+                    changeSectionAvailables($scope.data.currentPassDocSection);
                     $scope.data.currentPassDocSection.isSelected = true;
                     setSectionStyles();
 
@@ -781,24 +794,13 @@ app.directive('nmcDocumentViewer', function () {
                     break;
                 }
             }
-            
-            function changeAvailablesForEntry(section) {
-                isObjectImportEnable = false;
-                switch (section.preparedSection.sectionKey) {
-                case "S_1.3":
-                    if (!mainSvc.checkUndefinedNull(section.preparedSection.sectionEntryId)) {
-                        isObjectImportEnable = true;
-                    }
-                    break;
-                }
-            }
 
             function changeSection(part) {
                 $scope.ctrlSettings.sectionLoading = true;
                 if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection)) {
                     $scope.data.currentPassDocSection.isSelected = false;
                 }
-                if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.entries) && $scope.data.currentPassDocSection.entries.length > 0) {
+                if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection) && !mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.entries) && $scope.data.currentPassDocSection.entries.length > 0) {
                     $scope.data.currentPassDocSection.entries.forEach(function (entry) {
                         entry.isSelected = false;
                     });
@@ -806,7 +808,7 @@ app.directive('nmcDocumentViewer', function () {
                 $scope.data.currentPassDocSection = part;
                 $scope.data.currentPassDocSection.isSelected = true;
 
-                changeAvailablesForEntry($scope.data.currentPassDocSection);
+                changeSectionAvailables($scope.data.currentPassDocSection);
                 //change captions for different entries
                 changeCaptionsForEntry($scope.data.currentPassDocSection);
 
