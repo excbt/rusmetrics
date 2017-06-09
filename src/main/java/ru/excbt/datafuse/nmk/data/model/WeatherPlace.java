@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -17,6 +19,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_place")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class WeatherPlace extends AbstractAuditableModel implements DisabledObject, DeletableObjectId {
 
 	/**
@@ -84,168 +88,5 @@ public class WeatherPlace extends AbstractAuditableModel implements DisabledObje
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public String getPlaceName() {
-		return placeName;
-	}
-
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
-	}
-
-	public String getPlaceShortName() {
-		return placeShortName;
-	}
-
-	public void setPlaceShortName(String placeShortName) {
-		this.placeShortName = placeShortName;
-	}
-
-	public String getPlaceShortName2() {
-		return placeShortName2;
-	}
-
-	public void setPlaceShortName2(String placeShortName2) {
-		this.placeShortName2 = placeShortName2;
-	}
-
-	public String getPlaceShortName3() {
-		return placeShortName3;
-	}
-
-	public void setPlaceShortName3(String placeShortName3) {
-		this.placeShortName3 = placeShortName3;
-	}
-
-	public String getPlaceFullName() {
-		return placeFullName;
-	}
-
-	public void setPlaceFullName(String placeFullName) {
-		this.placeFullName = placeFullName;
-	}
-
-	public String getPlaceDescription() {
-		return placeDescription;
-	}
-
-	public void setPlaceDescription(String placeDescription) {
-		this.placeDescription = placeDescription;
-	}
-
-	public String getPlaceComment() {
-		return placeComment;
-	}
-
-	public void setPlaceComment(String placeComment) {
-		this.placeComment = placeComment;
-	}
-
-	public String getProviderPlaceId() {
-		return providerPlaceId;
-	}
-
-	public void setProviderPlaceId(String providerPlaceId) {
-		this.providerPlaceId = providerPlaceId;
-	}
-
-	public String getProviderPlaceId1() {
-		return providerPlaceId1;
-	}
-
-	public void setProviderPlaceId1(String providerPlaceId1) {
-		this.providerPlaceId1 = providerPlaceId1;
-	}
-
-	public String getProviderPlaceId2() {
-		return providerPlaceId2;
-	}
-
-	public void setProviderPlaceId2(String providerPlaceId2) {
-		this.providerPlaceId2 = providerPlaceId2;
-	}
-
-	public String getProviderPlaceId3() {
-		return providerPlaceId3;
-	}
-
-	public void setProviderPlaceId3(String providerPlaceId3) {
-		this.providerPlaceId3 = providerPlaceId3;
-	}
-
-	public BigDecimal getGeoLat() {
-		return geoLat;
-	}
-
-	public void setGeoLat(BigDecimal geoLat) {
-		this.geoLat = geoLat;
-	}
-
-	public BigDecimal getGeoLon() {
-		return geoLon;
-	}
-
-	public void setGeoLon(BigDecimal geoLon) {
-		this.geoLon = geoLon;
-	}
-
-	@Override
-	public Boolean getIsDisabled() {
-		return isDisabled;
-	}
-
-	public void setIsDisabled(Boolean isDisabled) {
-		this.isDisabled = isDisabled;
-	}
-
-	public UUID getFiasUuid() {
-		return fiasUuid;
-	}
-
-	public void setFiasUuid(UUID fiasUuid) {
-		this.fiasUuid = fiasUuid;
-	}
-
-	public String getFiasScName() {
-		return fiasScName;
-	}
-
-	public void setFiasScName(String fiasScName) {
-		this.fiasScName = fiasScName;
-	}
-
-	public Integer getFiasLevel() {
-		return fiasLevel;
-	}
-
-	public void setFiasLevel(Integer fiasLevel) {
-		this.fiasLevel = fiasLevel;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Integer getPlacePriority() {
-		return placePriority;
-	}
-
-	public void setPlacePriority(Integer placePriority) {
-		this.placePriority = placePriority;
-	}
 
 }

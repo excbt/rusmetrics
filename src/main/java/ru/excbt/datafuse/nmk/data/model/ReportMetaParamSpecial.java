@@ -10,6 +10,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -29,6 +31,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @Table(name = "report_meta_param_special")
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ReportMetaParamSpecial extends AbstractAuditableModel implements DisabledObject {
 
 	/**
@@ -81,66 +85,5 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel implements Di
 
 	@Column(name = "param_order", insertable = false, updatable = false)
 	private Integer reportMetaParamOrder;
-
-	//	public ReportType getReportType() {
-	//		return reportType;
-	//	}
-
-	public ReportMetaParamSpecialType getParamSpecialType() {
-		return paramSpecialType;
-	}
-
-	public String getParamSpecialKeyname() {
-		return paramSpecialKeyname;
-	}
-
-	public String getParamSpecialCaption() {
-		return paramSpecialCaption;
-	}
-
-	public Boolean getParamSpecialRequired() {
-		return paramSpecialRequired;
-	}
-
-	public String getParamSpecialName1() {
-		return paramSpecialName1;
-	}
-
-	public String getParamSpecialName2() {
-		return paramSpecialName2;
-	}
-
-	public String getParamSpecialDefaultValue1() {
-		return paramSpecialDefaultValue1;
-	}
-
-	public String getParamSpecialDefaultValue2() {
-		return paramSpecialDefaultValue2;
-	}
-
-	@Override
-	public Boolean getIsDisabled() {
-		return isDisabled;
-	}
-
-	public String getReportTypeKeyname() {
-		return reportTypeKeyname;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public ReportMetaParamCategory getReportMetaParamCategory() {
-		return reportMetaParamCategory;
-	}
-
-	public String getReportMetaParamCategoryKeyname() {
-		return reportMetaParamCategoryKeyname;
-	}
-
-	public Integer getReportMetaParamOrder() {
-		return reportMetaParamOrder;
-	}
 
 }

@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
@@ -22,10 +24,12 @@ import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session")
 @SequenceGenerator(name = "abstractEntity", sequenceName = "slog.seq_log_session_id", allocationSize = 1)
 @JsonInclude(value = Include.NON_NULL)
+@Getter
+@Setter
 public class LogSession extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
-		 * 
+		 *
 		 */
 	private static final long serialVersionUID = 574203986772513167L;
 
@@ -100,167 +104,6 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 	@Transient
 	private V_FullUserInfo fullUserInfo;
 
-	public Long getMasterId() {
-		return masterId;
-	}
-
-	public void setMasterId(Long masterId) {
-		this.masterId = masterId;
-	}
-
-	public String getSessionType() {
-		return sessionType;
-	}
-
-	public void setSessionType(String sessionType) {
-		this.sessionType = sessionType;
-	}
-
-	public UUID getSessionUuid() {
-		return sessionUuid;
-	}
-
-	public void setSessionUuid(UUID sessionUuid) {
-		this.sessionUuid = sessionUuid;
-	}
-
-	public UUID getMasterSessionUuid() {
-		return masterSessionUuid;
-	}
-
-	public void setMasterSessionUuid(UUID masterSessionUuid) {
-		this.masterSessionUuid = masterSessionUuid;
-	}
-
-	public Date getSessionDate() {
-		return sessionDate;
-	}
-
-	public void setSessionDate(Date sessionDate) {
-		this.sessionDate = sessionDate;
-	}
-
-	public Date getSessionEndDate() {
-		return sessionEndDate;
-	}
-
-	public void setSessionEndDate(Date sessionEndDate) {
-		this.sessionEndDate = sessionEndDate;
-	}
-
-	public String getSessionOwner() {
-		return sessionOwner;
-	}
-
-	public void setSessionOwner(String sessionOwner) {
-		this.sessionOwner = sessionOwner;
-	}
-
-	public String getSessionMessage() {
-		return sessionMessage;
-	}
-
-	public void setSessionMessage(String sessionMessage) {
-		this.sessionMessage = sessionMessage;
-	}
-
-	public String getSessionStatus() {
-		return sessionStatus;
-	}
-
-	public void setSessionStatus(String sessionStatus) {
-		this.sessionStatus = sessionStatus;
-	}
-
-	public String getStatusMessage() {
-		return statusMessage;
-	}
-
-	public void setStatusMessage(String statusMessage) {
-		this.statusMessage = statusMessage;
-	}
-
-	public Date getStatusDate() {
-		return statusDate;
-	}
-
-	public void setStatusDate(Date statusDate) {
-		this.statusDate = statusDate;
-	}
-
-	public Long getStatusNanos() {
-		return statusNanos;
-	}
-
-	public void setStatusNanos(Long statusNanos) {
-		this.statusNanos = statusNanos;
-	}
-
-	public Long getDataSourceId() {
-		return dataSourceId;
-	}
-
-	public void setDataSourceId(Long dataSourceId) {
-		this.dataSourceId = dataSourceId;
-	}
-
-	public Long getDeviceObjectId() {
-		return deviceObjectId;
-	}
-
-	public void setDeviceObjectId(Long deviceObjectId) {
-		this.deviceObjectId = deviceObjectId;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public Boolean getIsComplete() {
-		return isComplete;
-	}
-
-	public void setIsComplete(Boolean isComplete) {
-		this.isComplete = isComplete;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public SubscrDataSource getSubscrDataSource() {
-		return subscrDataSource;
-	}
-
-	public void setSubscrDataSource(SubscrDataSource subscrDataSource) {
-		this.subscrDataSource = subscrDataSource;
-	}
-
-	public DeviceObject getDeviceObject() {
-		return deviceObject;
-	}
-
-	public void setDeviceObject(DeviceObject deviceObject) {
-		this.deviceObject = deviceObject;
-	}
 
 	public String getSessionDateStr() {
 		return sessionDate == null ? null
@@ -275,22 +118,6 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 	public String getStatusDateStr() {
 		return statusDate == null ? null
 				: DateFormatUtils.formatDateTime(statusDate, DateFormatUtils.DATE_FORMAT_STR_FULL_SEC);
-	}
-
-	public Long getAuthorId() {
-		return authorId;
-	}
-
-	public void setAuthorId(Long authorId) {
-		this.authorId = authorId;
-	}
-
-	public V_FullUserInfo getFullUserInfo() {
-		return fullUserInfo;
-	}
-
-	public void setFullUserInfo(V_FullUserInfo fullUserInfo) {
-		this.fullUserInfo = fullUserInfo;
 	}
 
 }

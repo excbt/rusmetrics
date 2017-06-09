@@ -10,15 +10,19 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_object_tree_template_item")
+@Getter
+@Setter
 public class SubscrObjectTreeTemplateItem extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8142999302180305196L;
 
@@ -62,111 +66,5 @@ public class SubscrObjectTreeTemplateItem extends JsonAbstractAuditableModel imp
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public Long getTemplateId() {
-		return templateId;
-	}
-
-	public void setTemplateId(Long templateId) {
-		this.templateId = templateId;
-	}
-
-	public SubscrObjectTreeTemplate getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(SubscrObjectTreeTemplate template) {
-		this.template = template;
-	}
-
-	public Integer getItemLevel() {
-		return itemLevel;
-	}
-
-	public void setItemLevel(Integer itemLevel) {
-		this.itemLevel = itemLevel;
-	}
-
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
-	public String getItemDescription() {
-		return itemDescription;
-	}
-
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
-	}
-
-	public String getItemComment() {
-		return itemComment;
-	}
-
-	public void setItemComment(String itemComment) {
-		this.itemComment = itemComment;
-	}
-
-	public String getDevComment() {
-		return devComment;
-	}
-
-	public void setDevComment(String devComment) {
-		this.devComment = devComment;
-	}
-
-	public Boolean getIsDisabled() {
-		return isDisabled;
-	}
-
-	public void setIsDisabled(Boolean isDisabled) {
-		this.isDisabled = isDisabled;
-	}
-
-	public Boolean getIsSingleObject() {
-		return isSingleObject;
-	}
-
-	public void setIsSingleObject(Boolean isSingleObject) {
-		this.isSingleObject = isSingleObject;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Boolean getIsLinkDeny() {
-		return isLinkDeny;
-	}
-
-	public void setIsLinkDeny(Boolean isLinkDeny) {
-		this.isLinkDeny = isLinkDeny;
-	}
-
-	public String getItemNameTemplate() {
-		return itemNameTemplate;
-	}
-
-	public void setItemNameTemplate(String itemNameTemplate) {
-		this.itemNameTemplate = itemNameTemplate;
-	}
 
 }

@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
@@ -13,6 +15,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_pref_object_tree_type")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel implements DisabledObject {
 
 	/**
@@ -40,51 +44,6 @@ public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel impleme
 
 	public String getObjectTreeType() {
 		return objectTreeType;
-	}
-
-	public void setObjectTreeType(String objectTreeType) {
-		this.objectTreeType = objectTreeType;
-	}
-
-	public String getDevComment() {
-		return devComment;
-	}
-
-	public void setDevComment(String devComment) {
-		this.devComment = devComment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getSubscrPrefKeyname() {
-		return subscrPrefKeyname;
-	}
-
-	public void setSubscrPrefKeyname(String subscrPrefKeyname) {
-		this.subscrPrefKeyname = subscrPrefKeyname;
-	}
-
-	@Override
-	public Boolean getIsDisabled() {
-		return isDisabled;
-	}
-
-	public void setIsDisabled(Boolean isDisabled) {
-		this.isDisabled = isDisabled;
 	}
 
 }

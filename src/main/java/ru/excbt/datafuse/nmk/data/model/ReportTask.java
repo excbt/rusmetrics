@@ -12,11 +12,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Задание на создание отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -24,10 +26,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "report_task")
+@Getter
+@Setter
 public class ReportTask extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3985453988568530051L;
 
@@ -68,85 +72,5 @@ public class ReportTask extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public Date getTaskDate() {
-		return taskDate;
-	}
-
-	public void setTaskDate(Date taskDate) {
-		this.taskDate = taskDate;
-	}
-
-	public Date getReportDate() {
-		return reportDate;
-	}
-
-	public void setReportDate(Date reportDate) {
-		this.reportDate = reportDate;
-	}
-
-	public ReportTemplate getReportTemplate() {
-		return reportTemplate;
-	}
-
-	public void setReportTemplate(ReportTemplate reportTemplate) {
-		this.reportTemplate = reportTemplate;
-	}
-
-	public ReportParamset getReportParamset() {
-		return reportParamset;
-	}
-
-	public void setReportParamset(ReportParamset reportParamset) {
-		this.reportParamset = reportParamset;
-	}
-
-	public boolean is_complete() {
-		return _complete;
-	}
-
-	public void set_complete(boolean _complete) {
-		this._complete = _complete;
-	}
-
-	public ReportShedule getReportShedule() {
-		return reportShedule;
-	}
-
-	public void setReportShedule(ReportShedule reportShedule) {
-		this.reportShedule = reportShedule;
-	}
-
-	public Date getReportDataBeginDate() {
-		return reportDataBeginDate;
-	}
-
-	public void setReportDataBeginDate(Date reportDataBeginDate) {
-		this.reportDataBeginDate = reportDataBeginDate;
-	}
-
-	public Date getReportDataEndDate() {
-		return reportDataEndDate;
-	}
-
-	public void setReportDataEndDate(Date reportDataEndDate) {
-		this.reportDataEndDate = reportDataEndDate;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 }

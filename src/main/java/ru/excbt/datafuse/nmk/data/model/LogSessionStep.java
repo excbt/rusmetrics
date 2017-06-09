@@ -11,6 +11,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
@@ -18,10 +20,12 @@ import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 @Entity
 @Table(schema = DBMetadata.SCHEME_SLOG, name = "log_session_step")
 @SequenceGenerator(name = "abstractEntity", sequenceName = "slog.seq_log_session_id", allocationSize = 1)
+@Getter
+@Setter
 public class LogSessionStep extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7317990456243598785L;
 
@@ -68,120 +72,6 @@ public class LogSessionStep extends JsonAbstractAuditableModel implements Deleta
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public Long getSessionId() {
-		return sessionId;
-	}
-
-	public void setSessionId(Long sessionId) {
-		this.sessionId = sessionId;
-	}
-
-	public UUID getStepUuid() {
-		return stepUuid;
-	}
-
-	public void setStepUuid(UUID stepUuid) {
-		this.stepUuid = stepUuid;
-	}
-
-	public Date getStepDate() {
-		return stepDate;
-	}
-
-	public void setStepDate(Date stepDate) {
-		this.stepDate = stepDate;
-	}
-
-	public String getStepModule() {
-		return stepModule;
-	}
-
-	public void setStepModule(String stepModule) {
-		this.stepModule = stepModule;
-	}
-
-	public String getStepType() {
-		return stepType;
-	}
-
-	public void setStepType(String stepType) {
-		this.stepType = stepType;
-	}
-
-	public String getStepMessage() {
-		return stepMessage;
-	}
-
-	public void setStepMessage(String stepMessage) {
-		this.stepMessage = stepMessage;
-	}
-
-	public String getStepDescription() {
-		return stepDescription;
-	}
-
-	public void setStepDescription(String stepDescription) {
-		this.stepDescription = stepDescription;
-	}
-
-	public Boolean getIsChecked() {
-		return isChecked;
-	}
-
-	public void setIsChecked(Boolean isChecked) {
-		this.isChecked = isChecked;
-	}
-
-	public Integer getSumRows() {
-		return sumRows;
-	}
-
-	public void setSumRows(Integer sumRows) {
-		this.sumRows = sumRows;
-	}
-
-	public Boolean getIsIncremental() {
-		return isIncremental;
-	}
-
-	public void setIsIncremental(Boolean isIncremental) {
-		this.isIncremental = isIncremental;
-	}
-
-	public Date getLastIncrementDate() {
-		return lastIncrementDate;
-	}
-
-	public void setLastIncrementDate(Date lastIncrementDate) {
-		this.lastIncrementDate = lastIncrementDate;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Integer getStepOrder() {
-		return stepOrder;
-	}
-
-	public void setStepOrder(Integer stepOrder) {
-		this.stepOrder = stepOrder;
-	}
 
 	public String getStepDateStr() {
 		return stepDate == null ? null

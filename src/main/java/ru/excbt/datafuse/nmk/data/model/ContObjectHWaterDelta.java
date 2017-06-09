@@ -9,12 +9,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 /**
  * Расширенные данные HWater
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.08.2015
@@ -22,10 +24,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
  */
 @Entity
 @Table(name = "v_cont_object_hwater_delta")
+@Getter
 public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> implements DataDateFormatter {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4406985098209145741L;
 
@@ -65,55 +68,5 @@ public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> imple
 
 	@Column(name = "fail_time")
 	private BigDecimal failTime;
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public String getContServiceType() {
-		return contServiceType;
-	}
-
-	public Long getContZPointId() {
-		return contZPointId;
-	}
-
-	@Override
-	public Date getDataDate() {
-		return dataDate;
-	}
-
-	@Override
-	public String getTimeDetailType() {
-		return timeDetailType;
-	}
-
-	public BigDecimal getT_in() {
-		return t_in;
-	}
-
-	public BigDecimal getT_out() {
-		return t_out;
-	}
-
-	public BigDecimal getM_delta() {
-		return m_delta;
-	}
-
-	public BigDecimal getV_delta() {
-		return v_delta;
-	}
-
-	public BigDecimal getH_delta() {
-		return h_delta;
-	}
-
-	public BigDecimal getWorkTime() {
-		return workTime;
-	}
-
-	public BigDecimal getFailTime() {
-		return failTime;
-	}
 
 }

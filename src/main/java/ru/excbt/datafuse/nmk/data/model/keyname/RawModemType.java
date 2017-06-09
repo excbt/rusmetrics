@@ -5,15 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "raw_modem_type")
-public class RawModemType extends JsonAbstractKeynameEntity {
+@Getter
+public class RawModemType extends JsonAbstractKeynameEntity implements DeletedMarker {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8591532692074145572L;
 
@@ -37,61 +40,5 @@ public class RawModemType extends JsonAbstractKeynameEntity {
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getRawModemTypeName() {
-		return rawModemTypeName;
-	}
-
-	public void setRawModemTypeName(String rawModemTypeName) {
-		this.rawModemTypeName = rawModemTypeName;
-	}
-
-	public String getDevComment() {
-		return devComment;
-	}
-
-	public void setDevComment(String devComment) {
-		this.devComment = devComment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

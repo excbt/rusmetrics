@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "device_data_type")
+@Getter
 public class DeviceDataType extends AbstractKeynameEntity {
 
 
@@ -36,10 +37,6 @@ public class DeviceDataType extends AbstractKeynameEntity {
 	private int version;
 
     @Column(name = "order_idx")
-    @Getter
-    @Setter
     private Integer orderIdx;
-
-
 
 }

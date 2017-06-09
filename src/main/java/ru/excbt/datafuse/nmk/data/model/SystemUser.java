@@ -10,6 +10,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -26,6 +28,8 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 @Entity
 @Table(name = "system_user")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class SystemUser extends AbstractAuditableModel implements SubscriberUser {
 
 	/**
@@ -52,54 +56,5 @@ public class SystemUser extends AbstractAuditableModel implements SubscriberUser
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "subscriber_id")
 	private Subscriber subscriber;
-
-	@Override
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(final int version) {
-		this.version = version;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(final String userName) {
-		this.userName = userName;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(final String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(final String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(final String password) {
-		this.password = password;
-	}
 
 }

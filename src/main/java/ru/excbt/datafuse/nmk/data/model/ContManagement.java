@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -35,6 +37,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ContManagement extends AbstractAuditableModel {
 
 	/**
@@ -74,77 +78,5 @@ public class ContManagement extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public String getAgreementNr() {
-		return agreementNr;
-	}
-
-	public void setAgreementNr(String agreementNr) {
-		this.agreementNr = agreementNr;
-	}
-
-	public Date getAgreementDate() {
-		return agreementDate;
-	}
-
-	public void setAgreementDate(Date agreementDate) {
-		this.agreementDate = agreementDate;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public ContObject getContObject() {
-		return contObject;
-	}
-
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
-
-	public Organization getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
-
-	public String getReportsPath() {
-		return reportsPath;
-	}
-
-	public void setReportsPath(String reportsPath) {
-		this.reportsPath = reportsPath;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Long getOrganizationId() {
-		return organizationId;
-	}
-
-	public void setOrganizationId(Long organizationId) {
-		this.organizationId = organizationId;
-	}
 
 }

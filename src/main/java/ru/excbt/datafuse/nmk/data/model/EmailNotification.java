@@ -7,14 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "email_notification")
+@Getter
+@Setter
 public class EmailNotification extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5091171385850198906L;
 
@@ -62,125 +66,5 @@ public class EmailNotification extends AbstractAuditableModel {
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public String getEmailNotificationType() {
-		return emailNotificationType;
-	}
-
-	public void setEmailNotificationType(String emailNotificationType) {
-		this.emailNotificationType = emailNotificationType;
-	}
-
-	public Long getFromSubscrUserId() {
-		return fromSubscrUserId;
-	}
-
-	public void setFromSubscrUserId(Long fromSubscrUserId) {
-		this.fromSubscrUserId = fromSubscrUserId;
-	}
-
-	public Long getToSubscrUserId() {
-		return toSubscrUserId;
-	}
-
-	public void setToSubscrUserId(Long toSubscrUserId) {
-		this.toSubscrUserId = toSubscrUserId;
-	}
-
-	public String getMessageFrom() {
-		return messageFrom;
-	}
-
-	public void setMessageFrom(String messageFrom) {
-		this.messageFrom = messageFrom;
-	}
-
-	public String getMessageTo() {
-		return messageTo;
-	}
-
-	public void setMessageTo(String messageTo) {
-		this.messageTo = messageTo;
-	}
-
-	public String getMailHost() {
-		return mailHost;
-	}
-
-	public void setMailHost(String mailHost) {
-		this.mailHost = mailHost;
-	}
-
-	public String getMessageSubject() {
-		return messageSubject;
-	}
-
-	public void setMessageSubject(String messageSubject) {
-		this.messageSubject = messageSubject;
-	}
-
-	public String getIsTextHtml() {
-		return isTextHtml;
-	}
-
-	public void setIsTextHtml(String isTextHtml) {
-		this.isTextHtml = isTextHtml;
-	}
-
-	public String getMessageText() {
-		return messageText;
-	}
-
-	public void setMessageText(String messageText) {
-		this.messageText = messageText;
-	}
-
-	public Date getMessageCreateDate() {
-		return messageCreateDate;
-	}
-
-	public void setMessageCreateDate(Date messageCreateDate) {
-		this.messageCreateDate = messageCreateDate;
-	}
-
-	public Date getMesageSendDate() {
-		return mesageSendDate;
-	}
-
-	public void setMesageSendDate(Date mesageSendDate) {
-		this.mesageSendDate = mesageSendDate;
-	}
-
-	public Boolean getIsSendComplete() {
-		return isSendComplete;
-	}
-
-	public void setIsSendComplete(Boolean isSendComplete) {
-		this.isSendComplete = isSendComplete;
-	}
-
-	public Boolean getIsRecieved() {
-		return isRecieved;
-	}
-
-	public void setIsRecieved(Boolean isRecieved) {
-		this.isRecieved = isRecieved;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

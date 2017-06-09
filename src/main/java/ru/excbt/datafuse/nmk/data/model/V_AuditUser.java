@@ -10,8 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
@@ -25,7 +28,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 @Entity
 @Table(name = "audit_user")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
-public class V_AuditUser implements Serializable {
+public class V_AuditUser implements Serializable, PersistableBuilder<V_AuditUser, Long> {
 
 	/**
 	 *
@@ -34,40 +37,23 @@ public class V_AuditUser implements Serializable {
 
 	@Id
 	@Column(name = "id")
+    @Getter
+    @Setter
 	private Long id;
 
 	@Column(name = "user_name")
+    @Getter
+    @Setter
 	private String userName;
 
 	@Version
+    @Getter
+    @Setter
 	private int version;
 
 	@Column(name = "is_system")
+    @Getter
 	private Boolean isSystem;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 	public V_AuditUser() {
 
@@ -89,15 +75,6 @@ public class V_AuditUser implements Serializable {
 		this.version = srcObject.getVersion();
 		this.id = srcObject.getId();
 		this.isSystem = srcObject.getIsSystem();
-	}
-
-	public V_AuditUser id(Long id) {
-	    this.setId(id);
-	    return this;
-    }
-
-	public Boolean getIsSystem() {
-		return isSystem;
 	}
 
 }

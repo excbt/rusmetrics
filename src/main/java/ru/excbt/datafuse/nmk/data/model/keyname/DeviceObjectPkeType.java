@@ -13,13 +13,13 @@ import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "device_object_pke_type")
 @JsonInclude(Include.NON_NULL)
 @Getter
-@Setter
-public class DeviceObjectPkeType extends AbstractKeynameEntity implements DeletableObject {
+public class DeviceObjectPkeType extends AbstractKeynameEntity implements DeletedMarker {
 
 	/**
 	 *
@@ -46,6 +46,5 @@ public class DeviceObjectPkeType extends AbstractKeynameEntity implements Deleta
 
 	@Column(name = "deleted")
 	private int deleted;
-
 
 }

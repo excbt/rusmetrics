@@ -12,11 +12,13 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Универсальный справочник
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.03.2015
@@ -24,10 +26,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "u_directory")
+@Getter
+@Setter
 public class UDirectory extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4134532910102114066L;
 
@@ -50,45 +54,5 @@ public class UDirectory extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public String getDirectoryName() {
-		return directoryName;
-	}
-
-	public void setDirectoryName(String directoryName) {
-		this.directoryName = directoryName;
-	}
-
-	public String getDirectoryDescription() {
-		return directoryDescription;
-	}
-
-	public void setDirectoryDescription(String directoryDescription) {
-		this.directoryDescription = directoryDescription;
-	}
-
-	public UDirectoryNode getDirectoryNode() {
-		return directoryNode;
-	}
-
-	public void setDirectoryNode(UDirectoryNode directoryNode) {
-		this.directoryNode = directoryNode;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
 
 }

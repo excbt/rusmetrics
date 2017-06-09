@@ -23,6 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -40,6 +42,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	/**
@@ -224,85 +228,5 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	// ************************************************************************
 	//
 	// ************************************************************************
-
-	public ReportParamset getReportParamset() {
-		return reportParamset;
-	}
-
-	public void setReportParamset(ReportParamset reportParamset) {
-		this.reportParamset = reportParamset;
-	}
-
-	public Long getReportMetaParamSpecialId() {
-		return reportMetaParamSpecialId;
-	}
-
-	public void setReportMetaParamSpecialId(Long reportMetaParamSpecialId) {
-		this.reportMetaParamSpecialId = reportMetaParamSpecialId;
-	}
-
-	public String getTextValue() {
-		return textValue;
-	}
-
-	public void setTextValue(String textValue) {
-		this.textValue = textValue;
-	}
-
-	public BigDecimal getNumericValue() {
-		return numericValue;
-	}
-
-	public void setNumericValue(BigDecimal numericValue) {
-		this.numericValue = numericValue;
-	}
-
-	public Date getOneDateValue() {
-		return timestampFromDate(oneDateValue);
-	}
-
-	public void setOneDateValue(Date oneDateValue) {
-		this.oneDateValue = oneDateValue;
-	}
-
-	public Date getStartDateValue() {
-		return timestampFromDate(startDateValue);
-	}
-
-	public void setStartDateValue(Date startDateValue) {
-		this.startDateValue = startDateValue;
-	}
-
-	public Date getEndDateValue() {
-		return timestampFromDate(endDateValue);
-	}
-
-	public void setEndDateValue(Date endDateValue) {
-		this.endDateValue = endDateValue;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getDirectoryValue() {
-		return directoryValue;
-	}
-
-	public void setDirectoryValue(String directoryValue) {
-		this.directoryValue = directoryValue;
-	}
-
-	public Boolean getBoolValue() {
-		return boolValue;
-	}
-
-	public void setBoolValue(Boolean boolValue) {
-		this.boolValue = boolValue;
-	}
 
 }

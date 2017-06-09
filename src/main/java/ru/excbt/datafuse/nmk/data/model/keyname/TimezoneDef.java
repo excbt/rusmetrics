@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -18,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 @Table(name = "timezone_def")
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Getter
 public class TimezoneDef extends AbstractKeynameEntity implements DeletedMarker {
 
 	/**
@@ -56,46 +58,5 @@ public class TimezoneDef extends AbstractKeynameEntity implements DeletedMarker 
 
 	@Column(name = "timezone_suffix")
 	private String timezoneSuffix;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public String getTimezoneName() {
-		return timezoneName;
-	}
-
-	public String getTimezoneDescription() {
-		return timezoneDescription;
-	}
-
-	public String getCononicalId() {
-		return cononicalId;
-	}
-
-	public Boolean getIsDefault() {
-		return isDefault;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public String getTimezoneAtOffset() {
-		return timezoneAtOffset;
-	}
-
-	public String getTimezoneSuffix() {
-		return timezoneSuffix;
-	}
 
 }

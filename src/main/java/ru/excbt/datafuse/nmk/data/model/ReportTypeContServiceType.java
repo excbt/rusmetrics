@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import lombok.Getter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
@@ -20,10 +21,11 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_type_cont_service_type")
 @JsonIgnoreProperties(value = { "reportType", "reportTypeKeyname" })
 @JsonInclude(Include.NON_NULL)
+@Getter
 public class ReportTypeContServiceType extends JsonAbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6199350882623823558L;
 
@@ -38,17 +40,5 @@ public class ReportTypeContServiceType extends JsonAbstractAuditableModel {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cont_service_type")
 	private ContServiceType contServiceType;
-
-	public ReportType getReportType() {
-		return reportType;
-	}
-
-	public String getReportTypeKeyname() {
-		return reportTypeKeyname;
-	}
-
-	public ContServiceType getContServiceType() {
-		return contServiceType;
-	}
 
 }

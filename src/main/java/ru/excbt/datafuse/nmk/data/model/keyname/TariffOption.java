@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -11,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 @Entity
 @Table(name = "tariff_option")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Getter
 public class TariffOption extends AbstractKeynameEntity {
 
 	/**
@@ -29,37 +31,5 @@ public class TariffOption extends AbstractKeynameEntity {
 
 	@Column(name = "tariff_option_order")
 	private Integer tariffOptionOrder;
-
-	public String getTariffOptionName() {
-		return tariffOptionName;
-	}
-
-	public void setTariffOptionName(String tariffOptionName) {
-		this.tariffOptionName = tariffOptionName;
-	}
-
-	public String getTariffOptionDescription() {
-		return tariffOptionDescription;
-	}
-
-	public void setTariffOptionDescription(String tariffOptionDescription) {
-		this.tariffOptionDescription = tariffOptionDescription;
-	}
-
-	public String getTariffOptionComment() {
-		return tariffOptionComment;
-	}
-
-	public void setTariffOptionComment(String tariffOptionComment) {
-		this.tariffOptionComment = tariffOptionComment;
-	}
-
-	public Integer getTariffOptionOrder() {
-		return tariffOptionOrder;
-	}
-
-	public void setTariffOptionOrder(Integer tariffOptionOrder) {
-		this.tariffOptionOrder = tariffOptionOrder;
-	}
 
 }

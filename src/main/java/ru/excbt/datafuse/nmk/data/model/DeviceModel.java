@@ -42,6 +42,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class DeviceModel extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, ExLabelObject, DevModeObject, DeletableObjectId,
     PersistableBuilder<DeviceModel, Long> {
@@ -52,79 +54,49 @@ public class DeviceModel extends AbstractAuditableModel
 	private static final long serialVersionUID = -6370569022830583056L;
 
 	@Column(name = "device_model_name")
-    @Getter
-    @Setter
 	private String modelName;
 
 	@Column(name = "keyname")
-    @Getter
-    @Setter
 	private String keyname;
 
 	@Column(name = "caption")
-    @Getter
-    @Setter
 	private String caption;
 
 	@Column(name = "ex_code")
-    @Getter
-    @Setter
 	private String exCode;
 
 	@Column(name = "ex_label")
-    @Getter
-    @Setter
 	private String exLabel;
 
 	@Column(name = "ex_system", insertable = false, updatable = false)
-    @Getter
-    @Setter
 	private String exSystem;
 
     @JsonIgnore
 	@Column(name = "ex_system")
-    @Getter
-    @Setter
 	private String exSystemKeyname;
 
 	@Version
-    @Getter
-    @Setter
 	private int version;
 
 	@Column(name = "is_dev_mode")
-    @Getter
-    @Setter
 	private Boolean isDevMode;
 
 	@Column(name = "deleted")
-    @Getter
-    @Setter
 	private int deleted;
 
 	@Column(name = "meta_version")
-    @Getter
-    @Setter
 	private Integer metaVersion = 1;
 
 	@Column(name = "is_impulse")
-    @Getter
-    @Setter
 	private Boolean isImpulse;
 
 	@Column(name = "default_impulse_k")
-    @Getter
-    @Setter
 	private BigDecimal defaultImpulseK;
 
 	@Column(name = "default_impulse_mu")
-    @Getter
-    @Setter
 	private String defaultImpulseMu;
 
 	@Column(name = "device_type")
-    @Getter
-    @Setter
 	private String deviceType;
 
 	@ElementCollection
@@ -132,8 +104,6 @@ public class DeviceModel extends AbstractAuditableModel
 			joinColumns = @JoinColumn(name = "device_model_id"))
 	@Column(name = "device_data_type")
 	//@Fetch(value = FetchMode.SUBSELECT)
-    @Getter
-    @Setter
 	private Set<String> deviceDataTypes = new HashSet<>();
 
 
