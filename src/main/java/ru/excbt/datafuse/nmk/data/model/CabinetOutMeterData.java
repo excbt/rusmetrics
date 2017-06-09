@@ -55,4 +55,8 @@ public class CabinetOutMeterData {
 
     @Column(name = "processed_datetime")
     private ZonedDateTime processedDateTime;
+
+    @Column(name = "ins_datetime")
+    private ZonedDateTime insdDateTime;
+
 }

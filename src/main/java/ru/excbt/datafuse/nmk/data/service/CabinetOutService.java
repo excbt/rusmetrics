@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.*;
@@ -12,9 +13,12 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by kovtonyk on 08.06.2017.
@@ -26,6 +30,8 @@ public class CabinetOutService {
     private static final Logger log = LoggerFactory.getLogger(CabinetOutService.class);
 
     public static final TimeDetailKey CABINET_OUT_TIME_DETAIL = TimeDetailKey.TYPE_1MON_ABS;
+
+    private static final Lock lock = new ReentrantLock();
 
     private final CabinetOutMeterDataQRepository cabinetOutMeterDataQRepository;
     private final CabinetOutMeterDataRepository cabinetOutMeterDataRepository;
@@ -46,53 +52,70 @@ public class CabinetOutService {
     }
 
 
+    @Scheduled(cron = "0 */2 * * * ?")
     public void importCabinetOut() {
 
-        List<CabinetOutMeterDataQ> qList = cabinetOutMeterDataQRepository.findAllOrOrderDateTime();
+        if (!lock.tryLock()) {
+            log.warn("importCabinetOut is locked");
+            return;
+        }
 
 
-        for (CabinetOutMeterDataQ q : qList) {
-            if (q.getQId() == null || q.getQId().getId() == null) continue;
+        try {
 
-            log.debug("Import CabinetOutMeterData:{}", q.getQId().getId());
+            List<CabinetOutMeterDataQ> qList = cabinetOutMeterDataQRepository.findAllOrOrderDateTime();
 
-            CabinetOutMeterData meterData = cabinetOutMeterDataRepository.findOne(q.getQId().getId());
-            if (meterData == null || meterData.getDeviceObjectId() == null) {
-                log.error("meterData check failed");
-                continue;
+
+            for (CabinetOutMeterDataQ q : qList) {
+                if (q.getQId() == null || q.getQId().getId() == null) continue;
+
+                log.debug("Import CabinetOutMeterData:{}", q.getQId().getId());
+
+                CabinetOutMeterData meterData = cabinetOutMeterDataRepository.findOne(q.getQId().getId());
+                if (meterData == null || meterData.getDeviceObjectId() == null) {
+                    log.error("meterData check failed");
+                    continue;
+                }
+
+                if (Boolean.TRUE.equals(meterData.getProcessed())) {
+                    log.warn("CabinetOutMeterData is already processed");
+                    continue;
+                }
+
+                List<ContZPoint> contZPoints = contZPointRepository.selectContZPointsByDeviceObjectId(meterData.getDeviceObjectId());
+                Optional<ContZPoint> destZP = contZPoints.stream().filter((zp) -> zp.getContServiceType().keyName().equals(meterData.getContServiceType())).findFirst();
+                if (!destZP.isPresent()) {
+                    log.error("contZPoint check failed. DeviceObjectId:{}", meterData.getDeviceObjectId());
+                    continue;
+                }
+
+                if (destZP.get().getDeviceObjects().size() == 0) {
+                    log.error("deviceObject size check failed");
+                    continue;
+                }
+
+                Optional<DeviceObject> deviceObject = destZP.get().getDeviceObjects().stream()
+                    .filter((d) -> d.getId().equals(meterData.getDeviceObjectId())).findFirst();
+
+                if (!deviceObject.isPresent()) {
+                    log.error("deviceObject presence check failed");
+                    continue;
+                }
+
+                if (!Boolean.TRUE.equals(deviceObject.get().getDeviceModel().getIsImpulse())) {
+                    log.error("Only impulse data is supported yet");
+                    continue;
+                }
+                importImpulseData(destZP.get(), meterData, q.getQId().getQDateTime());
+                meterData.setProcessed(true);
+                meterData.setProcessedDateTime(ZonedDateTime.now());
+                cabinetOutMeterDataRepository.save(meterData);
+                cabinetOutMeterDataQRepository.delete(q);
+
+                log.debug("SUCCESS Import CabinetOutMeterData:{} is ", q.getQId().getId());
             }
-
-            List<ContZPoint> contZPoints = contZPointRepository.selectContZPointsByDeviceObjectId(meterData.getDeviceObjectId());
-            Optional<ContZPoint> destZP = contZPoints.stream().filter((zp) -> zp.getContServiceType().keyName().equals(meterData.getContServiceType())).findFirst();
-            if (!destZP.isPresent()) {
-                log.error("contZPoint check failed. DeviceObjectId:{}", meterData.getDeviceObjectId());
-                continue;
-            }
-
-            if (destZP.get().getDeviceObjects().size() == 0) {
-                log.error("deviceObject size check failed");
-                continue;
-            }
-
-            Optional<DeviceObject> deviceObject = destZP.get().getDeviceObjects().stream()
-                .filter((d) -> d.getId().equals(meterData.getDeviceObjectId())).findFirst();
-
-            if (!deviceObject.isPresent()) {
-                log.error("deviceObject presence check failed");
-                continue;
-            }
-
-            if (!Boolean.TRUE.equals(deviceObject.get().getDeviceModel().getIsImpulse())) {
-                log.error("Only impulse data is supported yet");
-                continue;
-            }
-            importImpulseData (destZP.get(), meterData, q.getQId().getQDateTime());
-            meterData.setProcessed(true);
-            meterData.setProcessedDateTime(ZonedDateTime.now());
-            cabinetOutMeterDataRepository.save(meterData);
-            cabinetOutMeterDataQRepository.delete(q);
-
-            log.debug("SUCCESS Import CabinetOutMeterData:{} is ", q.getQId().getId());
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -100,7 +123,7 @@ public class CabinetOutService {
     private void importImpulseData(ContZPoint contZPoint, CabinetOutMeterData meterData, ZonedDateTime dataDate){
         ContServiceDataImpulse dataImpulse = new ContServiceDataImpulse();
         dataImpulse.setContZpointId(contZPoint.getId());
-        dataImpulse.setDataDate(LocalDateUtils.asDate(dataDate.toLocalDate()));
+        dataImpulse.setDataDate(LocalDateUtils.asDate(meterData.getInsdDateTime().toLocalDateTime()));
         dataImpulse.setDeviceObjectId(meterData.getDeviceObjectId());
         dataImpulse.setTimeDetailType(CABINET_OUT_TIME_DETAIL.keyName());
         dataImpulse.setDataValue(meterData.getMeterValue());
