@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group_item")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrContGroupItem extends AbstractAuditableModel {
 
 	/**

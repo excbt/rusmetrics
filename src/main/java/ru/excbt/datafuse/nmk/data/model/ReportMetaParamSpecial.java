@@ -28,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @Entity
 @Table(name = "report_meta_param_special")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ReportMetaParamSpecial extends AbstractAuditableModel implements DisabledObject {
 
 	/**

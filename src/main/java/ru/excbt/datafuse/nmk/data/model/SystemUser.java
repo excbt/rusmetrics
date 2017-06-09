@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
  */
 @Entity
 @Table(name = "system_user")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SystemUser extends AbstractAuditableModel implements SubscriberUser {
 
 	/**

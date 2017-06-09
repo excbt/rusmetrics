@@ -34,7 +34,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Entity
 @Table(name = "subscr_service_pack")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrServicePack extends JsonAbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**

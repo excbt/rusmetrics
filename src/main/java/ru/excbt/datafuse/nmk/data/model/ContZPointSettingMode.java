@@ -30,7 +30,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "cont_zpoint_setting_mode")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ContZPointSettingMode extends AbstractAuditableModel {
 
 	/**

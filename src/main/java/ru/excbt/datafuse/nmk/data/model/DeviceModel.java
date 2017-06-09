@@ -41,7 +41,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @Table(name = "device_model")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class DeviceModel extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, ExLabelObject, DevModeObject, DeletableObjectId,
     PersistableBuilder<DeviceModel, Long> {

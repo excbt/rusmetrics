@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "report_paramset_unit")
 @SQLDelete(sql = "UPDATE report_paramset_unit SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ReportParamsetUnit extends AbstractAuditableModel {
 
 	/**

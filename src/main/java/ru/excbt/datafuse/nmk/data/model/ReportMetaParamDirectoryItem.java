@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_meta_param_directory_item")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ReportMetaParamDirectoryItem extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
