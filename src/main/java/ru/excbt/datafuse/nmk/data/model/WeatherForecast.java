@@ -13,6 +13,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -20,6 +22,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_forecast")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class WeatherForecast extends AbstractAuditableModel {
 
 	/**
@@ -55,69 +59,5 @@ public class WeatherForecast extends AbstractAuditableModel {
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public Long getWeatherPlaceId() {
-		return weatherPlaceId;
-	}
-
-	public void setWeatherPlaceId(Long weatherPlaceId) {
-		this.weatherPlaceId = weatherPlaceId;
-	}
-
-	public String getWeatherProvider() {
-		return weatherProvider;
-	}
-
-	public void setWeatherProvider(String weatherProvider) {
-		this.weatherProvider = weatherProvider;
-	}
-
-	public String getWeatherForecastType() {
-		return weatherForecastType;
-	}
-
-	public void setWeatherForecastType(String weatherForecastType) {
-		this.weatherForecastType = weatherForecastType;
-	}
-
-	public Date getForecastDateTime() {
-		return forecastDateTime;
-	}
-
-	public void setForecastDateTime(Date forecastDateTime) {
-		this.forecastDateTime = forecastDateTime;
-	}
-
-	public BigDecimal getTemperatureValue() {
-		return temperatureValue;
-	}
-
-	public void setTemperatureValue(BigDecimal temperatureValue) {
-		this.temperatureValue = temperatureValue;
-	}
-
-	public Long getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(Long requestId) {
-		this.requestId = requestId;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

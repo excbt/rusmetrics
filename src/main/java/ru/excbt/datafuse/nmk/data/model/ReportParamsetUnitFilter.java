@@ -10,6 +10,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
@@ -25,6 +27,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 @Entity
 @Table(name = "v_report_paramset_unit_filter")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ReportParamsetUnitFilter extends AbstractPersistableEntity<Long> {
 
 	/**
@@ -42,29 +46,5 @@ public class ReportParamsetUnitFilter extends AbstractPersistableEntity<Long> {
 
 	@Version
 	private int version;
-
-	public ReportParamset getReportParamset() {
-		return reportParamset;
-	}
-
-	public void setReportParamset(ReportParamset reportParamset) {
-		this.reportParamset = reportParamset;
-	}
-
-	public Long getObjectId() {
-		return objectId;
-	}
-
-	public void setObjectId(Long objectId) {
-		this.objectId = objectId;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 }

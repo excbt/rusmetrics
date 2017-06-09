@@ -41,7 +41,7 @@ public class RmaOrganizationControllerTest extends RmaControllerTest {
 
 		organization = organizationService.findOrganization(orgId);
 		organization.setOrganizationFullAddress("FULL Address");
-		organization.setOrganizationDecription("Modified By AK");
+		organization.setOrganizationDescription("Modified By AK");
 
 		String urlLoc = url + "/" + orgId;
 

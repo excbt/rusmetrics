@@ -11,11 +11,13 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Параметры универсального справочника
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.03.2015
@@ -24,10 +26,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(name = "u_directory_param")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class UDirectoryParam extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3859570295447832844L;
 
@@ -45,37 +49,5 @@ public class UDirectoryParam extends AbstractAuditableModel {
 
 	@Column(name = "param_name")
 	private String paramName;
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public UDirectory getDirectory() {
-		return directory;
-	}
-
-	public void setDirectory(UDirectory directory) {
-		this.directory = directory;
-	}
-
-	public String getParamType() {
-		return paramType;
-	}
-
-	public void setParamType(String paramType) {
-		this.paramType = paramType;
-	}
-
-	public String getParamName() {
-		return paramName;
-	}
-
-	public void setParamName(String paramName) {
-		this.paramName = paramName;
-	}
 
 }

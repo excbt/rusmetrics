@@ -10,11 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
 /**
  * Тепло системы Взлет
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
@@ -22,10 +24,12 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
  */
 @Entity
 @Table(name = "vzlet_system")
+@Getter
+@Setter
 public class VzletSystem implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 244069496621673974L;
 
@@ -51,61 +55,5 @@ public class VzletSystem implements Serializable {
 
 	@Column(name = "cont_service_type")
 	private String contServiceTypeKey;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getSystemName() {
-		return systemName;
-	}
-
-	public void setSystemName(String systemName) {
-		this.systemName = systemName;
-	}
-
-	public String getSystemCaption() {
-		return systemCaption;
-	}
-
-	public void setSystemCaption(String systemCaption) {
-		this.systemCaption = systemCaption;
-	}
-
-	public String getSystemDescription() {
-		return systemDescription;
-	}
-
-	public void setSystemDescription(String systemDescription) {
-		this.systemDescription = systemDescription;
-	}
-
-	public String getSystemComment() {
-		return systemComment;
-	}
-
-	public void setSystemComment(String systemComment) {
-		this.systemComment = systemComment;
-	}
-
-	public ContServiceType getContServiceType() {
-		return contServiceType;
-	}
-
-	public void setContServiceType(ContServiceType contServiceType) {
-		this.contServiceType = contServiceType;
-	}
-
-	public String getContServiceTypeKey() {
-		return contServiceTypeKey;
-	}
-
-	public void setContServiceTypeKey(String contServiceTypeKey) {
-		this.contServiceTypeKey = contServiceTypeKey;
-	}
 
 }

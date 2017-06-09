@@ -11,11 +11,13 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Прайс лист пакетов и услуг
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.09.2015
@@ -23,10 +25,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_service_price")
+@Getter
+@Setter
 public class SubscrServicePrice extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 578314712809691578L;
 
@@ -51,53 +55,5 @@ public class SubscrServicePrice extends AbstractAuditableModel {
 	@Temporal(TemporalType.DATE)
 	@JsonIgnore
 	private Date priceEndDate;
-
-	public Long getPackId() {
-		return packId;
-	}
-
-	public void setPackId(Long packId) {
-		this.packId = packId;
-	}
-
-	public Long getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
-	}
-
-	public BigDecimal getPriceValue() {
-		return priceValue;
-	}
-
-	public void setPriceValue(BigDecimal priceValue) {
-		this.priceValue = priceValue;
-	}
-
-	public String getPriceOption() {
-		return priceOption;
-	}
-
-	public void setPriceOption(String priceOption) {
-		this.priceOption = priceOption;
-	}
-
-	public Date getPriceBeginDate() {
-		return priceBeginDate;
-	}
-
-	public void setPriceBeginDate(Date priceBeginDate) {
-		this.priceBeginDate = priceBeginDate;
-	}
-
-	public Date getPriceEndDate() {
-		return priceEndDate;
-	}
-
-	public void setPriceEndDate(Date priceEndDate) {
-		this.priceEndDate = priceEndDate;
-	}
 
 }

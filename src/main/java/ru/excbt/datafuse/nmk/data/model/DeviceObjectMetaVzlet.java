@@ -11,14 +11,18 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(name = "device_object_meta_vzlet")
+@Getter
+@Setter
 public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2778200912535462611L;
 
@@ -69,95 +73,4 @@ public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	public DeviceObject getDeviceObject() {
-		return deviceObject;
-	}
-
-	public void setDeviceObject(DeviceObject deviceObject) {
-		this.deviceObject = deviceObject;
-	}
-
-	public String getVzletTableHour() {
-		return vzletTableHour;
-	}
-
-	public void setVzletTableHour(String vzletTableHour) {
-		this.vzletTableHour = vzletTableHour;
-	}
-
-	public String getVzletTableDay() {
-		return vzletTableDay;
-	}
-
-	public void setVzletTableDay(String vzletTableDay) {
-		this.vzletTableDay = vzletTableDay;
-	}
-
-	public VzletSystem getVzletSystem1() {
-		return vzletSystem1;
-	}
-
-	public VzletSystem getVzletSystem2() {
-		return vzletSystem2;
-	}
-
-	public VzletSystem getVzletSystem3() {
-		return vzletSystem3;
-	}
-
-	public Long getVzletSystemId1() {
-		return vzletSystemId1;
-	}
-
-	public void setVzletSystemId1(Long vzletSystemId1) {
-		this.vzletSystemId1 = vzletSystemId1;
-	}
-
-	public Long getVzletSystemId2() {
-		return vzletSystemId2;
-	}
-
-	public void setVzletSystemId2(Long vzletSystemId2) {
-		this.vzletSystemId2 = vzletSystemId2;
-	}
-
-	public Long getVzletSystemId3() {
-		return vzletSystemId3;
-	}
-
-	public void setVzletSystemId3(Long vzletSystemId3) {
-		this.vzletSystemId3 = vzletSystemId3;
-	}
-
-	public Long getDeviceObjectId() {
-		return deviceObjectId;
-	}
-
-	public void setDeviceObjectId(Long deviceObjectId) {
-		this.deviceObjectId = deviceObjectId;
-	}
-
-	public Boolean getExcludeNulls() {
-		return excludeNulls;
-	}
-
-	public void setExcludeNulls(Boolean excludeNulls) {
-		this.excludeNulls = excludeNulls;
-	}
-
-	public Boolean getMetaPropsOnly() {
-		return metaPropsOnly;
-	}
-
-	public void setMetaPropsOnly(Boolean metaPropsOnly) {
-		this.metaPropsOnly = metaPropsOnly;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 }

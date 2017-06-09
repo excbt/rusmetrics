@@ -10,6 +10,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -26,6 +28,8 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContGroupType;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class SubscrContGroup extends AbstractAuditableModel {
 
 	/**
@@ -60,61 +64,5 @@ public class SubscrContGroup extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public ContGroupType getContGroupType() {
-		return contGroupType;
-	}
-
-	public void setContGroupType(ContGroupType contGroupType) {
-		this.contGroupType = contGroupType;
-	}
-
-	public String getContGroupName() {
-		return contGroupName;
-	}
-
-	public void setContGroupName(String contGroupName) {
-		this.contGroupName = contGroupName;
-	}
-
-	public String getContGroupComment() {
-		return contGroupComment;
-	}
-
-	public void setContGroupComment(String contGroupComment) {
-		this.contGroupComment = contGroupComment;
-	}
-
-	public String getContGroupDescription() {
-		return contGroupDescription;
-	}
-
-	public void setContGroupDescription(String contGroupDescription) {
-		this.contGroupDescription = contGroupDescription;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getContGroupTypeKey() {
-		return contGroupTypeKey;
-	}
-
-	public void setContGroupTypeKey(String contGroupTypeKey) {
-		this.contGroupTypeKey = contGroupTypeKey;
-	}
 
 }

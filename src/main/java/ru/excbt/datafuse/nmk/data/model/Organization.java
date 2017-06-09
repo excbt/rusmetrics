@@ -10,7 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
@@ -27,8 +30,12 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Table(name = "organization")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Organization extends AbstractAuditableModel implements KeynameObject, DevModeObject, DeletableObject {
+@Getter
+@Setter
+public class Organization extends AbstractAuditableModel implements KeynameObject, DevModeObject, DeletableObject,
+    PersistableBuilder<Organization, Long>{
 
+    @Getter
 	public static class OrganizationInfo {
 
 		private final Long id;
@@ -39,13 +46,6 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 			this.organizationName = organization.getOrganizationName();
 		}
 
-		public Long getId() {
-			return id;
-		}
-
-		public String getOrganizationName() {
-			return organizationName;
-		}
 	}
 
 	/**
@@ -104,138 +104,5 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	@Column(name = "flag_serv")
 	private Boolean flagServ;
-
-	public Organization id(Long id) {
-	    this.setId(id);
-	    return this;
-    }
-
-	public Boolean getFlagServ() {
-		return flagServ;
-	}
-
-	public void setFlagServ(Boolean flagServ) {
-		this.flagServ = flagServ;
-	}
-
-	public String getExCode() {
-		return exCode;
-	}
-
-	public void setExCode(String exCode) {
-		this.exCode = exCode;
-	}
-
-	public String getExSystem() {
-		return exSystem;
-	}
-
-	public void setExSystem(String exSystem) {
-		this.exSystem = exSystem;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getOrganizationName() {
-		return organizationName;
-	}
-
-	public void setOrganizationName(String organizationName) {
-		this.organizationName = organizationName;
-	}
-
-	public String getOrganizationFullName() {
-		return organizationFullName;
-	}
-
-	public void setOrganizationFullName(String organizationFullName) {
-		this.organizationFullName = organizationFullName;
-	}
-
-	public String getOrganizationFullAddress() {
-		return organizationFullAddress;
-	}
-
-	public void setOrganizationFullAddress(String organizationFullAddress) {
-		this.organizationFullAddress = organizationFullAddress;
-	}
-
-	public Boolean getFlagRso() {
-		return flagRso;
-	}
-
-	public void setFlagRso(Boolean flagRso) {
-		this.flagRso = flagRso;
-	}
-
-	public Boolean getFlagRma() {
-		return flagRma;
-	}
-
-	public void setFlagRma(Boolean flagRma) {
-		this.flagRma = flagRma;
-	}
-
-	@Override
-	public String getKeyname() {
-		return keyname;
-	}
-
-	public void setKeyname(String keyname) {
-		this.keyname = keyname;
-	}
-
-	@Override
-	public Boolean getIsDevMode() {
-		return isDevMode;
-	}
-
-	public void setIsDevMode(Boolean isDevMode) {
-		this.isDevMode = isDevMode;
-	}
-
-	public Boolean getFlagCm() {
-		return flagCm;
-	}
-
-	public void setFlagCm(Boolean flagCm) {
-		this.flagCm = flagCm;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getOrganizationDescription() {
-		return organizationDescription;
-	}
-
-	public void setOrganizationDecription(String organizationDescription) {
-		this.organizationDescription = organizationDescription;
-	}
-
-	public Boolean getIsCommon() {
-		return isCommon;
-	}
-
-	public Long getRmaSubscriberId() {
-		return rmaSubscriberId;
-	}
-
-	public void setRmaSubscriberId(Long rmaSubscriberId) {
-		this.rmaSubscriberId = rmaSubscriberId;
-	}
 
 }

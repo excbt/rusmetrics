@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -15,11 +16,6 @@ import org.hibernate.annotations.Type;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.PropertyFilter;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
@@ -33,15 +29,15 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
  * @since 17.01.2017
  *
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "_widget")
 @JsonIgnoreProperties(value = { PropertyFilter.DEV_COMMENT_PROPERTY_IGNORE, "deleted" }, ignoreUnknown = true)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Widget extends AbstractPersistableEntity<Long> implements JsonModel, DeletedMarker {
 
 	/**
@@ -92,5 +88,7 @@ public class Widget extends AbstractPersistableEntity<Long> implements JsonModel
 	public ContServiceTypeKey contServiceTypeKey() {
 		return ContServiceTypeKey.searchKeyname(this.contServiceType);
 	}
+
+
 
 }

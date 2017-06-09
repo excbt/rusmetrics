@@ -13,11 +13,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * История значений цен
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.11.2015
@@ -25,10 +27,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_price_item_value")
+@Getter
+@Setter
 public class SubscrPriceItemValue extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2329929788034927010L;
 
@@ -53,53 +57,5 @@ public class SubscrPriceItemValue extends AbstractAuditableModel {
 	@Version
 	@Column(name = "version")
 	private int version;
-
-	public SubscrPriceItem getSubcrPriceItem() {
-		return subcrPriceItem;
-	}
-
-	public void setSubcrPriceItem(SubscrPriceItem subcrPriceItem) {
-		this.subcrPriceItem = subcrPriceItem;
-	}
-
-	public BigDecimal getPriceValue() {
-		return priceValue;
-	}
-
-	public void setPriceValue(BigDecimal priceValue) {
-		this.priceValue = priceValue;
-	}
-
-	public Date getValueBeginDate() {
-		return valueBeginDate;
-	}
-
-	public void setValueBeginDate(Date valueBeginDate) {
-		this.valueBeginDate = valueBeginDate;
-	}
-
-	public Date getValueEndDate() {
-		return valueEndDate;
-	}
-
-	public void setValueEndDate(Date valueEndDate) {
-		this.valueEndDate = valueEndDate;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Long getSubcrPriceItemId() {
-		return subcrPriceItemId;
-	}
-
-	public void setSubcrPriceItemId(Long subcrPriceItemId) {
-		this.subcrPriceItemId = subcrPriceItemId;
-	}
 
 }

@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 
@@ -29,6 +31,8 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 @Table(name = "cont_event")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class ContEvent extends AbstractPersistableEntity<Long> implements ContEventTypeModel {
 
 	/**
@@ -70,84 +74,5 @@ public class ContEvent extends AbstractPersistableEntity<Long> implements ContEv
 
 	@Column(name = "cont_event_deviation")
 	private String contEventDeviationKeyname;
-
-	@Override
-	public ContEventType getContEventType() {
-		return contEventType;
-	}
-
-	@Override
-	public void setContEventType(ContEventType contEventType) {
-		this.contEventType = contEventType;
-	}
-
-	public String getContServiceType() {
-		return contServiceType;
-	}
-
-	public void setContServiceType(String contServiceType) {
-		this.contServiceType = contServiceType;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public Date getEventTime() {
-		return eventTime;
-	}
-
-	public void setEventTime(Date eventTime) {
-		this.eventTime = eventTime;
-	}
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
-	}
-
-	public Date getRegistrationTimeTZ() {
-		return registrationTimeTZ;
-	}
-
-	public void setRegistrationTimeTZ(Date registrationTimeTZ) {
-		this.registrationTimeTZ = registrationTimeTZ;
-	}
-
-	public Long getContZPointId() {
-		return contZPointId;
-	}
-
-	public void setContZPointId(Long contZPointId) {
-		this.contZPointId = contZPointId;
-	}
-
-	public String getContEventDeviationKeyname() {
-		return contEventDeviationKeyname;
-	}
-
-	@Override
-	public Long getContEventTypeId() {
-		return contEventTypeId;
-	}
-
-	public void setContEventTypeId(Long contEventTypeId) {
-		this.contEventTypeId = contEventTypeId;
-	}
 
 }

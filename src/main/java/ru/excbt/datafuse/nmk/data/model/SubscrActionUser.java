@@ -10,11 +10,13 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Пользователи абонента для группы рассылок
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.04.2015
@@ -22,10 +24,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_action_user")
+@Getter
+@Setter
 public class SubscrActionUser extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4055849268733704428L;
 
@@ -51,61 +55,5 @@ public class SubscrActionUser extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-
-	public String getUserPhone() {
-		return userPhone;
-	}
-
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
-	}
-
-	public String getUserDescription() {
-		return userDescription;
-	}
-
-	public void setUserDescription(String userDescription) {
-		this.userDescription = userDescription;
-	}
-
-	public String getUserComment() {
-		return userComment;
-	}
-
-	public void setUserComment(String userComment) {
-		this.userComment = userComment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 }
