@@ -482,7 +482,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     };
     
     function checkImpulseCompatibility(model, datasource) {
-        if (!mainSvc.checkUndefinedNull(model) && model.isImpulse === true && datasource.dataSourceType.isRaw !== true) {
+        if (!mainSvc.checkUndefinedNull(model) && !mainSvc.checkUndefinedNull(datasource) && model.isImpulse === true && datasource.dataSourceType.isRaw !== true) {
             notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
             return false;
         }
@@ -502,7 +502,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         });
     }
     
-    $scope.deviceModelChange = function () {
+    $scope.deviceModelChange = function () {        
         if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)) {
             var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource)) {
@@ -512,6 +512,16 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
             $scope.data.currentModel = tmpDevModel;
             $scope.data.currentObject.curModel = tmpDevModel;
+            
+            if ($scope.deviceIsSpreader() === true) {
+//                $scope.data.currentObject.curDatasource = null;
+                $scope.data.currentObject.subscrDataSourceId = null;
+                
+                $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
+                
+                $scope.deviceDatasourceChange();
+    //console.log($scope.data.currentObject);            
+            }
             
             //change impulseK and impulseMu
             if ($scope.data.currentModel.isImpulse === true) {
@@ -723,7 +733,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         if (checkImpulseCompatibility(device.curModel, device.curDatasource) === false) {
             checkDsourceFlag = false;
         }
-        if (!mainSvc.checkUndefinedNull(device.curModel) && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
+        if (!mainSvc.checkUndefinedNull(device.curModel) && !$scope.deviceIsSpreader() && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
             var inputCDFlag = checkDsourceFlag;
             if (checkDeviceImpulseProperties(device) === false) {
                 checkDsourceFlag = false;
