@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -17,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 @Table(name = "report_meta_param_special_type")
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Getter
 public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 
 	/**
@@ -62,101 +64,5 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 	@JsonIgnore
 	@Version
 	private int version;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	public String getSpecialTypeName() {
-		return specialTypeName;
-	}
-
-	public void setSpecialTypeName(String specialTypeName) {
-		this.specialTypeName = specialTypeName;
-	}
-
-	public String getSpecialTypeDescription() {
-		return specialTypeDescription;
-	}
-
-	public void setSpecialTypeDescription(String specialTypeDescription) {
-		this.specialTypeDescription = specialTypeDescription;
-	}
-
-	public String getSpecialTypeComment() {
-		return specialTypeComment;
-	}
-
-	public void setSpecialTypeComment(String specialTypeComment) {
-		this.specialTypeComment = specialTypeComment;
-	}
-
-	public String getSpecialTypeDirectory() {
-		return specialTypeDirectory;
-	}
-
-	public void setSpecialTypeDirectory(String specialTypeDirectory) {
-		this.specialTypeDirectory = specialTypeDirectory;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getSpecialTypeField1() {
-		return specialTypeField1;
-	}
-
-	public void setSpecialTypeField1(String specialTypeField1) {
-		this.specialTypeField1 = specialTypeField1;
-	}
-
-	public String getSpecialTypeField2() {
-		return specialTypeField2;
-	}
-
-	public void setSpecialTypeField2(String specialTypeField2) {
-		this.specialTypeField2 = specialTypeField2;
-	}
-
-	public String getSpecialTypeDirectoryUrl() {
-		return specialTypeDirectoryUrl;
-	}
-
-	public void setSpecialTypeDirectoryUrl(String specialTypeDirectoryUrl) {
-		this.specialTypeDirectoryUrl = specialTypeDirectoryUrl;
-	}
-
-	public String getSpecialTypeDirectoryKey() {
-		return specialTypeDirectoryKey;
-	}
-
-	public void setSpecialTypeDirectoryKey(String specialTypeDirectoryKey) {
-		this.specialTypeDirectoryKey = specialTypeDirectoryKey;
-	}
-
-	public String getSpecialTypeDirectoryCaption() {
-		return specialTypeDirectoryCaption;
-	}
-
-	public void setSpecialTypeDirectoryCaption(String specialTypeDirectoryCaption) {
-		this.specialTypeDirectoryCaption = specialTypeDirectoryCaption;
-	}
-
-	public String getSpecialTypeDirectoryValue() {
-		return specialTypeDirectoryValue;
-	}
-
-	public void setSpecialTypeDirectoryValue(String specialTypeDirectoryValue) {
-		this.specialTypeDirectoryValue = specialTypeDirectoryValue;
-	}
 
 }
