@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_pref_object_tree_type")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrPrefObjectTreeType extends JsonAbstractAuditableModel implements DisabledObject {
 
 	/**

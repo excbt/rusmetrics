@@ -53,7 +53,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
  */
 @Entity
 @Table(name = "device_object")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId {
 
     /**

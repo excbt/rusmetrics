@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  */
 @Entity
 @Table(name = "audit_user")
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class V_AuditUser implements Serializable {
 
 	/**

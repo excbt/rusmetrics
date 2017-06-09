@@ -11,7 +11,7 @@ import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_type_role")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrTypeRole extends JsonAbstractAuditableModel {
 
 	/**

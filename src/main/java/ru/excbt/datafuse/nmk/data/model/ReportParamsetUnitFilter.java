@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
  */
 @Entity
 @Table(name = "v_report_paramset_unit_filter")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ReportParamsetUnitFilter extends AbstractPersistableEntity<Long> {
 
 	/**

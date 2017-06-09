@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Table(name = "subscr_service_access")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrServiceAccess extends AbstractAuditableModel {
 
 	/**

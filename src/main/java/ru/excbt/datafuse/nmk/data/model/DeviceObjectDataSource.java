@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
  */
 @Entity
 @Table(name = "device_object_data_source")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class DeviceObjectDataSource extends AbstractAuditableModel implements ActiveObject {
 
 	/**

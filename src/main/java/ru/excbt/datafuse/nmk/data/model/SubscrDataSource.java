@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
  */
 @Entity
 @Table(name = "subscr_data_source")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class SubscrDataSource extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**

@@ -32,7 +32,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Entity
 @Table(name = "cont_object_dadata")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class ContObjectDaData extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**

@@ -62,49 +62,49 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.WeatherProvider.class.getName());
 
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceModel.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObject.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceModel.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObject.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource.class.getName());
 
 
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial.class.getName());
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamset.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamsetUnitFilter.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamset.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportParamsetUnitFilter.class.getName());
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObject.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPoint.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointMetadata.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObjectFias.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObjectDaData.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrContObject.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrContGroup.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrDataSource.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObject.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPoint.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointMetadata.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObjectFias.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObjectDaData.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrContObject.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrContGroup.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrDataSource.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefValue.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Subscriber.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrUser.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SystemUser.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Subscriber.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrUser.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SystemUser.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrRole.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrTypePref.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrTypeRole.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrTypePref.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrTypeRole.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrVCookie.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.V_AuditUser.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.V_AuditUser.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.UserPersistentToken.class.getName());
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrRso.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrServicePack.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrRso.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrServicePack.class.getName());
 
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContEventType.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContManagement.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContManagement.class.getName());
 
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.EnergyPassport.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.EnergyPassportSection.class.getName());
@@ -114,13 +114,13 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.EnergyPassportDataValue.class.getName());
 
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.TemperatureChart.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.TemperatureChartItem.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.WeatherForecast.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.WeatherPlace.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.TemperatureChart.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.TemperatureChartItem.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.WeatherForecast.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.WeatherPlace.class.getName());
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Widget.class.getName());
+            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Widget.class.getName());
 
             //cm.createCache(com.mycompany.myapp.domain.Authority.class.getName(), jcacheConfiguration);
             //cm.createCache(com.mycompany.myapp.domain.User.class.getName() + ".authorities", jcacheConfiguration);
