@@ -20,7 +20,7 @@ public class CurrentSubscriberUserDetailsService {
 	private MockUserService mockUserService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SubscriberUserDetails getCurrentUserDetails() {
@@ -34,7 +34,7 @@ public class CurrentSubscriberUserDetailsService {
 
 		Authentication auth = getContextAuth();
 		if (auth == null) {
-			logger.warn("auth is null");
+			//logger.warn("auth is null");
 			return null;
 		}
 
@@ -50,7 +50,7 @@ public class CurrentSubscriberUserDetailsService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Authentication getContextAuth() {
@@ -58,7 +58,7 @@ public class CurrentSubscriberUserDetailsService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isSystem() {
@@ -72,7 +72,7 @@ public class CurrentSubscriberUserDetailsService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Authentication getAuthentication() {

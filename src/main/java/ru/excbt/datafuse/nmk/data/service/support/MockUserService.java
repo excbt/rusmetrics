@@ -24,6 +24,8 @@ public class MockUserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MockUserService.class);
 
+	public static final long SYSTEM_USER = 1000L;
+
 	private Long mockUserId = null;
 
 //	@Autowired
@@ -50,7 +52,11 @@ public class MockUserService {
 	 * @return
 	 */
 	public V_AuditUser getMockAuditUser() {
-		checkState(mockUserId != null, "Mock User Service is Disabled");
+        if (mockUserId == null) {
+            return null;
+        }
+
+		//checkState(mockUserId != null, "Mock User Service is Disabled");
 
 		logger.warn("ATTENTION!!! Using MockUser");
 		V_AuditUser result = new V_AuditUser().id(mockUserId);
@@ -70,7 +76,10 @@ public class MockUserService {
 	 * @return
 	 */
 	public SubscrUser getMockSubscrUser() {
-		checkState(mockUserId != null, "Mock User Service is Disabled");
+	    if (mockUserId == null) {
+	        return null;
+        }
+		//checkState(mockUserId != null, "Mock User Service is Disabled");
 		SubscrUser result = new SubscrUser();
 
 		result.setId(mockUserId);
