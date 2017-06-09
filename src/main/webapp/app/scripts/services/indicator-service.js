@@ -483,6 +483,18 @@ app.service('indicatorSvc', ['mainSvc', function (mainSvc) {
                 "24h_abs" : "24h_abs",
                 istunable: "istunable",
                 isvisible: 'isvisible'
+            },
+            {
+                header : "Дата ввода",
+                headerClass : "col-xs-2 nmc-text-align-center",
+                dataClass : "col-xs-2",
+                fieldName: "insertDateStr", /*dataValue*/
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs",
+                "24h_abs" : "24h_abs",
+                istunable: "istunable",
+                isvisible: 'invisible'
             }
         ];
 

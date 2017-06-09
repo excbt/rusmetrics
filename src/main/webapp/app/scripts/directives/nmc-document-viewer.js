@@ -110,7 +110,7 @@ app.directive('nmcDocumentViewer', function () {
             $scope.data.currentPassDocSection = null;
             
             $scope.isObjectImportButtonEnableAtBtnPanel = function () {
-                return isObjectImportEnable;
+                return !$scope.isReadOnly() && isObjectImportEnable && !$scope.ctrlSettings.passportLoading && !$scope.ctrlSettings.sectionLoading;
             };
 
             function locateTdBtns(td, tdInd, rowInd, partInd) {
@@ -695,6 +695,17 @@ app.directive('nmcDocumentViewer', function () {
                 energoPassportSvc.loadPassportData(passport.id)
                     .then(successLoadPassportDataCallback, errorCallback);
             }
+            
+            function changeSectionAvailables(section) {
+                isObjectImportEnable = false;
+                switch (section.preparedSection.sectionKey) {
+                case "S_1.3":
+                    if (!mainSvc.checkUndefinedNull(section.preparedSection.sectionEntryId) || $scope.data.passport.templateKeyname === "ENERGY_PASSPORT_X") {
+                        isObjectImportEnable = true;
+                    }
+                    break;
+                }
+            }
 
             function successLoadPassportCallback(response) {
         //        console.log(response);
@@ -722,10 +733,12 @@ app.directive('nmcDocumentViewer', function () {
         //        $scope.data.passDocStructure = result;
         //        if ($scope.data.passDocStructure.length >= 1) {
                 if ($scope.data.passport.sections.length >= 1) {
+//                    changeSection($scope.data.passport.sections[INDEX_OF_DEFAULT_SECTION]);
                     $scope.data.currentPassDocSection = $scope.data.passport.sections[INDEX_OF_DEFAULT_SECTION]; //$scope.data.passDocStructure[INDEX_OF_DEFAULT_SECTION];
         //            if (mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.values)) {
         //                $scope.data.currentPassDocSection.values = {};
         //            }
+                    changeSectionAvailables($scope.data.currentPassDocSection);
                     $scope.data.currentPassDocSection.isSelected = true;
                     setSectionStyles();
 
@@ -781,24 +794,13 @@ app.directive('nmcDocumentViewer', function () {
                     break;
                 }
             }
-            
-            function changeAvailablesForEntry(section) {
-                isObjectImportEnable = false;
-                switch (section.preparedSection.sectionKey) {
-                case "S_1.3":
-                    if (!mainSvc.checkUndefinedNull(section.preparedSection.sectionEntryId)) {
-                        isObjectImportEnable = true;
-                    }
-                    break;
-                }
-            }
 
             function changeSection(part) {
                 $scope.ctrlSettings.sectionLoading = true;
                 if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection)) {
                     $scope.data.currentPassDocSection.isSelected = false;
                 }
-                if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.entries) && $scope.data.currentPassDocSection.entries.length > 0) {
+                if (!mainSvc.checkUndefinedNull($scope.data.currentPassDocSection) && !mainSvc.checkUndefinedNull($scope.data.currentPassDocSection.entries) && $scope.data.currentPassDocSection.entries.length > 0) {
                     $scope.data.currentPassDocSection.entries.forEach(function (entry) {
                         entry.isSelected = false;
                     });
@@ -806,7 +808,7 @@ app.directive('nmcDocumentViewer', function () {
                 $scope.data.currentPassDocSection = part;
                 $scope.data.currentPassDocSection.isSelected = true;
 
-                changeAvailablesForEntry($scope.data.currentPassDocSection);
+                changeSectionAvailables($scope.data.currentPassDocSection);
                 //change captions for different entries
                 changeCaptionsForEntry($scope.data.currentPassDocSection);
 
@@ -1742,9 +1744,51 @@ app.directive('nmcDocumentViewer', function () {
                 $scope.data.currentObjPassDocSection = {};
             }
             
+            function successLoadContObjectPassportDataByPassportIdCallback(resp) {
+        //        console.log(resp);
+                //hash map
+                var sectionValues = {},
+                    passDocData = angular.copy(resp.data);
+                $scope.data.objectPassport.passportData = angular.copy(resp.data);
+                passDocData.forEach(function (dataElm) {
+                    //fill hash map
+                    sectionValues = performLoadedSection(dataElm, sectionValues);
+                });
+                var currentContObjectSectionValues = sectionValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][0];
+                
+                //importing values
+                var curSecKey = null,
+                    isChanged = false;
+                for (curSecKey in $scope.data.currentSectionValues) {
+                    if ($scope.data.currentSectionValues.hasOwnProperty(curSecKey) && currentContObjectSectionValues.hasOwnProperty(curSecKey) && curSecKey !== "version") {
+//                        console.log($scope.data.currentSectionValues[curSecKey]);
+                        $scope.data.currentSectionValues[curSecKey].value = currentContObjectSectionValues[curSecKey].value;
+                        isChanged = true;
+                    }
+                }
+                
+                if (isChanged === true) {
+                    //set section and document change flag
+                    $scope.onChange();
+                }
+                
+                //close importing window
+                $scope.ctrlSettings.passportImportLoading = false;
+                $('#showObjectImportPropertiesModal').modal('hide');
+                
+                //reset contObject passport structs
+                $scope.data.objectPassport = {};
+                $scope.data.currentObjPassDocSection = {};
+            }
+            
             function loadContObjectPassportData(passport) {
                 energoPassportSvc.loadPassportData(passport.id)
                     .then(successLoadContObjectPassportDataCallback, errorCallback);
+            }
+            
+            function loadContObjectPassportDataByPassportId(passportId) {
+                energoPassportSvc.loadPassportData(passportId)
+                    .then(successLoadContObjectPassportDataByPassportIdCallback, errorCallback);
             }
             
             function successLoadContObjectPassport(response) {
@@ -1809,7 +1853,8 @@ app.directive('nmcDocumentViewer', function () {
                 }
                 $scope.ctrlSettings.passportImportLoading = true;
                 //load cont object passport data
-                loadContObjectPassport(inputStruct.passportId);
+                loadContObjectPassportDataByPassportId(inputStruct.passportId);
+//                loadContObjectPassport(inputStruct.passportId);
                 //replace current section data for cont object passport data
             };
             
