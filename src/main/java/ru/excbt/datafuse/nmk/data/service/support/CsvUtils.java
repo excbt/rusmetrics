@@ -2,13 +2,15 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import lombok.Getter;
 import org.apache.commons.io.FilenameUtils;
-import org.assertj.core.util.Preconditions;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +19,10 @@ import java.util.List;
  */
 public class CsvUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(CsvUtils.class);
 
     private static final Logger logger = LoggerFactory.getLogger(CsvUtils.class);
+
 
     private CsvUtils() {
     }
@@ -47,11 +51,10 @@ public class CsvUtils {
 
 
     /**
-     *
      * @param multipartFiles
      * @return
      */
-    public static List<CheckFileResult> checkCsvFiles (MultipartFile[] multipartFiles) {
+    public static List<CheckFileResult> checkCsvFiles(MultipartFile[] multipartFiles) {
 
         List<CheckFileResult> result = new ArrayList<>();
 
@@ -63,7 +66,7 @@ public class CsvUtils {
             String fileName = checkFilesResult.getFileName();
             logger.debug("Checking file to import {}", fileName);
             if (fileName == null || fileName.isEmpty()) {
-                checkFilesResult.errorDesc =  "Имя файла не указано";
+                checkFilesResult.errorDesc = "Имя файла не указано";
                 continue;
             }
 
@@ -81,7 +84,6 @@ public class CsvUtils {
 
 
     /**
-     *
      * @param fileName
      * @return
      */
@@ -90,7 +92,6 @@ public class CsvUtils {
     }
 
     /**
-     *
      * @param fileName
      * @return
      */
@@ -100,7 +101,6 @@ public class CsvUtils {
 
 
     /**
-     *
      * @param file
      * @return
      * @throws FileNotFoundException
@@ -115,22 +115,39 @@ public class CsvUtils {
     }
 
     /**
-     *
-     * @param byteArray
+     * @param file
      * @return
-     * @throws FileNotFoundException
      * @throws IOException
      */
-    public static boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
-        boolean result = true;
-        try (InputStream is = new ByteArrayInputStream(byteArray)) {
-            result = checkCsvSeparatorReader(new InputStreamReader(is));
+    public static boolean checkCsvSeparators(File file) throws IOException {
+        boolean result;
+        Charset charset = determineCharset(file);
+
+        try (FileInputStream is = new FileInputStream(file)) {
+            InputStreamReader isr = new InputStreamReader(is, charset);
+            result = checkCsvSeparatorReader(isr);
         }
         return result;
     }
 
     /**
-     *
+     * @param byteArray
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static boolean checkByteCsvSeparators(byte[] byteArray) throws IOException {
+        boolean result = true;
+
+        try (InputStream is = new ByteArrayInputStream(byteArray)) {
+            Charset charset = determineCharset(is);
+            InputStreamReader isr = new InputStreamReader(is, charset);
+            result = checkCsvSeparatorReader(isr);
+        }
+        return result;
+    }
+
+    /**
      * @param reader
      * @return
      * @throws IOException
@@ -149,5 +166,46 @@ public class CsvUtils {
         return result;
     }
 
+
+    /**
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static Charset determineCharset(File file) throws IOException {
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            return determineCharset(fis);
+        }
+    }
+
+    /**
+     *
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    private static Charset determineCharset(InputStream is) throws IOException {
+
+        Charset charset;
+        UniversalDetector detector = new UniversalDetector(null);
+
+        byte[] buf = new byte[4096];
+        int nread;
+        while ((nread = is.read(buf)) > 0 && !detector.isDone()) {
+            detector.handleData(buf, 0, nread);
+        }
+        detector.dataEnd();
+
+        String encoding = detector.getDetectedCharset();
+
+        if (encoding != null) {
+            charset = Charset.forName(encoding);
+        } else
+            charset = StandardCharsets.UTF_8;
+
+        detector.reset();
+        return charset;
+    }
 
 }

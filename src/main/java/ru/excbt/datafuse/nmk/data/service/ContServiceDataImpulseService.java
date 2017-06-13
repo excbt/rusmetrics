@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseImportReposit
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
+import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -32,7 +33,9 @@ import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
 import javax.persistence.PersistenceException;
 import java.io.CharConversionException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -179,8 +182,9 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
             // Reading CSV from FILE
             List<ContServiceDataImpulseUCsv> inDataImport;
-            try (FileInputStream fio = new FileInputStream(importInfo.getInternalFileName())) {
-                inDataImport = impulseCsvService.parseDataImpulseUCsvImport(fio);
+
+            try {
+                inDataImport = impulseCsvService.parseDataImpulseUCsvImport(new File(importInfo.getInternalFileName()));
             } catch (Exception e) {
                 if (e instanceof RuntimeJsonMappingException) {
                     session.web().error("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());

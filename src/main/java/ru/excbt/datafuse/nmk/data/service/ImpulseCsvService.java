@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
@@ -13,8 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulse_CsvFormat
 import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Service
 public class ImpulseCsvService {
+
+    private static final Logger log = LoggerFactory.getLogger(ImpulseCsvService.class);
+
     private final TimeZoneService timeZoneService;
 
     public static final String CSV_HEADER = "comment,login,serial,dataDate,dataValue";
@@ -93,7 +97,7 @@ public class ImpulseCsvService {
      * @throws IOException
      * @throws JsonProcessingException
      */
-    public List<ContServiceDataImpulseUCsv> parseDataImpulseUCsvImport(InputStream inputStream)
+    private List<ContServiceDataImpulseUCsv> parseDataImpulseUCsvImport(InputStream inputStream)
         throws IOException {
 
         CsvMapper mapper = new CsvMapper();
@@ -111,6 +115,35 @@ public class ImpulseCsvService {
             parsedData.add(d);
         }
         return parsedData;
+    }
+
+
+    public List<ContServiceDataImpulseUCsv> parseDataImpulseUCsvImport(File file)
+        throws IOException {
+
+        Charset charset = CsvUtils.determineCharset(file);
+
+        try (FileInputStream is = new FileInputStream(file)) {
+            InputStreamReader isr = new InputStreamReader(is, charset);
+
+            CsvMapper mapper = new CsvMapper();
+            mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
+            mapper.findAndRegisterModules();
+            CsvSchema schema = mapper.schemaFor(ContServiceDataImpulseUCsv.class).withHeader();
+            ObjectReader reader = mapper.readerFor(ContServiceDataImpulseUCsv.class).with(schema);
+
+            MappingIterator<ContServiceDataImpulseUCsv> iterator = null;
+            List<ContServiceDataImpulseUCsv> parsedData = new ArrayList<>();
+
+            iterator = reader.readValues(isr);
+            while (iterator.hasNext()) {
+                ContServiceDataImpulseUCsv d = iterator.next();
+                parsedData.add(d);
+            }
+
+            return parsedData;
+        }
+
     }
 
 
