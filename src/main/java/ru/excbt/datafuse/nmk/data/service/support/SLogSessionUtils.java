@@ -5,6 +5,7 @@ import ru.excbt.datafuse.slogwriter.service.SLogSession;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -52,7 +53,7 @@ public class SLogSessionUtils {
 
         boolean checkCsvSeparators;
         try {
-            checkCsvSeparators = CsvUtils.checkCsvSeparators(fileImportInfo.getInternalFileName());
+            checkCsvSeparators = CsvUtils.checkCsvSeparators(new File(fileImportInfo.getInternalFileName()));
         } catch (FileNotFoundException e1) {
 
             failSession(session,

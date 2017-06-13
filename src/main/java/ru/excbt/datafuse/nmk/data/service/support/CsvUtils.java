@@ -99,21 +99,6 @@ public class CsvUtils {
         return fileName != null ? FilenameUtils.getExtension(fileName) : "";
     }
 
-
-    /**
-     * @param file
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public static boolean checkCsvSeparators(String file) throws IOException {
-        boolean result;
-        try (Reader reader = new FileReader(file)) {
-            result = checkCsvSeparatorReader(reader);
-        }
-        return result;
-    }
-
     /**
      * @param file
      * @return
