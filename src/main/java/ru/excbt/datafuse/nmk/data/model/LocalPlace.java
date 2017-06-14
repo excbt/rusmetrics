@@ -80,11 +80,11 @@ public class LocalPlace extends AbstractAuditableModel {
 	@JoinColumn(name = "weather_place_id")
 	private WeatherPlace weatherPlace;
 
-	@Column(name = "geo_lat")
-	private BigDecimal geoLat;
+	@Column(name = "geo_lat", columnDefinition = "numeric")
+	private Double geoLat;
 
-	@Column(name = "geo_lon")
-	private BigDecimal geoLon;
+	@Column(name = "geo_lon", columnDefinition = "numeric")
+	private Double geoLon;
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;

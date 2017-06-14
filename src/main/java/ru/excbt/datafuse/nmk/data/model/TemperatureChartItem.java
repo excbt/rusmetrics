@@ -39,14 +39,14 @@ public class TemperatureChartItem extends AbstractAuditableModel implements Dele
 	@JoinColumn(name = "temperature_chart_id")
 	private TemperatureChart temperatureChart;
 
-	@Column(name = "t_ambience")
-	private BigDecimal t_Ambience;
+	@Column(name = "t_ambience", columnDefinition = "numeric")
+	private Double t_Ambience;
 
-	@Column(name = "t_in")
-	private BigDecimal t_In;
+	@Column(name = "t_in", columnDefinition = "numeric")
+	private Double t_In;
 
-	@Column(name = "t_out")
-	private BigDecimal t_Out;
+	@Column(name = "t_out", columnDefinition = "numeric")
+	private Double t_Out;
 
 	@Column(name = "item_comment")
 	private String itemComment;

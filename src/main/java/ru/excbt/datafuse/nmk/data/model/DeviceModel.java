@@ -90,8 +90,8 @@ public class DeviceModel extends AbstractAuditableModel
 	@Column(name = "is_impulse")
 	private Boolean isImpulse;
 
-	@Column(name = "default_impulse_k")
-	private BigDecimal defaultImpulseK;
+	@Column(name = "default_impulse_k", columnDefinition = "numeric")
+	private Double defaultImpulseK;
 
 	@Column(name = "default_impulse_mu")
 	private String defaultImpulseMu;

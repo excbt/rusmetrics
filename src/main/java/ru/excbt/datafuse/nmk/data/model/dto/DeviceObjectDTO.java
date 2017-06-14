@@ -64,7 +64,7 @@ public class DeviceObjectDTO {
 
     @Getter
     @Setter
-    private BigDecimal verificationInterval;
+    private Double verificationInterval;
 
     @Getter
     @Setter
@@ -88,7 +88,7 @@ public class DeviceObjectDTO {
 
     @Getter
     @Setter
-    private BigDecimal impulseK;
+    private Double impulseK;
 
     @Getter
     @Setter

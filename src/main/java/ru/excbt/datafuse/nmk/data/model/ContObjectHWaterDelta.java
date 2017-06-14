@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Subselect;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
@@ -23,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
  *
  */
 @Entity
-@Table(name = "v_cont_object_hwater_delta")
+@Subselect("select * from v_cont_object_hwater_delta")
 @Getter
 public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> implements DataDateFormatter {
 
@@ -48,25 +49,25 @@ public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> imple
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
-	@Column(name = "t_in")
-	private BigDecimal t_in;
+	@Column(name = "t_in", columnDefinition = "numeric")
+	private Double t_in;
 
-	@Column(name = "t_out")
-	private BigDecimal t_out;
+	@Column(name = "t_out", columnDefinition = "numeric")
+	private Double t_out;
 
-	@Column(name = "m_delta")
-	private BigDecimal m_delta;
+	@Column(name = "m_delta", columnDefinition = "numeric")
+	private Double m_delta;
 
-	@Column(name = "v_delta")
-	private BigDecimal v_delta;
+	@Column(name = "v_delta", columnDefinition = "numeric")
+	private Double v_delta;
 
-	@Column(name = "h_delta")
-	private BigDecimal h_delta;
+	@Column(name = "h_delta", columnDefinition = "numeric")
+	private Double h_delta;
 
-	@Column(name = "work_time")
-	private BigDecimal workTime;
+	@Column(name = "work_time", columnDefinition = "numeric")
+	private Double workTime;
 
-	@Column(name = "fail_time")
-	private BigDecimal failTime;
+	@Column(name = "fail_time", columnDefinition = "numeric")
+	private Double failTime;
 
 }

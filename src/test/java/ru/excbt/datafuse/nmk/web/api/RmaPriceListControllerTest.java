@@ -175,7 +175,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 		SubscrPriceItemVO oldVO = priceItemsVO.get(0);
 
 		oldVO.setPriceValue(
-				oldVO.getPriceValue() != null ? oldVO.getPriceValue().multiply(BigDecimal.valueOf(0.9)) : null);
+				oldVO.getPriceValue() != null ? oldVO.getPriceValue() * 0.9D : null);
 		// oldVO.setValue(null);
 
 		_testUpdateJson(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, priceListId),

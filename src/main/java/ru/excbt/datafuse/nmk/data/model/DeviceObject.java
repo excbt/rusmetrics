@@ -205,8 +205,8 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
     @Getter
     @Setter
-	@Column(name = "verification_interval")
-	private BigDecimal verificationInterval;
+	@Column(name = "verification_interval", columnDefinition = "numeric")
+	private Double verificationInterval;
 
     @Getter
     @Setter
@@ -256,8 +256,8 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
     @Getter
     @Setter
-	@Column(name = "impulse_k")
-	private BigDecimal impulseK;
+	@Column(name = "impulse_k", columnDefinition = "numeric")
+	private Double impulseK;
 
     @Getter
     @Setter

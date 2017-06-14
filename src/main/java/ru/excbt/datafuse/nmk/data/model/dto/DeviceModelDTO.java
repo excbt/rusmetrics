@@ -41,7 +41,7 @@ public class DeviceModelDTO implements DevModeObject {
 
     private Boolean isImpulse;
 
-    private BigDecimal defaultImpulseK;
+    private Double defaultImpulseK;
 
     private String defaultImpulseMu;
 

@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContObjectDaDataRepository;
 
 /**
  * Сервис по работе с ФИАС и гео координатами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.01.2016
@@ -36,7 +36,7 @@ public class ContObjectDaDataService {
 	private ContObjectDaDataRepository contObjectDaDataRepository;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -50,7 +50,7 @@ public class ContObjectDaDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -70,11 +70,11 @@ public class ContObjectDaDataService {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectDaData
+     * @return
+     */
 
 	public ContObjectDaData processContObjectDaData(ContObjectDaData contObjectDaData) {
 		checkNotNull(contObjectDaData);
@@ -85,7 +85,7 @@ public class ContObjectDaDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectDaData
 	 * @return
 	 */
@@ -95,7 +95,7 @@ public class ContObjectDaDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectDaData
 	 */
 	private void parseSraw(ContObjectDaData contObjectDaData) {
@@ -128,14 +128,14 @@ public class ContObjectDaDataService {
 		String lat = safeJsonRead(raw, "$.data.geo_lat");
 		String lon = safeJsonRead(raw, "$.data.geo_lon");
 		if (lat != null || lon != null) {
-			contObjectDaData.setDataGeoLat(new BigDecimal(lat));
-			contObjectDaData.setDataGeoLon(new BigDecimal(lon));
+			contObjectDaData.setDataGeoLat(Double.parseDouble(lat));
+			contObjectDaData.setDataGeoLon(Double.parseDouble(lon));
 		}
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param json
 	 * @param jsonPath
 	 * @return

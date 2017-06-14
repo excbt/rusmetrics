@@ -56,11 +56,11 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "is_integrator", updatable = false)
 	private Boolean isIntegrator;
 
-	@Column(name = "src_prop_division")
-	private BigDecimal srcPropDivision;
+	@Column(name = "src_prop_division", columnDefinition = "numeric")
+	private Double srcPropDivision;
 
-	@Column(name = "dest_prop_capacity")
-	private BigDecimal destPropCapacity;
+	@Column(name = "dest_prop_capacity", columnDefinition = "numeric")
+	private Double destPropCapacity;
 
 	@Column(name = "src_measure_unit")
 	private String srcMeasureUnit;

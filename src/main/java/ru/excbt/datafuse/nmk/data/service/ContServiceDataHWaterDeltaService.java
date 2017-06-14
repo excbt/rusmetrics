@@ -36,7 +36,7 @@ import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 
 /**
  * Сервис по работе с вычисляемыми данными по горячей воде
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.08.2015
@@ -57,14 +57,15 @@ public class ContServiceDataHWaterDeltaService {
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param ldp
-	 * @param contServiceType
-	 * @param timeDetailType
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param ldp
+     * @param contServiceTypeKey
+     * @param timeDetailKey
+     * @param contObjectId
+     * @return
+     */
 	public List<Object[]> selectRawHWaterDeltaAgr(Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey, Long contObjectId) {
 
@@ -113,7 +114,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @param contServiceTypeKey
@@ -166,7 +167,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @param contServiceType
@@ -186,7 +187,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @param contServiceTypeKey
@@ -206,7 +207,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @param contServiceTypeKey
@@ -228,7 +229,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dbResult
 	 * @param contServiceTypeKey
 	 * @return
@@ -240,25 +241,24 @@ public class ContServiceDataHWaterDeltaService {
 			Long contObjectId = DBRowUtils.asLong(row[0]);
 			ContServiceTypeInfoART art = new ContServiceTypeInfoART(contServiceTypeKey);
 			if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.V_M3) {
-				art.setAbsConsValue(DBRowUtils.asBigDecimal(row[2])); // sum_v_delta
+				art.setAbsConsValue(DBRowUtils.asDouble(row[2])); // sum_v_delta
 			} else if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.W_GCAL) {
-				art.setAbsConsValue(DBRowUtils.asBigDecimal(row[3])); // sum_h_delta
+				art.setAbsConsValue(DBRowUtils.asDouble(row[3])); // sum_h_delta
 			}
-			art.setTempValue(DBRowUtils.asBigDecimal(row[4])); // avg_t_in
+			art.setTempValue(DBRowUtils.asDouble(row[4])); // avg_t_in
 			resultMap.put(contObjectId, art);
 		}
 
 		return resultMap;
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param ldp
-	 * @param contServiceTypeKey
-	 * @param timeDetailKey
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param ldp
+     * @param contObjectId
+     * @return
+     */
 	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfo(Long subscriberId, LocalDatePeriod ldp,
 			Long contObjectId) {
 
@@ -292,7 +292,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @param contObjectId
@@ -330,7 +330,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 * @param hwContObjectARTs
 	 * @param heatContObjectARTs
@@ -369,7 +369,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @return
@@ -384,7 +384,7 @@ public class ContServiceDataHWaterDeltaService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param ldp
 	 * @param cityFiasUUID

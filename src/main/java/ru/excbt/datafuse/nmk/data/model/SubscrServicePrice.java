@@ -40,8 +40,8 @@ public class SubscrServicePrice extends AbstractAuditableModel {
 	@Column(name = "subscr_service_item_id")
 	private Long itemId;
 
-	@Column(name = "price_value")
-	private BigDecimal priceValue;
+	@Column(name = "price_value", columnDefinition = "numeric")
+	private Double priceValue;
 
 	@Column(name = "price_option")
 	private String priceOption;

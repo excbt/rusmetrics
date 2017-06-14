@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api.loading;
 
@@ -38,32 +38,32 @@ import static com.google.common.base.Preconditions.*;
 import static org.junit.Assert.*;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.02.2017
- * 
+ *
  */
-@WithMockUser(username = "rma-77-admin", 
+@WithMockUser(username = "rma-77-admin",
 roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
 		"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
 public class LoadingBtsDataTest extends RmaControllerTest {
 
 	/**
-	 * 
+	 *
 	 */
-	
+
 	private static final Logger log = LoggerFactory.getLogger(LoadingBtsDataTest.class);
-	
+
 	private final long BTS_DATA_SOURCE_ID = 128908069;
 	private final long DEVICE_MODEL_ID = 128647057;
 	private final long RSO_ORGANIZARION_ID = 66244571;
 	private final long CM_ORGANIZARION_ID = 31904329;
 	private final boolean DO_DELETE = false;
-	
+
 	private final static Long ROM_RMA_SUBSCRIBER_USER_ID = 103926903L;
 	private final static Long ROM_RMA_SUBSCRIBER_ID = 103926764L;
-	
+
 
 	private final static class LoadingResult {
 		private LoadingBtsData.BtsInfo info;
@@ -74,7 +74,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 
 	/**
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	@Test
 	@Transactional
@@ -102,7 +102,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			RequestExtraInitializer params = (builder) -> {
 				builder.param("cmOrganizationId", String.valueOf(CM_ORGANIZARION_ID));
 			};
-			
+
 			// Make ContObject
 			Long contObjectId = _testCreateJson("/api/rma/contObjects", co, params);
 			assertNotNull(contObjectId);
@@ -116,7 +116,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 				DeviceObject deviceObject = new DeviceObject();
 				deviceObject.setDeviceModelId(DEVICE_MODEL_ID);
 				deviceObject.setIsImpulse(true);
-				deviceObject.setImpulseK(BigDecimal.valueOf(0.01));
+				deviceObject.setImpulseK(0.01);
 				deviceObject.setImpulseMu("V_M3");
 				deviceObject.setImpulseCounterAddr(info.getBtsNr());
 				deviceObject.setImpulseCounterSlotAddr(String.valueOf(i));
@@ -188,16 +188,16 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
 	@Test
 	@Transactional
 	public void testDeleteBtsData() throws Exception {
-		
+
 		List<LoadingResult> loadingResults = new ArrayList<>();
-		
+
 		File f = ResourceHelper.findResource("./bts-loading/result-bts-test.txt");
 		log.info("File: {}", f.getAbsolutePath());
 		try (Reader r = new FileReader("result-ts.txt")) {
@@ -234,13 +234,13 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 					loadingResults.add(lr);
 				}
 			}
-		}	
+		}
 		doDelete (loadingResults);
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	private void doDelete(List<LoadingResult> loadingResults) throws Exception {
 		for (LoadingResult r : loadingResults) {
@@ -258,9 +258,9 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			_testDeleteJson(String.format("/api/rma/contObjects/%d", r.contObjectId));
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -269,12 +269,12 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
 	public long getSubscrUserId() {
 		return ROM_RMA_SUBSCRIBER_USER_ID;
-	}	
-	
+	}
+
 }

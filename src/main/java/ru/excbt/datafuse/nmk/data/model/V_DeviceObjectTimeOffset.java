@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Subselect;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_device_object_time_offset")
+@Subselect("select * from portal.v_device_object_time_offset")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 @Getter
 @Setter

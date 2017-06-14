@@ -81,17 +81,17 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	@Column(name = "rma_ldap_ou", insertable = false, updatable = false)
 	private String rmaLdapOu;
 
-	@Column(name = "map_center_lat")
-	private BigDecimal mapCenterLat;
+	@Column(name = "map_center_lat", columnDefinition = "numeric")
+	private Double mapCenterLat;
 
-	@Column(name = "map_center_lng")
-	private BigDecimal mapCenterLng;
+	@Column(name = "map_center_lng", columnDefinition = "numeric")
+	private Double mapCenterLng;
 
-	@Column(name = "map_zoom")
-	private BigDecimal mapZoom;
+	@Column(name = "map_zoom", columnDefinition = "numeric")
+	private Double mapZoom;
 
-	@Column(name = "map_zoom_detail")
-	private BigDecimal mapZoomDetail;
+	@Column(name = "map_zoom_detail", columnDefinition = "numeric")
+	private Double mapZoomDetail;
 
 	@JsonIgnore
 	@Column(name = "subscr_type", updatable = false)

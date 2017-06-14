@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Value Object для SubscrPriceItem
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.11.2015
@@ -25,11 +25,11 @@ public class SubscrPriceItemVO {
 	private final Long id;
 	private final Long packId;
 	private final Long itemId;
-	private BigDecimal priceValue;
+	private Double priceValue;
 	private String currency;
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceItem
 	 */
 	public SubscrPriceItemVO(SubscrPriceItem subscrPriceItem) {
@@ -41,7 +41,7 @@ public class SubscrPriceItemVO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcVO
 	 */
 	public SubscrPriceItemVO(SubscrPriceItemVO srcVO) {
@@ -53,11 +53,11 @@ public class SubscrPriceItemVO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcVO
 	 * @param newValue
 	 */
-	public SubscrPriceItemVO(SubscrPriceItemVO srcVO, BigDecimal newValue) {
+	public SubscrPriceItemVO(SubscrPriceItemVO srcVO, Double newValue) {
 		checkNotNull(srcVO);
 		this.id = srcVO.id;
 		this.packId = srcVO.packId;
@@ -66,7 +66,7 @@ public class SubscrPriceItemVO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param packId
 	 * @param itemId
@@ -74,7 +74,7 @@ public class SubscrPriceItemVO {
 	 */
 	@JsonCreator
 	public SubscrPriceItemVO(@JsonProperty("id") Long id, @JsonProperty("packId") Long packId,
-			@JsonProperty("itemId") Long itemId, @JsonProperty("priceValue") BigDecimal priceValue) {
+			@JsonProperty("itemId") Long itemId, @JsonProperty("priceValue") Double priceValue) {
 		this.id = id;
 		this.packId = packId;
 		this.itemId = itemId;
@@ -93,11 +93,11 @@ public class SubscrPriceItemVO {
 		return itemId;
 	}
 
-	public BigDecimal getPriceValue() {
+	public Double getPriceValue() {
 		return priceValue;
 	}
 
-	public void setPriceValue(BigDecimal priceValue) {
+	public void setPriceValue(Double priceValue) {
 		this.priceValue = priceValue;
 	}
 

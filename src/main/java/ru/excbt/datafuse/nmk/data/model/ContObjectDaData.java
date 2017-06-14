@@ -114,11 +114,11 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID dataFiasId;
 
-	@Column(name = "data_geo_lat")
-	private BigDecimal dataGeoLat;
+	@Column(name = "data_geo_lat", columnDefinition = "numeric")
+	private Double dataGeoLat;
 
-	@Column(name = "data_geo_lon")
-	private BigDecimal dataGeoLon;
+	@Column(name = "data_geo_lon", columnDefinition = "numeric")
+	private Double dataGeoLon;
 
 	@Column(name = "is_valid")
 	private Boolean isValid;
