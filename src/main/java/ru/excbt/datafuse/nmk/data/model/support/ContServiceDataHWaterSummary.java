@@ -5,13 +5,17 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class ContServiceDataHWaterSummary implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7928358602878254237L;
 
@@ -27,42 +31,6 @@ public class ContServiceDataHWaterSummary implements Serializable {
 
 	public ContServiceDataHWater getFirstData() {
 		return firstData;
-	}
-
-	public void setFirstData(ContServiceDataHWater firstData) {
-		this.firstData = firstData;
-	}
-
-	public ContServiceDataHWater getLastData() {
-		return lastData;
-	}
-
-	public void setLastData(ContServiceDataHWater lastData) {
-		this.lastData = lastData;
-	}
-
-	public ContServiceDataHWaterTotals getTotals() {
-		return totals;
-	}
-
-	public void setTotals(ContServiceDataHWaterTotals totals) {
-		this.totals = totals;
-	}
-
-	public ContServiceDataHWaterTotals getDiffs() {
-		return diffs;
-	}
-
-	public void setDiffs(ContServiceDataHWaterTotals diffs) {
-		this.diffs = diffs;
-	}
-
-	public ContServiceDataHWater getAverage() {
-		return average;
-	}
-
-	public void setAverage(ContServiceDataHWater average) {
-		this.average = average;
 	}
 
 }

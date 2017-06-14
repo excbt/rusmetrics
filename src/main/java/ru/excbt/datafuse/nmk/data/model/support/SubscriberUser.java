@@ -4,11 +4,11 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
 public interface SubscriberUser {
 
-	public Long getId();
+	Long getId();
 
-	public Subscriber getSubscriber();
+	Subscriber getSubscriber();
 
-	default public Long getSubscriberId() {
+	default Long getSubscriberId() {
 		return getSubscriber() != null ? getSubscriber().getId() : null;
 	}
 }

@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,14 +17,14 @@ public class CityMonitorContEventsStatusV2 extends
 		Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1510890454161328379L;
 
 	public static final CityContObjectsFactory<CityMonitorContEventsStatusV2> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -40,7 +41,7 @@ public class CityMonitorContEventsStatusV2 extends
 	private Long monitorEventCount = 0L;
 
 	/**
-	 * 
+	 *
 	 * @param cityFiasUUID
 	 */
 	public CityMonitorContEventsStatusV2(UUID cityFiasUUID) {
@@ -48,7 +49,7 @@ public class CityMonitorContEventsStatusV2 extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<MonitorContEventNotificationStatusV2> getContEventNotificationStatuses() {
@@ -56,7 +57,7 @@ public class CityMonitorContEventsStatusV2 extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getMonitorEventCount() {
@@ -64,7 +65,7 @@ public class CityMonitorContEventsStatusV2 extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param monitorEventCount
 	 */
 	public void setMonitorEventCount(Long monitorEventCount) {
@@ -72,7 +73,7 @@ public class CityMonitorContEventsStatusV2 extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContEventLevelColorKeyV2 getCityContEventLevelColor() {
@@ -80,9 +81,8 @@ public class CityMonitorContEventsStatusV2 extends
 		Optional<MonitorContEventNotificationStatusV2> item = cityObjects
 				.stream()
 				.filter((i) -> i.getContEventLevelColorKey() != null)
-				.sorted((x, y) -> Integer.compare(x.getContEventLevelColorKey()
-						.getColorRank(), y.getContEventLevelColorKey()
-								.getColorRank()))
+				.sorted(Comparator.comparingInt(x -> x.getContEventLevelColorKey()
+                    .getColorRank()))
 				.findFirst();
 
 		return item.isPresent() ? item.get().getContEventLevelColorKey() : null;

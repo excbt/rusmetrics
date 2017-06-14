@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.model.support;
 
@@ -10,20 +10,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.01.2017
- * 
+ *
  */
 public interface JsonModel {
 
-	static final Logger log = LoggerFactory.getLogger(JsonModel.class);
+	Logger log = LoggerFactory.getLogger(JsonModel.class);
 
-	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws JsonProcessingException
 	 */
@@ -32,7 +32,7 @@ public interface JsonModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws JsonProcessingException
 	 */
