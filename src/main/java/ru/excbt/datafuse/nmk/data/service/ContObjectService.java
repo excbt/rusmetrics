@@ -1,17 +1,14 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContManagement;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
-import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
-import ru.excbt.datafuse.nmk.data.model.LocalPlace;
-import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
-import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
@@ -19,43 +16,23 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.model.vo.ContObjectMonitorVO;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectGeoPosRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
-
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис по работе с объектом учета
@@ -584,26 +561,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				contObjectDaData.getDataGeoLat().toString());
 	}
 
-	/**
-	 *
-	 * @param contObjectWrappers
-	 * @return
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private void calculateContObjectWrappersStats(List<ContObjectWrapper> contObjectWrappers) {
-		checkNotNull(contObjectWrappers);
-
-		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getContObject().getId())
-				.collect(Collectors.toSet());
-
-		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
-
-		contObjectWrappers.forEach(i -> {
-			Integer res = contObjectStats.get(i.getContObject().getId());
-			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-		});
-	}
 
 	/**
 	 *
@@ -629,56 +586,63 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		return contObjectWrappers;
 	}
 
-	/**
-	 *
-	 * @param contObjects
-	 * @return
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectMonitorVO> wrapContObjectsMonitorVO(List<ContObject> contObjects) {
-		checkNotNull(contObjects);
+//	/**
+//	 *
+//	 * @param contObjects
+//	 * @return
+//	 */
+//	@Deprecated
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	private List<ContObjectMonitorVO> wrapContObjectsMonitorVO(List<ContObject> contObjects) {
+//		checkNotNull(contObjects);
+//
+//		List<ContObjectMonitorVO> contObjectWrappers = contObjects.stream()
+//				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new ContObjectMonitorVO(i))
+//				.collect(Collectors.toList());
+//
+//		List<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getModel().getId()).distinct()
+//				.collect(Collectors.toList());
+//
+//		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+//
+//		List<ContEventMonitorV2> contEventMonitors = contEventMonitorV2Service.selectByContObjectIds(contObjectIds);
+//
+//		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
+//
+//		contEventMonitors.forEach(i -> {
+//			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
+//			if (l == null) {
+//				l = new ArrayList<>();
+//				contEventMonitorMapList.put(i.getContObjectId(), l);
+//			}
+//			checkNotNull(l);
+//			l.add(i);
+//		});
+//
+//		contObjectWrappers.forEach(i -> {
+//
+//			Integer res = contObjectStats.get(i.getModel().getId());
+//
+//			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+//			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getModel().getId());
+//			if (m != null && !m.isEmpty()) {
+//				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
+//				if (color != null) {
+//					i.getContObjectStats().setContEventLevelColor(color.getKeyname());
+//				}
+//
+//			}
+//		});
+//
+//		return contObjectWrappers;
+//	}
 
-		List<ContObjectMonitorVO> contObjectWrappers = contObjects.stream()
-				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new ContObjectMonitorVO(i))
-				.collect(Collectors.toList());
 
-		List<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getModel().getId()).distinct()
-				.collect(Collectors.toList());
-
-		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
-
-		List<ContEventMonitorV2> contEventMonitors = contEventMonitorV2Service.selectByContObjectIds(contObjectIds);
-
-		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
-
-		contEventMonitors.forEach(i -> {
-			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
-			if (l == null) {
-				l = new ArrayList<>();
-				contEventMonitorMapList.put(i.getContObjectId(), l);
-			}
-			checkNotNull(l);
-			l.add(i);
-		});
-
-		contObjectWrappers.forEach(i -> {
-
-			Integer res = contObjectStats.get(i.getModel().getId());
-
-			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getModel().getId());
-			if (m != null && !m.isEmpty()) {
-				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
-				if (color != null) {
-					i.getContObjectStats().setContEventLevelColor(color.getKeyname());
-				}
-
-			}
-		});
-
-		return contObjectWrappers;
-	}
+    /**
+     *
+     * @param contObjects
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(List<ContObject> contObjects) {
 		checkNotNull(contObjects);

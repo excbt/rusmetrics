@@ -101,7 +101,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
                 List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true, meterPeriodSettingIds)
                     : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
 
-				return contObjectService.wrapContObjectsMonitorVO(resultList);
+				return contObjectService.wrapContObjectsMonitorDTO(resultList);
 			}
 		};
 

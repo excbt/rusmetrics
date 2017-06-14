@@ -2,10 +2,8 @@ package ru.excbt.datafuse.nmk.service.mapper;
 
 import org.mapstruct.Mapper;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 
 /**
  * Created by kovtonyk on 14.06.2017.
