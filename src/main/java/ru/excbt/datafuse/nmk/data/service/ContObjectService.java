@@ -12,7 +12,9 @@ import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
@@ -32,10 +34,10 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -70,63 +72,112 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private static final String GEO_POS_JSON_TEMPLATE = "{\"pos\": \"%s %s\"}";
 
-	@Autowired
-	private ContObjectRepository contObjectRepository;
+	private final ContObjectRepository contObjectRepository;
 
-	@Autowired
-	private ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository;
+	private final ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberService subscriberService;
 
-	@Autowired
-	private ContObjectFiasRepository contObjectFiasRepository;
+	private final ContObjectFiasRepository contObjectFiasRepository;
 
-	@Autowired
-	private ContObjectGeoPosRepository contObjectGeoPosRepository;
+	private final ContObjectGeoPosRepository contObjectGeoPosRepository;
 
-	@Autowired
-	private ContObjectDaDataService contObjectDaDataService;
+	private final ContObjectDaDataService contObjectDaDataService;
 
-	@Autowired
-	private TimezoneDefService timezoneDefService;
+	private final TimezoneDefService timezoneDefService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+	private final SubscrContObjectService subscrContObjectService;
 
-	@Autowired
-	private SubscrContObjectRepository subscrContObjectRepository;
+	private final SubscrContObjectRepository subscrContObjectRepository;
 
-	@Autowired
-	private ContManagementService contManagementService;
+	private final ContManagementService contManagementService;
 
-	@Autowired
-	private FiasService fiasService;
+	private final FiasService fiasService;
 
-	@Autowired
-	private LocalPlaceService localPlaceService;
+	private final LocalPlaceService localPlaceService;
 
-	@Autowired
-	private ContEventMonitorV2Service contEventMonitorV2Service;
+	private final ContEventMonitorV2Service contEventMonitorV2Service;
 
-	@Autowired
-	private WeatherForecastService weatherForecastService;
+	private final WeatherForecastService weatherForecastService;
 
-	@Autowired
-	private MeterPeriodSettingRepository meterPeriodSettingRepository;
+	private final MeterPeriodSettingRepository meterPeriodSettingRepository;
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	private final ContObjectMapper contObjectMapper;
+
+    public ContObjectService(ContObjectRepository contObjectRepository,
+                             ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository,
+                             SubscriberService subscriberService,
+                             ContObjectFiasRepository contObjectFiasRepository,
+                             ContObjectGeoPosRepository contObjectGeoPosRepository,
+                             ContObjectDaDataService contObjectDaDataService,
+                             TimezoneDefService timezoneDefService,
+                             SubscrContObjectService subscrContObjectService,
+                             SubscrContObjectRepository subscrContObjectRepository,
+                             ContManagementService contManagementService,
+                             FiasService fiasService,
+                             LocalPlaceService localPlaceService,
+                             ContEventMonitorV2Service contEventMonitorV2Service,
+                             WeatherForecastService weatherForecastService,
+                             MeterPeriodSettingRepository meterPeriodSettingRepository,
+                             ContObjectMapper contObjectMapper) {
+        this.contObjectRepository = contObjectRepository;
+        this.contObjectSettingModeTypeRepository = contObjectSettingModeTypeRepository;
+        this.subscriberService = subscriberService;
+        this.contObjectFiasRepository = contObjectFiasRepository;
+        this.contObjectGeoPosRepository = contObjectGeoPosRepository;
+        this.contObjectDaDataService = contObjectDaDataService;
+        this.timezoneDefService = timezoneDefService;
+        this.subscrContObjectService = subscrContObjectService;
+        this.subscrContObjectRepository = subscrContObjectRepository;
+        this.contManagementService = contManagementService;
+        this.fiasService = fiasService;
+        this.localPlaceService = localPlaceService;
+        this.contEventMonitorV2Service = contEventMonitorV2Service;
+        this.weatherForecastService = weatherForecastService;
+        this.meterPeriodSettingRepository = meterPeriodSettingRepository;
+        this.contObjectMapper = contObjectMapper;
+    }
+
+
+    /**
+     *
+      * @param contObjectId
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObject findContObject(Long contObjectId) {
 		ContObject result = contObjectRepository.findOne(contObjectId);
 		if (result == null) {
 			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
 		}
 		return result;
+	}
+
+    /**
+     *
+     * @param contObjectId
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContObjectDTO findContObjectDTO(Long contObjectId) {
+		ContObject result = contObjectRepository.findOne(contObjectId);
+		if (result == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+		return contObjectMapper.contObjectToDto(result);
+	}
+
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContObjectMonitorDTO findContObjectMonitorDTO(Long contObjectId) {
+		ContObject contObject = contObjectRepository.findOne(contObjectId);
+		if (contObject == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+
+		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(Arrays.asList(contObject));
+
+        return monitorDTOList.get(0);
 	}
 
 	/**
@@ -583,6 +634,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @param contObjects
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectMonitorVO> wrapContObjectsMonitorVO(List<ContObject> contObjects) {
 		checkNotNull(contObjects);
@@ -626,6 +678,50 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		});
 
 		return contObjectWrappers;
+	}
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(List<ContObject> contObjects) {
+		checkNotNull(contObjects);
+
+		List<ContObjectMonitorDTO> contObjectMonitors = contObjects.stream()
+				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> contObjectMapper.contObjectToMonitorDto(i))
+				.collect(Collectors.toList());
+
+		List<Long> contObjectIds = contObjectMonitors.stream().map(i -> i.getId()).distinct()
+				.collect(Collectors.toList());
+
+		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+
+		List<ContEventMonitorV2> contEventMonitors = contEventMonitorV2Service.selectByContObjectIds(contObjectIds);
+
+		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
+
+		contEventMonitors.forEach(i -> {
+			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
+			if (l == null) {
+				l = new ArrayList<>();
+				contEventMonitorMapList.put(i.getContObjectId(), l);
+			}
+			checkNotNull(l);
+			l.add(i);
+		});
+
+		contObjectMonitors.forEach(i -> {
+
+			Integer res = contObjectStats.get(i.getId());
+
+			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getId());
+			if (m != null && !m.isEmpty()) {
+				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
+				if (color != null) {
+					i.getContObjectStats().setContEventLevelColor(color.getKeyname());
+				}
+
+			}
+		});
+
+		return contObjectMonitors;
 	}
 
 	/**

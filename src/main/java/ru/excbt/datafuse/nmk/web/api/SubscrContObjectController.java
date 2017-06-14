@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
@@ -122,11 +123,9 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		ContObject result = contObjectService.findContObject(contObjectId);
+		ContObjectMonitorDTO result = contObjectService.findContObjectMonitorDTO(contObjectId);
 
-		List<?> wrappedList = contObjectService.wrapContObjectsMonitorVO(Arrays.asList(result));
-
-		return ApiResponse.responseOK(wrappedList.isEmpty() ? null : wrappedList.get(0));
+		return ApiResponse.responseOK(result);
 	}
 
 

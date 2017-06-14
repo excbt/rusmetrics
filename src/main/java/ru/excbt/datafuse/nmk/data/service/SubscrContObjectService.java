@@ -55,9 +55,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	private SubscriberService subscriberService;
 
 	@Autowired
-	private ContObjectService contObjectService;
-
-	@Autowired
 	protected ContGroupService contGroupService;
 
 	/**
@@ -709,10 +706,9 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		checkNotNull(subscriber);
 		checkNotNull(subscrBeginDate);
 
-		ContObject contObject = contObjectService.findContObject(contObjectId);
 
 		SubscrContObject subscrContObject = new SubscrContObject();
-		subscrContObject.setContObject(contObject);
+		subscrContObject.setContObject(new ContObject().id(contObjectId));
 		subscrContObject.setSubscriber(subscriber);
 		subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
 		return subscrContObjectRepository.save(subscrContObject);
