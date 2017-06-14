@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -60,20 +60,20 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectWrapper, Long>(request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectMonitorDTO, Long>(request) {
 
 			@Override
-			public ContObjectWrapper processAndReturnResult() {
+			public ContObjectMonitorDTO processAndReturnResult() {
 				ContObject result = contObjectService.createContObject(contObject, getCurrentSubscriberId(),
 						rmaBeginDate,
 						cmOrganizationId);
 
-				return contObjectService.wrapContObjectsStats(result);
+				return contObjectService.wrapContObjectMonitorDTO(result,false);
 			}
 
 			@Override
 			protected Long getLocationId() {
-				return getResultEntity().getContObject().getId();
+				return getResultEntity().getId();
 			}
 		};
 
@@ -144,8 +144,18 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
-		List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);
-		return ApiResponse.responseOK(contObjectService.wrapContObjectsStats(resultList));
+
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+                List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
+
+                return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
+            }
+        };
+
+	    return ApiActionTool.processResponceApiActionOk(action);
+
 	}
 
 	/**
@@ -156,11 +166,16 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
-		checkNotNull(subscriberId);
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+                List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
-		List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
+                return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
+            }
+        };
 
-		return ApiResponse.responseOK(contObjectService.wrapContObjectsStats(resultList));
+        return ApiActionTool.processResponceApiActionOk(action);
 	}
 
 	/**
@@ -171,10 +186,19 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
-		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
-				getCurrentSubscriberId());
 
-		return ApiResponse.responseOK(contObjectService.wrapContObjectsStats(resultList));
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+                List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
+                    getCurrentSubscriberId());
+
+                return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
+            }
+        };
+
+        return ApiActionTool.processResponceApiActionOk(action);
+
 	}
 
 	/**

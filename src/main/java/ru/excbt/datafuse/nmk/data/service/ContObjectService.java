@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -562,82 +562,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 
-	/**
-	 *
-	 * @param contObjects
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectWrapper> wrapContObjectsStats(List<ContObject> contObjects) {
-		checkNotNull(contObjects);
-
-		List<ContObjectWrapper> contObjectWrappers = ContObjectWrapper.wrapContObjects(contObjects);
-
-		Set<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getContObject().getId())
-				.collect(Collectors.toSet());
-
-		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
-
-		contObjectWrappers.forEach(i -> {
-			Integer res = contObjectStats.get(i.getContObject().getId());
-			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-		});
-
-		return contObjectWrappers;
-	}
-
-//	/**
-//	 *
-//	 * @param contObjects
-//	 * @return
-//	 */
-//	@Deprecated
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-//	private List<ContObjectMonitorVO> wrapContObjectsMonitorVO(List<ContObject> contObjects) {
-//		checkNotNull(contObjects);
-//
-//		List<ContObjectMonitorVO> contObjectWrappers = contObjects.stream()
-//				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new ContObjectMonitorVO(i))
-//				.collect(Collectors.toList());
-//
-//		List<Long> contObjectIds = contObjectWrappers.stream().map(i -> i.getModel().getId()).distinct()
-//				.collect(Collectors.toList());
-//
-//		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
-//
-//		List<ContEventMonitorV2> contEventMonitors = contEventMonitorV2Service.selectByContObjectIds(contObjectIds);
-//
-//		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
-//
-//		contEventMonitors.forEach(i -> {
-//			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
-//			if (l == null) {
-//				l = new ArrayList<>();
-//				contEventMonitorMapList.put(i.getContObjectId(), l);
-//			}
-//			checkNotNull(l);
-//			l.add(i);
-//		});
-//
-//		contObjectWrappers.forEach(i -> {
-//
-//			Integer res = contObjectStats.get(i.getModel().getId());
-//
-//			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-//			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getModel().getId());
-//			if (m != null && !m.isEmpty()) {
-//				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
-//				if (color != null) {
-//					i.getContObjectStats().setContEventLevelColor(color.getKeyname());
-//				}
-//
-//			}
-//		});
-//
-//		return contObjectWrappers;
-//	}
-
-
     /**
      *
      * @param contObjects
@@ -645,60 +569,76 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(List<ContObject> contObjects) {
-		checkNotNull(contObjects);
-
-		List<ContObjectMonitorDTO> contObjectMonitors = contObjects.stream()
-				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> contObjectMapper.contObjectToMonitorDto(i))
-				.collect(Collectors.toList());
-
-		List<Long> contObjectIds = contObjectMonitors.stream().map(i -> i.getId()).distinct()
-				.collect(Collectors.toList());
-
-		Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
-
-		List<ContEventMonitorV2> contEventMonitors = contEventMonitorV2Service.selectByContObjectIds(contObjectIds);
-
-		final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
-
-		contEventMonitors.forEach(i -> {
-			List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
-			if (l == null) {
-				l = new ArrayList<>();
-				contEventMonitorMapList.put(i.getContObjectId(), l);
-			}
-			checkNotNull(l);
-			l.add(i);
-		});
-
-		contObjectMonitors.forEach(i -> {
-
-			Integer res = contObjectStats.get(i.getId());
-
-			i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-			List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getId());
-			if (m != null && !m.isEmpty()) {
-				ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
-				if (color != null) {
-					i.getContObjectStats().setContEventLevelColor(color.getKeyname());
-				}
-
-			}
-		});
-
-		return contObjectMonitors;
+        return wrapContObjectsMonitorDTO (contObjects, true);
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObjectWrapper wrapContObjectsStats(ContObject contObject) {
-		List<ContObjectWrapper> preResult = wrapContObjectsStats(Arrays.asList(contObject));
-		return preResult.isEmpty() ? null : preResult.get(0);
-	}
+
+    /**
+     *
+     * @param contObjects
+     * @param contEventStats
+     * @return
+     */
+    public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(List<ContObject> contObjects, final boolean contEventStats) {
+        checkNotNull(contObjects);
+
+        List<ContObjectMonitorDTO> contObjectMonitorDTOList= contObjects.stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> contObjectMapper.contObjectToMonitorDto(i))
+            .collect(Collectors.toList());
+
+        List<Long> contObjectIds = contObjectMonitorDTOList.stream().map(i -> i.getId()).distinct()
+            .collect(Collectors.toList());
+
+        Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+
+        // Cont Event Block
+        List<ContEventMonitorV2> contEventMonitors = contEventStats ?
+            contEventMonitorV2Service.selectByContObjectIds(contObjectIds) :
+            Lists.emptyList();
+
+        final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
+
+        contEventMonitors.forEach(i -> {
+            List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
+            if (l == null) {
+                l = new ArrayList<>();
+                contEventMonitorMapList.put(i.getContObjectId(), l);
+            }
+            checkNotNull(l);
+            l.add(i);
+        });
+
+        //
+
+        contObjectMonitorDTOList.forEach(i -> {
+
+            Integer res = contObjectStats.get(i.getId());
+
+            i.getContObjectStats().setContZpointCount(res != null ? res : 0);
+            List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getId());
+            if (m != null && !m.isEmpty()) {
+                ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
+                if (color != null) {
+                    i.getContObjectStats().setContEventLevelColor(color.getKeyname());
+                }
+
+            }
+        });
+
+        return contObjectMonitorDTOList;
+    }
+
+
+    /**
+     *
+     * @param contObject
+     * @param contEventStats
+     * @return
+     */
+    public ContObjectMonitorDTO wrapContObjectMonitorDTO(ContObject contObject, final boolean contEventStats) {
+        List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(Arrays.asList(contObject));
+        return list.isEmpty() ? null : list.get(0);
+    }
 
 	/**
 	 *
