@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Subselect;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
 /**
@@ -26,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
  *
  */
 @Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "v_full_user_info")
+@Subselect("select * from portal.v_full_user_info")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 public class V_FullUserInfo implements Serializable {
 

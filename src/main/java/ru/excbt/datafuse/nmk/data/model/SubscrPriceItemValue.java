@@ -43,8 +43,8 @@ public class SubscrPriceItemValue extends AbstractAuditableModel {
 	@Column(name = "subscr_price_item_id", insertable = false, updatable = false)
 	private Long subcrPriceItemId;
 
-	@Column(name = "price_value")
-	private BigDecimal priceValue;
+	@Column(name = "price_value", columnDefinition = "numeric")
+	private Double priceValue;
 
 	@Column(name = "value_begin_date")
 	@Temporal(TemporalType.DATE)

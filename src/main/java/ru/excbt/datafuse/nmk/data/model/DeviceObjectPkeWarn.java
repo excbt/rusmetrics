@@ -41,8 +41,8 @@ public class DeviceObjectPkeWarn extends AbstractAuditableModel {
 	@Column(name = "warn_end_date")
 	private Date warnEndDate;
 
-	@Column(name = "warn_value")
-	private BigDecimal warnValue;
+	@Column(name = "warn_value", columnDefinition = "numeric")
+	private Double warnValue;
 
 	@JsonIgnore
 	@Version

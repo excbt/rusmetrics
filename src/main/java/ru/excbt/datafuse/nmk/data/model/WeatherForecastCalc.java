@@ -55,8 +55,8 @@ public class WeatherForecastCalc extends AbstractAuditableModel {
 	@Column(name = "calc_type")
 	private String calcType;
 
-	@Column(name = "calc_value")
-	private BigDecimal calcValue;
+	@Column(name = "calc_value", columnDefinition = "numeric")
+	private Double calcValue;
 
 	@Version
 	private int version;

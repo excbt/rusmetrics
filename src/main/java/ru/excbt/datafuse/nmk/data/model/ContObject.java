@@ -104,11 +104,11 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "cont_object_comment")
 	private String comment;
 
-	@Column(name = "cont_object_cw_temp")
-	private BigDecimal cwTemp;
+	@Column(name = "cont_object_cw_temp", columnDefinition = "numeric")
+	private Double cwTemp;
 
-	@Column(name = "cont_object_heat_area")
-	private BigDecimal heatArea;
+	@Column(name = "cont_object_heat_area", columnDefinition = "numeric")
+	private Double heatArea;
 
 	@Version
 	private int version;

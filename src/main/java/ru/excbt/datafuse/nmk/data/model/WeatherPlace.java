@@ -61,11 +61,11 @@ public class WeatherPlace extends AbstractAuditableModel implements DisabledObje
 	@Column(name = "provider_place_id3")
 	private String providerPlaceId3;
 
-	@Column(name = "geo_lat")
-	private BigDecimal geoLat;
+	@Column(name = "geo_lat", columnDefinition = "numeric")
+	private Double geoLat;
 
-	@Column(name = "geo_lon")
-	private BigDecimal geoLon;
+	@Column(name = "geo_lon", columnDefinition = "numeric")
+	private Double geoLon;
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;

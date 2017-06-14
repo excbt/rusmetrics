@@ -61,8 +61,8 @@ public class SubscrPriceItem extends AbstractAuditableModel implements Deletable
 	@Column(name = "price_option")
 	private String priceOption;
 
-	@Column(name = "price_value")
-	private BigDecimal priceValue;
+	@Column(name = "price_value", columnDefinition = "numeric")
+	private Double priceValue;
 
 	@Column(name = "deleted")
 	private int deleted;

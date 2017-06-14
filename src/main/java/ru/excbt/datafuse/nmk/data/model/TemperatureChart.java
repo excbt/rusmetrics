@@ -67,11 +67,11 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "is_default")
 	private Boolean isDefault;
 
-	@Column(name = "max_t")
-	private BigDecimal maxT;
+	@Column(name = "max_t", columnDefinition = "numeric")
+	private Double maxT;
 
-	@Column(name = "min_t")
-	private BigDecimal minT;
+	@Column(name = "min_t", columnDefinition = "numeric")
+	private Double minT;
 
 	@Column(name = "flag_adj_pump")
 	private Boolean flagAdjPump;

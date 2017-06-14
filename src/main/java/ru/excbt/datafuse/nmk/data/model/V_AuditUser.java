@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Subselect;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
@@ -26,7 +27,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  *
  */
 @Entity
-@Table(name = "audit_user")
+@Subselect("select * from portal.v_audit_user")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 public class V_AuditUser implements Serializable, PersistableBuilder<V_AuditUser, Long> {
 

@@ -50,11 +50,11 @@ public class LocalPlaceTemperatureSst extends AbstractAuditableModel implements 
 	@Column(name = "sst_date_time")
 	private Date sstDateTime;
 
-	@Column(name = "sst_value")
-	private BigDecimal sstValue;
+	@Column(name = "sst_value", columnDefinition = "numeric")
+	private Double sstValue;
 
-	@Column(name = "sst_calc_value")
-	private BigDecimal sstCalcValue;
+	@Column(name = "sst_calc_value", columnDefinition = "numeric")
+	private Double sstCalcValue;
 
 	@JsonIgnore
 	@Temporal(TemporalType.TIMESTAMP)
