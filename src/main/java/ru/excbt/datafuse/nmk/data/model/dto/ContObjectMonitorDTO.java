@@ -22,7 +22,7 @@ public class ContObjectMonitorDTO extends ContObjectDTO {
         private long eventsTypesCount;
     }
 
-    private ContObjectStats contObjectStats;
+    private ContObjectStats contObjectStats = new ContObjectStats();
 
     private long newEventsCount;
 
