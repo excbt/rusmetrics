@@ -11,8 +11,8 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
@@ -100,7 +100,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
                 List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true, meterPeriodSettingIds)
                     : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
 
-				return contObjectService.wrapContObjectsMonitorVO(resultList);
+				return contObjectService.wrapContObjectsMonitorDTO(resultList);
 			}
 		};
 
@@ -122,11 +122,9 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		ContObject result = contObjectService.findContObject(contObjectId);
+		ContObjectMonitorDTO result = contObjectService.findContObjectMonitorDTO(contObjectId);
 
-		List<?> wrappedList = contObjectService.wrapContObjectsMonitorVO(Arrays.asList(result));
-
-		return ApiResponse.responseOK(wrappedList.isEmpty() ? null : wrappedList.get(0));
+		return ApiResponse.responseOK(result);
 	}
 
 
@@ -174,16 +172,16 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<ContObjectWrapper>() {
+		ApiAction action = new ApiActionEntityAdapter<ContObjectMonitorDTO>() {
 
 			@Override
-			public ContObjectWrapper processAndReturnResult() {
+			public ContObjectMonitorDTO processAndReturnResult() {
 
 				ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
 
 				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
-				return contObjectService.wrapContObjectsStats(result);
+				return contObjectService.wrapContObjectMonitorDTO(result,false);
 			}
 
 		};

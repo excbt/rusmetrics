@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с привязкой Объект учета и управляющая компания
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.03.2015
@@ -34,8 +34,8 @@ public class ContManagementService implements SecuredRoles {
 	@Autowired
 	private ContManagementRepository contManagementRepository;
 
-	@Autowired
-	private ContObjectService contObjectService;
+//	@Autowired
+	//private ContObjectService contObjectService;
 
 	@Autowired
 	private OrganizationService organizationService;
@@ -46,7 +46,7 @@ public class ContManagementService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param organizationId
 	 * @param beginDate
@@ -69,10 +69,10 @@ public class ContManagementService implements SecuredRoles {
 			}
 		});
 
-		ContObject co = contObjectService.findContObject(contObjectId);
-		if (co == null) {
-			throw new PersistenceException(String.format("ContObject(id=%d) not found", contObjectId));
-		}
+//		ContObject co = contObjectService.findContObject(contObjectId);
+//		if (co == null) {
+//			throw new PersistenceException(String.format("ContObject(id=%d) not found", contObjectId));
+//		}
 
 		Organization org = organizationService.selectOrganization(organizationId);
 		if (org == null) {
@@ -80,7 +80,7 @@ public class ContManagementService implements SecuredRoles {
 		}
 
 		ContManagement newRecord = new ContManagement();
-		newRecord.setContObject(co);
+		newRecord.setContObject(new ContObject().id(contObjectId));
 		newRecord.setOrganization(org);
 		newRecord.setBeginDate(beginDate.toDate());
 
@@ -121,7 +121,7 @@ public class ContManagementService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param organizationId
 	 * @return
@@ -132,7 +132,7 @@ public class ContManagementService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param organizationId
 	 * @return
@@ -145,7 +145,7 @@ public class ContManagementService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @return
 	 */
@@ -157,7 +157,7 @@ public class ContManagementService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizationId
 	 * @return
 	 */
@@ -169,7 +169,7 @@ public class ContManagementService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contManagements
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
