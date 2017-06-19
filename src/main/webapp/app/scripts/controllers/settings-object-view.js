@@ -218,38 +218,38 @@ angular.module('portalNMC')
                 getObjectsData();
             };
 
-            function makeObjectTable(objectArray, isNewFlag) {
-
-                var objTable = document.getElementById('objectTable').getElementsByTagName('tbody')[0];
-        //        var temptableHTML = "";
-                var tableHTML = "";
-                if (!isNewFlag) {
-                    tableHTML = objTable.innerHTML;
-                }
-
-                objectArray.forEach(function (element, index) {
-                    var globalElementIndex = $scope.objectCtrlSettings.objectBottomOnPage - objectArray.length + index;
-                    var trClass = globalElementIndex % 2 > 0 ? "" : "nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
-                    tableHTML += "<tr class=\"" + trClass + "\" id=\"obj" + element.id + "\"><td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть точки учета\" id=\"btnDetail" + element.id + "\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails(" + element.id + ")\"></i>";
-                    tableHTML += "<i title=\"Редактировать свойства объекта\" ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject(" + element.id + ")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
-                    tableHTML += "</td>";
-                    tableHTML += "<td ng-click=\"toggleShowGroupDetails(" + element.id + ")\">" + element.fullName;
-                    if ($scope.isSystemuser()) {
-                        tableHTML += " <span>(id = " + element.id + ")</span>";
-                    }
-                    tableHTML += "</td></tr>";
-                    tableHTML += "<tr id=\"trObjZp" + element.id + "\">";
-                    tableHTML += "</tr>";
-                });
-//console.log(objTable); 
-                if (angular.isDefined(objTable.innerHTML)) {
-//console.log("angular.isDefined(objTable.innerHTML) =  true");                        
-                    objTable.innerHTML = tableHTML;
-                }
-//console.log(objTable);                    
-                $compile(objTable)($scope);
-
-            }
+//            function makeObjectTable(objectArray, isNewFlag) {
+//
+//                var objTable = document.getElementById('objectTable').getElementsByTagName('tbody')[0];
+//        //        var temptableHTML = "";
+//                var tableHTML = "";
+//                if (!isNewFlag) {
+//                    tableHTML = objTable.innerHTML;
+//                }
+//
+//                objectArray.forEach(function (element, index) {
+//                    var globalElementIndex = $scope.objectCtrlSettings.objectBottomOnPage - objectArray.length + index;
+//                    var trClass = globalElementIndex % 2 > 0 ? "" : "nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
+//                    tableHTML += "<tr class=\"" + trClass + "\" id=\"obj" + element.id + "\"><td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть точки учета\" id=\"btnDetail" + element.id + "\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails(" + element.id + ")\"></i>";
+//                    tableHTML += "<i title=\"Редактировать свойства объекта\" ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject(" + element.id + ")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
+//                    tableHTML += "</td>";
+//                    tableHTML += "<td ng-click=\"toggleShowGroupDetails(" + element.id + ")\">" + element.fullName;
+//                    if ($scope.isSystemuser()) {
+//                        tableHTML += " <span>(id = " + element.id + ")</span>";
+//                    }
+//                    tableHTML += "</td></tr>";
+//                    tableHTML += "<tr id=\"trObjZp" + element.id + "\">";
+//                    tableHTML += "</tr>";
+//                });
+////console.log(objTable); 
+//                if (angular.isDefined(objTable.innerHTML)) {
+////console.log("angular.isDefined(objTable.innerHTML) =  true");                        
+//                    objTable.innerHTML = tableHTML;
+//                }
+////console.log(objTable);                    
+//                $compile(objTable)($scope);
+//
+//            }
 
 //                $scope.objects = objectSvc.getObjects();
             $scope.loading = objectSvc.getLoadingStatus();//loading;
@@ -708,7 +708,7 @@ angular.module('portalNMC')
                     performBuildingCategoryList($scope.currentObject.buildingType);
                     setBuildingCategory();
                 }
-//console.log($scope.currentObject);                    
+ //console.log($scope.currentObject);                    
             };
 
             function testCmOrganizationAtList() {
@@ -1748,8 +1748,9 @@ angular.module('portalNMC')
             };
 
             $scope.isDirectDevice = function (objId, zpointId) {
-//console.log("isDirectDevice");
-                $scope.selectedObject(objId);
+//console.log("isDirectDevice: ", objId, zpointId);
+                $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+//                $scope.selectedObject(objId);
                 var curZpoint = null;
                 if (mainSvc.checkUndefinedNull($scope.currentObject) || mainSvc.checkUndefinedNull($scope.currentObject.zpoints)) {
                     return false;
@@ -1766,7 +1767,7 @@ angular.module('portalNMC')
                     return false;
                 }
                 var curDevice = curZpoint.deviceObject;
-                return objectSvc.isDirectDevice(curDevice);
+                return objectSvc.isDirectDevice(curDevice);                
             };
                 
             function successSaveDeviceCallback(resp) {
@@ -2903,14 +2904,15 @@ angular.module('portalNMC')
                 //find b cat when parentCat === keyname from up ^
                 var categoryListByBuildingType = [],
                     filtredCategoryList = [],
-                    preparedCategory = null;
-                $scope.data.buildingCategories.forEach(function (bcat) {
+                    preparedCategory = null,
+                    buildingCategories = angular.copy($scope.data.buildingCategories);
+                buildingCategories.forEach(function (bcat) {
                     if (bcat.buildingType === buildingType) {
                         categoryListByBuildingType.push(angular.copy(bcat));
                     }
                 });
                 categoryListByBuildingType.forEach(function (pcat) {
-                    $scope.data.buildingCategories.forEach(function (bcat) {
+                    buildingCategories.forEach(function (bcat) {                        
                         if (bcat.parentCategory === pcat.keyname) {
                             preparedCategory = angular.copy(bcat);
                             preparedCategory.parentCategoryCaption = pcat.caption;
@@ -2918,6 +2920,7 @@ angular.module('portalNMC')
                         }
                     });
                 });
+//                $scope.data.buildingCategories = buildingCategories;
                 $scope.data.preparedBuildingCategoryList = filtredCategoryList;
 //                    console.log($scope.data.preparedBuildingCategoryList);
             }
