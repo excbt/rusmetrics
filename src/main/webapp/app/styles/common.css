@@ -1769,6 +1769,22 @@ tr.nmc-inactive-price > td {
     color: #fff;
 }
 
+.nmc-main-add-button-xs {    
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
+    /* на кнопку наведен курсор*/
+.nmc-main-add-button-xs:hover {
+    background: linear-gradient(to top, #CD5F03,#EB5F03);
+    color: #fff;
+}
+    /* кнопка нажата*/
+.nmc-main-add-button-xs:focus {    
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
     /* Кнопка удалить/ очистить фильтр в рабочей области окна*/
 .nmc-remove-button-in-header{
     width: 25px;

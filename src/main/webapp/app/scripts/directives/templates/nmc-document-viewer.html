@@ -5,17 +5,21 @@
     <ul class = "nav nav-tabs nmc-nav-tabs-buttons" 
         role = "tablist">
         <li>
-            <button ng-if = "!isReadOnly()"
-                    class = "btn btn-default"                    
-                    ng-class = "{'nmc-main-add-button': data.passport.changedSectionCount > 0}"
+            <p title = "Сохранить документ"
+                    ng-if = "!isReadOnly()"
+                    class = "btn btn-xs btn-default"                    
+                    ng-class = "{'nmc-main-add-button-xs': data.passport.changedSectionCount > 0}"
                     ng-click = "savePassportWhole()"
                     ng-disabled = "isDisabledSaveButtons()">
                 <i ng-hide = "ctrlSettings.passportSaving !== true"
                    class = "fa fa-spinner fa-spin">
                 </i>
-                Сохранить документ
-            </button>
+                <i class = "glyphicon glyphicon-floppy-disk">
+                </i>
+<!--                Сохранить документ-->
+            </p>
         </li>
+<!--
         <li>
             <button ng-if = "!isReadOnly()"
                     class = "btn btn-default"                    
@@ -28,6 +32,7 @@
                 Сохранить {{SECTION_NAME_ACC}}
             </button>
         </li>
+-->
 <!--
         <li style = "padding: 0 10px;">
             <button class="btn btn-default"
@@ -37,12 +42,15 @@
         </li>
 -->
         <li>
-            <button class = "btn btn-default"                    
+            <p title = "Закрыть документ"
+                    class = "btn btn-xs btn-default"                    
                     ng-click = "closeDocument()">
 <!--                Вернуться к списку документов-->
-                Закрыть документ
-            </button>
-        </li>
+                <i class = "glyphicon glyphicon-log-out">
+                </i>
+<!--                Закрыть документ-->
+            </p>
+        </li>        
         <li ng-if = "isSystemuser()"
             class = "pull-right">
             <p title = "Вкл. / выкл. отладочный режим"
@@ -51,6 +59,31 @@
                ng-click = "switchMode()">
                 d
             </p>
+        </li>
+        <li class = "pull-right">
+            <i ng-if = "isObjectImportButtonEnableAtBtnPanel()"
+               title = "Импортировать данные"                                                                
+               class = "btn btn-xs btn-default glyphicon glyphicon-download-alt gly-rotate-180"
+               ng-click = "importObjectDataInitFromBtnPanel()">
+            </i>
+        </li>
+        <li class = "pull-right">
+            <div title = "Панель с кнопками"
+                 ng-show = "data.currentRow.dynamic === true && data.currentRow.isSelected === true && data.currentTd.isSelected === true" 
+                 class = ""
+                 style = "border: 2px solid orange">
+
+                <i ng-if = "isDeleteRowButtonEnableAtBtnPanel(data.currentPart, data.currentRow)"
+                   title = "Удалить строку"
+                   class = "btn btn-xs btn-default nmc-remove-btn"
+                   ng-click = "deleteRowFromTableInitFromBtnPanel(data.currentPart, data.currentRow)">
+                </i>
+                <i ng-if = "isAddRowButtonEnableAtBtnPanel(data.currentPart, data.currentRow)"
+                   title = "Добавить строку"                                                                
+                   class = "btn btn-xs btn-default nmc-insert-row-btn"
+                   ng-click = "addRowToTableInitFromBtnPanel(data.currentPart, data.currentRow)">
+                </i>                            
+            </div>
         </li>
     </ul>
     <div class = "tab-content">
@@ -126,6 +159,7 @@
                             </h3>
                         </div>
                         
+<!--
                         <div title = "Импорт данных"
                              ng-show = "isObjectImportButtonEnableAtBtnPanel()" 
                              class = "col-xs-1"
@@ -136,7 +170,9 @@
                                ng-click = "importObjectDataInitFromBtnPanel()">
                             </i>
                         </div>
+-->
                         
+<!--
                         <div title = "Панель с кнопками"
                              ng-show = "data.currentRow.dynamic === true && data.currentRow.isSelected === true && data.currentTd.isSelected === true" 
                              class = "col-xs-1"
@@ -153,6 +189,7 @@
                                ng-click = "addRowToTableInitFromBtnPanel(data.currentPart, data.currentRow)">
                             </i>                            
                         </div>
+-->
                     </div>
                 </div>
                 <div ng-show = "ctrlSettings.passportLoading" class = "nmc-loading">
