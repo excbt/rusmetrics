@@ -651,6 +651,7 @@ angular.module('portalNMC')
 
             var errorCallback = function (e) {
                 $scope.treeLoading = false;
+                $scope.objectCtrlSettings.isPassportsLoading = false;
                 var errorObj = mainSvc.errorCallbackHandler(e);
                 notificationFactory.errorInfo(errorObj.caption, errorObj.description);
             };
@@ -3089,6 +3090,7 @@ angular.module('portalNMC')
 //            };
                 
             function successLoadPassportsCallback(resp) {
+                $scope.objectCtrlSettings.isPassportsLoading = false;
                 if (!angular.isArray(resp.data) || resp.data.length <= 0) {
                     //console.warn("Response from server is incorrect:", resp);
                     return false;
@@ -3109,7 +3111,7 @@ angular.module('portalNMC')
                 activePassport.isActive = true;
                 mainSvc.sortItemsBy(resp.data, "isActive");
                 resp.data.reverse();
-                $scope.data.currentContObjectPassports = resp.data;
+                $scope.data.currentContObjectPassports = resp.data;                
             }
                 
             function successSavePassportCallback(resp) {
@@ -3146,6 +3148,8 @@ angular.module('portalNMC')
                 if (passportRequestCanceller !== null) {
                     passportRequestCanceller.resolve();
                 }
+                
+                $scope.objectCtrlSettings.isPassportsLoading = true;
                 
                 passportRequestCanceller = $q.defer();
                 var httpOptions = {
