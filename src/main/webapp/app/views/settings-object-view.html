@@ -356,13 +356,19 @@
                                                     </a>
                                                 </li>
                                                 <li ng-if = "!isReadonly()" role = "separator" class = "divider"></li>
-                                                <li ng-if = "data.currentContObjectPassports.length === 0"
+                                                <li ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                                    class = "menu-item dropdown nmc-loading">
+                                                    <a>
+                                                        <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "data.currentContObjectPassports.length === 0 && !objectCtrlSettings.isPassportsLoading"
                                                     class = "menu-item dropdown">
                                                     <a>
                                                         У объекта нет паспортов
                                                     </a>
                                                 </li>
-                                                <li ng-if = "data.currentContObjectPassports.length > 0"
+                                                <li ng-if = "data.currentContObjectPassports.length > 0 && !objectCtrlSettings.isPassportsLoading"
                                                     class = "menu-item dropdown" 
                                                     ng-repeat = "passport in data.currentContObjectPassports track by $index">
                                                     
