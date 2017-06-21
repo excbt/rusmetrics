@@ -150,39 +150,6 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
-        <!-- JSP FIX -->
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>el-api</artifactId>
-            <version>6.0.53</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>jasper-el</artifactId>
-            <version>6.0.53</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- end of JSP FIX-->
 
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -248,11 +215,11 @@
 
 		<!-- Servlet -->
 
-		<!--<dependency>-->
-			<!--<groupId>javax.servlet</groupId>-->
-			<!--<artifactId>javax.servlet-api</artifactId>-->
-			<!--<scope>provided</scope>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -265,6 +232,11 @@
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-el</artifactId>
+            <version>8.5.11</version>
+        </dependency>
 		<!-- end of JSP -->
 
 		<dependency>
@@ -474,11 +446,12 @@
 			<version>6.3.0</version>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>javax.el</groupId>-->
-			<!--<artifactId>javax.el-api</artifactId>-->
-			<!--<version>3.0.0</version>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+            <scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>com.github.jmnarloch</groupId>
