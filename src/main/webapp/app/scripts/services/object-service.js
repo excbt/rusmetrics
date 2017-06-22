@@ -889,6 +889,31 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
                 console.log(e);
             });
         }
+                 
+        function performBuildingCategoryListForUiSelect(buildingType, buildingCategories) {
+            //find b cat when buildingType === input buildingType
+            //find b cat when parentCat === keyname from up ^
+            var categoryListByBuildingType = [],
+                filtredCategoryList = [],
+                preparedCategory = null,
+                parentCategories = [];
+            buildingCategories.forEach(function (bcat) {
+                if (bcat.buildingType === buildingType && bcat.parentCategory === null) {
+                    var parentCat = angular.copy(bcat);
+                    parentCat.depth = 1;
+                    categoryListByBuildingType.push(parentCat);
+                    buildingCategories.forEach(function (cat) {
+                        if (cat.parentCategory === bcat.keyname) {
+                            var childCat = angular.copy(cat);
+                            childCat.depth = 2;
+                            categoryListByBuildingType.push(childCat);
+                        }
+                    });
+                }
+            });
+            return categoryListByBuildingType;
+//                    console.log($scope.data.preparedBuildingCategoryListForUiSelect);
+            }
 // **************************************************************
 //      Bulding types
 // **************************************************************
@@ -1024,6 +1049,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             loadSubscrObjectsByTreeNode,
             loadSubscrTree,
             loadSubscrTrees,
+            performBuildingCategoryListForUiSelect,
             promise,
             putDeviceMetaDataVzlet,
             putDeviceSchedulerSettings,

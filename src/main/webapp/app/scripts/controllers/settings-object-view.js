@@ -703,10 +703,12 @@ angular.module('portalNMC')
             };
 
             $scope.selectedObject = function (objId) {
-                $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+                $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
                 if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
 //                            $scope.changeBuildingType($scope.currentObject.buildingType);
-                    performBuildingCategoryList($scope.currentObject.buildingType);
+//                    performBuildingCategoryList($scope.currentObject.buildingType);
+//                    performBuildingCategoryListForUiSelect($scope.currentObject.buildingType);
+                    $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect($scope.currentObject.buildingType, $scope.data.buildingCategories);
                     setBuildingCategory();
                 }
  //console.log($scope.currentObject);                    
@@ -1171,12 +1173,12 @@ angular.module('portalNMC')
                 return true;
             };
 
-            $scope.showDetails = function (obj) {
-                if ($scope.bdirectories) {
-                    $scope.currentObject = obj;
-                    $('#showDirectoryStructModal').modal();
-                }
-            };
+//            $scope.showDetails = function (obj) {
+//                if ($scope.bdirectories) {
+//                    $scope.currentObject = obj;
+//                    $('#showDirectoryStructModal').modal();
+//                }
+//            };
 
             // Показания точек учета
             $scope.getIndicators = function (objectId, zpointId) {
@@ -1750,7 +1752,7 @@ angular.module('portalNMC')
 
             $scope.isDirectDevice = function (objId, zpointId) {
 //console.log("isDirectDevice: ", objId, zpointId);
-                $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+                $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
 //                $scope.selectedObject(objId);
                 var curZpoint = null;
                 if (mainSvc.checkUndefinedNull($scope.currentObject) || mainSvc.checkUndefinedNull($scope.currentObject.zpoints)) {
@@ -2925,23 +2927,55 @@ angular.module('portalNMC')
                 $scope.data.preparedBuildingCategoryList = filtredCategoryList;
 //                    console.log($scope.data.preparedBuildingCategoryList);
             }
+                
+            function performBuildingCategoryListForUiSelect(buildingType) {
+                //find b cat when buildingType === input buildingType
+                //find b cat when parentCat === keyname from up ^
+                var categoryListByBuildingType = [],
+                    filtredCategoryList = [],
+                    preparedCategory = null,
+                    parentCategories = [];
+                $scope.data.buildingCategories.forEach(function (bcat) {
+                    if (bcat.buildingType === buildingType && bcat.parentCategory === null) {
+                        var parentCat = angular.copy(bcat);
+                        parentCat.depth = 1;
+                        categoryListByBuildingType.push(parentCat);
+                        $scope.data.buildingCategories.forEach(function (cat) {
+                            if (cat.parentCategory === bcat.keyname) {
+                                var childCat = angular.copy(cat);
+                                childCat.depth = 2;
+                                categoryListByBuildingType.push(childCat);
+                            }
+                        });
+                    }
+                });
+                $scope.data.preparedBuildingCategoryListForUiSelect = categoryListByBuildingType;
+//                    console.log($scope.data.preparedBuildingCategoryListForUiSelect);
+            }
 
             $scope.changeBuildingType = function (buildingType) {
 //                    console.log("changeBuildingType");
                 $scope.currentObject.buildingTypeCategory = null;
                 $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
-                $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-                $('#inputBuildingCategory').addClass('nmc-select-form');
+//                $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//                $('#inputBuildingCategory').addClass('nmc-select-form');
+                
+                $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+                $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
+                
                 if (mainSvc.checkUndefinedNull(buildingType)) {
                     return false;
                 }
                 $cookies.recentBuildingType = buildingType;
-                performBuildingCategoryList(buildingType);
+//                performBuildingCategoryList(buildingType);
+//                performBuildingCategoryListForUiSelect(buildingType);
+                $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect(buildingType, $scope.data.buildingCategories);
             };
 
             function setBuildingCategory() {
-                var bCat = null;
-                $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+                var bCat = null;                
+//                $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+                $scope.data.preparedBuildingCategoryListForUiSelect.some(function (bcat) {
                     if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
                         bCat = bcat;
                         return true;
@@ -2953,11 +2987,18 @@ angular.module('portalNMC')
                 //50 symbols
 //                    console.log(bCat);
                 if (bCat !== null && bCat.caption.length >= 50) {
-                    $('#inputBuildingCategory').removeClass('nmc-select-form');
-                    $('#inputBuildingCategory').addClass('nmc-select-form-high');
+//                    $('#inputBuildingCategory').removeClass('nmc-select-form');
+//                    $('#inputBuildingCategory').addClass('nmc-select-form-high');
+                    
+                    $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form');
+                    $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form-high');
+                    
                 } else {
-                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-                    $('#inputBuildingCategory').addClass('nmc-select-form');
+//                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//                    $('#inputBuildingCategory').addClass('nmc-select-form');
+                    
+                    $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+                    $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
                 }
                 if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
                     return false;
