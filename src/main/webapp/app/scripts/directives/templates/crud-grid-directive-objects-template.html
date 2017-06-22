@@ -1344,7 +1344,7 @@
                                             </td>
                                             <td class="nmc-text-align-left col-sm-9">
                                                 <div class="form-group noMarginBottom">
-                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                    <select class="form-control nmc-select-form" 
                                                             id="inputMode" 
                                                             ng-model="currentObject.buildingType" 
                                                             ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
@@ -1354,13 +1354,14 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        
+<!--
                                         <tr>
                                             <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-9">
                                                 <div class="form-group noMarginBottom"
                                                      >
-<!--                                                    ng-class="{'has-error': emptyString(currentObject.buildingTypeCategory) && currentObject.buildingType}"-->
                                                     <select class="form-control nmc-select-form" 
                                                             id="inputBuildingCategory"                                                            
                                                             ng-disabled="!currentObject.buildingType || !isAdmin()"
@@ -1371,6 +1372,34 @@
                                                 </div>
                                             </td>
                                         </tr>
+-->
+                                        
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom"
+                                                     >
+                                                        <ui-select id = "inputBuildingCategoryUI"
+                                                                   
+                                                                   class = "nmc-ui-select-form" 
+                                                                   ng-model = "currentObject.buildingTypeCategory" 
+                                                                   theme = "bootstrap" 
+                                                                   search-enabled = "false"
+                                                                   on-select = "changeBuildingCategory()"
+                                                                   ng-disabled="!currentObject.buildingType || !isAdmin()"
+                                                                   >
+                                                        <ui-select-match>{{$select.selected.caption}}</ui-select-match>
+                                                        <ui-select-choices 
+                                                                           repeat = "bcategory.keyname as bcategory in data.preparedBuildingCategoryListForUiSelect">
+                                                          <div class = "nmc-bcategory-depth-{{bcategory.depth}}"
+                                                               ng-bind-html = "bcategory.caption"></div>
+                                                        </ui-select-choices>
+                                                      </ui-select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
                                         <tr>
                                             <td class="col-sm-3"><label for="inputNumOfStories">Количество этажей</label>
                                             </td>

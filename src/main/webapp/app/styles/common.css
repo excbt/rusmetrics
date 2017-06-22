@@ -1279,6 +1279,23 @@ tr.nmc-inactive-price > td {
     border-radius: 4px !important;
 }
 
+.nmc-ui-select-form-high > .ui-select-match > span {
+    font-size: 12px;
+    height: 60px;
+    white-space: normal;
+    padding: 3px;
+    border-radius: 4px !important;
+}
+
+/* Иерархическая организация категорий зданий при использовании ui-select*/
+.nmc-bcategory-depth-1 {
+  padding-left: 0px;
+  font-weight: bold;
+}
+.nmc-bcategory-depth-2 {
+  padding-left: 15px;
+}
+
 /* выпадающий список на странице с прайсами*/
 .nmc-select-form-for-price {
     font-size: 12px;

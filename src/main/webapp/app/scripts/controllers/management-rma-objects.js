@@ -867,7 +867,8 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 }
                 if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
     //                            $scope.changeBuildingType($scope.currentObject.buildingType);
-                    performBuildingCategoryList($scope.currentObject.buildingType);
+//                    performBuildingCategoryList($scope.currentObject.buildingType);
+                    $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect($scope.currentObject.buildingType, $scope.data.buildingCategories);
                     setBuildingCategory();
                 }
                 checkGeo();
@@ -2305,18 +2306,24 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //                    console.log("changeBuildingType");
         $scope.currentObject.buildingTypeCategory = null;
         $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
-        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-        $('#inputBuildingCategory').addClass('nmc-select-form');
+//        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//        $('#inputBuildingCategory').addClass('nmc-select-form');
+        
+        $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+        $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
+        
         if (mainSvc.checkUndefinedNull(buildingType)) {
             return false;
         }
         $cookies.recentBuildingType = buildingType;
-        performBuildingCategoryList(buildingType);
+//        performBuildingCategoryList(buildingType);
+        $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect(buildingType, $scope.data.buildingCategories);
     };
 
     function setBuildingCategory() {
         var bCat = null;
-        $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+//        $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+        $scope.data.preparedBuildingCategoryListForUiSelect.some(function (bcat) {
             if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
                 bCat = bcat;
                 return true;
@@ -2328,11 +2335,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         //50 symbols
 //                    console.log(bCat);
         if (bCat !== null && bCat.caption.length >= 50) {
-            $('#inputBuildingCategory').removeClass('nmc-select-form');
-            $('#inputBuildingCategory').addClass('nmc-select-form-high');
+//            $('#inputBuildingCategory').removeClass('nmc-select-form');
+//            $('#inputBuildingCategory').addClass('nmc-select-form-high');
+            $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form');
+            $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form-high');
         } else {
-            $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-            $('#inputBuildingCategory').addClass('nmc-select-form');
+//            $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//            $('#inputBuildingCategory').addClass('nmc-select-form');
+            $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+            $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
         }
         if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
             return false;

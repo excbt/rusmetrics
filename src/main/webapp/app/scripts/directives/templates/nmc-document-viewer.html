@@ -2,7 +2,8 @@
      class = "nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
-    <ul class = "nav nav-tabs nmc-nav-tabs-buttons" 
+    <ul ng-show = "!ctrlSettings.passportLoading"
+        class = "nav nav-tabs nmc-nav-tabs-buttons" 
         role = "tablist">
         <li>
             <p title = "Сохранить документ"
@@ -41,6 +42,14 @@
                     >Отменить изменения</button>
         </li>
 -->
+        <li>            
+            <p title = "Печать документа"
+                    class = "btn btn-xs btn-default"                    
+                    >
+                <i class = "glyphicon glyphicon-print">
+                </i>
+            </p>
+        </li>
         <li>
             <p title = "Закрыть документ"
                     class = "btn btn-xs btn-default"                    
