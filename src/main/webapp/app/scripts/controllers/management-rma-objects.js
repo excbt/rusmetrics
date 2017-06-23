@@ -2031,7 +2031,9 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     });
 
     $('#showObjOptionModal').on('hidden.bs.modal', function () {
-        $scope.currentObject.isSaving = false;
+        if (!mainSvc.checkUndefinedNull($scope.currentObject)) {
+            $scope.currentObject.isSaving = false;
+        }
         $scope.currentSug = null;
         setActiveObjectPropertiesTab("main_object_properties_tab");
     });
