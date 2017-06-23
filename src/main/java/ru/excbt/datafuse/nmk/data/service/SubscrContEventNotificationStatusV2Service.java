@@ -45,7 +45,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	private ContObjectService contObjectService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 * @param subscriberParam
 	 * @param datePeriod
@@ -56,6 +56,10 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	public List<CityMonitorContEventsStatusV2> selectCityMonitoryContEventsStatusV2(
 			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
+
+	    if (contObjects.isEmpty()) {
+	        return new ArrayList<>();
+        }
 
 		List<MonitorContEventNotificationStatusV2> resultObjects = selectMonitorContEventNotificationStatusCollapseV2(
 				subscriberParam, contObjects, datePeriod, noGreenColor);
@@ -76,7 +80,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param contObjects
 	 * @param datePeriod

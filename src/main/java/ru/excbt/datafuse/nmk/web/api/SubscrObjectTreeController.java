@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
@@ -34,25 +35,40 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 	private static final String INVALID_SUBSCRIBER_MSG = "Invalid subscriberId (%d)";
 
-	@Autowired
-	protected SubscrObjectTreeService subscrObjectTreeService;
+
+    private final SubscrObjectTreeService subscrObjectTreeService;
+
+    private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
+
+    private final SubscrContObjectService subscrContObjectService;
+
+    private final SubscrContEventNotificationService subscrContEventNotificationService;
+
+    private final SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
+
+    private final SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
+
+
+	private final ContObjectService contObjectService;
 
 	@Autowired
-	protected SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
+    public SubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService,
+                                      SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
+                                      SubscrContObjectService subscrContObjectService,
+                                      SubscrContEventNotificationService subscrContEventNotificationService,
+                                      SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService,
+                                      SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service,
+                                      ContObjectService contObjectService) {
+        this.subscrObjectTreeService = subscrObjectTreeService;
+        this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
+        this.subscrContObjectService = subscrContObjectService;
+        this.subscrContEventNotificationService = subscrContEventNotificationService;
+        this.subscrContEventNotifiicationStatusService = subscrContEventNotifiicationStatusService;
+        this.subscrContEventNotifiicationStatusV2Service = subscrContEventNotifiicationStatusV2Service;
+        this.contObjectService = contObjectService;
+    }
 
-	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
-
-	@Autowired
-	protected SubscrContEventNotificationService subscrContEventNotificationService;
-
-	@Autowired
-	protected SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
-
-	@Autowired
-	protected SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
-
-	/**
+    /**
 	 *
 	 *
 	 * @author A.Kovtonyuk
@@ -147,10 +163,21 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<ContObject> result = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
-				childSubscrObjectTreeId);
 
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+                List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+                    childSubscrObjectTreeId);
+
+                return contObjectService.wrapContObjectsMonitorDTO(resultList);
+            }
+        };
+
+        return ApiActionTool.processResponceApiActionOk(action);
+
+
+
 	}
 
 	/**
@@ -197,12 +224,23 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 				.filter(i -> treeContObjectIds.contains(i.getContObjectId())).map(i -> i.getContObjectId())
 				.collect(Collectors.toList());
 
-		List<ContObject> resultList = new ArrayList<>();
-		if (!resultContObjectIds.isEmpty()) {
-			resultList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId(), resultContObjectIds);
-		}
 
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
+
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+                List<ContObject> resultList = new ArrayList<>();
+                if (!resultContObjectIds.isEmpty()) {
+                    resultList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId(), resultContObjectIds);
+                }
+
+                return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(resultList));
+            }
+        };
+
+        return ApiActionTool.processResponceApiActionOk(action);
+
+
 	}
 
 	/**
@@ -228,10 +266,21 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 		//		List<ContObject> result = subscrContObjectService
 		//				.selectRmaSubscriberContObjectsExcludingIds(getRmaSubscriberId(), contObjectIds);
-		List<ContObject> result = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
-				contObjectIds);
 
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+		//return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+
+
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+                List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
+                    contObjectIds);
+                return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(resultList));
+            }
+        };
+
+        return ApiActionTool.processResponceApiActionOk(action);
+
 	}
 
 	/**
@@ -255,22 +304,31 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 		checkNotNull(treeContObjectIds);
 
-		////
-		List<ContObject> viewContObjects = null;
-		if (currentSubscriberService.isRma()) {
-			List<ContObject> rmaContObjects = subscrContObjectService
-					.selectRmaSubscriberContObjectsExcludingIds(getSubscriberId(), treeContObjectIds);
-			viewContObjects = rmaContObjects.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
-					.collect(Collectors.toList());
-		} else {
-			viewContObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
-					treeContObjectIds);
-		}
-		////
 
-		List<ContObject> result = viewContObjects;
 
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+        ApiAction action = new ApiActionEntityAdapter<Object>() {
+            @Override
+            public Object processAndReturnResult() {
+
+                ////
+                List<ContObject> viewContObjects = null;
+                if (currentSubscriberService.isRma()) {
+                    List<ContObject> rmaContObjects = subscrContObjectService
+                        .selectRmaSubscriberContObjectsExcludingIds(getSubscriberId(), treeContObjectIds);
+                    viewContObjects = rmaContObjects.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
+                        .collect(Collectors.toList());
+                } else {
+                    viewContObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
+                        treeContObjectIds);
+                }
+                ////
+                return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(viewContObjects));
+            }
+        };
+
+
+        return ApiActionTool.processResponceApiActionOk(action);
+
 	}
 
 	/**
@@ -418,14 +476,8 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			return checkResponse;
 		}
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				subscrObjectTreeService.deleteChildSubscrObjectTreeNode(getSubscriberParam(), rootSubscrObjectTreeId,
-						childSubscrObjectTreeId);
-			}
-		};
+		ApiAction action = (ApiActionAdapter) () -> subscrObjectTreeService.deleteChildSubscrObjectTreeNode(getSubscriberParam(), rootSubscrObjectTreeId,
+                childSubscrObjectTreeId);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 
@@ -469,14 +521,18 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			}
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
+		ApiAction action = new ApiActionEntityAdapter<List<ContObjectMonitorDTO>>() {
 
 			@Override
-			public List<ContObject> processAndReturnResult() {
+			public List<ContObjectMonitorDTO> processAndReturnResult() {
 				subscrObjectTreeContObjectService.addTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
 						contObjectIds);
-				return subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
-						childSubscrObjectTreeId);
+
+
+				List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+                    childSubscrObjectTreeId);
+
+				return contObjectService.wrapContObjectsMonitorDTO(resultList);
 			}
 		};
 
@@ -521,14 +577,17 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			}
 		}
 
-		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
+		ApiAction action = new ApiActionEntityAdapter<List<ContObjectMonitorDTO>>() {
 
 			@Override
-			public List<ContObject> processAndReturnResult() {
+			public List<ContObjectMonitorDTO> processAndReturnResult() {
 				subscrObjectTreeContObjectService.deleteTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
 						contObjectIds);
-				return subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
-						childSubscrObjectTreeId);
+
+                List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+                    childSubscrObjectTreeId);
+
+                return contObjectService.wrapContObjectsMonitorDTO(resultList);
 			}
 		};
 

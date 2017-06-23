@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeContObject;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
@@ -43,7 +44,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	protected SubscrContObjectService subscrContObjectService;
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 */
@@ -52,7 +53,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
@@ -65,7 +66,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
@@ -79,12 +80,12 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 			subscrContObjectService.rmaInitHaveSubscr(subscriberParam, result);
 		}
 
-		return result;
+		return result.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
@@ -96,7 +97,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
@@ -138,7 +139,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
@@ -178,7 +179,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @param contObjectIds
@@ -205,7 +206,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 */
@@ -222,7 +223,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 * @return
