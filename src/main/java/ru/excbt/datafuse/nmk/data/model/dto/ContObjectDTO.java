@@ -67,4 +67,6 @@ public class ContObjectDTO {
 
     private Integer numOfStories;
 
+    private ContManagementDTO _activeContManagement;
+
 }
