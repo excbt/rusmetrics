@@ -134,32 +134,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		}
 
 		/////////////////////////////////////////////
-		ApiActionObjectProcess actionProcess = () -> {
-
-			deviceObject.setContObject(new ContObject().id(contObjectId));
-			deviceObject.setDeviceModel(new DeviceModel().id(deviceObject.getDeviceModelId()));
-
-			ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
-
-			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-					: new DeviceObjectDataSource();
-
-			if (deviceObjectDataSource != null && dsi != null) {
-				SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
-				deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-				deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
-				deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
-				deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
-				deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-				deviceObjectDataSource.setIsActive(true);
-			}
-
-			deviceObject.saveDeviceObjectCredentials();
-
-			DeviceObject result = deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
-			result.shareDeviceLoginInfo();
-			return result;
-		};
+		ApiActionObjectProcess actionProcess = () -> deviceObjectService.automationUpdate(contObjectId, deviceObject);
 		return ApiResponse.responseUpdate(actionProcess);
 
 	}
@@ -309,15 +284,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		ApiActionObjectProcess actionProcess = () -> deviceObjectLoadingSettingsService.saveOne(requestEntity);
 		return ApiResponse.responseUpdate(actionProcess);
 
-		//		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
-		//
-		//			@Override
-		//			public DeviceObjectLoadingSettings processAndReturnResult() {
-		//				return deviceObjectLoadingSettingsService.saveOne(requestEntity);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -359,15 +325,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 				.saveSubscrDataSourceLoadingSettings(requestEntity);
 		return ApiResponse.responseUpdate(actionProcess);
 
-		//		ApiAction action = new ApiActionEntityAdapter<SubscrDataSourceLoadingSettings>(requestEntity) {
-		//
-		//			@Override
-		//			public SubscrDataSourceLoadingSettings processAndReturnResult() {
-		//				return subscrDataSourceLoadingSettingsService.saveSubscrDataSourceLoadingSettings(entity);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**

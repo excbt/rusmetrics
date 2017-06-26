@@ -114,6 +114,41 @@ public class DeviceObjectService implements SecuredRoles {
         DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
             : new DeviceObjectDataSource();
 
+        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+
+        deviceObject.saveDeviceObjectCredentials();
+
+        return saveDeviceObject(deviceObject, deviceObjectDataSource);
+    }
+
+    /*
+
+     */
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObject automationUpdate(Long contObjectId, DeviceObject deviceObject) {
+        deviceObject.setContObject(new ContObject().id(contObjectId));
+        deviceObject.setDeviceModel(new DeviceModel().id(deviceObject.getDeviceModelId()));
+
+        ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
+
+        DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource();
+
+        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+
+        deviceObject.saveDeviceObjectCredentials();
+
+        DeviceObject result = saveDeviceObject(deviceObject, deviceObjectDataSource);
+        result.shareDeviceLoginInfo();
+        return result;
+    }
+
+
+    /*
+
+     */
+    private void initDeviceObjectDataSource(ActiveDataSourceInfoDTO dsi, DeviceObjectDataSource deviceObjectDataSource) {
         if (deviceObjectDataSource != null && dsi != null) {
             deviceObjectDataSource.setSubscrDataSource(new SubscrDataSource().id(dsi.getSubscrDataSourceId()));
             deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
@@ -122,10 +157,6 @@ public class DeviceObjectService implements SecuredRoles {
             deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
             deviceObjectDataSource.setIsActive(true);
         }
-
-        deviceObject.saveDeviceObjectCredentials();
-
-        return saveDeviceObject(deviceObject, deviceObjectDataSource);
     }
 
 
