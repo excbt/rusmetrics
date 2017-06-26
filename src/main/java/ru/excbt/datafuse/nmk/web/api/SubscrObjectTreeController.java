@@ -184,69 +184,6 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 *
 	 * @param objectTreeType
 	 * @param rootSubscrObjectTreeId
-	 * @param childSubscrObjectTreeId
-	 * @return
-	 */
-	@Deprecated
-	protected ResponseEntity<?> getSubscrObjectTreeContObjects_old(
-			@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId,
-			@PathVariable("childSubscrObjectTreeId") Long childSubscrObjectTreeId) {
-
-		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
-
-		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
-		}
-
-		////
-		List<ContObjectShortInfo> viewContObjectShortInfo = null;
-		if (currentSubscriberService.isRma()) {
-			//-- New version
-			List<ContObjectShortInfo> rmaContObjectsShortInfo = subscrContObjectService
-					.selectSubscriberContObjectsShortInfo(getSubscriberId());
-
-			List<Long> rmaSubscrContObjectIds = subscrContObjectService
-					.selectRmaSubscribersContObjectIds(getSubscriberParam());
-
-			viewContObjectShortInfo = rmaContObjectsShortInfo.stream()
-					.filter(i -> rmaSubscrContObjectIds.contains(i.getContObjectId())).collect(Collectors.toList());
-
-		} else {
-			viewContObjectShortInfo = subscrContObjectService.selectSubscriberContObjectsShortInfo(getSubscriberId());
-		}
-		////
-
-		List<Long> treeContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIds(getSubscriberParam(),
-				childSubscrObjectTreeId);
-
-		List<Long> resultContObjectIds = viewContObjectShortInfo.stream()
-				.filter(i -> treeContObjectIds.contains(i.getContObjectId())).map(i -> i.getContObjectId())
-				.collect(Collectors.toList());
-
-
-
-        ApiAction action = new ApiActionEntityAdapter<Object>() {
-            @Override
-            public Object processAndReturnResult() {
-                List<ContObject> resultList = new ArrayList<>();
-                if (!resultContObjectIds.isEmpty()) {
-                    resultList = subscrContObjectService.selectSubscriberContObjects(getSubscriberId(), resultContObjectIds);
-                }
-
-                return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(resultList));
-            }
-        };
-
-        return ApiActionTool.processResponceApiActionOk(action);
-
-
-	}
-
-	/**
-	 *
-	 * @param objectTreeType
-	 * @param rootSubscrObjectTreeId
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}/{rootSubscrObjectTreeId}/contObjects/free",
@@ -264,12 +201,6 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 		checkNotNull(contObjectIds);
 
-		//		List<ContObject> result = subscrContObjectService
-		//				.selectRmaSubscriberContObjectsExcludingIds(getRmaSubscriberId(), contObjectIds);
-
-		//return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
-
-
         ApiAction action = new ApiActionEntityAdapter<Object>() {
             @Override
             public Object processAndReturnResult() {
@@ -283,53 +214,6 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param objectTreeType
-	 * @param rootSubscrObjectTreeId
-	 * @return
-	 */
-	@Deprecated
-	protected ResponseEntity<?> getSubscrObjectTreeContObjectsFree_old(
-			@PathVariable("objectTreeType") String objectTreeType,
-			@PathVariable("rootSubscrObjectTreeId") Long rootSubscrObjectTreeId) {
-
-		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
-
-		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
-		}
-
-		List<Long> treeContObjectIds = subscrObjectTreeContObjectService
-				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
-		checkNotNull(treeContObjectIds);
-
-
-
-        ApiAction action = new ApiActionEntityAdapter<Object>() {
-            @Override
-            public Object processAndReturnResult() {
-
-                ////
-                List<ContObject> viewContObjects = null;
-                if (currentSubscriberService.isRma()) {
-                    List<ContObject> rmaContObjects = subscrContObjectService
-                        .selectRmaSubscriberContObjectsExcludingIds(getSubscriberId(), treeContObjectIds);
-                    viewContObjects = rmaContObjects.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
-                        .collect(Collectors.toList());
-                } else {
-                    viewContObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
-                        treeContObjectIds);
-                }
-                ////
-                return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(viewContObjects));
-            }
-        };
-
-
-        return ApiActionTool.processResponceApiActionOk(action);
-
-	}
 
 	/**
 	 *
@@ -439,13 +323,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			return checkResponse;
 		}
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				subscrObjectTreeService.deleteRootSubscrObjectTree(getSubscriberParam(), rootSubscrObjectTreeId);
-			}
-		};
+		ApiAction action = (ApiActionAdapter) () -> subscrObjectTreeService.deleteRootSubscrObjectTree(getSubscriberParam(), rootSubscrObjectTreeId);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 
@@ -568,11 +446,11 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			return checkResponse;
 		}
 
-		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
+		List<Long> existingContObjectIds = subscrObjectTreeContObjectService
 				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
-			if (!existsingContObjectIds.contains(id)) {
+			if (!existingContObjectIds.contains(id)) {
 				return ApiResponse.responseBadRequest(ApiResult.validationError("ContObjectid (id=%d) is not linked", id));
 			}
 		}
