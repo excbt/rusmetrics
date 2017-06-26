@@ -3124,7 +3124,21 @@ angular.module('portalNMC')
                     winName = OBJECT_PASSPORT_CREATION_WINDOW_NAME;
                     objectPassportCreationWindow = null;
                 }
-                window.open("#/settings/object-passport/" + objectParam + "/" + doc.id, winName);
+                var url = "#/settings/object-passport/" + objectParam + "/" + doc.id;
+                if (objectParam === "new") {
+                    url = mainSvc.addParamToURL(url, "buildingType", $scope.currentObject.buildingType);
+                    url = mainSvc.addParamToURL(url, "buildingTypeCategory", $scope.currentObject.buildingTypeCategory);
+                    if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
+                        var catCaption = "";
+                        $scope.data.buildingCategories.some(function (bcat) {
+                            if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
+                                catCaption = bcat.caption;
+                            }
+                        });
+                        url = mainSvc.addParamToURL(url, "buildingTypeCategoryCaption", catCaption);
+                    }
+                }
+                window.open(url, winName);
             };
                 
 //            $scope.openContObjectPassport_old = function (doc) {
