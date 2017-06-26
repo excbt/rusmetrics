@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -8,7 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
 
 /**
  * Repository для ContObjectDaData
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.01.2015
@@ -16,5 +17,8 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
  */
 public interface ContObjectDaDataRepository extends CrudRepository<ContObjectDaData, Long> {
 
-	public List<ContObjectDaData> findByContObjectId(Long contObjectId);
+	List<ContObjectDaData> findByContObjectId(Long contObjectId);
+
+
+    Optional<ContObjectDaData> findOneByContObjectId(Long contObjectId);
 }

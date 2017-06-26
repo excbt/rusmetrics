@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceRepository;
@@ -31,7 +32,7 @@ public class LocalPlaceService implements SecuredRoles {
 	private WeatherPlaceService weatherPlaceService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -40,7 +41,7 @@ public class LocalPlaceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -50,7 +51,7 @@ public class LocalPlaceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fiasUUID
 	 * @return
 	 */
@@ -64,7 +65,7 @@ public class LocalPlaceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -75,13 +76,16 @@ public class LocalPlaceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fiasUuid
 	 * @return
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public LocalPlace checkLocalPlace(UUID fiasUuid) {
+	public LocalPlace saveCityToLocalPlace(UUID fiasUuid) {
+	    if (fiasUuid == null) {
+	        return null;
+        }
 		LocalPlace localPlace = selectLocalPlaceByFias(fiasUuid);
 		if (localPlace == null) {
 
@@ -100,4 +104,9 @@ public class LocalPlaceService implements SecuredRoles {
 		return localPlace;
 	}
 
+    @Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
+    @Transactional(value = TxConst.TX_DEFAULT)
+    public LocalPlace saveCityToLocalPlace(ContObjectFias contObjectFias) {
+        return contObjectFias != null ? saveCityToLocalPlace(contObjectFias.getCityFiasUUID()) : null;
+    }
 }

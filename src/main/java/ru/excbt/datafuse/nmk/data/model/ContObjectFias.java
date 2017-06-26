@@ -96,4 +96,12 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 	@Column(name = "deleted")
 	private int deleted;
 
+	public void copyFormDaData(ContObjectDaData contObjectDaData) {
+        fiasFullAddress = contObjectDaData.getSvalue();
+        geoFullAddress = contObjectDaData.getSvalue();
+        fiasUUID = contObjectDaData.getDataFiasId();
+        isGeoRefresh = contObjectDaData.getSvalue() != null;
+        geoJson2 = contObjectDaData.makeJsonGeoString();
+    }
+
 }

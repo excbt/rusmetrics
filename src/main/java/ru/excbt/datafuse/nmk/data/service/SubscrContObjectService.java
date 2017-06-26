@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -678,8 +679,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public SubscrContObject createSubscrContObject(ContObject contObject, Subscriber subscriber,
-			LocalDate subscrBeginDate) {
+	public SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
+                                                       LocalDate subscrBeginDate) {
 		checkNotNull(contObject);
 		checkNotNull(subscriber);
 		checkNotNull(subscrBeginDate);
@@ -688,6 +689,21 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		subscrContObject.setContObject(contObject);
 		subscrContObject.setSubscriber(subscriber);
 		subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
+		return subscrContObjectRepository.save(subscrContObject);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
+                                                       java.time.LocalDate fromDate) {
+		checkNotNull(contObject);
+		checkNotNull(subscriber);
+		checkNotNull(fromDate);
+
+		SubscrContObject subscrContObject = new SubscrContObject();
+		subscrContObject.setContObject(contObject);
+		subscrContObject.setSubscriber(subscriber);
+		subscrContObject.setSubscrBeginDate(LocalDateUtils.asDate(fromDate));
 		return subscrContObjectRepository.save(subscrContObject);
 	}
 
@@ -700,8 +716,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public SubscrContObject createSubscrContObject(Long contObjectId, Subscriber subscriber,
-			LocalDate subscrBeginDate) {
+	public SubscrContObject createSubscrContObjectLink(Long contObjectId, Subscriber subscriber,
+                                                       LocalDate subscrBeginDate) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriber);
 		checkNotNull(subscrBeginDate);
@@ -763,7 +779,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		deleteSubscrContObject(delSubscrContObjects, subscrCurrentDate);
 
 		addContObjectIds.forEach(i -> {
-			createSubscrContObject(i, subscriber, subscrBeginDate);
+			createSubscrContObjectLink(i, subscriber, subscrBeginDate);
 		});
 
 		List<ContObject> resultContObjects = selectSubscriberContObjects(subscriberId);

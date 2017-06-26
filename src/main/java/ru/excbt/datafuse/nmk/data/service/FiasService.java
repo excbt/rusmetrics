@@ -8,14 +8,16 @@ import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 
 /**
  * Сервис для работы с ФИАС
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.01.2016
@@ -29,8 +31,8 @@ public class FiasService {
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
 
-	/**
-	 * 
+    /**
+	 *
 	 * @param fiasUUID
 	 * @return
 	 */
@@ -51,7 +53,7 @@ public class FiasService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fiasUUID
 	 * @return
 	 */
@@ -72,7 +74,7 @@ public class FiasService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fiasUUID
 	 * @return
 	 */
@@ -91,5 +93,23 @@ public class FiasService {
 		String strResult = (String) result;
 		return strResult;
 	}
+
+
+	public void initCityUUID(ContObjectFias contObjectFias) {
+        if (contObjectFias.getFiasUUID() != null) {
+            UUID cityUUID = getCityUUID(contObjectFias.getFiasUUID());
+            if (cityUUID != null) {
+                contObjectFias.setCityFiasUUID(cityUUID);
+                String cityName = getCityName(cityUUID);
+                contObjectFias.setShortAddress2(cityName);
+
+//                localPlaceService.saveCityToLocalPlace(cityUUID);
+            }
+            String shortAddr = getShortAddr(contObjectFias.getFiasUUID());
+            contObjectFias.setShortAddress1(shortAddr);
+        }
+
+    }
+
 
 }

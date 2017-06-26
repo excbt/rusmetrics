@@ -6,6 +6,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -73,8 +74,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
-				ContObject result = contObjectService.createContObject(contObject, getCurrentSubscriberId(),
-						rmaBeginDate,
+				ContObject result = contObjectService.createContObjectNew(contObject, getCurrentSubscriberId(),
+                        LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
 						cmOrganizationId);
 
 				return contObjectService.wrapContObjectMonitorDTO(result,false);

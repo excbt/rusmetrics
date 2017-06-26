@@ -200,7 +200,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setNumOfStories(contObject.getNumOfStories());
 
 		// Process ContObjectDaData
-		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(currContObject);
+		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(currContObject);
 		checkNotNull(contObjectDaData);
 		if (contObject.get_daDataSraw() != null) {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
@@ -217,7 +217,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			}
 
 		}
-		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
+		contObjectDaData = contObjectDaDataService.parseIfValid(contObjectDaData);
 		contObjectDaData = contObjectDaDataService.saveContObjectDaData(contObjectDaData);
 		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
 
@@ -257,7 +257,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				String cityName = fiasService.getCityName(cityUUID);
 				contObjectFias.setShortAddress2(cityName);
 
-				localPlaceService.checkLocalPlace(cityUUID);
+				localPlaceService.saveCityToLocalPlace(cityUUID);
 
 			}
 			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
@@ -310,7 +310,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsManual(true);
 
 		// Processing ContObjectDaData
-		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(contObject);
+		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(contObject);
 		checkNotNull(contObjectDaData);
 		if (contObject.get_daDataSraw() != null) {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
@@ -325,7 +325,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				contObjectDaData.setIsValid(false);
 			}
 		}
-		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
+		contObjectDaData = contObjectDaDataService.parseIfValid(contObjectDaData);
 
 		// Inserting ContObjectFias
 		ContObjectFias contObjectFias = createConfObjectFias(contObject);
@@ -349,7 +349,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 				String cityName = fiasService.getCityName(cityUUID);
 				contObjectFias.setShortAddress2(cityName);
 
-				localPlaceService.checkLocalPlace(cityUUID);
+				localPlaceService.saveCityToLocalPlace(cityUUID);
 			}
 			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
 			contObjectFias.setShortAddress1(shortAddr);
@@ -364,7 +364,66 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		saveContObjectFias(resultContObject.getId(), contObjectFias);
 
-		subscrContObjectService.createSubscrContObject(resultContObject, subscriber, subscrBeginDate);
+		subscrContObjectService.createSubscrContObjectLink(resultContObject, subscriber, subscrBeginDate);
+
+		if (cmOrganizationId != null) {
+			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+					LocalDate.now());
+			resultContObject.getContManagements().clear();
+			resultContObject.getContManagements().add(newCm);
+		}
+
+		return resultContObject;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
+	public ContObject createContObjectNew(ContObject contObject, Long subscriberId, java.time.LocalDate subscrBeginDate,
+			Long cmOrganizationId) {
+
+		checkNotNull(contObject);
+		checkArgument(contObject.isNew());
+		checkArgument(contObject.getTimezoneDefKeyname() != null);
+
+		contObject.setIsManual(true);
+
+		// Processing ContObjectDaData
+		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(contObject);
+		checkNotNull(contObjectDaData);
+
+		if (contObject.get_daDataSraw() != null) {
+			contObjectDaData.setSraw(contObject.get_daDataSraw());
+			contObjectDaData.setIsValid(true);
+		} else {
+			if (contObject.getFullAddress() == null
+					|| !contObject.getFullAddress().equals(contObjectDaData.getSvalue())) {
+			    contObjectDaData.clearInValid();
+			}
+		}
+		contObjectDaData = contObjectDaDataService.parseIfValid(contObjectDaData);
+
+		// Inserting ContObjectFias
+		ContObjectFias contObjectFias = createConfObjectFias(contObject);
+
+		if (contObjectDaData != null) {
+		    contObjectFias.copyFormDaData(contObjectDaData);
+			contObject.setFullAddress(contObjectDaData.getSvalue());
+		}
+
+		fiasService.initCityUUID(contObjectFias);
+		localPlaceService.saveCityToLocalPlace(contObjectFias);
+
+		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
+		contObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
+		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
+
+		ContObject resultContObject = contObjectRepository.save(contObject);
+
+		contObjectDaDataService.saveContObjectDaData(contObjectDaData);
+
+		saveContObjectFias(resultContObject.getId(), contObjectFias);
+
+		subscrContObjectService.createSubscrContObjectLink(resultContObject, new Subscriber().id(subscriberId), subscrBeginDate);
 
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
