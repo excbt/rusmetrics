@@ -9,23 +9,26 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.modelmapper.ModelMapper;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.util.Assert;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.V_DeviceObjectTimeOffsetRepository;
+import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
@@ -40,6 +43,8 @@ import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
  */
 @Service
 public class DeviceObjectService implements SecuredRoles {
+
+    private static final Logger log = LoggerFactory.getLogger(DeviceObjectService.class);
 
 	private final DeviceObjectRepository deviceObjectRepository;
 
@@ -63,7 +68,8 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectMapper deviceObjectMapper;
 
-	@Autowired
+
+    @Autowired
     public DeviceObjectService(DeviceObjectRepository deviceObjectRepository,
                                DeviceModelService deviceModelService,
                                DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository,
@@ -87,6 +93,41 @@ public class DeviceObjectService implements SecuredRoles {
         this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
         this.deviceObjectMapper = deviceObjectMapper;
     }
+
+
+    /**
+     *
+     * @param contObjectId
+     * @param deviceObject
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObject automationCreate (Long contObjectId, DeviceObject deviceObject) {
+
+        deviceObject.setContObject(new ContObject().id(contObjectId));
+        DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
+        deviceObject.setDeviceModel(deviceModel);
+
+        ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
+
+        DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource();
+
+        if (deviceObjectDataSource != null && dsi != null) {
+            deviceObjectDataSource.setSubscrDataSource(new SubscrDataSource().id(dsi.getSubscrDataSourceId()));
+            deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
+            deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
+            deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
+            deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
+            deviceObjectDataSource.setIsActive(true);
+        }
+
+        deviceObject.saveDeviceObjectCredentials();
+
+        return saveDeviceObject(deviceObject, deviceObjectDataSource);
+    }
+
 
     /**
 	 *
@@ -540,5 +581,7 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectIds.isEmpty() ? new ArrayList<>()
 				: deviceObjectTimeOffsetRepository.selectDeviceObjectTimeOffsetList(deviceObjectIds);
 	}
+
+
 
 }
