@@ -46,16 +46,22 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectResource.class);
 
-	@Autowired
-	protected ContObjectService contObjectService;
+	protected final ContObjectService contObjectService;
+
+	protected final ContGroupService contGroupService;
+
+	private final OrganizationService organizationService;
 
 	@Autowired
-	protected ContGroupService contGroupService;
+    public SubscrContObjectResource(ContObjectService contObjectService,
+                                    ContGroupService contGroupService,
+                                    OrganizationService organizationService) {
+        this.contObjectService = contObjectService;
+        this.contGroupService = contGroupService;
+        this.organizationService = organizationService;
+    }
 
-	@Autowired
-	private OrganizationService organizationService;
-
-	/**
+    /**
 	 *
 	 * @param contGroupId
 	 * @return
