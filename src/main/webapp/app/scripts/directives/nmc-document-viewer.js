@@ -8,7 +8,8 @@ app.directive('nmcDocumentViewer', function () {
         replace: false,
         scope: {
             isReadOnly: "&",
-            closeDocument: "&"
+            closeDocument: "&",
+            extraValues: "="
         },
         templateUrl: 'scripts/directives/templates/nmc-document-viewer.html',
         controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', 'objectSvc', '$q', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout, objectSvc, $q) {
@@ -616,6 +617,20 @@ app.directive('nmcDocumentViewer', function () {
         //console.log($scope.ctrlSettings);        
         //console.log($scope.data.passport.changedSectionCount);        
             }
+            
+            function performExtraValues() {
+                if (mainSvc.checkUndefinedNull($scope.extraValues) || !angular.isArray($scope.extraValues) || $scope.extraValues.length === 0) {
+                    return false;
+                }
+                
+                $scope.extraValues.forEach(function (ev) {
+                    if ($scope.data.currentSectionValues.hasOwnProperty(ev._complexIdx)) {
+                        $scope.data.currentSectionValues[ev._complexIdx].value = ev.value;
+                        $scope.onChange();
+                    }
+                });
+                
+            }
 
             function successLoadPassportDataCallback(resp) {
         //        console.log(resp);
@@ -639,6 +654,9 @@ app.directive('nmcDocumentViewer', function () {
         //        $scope.data.passport.passportData = passDocData;
                 $scope.data.passDocValues = sectionValues;
                 $scope.data.currentSectionValues = $scope.data.passDocValues[$scope.data.currentPassDocSection.preparedSection.sectionKey][$scope.data.currentPassDocSection.preparedSection.sectionEntryId || 0];
+                
+                performExtraValues();
+                
                 $scope.ctrlSettings.passportLoading = false;
         //        console.log(passDocData);
                 console.log(sectionValues);
@@ -1863,6 +1881,7 @@ app.directive('nmcDocumentViewer', function () {
             */
 
             function initCtrl() {
+console.log($scope.extraValues);                
                 var routeParams = $routeParams;
                 if (routeParams.param === "new") {
                     createPassDocInit();

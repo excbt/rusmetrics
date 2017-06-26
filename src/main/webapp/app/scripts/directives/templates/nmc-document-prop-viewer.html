@@ -94,19 +94,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <label for = "inputEnergyDocDescription" >Описание</label>
-                                </td>
-                                <td class = "nmc-text-align-left">
-                                    <textarea class = "form-control nmc-textarea-form" 
-                                              id = "inputEnergyDocDescription" 
-                                              placeholder = "Описание" 
-                                              ng-model = "currentDocument.description"
-                                              ng-disabled = "isReadOnly()">
-                                    </textarea>
-                                </td>
-                            </tr>
+                            
                             <tr>
                                 <td class = "col-xs-3">
                                     <label for = "inputEnergyDocDate" 
@@ -124,6 +112,20 @@
                                                readonly
                                                />
                                     </span>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for = "inputEnergyDocDescription" >Комментарий</label>
+                                </td>
+                                <td class = "nmc-text-align-left">
+                                    <textarea class = "form-control nmc-textarea-form" 
+                                              id = "inputEnergyDocDescription" 
+                                              placeholder = "Описание" 
+                                              ng-model = "currentDocument.description"
+                                              ng-disabled = "isReadOnly()">
+                                    </textarea>
                                 </td>
                             </tr>
 <!--
