@@ -41,43 +41,54 @@ import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 @Service
 public class DeviceObjectService implements SecuredRoles {
 
-	@Autowired
-	private DeviceObjectRepository deviceObjectRepository;
+	private final DeviceObjectRepository deviceObjectRepository;
+
+	private final DeviceModelService deviceModelService;
+
+	private final DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository;
+
+	private final DeviceObjectDataSourceService deviceObjectDataSourceService;
+
+	private final SubscrContObjectService subscrContObjectService;
+
+	private final DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
+
+	private final DeviceObjectMetadataService deviceObjectMetadataService;
+
+	private final DeviceMetadataService deviceMetadataService;
+
+	private final DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
+
+	private final V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
+
+	private final DeviceObjectMapper deviceObjectMapper;
 
 	@Autowired
-	private DeviceModelService deviceModelService;
+    public DeviceObjectService(DeviceObjectRepository deviceObjectRepository,
+                               DeviceModelService deviceModelService,
+                               DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository,
+                               DeviceObjectDataSourceService deviceObjectDataSourceService,
+                               SubscrContObjectService subscrContObjectService,
+                               DeviceObjectDataSourceRepository deviceObjectDataSourceRepository,
+                               DeviceObjectMetadataService deviceObjectMetadataService,
+                               DeviceMetadataService deviceMetadataService,
+                               DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService,
+                               V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
+                               DeviceObjectMapper deviceObjectMapper) {
+        this.deviceObjectRepository = deviceObjectRepository;
+        this.deviceModelService = deviceModelService;
+        this.deviceObjectMetaVzletRepository = deviceObjectMetaVzletRepository;
+        this.deviceObjectDataSourceService = deviceObjectDataSourceService;
+        this.subscrContObjectService = subscrContObjectService;
+        this.deviceObjectDataSourceRepository = deviceObjectDataSourceRepository;
+        this.deviceObjectMetadataService = deviceObjectMetadataService;
+        this.deviceMetadataService = deviceMetadataService;
+        this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
+        this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
+        this.deviceObjectMapper = deviceObjectMapper;
+    }
 
-	@Autowired
-	private DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository;
-
-	@Autowired
-	private DeviceObjectDataSourceService deviceObjectDataSourceService;
-
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
-
-	@Autowired
-	private DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
-
-	@Autowired
-	private DeviceObjectMetadataService deviceObjectMetadataService;
-
-	@Autowired
-	private DeviceMetadataService deviceMetadataService;
-
-	@Autowired
-	private DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
-
-	@Autowired
-	private V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-	@Autowired
-	private DeviceObjectMapper deviceObjectMapper;
-
-
-	/**
+    /**
 	 *
 	 * @return
 	 */
