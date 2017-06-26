@@ -11,7 +11,8 @@ angular.module('portalNMC')
                 USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
                 OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
                 WIDGETS_URL = "../api/subscr/vcookie/widgets/list",
-                OBJECT_PASSPORT_CREATION_WINDOW_NAME = 'objectPassport';
+                OBJECT_PASSPORT_CREATION_WINDOW_NAME = 'objectPassport',
+                DATE_FORMAT_FOR_DATEPICKER = "yy-mm-dd";
 
             var measureUnits = null,
                 objectPassportCreationWindow = null;
@@ -3170,6 +3171,51 @@ angular.module('portalNMC')
                 $('#showDocumentPropertiesModal').modal('hide');
                 $scope.openContObjectPassport(resp.data);
             }
+                
+            function successCreatePassportCallbackFromTab(resp) {
+                if (successSavePassportCallback(resp) === false) {
+                    return false;
+                }
+                
+                var tmpPassportArr = angular.copy($scope.data.currentContObjectPassports);
+                tmpPassportArr.forEach(function (pass) {
+                    pass.isActive = false;
+                }); 
+                var newPass = angular.copy(resp.data);
+                newPass.isActive = true;
+                tmpPassportArr.unshift(newPass);
+                
+                $scope.data.currentContObjectPassports = tmpPassportArr;
+                
+                $scope.openContObjectPassport(resp.data);
+            }
+                            
+            function successUpdatePassportCallbackFromTab(resp) {
+                if (successSavePassportCallback(resp) === false) {
+                    return false;
+                }
+                
+//                var tmpPassportArr = angular.copy($scope.data.currentContObjectPassports);
+//                tmpPassportArr.forEach(function (pass) {
+//                    pass.isActive = false;
+//                }); 
+//                var newPass = angular.copy(resp.data);
+//                newPass.isActive = true;
+//                tmpPassportArr.unshift(newPass);
+//                
+//                $scope.data.currentContObjectPassports = tmpPassportArr;
+                
+                notificationFactory.success();
+                //find and update doc in doc array
+                var updatingItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
+                var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(updatingItem);
+                if (docIndexAtArr > -1) {
+                    var newData = angular.copy(resp.data);
+                    $scope.data.currentContObjectPassports[docIndexAtArr].passportName = newData.passportName;
+                    $scope.data.currentContObjectPassports[docIndexAtArr].description = newData.description;
+                    $scope.data.currentContObjectPassports[docIndexAtArr].docDateFormatted = moment(newData.passportDate2).format($scope.objectCtrlSettings.dateFormat);                    
+                }
+            }
 
             function successUpdatePassportCallback(resp) {
                 if (successSavePassportCallback(resp) === false) {
@@ -3219,6 +3265,49 @@ angular.module('portalNMC')
                 $('#showDocumentPropertiesModal').modal();
             };
                 
+            $scope.createContObjectPassportFromTabInit = function (object) {
+                $scope.data.currentDocument = {};
+                $scope.data.currentDocument.parentObject = object;
+                $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
+                
+                $scope.data.currentContObjectPassports.forEach(function (pass) {
+                    pass.isPassportEditing = false;
+                });
+                $scope.objectCtrlSettings.isPassportCreating = true;
+                
+                var viewDateformat = mainSvc.getDetepickerSettingsFullView();
+                viewDateformat.dateFormat = DATE_FORMAT_FOR_DATEPICKER;
+                $('#inputEnergyDocDate').datepicker(viewDateformat);
+
+            };
+                            
+            $scope.editContObjectPassportFromTabInit = function (passport, object) {
+                
+                $scope.data.currentContObjectPassports.forEach(function (pass) {
+                    if (passport.id !== pass.id) {
+                        pass.isPassportEditing = false;
+                    }
+                });
+                
+                passport.isPassportEditing = !passport.isPassportEditing;
+                $scope.objectCtrlSettings.isPassportCreating = false;
+                
+                $scope.data.currentDocument = angular.copy(passport);
+                $scope.data.currentDocument.parentObject = object;
+                $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
+                $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);                
+            };
+                
+            $scope.cancelCreateContObjectPassportFromTab = function (object) {
+                $scope.data.currentDocument = {};                                
+                $scope.objectCtrlSettings.isPassportCreating = false;
+            };
+                
+            $scope.cancelEditContObjectPassportFromTab = function (passport) {
+                $scope.data.currentDocument = {};                                
+                passport.isPassportEditing = false;
+            };
+                
             function checkDoc(doc) {
                 var checkFlag = true;
                 if (mainSvc.checkUndefinedNull(doc.passportName) || $scope.emptyString(doc.passportName)) {
@@ -3262,6 +3351,25 @@ angular.module('portalNMC')
                         .then(successUpdatePassportCallback, errorCallback);
                 }
             };
+                
+            $scope.saveDocumentFromTab = function (doc) {
+        console.log(doc);
+                if (checkDoc(doc) === false) {
+                    return false;
+                }
+                //prepare doc date 
+                var tmpDate = moment(doc.docDateFormatted, $scope.objectCtrlSettings.dateFormat);
+                doc.passportDate = [tmpDate.year(), tmpDate.month() + 1, tmpDate.date()];
+   
+                if (mainSvc.checkUndefinedNull(doc.id)) {
+                    objectPassportCreationWindow = window.open("", OBJECT_PASSPORT_CREATION_WINDOW_NAME);
+                    energoPassportSvc.createContObjectPassport(doc, doc.parentObject.id)
+                        .then(successCreatePassportCallbackFromTab, errorCallback);            
+                } else {
+                    energoPassportSvc.updateContObjectPassport(doc, doc.parentObject.id)
+                        .then(successUpdatePassportCallbackFromTab, errorCallback);
+                }
+            };
 // ********************************************************************************************
     //    End work with cont object passports
 //*********************************************************************************************                
@@ -3279,6 +3387,10 @@ angular.module('portalNMC')
                 {
                     name: "extra_object_properties_tab",
                     tabpanel: "extra_object_properties"
+                },
+                {
+                    name: "object_passports_tab",
+                    tabpanel: "object_passports"
                 }
             ];
 
