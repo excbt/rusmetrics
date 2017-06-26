@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +40,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContObjectController extends AbstractSubscrApiResource {
+public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	// private final static int TEST_SUBSCRIBER_ID = 728;
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectResource.class);
 
 	@Autowired
 	protected ContObjectService contObjectService;

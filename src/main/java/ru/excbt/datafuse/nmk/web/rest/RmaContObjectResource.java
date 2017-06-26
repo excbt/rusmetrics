@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
@@ -38,9 +38,9 @@ import static com.google.common.base.Preconditions.*;
  */
 @Controller
 @RequestMapping(value = "/api/rma")
-public class RmaSubscrContObjectController extends SubscrContObjectController {
+public class RmaContObjectResource extends SubscrContObjectResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrContObjectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaContObjectResource.class);
 
 	/**
 	 *

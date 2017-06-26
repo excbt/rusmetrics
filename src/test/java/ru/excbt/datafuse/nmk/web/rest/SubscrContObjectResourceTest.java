@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
@@ -41,9 +41,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.Assert.*;
 
 @Transactional
-public class SubscrContObjectControllerTest extends AnyControllerTest {
+public class SubscrContObjectResourceTest extends AnyControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscrContObjectResourceTest.class);
 
     private final static String contObjectDaDataFilename = "metadata_json/contObjectDaData.json";
 

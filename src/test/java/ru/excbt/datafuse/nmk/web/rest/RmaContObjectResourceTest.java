@@ -1,14 +1,9 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
-import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -28,9 +23,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @Transactional
-public class RmaSubscrContObjectControllerTest extends RmaControllerTest {
+public class RmaContObjectResourceTest extends RmaControllerTest {
 
-	private static final Logger log = LoggerFactory.getLogger(RmaSubscrContObjectControllerTest.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaContObjectResourceTest.class);
 
 	@Autowired
 	private ContObjectService contObjectService;
