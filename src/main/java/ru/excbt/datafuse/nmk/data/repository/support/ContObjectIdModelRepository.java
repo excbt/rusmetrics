@@ -31,5 +31,5 @@ public interface ContObjectIdModelRepository<T> extends JpaRepository<T, Long> {
 	 * @return
 	 */
 	@Query("SELECT f FROM #{#entityName} f WHERE f.contObjectId in (:contObjectIds)")
-	public List<T> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
+	List<T> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
 }

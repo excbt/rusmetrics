@@ -76,7 +76,7 @@ public class ContObjectFiasService {
      */
     public ContObjectFias createConfObjectFias(ContObject contObject) {
         ContObjectFias contObjectFias = new ContObjectFias();
-        contObjectFias.setContObjectId(contObject.getId());
+        contObjectFias.setContObject(contObject);
         contObjectFias.setFiasFullAddress(contObject.getFullAddress());
         contObjectFias.setGeoFullAddress(contObject.getFullAddress());
         contObjectFias.setIsGeoRefresh(true);
@@ -91,7 +91,7 @@ public class ContObjectFiasService {
     @Transactional
     public void saveContObjectFias(final Long contObjectId, final ContObjectFias contObjectFias) {
         checkNotNull(contObjectId);
-        contObjectFias.setContObjectId(contObjectId);
+        contObjectFias.setContObject(new ContObject().id(contObjectId));
         contObjectFiasRepository.save(contObjectFias);
 
     }
