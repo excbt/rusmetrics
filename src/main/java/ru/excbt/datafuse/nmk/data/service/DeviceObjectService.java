@@ -9,19 +9,15 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.util.Assert;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
@@ -29,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.*;
+import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
@@ -68,6 +65,8 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectMapper deviceObjectMapper;
 
+	private final SubscrDataSourceRepository subscrDataSourceRepository;
+
 
     @Autowired
     public DeviceObjectService(DeviceObjectRepository deviceObjectRepository,
@@ -80,7 +79,7 @@ public class DeviceObjectService implements SecuredRoles {
                                DeviceMetadataService deviceMetadataService,
                                DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService,
                                V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
-                               DeviceObjectMapper deviceObjectMapper) {
+                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository) {
         this.deviceObjectRepository = deviceObjectRepository;
         this.deviceModelService = deviceModelService;
         this.deviceObjectMetaVzletRepository = deviceObjectMetaVzletRepository;
@@ -92,6 +91,7 @@ public class DeviceObjectService implements SecuredRoles {
         this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
         this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
         this.deviceObjectMapper = deviceObjectMapper;
+        this.subscrDataSourceRepository = subscrDataSourceRepository;
     }
 
 
@@ -150,7 +150,11 @@ public class DeviceObjectService implements SecuredRoles {
      */
     private void initDeviceObjectDataSource(ActiveDataSourceInfoDTO dsi, DeviceObjectDataSource deviceObjectDataSource) {
         if (deviceObjectDataSource != null && dsi != null) {
-            deviceObjectDataSource.setSubscrDataSource(new SubscrDataSource().id(dsi.getSubscrDataSourceId()));
+            SubscrDataSource ds = subscrDataSourceRepository.findOne(dsi.getSubscrDataSourceId());
+            if (ds == null) {
+                DBExceptionUtils.entityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
+            }
+            deviceObjectDataSource.setSubscrDataSource(ds);
             deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
             deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
             deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
