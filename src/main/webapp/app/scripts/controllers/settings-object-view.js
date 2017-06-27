@@ -1833,6 +1833,17 @@ angular.module('portalNMC')
                         $scope.$apply();
                     }
                 });
+                
+                function objectAddressChange(ev) {
+            //console.log($scope.currentObject);
+            //console.log(ev);            
+            //return;            
+                    $scope.currentSug = null;
+                    $scope.currentObject.isAddressAuto = false;
+                    $scope.currentObject.isValidGeoPos = false;
+                    checkGeo();
+                    $scope.$apply();
+                }
 
                 $("#inputAddress").suggestions({
                     serviceUrl: "https://dadata.ru/api/v2",
@@ -1847,16 +1858,20 @@ angular.module('portalNMC')
                         $scope.currentObject.isAddressAuto = true;
                         checkGeo();
                         $scope.$apply();
+                    },
+                    /*Если пользователь ничего не выбрал*/
+                    onSelectNothing: function (query) {
+                        objectAddressChange(query);
                     }
                 });
                 
-                $("#inputAddress").change(function () {
-                    $scope.currentSug = null;
-                    $scope.currentObject.isAddressAuto = false;
-                    $scope.currentObject.isValidGeoPos = false;
-                    checkGeo();
-                    $scope.$apply();
-                });
+//                $("#inputAddress").change(function () {
+//                    $scope.currentSug = null;
+//                    $scope.currentObject.isAddressAuto = false;
+//                    $scope.currentObject.isValidGeoPos = false;
+//                    checkGeo();
+//                    $scope.$apply();
+//                });
 
                                 //drop menu
 //                    $('ul.dropdown-menu[data-toggle=dropdown]').on('click', function(event) {

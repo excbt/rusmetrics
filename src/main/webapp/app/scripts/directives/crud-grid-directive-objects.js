@@ -120,6 +120,7 @@ app.directive('crudGridObjects', function () {
                 $scope.object = {};
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
+                $scope.currentSug = null;
                 $scope.data = {};
                 $scope.data.currentGroupId = null; //current group id: use for group object filter
                 $scope.data.currentContObjectPassports = [];
@@ -766,6 +767,19 @@ app.directive('crudGridObjects', function () {
                         $scope.toggleAddMode();
                     });
                 };
+                
+                var checkGeo = function () {
+                    $scope.currentObject.geoState = "red";
+                    $scope.currentObject.geoStateText = "Не отображается на карте";
+            // console.log($scope.currentObject.isValidGeoPos);
+            // console.log($scope.currentSug);
+            // console.log($scope.currentSug.data.geo_lat);
+            // console.log($scope.currentSug.data.geo_lon);                
+                    if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null) {
+                        $scope.currentObject.geoState = "green";
+                        $scope.currentObject.geoStateText = "Отображается на карте";
+                    }
+                };
 
                 $scope.addObject = function () {
                     crudGridDataFactory($scope.crudTableName).save($scope.object, successPostCallback, errorCallback);
@@ -788,6 +802,10 @@ app.directive('crudGridObjects', function () {
                             id: object[$scope.extraProps.idColumnName],
                             cmOrganizationId: cmOrganizationId
                         };
+                    }
+                    object._daDataSraw = null;
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)) {
+                        object._daDataSraw = JSON.stringify($scope.currentSug);
                     }
                     crudGridDataFactory($scope.crudTableName).update(params, object, successCallbackUpdateObject, errorCallback);
                 };
@@ -819,6 +837,7 @@ app.directive('crudGridObjects', function () {
                         $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect($scope.currentObject.buildingType, $scope.data.buildingCategories);
                         setBuildingCategory();
                     }
+                    checkGeo();
 //console.log($scope.currentObject);                    
                 };
                 
@@ -2021,6 +2040,20 @@ app.directive('crudGridObjects', function () {
                     }
                 }
                 
+                function objectAddressChange(ev) {
+            //console.log($scope.currentObject);
+            //console.log(ev);            
+            //return;            
+            //        if (!mainSvc.checkUndefinedNull($scope.currentObject) && $scope.currentObject.isSaving === true) {
+            //            return;
+            //        }
+                    $scope.currentSug = null;
+                    $scope.currentObject.isAddressAuto = false;
+                    $scope.currentObject.isValidGeoPos = false;
+                    checkGeo();
+                    $scope.$apply();
+                }
+                
                 $(document).ready(function () {
                     $('#inp_ref_range_start').datepicker({
                         dateFormat: $scope.dateOptsParamsetRu.format,
@@ -2044,9 +2077,16 @@ app.directive('crudGridObjects', function () {
                         count: 5,
                         /* Вызывается, когда пользователь выбирает одну из подсказок */
                         onSelect: function (suggestion) {
-                            console.log(suggestion);
+//                            console.log(suggestion);
                             $scope.currentObject.fullAddress = suggestion.value;
+                            $scope.currentSug = suggestion;
+                            $scope.currentObject.isAddressAuto = true;
+                            checkGeo();
                             $scope.$apply();
+                        },
+                        /*Если пользователь ничего не выбрал*/
+                        onSelectNothing: function (query) {
+                            objectAddressChange(query);
                         }
                     });
                     
@@ -2572,7 +2612,7 @@ app.directive('crudGridObjects', function () {
                     activePassport.isActive = true;
                     mainSvc.sortItemsBy(resp.data, "isActive");
                     resp.data.reverse();
-                    $scope.data.currentContObjectPassports = resp.data;                
+                    $scope.data.currentContObjectPassports = resp.data;
                 }
 
 //                function successSavePassportCallback(resp) {
@@ -2690,7 +2730,7 @@ app.directive('crudGridObjects', function () {
                     $scope.data.currentDocument = angular.copy(passport);
                     $scope.data.currentDocument.parentObject = object;
                     $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
-                    $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);                
+                    $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);
                 };
 
 //                $scope.cancelCreateContObjectPassportFromTab = function (object) {
@@ -2699,7 +2739,7 @@ app.directive('crudGridObjects', function () {
 //                };
 
                 $scope.cancelEditContObjectPassportFromTab = function (passport) {
-                    $scope.data.currentDocument = {};                                
+                    $scope.data.currentDocument = {};
                     passport.isPassportEditing = false;
                 };
 
