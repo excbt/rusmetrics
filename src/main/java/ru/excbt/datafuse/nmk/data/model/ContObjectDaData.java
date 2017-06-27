@@ -129,4 +129,28 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
 	@Column(name = "deleted")
 	private int deleted;
 
+
+	public void clearInValid() {
+        sraw = null;
+        dataGeoLat = null;
+        dataGeoLon = null;
+        dataFiasId = null;
+        isValid = false;
+    }
+
+    private static final String GEO_POS_JSON_TEMPLATE = "{\"pos\": \"%s %s\"}";
+
+    public String makeJsonGeoString() {
+        if (dataGeoLat == null || dataGeoLon == null) {
+            return null;
+        }
+        return String.format(GEO_POS_JSON_TEMPLATE, dataGeoLon.toString(),
+            dataGeoLat.toString());
+    }
+
+    @JsonIgnore
+    public boolean isAddressAuto() {
+        return Boolean.TRUE.equals(isValid);
+    }
+
 }

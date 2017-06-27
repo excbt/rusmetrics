@@ -16,6 +16,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
@@ -32,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 @Getter
 @Setter
-public class SubscrDataSource extends JsonAbstractAuditableModel implements DeletableObject {
+public class SubscrDataSource extends JsonAbstractAuditableModel implements DeletableObject, PersistableBuilder<SubscrDataSource, Long> {
 
 	/**
 	 *

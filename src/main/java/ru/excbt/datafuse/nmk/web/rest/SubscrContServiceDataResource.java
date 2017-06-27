@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,7 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
     private final SubscrContServiceDataImpulseResource subscrContServiceDataImpulseController;
 
 
+    @Autowired
     public SubscrContServiceDataResource(WebAppPropsService webAppPropsService,
                                          SubscrContServiceDataHWaterController subscrContServiceDataHWaterController,
                                          SubscrContServiceDataImpulseResource subscrContServiceDataImpulseController) {

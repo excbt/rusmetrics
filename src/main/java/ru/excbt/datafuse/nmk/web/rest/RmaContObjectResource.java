@@ -1,7 +1,10 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -38,11 +41,16 @@ import static com.google.common.base.Preconditions.*;
  */
 @Controller
 @RequestMapping(value = "/api/rma")
-public class RmaSubscrContObjectController extends SubscrContObjectController {
+public class RmaContObjectResource extends SubscrContObjectResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrContObjectController.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaContObjectResource.class);
 
-	/**
+	@Autowired
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService) {
+        super(contObjectService, contGroupService, organizationService, contObjectFiasService);
+    }
+
+    /**
 	 *
 	 * @param contObject
 	 * @return
@@ -64,8 +72,8 @@ public class RmaSubscrContObjectController extends SubscrContObjectController {
 
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
-				ContObject result = contObjectService.createContObject(contObject, getCurrentSubscriberId(),
-						rmaBeginDate,
+				ContObject result = contObjectService.automationCreate(contObject, getCurrentSubscriberId(),
+                        LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
 						cmOrganizationId);
 
 				return contObjectService.wrapContObjectMonitorDTO(result,false);

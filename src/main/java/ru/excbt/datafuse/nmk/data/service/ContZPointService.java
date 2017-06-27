@@ -46,7 +46,7 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
  * Сервис для работы с точками учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.03.2015
@@ -95,7 +95,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * Краткая информация по точке учета
-	 * 
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since 17.03.2016
@@ -140,7 +140,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * /**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -156,7 +156,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -180,7 +180,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -241,7 +241,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param zpointList
 	 * @return
 	 */
@@ -299,7 +299,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param zpointList
 	 * @return
 	 */
@@ -336,7 +336,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param zpointList
 	 * @return
 	 */
@@ -362,7 +362,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param contObjectId
 	 * @return
@@ -374,7 +374,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -384,7 +384,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -401,7 +401,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -428,7 +428,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 * @return
 	 */
@@ -445,7 +445,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contServiceTypeKey
 	 * @return
@@ -464,7 +464,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		ContZPoint result = new ContZPoint();
 
 		result.setContObjectId(contObjectId);
-		initContObject(result);
+		linkToContObject(result);
 
 		result.setContServiceType(contServiceType);
 		result.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
@@ -479,7 +479,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -495,7 +495,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contServiceTypeKey
 	 * @param startDate
@@ -515,7 +515,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		checkNotNull(contZPoint.getRsoId());
 
 		contZPoint.setContObjectId(contObjectId);
-		initContObject(contZPoint);
+		linkToContObject(contZPoint);
 		initDeviceObject(contZPoint);
 		initContServiceType(contZPoint);
 		initRso(contZPoint);
@@ -527,7 +527,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -539,7 +539,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -553,7 +553,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 * @return
 	 */
@@ -567,7 +567,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		checkNotNull(contZPoint.get_activeDeviceObjectId());
 		checkNotNull(contZPoint.getRsoId());
 
-		initContObject(contZPoint);
+		linkToContObject(contZPoint);
 		initDeviceObject(contZPoint);
 		initContServiceType(contZPoint);
 		initRso(contZPoint);
@@ -590,20 +590,16 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 */
-	private void initContObject(ContZPoint contZPoint) {
-		ContObject contObject = contObjectService.findContObject(contZPoint.getContObjectId());
-		if (contObject == null) {
-			throw new PersistenceException(
-					String.format("ContObject(id=%d) is not found", contZPoint.getContObjectId()));
-		}
+	private void linkToContObject(ContZPoint contZPoint) {
+		ContObject contObject = contObjectService.findContObjectChecked(contZPoint.getContObjectId());
 		contZPoint.setContObject(contObject);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 */
 	private void initDeviceObject(ContZPoint contZPoint) {
@@ -618,7 +614,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 */
 	private void initContServiceType(ContZPoint contZPoint) {
@@ -628,7 +624,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 */
 	private void initRso(ContZPoint contZPoint) {
@@ -646,7 +642,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ContServiceType> selectContServiceTypes() {
@@ -655,7 +651,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -665,7 +661,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -675,7 +671,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -686,7 +682,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */

@@ -57,8 +57,11 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	private ContObjectFiasService contObjectFiasService;
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -88,7 +91,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 * @param subscriberParam
 	 * @param datePeriod
@@ -117,7 +120,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Deprecated
@@ -144,7 +147,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
-		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
@@ -204,7 +207,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -236,7 +239,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
-		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
@@ -298,7 +301,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param datePeriod
 	 * @param subscriberId
@@ -343,7 +346,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param datePeriod

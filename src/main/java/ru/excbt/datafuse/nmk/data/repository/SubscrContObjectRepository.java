@@ -14,27 +14,28 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
 
 /**
  * Repository для SubscrContObject
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
  *
  */
 public interface SubscrContObjectRepository
-		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject> {
+		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
+
+//	/**
+//	 *
+//	 * @param contObjectId
+//	 * @return
+//	 */
+//	public List<SubscrContObject> findByContObjectId(Long contObjectId);
 
 	/**
-	 * 
-	 * @param contObjectId
-	 * @return
-	 */
-	public List<SubscrContObject> findByContObjectId(Long contObjectId);
-
-	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrDate
 	 * @return
@@ -46,7 +47,7 @@ public interface SubscrContObjectRepository
 			@Param("subscrDate") Date subscrDate);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -56,7 +57,7 @@ public interface SubscrContObjectRepository
 	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -66,7 +67,7 @@ public interface SubscrContObjectRepository
 	public List<ContObject> selectContObjects(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @return
@@ -78,7 +79,7 @@ public interface SubscrContObjectRepository
 			@Param("contObjectIds") List<Long> contObjectIds);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -87,7 +88,7 @@ public interface SubscrContObjectRepository
 	public List<ContObject> selectContObjectsNoSort(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
@@ -98,7 +99,7 @@ public interface SubscrContObjectRepository
 			@Param("idList") List<Long> idList);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -108,7 +109,7 @@ public interface SubscrContObjectRepository
 	public List<Long> selectContObjectIds(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @return
@@ -120,7 +121,7 @@ public interface SubscrContObjectRepository
 			@Param("contObjectId") long contObjectId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @return
@@ -132,7 +133,7 @@ public interface SubscrContObjectRepository
 			@Param("contObjectId") long contObjectId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @return
@@ -141,7 +142,7 @@ public interface SubscrContObjectRepository
 	public List<SubscrContObject> selectSubscrContObjects(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -151,7 +152,7 @@ public interface SubscrContObjectRepository
 	public List<ContZPoint> selectContZPoints(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -162,7 +163,7 @@ public interface SubscrContObjectRepository
 	public List<Object[]> selectContZPointShortInfo(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -172,7 +173,7 @@ public interface SubscrContObjectRepository
 	public List<Long> selectContZPointIds(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -183,14 +184,14 @@ public interface SubscrContObjectRepository
 	public List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
 	public List<SubscrContObject> findBySubscriberId(Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param rmaSubscriberId
 	 * @return
@@ -202,7 +203,7 @@ public interface SubscrContObjectRepository
 			@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param parentSubscriberId
 	 * @return
 	 */
@@ -213,7 +214,7 @@ public interface SubscrContObjectRepository
 			@Param("parentSubscriberId") Long parentSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param contObjectId
 	 * @return
@@ -225,7 +226,7 @@ public interface SubscrContObjectRepository
 			@Param("contObjectId") Long contObjectId);
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Query(value = "SELECT sco.subscriberId as subscriberId, sco.contObjectId as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, "

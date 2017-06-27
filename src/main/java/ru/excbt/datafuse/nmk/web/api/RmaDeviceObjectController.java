@@ -50,7 +50,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 @RequestMapping(value = "/api/rma")
 public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectController.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectController.class);
 
 	/**
 	 *
@@ -134,32 +134,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		}
 
 		/////////////////////////////////////////////
-		ApiActionObjectProcess actionProcess = () -> {
-
-			deviceObject.setContObject(new ContObject().id(contObjectId));
-			deviceObject.setDeviceModel(new DeviceModel().id(deviceObject.getDeviceModelId()));
-
-			ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
-
-			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-					: new DeviceObjectDataSource();
-
-			if (deviceObjectDataSource != null && dsi != null) {
-				SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
-				deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-				deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
-				deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
-				deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
-				deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-				deviceObjectDataSource.setIsActive(true);
-			}
-
-			deviceObject.saveDeviceObjectCredentials();
-
-			DeviceObject result = deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
-			result.shareDeviceLoginInfo();
-			return result;
-		};
+		ApiActionObjectProcess actionProcess = () -> deviceObjectService.automationUpdate(contObjectId, deviceObject);
 		return ApiResponse.responseUpdate(actionProcess);
 
 	}
@@ -176,7 +151,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
-		return createDeviceObjectInternal(contObjectId, deviceObject, request);
+        return createDeviceObject(contObjectId,deviceObject, request);
 
 	}
 
@@ -192,55 +167,18 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
-		return createDeviceObjectInternal(contObjectId, deviceObject, request);
-	}
+        checkNotNull(deviceObject);
+        checkArgument(deviceObject.isNew());
+        checkNotNull(deviceObject.getDeviceModelId());
 
-    /**
-     *
-     * @param contObjectId
-     * @param deviceObject
-     * @param request
-     * @return
-     */
-	private ResponseEntity<?> createDeviceObjectInternal(Long contObjectId, DeviceObject deviceObject,
-			HttpServletRequest request) {
-		checkNotNull(deviceObject);
-		checkArgument(deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId());
+        if (!canAccessContObject(contObjectId)) {
+            return ApiResponse.responseForbidden();
+        }
 
-		if (!canAccessContObject(contObjectId)) {
-			return ApiResponse.responseForbidden();
-		}
+        ApiActionProcess<DeviceObject> actionProcess = () ->
+            deviceObjectService.automationCreate(contObjectId, deviceObject);
 
-		ApiActionProcess<DeviceObject> actionProcess = () -> {
-
-			ContObject contObject = contObjectService.findContObject(contObjectId);
-			deviceObject.setContObject(contObject);
-			DeviceModel deviceModel = deviceModelService.findDeviceModel(deviceObject.getDeviceModelId());
-			deviceObject.setDeviceModel(deviceModel);
-
-			ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
-
-			DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-					: new DeviceObjectDataSource();
-
-			if (deviceObjectDataSource != null && dsi != null) {
-				SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
-				deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-				deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
-				deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
-				deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
-				deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-				deviceObjectDataSource.setIsActive(true);
-			}
-
-			deviceObject.saveDeviceObjectCredentials();
-
-			return deviceObjectService.saveDeviceObject(deviceObject, deviceObjectDataSource);
-		};
-
-		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
-
+        return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 	}
 
 	/**
@@ -346,15 +284,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		ApiActionObjectProcess actionProcess = () -> deviceObjectLoadingSettingsService.saveOne(requestEntity);
 		return ApiResponse.responseUpdate(actionProcess);
 
-		//		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
-		//
-		//			@Override
-		//			public DeviceObjectLoadingSettings processAndReturnResult() {
-		//				return deviceObjectLoadingSettingsService.saveOne(requestEntity);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -396,15 +325,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 				.saveSubscrDataSourceLoadingSettings(requestEntity);
 		return ApiResponse.responseUpdate(actionProcess);
 
-		//		ApiAction action = new ApiActionEntityAdapter<SubscrDataSourceLoadingSettings>(requestEntity) {
-		//
-		//			@Override
-		//			public SubscrDataSourceLoadingSettings processAndReturnResult() {
-		//				return subscrDataSourceLoadingSettingsService.saveSubscrDataSourceLoadingSettings(entity);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**

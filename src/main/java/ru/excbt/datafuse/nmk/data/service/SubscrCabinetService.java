@@ -82,7 +82,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	private DeviceObjectService deviceObjectService;
 
 	/*
-	 * 
+	 *
 	 */
 	private class SubscCabinetContObjectStats {
 		private final Long contObjectId;
@@ -103,7 +103,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -129,7 +129,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -151,11 +151,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 					String.format("Subscriber (id=%d) have not childLdapOu propterty", parentSubscriber.getId()));
 		}
 
-		ContObject contObject = contObjectService.findContObject(contObjectIds[0]);
-
-		if (contObject == null) {
-			throw new PersistenceException(String.format("ContObjectId (%d) is not found", contObjectIds[0]));
-		}
+		ContObject contObject = contObjectService.findContObjectChecked(contObjectIds[0]);
 
 		Long subscrCabinetNr = getSubscrCabinetNr();
 
@@ -230,7 +226,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cabinetSubscriber
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -262,7 +258,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cabinetSubscriberId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -278,7 +274,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ContObjectCabinetInfo> selectSubscrContObjectCabinetInfoList(Long parentSubscriberId) {
@@ -349,7 +345,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param parentSubscriberId
 	 * @return
 	 */
@@ -376,7 +372,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param parentSubscriberId
 	 * @param contObjectIds
 	 * @return
@@ -387,7 +383,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 */
 	private void checkCabinerSubscrUserValid(Long parentSubscriberId, Long subscrUserId, SubscrUser subscrUser) {
@@ -414,7 +410,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -459,7 +455,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -480,7 +476,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -511,7 +507,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
@@ -559,7 +555,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @return
 	 */

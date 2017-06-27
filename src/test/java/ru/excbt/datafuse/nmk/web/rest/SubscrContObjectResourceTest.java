@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
@@ -41,9 +41,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.junit.Assert.*;
 
 @Transactional
-public class SubscrContObjectControllerTest extends AnyControllerTest {
+public class SubscrContObjectResourceTest extends AnyControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscrContObjectResourceTest.class);
 
     private final static String contObjectDaDataFilename = "metadata_json/contObjectDaData.json";
 
@@ -135,7 +135,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 
 
-        List<ContObjectFias> fiasIds = contObjectFiasRepository.selectByContObjectIds(ids);
+        List<ContObjectFias> fiasIds = contObjectFiasRepository.findByContObjectIds(ids);
 
         Optional<ContObjectFias> testObjectFias = fiasIds.stream().filter(i -> i.getFiasUUID() != null).findAny();
 
@@ -206,7 +206,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
      */
     private ContObject findFirstContObject() {
         List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
-        ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObject(ids.get(0));
+        ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObjectChecked(ids.get(0));
         assertNotNull(testCO);
         return testCO;
     }
@@ -229,7 +229,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
         log.info("daDataJson: {}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
 
-        ContObject testCO = contObjectService.findContObject(id);
+        ContObject testCO = contObjectService.findContObjectChecked(id);
         String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 
         testCO.set_daDataSraw(daDataJson);
@@ -277,7 +277,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
         coSetting.putSetting(ContServiceTypeKey.CW.getKeyname(), setting.getId());
         _testUpdateJson(UrlUtils.apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId), coSetting);
 
-        ContObject contObject = contObjectService.findContObject(contObjectId);
+        ContObject contObject = contObjectService.findContObjectChecked(contObjectId);
         assertTrue(contObject.getMeterPeriodSettings() != null);
         MeterPeriodSetting meterPeriod = contObject.getMeterPeriodSettings().get(ContServiceTypeKey.CW.getKeyname());
         assertTrue(meterPeriod != null);

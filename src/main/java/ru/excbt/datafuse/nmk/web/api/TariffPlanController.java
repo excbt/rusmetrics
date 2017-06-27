@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -149,12 +150,12 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (contObjectIds != null) {
 
 			for (long contObjectId : contObjectIds) {
-				ContObject co = contObjectService.findContObject(contObjectId);
-				if (co == null) {
+				Optional<ContObject> co = contObjectService.findContObjectOptional(contObjectId);
+				if (!co.isPresent()) {
 					return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
-				tariffPlan.getContObjects().add(co);
+				tariffPlan.getContObjects().add(co.get());
 			}
 		}
 
@@ -212,12 +213,12 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		if (contObjectIds != null) {
 
 			for (long contObjectId : contObjectIds) {
-				ContObject co = contObjectService.findContObject(contObjectId);
-				if (co == null) {
+				Optional<ContObject> co = contObjectService.findContObjectOptional(contObjectId);
+				if (!co.isPresent()) {
 					return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
-				tariffPlan.getContObjects().add(co);
+				tariffPlan.getContObjects().add(co.get());
 			}
 		}
 

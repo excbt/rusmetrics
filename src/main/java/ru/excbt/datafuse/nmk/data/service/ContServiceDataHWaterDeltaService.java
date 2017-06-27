@@ -57,6 +57,10 @@ public class ContServiceDataHWaterDeltaService {
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
+    @Autowired
+    private ContObjectFiasService contObjectFiasService;
+
+
     /**
      *
      * @param subscriberId
@@ -270,11 +274,7 @@ public class ContServiceDataHWaterDeltaService {
 		if (contObjectId == null) {
 			contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
 		} else {
-			ContObject contObject = contObjectService.findContObject(contObjectId);
-
-			if (contObject == null) {
-				throw new PersistenceException(String.format("ContObject (id=%d) is not found", contObjectId));
-			}
+			ContObject contObject = contObjectService.findContObjectChecked(contObjectId);
 
 			contObjects.add(contObject);
 		}
@@ -310,7 +310,7 @@ public class ContServiceDataHWaterDeltaService {
 		contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
 
 		List<Long> contObjectIds = contObjects.stream().map(i -> i.getId()).collect(Collectors.toList());
-		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
 
 		List<ContObject> cityContObjects = contObjects.stream()
 				.filter((i) -> contObjectFiasMap.get(i.getId()) != null
@@ -345,7 +345,7 @@ public class ContServiceDataHWaterDeltaService {
 		List<Long> contObjectIds = contObjects.stream().filter(i -> i.getId() != null).map(i -> i.getId())
 				.collect(Collectors.toList());
 
-		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		contObjects.forEach((contObject) -> {

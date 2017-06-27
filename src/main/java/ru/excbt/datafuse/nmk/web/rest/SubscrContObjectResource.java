@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
-import ru.excbt.datafuse.nmk.data.service.ContGroupService;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -40,22 +38,31 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContObjectController extends AbstractSubscrApiResource {
+public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	// private final static int TEST_SUBSCRIBER_ID = 728;
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectResource.class);
+
+	protected final ContObjectService contObjectService;
+
+	protected final ContGroupService contGroupService;
+
+    protected final OrganizationService organizationService;
+
+	protected final ContObjectFiasService contObjectFiasService;
 
 	@Autowired
-	protected ContObjectService contObjectService;
+    public SubscrContObjectResource(ContObjectService contObjectService,
+                                    ContGroupService contGroupService,
+                                    OrganizationService organizationService, ContObjectFiasService contObjectFiasService) {
+        this.contObjectService = contObjectService;
+        this.contGroupService = contGroupService;
+        this.organizationService = organizationService;
+        this.contObjectFiasService = contObjectFiasService;
+    }
 
-	@Autowired
-	protected ContGroupService contGroupService;
-
-	@Autowired
-	private OrganizationService organizationService;
-
-	/**
+    /**
 	 *
 	 * @param contGroupId
 	 * @return
@@ -141,7 +148,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		ContObjectFias result = contObjectService.findContObjectFias(contObjectId);
+		ContObjectFias result = contObjectFiasService.findContObjectFias(contObjectId);
 
 		if (result == null) {
 			return ApiResponse.responseNoContent();
@@ -177,7 +184,8 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
 
-				ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
+				//ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
+				ContObject result = contObjectService.automationUpdate(contObject, cmOrganizationId);
 
 				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
@@ -317,7 +325,7 @@ public class SubscrContObjectController extends AbstractSubscrApiResource {
 
 		ApiActionProcess<ContObject> process = () -> {
 			contObjectService.updateMeterPeriodSettings(settings);
-			return contObjectService.findContObject(settings.getContObjectId());
+			return contObjectService.findContObjectChecked(settings.getContObjectId());
 		};
 
 		return ApiResponse.responseUpdate(process);

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -41,12 +42,9 @@ public class ContObjectDaDataService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObjectDaData findByContObjectId(Long contObjectId) {
-		List<ContObjectDaData> preResult = contObjectDaDataRepository.findByContObjectId(contObjectId);
-		if (preResult.size() == 0) {
-			return null;
-		}
-		return preResult.get(0);
+	public Optional<ContObjectDaData> findOneByContObjectId(Long contObjectId) {
+//        Optional<ContObjectDaData> contObjectDaDataOptional = contObjectDaDataRepository.findOneByContObjectId(contObjectId);
+		return contObjectDaDataRepository.findOneByContObjectId(contObjectId);
 	}
 
 	/**
@@ -55,17 +53,17 @@ public class ContObjectDaDataService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ContObjectDaData getContObjectDaData(ContObject contObject) {
-		ContObjectDaData result = null;
+	public ContObjectDaData getOrInitDaData(ContObject contObject) {
+		ContObjectDaData result;
 		if (contObject.isNew()) {
 			result = new ContObjectDaData();
 			result.setContObject(contObject);
 		} else {
-			result = findByContObjectId(contObject.getId());
-			if (result == null) {
-				result = new ContObjectDaData();
-				result.setContObject(contObject);
-			}
+            result = findOneByContObjectId(contObject.getId()).orElseGet(() -> {
+                ContObjectDaData r = new ContObjectDaData();
+                r.setContObject(contObject);
+                return r;
+            });
 		}
 		return result;
 	}
@@ -76,7 +74,7 @@ public class ContObjectDaDataService {
      * @return
      */
 
-	public ContObjectDaData processContObjectDaData(ContObjectDaData contObjectDaData) {
+	public ContObjectDaData parseIfValid(ContObjectDaData contObjectDaData) {
 		checkNotNull(contObjectDaData);
 		if (Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
 			parseSraw(contObjectDaData);
