@@ -2,16 +2,20 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointAccess;
+import ru.excbt.datafuse.nmk.data.model.ContZPointAccessHistory;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by kovtonyk on 27.06.2017.
@@ -21,11 +25,16 @@ public class SubscriberAccessService {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriberAccessService.class);
 
-    public SubscriberAccessService(ContZPointAccessRepository contZPointAccessRepository) {
-        this.contZPointAccessRepository = contZPointAccessRepository;
-    }
 
     private final ContZPointAccessRepository contZPointAccessRepository;
+
+    private final ContZPointAccessHistoryRepository contZPointAccessHistoryRepository;
+
+    @Autowired
+    public SubscriberAccessService(ContZPointAccessRepository contZPointAccessRepository, ContZPointAccessHistoryRepository contZPointAccessHistoryRepository) {
+        this.contZPointAccessRepository = contZPointAccessRepository;
+        this.contZPointAccessHistoryRepository = contZPointAccessHistoryRepository;
+    }
 
     /**
      *
@@ -47,7 +56,8 @@ public class SubscriberAccessService {
         Optional<Long> checkExistsing = findContZPointIds(subscriber.getId()).stream().filter((i) -> i.equals(contZPoint.getId())).findFirst();
         if (!checkExistsing.isPresent()) {
             ContZPointAccess access = new ContZPointAccess().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
-            contZPointAccessRepository.save(access);
+            contZPointAccessRepository.saveAndFlush(access);
+            saveGrantHistory(subscriber, contZPoint);
         } else {
             log.warn("Access for ContZPoint (id={}) for Subscriber(id={}) already granted", contZPoint.getId(), subscriber.getId());
         }
@@ -62,6 +72,16 @@ public class SubscriberAccessService {
         } else {
             log.warn("Access for ContZPoint (id={}) for Subscriber(id={}) already revoked", contZPoint.getId(), subscriber.getId());
         }
+    }
+
+
+    private void saveGrantHistory(Subscriber subscriber, ContZPoint contZPoint) {
+        ContZPointAccessHistory history = new ContZPointAccessHistory();
+        history.setContZPoint(contZPoint);
+        history.setSubscriber(subscriber);
+        history.setGrantDate(LocalDate.now());
+        history.setGrantTime(LocalTime.now());
+        contZPointAccessHistoryRepository.saveAndFlush(history);
     }
 
 }
