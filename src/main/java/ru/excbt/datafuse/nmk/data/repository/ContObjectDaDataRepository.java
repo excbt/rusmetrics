@@ -1,12 +1,8 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
-import ru.excbt.datafuse.nmk.data.repository.support.ContObjectModelRepository;
+import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
 
 /**
  * Repository для ContObjectDaData
@@ -16,6 +12,6 @@ import ru.excbt.datafuse.nmk.data.repository.support.ContObjectModelRepository;
  * @since 15.01.2015
  *
  */
-public interface ContObjectDaDataRepository extends ContObjectModelRepository<ContObjectDaData> {
+public interface ContObjectDaDataRepository extends JpaRepository<ContObjectDaData, Long>, ContObjectRI<ContObjectDaData> {
 
 }

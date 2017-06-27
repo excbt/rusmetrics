@@ -1,14 +1,13 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.util.List;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.repository.support.ContObjectModelRepository;
+import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
+
+import java.util.List;
 
 /**
  * Repository для ContZPoint
@@ -18,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.repository.support.ContObjectModelRepository;
  * @since 26.02.2015
  *
  */
-public interface ContZPointRepository extends ContObjectModelRepository<ContZPoint> {
+public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, ContObjectRI<ContZPoint> {
 
 	List<ContZPoint> findByIdAndContObject(long contZpointId, long contObjectId);
 
