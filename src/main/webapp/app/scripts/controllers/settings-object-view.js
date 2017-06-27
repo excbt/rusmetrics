@@ -653,6 +653,7 @@ angular.module('portalNMC')
             var errorCallback = function (e) {
                 $scope.treeLoading = false;
                 $scope.objectCtrlSettings.isPassportsLoading = false;
+                $scope.objectCtrlSettings.isDocumentSaving = false;
                 var errorObj = mainSvc.errorCallbackHandler(e);
                 notificationFactory.errorInfo(errorObj.caption, errorObj.description);
             };
@@ -1771,7 +1772,7 @@ angular.module('portalNMC')
                     return false;
                 }
                 var curDevice = curZpoint.deviceObject;
-                return objectSvc.isDirectDevice(curDevice);                
+                return objectSvc.isDirectDevice(curDevice);
             };
                 
             function successSaveDeviceCallback(resp) {
@@ -2692,9 +2693,10 @@ angular.module('portalNMC')
                         return false;
                     }
 //console.log(resp.data);     
+                    var objectIndicatorModeKeyname = null;
                     try {
-                        var objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
-                    } catch(err) {
+                        objectIndicatorModeKeyname = JSON.parse(resp.data[0].vcValue);
+                    } catch (err) {
                         console.error("objectIndicatorModeKeyname parse error: ", err);
                     }
                     $scope.data.indicatorModes.some(function (imode) {
@@ -2916,7 +2918,7 @@ angular.module('portalNMC')
                     }
                 });
                 categoryListByBuildingType.forEach(function (pcat) {
-                    buildingCategories.forEach(function (bcat) {                        
+                    buildingCategories.forEach(function (bcat) {
                         if (bcat.parentCategory === pcat.keyname) {
                             preparedCategory = angular.copy(bcat);
                             preparedCategory.parentCategoryCaption = pcat.caption;
@@ -2974,7 +2976,7 @@ angular.module('portalNMC')
             };
 
             function setBuildingCategory() {
-                var bCat = null;                
+                var bCat = null;
 //                $scope.data.preparedBuildingCategoryList.some(function (bcat) {
                 $scope.data.preparedBuildingCategoryListForUiSelect.some(function (bcat) {
                     if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
@@ -3167,7 +3169,7 @@ angular.module('portalNMC')
                 activePassport.isActive = true;
                 mainSvc.sortItemsBy(resp.data, "isActive");
                 resp.data.reverse();
-                $scope.data.currentContObjectPassports = resp.data;                
+                $scope.data.currentContObjectPassports = resp.data;
             }
                 
             function successSavePassportCallback(resp) {
@@ -3187,6 +3189,7 @@ angular.module('portalNMC')
             }
                 
             function successCreatePassportCallbackFromTab(resp) {
+                $scope.objectCtrlSettings.isDocumentSaving = false;
                 if (successSavePassportCallback(resp) === false) {
                     return false;
                 }
@@ -3194,7 +3197,7 @@ angular.module('portalNMC')
                 var tmpPassportArr = angular.copy($scope.data.currentContObjectPassports);
                 tmpPassportArr.forEach(function (pass) {
                     pass.isActive = false;
-                }); 
+                });
                 var newPass = angular.copy(resp.data);
                 newPass.isActive = true;
                 tmpPassportArr.unshift(newPass);
@@ -3205,6 +3208,7 @@ angular.module('portalNMC')
             }
                             
             function successUpdatePassportCallbackFromTab(resp) {
+                $scope.objectCtrlSettings.isDocumentSaving = false;
                 if (successSavePassportCallback(resp) === false) {
                     return false;
                 }
@@ -3227,7 +3231,7 @@ angular.module('portalNMC')
                     var newData = angular.copy(resp.data);
                     $scope.data.currentContObjectPassports[docIndexAtArr].passportName = newData.passportName;
                     $scope.data.currentContObjectPassports[docIndexAtArr].description = newData.description;
-                    $scope.data.currentContObjectPassports[docIndexAtArr].docDateFormatted = moment(newData.passportDate2).format($scope.objectCtrlSettings.dateFormat);                    
+                    $scope.data.currentContObjectPassports[docIndexAtArr].docDateFormatted = moment(newData.passportDate2).format($scope.objectCtrlSettings.dateFormat);
                 }
             }
 
@@ -3309,16 +3313,16 @@ angular.module('portalNMC')
                 $scope.data.currentDocument = angular.copy(passport);
                 $scope.data.currentDocument.parentObject = object;
                 $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
-                $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);                
+                $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);
             };
                 
             $scope.cancelCreateContObjectPassportFromTab = function (object) {
-                $scope.data.currentDocument = {};                                
+                $scope.data.currentDocument = {};
                 $scope.objectCtrlSettings.isPassportCreating = false;
             };
                 
             $scope.cancelEditContObjectPassportFromTab = function (passport) {
-                $scope.data.currentDocument = {};                                
+                $scope.data.currentDocument = {};
                 passport.isPassportEditing = false;
             };
                 
@@ -3367,7 +3371,8 @@ angular.module('portalNMC')
             };
                 
             $scope.saveDocumentFromTab = function (doc) {
-        console.log(doc);
+//        console.log(doc);
+                $scope.objectCtrlSettings.isDocumentSaving = true;
                 if (checkDoc(doc) === false) {
                     return false;
                 }
@@ -3378,7 +3383,7 @@ angular.module('portalNMC')
                 if (mainSvc.checkUndefinedNull(doc.id)) {
                     objectPassportCreationWindow = window.open("", OBJECT_PASSPORT_CREATION_WINDOW_NAME);
                     energoPassportSvc.createContObjectPassport(doc, doc.parentObject.id)
-                        .then(successCreatePassportCallbackFromTab, errorCallback);            
+                        .then(successCreatePassportCallbackFromTab, errorCallback);
                 } else {
                     energoPassportSvc.updateContObjectPassport(doc, doc.parentObject.id)
                         .then(successUpdatePassportCallbackFromTab, errorCallback);
@@ -3427,6 +3432,7 @@ angular.module('portalNMC')
 
             $('#showObjOptionModal').on('hidden.bs.modal', function () {
                 $scope.currentObject.isSaving = false;
+                $scope.objectCtrlSettings.isPassportCreating = false;
                 $scope.currentSug = null;
                 setActiveObjectPropertiesTab("main_object_properties_tab");
             });
