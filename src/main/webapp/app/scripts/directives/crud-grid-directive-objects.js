@@ -19,8 +19,8 @@ app.directive('crudGridObjects', function () {
 //scope.crudTableName = scope.$eval($attrs.table);  
 //console.log(scope.crudTableName);
 //        },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location', '$interval',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location, $interval) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location', '$interval', 'energoPassportSvc', '$q',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location, $interval, energoPassportSvc, $q) {
                 
                 console.time("crudGridObjects loading");
                 
@@ -122,6 +122,7 @@ app.directive('crudGridObjects', function () {
                 $scope.objectsOnPage = [];
                 $scope.data = {};
                 $scope.data.currentGroupId = null; //current group id: use for group object filter
+                $scope.data.currentContObjectPassports = [];
                 
                 function findObjectById(objId) {
                     var obj = null;
@@ -136,6 +137,7 @@ app.directive('crudGridObjects', function () {
                 
                 var errorCallback = function (e) {
                     $scope.treeLoading = false;
+                    $scope.objectCtrlSettings.isPassportsLoading = false;
                     var errorObj = mainSvc.errorCallbackHandler(e);
                     notificationFactory.errorInfo(errorObj.caption, errorObj.description);
                 };
@@ -273,7 +275,7 @@ app.directive('crudGridObjects', function () {
                 };
                 
                 function setBuildingCategory() {
-                    var bCat = null;                    
+                    var bCat = null;
 //                    $scope.data.preparedBuildingCategoryList.some(function (bcat) {
                     $scope.data.preparedBuildingCategoryListForUiSelect.some(function (bcat) {
                         if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
@@ -887,6 +889,8 @@ app.directive('crudGridObjects', function () {
                 
                 $scope.selectedObjectEx = function (objId) {
                     $scope.selectedObject(objId);
+                    //load object passports
+                    loadContObjectPassports(objId);
                     if (!angular.isArray($scope.data.cmOrganizations)) {
                         return;
                     }
@@ -2499,6 +2503,246 @@ app.directive('crudGridObjects', function () {
 // ***********************************************************************************************
 //                  end Work with Notices
 // ***********************************************************************************************               
+
+// ********************************************************************************************
+    //    Work with cont object passports
+//*********************************************************************************************
+                var passportRequestCanceller = null;
+
+                $scope.objectCtrlSettings.dateFormat = "YYYY-MM-DD";//"DD.MM.YYYY"; //moment format
+                $scope.objectCtrlSettings.dateFormatForDatepicker = "yy-mm-dd"; //jquery datepicker format
+
+                $scope.data.currentDocument = {};
+                $scope.data.documentTypes = energoPassportSvc.getDocumentTypes();
+
+                $scope.isReadOnlyPassport = function (passport) {
+                    return mainSvc.isReadonly() || (!mainSvc.checkUndefinedNull(passport.id) && !passport.isActive);
+                };
+
+                $scope.openContObjectPassport = function (doc, object) {
+                    var objectParam = "new";
+                    if (!mainSvc.checkUndefinedNull(object) && !mainSvc.checkUndefinedNull(object.id)) {
+                        objectParam = object.id;
+                    }
+                    var winName = "_blank";
+//                    if (objectPassportCreationWindow !== null) {
+//                        winName = OBJECT_PASSPORT_CREATION_WINDOW_NAME;
+//                        objectPassportCreationWindow = null;
+//                    }
+                    var url = "#/settings/object-passport/" + objectParam + "/" + doc.id;
+                    if (objectParam === "new") {
+                        url = mainSvc.addParamToURL(url, "buildingType", $scope.currentObject.buildingType);
+                        url = mainSvc.addParamToURL(url, "buildingTypeCategory", $scope.currentObject.buildingTypeCategory);
+                        if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
+                            var catCaption = "";
+                            $scope.data.buildingCategories.some(function (bcat) {
+                                if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
+                                    catCaption = bcat.caption;
+                                }
+                            });
+                            url = mainSvc.addParamToURL(url, "buildingTypeCategoryCaption", catCaption);
+                        }
+                    }
+                    window.open(url, winName);
+                };
+
+    //            $scope.openContObjectPassport_old = function (doc) {
+    //                window.open("#/documents/object-passport/" + doc.id + "?active=" + doc.isActive, '_blank');
+    //            };
+
+                function successLoadPassportsCallback(resp) {
+                    $scope.objectCtrlSettings.isPassportsLoading = false;
+                    if (!angular.isArray(resp.data) || resp.data.length <= 0) {
+                        //console.warn("Response from server is incorrect:", resp);
+                        return false;
+                    }
+                    // find active passport
+    //                var tmp = resp.data,
+    //                    activePassport = resp.data[0];
+    //                tmp.forEach(function (passport) {
+    //                    if (passport.passportDate2 > activePassport.passportDate2) {
+    //                        activePassport = passport;
+    //                    } else if (passport.passportDate2 === activePassport.passportDate2) {
+    //                        if (passport.id > activePassport.id) {
+    //                            activePassport = passport;
+    //                        }
+    //                    }
+    //                });
+                    var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+                    activePassport.isActive = true;
+                    mainSvc.sortItemsBy(resp.data, "isActive");
+                    resp.data.reverse();
+                    $scope.data.currentContObjectPassports = resp.data;                
+                }
+
+//                function successSavePassportCallback(resp) {
+//                    if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+//                        console.error("Incorrect response from server:");
+//                        console.error(resp);
+//                        return false;
+//                    }
+//                }
+
+//                function successCreatePassportCallback(resp) {
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//                    $('#showDocumentPropertiesModal').modal('hide');
+//                    $scope.openContObjectPassport(resp.data);
+//                }
+
+//                function successCreatePassportCallbackFromTab(resp) {
+//                    $scope.objectCtrlSettings.isDocumentSaving = false;
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//
+//                    var tmpPassportArr = angular.copy($scope.data.currentContObjectPassports);
+//                    tmpPassportArr.forEach(function (pass) {
+//                        pass.isActive = false;
+//                    }); 
+//                    var newPass = angular.copy(resp.data);
+//                    newPass.isActive = true;
+//                    tmpPassportArr.unshift(newPass);
+//
+//                    $scope.data.currentContObjectPassports = tmpPassportArr;
+//
+//                    $scope.openContObjectPassport(resp.data);
+//                }
+
+//                function successUpdatePassportCallbackFromTab(resp) {
+//                    $scope.objectCtrlSettings.isDocumentSaving = false;
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//
+//                    notificationFactory.success();
+//                    //find and update doc in doc array
+//                    var updatingItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
+//                    var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(updatingItem);
+//                    if (docIndexAtArr > -1) {
+//                        var newData = angular.copy(resp.data);
+//                        $scope.data.currentContObjectPassports[docIndexAtArr].passportName = newData.passportName;
+//                        $scope.data.currentContObjectPassports[docIndexAtArr].description = newData.description;
+//                        $scope.data.currentContObjectPassports[docIndexAtArr].docDateFormatted = moment(newData.passportDate2).format($scope.objectCtrlSettings.dateFormat);                    
+//                    }
+//                }
+
+//                function successUpdatePassportCallback(resp) {
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//                    notificationFactory.success();
+//                    //find and update doc in doc array
+//                    var updatingItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
+//                    var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(updatingItem);
+//                    if (docIndexAtArr > -1) {
+//                        $scope.data.currentContObjectPassports[docIndexAtArr] = angular.copy(resp.data);
+//                    }
+//                }
+
+                function loadContObjectPassports(contObject) {
+                    $scope.data.currentContObjectPassports = [];
+                    if (passportRequestCanceller !== null) {
+                        passportRequestCanceller.resolve();
+                    }
+
+                    $scope.objectCtrlSettings.isPassportsLoading = true;
+
+                    passportRequestCanceller = $q.defer();
+                    var httpOptions = {
+                        timeout: passportRequestCanceller.promise
+                    };
+
+                    energoPassportSvc.loadContObjectPassports(contObject, httpOptions)
+                        .then(successLoadPassportsCallback, errorCallback);
+
+                }
+
+
+//                $scope.createContObjectPassportFromTabInit = function (object) {
+//                    $scope.data.currentDocument = {};
+//                    $scope.data.currentDocument.parentObject = object;
+//                    $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
+//
+//                    $scope.data.currentContObjectPassports.forEach(function (pass) {
+//                        pass.isPassportEditing = false;
+//                    });
+//                    $scope.objectCtrlSettings.isPassportCreating = true;
+//
+//                    var viewDateformat = mainSvc.getDetepickerSettingsFullView();
+//                    viewDateformat.dateFormat = DATE_FORMAT_FOR_DATEPICKER;
+//                    $('#inputEnergyDocDate').datepicker(viewDateformat);
+//
+//                };
+
+                $scope.editContObjectPassportFromTabInit = function (passport, object) {
+
+                    $scope.data.currentContObjectPassports.forEach(function (pass) {
+                        if (passport.id !== pass.id) {
+                            pass.isPassportEditing = false;
+                        }
+                    });
+
+                    passport.isPassportEditing = !passport.isPassportEditing;
+                    $scope.objectCtrlSettings.isPassportCreating = false;
+
+                    $scope.data.currentDocument = angular.copy(passport);
+                    $scope.data.currentDocument.parentObject = object;
+                    $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
+                    $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);                
+                };
+
+//                $scope.cancelCreateContObjectPassportFromTab = function (object) {
+//                    $scope.data.currentDocument = {};                                
+//                    $scope.objectCtrlSettings.isPassportCreating = false;
+//                };
+
+                $scope.cancelEditContObjectPassportFromTab = function (passport) {
+                    $scope.data.currentDocument = {};                                
+                    passport.isPassportEditing = false;
+                };
+
+                function checkDoc(doc) {
+                    var checkFlag = true;
+                    if (mainSvc.checkUndefinedNull(doc.passportName) || $scope.emptyString(doc.passportName)) {
+                        notificationFactory.errorInfo("Ошибка", "Не задано название для документа");
+                        checkFlag = false;
+                    }
+                    if (mainSvc.checkUndefinedNull(doc.type)) {
+                        notificationFactory.errorInfo("Ошибка", "Не задан тип для документа");
+                        checkFlag = false;
+                    }
+                    if (mainSvc.checkUndefinedNull(doc.docDateFormatted) || $scope.emptyString(doc.docDateFormatted)) {
+                        notificationFactory.errorInfo("Ошибка", "Не задана дата документа");
+                        checkFlag = false;
+                    }
+                    return checkFlag;
+                }
+
+
+//                $scope.saveDocumentFromTab = function (doc) {
+//            console.log(doc);
+//                    $scope.objectCtrlSettings.isDocumentSaving = true;
+//                    if (checkDoc(doc) === false) {
+//                        return false;
+//                    }
+//                    //prepare doc date 
+//                    var tmpDate = moment(doc.docDateFormatted, $scope.objectCtrlSettings.dateFormat);
+//                    doc.passportDate = [tmpDate.year(), tmpDate.month() + 1, tmpDate.date()];
+//
+//                    if (mainSvc.checkUndefinedNull(doc.id)) {
+//                        objectPassportCreationWindow = window.open("", OBJECT_PASSPORT_CREATION_WINDOW_NAME);
+//                        energoPassportSvc.createContObjectPassport(doc, doc.parentObject.id)
+//                            .then(successCreatePassportCallbackFromTab, errorCallback);
+//                    } else {
+//                        energoPassportSvc.updateContObjectPassport(doc, doc.parentObject.id)
+//                            .then(successUpdatePassportCallbackFromTab, errorCallback);
+//                    }
+//                };
+// ********************************************************************************************
+    //    End work with cont object passports
+//*********************************************************************************************                
                 
                 $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function () {
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
@@ -2517,6 +2761,10 @@ app.directive('crudGridObjects', function () {
                     {
                         name: "view_extra_object_properties_tab",
                         tabpanel: "view_extra_object_properties"
+                    },
+                    {
+                        name: "object_passports_tab",
+                        tabpanel: "object_passports"
                     }
                 ];
                 
