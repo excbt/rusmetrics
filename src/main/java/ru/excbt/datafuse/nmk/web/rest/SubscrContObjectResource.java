@@ -14,9 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
-import ru.excbt.datafuse.nmk.data.service.ContGroupService;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -50,15 +48,18 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	protected final ContGroupService contGroupService;
 
-	private final OrganizationService organizationService;
+    protected final OrganizationService organizationService;
+
+	protected final ContObjectFiasService contObjectFiasService;
 
 	@Autowired
     public SubscrContObjectResource(ContObjectService contObjectService,
                                     ContGroupService contGroupService,
-                                    OrganizationService organizationService) {
+                                    OrganizationService organizationService, ContObjectFiasService contObjectFiasService) {
         this.contObjectService = contObjectService;
         this.contGroupService = contGroupService;
         this.organizationService = organizationService;
+        this.contObjectFiasService = contObjectFiasService;
     }
 
     /**
@@ -147,7 +148,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		ContObjectFias result = contObjectService.findContObjectFias(contObjectId);
+		ContObjectFias result = contObjectFiasService.findContObjectFias(contObjectId);
 
 		if (result == null) {
 			return ApiResponse.responseNoContent();
@@ -324,7 +325,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 		ApiActionProcess<ContObject> process = () -> {
 			contObjectService.updateMeterPeriodSettings(settings);
-			return contObjectService.findContObject(settings.getContObjectId());
+			return contObjectService.findContObjectChecked(settings.getContObjectId());
 		};
 
 		return ApiResponse.responseUpdate(process);

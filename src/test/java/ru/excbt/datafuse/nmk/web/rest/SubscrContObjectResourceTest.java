@@ -206,7 +206,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
      */
     private ContObject findFirstContObject() {
         List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
-        ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObject(ids.get(0));
+        ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObjectChecked(ids.get(0));
         assertNotNull(testCO);
         return testCO;
     }
@@ -229,7 +229,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
 
         log.info("daDataJson: {}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
 
-        ContObject testCO = contObjectService.findContObject(id);
+        ContObject testCO = contObjectService.findContObjectChecked(id);
         String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 
         testCO.set_daDataSraw(daDataJson);
@@ -277,7 +277,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
         coSetting.putSetting(ContServiceTypeKey.CW.getKeyname(), setting.getId());
         _testUpdateJson(UrlUtils.apiRmaUrlTemplate("/contObjects/%d/meterPeriodSettings", contObjectId), coSetting);
 
-        ContObject contObject = contObjectService.findContObject(contObjectId);
+        ContObject contObject = contObjectService.findContObjectChecked(contObjectId);
         assertTrue(contObject.getMeterPeriodSettings() != null);
         MeterPeriodSetting meterPeriod = contObject.getMeterPeriodSettings().get(ContServiceTypeKey.CW.getKeyname());
         assertTrue(meterPeriod != null);

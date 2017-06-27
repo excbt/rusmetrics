@@ -88,7 +88,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 
 		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
 
-		contObject = contObjectService.findContObject(contObjectId);
+		contObject = contObjectService.findContObjectChecked(contObjectId);
 		contObject.setCurrentSettingMode("summer");
 		_testUpdateJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId), contObject);
 

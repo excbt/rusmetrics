@@ -42,9 +42,9 @@ public class ContObjectDaDataService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObjectDaData findByContObjectId(Long contObjectId) {
-        Optional<ContObjectDaData> contObjectDaDataOptional = contObjectDaDataRepository.findOneByContObjectId(contObjectId);
-		return contObjectDaDataOptional.isPresent() ? contObjectDaDataOptional.get() : null;
+	public Optional<ContObjectDaData> findOneByContObjectId(Long contObjectId) {
+//        Optional<ContObjectDaData> contObjectDaDataOptional = contObjectDaDataRepository.findOneByContObjectId(contObjectId);
+		return contObjectDaDataRepository.findOneByContObjectId(contObjectId);
 	}
 
 	/**
@@ -59,11 +59,11 @@ public class ContObjectDaDataService {
 			result = new ContObjectDaData();
 			result.setContObject(contObject);
 		} else {
-			result = findByContObjectId(contObject.getId());
-			if (result == null) {
-				result = new ContObjectDaData();
-				result.setContObject(contObject);
-			}
+            result = findOneByContObjectId(contObject.getId()).orElseGet(() -> {
+                ContObjectDaData r = new ContObjectDaData();
+                r.setContObject(contObject);
+                return r;
+            });
 		}
 		return result;
 	}

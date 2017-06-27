@@ -44,6 +44,9 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	private ContObjectFiasService contObjectFiasService;
+
 	/**
 	 *
 	 * @param contObjects
@@ -122,7 +125,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 		Map<Long, List<ContEventMonitorV2>> monitorContObjectsMap = contEventMonitorV2Service
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
-		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();

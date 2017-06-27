@@ -3,9 +3,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
-import ru.excbt.datafuse.nmk.data.service.ContGroupService;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -48,8 +46,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	private static final Logger log = LoggerFactory.getLogger(RmaContObjectResource.class);
 
 	@Autowired
-    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService) {
-        super(contObjectService, contGroupService, organizationService);
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService) {
+        super(contObjectService, contGroupService, organizationService, contObjectFiasService);
     }
 
     /**
