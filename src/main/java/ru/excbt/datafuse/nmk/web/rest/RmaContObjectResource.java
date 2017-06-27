@@ -74,7 +74,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
-				ContObject result = contObjectService.createContObjectNew(contObject, getCurrentSubscriberId(),
+				ContObject result = contObjectService.automationCreate(contObject, getCurrentSubscriberId(),
                         LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
 						cmOrganizationId);
 

@@ -148,5 +148,9 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
             dataGeoLat.toString());
     }
 
+    @JsonIgnore
+    public boolean isAddressAuto() {
+        return Boolean.TRUE.equals(isValid);
+    }
 
 }

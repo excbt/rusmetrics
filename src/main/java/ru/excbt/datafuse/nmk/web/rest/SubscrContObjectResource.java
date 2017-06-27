@@ -183,7 +183,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
 
-				ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
+				//ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
+				ContObject result = contObjectService.automationUpdate(contObject, cmOrganizationId);
 
 				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 

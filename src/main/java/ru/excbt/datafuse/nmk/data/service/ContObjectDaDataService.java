@@ -54,7 +54,7 @@ public class ContObjectDaDataService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ContObjectDaData getOrInitDaData(ContObject contObject) {
-		ContObjectDaData result = null;
+		ContObjectDaData result;
 		if (contObject.isNew()) {
 			result = new ContObjectDaData();
 			result.setContObject(contObject);

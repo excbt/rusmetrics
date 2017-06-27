@@ -107,6 +107,9 @@ public class FiasService {
             }
             String shortAddr = getShortAddr(contObjectFias.getFiasUUID());
             contObjectFias.setShortAddress1(shortAddr);
+        } else {
+            contObjectFias.setShortAddress1(null);
+            contObjectFias.setShortAddress2(null);
         }
 
     }

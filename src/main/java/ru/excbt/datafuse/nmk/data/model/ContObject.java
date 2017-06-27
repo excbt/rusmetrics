@@ -216,4 +216,29 @@ public class ContObject extends AbstractAuditableModel
 		};
 	}
 
+
+	public void updateFromContObject (ContObject contObject) {
+
+        setVersion(contObject.getVersion());
+        setName(contObject.getName());
+        setFullName(contObject.getFullName());
+        setFullAddress(contObject.getFullAddress());
+        setNumber(contObject.getNumber());
+        setDescription(contObject.getDescription());
+        setCurrentSettingMode(contObject.getCurrentSettingMode());
+        setComment(contObject.getComment());
+        setOwner(contObject.getOwner());
+        setOwnerContacts(contObject.getOwnerContacts());
+        setCwTemp(contObject.getCwTemp());
+        setHeatArea(contObject.getHeatArea());
+        setTimezoneDefKeyname(contObject.getTimezoneDefKeyname());
+        setBuildingType(contObject.getBuildingType());
+        setBuildingTypeCategory(contObject.getBuildingTypeCategory());
+        setNumOfStories(contObject.getNumOfStories());
+    }
+
+    public boolean haveDaData() {
+	    return _daDataSraw != null && _daDataSraw != "";
+    }
+
 }

@@ -102,6 +102,16 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
         fiasUUID = contObjectDaData.getDataFiasId();
         isGeoRefresh = contObjectDaData.getSvalue() != null;
         geoJson2 = contObjectDaData.makeJsonGeoString();
+        isGeoRefresh = true;
     }
+
+    public void clearCodes() {
+        setFiasUUID(null);
+        setCityFiasUUID(null);
+        setGeoJson(null);
+        setGeoJson2(null);
+        setIsGeoRefresh(true);
+    }
+
 
 }
