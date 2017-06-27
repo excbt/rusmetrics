@@ -65,10 +65,11 @@ public class SubscriberAccessService {
 
     @Transactional
     public void revokeContZPointAccess(Subscriber subscriber, ContZPoint contZPoint) {
-        Optional<Long> checkExistsing = findContZPointIds(subscriber.getId()).stream().filter((i) -> i.equals(contZPoint.getId())).findFirst();
-        if (checkExistsing.isPresent()) {
+        Optional<Long> checkExisting = findContZPointIds(subscriber.getId()).stream().filter((i) -> i.equals(contZPoint.getId())).findFirst();
+        if (checkExisting.isPresent()) {
             ContZPointAccess access = new ContZPointAccess().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
             contZPointAccessRepository.delete(access);
+            saveRevokeHistory(subscriber, contZPoint);
         } else {
             log.warn("Access for ContZPoint (id={}) for Subscriber(id={}) already revoked", contZPoint.getId(), subscriber.getId());
         }
@@ -82,6 +83,15 @@ public class SubscriberAccessService {
         history.setGrantDate(LocalDate.now());
         history.setGrantTime(LocalTime.now());
         contZPointAccessHistoryRepository.saveAndFlush(history);
+    }
+
+    private void saveRevokeHistory(Subscriber subscriber, ContZPoint contZPoint) {
+        contZPointAccessHistoryRepository.findBySubscriberIdAndContZPointId(subscriber.getId(), contZPoint.getId())
+            .stream().filter((i) -> i.getRevokeDate() == null).forEach((i) -> {
+            i.setRevokeDate(LocalDate.now());
+            i.setGrantTime(LocalTime.now());
+            contZPointAccessHistoryRepository.saveAndFlush(i);
+        });
     }
 
 }

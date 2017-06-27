@@ -22,12 +22,12 @@ public class ContZPointAccessHistory extends AbstractAuditableModel {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscriber_id")
+    @JoinColumn(name = "subscriber_id", updatable = false)
     private Subscriber subscriber;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cont_zpoint_id")
+    @JoinColumn(name = "cont_zpoint_id", updatable = false)
     private ContZPoint contZPoint;
 
     @NotNull

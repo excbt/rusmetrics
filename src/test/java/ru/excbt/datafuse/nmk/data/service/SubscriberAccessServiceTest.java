@@ -44,5 +44,7 @@ public class SubscriberAccessServiceTest extends JpaSupportTest {
 
         subscriberAccessService.grantContZPointAccess(new Subscriber().id(testSubscriberId.get()), new ContZPoint().id(contZPointId.get()));
 
+        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(testSubscriberId.get()), new ContZPoint().id(contZPointId.get()));
+
     }
 }
