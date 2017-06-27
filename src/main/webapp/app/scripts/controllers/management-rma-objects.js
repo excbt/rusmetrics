@@ -799,7 +799,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     };
                 
     $scope.sendObjectToServer = function (obj) {
-//console.log(obj);                    
         obj.isSaving = true;
         if (!checkObjectSettings(obj)) {
             obj.isSaving = false;
@@ -857,7 +856,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         objectSvc.getRmaObject(objId)
             .then(function (resp) {
                 $scope.currentObject = resp.data;
-    //console.log($scope.currentObject);                        
+//    console.log($scope.currentObject);                        
                 if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement != null)) {
                     $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                 }
@@ -1987,6 +1986,20 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         }
         return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
     };
+    
+    function objectAddressChange(ev) {
+//console.log($scope.currentObject);
+//console.log(ev);            
+//return;            
+//        if (!mainSvc.checkUndefinedNull($scope.currentObject) && $scope.currentObject.isSaving === true) {
+//            return;
+//        }
+        $scope.currentSug = null;
+        $scope.currentObject.isAddressAuto = false;
+        $scope.currentObject.isValidGeoPos = false;
+        checkGeo();
+        $scope.$apply();
+    }
                 
     $(document).ready(function () {
         $('#inputTSNumber').inputmask();
@@ -2012,15 +2025,13 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 //     $scope.currentSug = suggestions[0];
                 // };
                 // $scope.$apply();
+            },
+            /*Если пользователь ничего не выбрал*/
+            onSelectNothing: function (query) {
+                objectAddressChange(query);
             }
         });
-        $("#inputObjAddress").change(function () {
-            $scope.currentSug = null;
-            $scope.currentObject.isAddressAuto = false;
-            $scope.currentObject.isValidGeoPos = false;
-            checkGeo();
-            $scope.$apply();
-        });
+//        $("#inputObjAddress").change(objectAddressChange);
     });
                 
     $('#showZpointOptionModal').on('hidden.bs.modal', function () {

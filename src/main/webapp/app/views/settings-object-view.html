@@ -338,6 +338,7 @@
                                             </a>
                                         </li>
                                           
+<!--
                                         <li class="menu-item dropdown dropdown-submenu" role="presentation">
                                             <a href="" 
                                                class="" 
@@ -348,7 +349,6 @@
                                                 Паспорт объекта
                                             </a>
                                             <ul class="dropdown-menu nmc-dropdown-menu">
-<!--                                                ng-if = "!isReadonly() || data.currentContObjectPassports.length > 0">-->
                                                 <li ng-if = "!isReadonly()"
                                                     class="menu-item dropdown">
                                                     <a ng-click = "createContObjectPassportInit(object)">
@@ -391,18 +391,8 @@
                                                     </a>
                                                 </li>                                        
                                             </ul>
-<!--
-                                            <ul class = "dropdown-menu nmc-dropdown-menu"
-                                                ng-if = "isReadonly() && data.currentContObjectPassports.length === 0">
-                                                <li ng-if = "isReadonly()"
-                                                    class = "menu-item dropdown">
-                                                    <a>
-                                                        У объекта нет паспортов
-                                                    </a>
-                                                </li>                                                                                        
-                                            </ul>
--->
                                         </li> 
+-->
                                           
                                         <li ng-if="data.indicatorModes && data.indicatorModes.length > 0" 
                                             class="menu-item dropdown dropdown-submenu" role="presentation">
@@ -1211,7 +1201,7 @@
 
               <!-- реализация вкладок -->
               <div class="tab-content">
-            <!--      Варианты отчетов-->
+            
                 <div role="tabpanel" 
                      class="tab-pane fade in active" 
                      id="main_object_properties">
@@ -1390,7 +1380,15 @@
                       <div class="container-fluid">
                           <div class = "row nmc-modal-panel-with-objects-tp">
                               <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
-                                    <table class="table table-lighter table-striped table-condensed noMarginBottom nmc-modal-main-table">
+                                  <div ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                        class = "menu-item dropdown nmc-loading">
+                                        
+                                            <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
+                                        
+                                    </div>                                                
+                                  
+                                    <table ng-show = "!objectCtrlSettings.isPassportsLoading"
+                                           class="table table-lighter table-striped table-condensed noMarginBottom nmc-modal-main-table">
                                         <tr ng-show = "!objectCtrlSettings.isPassportCreating">
                                             <td colspan = "2">
                                                 <button class="btn nmc-main-add-button" ng-click = "createContObjectPassportFromTabInit(currentObject)">Создать паспорт</button>
@@ -1418,7 +1416,7 @@
                                                                        type = "text" 
                                                                        id = "inputEnergyDocName" 
                                                                        ng-model = "data.currentDocument.passportName" 
-                                                                       ng-disabled = "isReadOnly()"/>
+                                                                       ng-disabled = "isReadonly()"/>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -1436,7 +1434,7 @@
                                                                        class = "form-control nmc-date-input-form nmc-spec-date" 
                                                                        type = "text"                                                                                               
                                                                        ng-model = "data.currentDocument.docDateFormatted"
-                                                                       ng-disabled = "isReadOnly()"
+                                                                       ng-disabled = "isReadonly()"
                                                                        readonly
                                                                        />
                                                             </span>
@@ -1452,7 +1450,7 @@
                                                                       id = "inputEnergyDocDescription" 
                                                                       placeholder = "Описание" 
                                                                       ng-model = "data.currentDocument.description"
-                                                                      ng-disabled = "isReadOnly()">
+                                                                      ng-disabled = "isReadonly()">
                                                             </textarea>
                                                         </td>
                                                     </tr>
@@ -1466,19 +1464,21 @@
                                                             <div class = "container-fluid  ">
                                                                 <div class = "row">
                                                                     <div class = "col-xs-offset-2 col-xs-3">
-                                                                        <button ng-if = "!isReadOnly()" 
+                                                                        <button ng-if = "!isReadonly()" 
                                                                                 class = "btn btn-block btn-xs nmc-add-button-in-modal"
                                                                                 ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                                ng-disabled = "objectCtrlSettings.isDocumentSaving"
                                                                                 >
                                                                             Далее...
                                                                         </button>
                                                                     </div>
                                                                     <div class = "col-xs-3">
-                                                                        <input ng-if = "!isReadOnly()" 
+                                                                        <input ng-if = "!isReadonly()" 
                                                                                type = "submit" 
                                                                                class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                                                                ng-click = "saveDocumentFromTab(data.currentDocument)"
-                                                                               value = "Сохранить" />
+                                                                               value = "Сохранить" 
+                                                                               ng-disabled = "objectCtrlSettings.isDocumentSaving"/>
                                                                     </div>
                                                                     <div class = "pull-right col-xs-3 noMargin noPadding">
                                                                         <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"
@@ -1496,6 +1496,12 @@
                                         <tr>
                                             <td colspan = "2">
                                                 <label>Список паспортов:</label>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "data.currentContObjectPassports.length === 0 && !objectCtrlSettings.isPassportsLoading"
+                                            class = "menu-item dropdown">
+                                            <td colspan = "2">
+                                                У объекта нет паспортов
                                             </td>
                                         </tr>
                                         <tr ng-repeat = "passport in data.currentContObjectPassports">
@@ -1546,7 +1552,7 @@
                                                                                    type = "text" 
                                                                                    id = "inputEnergyDocName" 
                                                                                    ng-model = "data.currentDocument.passportName" 
-                                                                                   ng-disabled = "isReadOnly()"/>
+                                                                                   ng-disabled = "isReadonly()"/>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -1564,7 +1570,7 @@
                                                                                    class = "form-control nmc-date-input-form nmc-spec-date" 
                                                                                    type = "text"                                                                                               
                                                                                    ng-model = "data.currentDocument.docDateFormatted"
-                                                                                   ng-disabled = "isReadOnly()"
+                                                                                   ng-disabled = "isReadonly()"
                                                                                    readonly
                                                                                    />
                                                                         </span>
@@ -1580,7 +1586,7 @@
                                                                                   id = "inputEnergyDocDescription" 
                                                                                   placeholder = "Описание" 
                                                                                   ng-model = "data.currentDocument.description"
-                                                                                  ng-disabled = "isReadOnly()">
+                                                                                  ng-disabled = "isReadonly()">
                                                                         </textarea>
                                                                     </td>
                                                                 </tr>
@@ -1594,18 +1600,20 @@
                                                                         <div class = "container-fluid">
                                                                             <div class = "row">
                                                                                 <div class = "col-xs-offset-2 col-xs-3">
-                                                                                    <button ng-if = "!isReadOnly()" 
+                                                                                    <button ng-if = "!isReadonly()" 
                                                                                             class = "btn btn-block btn-xs nmc-add-button-in-modal"
-                                                                                            ng-click = "openContObjectPassport(passport, currentObject)">
+                                                                                            ng-click = "openContObjectPassport(passport, currentObject)"
+                                                                                            ng-disabled = "objectCtrlSettings.isDocumentSaving">
                                                                                         Далее...
                                                                                     </button>
                                                                                 </div>
                                                                                 <div class = "col-xs-3">
-                                                                                    <input ng-if = "!isReadOnly()" 
+                                                                                    <input ng-if = "!isReadonly()" 
                                                                                            type = "submit" 
                                                                                            class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                                                                            ng-click = "saveDocumentFromTab(data.currentDocument)"
-                                                                                           value = "Сохранить" />
+                                                                                           value = "Сохранить" 
+                                                                                           ng-disabled = "objectCtrlSettings.isDocumentSaving"/>
                                                                                 </div>
                                                                                 <div class = "pull-right col-xs-3 noMargin noPadding">
                                                                                     <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"
