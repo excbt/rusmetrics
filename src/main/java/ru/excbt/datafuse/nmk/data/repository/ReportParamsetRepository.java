@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.repository.support.SubscriberRI;
 
 /**
  * Repository для ReportParamset
@@ -18,11 +19,11 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
  * @since 10.04.2015
  *
  */
-public interface ReportParamsetRepository extends JpaRepository<ReportParamset, Long> {
+public interface ReportParamsetRepository extends JpaRepository<ReportParamset, Long>, SubscriberRI<ReportParamset> {
 
 	public List<ReportParamset> findByReportTemplateId(Long reportTemplateId);
 
-	public List<ReportParamset> findBySubscriberId(Long subscriberId);
+	//public List<ReportParamset> findBySubscriberId(Long subscriberId);
 
 	/**
 	 *
