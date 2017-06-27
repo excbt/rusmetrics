@@ -58,7 +58,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@OneToOne()
+	@ManyToOne
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
@@ -66,7 +66,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "cont_service_type")
 	private ContServiceType contServiceType;
 

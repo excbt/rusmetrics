@@ -29,6 +29,6 @@ public interface ContObjectModelRepository<T> extends JpaRepository<T, Long> {
     Optional<T> findOneByContObjectId(@Param("contObjectId") Long contObjectId);
 
     @Query("SELECT f FROM #{#entityName} f WHERE f.contObject.id in (:contObjectIds)")
-    List<T> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
+    List<T> findByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
 
 }

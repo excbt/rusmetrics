@@ -135,7 +135,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
         List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 
 
-        List<ContObjectFias> fiasIds = contObjectFiasRepository.selectByContObjectIds(ids);
+        List<ContObjectFias> fiasIds = contObjectFiasRepository.findByContObjectIds(ids);
 
         Optional<ContObjectFias> testObjectFias = fiasIds.stream().filter(i -> i.getFiasUUID() != null).findAny();
 

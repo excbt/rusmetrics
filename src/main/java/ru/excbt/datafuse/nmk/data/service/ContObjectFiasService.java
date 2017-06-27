@@ -130,7 +130,7 @@ public class ContObjectFiasService {
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<ContObjectFias> selectContObjectsFias(List<Long> contObjectIds) {
         return contObjectIds == null || contObjectIds.isEmpty() ? new ArrayList<>()
-            : contObjectFiasRepository.selectByContObjectIds(contObjectIds);
+            : contObjectFiasRepository.findByContObjectIds(contObjectIds);
     }
 
     /**
