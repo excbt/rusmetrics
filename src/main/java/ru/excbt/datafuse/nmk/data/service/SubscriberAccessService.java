@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -151,7 +152,7 @@ public class SubscriberAccessService implements SecuredRoles {
             log.warn("Access for {} (id={}) for Subscriber(id={}) already granted", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
         }
 
-        subscrContObjectService.linkSubscrContObject(contObject, subscriber,
+        subscrContObjectService.access().linkSubscrContObject(contObject, subscriber,
             grantDateTime != null ? grantDateTime.toLocalDate() : LocalDate.now());
 
     }
@@ -199,5 +200,14 @@ public class SubscriberAccessService implements SecuredRoles {
             contObjectAccessHistoryRepository.saveAndFlush(i);
         });
     }
+
+    @Transactional()
+    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+    public void updateSubscriberAccess(Subscriber subscriber, List<Long> contObjectIds,
+                                       LocalDateTime accessDateTime) {
+        subscrContObjectService.access()
+            .updateSubscrContObjects(subscriber.getId(), contObjectIds, new org.joda.time.LocalDate(LocalDateUtils.asDate(accessDateTime)));
+    }
+
 
 }

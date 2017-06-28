@@ -51,39 +51,56 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	private static final String CABINET_SEQ_DEVICE_NUMBER = "{deviceObjectNumber}";
 
-	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
+	protected final SubscrContObjectService subscrContObjectService;
+
+	protected final SubscrUserService subscrUserService;
+
+	protected final SubscrRoleService subscrRoleService;
+
+	protected final SubscriberService subscriberService;
+
+	private final ContObjectService contObjectService;
+
+	private final SubscrContObjectRepository subscrContObjectRepository;
+
+	private final SubscrUserRepository subscrUserRepository;
+
+	private final LdapService ldapService;
+
+	private final EmailNotificationService emailNotificationService;
+
+	private final DeviceObjectService deviceObjectService;
+
+	private final SubscriberAccessService subscriberAccessService;
 
 	@Autowired
-	protected SubscrUserService subscrUserService;
+    public SubscrCabinetService(SubscrContObjectService subscrContObjectService,
+                                SubscrUserService subscrUserService,
+                                SubscrRoleService subscrRoleService,
+                                SubscriberService subscriberService,
+                                ContObjectService contObjectService,
+                                SubscrContObjectRepository subscrContObjectRepository,
+                                SubscrUserRepository subscrUserRepository,
+                                LdapService ldapService,
+                                EmailNotificationService emailNotificationService,
+                                DeviceObjectService deviceObjectService,
+                                SubscriberAccessService subscriberAccessService) {
+        this.subscrContObjectService = subscrContObjectService;
+        this.subscrUserService = subscrUserService;
+        this.subscrRoleService = subscrRoleService;
+        this.subscriberService = subscriberService;
+        this.contObjectService = contObjectService;
+        this.subscrContObjectRepository = subscrContObjectRepository;
+        this.subscrUserRepository = subscrUserRepository;
+        this.ldapService = ldapService;
+        this.emailNotificationService = emailNotificationService;
+        this.deviceObjectService = deviceObjectService;
+        this.subscriberAccessService = subscriberAccessService;
+    }
 
-	@Autowired
-	protected SubscrRoleService subscrRoleService;
-
-	@Autowired
-	protected SubscriberService subscriberService;
-
-	@Autowired
-	private ContObjectService contObjectService;
-
-	@Autowired
-	private SubscrContObjectRepository subscrContObjectRepository;
-
-	@Autowired
-	private SubscrUserRepository subscrUserRepository;
-
-	@Autowired
-	private LdapService ldapService;
-
-	@Autowired
-	private EmailNotificationService emailNotificationService;
-
-	@Autowired
-	private DeviceObjectService deviceObjectService;
-
-	/*
-	 *
-	 */
+    /*
+         *
+         */
 	private class SubscCabinetContObjectStats {
 		private final Long contObjectId;
 		private final Long count;
@@ -194,8 +211,9 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
-		List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
-				Arrays.asList(contObjectIds), LocalDate.now());
+        subscriberAccessService.updateSubscriberAccess(newSubscriber , Arrays.asList(contObjectIds), null);
+		//List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
+		//		Arrays.asList(contObjectIds), LocalDate.now());
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
@@ -216,6 +234,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 					String.format("Can't create Child Subscriber for contObjects=%s", contObjectIds.toString()));
 
 		}
+
+        List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(newSubscriber.getId());
 
 		List<ContObjectShortInfo> subscrObjectSHortInfoList = contObjects.stream().map(i -> i.getContObjectShortInfo())
 				.collect(Collectors.toList());
@@ -251,7 +271,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		List<SubscrContObject> subscrContObjects = subscrContObjectService
 				.selectSubscrContObjects(cabinetSubscriber.getId());
 
-		subscrContObjectService.deleteSubscrContObjectPermanent(subscrContObjects);
+		subscrContObjectService.old().deleteSubscrContObjectPermanent(subscrContObjects);
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 

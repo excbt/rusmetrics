@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import lombok.Getter;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
@@ -59,12 +60,55 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	protected ContGroupService contGroupService;
 
 
+
+	private final Access access = new Access();
+	private final Old old = new Old();
+
+	public Access access() {
+	    return this.access;
+    }
+
+	public Old old() {
+	    return this.old;
+    }
+
+	public class Access {
+        public void linkSubscrContObject(ContObject contObject, Subscriber subscriber,
+                                         java.time.LocalDate fromDate) {
+            checkNotNull(contObject);
+            checkNotNull(subscriber);
+            checkNotNull(fromDate);
+
+            if (!canAccessContObjects(subscriber.getId(), new Long[]{contObject.getId()})) {
+                createSubscrContObjectLink(contObject, subscriber, fromDate);
+            }
+        }
+
+        public List<ContObject> updateSubscrContObjects(Long subscriberId, List<Long> contObjectIds,
+                                                        LocalDate subscrBeginDate) {
+            return updateSubscrContObjectsInternal(subscriberId, contObjectIds, subscrBeginDate);
+        }
+
+    }
+
+
+    public class Old {
+        public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
+            subscrContObjectRepository.delete(objects);
+        }
+
+        public void purgeSubscrContObject(ContObject contObject,
+                                          java.time.LocalDate subscrEndDate) {
+            List<SubscrContObject> subscrContObjects = selectByContObjectId(contObject.getId());
+            deleteSubscrContObject(subscrContObjects, subscrEndDate);
+        }
+
+    }
+
 	/**
 	 *
 	 * @param objects
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	private void deleteSubscrContObject(List<SubscrContObject> objects, java.time.LocalDate subscrEndDate) {
 		checkNotNull(objects);
 		checkNotNull(subscrEndDate);
@@ -80,39 +124,39 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		subscrContObjectRepository.save(updateCandidate);
 	}
 
-	/**
-	 *
-	 * @param subscrContObject
-	 */
-	private void deleteSubscrContObject(SubscrContObject subscrContObject, java.time.LocalDate subscrEndDate) {
-		checkNotNull(subscrContObject);
-		if (subscrContObject.getSubscrBeginDate().equals(subscrContObject.getSubscrEndDate())) {
-			subscrContObjectRepository.delete(subscrContObject);
-		} else {
-			subscrContObject.setSubscrEndDate(LocalDateUtils.asDate(subscrEndDate));
-			subscrContObjectRepository.save(subscrContObject);
-		}
-	}
+//	/**
+//	 *
+//	 * @param subscrContObject
+//	 */
+//	private void deleteSubscrContObject(SubscrContObject subscrContObject, java.time.LocalDate subscrEndDate) {
+//		checkNotNull(subscrContObject);
+//		if (subscrContObject.getSubscrBeginDate().equals(subscrContObject.getSubscrEndDate())) {
+//			subscrContObjectRepository.delete(subscrContObject);
+//		} else {
+//			subscrContObject.setSubscrEndDate(LocalDateUtils.asDate(subscrEndDate));
+//			subscrContObjectRepository.save(subscrContObject);
+//		}
+//	}
 
 	/**
 	 *
 	 * @param objects
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-	public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
-		subscrContObjectRepository.delete(objects);
-	}
+//	@Transactional(value = TxConst.TX_DEFAULT)
+//	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+//	public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
+//		subscrContObjectRepository.delete(objects);
+//	}
 
 	/**
 	 *
 	 * @param subscrContObject
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	private void deleteSubscrContObjectPermanent(SubscrContObject subscrContObject) {
-		subscrContObjectRepository.delete(subscrContObject);
-	}
+//	@Transactional(value = TxConst.TX_DEFAULT)
+//	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+//	public void deleteSubscrContObjectPermanent(SubscrContObject subscrContObject) {
+//		subscrContObjectRepository.delete(subscrContObject);
+//	}
 
 
     /**
@@ -122,23 +166,21 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      * @param subscrBeginDate
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-    private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
-                                                        LocalDate subscrBeginDate) {
-        checkNotNull(contObject);
-        checkNotNull(subscriber);
-        checkNotNull(subscrBeginDate);
+//    @Transactional(value = TxConst.TX_DEFAULT)
+//    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+//    private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
+//                                                        LocalDate subscrBeginDate) {
+//        checkNotNull(contObject);
+//        checkNotNull(subscriber);
+//        checkNotNull(subscrBeginDate);
+//
+//        SubscrContObject subscrContObject = new SubscrContObject();
+//        subscrContObject.setContObject(contObject);
+//        subscrContObject.setSubscriber(subscriber);
+//        subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
+//        return subscrContObjectRepository.save(subscrContObject);
+//    }
 
-        SubscrContObject subscrContObject = new SubscrContObject();
-        subscrContObject.setContObject(contObject);
-        subscrContObject.setSubscriber(subscriber);
-        subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
-        return subscrContObjectRepository.save(subscrContObject);
-    }
-
-    @Transactional(value = TxConst.TX_DEFAULT)
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
     private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
                                                         java.time.LocalDate fromDate) {
         checkNotNull(contObject);
@@ -152,28 +194,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
         return subscrContObjectRepository.save(subscrContObject);
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT)
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-    public void linkSubscrContObject(ContObject contObject, Subscriber subscriber,
-                                     java.time.LocalDate fromDate) {
-        checkNotNull(contObject);
-        checkNotNull(subscriber);
-        checkNotNull(fromDate);
 
-        if (!canAccessContObjects(subscriber.getId(), new Long[]{contObject.getId()})) {
-            createSubscrContObjectLink(contObject, subscriber, fromDate);
-        }
-    }
-
-    @Transactional(value = TxConst.TX_DEFAULT)
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-
-    public void purgeSubscrContObject(ContObject contObject,
-                                       java.time.LocalDate subscrEndDate) {
-        List<SubscrContObject> subscrContObjects = selectByContObjectId(contObject.getId());
-        deleteSubscrContObject(subscrContObjects, subscrEndDate);
-
-    }
 
     /**
      *
@@ -205,9 +226,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      * @param subscrBeginDate
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-    public List<ContObject> updateSubscrContObjects(Long subscriberId, List<Long> contObjectIds,
+    private List<ContObject> updateSubscrContObjectsInternal(Long subscriberId, List<Long> contObjectIds,
                                                     LocalDate subscrBeginDate) {
 
         LocalDate subscrCurrentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
@@ -283,16 +302,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return rmaList.isEmpty() ? null : rmaList.get(0).getSubscriber();
 	}
 
-	/**
-	 *
-	 * @param subscrContObject
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	private SubscrContObject saveOne(SubscrContObject subscrContObject) {
-		return subscrContObjectRepository.save(subscrContObject);
-	}
 
 	/**
 	 *
@@ -391,7 +400,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
     public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam, Long contGroupId, List<Long> meterPeriodSettingIds) {
         checkNotNull(subscriberParam);
 
-        List<ContObject> result = EMPTY_CONT_OBJECTS_LIST;
+        List<ContObject> result;
 
         if (contGroupId == null) {
             result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());

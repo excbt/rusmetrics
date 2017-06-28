@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -45,9 +46,12 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 	private static final Logger log = LoggerFactory.getLogger(RmaContObjectResource.class);
 
+	private final SubscriberAccessService subscriberAccessService;
+
 	@Autowired
-    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService) {
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService) {
         super(contObjectService, contGroupService, organizationService, contObjectFiasService);
+        this.subscriberAccessService = subscriberAccessService;
     }
 
     /**
@@ -217,8 +221,12 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			@Override
 			public List<ContObject> processAndReturnResult() {
 
-				List<ContObject> result = subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds,
-						subscrBeginDate);
+//				List<ContObject> result =
+                subscriberAccessService.updateSubscriberAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
+//                    subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds,
+//						subscrBeginDate);
+
+                List<ContObject> result = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
 				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), result);
 
