@@ -1881,7 +1881,7 @@ app.directive('nmcDocumentViewer', function () {
             */
 
             function initCtrl() {
-console.log($scope.extraValues);                
+//console.log($scope.extraValues);                
                 var routeParams = $routeParams;
                 if (routeParams.param === "new") {
                     createPassDocInit();

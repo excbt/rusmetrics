@@ -1391,7 +1391,11 @@
                                            class="table table-lighter table-striped table-condensed noMarginBottom nmc-modal-main-table">
                                         <tr ng-show = "!objectCtrlSettings.isPassportCreating">
                                             <td colspan = "2">
-                                                <button class="btn nmc-main-add-button" ng-click = "createContObjectPassportFromTabInit(currentObject)">Создать паспорт</button>
+                                                <button class="btn nmc-main-add-button" 
+                                                        ng-click = "createContObjectPassportFromTabInit(currentObject)"
+                                                        ng-disabled = "isReadonly()">
+                                                    Создать паспорт
+                                                </button>
                                             </td>
                                         </tr>
                                         <tr ng-show = "objectCtrlSettings.isPassportCreating">
@@ -1552,7 +1556,7 @@
                                                                                    type = "text" 
                                                                                    id = "inputEnergyDocName" 
                                                                                    ng-model = "data.currentDocument.passportName" 
-                                                                                   ng-disabled = "isReadonly()"/>
+                                                                                   ng-disabled = "isReadonly() || !passport.isActive"/>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -1570,7 +1574,7 @@
                                                                                    class = "form-control nmc-date-input-form nmc-spec-date" 
                                                                                    type = "text"                                                                                               
                                                                                    ng-model = "data.currentDocument.docDateFormatted"
-                                                                                   ng-disabled = "isReadonly()"
+                                                                                   ng-disabled = "isReadonly() || !passport.isActive"
                                                                                    readonly
                                                                                    />
                                                                         </span>
@@ -1586,7 +1590,7 @@
                                                                                   id = "inputEnergyDocDescription" 
                                                                                   placeholder = "Описание" 
                                                                                   ng-model = "data.currentDocument.description"
-                                                                                  ng-disabled = "isReadonly()">
+                                                                                  ng-disabled = "isReadonly() || !passport.isActive">
                                                                         </textarea>
                                                                     </td>
                                                                 </tr>
@@ -1613,7 +1617,7 @@
                                                                                            class = "btn btn-primary btn-block btn-xs nmc-save-button"
                                                                                            ng-click = "saveDocumentFromTab(data.currentDocument)"
                                                                                            value = "Сохранить" 
-                                                                                           ng-disabled = "objectCtrlSettings.isDocumentSaving"/>
+                                                                                           ng-disabled = "objectCtrlSettings.isDocumentSaving || !passport.isActive"/>
                                                                                 </div>
                                                                                 <div class = "pull-right col-xs-3 noMargin noPadding">
                                                                                     <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"

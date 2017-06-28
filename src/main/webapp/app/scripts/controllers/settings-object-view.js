@@ -3205,6 +3205,7 @@ angular.module('portalNMC')
                 
             function successCreatePassportCallbackFromTab(resp) {
                 $scope.objectCtrlSettings.isDocumentSaving = false;
+                $scope.objectCtrlSettings.isPassportCreating = false;
                 if (successSavePassportCallback(resp) === false) {
                     return false;
                 }

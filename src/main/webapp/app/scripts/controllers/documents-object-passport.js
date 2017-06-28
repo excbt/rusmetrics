@@ -12,6 +12,8 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
     $scope.extraValues = [];
     
     $scope.isReadOnly = function () {
+//console.log(mainSvc.isReadonly());        
+//console.log($scope.isActivePassport);        
         return mainSvc.isReadonly() || !$scope.isActivePassport;
     };
     
@@ -43,6 +45,8 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
 //            }
 //        });
         var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+//console.log(activePassport);        
+//console.log($routeParams);        
         if (activePassport !== null && activePassport.id === Number($routeParams.param)) {
             $scope.isActivePassport = true;
         }
