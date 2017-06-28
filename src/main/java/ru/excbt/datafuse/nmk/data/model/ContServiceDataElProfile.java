@@ -24,7 +24,6 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
- *
  */
 @Entity
 @Table(name = "cont_service_data_el_profile")
@@ -32,52 +31,52 @@ import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 @Setter
 public class ContServiceDataElProfile extends AbstractAuditableModel implements DataDateFormatter {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -7484466554217659824L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7484466554217659824L;
 
-	@Column(name = "data_date")
-	private Date dataDate;
+    @Column(name = "data_date", updatable = false)
+    private Date dataDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id")
-	@JsonIgnore
-	private DeviceObject deviceObject;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_object_id", updatable = false)
+    @JsonIgnore
+    private DeviceObject deviceObject;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
-	@JsonIgnore
-	private ContZPoint contZPoint;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
+    @JsonIgnore
+    private ContZPoint contZPoint;
 
-	@Column(name = "cont_zpoint_id")
-	@JsonIgnore
-	private Long contZPointId;
+    @Column(name = "cont_zpoint_id", updatable = false)
+    @JsonIgnore
+    private Long contZPointId;
 
-	@Column(name = "time_detail_type")
-	private String timeDetailType;
+    @Column(name = "time_detail_type", updatable = false)
+    private String timeDetailType;
 
-	@JsonIgnore
-	@Version
-	private int version;
+    @JsonIgnore
+    @Version
+    private int version;
 
-	@JsonIgnore
-	@Column(name = "deleted")
-	private int deleted;
+    @JsonIgnore
+    @Column(name = "deleted")
+    private int deleted;
 
-	@Column(name = "profile_interval")
-	private Integer profileInterval;
+    @Column(name = "profile_interval")
+    private Integer profileInterval;
 
-	@Column(name = "p_ap", columnDefinition = "numeric")
-	private Double p_Ap;
+    @Column(name = "p_ap", columnDefinition = "numeric")
+    private Double p_Ap;
 
-	@Column(name = "p_an", columnDefinition = "numeric")
-	private Double p_An;
+    @Column(name = "p_an", columnDefinition = "numeric")
+    private Double p_An;
 
-	@Column(name = "q_rp", columnDefinition = "numeric")
-	private Double q_Rp;
+    @Column(name = "q_rp", columnDefinition = "numeric")
+    private Double q_Rp;
 
-	@Column(name = "q_rn", columnDefinition = "numeric")
-	private Double q_Rn;
+    @Column(name = "q_rn", columnDefinition = "numeric")
+    private Double q_Rn;
 
 }

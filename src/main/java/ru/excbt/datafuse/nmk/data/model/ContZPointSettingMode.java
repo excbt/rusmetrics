@@ -43,7 +43,7 @@ public class ContZPointSettingMode extends AbstractAuditableModel {
 	private static final long serialVersionUID = 5728833577792967110L;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = {})
-	@JoinColumn(name = "cont_zpoint_id")
+	@JoinColumn(name = "cont_zpoint_id", updatable = false)
 	@JsonIgnore
 	@NotNull
 	private ContZPoint contZPoint;

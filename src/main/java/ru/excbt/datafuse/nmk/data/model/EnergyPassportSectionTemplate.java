@@ -34,7 +34,7 @@ public class EnergyPassportSectionTemplate extends AbstractAuditableModel implem
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "passport_template_id")
+    @JoinColumn(name = "passport_template_id", updatable = false)
     private EnergyPassportTemplate passportTemplate;
 
     @Column(name = "section_key")

@@ -32,7 +32,7 @@ public class SubscrDirectory extends AbstractAuditableModel {
 	private static final long serialVersionUID = 4169289603719698288L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	private Subscriber subscriber;
 
 	@Column(name = "subscriber_id", insertable = false, updatable = false)

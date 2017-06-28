@@ -25,7 +25,7 @@ public class DeviceObjectMetadataTransform extends AbstractAuditableModel {
 	@Column(name = "device_metadata_type")
 	private String deviceMetadataType;
 
-	@Column(name = "device_object_id")
+	@Column(name = "device_object_id", updatable = false)
 	private Long deviceObjectId;
 
 	@Column(name = "cont_service_type")

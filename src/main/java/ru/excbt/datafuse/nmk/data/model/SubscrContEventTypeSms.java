@@ -35,7 +35,7 @@ public class SubscrContEventTypeSms extends AbstractAuditableModel implements De
 	private static final long serialVersionUID = -3626302771831986734L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	@JsonIgnore
 	private Subscriber subscriber;
 

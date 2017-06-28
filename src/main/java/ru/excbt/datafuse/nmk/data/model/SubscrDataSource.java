@@ -41,7 +41,7 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 	private static final long serialVersionUID = -200221160904201276L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	@JsonIgnore
 	private Subscriber subscriber;
 
