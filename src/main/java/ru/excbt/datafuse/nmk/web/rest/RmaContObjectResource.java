@@ -106,13 +106,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiAction action = new ApiActionAdapter() {
 
-			@Override
-			public void process() {
-				contObjectService.deleteContObject(contObjectId, subscrEndDate);
-			}
-		};
+		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteContObject(contObjectId, LocalDateUtils.asLocalDate(subscrEndDate.toDate()));
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}
@@ -133,13 +128,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				contObjectService.deleteManyContObjects(contObjectIds, subscrEndDate);
-			}
-		};
+		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteManyContObjects(contObjectIds, LocalDateUtils.asLocalDate(subscrEndDate.toDate()));
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}

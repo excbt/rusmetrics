@@ -23,10 +23,12 @@ import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -83,6 +85,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private final ContObjectFiasService contObjectFiasService;
 
+	private final SubscriberAccessService subscriberAccessService;
+
     public ContObjectService(ContObjectRepository contObjectRepository,
                              ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository,
                              SubscriberService subscriberService,
@@ -98,7 +102,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
                              ContEventMonitorV2Service contEventMonitorV2Service,
                              WeatherForecastService weatherForecastService,
                              MeterPeriodSettingRepository meterPeriodSettingRepository,
-                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService) {
+                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService) {
         this.contObjectRepository = contObjectRepository;
         this.contObjectSettingModeTypeRepository = contObjectSettingModeTypeRepository;
         this.subscriberService = subscriberService;
@@ -116,6 +120,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         this.meterPeriodSettingRepository = meterPeriodSettingRepository;
         this.contObjectMapper = contObjectMapper;
         this.contObjectFiasService = contObjectFiasService;
+        this.subscriberAccessService = subscriberAccessService;
     }
 
 
@@ -447,7 +452,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
         contObjectFiasService.saveContObjectFias(resultContObject.getId(), contObjectFias);
 
-		subscrContObjectService.createSubscrContObjectLink(resultContObject, subscriber, subscrBeginDate);
+		//subscrContObjectService.createSubscrContObjectLink(resultContObject, subscriber, subscrBeginDate);
+		subscriberAccessService.grantContObjectAccess(subscriber, resultContObject, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
 
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
@@ -519,8 +525,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			resultContObject.getContManagements().add(newCm);
 		}
 
-		// Link to subscrContObject
-        subscrContObjectService.createSubscrContObjectLink(resultContObject, new Subscriber().id(subscriberId), subscrBeginDate);
+        subscriberAccessService.grantContObjectAccess(new Subscriber().id(subscriberId), resultContObject, subscrBeginDate.atStartOfDay());
 
 		return resultContObject;
 	}
@@ -532,7 +537,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteContObject(Long contObjectId, LocalDate subscrEndDate) {
+	public void deleteContObject(Long contObjectId, java.time.LocalDate subscrEndDate) {
 		checkNotNull(contObjectId);
 
 		ContObject contObject = findContObjectChecked(contObjectId);
@@ -540,8 +545,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsManual(true);
 		softDelete(contObject);
 
-		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
-		subscrContObjectService.deleteSubscrContObject(subscrContObjects, subscrEndDate);
+        subscrContObjectService.purgeSubscrContObject(new ContObject().id(contObjectId), subscrEndDate);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {
@@ -560,7 +564,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteManyContObjects(Long[] contObjects, LocalDate subscrEndDate) {
+	public void deleteManyContObjects(Long[] contObjects, java.time.LocalDate subscrEndDate) {
 		checkNotNull(contObjects);
 		for (Long i : contObjects) {
 			deleteContObject(i, subscrEndDate);

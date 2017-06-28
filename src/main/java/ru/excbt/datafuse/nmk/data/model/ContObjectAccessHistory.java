@@ -40,8 +40,8 @@ public class ContObjectAccessHistory extends AbstractAuditableModel {
     private LocalTime grantTime;
 
     @NotNull
-    @Column(name = "grant_ts", updatable = false)
-    private ZonedDateTime grantTS;
+    @Column(name = "grant_tz", updatable = false)
+    private ZonedDateTime grantTZ;
 
     @Column(name = "revoke_date")
     private LocalDate revokeDate;
@@ -49,8 +49,8 @@ public class ContObjectAccessHistory extends AbstractAuditableModel {
     @Column(name = "revoke_time")
     private LocalTime revokeTime;
 
-    @Column(name = "revoke_ts")
-    private ZonedDateTime revokeTS;
+    @Column(name = "revoke_tz")
+    private ZonedDateTime revokeTZ;
 
     @Version
     private int version;
