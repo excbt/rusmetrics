@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,6 +106,7 @@ public class SubscriberAccessService {
         history.setSubscriber(subscriber);
         history.setGrantDate(LocalDate.now());
         history.setGrantTime(LocalTime.now());
+        history.setGrantTS(ZonedDateTime.now());
         contZPointAccessHistoryRepository.saveAndFlush(history);
     }
 
@@ -112,7 +114,8 @@ public class SubscriberAccessService {
         contZPointAccessHistoryRepository.findBySubscriberIdAndContZPointId(subscriber.getId(), contZPoint.getId())
             .stream().filter((i) -> i.getRevokeDate() == null).forEach((i) -> {
             i.setRevokeDate(LocalDate.now());
-            i.setGrantTime(LocalTime.now());
+            i.setRevokeTime(LocalTime.now());
+            i.setRevokeTS(ZonedDateTime.now());
             contZPointAccessHistoryRepository.saveAndFlush(i);
         });
     }
@@ -154,6 +157,7 @@ public class SubscriberAccessService {
         history.setSubscriber(subscriber);
         history.setGrantDate(LocalDate.now());
         history.setGrantTime(LocalTime.now());
+        history.setGrantTS(ZonedDateTime.now());
         contObjectAccessHistoryRepository.saveAndFlush(history);
     }
 
@@ -166,7 +170,8 @@ public class SubscriberAccessService {
         contObjectAccessHistoryRepository.findBySubscriberIdAndContObjectId(subscriber.getId(), contObject.getId())
             .stream().filter((i) -> i.getRevokeDate() == null).forEach((i) -> {
             i.setRevokeDate(LocalDate.now());
-            i.setGrantTime(LocalTime.now());
+            i.setRevokeTime(LocalTime.now());
+            i.setRevokeTS(ZonedDateTime.now());
             contObjectAccessHistoryRepository.saveAndFlush(i);
         });
     }

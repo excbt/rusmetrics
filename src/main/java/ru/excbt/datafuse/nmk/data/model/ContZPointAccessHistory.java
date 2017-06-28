@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 /**
  * Created by kovtonyk on 27.06.2017.
@@ -38,11 +39,18 @@ public class ContZPointAccessHistory extends AbstractAuditableModel {
     @Column(name = "grant_time", updatable = false)
     private LocalTime grantTime;
 
+    @NotNull
+    @Column(name = "grant_ts", updatable = false)
+    private ZonedDateTime grantTS;
+
     @Column(name = "revoke_date")
     private LocalDate revokeDate;
 
     @Column(name = "revoke_time")
     private LocalTime revokeTime;
+
+    @Column(name = "revoke_ts")
+    private ZonedDateTime revokeTS;
 
     @Version
     private int version;
