@@ -11,11 +11,11 @@ import java.io.Serializable;
  * Created by kovtonyk on 27.06.2017.
  */
 @Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_zpoint_access")
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_object_access")
 @Getter
 @Setter
-@IdClass(ContZPointAccess.PK.class)
-public class ContZPointAccess {
+@IdClass(ContObjectAccess.PK.class)
+public class ContObjectAccess {
 
     @Getter
     @Setter
@@ -26,16 +26,16 @@ public class ContZPointAccess {
         private Long subscriberId;
 
         @NotNull
-        @Column(name = "cont_zpoint_id")
-        private Long contZPointId;
+        @Column(name = "cont_object_id")
+        private Long contObjectId;
 
-        public PK subscriberId(Long subscriberId) {
+        public PK subscriber(Long subscriberId) {
             this.subscriberId = subscriberId;
             return this;
         }
 
-        public PK contZPointId(Long contZPointId) {
-            this.contZPointId = contZPointId;
+        public PK contObjectId(Long contObjectId) {
+            this.contObjectId = contObjectId;
             return this;
         }
 
@@ -47,45 +47,44 @@ public class ContZPointAccess {
             PK sId = (PK) o;
 
             if (subscriberId != null ? !subscriberId.equals(sId.subscriberId) : sId.subscriberId != null) return false;
-            return contZPointId != null ? contZPointId.equals(sId.contZPointId) : sId.contZPointId == null;
+            return contObjectId != null ? contObjectId.equals(sId.contObjectId) : sId.contObjectId == null;
         }
 
         @Override
         public int hashCode() {
             int result = subscriberId != null ? subscriberId.hashCode() : 0;
-            result = 31 * result + (contZPointId != null ? contZPointId.hashCode() : 0);
+            result = 31 * result + (contObjectId != null ? contObjectId.hashCode() : 0);
             return result;
         }
     }
 
     @Id
 //    @ManyToOne
-    @JoinColumn(name = "subscriber_id")
+    @Column(name = "subscriber_id")
     private Long subscriberId;
 
     @Id
 //    @ManyToOne
-    @JoinColumn(name = "cont_zpoint_id")
-    private Long contZPointId;
+    @Column(name = "cont_object_id")
+    private Long contObjectId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id", insertable = false, updatable = false)
     private Subscriber subscriber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
-    private ContZPoint contZPoint;
+    @JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+    private ContObject contObject;
 
 
-    public ContZPointAccess subscriberId(Long subscriberId) {
+    public ContObjectAccess subscriberId(Long subscriberId) {
         this.subscriberId = subscriberId;
         return this;
     }
 
-    public ContZPointAccess contZPointId(Long contZPointId) {
-        this.contZPointId = contZPointId;
+    public ContObjectAccess contObjectId(Long contObjectId) {
+        this.contObjectId = contObjectId;
         return this;
     }
-
 
 }
