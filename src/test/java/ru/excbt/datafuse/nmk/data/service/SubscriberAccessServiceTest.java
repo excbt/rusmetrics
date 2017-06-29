@@ -63,6 +63,8 @@ public class SubscriberAccessServiceTest extends JpaSupportTest {
         subscriberAccessService.grantContObjectAccess(new Subscriber().id(testSubscriberId.get()), new ContObject().id(contObjectId.get()));
 
         subscriberAccessService.revokeContObjectAccess(new Subscriber().id(testSubscriberId.get()), new ContObject().id(contObjectId.get()));
+        subscriberAccessService.revokeContObjectAccess(new ContObject().id(contObjectId.get()));
+        Assert.assertFalse(subscriberAccessService.findContObjectIds(testSubscriberId.get()).isEmpty());
 
     }
 }

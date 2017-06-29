@@ -100,6 +100,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
     }
 
 
+    // TODO delete
+    @Deprecated
     public class Old {
         public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
             subscrContObjectRepository.delete(objects);

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,10 +268,11 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
-		List<SubscrContObject> subscrContObjects = subscrContObjectService
-				.selectSubscrContObjects(cabinetSubscriber.getId());
+//		List<SubscrContObject> subscrContObjects = subscrContObjectService
+//				.selectSubscrContObjects(cabinetSubscriber.getId());
 
-		subscrContObjectService.old().deleteSubscrContObjectPermanent(subscrContObjects);
+		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Lists.emptyList(), null);
+		//subscrContObjectService.old().deleteSubscrContObjectPermanent(subscrContObjects);
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.google.common.base.Preconditions;
 import org.mapstruct.ap.internal.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kovtonyk on 27.06.2017.
@@ -27,9 +31,6 @@ import java.util.*;
 public class SubscriberAccessService implements SecuredRoles {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriberAccessService.class);
-
-    public enum AccessAction {ADD, DELETE, MERGE}
-
 
     private final ContZPointAccessRepository contZPointAccessRepository;
 
@@ -55,12 +56,11 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
     /**
-     *
      * @param subscriberId
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Long> findContZPointIds (Long subscriberId) {
+    public List<Long> findContZPointIds(Long subscriberId) {
         return contZPointAccessRepository.findContZPointIds(subscriberId);
     }
 
@@ -70,13 +70,12 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
     /**
-     *
      * @param subscriberId
      * @return
      */
     @Transactional(readOnly = true)
-    public List<Long> findContObjectIds (Long subscriberId) {
-        return contObjectAccessRepository.findContObjectIds(subscriberId);
+    public List<Long> findContObjectIds(Long subscriberId) {
+        return contObjectAccessRepository.findContObjectIdsBySubscriber(subscriberId);
     }
 
     @Transactional(readOnly = true)
@@ -88,7 +87,7 @@ public class SubscriberAccessService implements SecuredRoles {
     TODO change for update
      */
     @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void grantContZPointAccess(Subscriber subscriber, ContZPoint contZPoint) {
         startContZPointAccess(subscriber, contZPoint, null);
     }
@@ -98,13 +97,13 @@ public class SubscriberAccessService implements SecuredRoles {
     TODO change for update
      */
     @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void grantContZPointAccess(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime grantDateTime) {
         startContZPointAccess(subscriber, contZPoint, grantDateTime);
     }
 
     @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void revokeContZPointAccess(Subscriber subscriber, ContZPoint contZPoint) {
         finishContZPointAccess(subscriber, contZPoint, null);
     }
@@ -133,21 +132,32 @@ public class SubscriberAccessService implements SecuredRoles {
 
 
     @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void grantContObjectAccess(Subscriber subscriber, ContObject contObject) {
-        updateContObjectIdsAccess(subscriber, Arrays.asList(contObject.getId()), null, AccessAction.ADD);
+        startContObjectAccess(subscriber, contObject, null);
     }
 
     @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void grantContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime accessDateTime) {
-        updateContObjectIdsAccess(subscriber, Arrays.asList(contObject.getId()), accessDateTime, AccessAction.ADD);
+        startContObjectAccess(subscriber, contObject, null);
+    }
+
+    @Transactional
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
+    public void revokeContObjectAccess(Subscriber subscriber, ContObject contObject) {
+        finishContObjectAccess(subscriber, contObject, null);
     }
 
     @Transactional
     @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-    public void revokeContObjectAccess(Subscriber subscriber, ContObject contObject) {
-        updateContObjectIdsAccess(subscriber, Arrays.asList(contObject.getId()), null, AccessAction.DELETE);
+    public void revokeContObjectAccess(ContObject contObject) {
+        contObjectAccessRepository.findSubscriberByContObject(contObject.getId()).forEach((i) ->
+            finishContObjectAccess(new Subscriber().id(i), contObject, null)
+        );
+//        contObjectAccessRepository.findByContObjectId(contObject.getId()).forEach((i)->
+//                updateContObjectIdsAccess(new Subscriber().id(i), Arrays.asList(contObject.getId()), null, AccessAction.MERGE)
+//            );
     }
 
     private void startContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime grantDateTime) {
@@ -167,8 +177,10 @@ public class SubscriberAccessService implements SecuredRoles {
 
 
     private void finishContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime revokeDateTime) {
-        Optional<Long> checkExisting = findContObjectIds(subscriber.getId()).stream().filter((i) -> i.equals(contObject.getId())).findFirst();
+        Optional<Long> checkExisting = contObjectAccessRepository.findByPK(subscriber.getId(), contObject.getId());
+
         if (checkExisting.isPresent()) {
+            Preconditions.checkState(checkExisting.get() == 1);
             ContObjectAccess access = new ContObjectAccess().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
             contObjectAccessRepository.delete(access);
             saveFinishContObjectAccessHistory(subscriber, contObject, revokeDateTime);
@@ -222,17 +234,11 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
 
-    @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-    public void updateContObjectIdsAccess(Subscriber subscriber, List<Long> contObjectIds,
-                                          LocalDateTime accessDateTime) {
-        updateContObjectIdsAccess(subscriber, contObjectIds, accessDateTime,AccessAction.MERGE);
-    }
 
     @Transactional
-    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+    @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET})
     public void updateContObjectIdsAccess(final Subscriber subscriber, final List<Long> newContObjectIds,
-                                          final LocalDateTime accessDateTime, final AccessAction accessAction) {
+                                          final LocalDateTime accessDateTime) {
 
         List<Long> existingContObjectIds = findContObjectIds(subscriber.getId());
 
@@ -251,13 +257,9 @@ public class SubscriberAccessService implements SecuredRoles {
             }
         });
 
-        if (Collections.asSet(AccessAction.DELETE, AccessAction.MERGE).contains(accessAction)) {
-            delContObjectIds.forEach((id) -> finishContObjectAccess(subscriber, new ContObject().id(id), accessDateTime));
-        }
+        delContObjectIds.forEach((id) -> finishContObjectAccess(subscriber, new ContObject().id(id), accessDateTime));
 
-        if (Collections.asSet(AccessAction.ADD, AccessAction.MERGE).contains(accessAction)) {
-            addContObjectIds.forEach((id) -> startContObjectAccess(subscriber, new ContObject().id(id), accessDateTime));
-        }
+        addContObjectIds.forEach((id) -> startContObjectAccess(subscriber, new ContObject().id(id), accessDateTime));
 
     }
 

@@ -545,7 +545,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsManual(true);
 		softDelete(contObject);
 
-        subscrContObjectService.old().purgeSubscrContObject(new ContObject().id(contObjectId), subscrEndDate);
+		subscriberAccessService.revokeContObjectAccess(new ContObject().id(contObjectId));
+        //subscrContObjectService.old().purgeSubscrContObject(new ContObject().id(contObjectId), subscrEndDate);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {
@@ -572,9 +573,10 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 *
+	 * TODO delete
 	 * @param contObjectId
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteContObjectPermanent(Long contObjectId) {
