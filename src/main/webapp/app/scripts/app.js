@@ -86,6 +86,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 //            controller: 'documentsObjectPassportCtrl'
 //        })
         .when('/settings/object-passport/:object/:param', {
+            reloadOnSearch: false,
             templateUrl: 'views/documents-object-passport.html',
             controller: 'documentsObjectPassportCtrl'
         })

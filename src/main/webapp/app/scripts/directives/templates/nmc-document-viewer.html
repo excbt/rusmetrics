@@ -159,8 +159,8 @@
                     </div>
                 </span>
             </div>
-            <div class = "col-xs-10"
-                 ng-class = "{'nmc-energo-passport-maximize': !showContentsFlag}">
+            <div class = ""
+                 ng-class = "{'nmc-energo-passport-maximize': !showContentsFlag && !(data.currentPassDocSection.preparedSection.navAnchors.length > 0), 'nmc-energo-passport-maximize-with-rnav': !showContentsFlag && (data.currentPassDocSection.preparedSection.navAnchors.length > 0), 'col-xs-8': data.currentPassDocSection.preparedSection.navAnchors.length > 0, 'col-xs-10': !(data.currentPassDocSection.preparedSection.navAnchors.length > 0)}">
                 
                 <div class = "container-fluid">
                     <div class = "row">
@@ -262,7 +262,8 @@
                                 <div ng-switch = "part.partType">
                                     <div ng-switch-when = "SIMPLE_LINE"                                         
                                          class = "nmc-energy-simple-line"
-                                         ng-style = "{'text-align': part.cellStyle.halignment}">
+                                         ng-style = "{'text-align': part.cellStyle.halignment}"
+                                         ng-attr-id = "{{part.key}}">
                                         <div ng-repeat = "elm in part.elements track by $index"                                             
                                              ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}"
                                              ng-class = "{'nmc-energy-doc-h1': elm.cellStyle.header1}">
@@ -461,6 +462,35 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div ng-if = "data.currentPassDocSection.preparedSection.navAnchors.length > 0"
+                 class = "col-xs-2 noPadding">
+                <h3 class = "nmc-h3">
+                    
+                </h3>
+                <div class = "nmc-energo-passport-main-div"
+                     ng-show = "!ctrlSettings.passportLoading">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li role="presentation" ng-repeat = "navAnchor in data.currentPassDocSection.preparedSection.navAnchors track by $index">
+                            <a ng-click = "gotoAnchor(navAnchor.anchor)">
+                                <span ng-bind = "navAnchor.caption"></span>
+                            </a>
+                        </li>
+    <!--
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_1')">1 - 3. Описание объекта</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_4')">4 - 6. Сведения о потреблении и оплате энергоресурсов</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_7')">7. Сведения об оснащенности приборами учета</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_8')">8. Система теплопотребления</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_9')">9. Система электропотребления</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_10')">10. Холодное водоснабжение</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_11')">11. Сведения об использовании вторичных энергетических ресурсов</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_12')">12. Экология материалов и оборудования</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_13')">13. Среднесписочная численность</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_14')">14. Внедрение энергосберегающих мероприятий по программе энергосбережения</a></li>
+                        <li role="presentation"><a ng-click = "gotoAnchor('P_15')">15. Качество контроля и управления комфортностью здания</a></li>
+    -->
+                    </ul>
                 </div>
             </div>
         </div>

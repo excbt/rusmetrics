@@ -3057,6 +3057,11 @@ input[type="checkbox"] {
     width: 96%;
     margin-left: 0;
 }
+/*  Распахнутый режим, когда справа есть nav bar*/
+.nmc-energo-passport-maximize-with-rnav {
+    width: 79%;
+    margin-left: 0;
+}
 /*  а содержание минимизируется*/
 .nmc-energo-contents-minimize {
 /*    min-width: 45px;*/
