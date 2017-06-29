@@ -30,6 +30,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
     }
 
 	public class Access {
-        public void linkSubscrContObject(ContObject contObject, Subscriber subscriber,
+        public void linkSubscrContObject(Subscriber subscriber, ContObject contObject,
                                          java.time.LocalDate fromDate) {
             checkNotNull(contObject);
             checkNotNull(subscriber);
@@ -84,10 +85,17 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
             }
         }
 
-        public List<ContObject> updateSubscrContObjects(Long subscriberId, List<Long> contObjectIds,
+        public void updateSubscrContObjects(Long subscriberId, List<Long> contObjectIds,
                                                         LocalDate subscrBeginDate) {
-            return updateSubscrContObjectsInternal(subscriberId, contObjectIds, subscrBeginDate);
+            updateSubscrContObjectsInternal(subscriberId, contObjectIds, subscrBeginDate);
         }
+
+        public void unlinkSubscrContObject(Subscriber subscriber, ContObject contObject, java.time.LocalDate revokeDate) {
+            List<SubscrContObject> delSubscrContObjects = subscrContObjectRepository.selectActualSubscrContObjects(subscriber.getId(),
+                contObject.getId());
+            deleteSubscrContObject(delSubscrContObjects, revokeDate);
+        }
+
 
     }
 
@@ -98,15 +106,15 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
         }
 
         public void purgeSubscrContObject(ContObject contObject,
-                                          java.time.LocalDate subscrEndDate) {
+                                          java.time.LocalDate revokeDate) {
             List<SubscrContObject> subscrContObjects = selectByContObjectId(contObject.getId());
-            deleteSubscrContObject(subscrContObjects, subscrEndDate);
+            deleteSubscrContObject(subscrContObjects, revokeDate);
         }
 
     }
 
 	/**
-	 *
+	 * TO DO
 	 * @param objects
 	 */
 	private void deleteSubscrContObject(List<SubscrContObject> objects, java.time.LocalDate subscrEndDate) {
@@ -123,6 +131,10 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		});
 		subscrContObjectRepository.save(updateCandidate);
 	}
+
+
+
+
 
 //	/**
 //	 *
@@ -226,7 +238,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      * @param subscrBeginDate
      * @return
      */
-    private List<ContObject> updateSubscrContObjectsInternal(Long subscriberId, List<Long> contObjectIds,
+    private void updateSubscrContObjectsInternal(Long subscriberId, List<Long> contObjectIds,
                                                     LocalDate subscrBeginDate) {
 
         LocalDate subscrCurrentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
@@ -269,12 +281,12 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
             createSubscrContObjectLink(i, subscriber, subscrBeginDate);
         });
 
-        List<ContObject> resultContObjects = selectSubscriberContObjects(subscriberId);
-        resultContObjects.forEach(i -> {
-            i.getId();
-        });
+//        List<ContObject> resultContObjects = selectSubscriberContObjects(subscriberId);
+//        resultContObjects.forEach(i -> {
+//            i.getId();
+//        });
 
-        return resultContObjects;
+//        return resultContObjects;
     }
 
 

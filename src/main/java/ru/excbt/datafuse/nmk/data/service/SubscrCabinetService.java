@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,7 +210,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
-        subscriberAccessService.updateSubscriberAccess(newSubscriber , Arrays.asList(contObjectIds), null);
+        subscriberAccessService.updateContObjectAccess(newSubscriber , Arrays.asList(contObjectIds), null);
 		//List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
 		//		Arrays.asList(contObjectIds), LocalDate.now());
 

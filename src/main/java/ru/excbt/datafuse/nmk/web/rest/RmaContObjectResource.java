@@ -160,7 +160,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	}
 
 	/**
-	 *
+	 * TODO updateContObjectAccess pt.3
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.GET,
@@ -180,7 +180,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	}
 
 	/**
-	 *
+	 * TODO updateContObjectAccess pt.2
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
@@ -203,7 +203,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	}
 
 	/**
-	 *
+	 * TODO updateContObjectAccess pt.1
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.PUT,
@@ -222,7 +222,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			public List<ContObject> processAndReturnResult() {
 
 //				List<ContObject> result =
-                subscriberAccessService.updateSubscriberAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
+                subscriberAccessService.updateContObjectAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
 //                    subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds,
 //						subscrBeginDate);
 

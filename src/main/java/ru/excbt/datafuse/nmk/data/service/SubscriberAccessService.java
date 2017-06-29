@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.mapstruct.ap.internal.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,8 @@ import java.util.Optional;
 public class SubscriberAccessService implements SecuredRoles {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriberAccessService.class);
+
+    public enum AccessAction {ADD, DELETE, MERGE}
 
 
     private final ContZPointAccessRepository contZPointAccessRepository;
@@ -152,7 +157,7 @@ public class SubscriberAccessService implements SecuredRoles {
             log.warn("Access for {} (id={}) for Subscriber(id={}) already granted", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
         }
 
-        subscrContObjectService.access().linkSubscrContObject(contObject, subscriber,
+        subscrContObjectService.access().linkSubscrContObject(subscriber, contObject,
             grantDateTime != null ? grantDateTime.toLocalDate() : LocalDate.now());
 
     }
@@ -160,6 +165,11 @@ public class SubscriberAccessService implements SecuredRoles {
 
     @Transactional
     public void revokeContObjectAccess(Subscriber subscriber, ContObject contObject) {
+        revokeContObjectAccess(subscriber, contObject, null);
+    }
+
+    @Transactional
+    public void revokeContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime revokeDateTime) {
         Optional<Long> checkExisting = findContObjectIds(subscriber.getId()).stream().filter((i) -> i.equals(contObject.getId())).findFirst();
         if (checkExisting.isPresent()) {
             ContObjectAccess access = new ContObjectAccess().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
@@ -168,6 +178,10 @@ public class SubscriberAccessService implements SecuredRoles {
         } else {
             log.warn("Access for {} (id={}) for Subscriber(id={}) already revoked", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
         }
+
+        subscrContObjectService.access().unlinkSubscrContObject(subscriber, contObject,
+            revokeDateTime != null ? revokeDateTime.toLocalDate() : LocalDate.now());
+
     }
 
 
@@ -201,12 +215,48 @@ public class SubscriberAccessService implements SecuredRoles {
         });
     }
 
-    @Transactional()
+    @Transactional
     @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-    public void updateSubscriberAccess(Subscriber subscriber, List<Long> contObjectIds,
+    public void updateContObjectAccess(Subscriber subscriber, List<Long> contObjectIds,
                                        LocalDateTime accessDateTime) {
         subscrContObjectService.access()
             .updateSubscrContObjects(subscriber.getId(), contObjectIds, new org.joda.time.LocalDate(LocalDateUtils.asDate(accessDateTime)));
+    }
+
+    @Transactional
+    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+    public void updateContObjectAccess(Subscriber subscriber, List<Long> contObjectIds,
+                                       LocalDateTime accessDateTime, final AccessAction accessAction) {
+
+        List<Long> existingContObjectIds = findContObjectIds(subscriber.getId());
+
+        List<Long> addContObjectIds = new ArrayList<>();
+        List<Long> delContObjectIds = new ArrayList<>();
+
+        existingContObjectIds.forEach(i -> {
+            if (!contObjectIds.contains(i)) {
+                delContObjectIds.add(i);
+            }
+        });
+
+        contObjectIds.forEach(i -> {
+            if (!existingContObjectIds.contains(i)) {
+                addContObjectIds.add(i);
+            }
+        });
+
+
+
+        if (Collections.asSet(AccessAction.DELETE, AccessAction.MERGE).contains(accessAction)) {
+            delContObjectIds.forEach((id) -> revokeContObjectAccess(subscriber, new ContObject().id(id), accessDateTime));
+        }
+
+        if (Collections.asSet(AccessAction.ADD, AccessAction.MERGE).contains(accessAction)) {
+            addContObjectIds.forEach((id) -> grantContObjectAccess(subscriber, new ContObject().id(id), accessDateTime));
+        }
+
+//        subscrContObjectService.access()
+//            .updateSubscrContObjects(subscriber.getId(), contObjectIds, new org.joda.time.LocalDate(LocalDateUtils.asDate(accessDateTime)));
     }
 
 
