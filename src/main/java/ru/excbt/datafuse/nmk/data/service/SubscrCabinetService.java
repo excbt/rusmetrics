@@ -210,7 +210,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
-        subscriberAccessService.updateContObjectAccess(newSubscriber , Arrays.asList(contObjectIds), null);
+        subscriberAccessService.updateContObjectIdsAccess(newSubscriber , Arrays.asList(contObjectIds), null);
 		//List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
 		//		Arrays.asList(contObjectIds), LocalDate.now());
 
