@@ -160,7 +160,7 @@
                 </span>
             </div>
             <div class = ""
-                 ng-class = "{'nmc-energo-passport-maximize': !showContentsFlag && !(data.currentPassDocSection.preparedSection.navAnchors.length > 0), 'nmc-energo-passport-maximize-with-rnav': !showContentsFlag && (data.currentPassDocSection.preparedSection.navAnchors.length > 0), 'col-xs-8': data.currentPassDocSection.preparedSection.navAnchors.length > 0, 'col-xs-10': !(data.currentPassDocSection.preparedSection.navAnchors.length > 0)}">
+                 ng-class = "{'nmc-energo-passport-maximize': !showContentsFlag && !(data.currentPassDocSection.preparedSection.navAnchors.length > 0), 'nmc-energo-passport-maximize-with-rnav': !showContentsFlag && (data.currentPassDocSection.preparedSection.navAnchors.length > 0), 'col-xs-8': data.currentPassDocSection.preparedSection.navAnchors.length > 0 && data.currentPassDocSection.hasEntries !== true, 'col-xs-10': !(data.currentPassDocSection.preparedSection.navAnchors.length > 0) || data.currentPassDocSection.hasEntries === true}">
                 
                 <div class = "container-fluid">
                     <div class = "row">
@@ -263,7 +263,7 @@
                                     <div ng-switch-when = "SIMPLE_LINE"                                         
                                          class = "nmc-energy-simple-line"
                                          ng-style = "{'text-align': part.cellStyle.halignment}"
-                                         ng-attr-id = "{{part.key}}">
+                                         ng-attr-id = "{{part.anchor.key}}">
                                         <div ng-repeat = "elm in part.elements track by $index"                                             
                                              ng-style = "{'width': calcInlineWidth($first, elm, part.elements.length), 'text-align': elm.cellStyle.halignment}"
                                              ng-class = "{'nmc-energy-doc-h1': elm.cellStyle.header1}">
@@ -464,16 +464,17 @@
                     </div>
                 </div>
             </div>
-            <div ng-if = "data.currentPassDocSection.preparedSection.navAnchors.length > 0"
+            <div ng-if = "data.currentPassDocSection.preparedSection.navAnchors.length > 0 && data.currentPassDocSection.hasEntries !== true"
                  class = "col-xs-2 noPadding">
                 <h3 class = "nmc-h3">
                     
                 </h3>
                 <div class = "nmc-energo-passport-main-div"
-                     ng-show = "!ctrlSettings.passportLoading">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation" ng-repeat = "navAnchor in data.currentPassDocSection.preparedSection.navAnchors track by $index">
-                            <a ng-click = "gotoAnchor(navAnchor.anchor)">
+                     ng-show = "!ctrlSettings.passportLoading && !ctrlSettings.sectionLoading">
+                    <ul class = "nav nav-pills nav-stacked">
+                        <li role = "presentation" 
+                            ng-repeat = "navAnchor in data.currentPassDocSection.preparedSection.navAnchors track by $index">
+                            <a ng-click = "gotoAnchor(navAnchor.key)">
                                 <span ng-bind = "navAnchor.caption"></span>
                             </a>
                         </li>

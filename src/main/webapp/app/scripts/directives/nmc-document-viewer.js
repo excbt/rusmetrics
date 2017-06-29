@@ -317,69 +317,18 @@ app.directive('nmcDocumentViewer', function () {
                 //Prepare headers for inner tables
         //        switch (passDoc.viewType) {
         //        default:
-                //add passDoc navAnchors
-                passDoc.navAnchors = [];
                 
+                //add passDoc navAnchors                
+                passDoc.navAnchors = [];
                 passDoc.parts.forEach(function (passDocPart) {
-
-                    if (passDocPart.partType === "SIMPLE_LINE") {
-                        switch (passDocPart.key) {
-                        case "P_1":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "1 - 3. Описание объекта"});
-                            break;
-                        case "P_4":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "4 - 6. Сведения о потреблении и оплате энергоресурсов"});
-                            break;
-                        case "P_7":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "7. Сведения об оснащенности приборами учета"});
-                            break;
-                        case "P_8":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "8. Система теплопотребления"});
-                            break;
-                        case "P_9":
-                            passDoc.navAnchors.push({anchor: passDocPart.key, caption: "9. Система электропотребления"});
-                            break;
-                        case "P_10":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "10. Холодное водоснабжение"});
-                            break;
-                        case "P_11":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "11. Сведения об использовании вторичных энергетических ресурсов"});
-                            break;
-                        case "P_12":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "12. Экология материалов и оборудования"});
-                            break;
-                        case "P_13":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "13. Среднесписочная численность"});
-                            break;
-                        case "P_14":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "14. Внедрение энергосберегающих мероприятий по программе энергосбережения"});
-                            break;
-                        case "P_15":
-                            passDoc
-                                .navAnchors
-                                .push({anchor: passDocPart.key, caption: "15. Качество контроля и управления комфортностью здания"});
-                            break;
-                        }
+                    if (passDocPart.hasOwnProperty("anchor") && !mainSvc.checkUndefinedNull(passDocPart.anchor)) {
+                        passDoc
+                            .navAnchors
+                            .push(passDocPart.anchor);
                     }
-                    
+                });
+
+                passDoc.parts.forEach(function (passDocPart) {
                     if (passDocPart.partType !== "INNER_TABLE") {
                         return;
                     }
