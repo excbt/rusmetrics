@@ -12,7 +12,7 @@ app.directive('nmcDocumentViewer', function () {
             extraValues: "="
         },
         templateUrl: 'scripts/directives/templates/nmc-document-viewer.html',
-        controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', 'objectSvc', '$q', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout, objectSvc, $q) {
+        controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', 'objectSvc', '$q', '$anchorScroll', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout, objectSvc, $q, $anchorScroll) {
     
 //    console.log('documentsEnergoPassportCtrl is run');
 //    console.log($location.path);
@@ -317,6 +317,17 @@ app.directive('nmcDocumentViewer', function () {
                 //Prepare headers for inner tables
         //        switch (passDoc.viewType) {
         //        default:
+                
+                //add passDoc navAnchors                
+                passDoc.navAnchors = [];
+                passDoc.parts.forEach(function (passDocPart) {
+                    if (passDocPart.hasOwnProperty("anchor") && !mainSvc.checkUndefinedNull(passDocPart.anchor)) {
+                        passDoc
+                            .navAnchors
+                            .push(passDocPart.anchor);
+                    }
+                });
+
                 passDoc.parts.forEach(function (passDocPart) {
                     if (passDocPart.partType !== "INNER_TABLE") {
                         return;
@@ -732,14 +743,14 @@ app.directive('nmcDocumentViewer', function () {
                     return false;
                 }
 
-                var result = [],
-                    tmp = angular.copy(response.data);
+//                var result = [],
+                var tmp = angular.copy(response.data);
 
                 //$scope.data.passport = angular.copy(response.data);
 
                 tmp.sections.forEach(function (secTempl) {
                     secTempl.preparedSection = preparePassDoc(JSON.parse(secTempl.sectionJson));
-                    result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
+//                    result.push(preparePassDoc(JSON.parse(secTempl.sectionJson)));
                 });
         //        result = preparePassDoc(result);
                 $scope.data.passport = tmp;
@@ -1879,9 +1890,14 @@ app.directive('nmcDocumentViewer', function () {
             /***
             Конец Импорта данных для объектов
             */
+            
+            $scope.gotoAnchor = function (anchor) {
+                $location.hash(anchor);
+                $anchorScroll();
+            };
 
             function initCtrl() {
-console.log($scope.extraValues);                
+//console.log($scope.extraValues);                
                 var routeParams = $routeParams;
                 if (routeParams.param === "new") {
                     createPassDocInit();

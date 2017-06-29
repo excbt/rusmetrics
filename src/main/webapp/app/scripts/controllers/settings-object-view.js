@@ -3181,6 +3181,7 @@ angular.module('portalNMC')
 //                    }
 //                });
                 var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+                mainSvc.sortNumericItemsBy(resp.data, "passportDate2");
                 activePassport.isActive = true;
                 mainSvc.sortItemsBy(resp.data, "isActive");
                 resp.data.reverse();
@@ -3205,6 +3206,7 @@ angular.module('portalNMC')
                 
             function successCreatePassportCallbackFromTab(resp) {
                 $scope.objectCtrlSettings.isDocumentSaving = false;
+                $scope.objectCtrlSettings.isPassportCreating = false;
                 if (successSavePassportCallback(resp) === false) {
                     return false;
                 }
@@ -3329,6 +3331,10 @@ angular.module('portalNMC')
                 $scope.data.currentDocument.parentObject = object;
                 $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
                 $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);
+                
+                var viewDateformat = mainSvc.getDetepickerSettingsFullView();
+                viewDateformat.dateFormat = DATE_FORMAT_FOR_DATEPICKER;
+                $('#inputEnergyDocDateEdit').datepicker(viewDateformat);
             };
                 
             $scope.cancelCreateContObjectPassportFromTab = function (object) {

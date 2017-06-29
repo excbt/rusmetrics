@@ -69,6 +69,7 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'documentsEnergoPassportsCtrl'
         })
         .when('/documents/energo-passport/:param', {
+            reloadOnSearch: false,
             templateUrl: 'views/documents-energo-passport.html',
             controller: 'documentsEnergoPassportCtrl'
         })
@@ -86,6 +87,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 //            controller: 'documentsObjectPassportCtrl'
 //        })
         .when('/settings/object-passport/:object/:param', {
+            reloadOnSearch: false,
             templateUrl: 'views/documents-object-passport.html',
             controller: 'documentsObjectPassportCtrl'
         })
