@@ -2610,6 +2610,7 @@ app.directive('crudGridObjects', function () {
     //                    }
     //                });
                     var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+                    mainSvc.sortNumericItemsBy(resp.data, "passportDate2");
                     activePassport.isActive = true;
                     mainSvc.sortItemsBy(resp.data, "isActive");
                     resp.data.reverse();
