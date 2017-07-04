@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
@@ -60,6 +61,10 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
         this.contGroupService = contGroupService;
         this.organizationService = organizationService;
         this.contObjectFiasService = contObjectFiasService;
+    }
+
+    protected abstract class ContObjectDTOResponse extends ApiActionEntityAdapter<List<? extends ContObjectDTO>> {
+
     }
 
     /**

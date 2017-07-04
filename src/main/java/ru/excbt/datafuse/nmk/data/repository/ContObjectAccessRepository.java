@@ -13,17 +13,20 @@ import java.util.Optional;
  */
 public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK> {
 
-    @Query("SELECT distinct a.subscriber.id FROM ContObjectAccess a")
+    @Query("SELECT distinct a.subscriber.id FROM ContObjectAccess a WHERE a.accessTtl IS NULL")
     List<Long> findAllSubscriberIds();
 
-    @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId")
+    @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL")
     List<Long> findContObjectIdsBySubscriber (@Param("subscriberId") Long subscriberId);
 
+    @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL")
+    List<Long> findContObjectIdsBySubscriberTTL (@Param("subscriberId") Long subscriberId);
 
-    @Query("SELECT distinct a.subscriberId FROM ContObjectAccess a WHERE a.contObjectId = :contObjectId")
+
+    @Query("SELECT distinct a.subscriberId FROM ContObjectAccess a WHERE a.contObjectId = :contObjectId AND a.accessTtl IS NULL")
     List<Long> findSubscriberByContObject(@Param("contObjectId") Long contObjectId);
 
-    @Query("SELECT count(a) FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.contObjectId = :contObjectId")
+    @Query("SELECT count(a) FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.contObjectId = :contObjectId AND a.accessTtl IS NULL")
     Optional<Long> findByPK(@Param("subscriberId") Long subscriberId, @Param("contObjectId") Long contObjectId);
 
 

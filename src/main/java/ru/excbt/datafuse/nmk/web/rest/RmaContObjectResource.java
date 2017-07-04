@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -53,6 +54,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
         super(contObjectService, contGroupService, organizationService, contObjectFiasService);
         this.subscriberAccessService = subscriberAccessService;
     }
+
+
+
 
     /**
 	 *
@@ -146,9 +150,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
-        ApiAction action = new ApiActionEntityAdapter<Object>() {
+        ApiAction action = new ContObjectDTOResponse() {
             @Override
-            public Object processAndReturnResult() {
+            public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
@@ -167,9 +171,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
-        ApiAction action = new ApiActionEntityAdapter<Object>() {
+        ApiAction action = new ContObjectDTOResponse() {
             @Override
-            public Object processAndReturnResult() {
+            public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
@@ -188,9 +192,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 
-        ApiAction action = new ApiActionEntityAdapter<Object>() {
+        ApiAction action = new ContObjectDTOResponse() {
             @Override
-            public Object processAndReturnResult() {
+            public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
                     getCurrentSubscriberId());
 
@@ -216,19 +220,14 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 		LocalDate subscrBeginDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
 
-		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
+		ApiAction action = new ContObjectDTOResponse() {
 
 			@Override
-			public List<ContObject> processAndReturnResult() {
+			public List<ContObjectDTO> processAndReturnResult() {
 
-//				List<ContObject> result =
                 subscriberAccessService.updateContObjectIdsAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
-//                    subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds,
-//						subscrBeginDate);
-
-                List<ContObject> result = subscrContObjectService.selectSubscriberContObjects(subscriberId);
-
-				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), result);
+                List<ContObjectDTO> result = subscrContObjectService.selectSubscriberContObjectDTOs(subscriberId);
+				subscrContObjectService.rmaInitHaveSubscrDTO(getSubscriberParam(), result);
 
 				return result;
 			}

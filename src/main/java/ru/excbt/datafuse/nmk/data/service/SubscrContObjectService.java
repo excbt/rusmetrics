@@ -1,10 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import lombok.Getter;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
@@ -30,7 +32,6 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,18 +52,24 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 	private static final List<ContObject> EMPTY_CONT_OBJECTS_LIST = Collections.unmodifiableList(new ArrayList<>());
 
+	private final SubscrContObjectRepository subscrContObjectRepository;
+
+	private final SubscriberService subscriberService;
+
+    private final ContGroupService contGroupService;
+
+    private final ContObjectMapper contObjectMapper;
+
+
 	@Autowired
-	private SubscrContObjectRepository subscrContObjectRepository;
+    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper) {
+        this.subscrContObjectRepository = subscrContObjectRepository;
+        this.subscriberService = subscriberService;
+        this.contGroupService = contGroupService;
+        this.contObjectMapper = contObjectMapper;
+    }
 
-	@Autowired
-	private SubscriberService subscriberService;
-
-	@Autowired
-	protected ContGroupService contGroupService;
-
-
-
-	private final Access access = new Access();
+    private final Access access = new Access();
 	private final Old old = new Old();
 
 	public Access access() {
@@ -173,13 +180,13 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 //	}
 
 
-    /**
-     *
-     * @param contObject
-     * @param subscriber
-     * @param subscrBeginDate
-     * @return
-     */
+//    /**
+//     *
+//     * @param contObject
+//     * @param subscriber
+//     * @param subscrBeginDate
+//     * @return
+//     */
 //    @Transactional(value = TxConst.TX_DEFAULT)
 //    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 //    private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
@@ -368,6 +375,15 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		checkNotNull(subscriberId);
 		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
 		return ObjectFilters.deletedFilter(result);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectDTO> selectSubscriberContObjectDTOs(Long subscriberId) {
+		checkNotNull(subscriberId);
+
+		List<ContObjectDTO> result = subscrContObjectRepository.selectContObjects(subscriberId)
+            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
+		return result;
 	}
 
 	/**
@@ -816,6 +832,16 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId);
 	}
 
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObjectDTO> selectAvailableContObjectDTOs(Long subscriberId, Long rmaSubscriberId) {
+		checkNotNull(subscriberId);
+		checkNotNull(rmaSubscriberId);
+
+		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId)
+            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
+	}
+
 
 	/**
 	 *
@@ -842,6 +868,29 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public void rmaInitHaveSubscr(final SubscriberParam subscriberParam, final List<ContObject> contObjects) {
+		checkNotNull(subscriberParam);
+		checkNotNull(contObjects);
+
+		if (!subscriberParam.isRma()) {
+			return;
+		}
+
+		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
+
+		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+		contObjects.forEach(i -> {
+			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+			i.set_haveSubscr(haveSubscr);
+		});
+
+	}
+	/**
+	 *
+	 * @param subscriberParam
+	 * @param contObjects
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public void rmaInitHaveSubscrDTO(final SubscriberParam subscriberParam, final List<ContObjectDTO> contObjects) {
 		checkNotNull(subscriberParam);
 		checkNotNull(contObjects);
 
