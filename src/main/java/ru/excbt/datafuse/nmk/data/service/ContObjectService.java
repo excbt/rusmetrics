@@ -67,8 +67,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private final SubscrContObjectService subscrContObjectService;
 
-	private final SubscrContObjectRepository subscrContObjectRepository;
-
 	private final ContManagementService contManagementService;
 
 	private final FiasService fiasService;
@@ -95,7 +93,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
                              ContObjectDaDataService contObjectDaDataService,
                              TimezoneDefService timezoneDefService,
                              SubscrContObjectService subscrContObjectService,
-                             SubscrContObjectRepository subscrContObjectRepository,
                              ContManagementService contManagementService,
                              FiasService fiasService,
                              LocalPlaceService localPlaceService,
@@ -111,7 +108,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         this.contObjectDaDataService = contObjectDaDataService;
         this.timezoneDefService = timezoneDefService;
         this.subscrContObjectService = subscrContObjectService;
-        this.subscrContObjectRepository = subscrContObjectRepository;
         this.contManagementService = contManagementService;
         this.fiasService = fiasService;
         this.localPlaceService = localPlaceService;

@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,16 +36,43 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
     /// Queries for ContObject
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId " +
-        " ORDER BY a.contObject.fullAddress, a.contObject.id")
-    List<ContObject> findContObjectBySubscriberId(@Param("subscriberId") Long subscriberId);
+    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId "
+        + " AND a.accessTtl IS NULL "
+        + " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    List<ContObject> findContObjectsBySubscriberId(@Param("subscriberId") Long subscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a "
         + " WHERE a.subscriberId = :subscriberId "
         + " AND a.contObjectId NOT IN (:idList)"
+        + " AND a.accessTtl IS NULL "
         + " ORDER BY a.contObject.fullAddress, a.contObject.id")
     List<ContObject> findContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
                                                  @Param("idList") List<Long> idList);
+
+
+    @Query("SELECT DISTINCT a.contObjectId FROM ContObjectAccess a WHERE a.subscriberId IN "
+        + " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId AND s.deleted = 0) "
+        + " AND a.accessTtl IS NULL "
+    )
+    List<Long> findContObjectIdsByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
+
+
+    @Query("SELECT a.contObject FROM ContObjectAccess a "
+        + " WHERE a.subscriberId = :subscriberId "
+        + " AND a.contObjectId IN (:contObjectIds) AND a.contObject.deleted = 0"
+        + " AND a.accessTtl IS NULL"
+        + " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    List<ContObject> findContObjectsByIds(@Param("subscriberId") Long subscriberId,
+                                          @Param("contObjectIds") List<Long> contObjectIds);
+
+
+    @Query("SELECT a.subscriberId FROM ContObjectAccess a "
+        + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId) "
+        + " AND a.contObjectId = :contObjectId "
+        + " AND a.accessTtl IS NULL "
+    )
+    List<Long> findSubscriberIdsByRma(@Param("rmaSubscriberId") Long rmaSubscriberId,
+                                      @Param("contObjectId") Long contObjectId);
 
 }

@@ -10,7 +10,6 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
@@ -48,11 +47,13 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	private static final Logger log = LoggerFactory.getLogger(RmaContObjectResource.class);
 
 	private final SubscriberAccessService subscriberAccessService;
+	private final ObjectAccessService objectAccessService;
 
 	@Autowired
-    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService) {
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
         super(contObjectService, contGroupService, organizationService, contObjectFiasService);
         this.subscriberAccessService = subscriberAccessService;
+        this.objectAccessService = objectAccessService;
     }
 
 
@@ -245,8 +246,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/subscribers", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
-		List<Long> resultList = subscrContObjectService.selectContObjectSubscriberIdsByRma(getRmaSubscriberId(),
-				contObjectId);
+		List<Long> resultList = objectAccessService.findSubscriberIdsByRma(getRmaSubscriberId(), contObjectId);
 		return ApiResponse.responseOK(resultList);
 	}
 

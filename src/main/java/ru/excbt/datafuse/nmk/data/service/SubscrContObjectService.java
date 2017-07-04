@@ -1,5 +1,12 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
@@ -13,30 +20,18 @@ import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
-
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
+import javax.persistence.criteria.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Сервис для работы с привязкой абонентов и объекта учета
@@ -221,22 +216,16 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
     }
 
-	/**
-	 *
-	 * @param subscriberParam
-	 * @param currentDateFilter
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> selectRmaSubscribersContObjectIds(SubscriberParam subscriberParam, boolean currentDateFilter) {
+	public List<Long> selectRmaSubscribersContObjectIds(SubscriberParam subscriberParam) {
 		checkNotNull(subscriberParam);
 		checkState(subscriberParam.isRma());
-		if (currentDateFilter) {
-			LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberParam.getSubscriberId());
-			return subscrContObjectRepository.selectRmaSubscribersContObjectIds(subscriberParam.getSubscriberId(),
-					currentDate.toDate());
-		}
-		return subscrContObjectRepository.selectRmaSubscribersContObjectIds(subscriberParam.getSubscriberId());
+		return objectAccessService.findContObjectIdsByRmaSubscriberId(subscriberParam.getRmaSubscriberId());
 	}
 
 	/**
@@ -269,7 +258,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam) {
 		checkNotNull(subscriberParam);
 		List<ContObject> result = objectAccessService.findContObjects(subscriberParam.getSubscriberId());
-		// subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -345,7 +333,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId, List<Long> contObjectIds) {
 		checkNotNull(subscriberId);
-		List<ContObject> result = subscrContObjectRepository.selectContObjectsByIds(subscriberId, contObjectIds);
+		List<ContObject> result = objectAccessService.findContObjectsByIds(subscriberId, contObjectIds);
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -358,8 +346,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam, List<Long> contObjectIds) {
 		checkNotNull(subscriberParam);
-		List<ContObject> result = subscrContObjectRepository.selectContObjectsByIds(subscriberParam.getSubscriberId(),
-				contObjectIds);
+		List<ContObject> result = objectAccessService.findContObjectsByIds(subscriberParam.getSubscriberId(), contObjectIds);
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -541,7 +528,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectSubscriberContObjectIds(Long subscriberId) {
 		checkNotNull(subscriberId);
-		List<Long> result = subscrContObjectRepository.selectContObjectIds(subscriberId);
+		List<Long> result = objectAccessService.findContObjectIds(subscriberId);
 		return result;
 	}
 
@@ -553,7 +540,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public int selectSubscriberContObjectCount(Long subscriberId) {
 		checkNotNull(subscriberId);
-		List<Long> result = subscrContObjectRepository.selectContObjectIds(subscriberId);
+		List<Long> result = objectAccessService.findContObjectIds(subscriberId);
 		return result.size();
 	}
 
@@ -679,7 +666,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			return;
 		}
 
-		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam, false);
+		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
 
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
 		contObjects.forEach(i -> {
@@ -702,7 +689,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			return;
 		}
 
-		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam, false);
+		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
 
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
 		contObjects.forEach(i -> {
@@ -727,7 +714,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 		logger.debug("Checking access for subscriberId:{}", subscriberId);
 
-		List<Long> subscrContObjectIds = selectSubscriberContObjectIds(subscriberId);
+		List<Long> subscrContObjectIds = objectAccessService.findContObjectIds(subscriberId);
 
 		return checkIds(contObjectIds, subscrContObjectIds);
 	}
@@ -747,17 +734,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		List<Long> availableIds = selectSubscriberContZPointIds(subscriberId);
 
 		return checkIds(contZPointIds, availableIds);
-	}
-
-	/**
-	 *
-	 * @param rmaSubscriberId
-	 * @param contObjectId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectContObjectSubscriberIdsByRma(Long rmaSubscriberId, Long contObjectId) {
-		return subscrContObjectRepository.selectContObjectSubscriberIdsByRma(rmaSubscriberId, contObjectId);
 	}
 
 	/**

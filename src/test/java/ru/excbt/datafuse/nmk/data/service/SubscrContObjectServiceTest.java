@@ -1,17 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.Tuple;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
@@ -23,6 +15,12 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+
+import javax.persistence.Tuple;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
@@ -39,6 +37,9 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 
 	@Autowired
 	private SubscrContObjectRepository subscrContObjectRepository;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	/**
 	 *
@@ -59,7 +60,7 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	@Test
     @Transactional
 	public void testSelectContObjectSubscriberIdsByRma() throws Exception {
-		List<Long> ids = subscrContObjectService.selectContObjectSubscriberIdsByRma(64166466L, 29863789L);
+		List<Long> ids = objectAccessService.findSubscriberIdsByRma(64166466L, 29863789L);
 
 		ids.forEach(i -> logger.info("id:{}", i));
 

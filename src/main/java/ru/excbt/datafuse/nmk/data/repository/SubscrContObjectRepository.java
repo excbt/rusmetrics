@@ -28,17 +28,17 @@ public interface SubscrContObjectRepository
 		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
 
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param subscrDate
-	 * @return
-	 */
-	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
-			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
-			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
-	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId,
-			@Param("subscrDate") Date subscrDate);
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @param subscrDate
+//	 * @return
+//	 */
+//	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
+//			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
+//			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
+//	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId,
+//			@Param("subscrDate") Date subscrDate);
 
 	/**
 	 *
