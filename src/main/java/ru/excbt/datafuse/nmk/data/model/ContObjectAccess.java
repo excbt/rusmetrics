@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Created by kovtonyk on 27.06.2017.
@@ -29,7 +31,7 @@ public class ContObjectAccess {
         @Column(name = "cont_object_id")
         private Long contObjectId;
 
-        public PK subscriber(Long subscriberId) {
+        public PK subscriberId(Long subscriberId) {
             this.subscriberId = subscriberId;
             return this;
         }
@@ -59,14 +61,22 @@ public class ContObjectAccess {
     }
 
     @Id
-//    @ManyToOne
     @Column(name = "subscriber_id")
     private Long subscriberId;
 
     @Id
-//    @ManyToOne
     @Column(name = "cont_object_id")
     private Long contObjectId;
+
+    @Column(name = "access_ttl")
+    private LocalDateTime accessTtl;
+
+    @Column(name = "access_ttl_tz")
+    private ZonedDateTime accessTtlTz;
+
+    @Version
+    private int version;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id", insertable = false, updatable = false)
@@ -76,7 +86,6 @@ public class ContObjectAccess {
     @JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
     private ContObject contObject;
 
-
     public ContObjectAccess subscriberId(Long subscriberId) {
         this.subscriberId = subscriberId;
         return this;
@@ -85,6 +94,11 @@ public class ContObjectAccess {
     public ContObjectAccess contObjectId(Long contObjectId) {
         this.contObjectId = contObjectId;
         return this;
+    }
+
+    public void clearAccessTTL(){
+        this.accessTtl = null;
+        this.accessTtlTz = null;
     }
 
 }

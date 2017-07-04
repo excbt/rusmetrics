@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -271,7 +272,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 //		List<SubscrContObject> subscrContObjects = subscrContObjectService
 //				.selectSubscrContObjects(cabinetSubscriber.getId());
 
-		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Lists.emptyList(), null);
+		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Lists.emptyList(), LocalDateTime.now());
 		//subscrContObjectService.old().deleteSubscrContObjectPermanent(subscrContObjects);
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);

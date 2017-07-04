@@ -8,6 +8,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
@@ -51,6 +52,12 @@ public class ContObjectAccessHistory extends AbstractAuditableModel {
 
     @Column(name = "revoke_tz")
     private ZonedDateTime revokeTZ;
+
+    @Column(name = "access_ttl")
+    private LocalDateTime accessTtl;
+
+    @Column(name = "access_ttl_tz")
+    private ZonedDateTime accessTtlTZ;
 
     @Version
     private int version;

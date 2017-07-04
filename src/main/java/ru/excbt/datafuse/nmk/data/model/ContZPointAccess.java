@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Created by kovtonyk on 27.06.2017.
@@ -59,14 +61,21 @@ public class ContZPointAccess {
     }
 
     @Id
-//    @ManyToOne
     @JoinColumn(name = "subscriber_id")
     private Long subscriberId;
 
     @Id
-//    @ManyToOne
     @JoinColumn(name = "cont_zpoint_id")
     private Long contZPointId;
+
+    @Column(name = "access_ttl")
+    private LocalDateTime accessTtl;
+
+    @Column(name = "access_ttl_tz")
+    private ZonedDateTime accessTtlTz;
+
+    @Version
+    private int version;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id", insertable = false, updatable = false)
@@ -75,7 +84,6 @@ public class ContZPointAccess {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
     private ContZPoint contZPoint;
-
 
     public ContZPointAccess subscriberId(Long subscriberId) {
         this.subscriberId = subscriberId;
