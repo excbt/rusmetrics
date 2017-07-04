@@ -35,7 +35,16 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
     /// Queries for ContObject
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId")
-    List<ContObject> findContObjectBySubscriberId (@Param("subscriberId") Long subscriberId);
+    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId " +
+        " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    List<ContObject> findContObjectBySubscriberId(@Param("subscriberId") Long subscriberId);
+
+
+    @Query("SELECT a.contObject FROM ContObjectAccess a "
+        + " WHERE a.subscriberId = :subscriberId "
+        + " AND a.contObjectId NOT IN (:idList)"
+        + " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    List<ContObject> findContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
+                                                 @Param("idList") List<Long> idList);
 
 }

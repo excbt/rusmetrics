@@ -37,10 +37,20 @@ public class ObjectAccessService {
     public List<ContObject> findContObjects(Long subscriberId) {
         List<ContObject> result;
         if (NEW_ACCESS) {
-            //result = contObjectAccessRepository.findBySubscriberId(subscriberId).stream().map((a) -> a.getContObject()).collect(Collectors.toList());
             result = contObjectAccessRepository.findContObjectBySubscriberId(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContObjects(subscriberId);
+        }
+        return result;
+    }
+
+
+    public List<ContObject> findContObjectsExcludingIds (Long subscriberId, List<Long> idList) {
+        List<ContObject> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findContObjectsExcludingIds(subscriberId, idList);
+        } else {
+            result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId,idList);
         }
         return result;
     }

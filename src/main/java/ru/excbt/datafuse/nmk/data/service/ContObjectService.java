@@ -573,30 +573,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * TODO delete
-	 * @param contObjectId
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteContObjectPermanent(Long contObjectId) {
-		checkNotNull(contObjectId);
-
-		ContObject contObject = findContObjectChecked(contObjectId);
-
-		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
-		subscrContObjectService.old().deleteSubscrContObjectPermanent(subscrContObjects);
-
-		List<ContManagement> contManagements = contManagementService.selectByContObject(contObjectId);
-		contManagementService.deletePermanent(contManagements);
-
-		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
-		contObjectFiasRepository.delete(contObjectFiasList);
-
-		contObjectRepository.delete(contObject);
-	}
-
-	/**
 	 *
 	 * @return
 	 */

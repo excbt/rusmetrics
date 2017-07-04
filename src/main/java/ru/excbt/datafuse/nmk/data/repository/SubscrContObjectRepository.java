@@ -27,12 +27,6 @@ import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
 public interface SubscrContObjectRepository
 		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
 
-//	/**
-//	 *
-//	 * @param contObjectId
-//	 * @return
-//	 */
-//	public List<SubscrContObject> findByContObjectId(Long contObjectId);
 
 	/**
 	 *
@@ -80,23 +74,14 @@ public interface SubscrContObjectRepository
 			@Param("contObjectIds") List<Long> contObjectIds);
 
 	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Query("SELECT sco.contObject FROM SubscrContObject sco "
-			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
-	public List<ContObject> selectContObjectsNoSort(@Param("subscriberId") Long subscriberId);
-
-	/**
-	 *
+	 * COVERED
 	 * @return
 	 */
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
 			+ " AND sco.deleted = 0 AND sco.contObjectId NOT IN (:idList)"
 			+ " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
-	public List<ContObject> selectContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
+	List<ContObject> selectContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
 			@Param("idList") List<Long> idList);
 
 	/**
@@ -132,15 +117,6 @@ public interface SubscrContObjectRepository
 			+ " AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
 	public List<SubscrContObject> selectActualSubscrContObjects(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") long contObjectId);
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @param contObjectId
-	 * @return
-	 */
-	@Query("SELECT sco FROM SubscrContObject sco " + " WHERE sco.subscriberId = :subscriberId ")
-	public List<SubscrContObject> selectSubscrContObjects(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 *
