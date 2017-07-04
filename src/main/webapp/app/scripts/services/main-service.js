@@ -541,16 +541,17 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         return result;
     };
     
-    function isPositiveNumberValue(val) {
-        if (checkUndefinedNull(val)) {
-            return false;
-        } else {
-            return checkPositiveNumberValue(val);
-        }
-    }
+//    function isPositiveNumberValue(val) {
+//        if (checkUndefinedNull(val)) {
+//            return false;
+//        } else {
+//            return checkPositiveNumberValue(val);
+//        }
+//    }
     
     var checkHHmm = function (hhmmValue) {
         if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
+//        if (/(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]){1}/.test(hhmmValue)) {
             return true;
         }
         return false;
@@ -1017,7 +1018,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         isAdmin: isAdmin,
         isCabinet: isCabinet,
         isNumeric: isNumeric,
-        isPositiveNumberValue: isPositiveNumberValue,
+        /*isPositiveNumberValue: isPositiveNumberValue,*/
         isRma: isRma,
         isReadonly: isReadonly,
         isSystemuser: isSystemuser,

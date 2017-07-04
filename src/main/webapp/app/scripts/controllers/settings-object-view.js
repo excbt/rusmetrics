@@ -1909,20 +1909,21 @@ angular.module('portalNMC')
                 return result;
             };
 
-            function isNumeric(n) {
-                return !isNaN(parseFloat(n)) && isFinite(n);
-            }
+//            function isNumeric(n) {
+//                return !isNaN(parseFloat(n)) && isFinite(n);
+//            }
 
             $scope.checkNumericValue = function (numvalue) {
-                var result = true;
-                if ($scope.checkEmptyNullValue(numvalue)) {
-                    return result;
-                }
-                if (!isNumeric(numvalue)) {
-                    result = false;
-                    return result;
-                }
-                return result;
+                return mainSvc.checkNumericValue(numvalue);
+//                var result = true;
+//                if ($scope.checkEmptyNullValue(numvalue)) {
+//                    return result;
+//                }
+//                if (!isNumeric(numvalue)) {
+//                    result = false;
+//                    return result;
+//                }
+//                return result;
             };
 
             $scope.checkPositiveNumberValue = function (numvalue) {
@@ -1942,7 +1943,7 @@ angular.module('portalNMC')
                 return false;
             };
 
-            $scope.checkHHmm = function (hhmmValue) {
+            $scope.checkHHmm = function (hhmmValue) {                
                 return mainSvc.checkHHmm(hhmmValue);
             };
 
