@@ -221,30 +221,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
     }
 
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> selectRmaSubscrContObjectIds(Long subscriberId) {
-		checkNotNull(subscriberId);
-		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
-		return subscrContObjectRepository.selectRmaSubscribersContObjectIds(subscriberId, currentDate.toDate());
-	}
-
-	/**
-	 *
-	 * @param subscriberParam
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> selectRmaSubscribersContObjectIds(SubscriberParam subscriberParam) {
-		return selectRmaSubscribersContObjectIds(subscriberParam, false);
-	}
-
 	/**
 	 *
 	 * @param subscriberParam
@@ -703,7 +679,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			return;
 		}
 
-		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
+		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam, false);
 
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
 		contObjects.forEach(i -> {
@@ -726,7 +702,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 			return;
 		}
 
-		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
+		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam, false);
 
 		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
 		contObjects.forEach(i -> {

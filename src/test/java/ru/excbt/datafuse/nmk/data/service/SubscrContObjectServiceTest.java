@@ -46,19 +46,6 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	 */
 	@Test
     @Transactional
-	public void testSubscrContObjectIds() throws Exception {
-		logger.debug("Current Subscriber Id: {}", currentSubscriberService.getSubscriberId());
-
-		List<Long> contObjectIds = subscrContObjectService.selectRmaSubscrContObjectIds(EXCBT_RMA_SUBSCRIBER_ID);
-		assertTrue(contObjectIds.size() > 0);
-	}
-
-	/**
-	 *
-	 * @throws Exception
-	 */
-	@Test
-    @Transactional
 	public void testContZPointInfo() throws Exception {
 		List<ContZPointShortInfo> result = subscrContObjectService
 				.selectSubscriberContZPointShortInfo(EXCBT_RMA_SUBSCRIBER_ID);
