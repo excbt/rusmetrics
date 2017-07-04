@@ -4,6 +4,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
@@ -60,13 +61,18 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
     private final ContObjectMapper contObjectMapper;
 
+    private final ContObjectAccessRepository contObjectAccessRepository;
+
+    private final ObjectAccessService objectAccessService;
 
 	@Autowired
-    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper) {
+    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.subscriberService = subscriberService;
         this.contGroupService = contGroupService;
         this.contObjectMapper = contObjectMapper;
+        this.contObjectAccessRepository = contObjectAccessRepository;
+        this.objectAccessService = objectAccessService;
     }
 
     private final Access access = new Access();
@@ -142,65 +148,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 
-
-
-
-//	/**
-//	 *
-//	 * @param subscrContObject
-//	 */
-//	private void deleteSubscrContObject(SubscrContObject subscrContObject, java.time.LocalDate subscrEndDate) {
-//		checkNotNull(subscrContObject);
-//		if (subscrContObject.getSubscrBeginDate().equals(subscrContObject.getSubscrEndDate())) {
-//			subscrContObjectRepository.delete(subscrContObject);
-//		} else {
-//			subscrContObject.setSubscrEndDate(LocalDateUtils.asDate(subscrEndDate));
-//			subscrContObjectRepository.save(subscrContObject);
-//		}
-//	}
-
-	/**
-	 *
-	 * @param objects
-	 */
-//	@Transactional(value = TxConst.TX_DEFAULT)
-//	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-//	public void deleteSubscrContObjectPermanent(List<SubscrContObject> objects) {
-//		subscrContObjectRepository.delete(objects);
-//	}
-
-	/**
-	 *
-	 * @param subscrContObject
-	 */
-//	@Transactional(value = TxConst.TX_DEFAULT)
-//	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-//	public void deleteSubscrContObjectPermanent(SubscrContObject subscrContObject) {
-//		subscrContObjectRepository.delete(subscrContObject);
-//	}
-
-
-//    /**
-//     *
-//     * @param contObject
-//     * @param subscriber
-//     * @param subscrBeginDate
-//     * @return
-//     */
-//    @Transactional(value = TxConst.TX_DEFAULT)
-//    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-//    private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
-//                                                        LocalDate subscrBeginDate) {
-//        checkNotNull(contObject);
-//        checkNotNull(subscriber);
-//        checkNotNull(subscrBeginDate);
-//
-//        SubscrContObject subscrContObject = new SubscrContObject();
-//        subscrContObject.setContObject(contObject);
-//        subscrContObject.setSubscriber(subscriber);
-//        subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
-//        return subscrContObjectRepository.save(subscrContObject);
-//    }
 
     private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
                                                         java.time.LocalDate fromDate) {
@@ -290,12 +237,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
             createSubscrContObjectLink(i, subscriber, subscrBeginDate);
         });
 
-//        List<ContObject> resultContObjects = selectSubscriberContObjects(subscriberId);
-//        resultContObjects.forEach(i -> {
-//            i.getId();
-//        });
-
-//        return resultContObjects;
     }
 
 
@@ -373,7 +314,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);
-		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberId);
+		List<ContObject> result = objectAccessService.findContObjects(subscriberId);
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -381,8 +322,10 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObjectDTO> selectSubscriberContObjectDTOs(Long subscriberId) {
 		checkNotNull(subscriberId);
 
-		List<ContObjectDTO> result = subscrContObjectRepository.selectContObjects(subscriberId)
+		List<ContObjectDTO> result = objectAccessService.findContObjects(subscriberId)
             .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
+//		List<ContObjectDTO> result = subscrContObjectRepository.selectContObjects(subscriberId)
+//            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
 		return result;
 	}
 
@@ -394,7 +337,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam) {
 		checkNotNull(subscriberParam);
-		List<ContObject> result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
+		List<ContObject> result = objectAccessService.findContObjects(subscriberParam.getSubscriberId());
+		// subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -411,7 +355,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		List<ContObject> result = EMPTY_CONT_OBJECTS_LIST;
 
 		if (contGroupId == null) {
-			result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
+			result = objectAccessService.findContObjects(subscriberParam.getSubscriberId());
+                //subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
 		} else {
 			result = contGroupService.selectContGroupObjects(subscriberParam, contGroupId);
 		}
@@ -433,7 +378,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
         List<ContObject> result;
 
         if (contGroupId == null) {
-            result = subscrContObjectRepository.selectContObjects(subscriberParam.getSubscriberId());
+            result = objectAccessService.findContObjects(subscriberParam.getSubscriberId());
         } else {
             result = contGroupService.selectContGroupObjects(subscriberParam, contGroupId);
         }
@@ -659,7 +604,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		checkNotNull(subscriberId);
 		List<ContObject> result = null;
 		if (contObjectIds.isEmpty()) {
-			result = subscrContObjectRepository.selectContObjects(subscriberId);
+			result = objectAccessService.findContObjects(subscriberId);
+                //subscrContObjectRepository.selectContObjects(subscriberId);
 		} else {
 			result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId, contObjectIds);
 		}
@@ -671,8 +617,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      * @param rmaSubscriberId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    private List<ContObject> selectRmaSubscriberContObjects(Long rmaSubscriberId) {
 		checkNotNull(rmaSubscriberId);
 		List<ContObject> result = selectSubscriberContObjects(rmaSubscriberId);
 		rmaInitHaveSubscr(rmaSubscriberId, result);
@@ -685,8 +631,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @param subscriberParam
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjects(SubscriberParam subscriberParam) {
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    private List<ContObject> selectRmaSubscriberContObjects(SubscriberParam subscriberParam) {
 		checkNotNull(subscriberParam);
 		List<ContObject> result = selectSubscriberContObjects(subscriberParam);
 		rmaInitHaveSubscr(subscriberParam, result);
@@ -700,8 +646,8 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      * @param contObjectIds
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long rmaSubscriberId, List<Long> contObjectIds) {
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	private List<ContObject> selectRmaSubscriberContObjectsExcludingIds(Long rmaSubscriberId, List<Long> contObjectIds) {
 		checkNotNull(rmaSubscriberId);
 		checkNotNull(contObjectIds);
 
@@ -971,5 +917,18 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 				: subscrContObjectRepository.selectSubscrDeviceObjectByNumber(subscriberParam.getSubscriberId(),
 						deviceObjectNumbers);
 	}
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public void readContObjectAccess(Long subscriberId, List<? extends ContObjectDTO> contObjectDTOS) {
+        List<ContObjectAccess> accesses = contObjectAccessRepository.findBySubscriberId(subscriberId);
+        Map<Long, ContObjectAccess> accessMap = new HashMap<>();
+        accesses.forEach((i) -> accessMap.put(i.getContObjectId(), i));
+        contObjectDTOS.forEach((co) -> {
+            Optional.ofNullable(accessMap.get(co.getId())).ifPresent((a) -> {
+                if (a.getAccessTtl() != null)
+                    co.objectAccess(ObjectAccessDTO.AccessType.TRIAL, a.getAccessTtl().toLocalDate());
+            });
+        });
+    }
 
 }

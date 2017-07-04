@@ -53,10 +53,12 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	protected final ContObjectFiasService contObjectFiasService;
 
+
 	@Autowired
     public SubscrContObjectResource(ContObjectService contObjectService,
                                     ContGroupService contGroupService,
-                                    OrganizationService organizationService, ContObjectFiasService contObjectFiasService) {
+                                    OrganizationService organizationService,
+                                    ContObjectFiasService contObjectFiasService) {
         this.contObjectService = contObjectService;
         this.contGroupService = contGroupService;
         this.organizationService = organizationService;
@@ -67,36 +69,61 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
     }
 
+//    /**
+//	 *
+//	 * @param contGroupId
+//	 * @return
+//	 */
+//	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered, List<Long> meterPeriodSettingIds) {
+//		List<ContObject> contObjectList = null;
+//
+//		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
+//
+//		subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
+//
+//		if (isHaveSubscrFiltered) {
+//
+//			return ObjectFilters.filterToList(contObjectList, i -> Boolean.TRUE.equals(i.get_haveSubscr()));
+//
+//		}
+//
+//		return contObjectList;
+//	}
+
     /**
-	 *
-	 * @param contGroupId
-	 * @return
-	 */
-	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered, List<Long> meterPeriodSettingIds) {
-		List<ContObject> contObjectList = null;
+     *
+     * @param contGroupId
+     * @return
+     */
+    protected List<ContObject> findContObjectsByAccess(Long contGroupId, boolean isRma, boolean isHaveSubscrFiltered, List<Long> meterPeriodSettingIds) {
+        List<ContObject> contObjectList;
 
-		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
+        contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
 
-		subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
+        if (isRma) {
+            subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
 
-		if (isHaveSubscrFiltered) {
+            if (isHaveSubscrFiltered) {
 
-			return ObjectFilters.filterToList(contObjectList, i -> Boolean.TRUE.equals(i.get_haveSubscr()));
+                contObjectList = ObjectFilters.filterToList(contObjectList, i -> Boolean.TRUE.equals(i.get_haveSubscr()));
 
-		}
+            }
+        }
 
-		return contObjectList;
-	}
 
-	/**
-	 *
-	 * @param contGroupId
-	 * @return
-	 */
-	protected List<ContObject> selectSubscrContObjects(Long contGroupId, List<Long> meterPeriodSettingIds) {
-		return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
+        return contObjectList;
+    }
 
-	}
+
+//	/**
+//	 *
+//	 * @param contGroupId
+//	 * @return
+//	 */
+//	protected List<ContObject> selectSubscrContObjects(Long contGroupId, List<Long> meterPeriodSettingIds) {
+//		return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
+//
+//	}
 
 	/**
 	 *
@@ -106,15 +133,20 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
-		ApiAction action = new ApiActionEntityAdapter<Object>() {
-			@Override
-			public Object processAndReturnResult() {
-                List<ContObject> resultList = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true, meterPeriodSettingIds)
-                    : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
+        ApiAction action = new ContObjectDTOResponse() {
+            @Override
+            public List<? extends ContObjectDTO> processAndReturnResult() {
+                boolean isRma = currentSubscriberService.isRma();
+                List<ContObject> resultList = findContObjectsByAccess(contGroupId, isRma, true, meterPeriodSettingIds);
 
-				return contObjectService.wrapContObjectsMonitorDTO(resultList);
-			}
-		};
+//                List<ContObject> resultList3 = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true, meterPeriodSettingIds)
+//                    : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
+
+                List<? extends ContObjectDTO> result = contObjectService.wrapContObjectsMonitorDTO(resultList);
+                subscrContObjectService.readContObjectAccess(getSubscriberId(), result);
+                return result;
+            }
+        };
 
 		return ApiActionTool.processResponceApiActionOk(action);
 

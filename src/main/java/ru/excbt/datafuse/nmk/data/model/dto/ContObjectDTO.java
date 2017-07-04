@@ -1,15 +1,11 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import ru.excbt.datafuse.nmk.data.model.ContManagement;
-import ru.excbt.datafuse.nmk.data.model.DBMetadata;
-import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 
-import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -17,7 +13,7 @@ import java.util.*;
  */
 @Getter
 @Setter
-public class ContObjectDTO {
+public class ContObjectDTO implements ObjectAccessDTO.ObjectAccessInitializer {
 
     private Long id;
 
@@ -68,5 +64,16 @@ public class ContObjectDTO {
     private Integer numOfStories;
 
     private ContManagementDTO _activeContManagement;
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private ObjectAccessDTO access;
+
+    @Override
+    public void objectAccess(ObjectAccessDTO.AccessType accessType, LocalDate date) {
+        ObjectAccessDTO access = new ObjectAccessDTO();
+        access.setAccessTTL(date);
+        access.setAccessType(accessType);
+        this.access = access;
+    }
 
 }

@@ -153,7 +153,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
         ApiAction action = new ContObjectDTOResponse() {
             @Override
             public List<? extends ContObjectDTO> processAndReturnResult() {
-                List<ContObject> resultList = selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
+                List<ContObject> resultList = findContObjectsByAccess(contGroupId, true, false,meterPeriodSettingIds);
+                    //selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
             }

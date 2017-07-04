@@ -66,6 +66,7 @@ public interface SubscrContObjectRepository
 			+ " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
 	public List<ContObject> selectContObjects(@Param("subscriberId") Long subscriberId);
 
+
 	/**
 	 *
 	 * @param subscriberId
