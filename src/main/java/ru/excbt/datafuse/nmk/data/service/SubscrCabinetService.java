@@ -39,8 +39,6 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	private static final String CABINET_SEQ_DEVICE_NUMBER = "{deviceObjectNumber}";
 
-	// TODO
-	protected final SubscrContObjectService subscrContObjectService;
 
 	protected final SubscrUserService subscrUserService;
 
@@ -63,8 +61,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	private final ObjectAccessService objectAccessService;
 
 	@Autowired
-    public SubscrCabinetService(SubscrContObjectService subscrContObjectService,
-                                SubscrUserService subscrUserService,
+    public SubscrCabinetService(SubscrUserService subscrUserService,
                                 SubscrRoleService subscrRoleService,
                                 SubscriberService subscriberService,
                                 ContObjectService contObjectService,
@@ -73,7 +70,6 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
                                 EmailNotificationService emailNotificationService,
                                 DeviceObjectService deviceObjectService,
                                 SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
-        this.subscrContObjectService = subscrContObjectService;
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.subscriberService = subscriberService;
@@ -289,9 +285,14 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	public List<ContObjectCabinetInfo> selectSubscrContObjectCabinetInfoList(Long parentSubscriberId) {
 
-		List<ContObjectShortInfo> contObjectShortInfoList = subscrContObjectService
-				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
+		List<ContObjectShortInfo> contObjectShortInfoList = objectAccessService.findContObjects(parentSubscriberId)
+            .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
+//            subscrContObjectService
+//				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
 
+//		List<ContObjectShortInfo> contObjectShortInfoList = subscrContObjectService
+//				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
+//
 		List<Subscriber> childSubscribers = subscriberService.selectChildSubscribers(parentSubscriberId);
 
 		Map<Long, List<Long>> childContObjectIdMap = new HashMap<>();
@@ -301,10 +302,16 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		List<Long> allChildContObjectIds = new ArrayList<>();
 
 		for (Subscriber s : childSubscribers) {
-			List<Long> childContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(s.getId());
+			List<Long> childContObjectIds = objectAccessService.findContObjectIds(s.getId());
+                //subscrContObjectService.selectSubscriberContObjectIds(s.getId());
 			allChildContObjectIds.addAll(childContObjectIds);
-			List<ContObjectShortInfo> childContObjects = subscrContObjectService
-					.selectSubscriberContObjectsShortInfo(s.getId());
+
+			List<ContObjectShortInfo> childContObjects = objectAccessService.findContObjects(s.getId())
+                    .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
+//                subscrContObjectService
+//					.selectSubscriberContObjectsShortInfo(s.getId());
+//			List<ContObjectShortInfo> childContObjects = subscrContObjectService
+//					.selectSubscriberContObjectsShortInfo(s.getId());
 			if (!childContObjectIds.isEmpty()) {
 				childContObjectIdMap.put(s.getId(), childContObjectIds);
 			}

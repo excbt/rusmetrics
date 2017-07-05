@@ -219,48 +219,15 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
     }
 
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
-		checkNotNull(subscriberId);
-		List<ContObject> result = objectAccessService.findContObjects(subscriberId);
-		return ObjectFilters.deletedFilter(result);
-	}
-
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectDTO> selectSubscriberContObjectDTOs(Long subscriberId) {
-		checkNotNull(subscriberId);
-
-		List<ContObjectDTO> result = objectAccessService.findContObjects(subscriberId)
-            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
-		return result;
-	}
 
 	/**
-	 *
-	 * @param subscriberParam
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectSubscriberContObjects(SubscriberParam subscriberParam) {
-		checkNotNull(subscriberParam);
-		List<ContObject> result = objectAccessService.findContObjects(subscriberParam.getSubscriberId());
-		return ObjectFilters.deletedFilter(result);
-	}
-
-
-	/**
-	 *
+	 * TODO delete
 	 * @param subscriberId
 	 * @return
 	 */
 	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo2(Long subscriberId) {
+	private List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo22(Long subscriberId) {
 		checkNotNull(subscriberId);
 
 		List<ContObjectShortInfo> result = new ArrayList<>();
@@ -324,83 +291,70 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return result;
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo(Long subscriberId) {
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<Tuple> q = cb.createTupleQuery();
-		Subquery<Long> subq = q.subquery(Long.class);
-
-		Root<ContObject> co = q.from(ContObject.class);
-		Root<SubscrContObject> sco = subq.from(SubscrContObject.class);
-
-		ParameterExpression<Long> nameParameter = cb.parameter(Long.class, "subscriberId");
-
-		subq.select(sco.get(SubscrContObject_.contObjectId)).where(cb.equal(sco.get(SubscrContObject_.deleted), 0),
-				sco.get(SubscrContObject_.subscrEndDate).isNull(),
-				cb.equal(sco.get(SubscrContObject_.subscriberId), nameParameter));
-
-		ColumnHelper columnHelper = new ColumnHelper(ContObject_.id, ContObject_.name, ContObject_.fullName);
-
-		q.select(cb.tuple(columnHelper.getSelection(co))).where(cb.equal(co.get(ContObject_.deleted), 0),
-				cb.in(co.get(ContObject_.id)).value(subq));
-
-		//		q.select(cb.tuple(co.get(ContObject_.id), co.get(ContObject_.name), co.get(ContObject_.fullName)))
-		//				.where(cb.equal(co.get(ContObject_.deleted), 0), cb.in(co.get(ContObject_.id)).value(subq));
-
-		List<Tuple> resultTuples = em.createQuery(q).setParameter("subscriberId", subscriberId).getResultList();
-
-		List<ContObjectShortInfo> result = new ArrayList<>();
-
-		for (Tuple t : resultTuples) {
-
-			//columnHelper.indexOf(column)
-
-			final Long id = columnHelper.getTupleValue(t, ContObject_.id);
-			final String contObjectName = columnHelper.getTupleValue(t, ContObject_.name);
-			final String contObjectFullName = columnHelper.getTupleValue(t, ContObject_.fullName);
-
-			ContObjectShortInfo contObjectShortInfo = new ContObjectShortInfo() {
-
-				@Override
-				public String getName() {
-					return contObjectName;
-				}
-
-				@Override
-				public String getFullName() {
-					return contObjectFullName;
-				}
-
-				@Override
-				public Long getContObjectId() {
-					return id;
-				}
-			};
-
-			result.add(contObjectShortInfo);
-
-		}
-
-		return result;
-	}
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectSubscriberContObjectIds(Long subscriberId) {
-		checkNotNull(subscriberId);
-		List<Long> result = objectAccessService.findContObjectIds(subscriberId);
-		return result;
-	}
-
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @return
+//	 */
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	private List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo(Long subscriberId) {
+//		CriteriaBuilder cb = em.getCriteriaBuilder();
+//		CriteriaQuery<Tuple> q = cb.createTupleQuery();
+//		Subquery<Long> subq = q.subquery(Long.class);
+//
+//		Root<ContObject> co = q.from(ContObject.class);
+//		Root<SubscrContObject> sco = subq.from(SubscrContObject.class);
+//
+//		ParameterExpression<Long> nameParameter = cb.parameter(Long.class, "subscriberId");
+//
+//		subq.select(sco.get(SubscrContObject_.contObjectId)).where(cb.equal(sco.get(SubscrContObject_.deleted), 0),
+//				sco.get(SubscrContObject_.subscrEndDate).isNull(),
+//				cb.equal(sco.get(SubscrContObject_.subscriberId), nameParameter));
+//
+//		ColumnHelper columnHelper = new ColumnHelper(ContObject_.id, ContObject_.name, ContObject_.fullName);
+//
+//		q.select(cb.tuple(columnHelper.getSelection(co))).where(cb.equal(co.get(ContObject_.deleted), 0),
+//				cb.in(co.get(ContObject_.id)).value(subq));
+//
+//		//		q.select(cb.tuple(co.get(ContObject_.id), co.get(ContObject_.name), co.get(ContObject_.fullName)))
+//		//				.where(cb.equal(co.get(ContObject_.deleted), 0), cb.in(co.get(ContObject_.id)).value(subq));
+//
+//		List<Tuple> resultTuples = em.createQuery(q).setParameter("subscriberId", subscriberId).getResultList();
+//
+//		List<ContObjectShortInfo> result = new ArrayList<>();
+//
+//		for (Tuple t : resultTuples) {
+//
+//			//columnHelper.indexOf(column)
+//
+//			final Long id = columnHelper.getTupleValue(t, ContObject_.id);
+//			final String contObjectName = columnHelper.getTupleValue(t, ContObject_.name);
+//			final String contObjectFullName = columnHelper.getTupleValue(t, ContObject_.fullName);
+//
+//			ContObjectShortInfo contObjectShortInfo = new ContObjectShortInfo() {
+//
+//				@Override
+//				public String getName() {
+//					return contObjectName;
+//				}
+//
+//				@Override
+//				public String getFullName() {
+//					return contObjectFullName;
+//				}
+//
+//				@Override
+//				public Long getContObjectId() {
+//					return id;
+//				}
+//			};
+//
+//			result.add(contObjectShortInfo);
+//
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 *

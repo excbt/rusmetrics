@@ -1,9 +1,11 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -74,6 +76,37 @@ public class ContObjectDTO implements ObjectAccessDTO.ObjectAccessInitializer {
         access.setAccessTTL(date);
         access.setAccessType(accessType);
         this.access = access;
+    }
+
+
+    public ContObjectShortInfo newShortInfo() {
+        return new ShortInfo(this);
+    }
+
+
+    public static class ShortInfo implements ContObjectShortInfo {
+
+        private final ContObjectDTO contObjectDTO;
+
+        public ShortInfo(ContObjectDTO contObjectDTO) {
+            this.contObjectDTO = contObjectDTO;
+        }
+
+
+        @Override
+        public Long getContObjectId() {
+            return contObjectDTO.getId();
+        }
+
+        @Override
+        public String getName() {
+            return contObjectDTO.name;
+        }
+
+        @Override
+        public String getFullName() {
+            return contObjectDTO.fullName;
+        }
     }
 
 }

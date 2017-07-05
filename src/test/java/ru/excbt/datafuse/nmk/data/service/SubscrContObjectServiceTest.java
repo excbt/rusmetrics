@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import javax.persistence.Tuple;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,9 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 
     @Autowired
 	private ObjectAccessService objectAccessService;
+
+    @Autowired
+    private ContObjectService contObjectService;
 
 	/**
 	 *
@@ -66,7 +70,10 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	@Test
     @Transactional
 	public void testSelectContObjectShortInfo() throws Exception {
-		List<ContObjectShortInfo> result = subscrContObjectService.selectSubscriberContObjectsShortInfo(64166466L);
+		List<ContObjectShortInfo> result = objectAccessService.findContObjects(64166466L)
+                .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
+
+//            subscrContObjectService.selectSubscriberContObjectsShortInfo(64166466L);
 		result.forEach(i -> logger.info("id:{}", i.getContObjectId()));
 	}
 

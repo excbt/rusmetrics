@@ -191,14 +191,19 @@ public class SubscriberAccessService implements SecuredRoles {
 
 
     private void finishContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime subscriberDateTime, ZonedDateTime currDateTime) {
-        Optional<Long> checkExisting = contObjectAccessRepository.findByPK(subscriber.getId(), contObject.getId());
+        //Optional<Long> checkExisting = contObjectAccessRepository.findByPK(subscriber.getId(), contObject.getId());
+
+        ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
+        Optional<ContObjectAccess> checkExisting = Optional.ofNullable(contObjectAccessRepository.findOne(accessPK));
 
         final LocalDateTime subscriberDT = subscriberDateTime != null ? subscriberDateTime : LocalDateTime.now();
 
         if (checkExisting.isPresent()) {
-            Preconditions.checkState(checkExisting.get() == 1);
-            ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
-            ContObjectAccess access = contObjectAccessRepository.findOne(accessPK);
+            //Preconditions.checkState(checkExisting.get() == 1);
+//            ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
+            ContObjectAccess access = checkExisting.get();
+//                contObjectAccessRepository.findOne(accessPK);
+  //          access.setVersion(checkExisting.get());
 
             access.setAccessTtl(MAKE_ACCESS_TTL.apply(subscriberDT));
             access.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(currDateTime));
@@ -276,12 +281,15 @@ public class SubscriberAccessService implements SecuredRoles {
     @Transactional
     @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_SUBSCR_CREATE_CABINET})
     public void updateContObjectIdsAccess(final Subscriber subscriber, final List<Long> newContObjectIds,
-                                          final LocalDateTime accessDateTime) {
+                                          final LocalDateTime subscriberDateTime) {
 
         List<Long> existingContObjectIds = contObjectAccessRepository.findContObjectIdsBySubscriber(subscriber.getId());
 
         List<Long> addContObjectIds = new ArrayList<>();
         List<Long> delContObjectIds = new ArrayList<>();
+
+        LocalDateTime accessDateTime = subscriberDateTime != null ? subscriberDateTime : LocalDateTime.now() ;
+        ZonedDateTime currDateTime = ZonedDateTime.now();
 
         existingContObjectIds.forEach(i -> {
             if (!newContObjectIds.contains(i)) {
@@ -295,7 +303,6 @@ public class SubscriberAccessService implements SecuredRoles {
             }
         });
 
-        ZonedDateTime currDateTime = ZonedDateTime.now();
 
         delContObjectIds.forEach((id) -> finishContObjectAccess(subscriber, new ContObject().id(id), accessDateTime, currDateTime));
 

@@ -877,4 +877,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         return contObjects.stream().map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
     }
 
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public ContObjectDTO mapToDTO(ContObject contObjects) {
+        return contObjectMapper.contObjectToDto(contObjects);
+    }
+
 }

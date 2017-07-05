@@ -85,7 +85,8 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
 
     @Query("SELECT a.contObjectId, COUNT(a.contObjectId) as cnt FROM ContObjectAccess a "
-        + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId AND s.isChild = true)"
+        + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId AND s.isChild = true"
+        + " AND s.deleted = 0 )"
         + " GROUP BY a.contObjectId")
     List<Object[]> findChildSubscrCabinetContObjectsStats(
         @Param("parentSubscriberId") Long parentSubscriberId);
