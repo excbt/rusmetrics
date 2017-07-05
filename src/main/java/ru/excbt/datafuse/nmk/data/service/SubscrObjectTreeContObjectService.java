@@ -43,6 +43,9 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@Autowired
 	protected SubscrContObjectService subscrContObjectService;
 
+    @Autowired
+	protected ObjectAccessService objectAccessService;
+
 	/**
 	 *
 	 * @param rmaSubscriberId
@@ -77,7 +80,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 		if (subscriberParam.isRma()) {
-			subscrContObjectService.rmaInitHaveSubscr(subscriberParam, result);
+            objectAccessService.setupRmaHaveSubscr(subscriberParam,result);
 		}
 
 		return result.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());

@@ -57,8 +57,6 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	protected final ObjectAccessService objectAccessService;
 
-	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
 
 	@Autowired
     public SubscrContObjectResource(ContObjectService contObjectService,
@@ -110,7 +108,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
         contObjectList = meterPeriodSettingService.filterMeterPeriodSettingIds(contObjectList, meterPeriodSettingIds);
 
         if (isRma) {
-            subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
+            objectAccessService.setupRmaHaveSubscr(getSubscriberParam(), contObjectList);
 
             if (isHaveSubscrFiltered) {
 
@@ -233,7 +231,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 				//ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
 				ContObject result = contObjectService.automationUpdate(contObject, cmOrganizationId);
 
-				subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
+				objectAccessService.setupRmaHaveSubscr(getSubscriberParam(), Arrays.asList(result));
+                //subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
 				return contObjectService.wrapContObjectMonitorDTO(result,false);
 			}
@@ -265,7 +264,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObjectSettingModeType(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestParam(value = "currentSettingMode", required = true) final String currentSettingMode,
+			@RequestParam(value = "currentSettingMode") final String currentSettingMode,
 			final @RequestBody(required = false) List<Long> ids) {
 
 		checkNotNull(currentSettingMode);

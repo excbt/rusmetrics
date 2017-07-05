@@ -26,11 +26,13 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Сервис для работы с привязкой абонентов и объекта учета
@@ -216,17 +218,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
     }
 
-    /**
-     *
-     * @param subscriberParam
-     * @return
-     */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> selectRmaSubscribersContObjectIds(SubscriberParam subscriberParam) {
-		checkNotNull(subscriberParam);
-		checkState(subscriberParam.isRma());
-		return objectAccessService.findContObjectIdsByRmaSubscriberId(subscriberParam.getRmaSubscriberId());
-	}
 
 	/**
 	 *
@@ -261,24 +252,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return ObjectFilters.deletedFilter(result);
 	}
 
-    /**
-     *
-     * @param contObjects
-     * @param meterPeriodSettingIds
-     * @return
-     */
-    private List<ContObject> filterMeterPeriodSettingIds(List<ContObject> contObjects, List<Long> meterPeriodSettingIds) {
-        if (contObjects == null)
-            return null;
-        return contObjects.stream().filter(i -> {
-            if (meterPeriodSettingIds == null)
-                return true;
-            List<Long> checkIds = i.getMeterPeriodSettings().values().stream().map(s -> s.getId()).collect(Collectors.toList());
-            List<Long> filerM = new ArrayList<>(meterPeriodSettingIds);
-            filerM.retainAll(checkIds);
-            return !checkIds.isEmpty();
-        }).collect(Collectors.toList());
-    }
 
 	/**
 	 *
@@ -501,64 +474,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		return subscrContObjectRepository.selectDeviceObjects(subscriberId);
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectAvailableContObjects(Long subscriberId, Long rmaSubscriberId) {
-		checkNotNull(subscriberId);
-		checkNotNull(rmaSubscriberId);
-		return objectAccessService.findRmaAvailableContObjects(subscriberId, rmaSubscriberId);
-	}
-
-	/**
-	 *
-	 * @param subscriberParam
-	 * @param contObjects
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public void rmaInitHaveSubscr(final SubscriberParam subscriberParam, final List<ContObject> contObjects) {
-		checkNotNull(subscriberParam);
-		checkNotNull(contObjects);
-
-		if (!subscriberParam.isRma()) {
-			return;
-		}
-
-		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
-
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		contObjects.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
-
-	}
-	/**
-	 *
-	 * @param subscriberParam
-	 * @param contObjects
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public void rmaInitHaveSubscrDTO(final SubscriberParam subscriberParam, final List<ContObjectDTO> contObjects) {
-		checkNotNull(subscriberParam);
-		checkNotNull(contObjects);
-
-		if (!subscriberParam.isRma()) {
-			return;
-		}
-
-		List<Long> subscrContObjectIds = selectRmaSubscribersContObjectIds(subscriberParam);
-
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		contObjects.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
-
-	}
 
 	/**
 	 *

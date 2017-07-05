@@ -173,7 +173,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
         ApiAction action = new ContObjectDTOResponse() {
             @Override
             public List<? extends ContObjectDTO> processAndReturnResult() {
-                List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
+                List<ContObject> resultList = objectAccessService.findContObjects(subscriberId);
+                    //subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
             }
@@ -194,8 +195,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
         ApiAction action = new ContObjectDTOResponse() {
             @Override
             public List<? extends ContObjectDTO> processAndReturnResult() {
-                List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
-                    getCurrentSubscriberId());
+                List<ContObject> resultList = objectAccessService.findRmaAvailableContObjects(subscriberId, getCurrentSubscriberId());
+//                    subscrContObjectService.selectAvailableContObjects(subscriberId,
+//                    getCurrentSubscriberId());
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
             }
@@ -225,9 +227,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			public List<ContObjectDTO> processAndReturnResult() {
 
                 subscriberAccessService.updateContObjectIdsAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
-                List<ContObjectDTO> result = subscrContObjectService.selectSubscriberContObjectDTOs(subscriberId);
-				subscrContObjectService.rmaInitHaveSubscrDTO(getSubscriberParam(), result);
-
+                List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
+                List<ContObjectDTO> result = contObjectService.mapToDTO(contObjects);
+                objectAccessService.setupRmaHaveSubscrDTO(getSubscriberParam(), result);
 				return result;
 			}
 		};

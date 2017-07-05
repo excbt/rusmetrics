@@ -12,11 +12,12 @@ import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by kovtonyk on 04.07.2017.
@@ -33,10 +34,13 @@ public class ObjectAccessService {
 
     private final ContGroupService contGroupService;
 
-    public ObjectAccessService(SubscrContObjectRepository subscrContObjectRepository, ContObjectAccessRepository contObjectAccessRepository, ContGroupService contGroupService) {
+    private final ContObjectMapper contObjectMapper;
+
+    public ObjectAccessService(SubscrContObjectRepository subscrContObjectRepository, ContObjectAccessRepository contObjectAccessRepository, ContGroupService contGroupService, ContObjectMapper contObjectMapper) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.contGroupService = contGroupService;
+        this.contObjectMapper = contObjectMapper;
     }
 
 
@@ -100,7 +104,7 @@ public class ObjectAccessService {
         return result;
     }
 
-    public List<Long> findContObjectIdsByRmaSubscriberId (Long rmaSubscriberId) {
+    public List<Long> findRmaSubscribersContObjectIds(Long rmaSubscriberId) {
         List<Long> result;
         if (NEW_ACCESS) {
             result = contObjectAccessRepository.findRmaSubscribersContObjectIds(rmaSubscriberId);
@@ -185,6 +189,44 @@ public class ObjectAccessService {
                     co.objectAccess(ObjectAccessDTO.AccessType.TRIAL, a.getAccessTtl().toLocalDate());
             });
         });
+    }
+
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public void setupRmaHaveSubscr(final SubscriberParam subscriberParam, final List<ContObject> contObjects) {
+        checkNotNull(subscriberParam);
+        checkNotNull(contObjects);
+
+        if (!subscriberParam.isRma()) {
+            return;
+        }
+
+        List<Long> subscrContObjectIds = this.findRmaSubscribersContObjectIds(subscriberParam.getRmaSubscriberId());
+
+        Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+        contObjects.forEach(i -> {
+            boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+            i.set_haveSubscr(haveSubscr);
+        });
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public void setupRmaHaveSubscrDTO(final SubscriberParam subscriberParam, final List<ContObjectDTO> contObjects) {
+        checkNotNull(subscriberParam);
+        checkNotNull(contObjects);
+
+        if (!subscriberParam.isRma()) {
+            return;
+        }
+
+        List<Long> subscrContObjectIds = findRmaSubscribersContObjectIds(subscriberParam.getRmaSubscriberId());
+
+        Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+        contObjects.forEach(i -> {
+            boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+            i.set_haveSubscr(haveSubscr);
+        });
+
     }
 
 
