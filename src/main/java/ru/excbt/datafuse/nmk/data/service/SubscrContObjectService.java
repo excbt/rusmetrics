@@ -554,8 +554,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public boolean checkContObjectSubscription(Long subscriberId, Long contObjectId) {
 		checkNotNull(subscriberId);
 		checkNotNull(contObjectId);
-		List<Long> resultIds = subscrContObjectRepository.selectContObjectId(subscriberId, contObjectId);
-		return resultIds.size() > 0;
+		return objectAccessService.checkContObjectId(subscriberId, contObjectId);
 	}
 
 	/**
@@ -639,7 +638,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	public List<ContObject> selectAvailableContObjects(Long subscriberId, Long rmaSubscriberId) {
 		checkNotNull(subscriberId);
 		checkNotNull(rmaSubscriberId);
-		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId);
+		return objectAccessService.findRmaAvailableContObjects(subscriberId, rmaSubscriberId);
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -647,7 +646,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 		checkNotNull(subscriberId);
 		checkNotNull(rmaSubscriberId);
 
-		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId)
+		return objectAccessService.findRmaAvailableContObjects(subscriberId, rmaSubscriberId)
             .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
             .map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
 	}

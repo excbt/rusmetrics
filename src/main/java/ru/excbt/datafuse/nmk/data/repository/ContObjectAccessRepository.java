@@ -55,7 +55,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId AND s.deleted = 0) "
         + " AND a.accessTtl IS NULL "
     )
-    List<Long> findContObjectIdsByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
+    List<Long> findRmaSubscribersContObjectIds(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a "
@@ -72,7 +72,15 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " AND a.contObjectId = :contObjectId "
         + " AND a.accessTtl IS NULL "
     )
-    List<Long> findSubscriberIdsByRma(@Param("rmaSubscriberId") Long rmaSubscriberId,
-                                      @Param("contObjectId") Long contObjectId);
+    List<Long> findRmaSubscriberIds(@Param("rmaSubscriberId") Long rmaSubscriberId,
+                                    @Param("contObjectId") Long contObjectId);
+
+
+    @Query("SELECT ra.contObject FROM ContObjectAccess ra WHERE ra.subscriberId = :rmaSubscriberId AND ra.contObjectId NOT IN "
+        + " (SELECT sa.contObjectId FROM ContObjectAccess sa WHERE sa.subscriberId=:subscriberId) "
+        + " ORDER BY ra.contObject.fullAddress, ra.contObject.id ")
+    List<ContObject> findRmaAvailableContObjects(@Param("subscriberId") Long subscriberId,
+                                                 @Param("rmaSubscriberId") Long rmaSubscriberId);
+
 
 }

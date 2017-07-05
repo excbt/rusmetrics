@@ -72,7 +72,7 @@ public class ObjectAccessService {
     public List<Long> findContObjectIdsByRmaSubscriberId (Long rmaSubscriberId) {
         List<Long> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectIdsByRmaSubscriberId(rmaSubscriberId);
+            result = contObjectAccessRepository.findRmaSubscribersContObjectIds(rmaSubscriberId);
         } else {
             result = subscrContObjectRepository.selectRmaSubscribersContObjectIds(rmaSubscriberId);
         }
@@ -95,9 +95,29 @@ public class ObjectAccessService {
     public List<Long> findSubscriberIdsByRma (Long rmaSubscriberId, Long contObjectId) {
         List<Long> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findSubscriberIdsByRma(rmaSubscriberId, contObjectId);
+            result = contObjectAccessRepository.findRmaSubscriberIds(rmaSubscriberId, contObjectId);
         } else {
             result = subscrContObjectRepository.selectContObjectSubscriberIdsByRma(rmaSubscriberId, contObjectId);
+        }
+        return result;
+
+    }
+
+
+    public boolean checkContObjectId (Long subscriberId, Long contObjectId) {
+        if (NEW_ACCESS) {
+            return contObjectAccessRepository.findByPK(subscriberId, contObjectId).isPresent();
+        } else {
+            return subscrContObjectRepository.selectContObjectId(subscriberId, contObjectId).size() > 0;
+        }
+    }
+
+    public List<ContObject> findRmaAvailableContObjects (Long subscriberId, Long rmaSubscriberId) {
+        List<ContObject> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findRmaAvailableContObjects(subscriberId, rmaSubscriberId);
+        } else {
+            result = subscrContObjectRepository.selectRmaAvailableContObjects(subscriberId, rmaSubscriberId);
         }
         return result;
 

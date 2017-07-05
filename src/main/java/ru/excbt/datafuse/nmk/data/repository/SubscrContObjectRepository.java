@@ -115,7 +115,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.contObjectId = :contObjectId "
 			+ " AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
-	public List<SubscrContObject> selectActualSubscrContObjects(@Param("subscriberId") Long subscriberId,
+	List<SubscrContObject> selectActualSubscrContObjects(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") long contObjectId);
 
 	/**
@@ -176,8 +176,8 @@ public interface SubscrContObjectRepository
 	@Query("SELECT rco.contObject FROM SubscrContObject rco WHERE rco.subscriberId = :rmaSubscriberId AND rco.contObjectId NOT IN "
 			+ " (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId=:subscriberId AND sco.subscrEndDate IS NULL AND sco.deleted = 0) "
 			+ " ORDER BY rco.contObject.fullAddress, rco.contObject.id ")
-	public List<ContObject> selectAvailableContObjects(@Param("subscriberId") Long subscriberId,
-			@Param("rmaSubscriberId") Long rmaSubscriberId);
+	public List<ContObject> selectRmaAvailableContObjects(@Param("subscriberId") Long subscriberId,
+                                                          @Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *
