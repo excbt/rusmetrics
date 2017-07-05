@@ -1,19 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
@@ -39,8 +24,8 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -49,6 +34,18 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @Transactional
@@ -65,9 +62,6 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	@Autowired
 	private SubscrContEventNotificationService subscrContEventNotifiicationService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
-
     @Autowired
 	private ContZPointService contZPointService;
 
@@ -77,12 +71,16 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
     @Autowired
     private ContEventMonitorV2Repository contEventMonitorV2Repository;
 
+    @Autowired
+    private ObjectAccessService objectAccessService;
+
+
     /**
      * @return
      */
     private List<Long> findSubscriberContObjectIds() {
         log.debug("Finding objects for subscriberId:{}", getSubscriberId());
-        List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> result = objectAccessService.findContObjectIds(getSubscriberId());
         assertFalse(result.isEmpty());
         return result;
     }
@@ -91,8 +89,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
     @Transactional
 	public void testNotificationGet() throws Exception {
 
-		List<Long> contObjectList = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
+		List<Long> contObjectList = objectAccessService.findContObjectIds(currentSubscriberService.getSubscriberId());
 
 		List<Long> contEventTypeIdList = contEventTypeService.selectBaseContEventTypes().stream()
 				.map(cet -> cet.getId()).collect(Collectors.toList());

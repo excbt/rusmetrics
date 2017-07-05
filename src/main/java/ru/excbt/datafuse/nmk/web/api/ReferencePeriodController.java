@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.ReferencePeriodService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -37,11 +38,20 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReferencePeriodController.class);
 
-	@Autowired
-	private ReferencePeriodService referencePeriodService;
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ReferencePeriodService referencePeriodService;
+
+    private final ContZPointService contZPointService;
+
+	private final ObjectAccessService objectAccessService;
+
+    @Autowired
+    public ReferencePeriodController(ReferencePeriodService referencePeriodService, ContZPointService contZPointService, ObjectAccessService objectAccessService) {
+        this.referencePeriodService = referencePeriodService;
+        this.contZPointService = contZPointService;
+        this.objectAccessService = objectAccessService;
+    }
+
 
     /**
      *
@@ -94,8 +104,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	private ResponseEntity<?> checkContObjectZPoint(long contObjectId, long contZPointId) {
-		List<Long> contObjectsIds = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
+		List<Long> contObjectsIds = objectAccessService.findContObjectIds(getSubscriberId());
 
 		if (!contObjectsIds.contains(contObjectId)) {
 			return ResponseEntity.badRequest().body(ApiResult.validationError("Bad contObjectId"));

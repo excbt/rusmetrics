@@ -41,7 +41,6 @@ public class EnergyPassportService {
     private final EnergyPassportDataValueRepository energyPassportDataValueRepository;
     private final EnergyPassportSectionRepository passportSectionRepository;
     private final EnergyPassportSectionEntryRepository sectionEntryRepository;
-    private final SubscrContObjectService subscrContObjectService;
     /**
      * Creates section from section templates
      */
@@ -73,15 +72,13 @@ public class EnergyPassportService {
                                  EnergyPassportDataRepository energyPassportDataRepository,
                                  EnergyPassportDataValueRepository energyPassportDataValueRepository,
                                  EnergyPassportSectionRepository energyPassportSectionRepository,
-                                 EnergyPassportSectionEntryRepository energyPassportSectionEntryRepository,
-                                 SubscrContObjectService subscrContObjectService) {
+                                 EnergyPassportSectionEntryRepository energyPassportSectionEntryRepository) {
         this.passportTemplateRepository = energyPassportTemplateRepository;
         this.passportRepository = energyPassportRepository;
         this.passportDataRepository = energyPassportDataRepository;
         this.energyPassportDataValueRepository = energyPassportDataValueRepository;
         this.passportSectionRepository = energyPassportSectionRepository;
         this.sectionEntryRepository = energyPassportSectionEntryRepository;
-        this.subscrContObjectService = subscrContObjectService;
     }
 
     @Transactional(value = TxConst.TX_DEFAULT)

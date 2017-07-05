@@ -1,13 +1,8 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
@@ -21,6 +16,10 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
@@ -29,8 +28,8 @@ public class SubscrContEventNotificationStatusV2ServiceTest extends JpaSupportTe
 	@Autowired
 	private SubscrContEventNotificationStatusV2Service subscrContEventNotificationStatusV2Service;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	@Test
 	public void testStatus() throws Exception {
@@ -38,7 +37,7 @@ public class SubscrContEventNotificationStatusV2ServiceTest extends JpaSupportTe
 		SubscriberParam sp = SubscriberParam.builder().subscriberId(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID)
 				.subscrUserId(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID).build();
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(sp);
+		List<ContObject> contObjects = objectAccessService.findContObjects(sp.getSubscriberId());
 
 		assertTrue(contObjects.size() > 0);
 

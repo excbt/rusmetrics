@@ -49,15 +49,12 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	private final SubscriberAccessService subscriberAccessService;
 	private final ObjectAccessService objectAccessService;
 
-	@Autowired
-    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
-        super(contObjectService, contGroupService, organizationService, contObjectFiasService);
+
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService1) {
+        super(contObjectService, contGroupService, organizationService, contObjectFiasService, meterPeriodSettingService, objectAccessService);
         this.subscriberAccessService = subscriberAccessService;
-        this.objectAccessService = objectAccessService;
+        this.objectAccessService = objectAccessService1;
     }
-
-
-
 
     /**
 	 *

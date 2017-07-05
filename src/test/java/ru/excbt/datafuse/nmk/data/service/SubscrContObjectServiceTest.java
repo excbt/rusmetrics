@@ -33,9 +33,6 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
 	private SubscrContObjectRepository subscrContObjectRepository;
 
     @Autowired

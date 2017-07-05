@@ -11,7 +11,6 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -22,9 +21,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,32 +37,30 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
     private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
-    private final SubscrContObjectService subscrContObjectService;
-
     private final SubscrContEventNotificationService subscrContEventNotificationService;
 
     private final SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
 
     private final SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
-
 	private final ContObjectService contObjectService;
+
+	private final ObjectAccessService objectAccessService;
 
 	@Autowired
     public SubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService,
                                       SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
-                                      SubscrContObjectService subscrContObjectService,
                                       SubscrContEventNotificationService subscrContEventNotificationService,
                                       SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService,
                                       SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service,
-                                      ContObjectService contObjectService) {
+                                      ContObjectService contObjectService, ObjectAccessService objectAccessService) {
         this.subscrObjectTreeService = subscrObjectTreeService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
-        this.subscrContObjectService = subscrContObjectService;
         this.subscrContEventNotificationService = subscrContEventNotificationService;
         this.subscrContEventNotifiicationStatusService = subscrContEventNotifiicationStatusService;
         this.subscrContEventNotifiicationStatusV2Service = subscrContEventNotifiicationStatusV2Service;
         this.contObjectService = contObjectService;
+        this.objectAccessService = objectAccessService;
     }
 
     /**
@@ -204,8 +199,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
         ApiAction action = new ApiActionEntityAdapter<Object>() {
             @Override
             public Object processAndReturnResult() {
-                List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjectsExcludingIds(getSubscriberId(),
-                    contObjectIds);
+                List<ContObject> resultList = objectAccessService.findContObjectsExcludingIds(getSubscriberId(), contObjectIds);
                 return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(resultList));
             }
         };

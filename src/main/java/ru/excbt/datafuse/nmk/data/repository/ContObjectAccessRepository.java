@@ -83,4 +83,20 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
                                                  @Param("rmaSubscriberId") Long rmaSubscriberId);
 
 
+
+    @Query("SELECT a.contObjectId, COUNT(a.contObjectId) as cnt FROM ContObjectAccess a "
+        + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId AND s.isChild = true)"
+        + " GROUP BY a.contObjectId")
+    List<Object[]> findChildSubscrCabinetContObjectsStats(
+        @Param("parentSubscriberId") Long parentSubscriberId);
+
+
+    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.contObjectId IN "
+        + "( SELECT ci.contObject.id FROM SubscrContGroupItem ci INNER JOIN ci.contGroup cg "
+        + " WHERE cg.id = :contGroupId ) AND" + " a.subscriberId = :subscriberId"
+        + " ORDER BY a.contObject.name, a.contObject.id ")
+    List<ContObject> findContObjectsBySubscriberGroup(@Param("subscriberId") long subscriberId,
+                                                        @Param("contGroupId") long contGroupId);
+
+
 }

@@ -53,16 +53,24 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 	protected final ContObjectFiasService contObjectFiasService;
 
+	protected final MeterPeriodSettingService meterPeriodSettingService;
+
+	protected final ObjectAccessService objectAccessService;
+
+	@Autowired
+	protected SubscrContObjectService subscrContObjectService;
 
 	@Autowired
     public SubscrContObjectResource(ContObjectService contObjectService,
                                     ContGroupService contGroupService,
                                     OrganizationService organizationService,
-                                    ContObjectFiasService contObjectFiasService) {
+                                    ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService) {
         this.contObjectService = contObjectService;
         this.contGroupService = contGroupService;
         this.organizationService = organizationService;
         this.contObjectFiasService = contObjectFiasService;
+        this.meterPeriodSettingService = meterPeriodSettingService;
+        this.objectAccessService = objectAccessService;
     }
 
     protected abstract class ContObjectDTOResponse extends ApiActionEntityAdapter<List<? extends ContObjectDTO>> {
@@ -98,7 +106,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
     protected List<ContObject> findContObjectsByAccess(Long contGroupId, boolean isRma, boolean isHaveSubscrFiltered, List<Long> meterPeriodSettingIds) {
         List<ContObject> contObjectList;
 
-        contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
+        contObjectList = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
+        contObjectList = meterPeriodSettingService.filterMeterPeriodSettingIds(contObjectList, meterPeriodSettingIds);
 
         if (isRma) {
             subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
@@ -143,7 +152,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 //                    : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
 
                 List<? extends ContObjectDTO> result = contObjectService.wrapContObjectsMonitorDTO(resultList);
-                subscrContObjectService.readContObjectAccess(getSubscriberId(), result);
+                objectAccessService.readContObjectAccess(getSubscriberId(), result);
                 return result;
             }
         };
@@ -375,7 +384,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectMeterPeriodSetting() {
-		List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+		List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
 		List<ContObjectMeterPeriodSettingsDTO> result = contObjectService.findMeterPeriodSettings(ids);
 		return ApiResponse.responseOK(result);
 	}

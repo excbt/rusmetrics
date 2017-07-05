@@ -5,6 +5,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
@@ -21,6 +22,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,6 +112,18 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 		}
 	}
 
+    public List<ContObject> filterMeterPeriodSettingIds(List<ContObject> contObjects, List<Long> meterPeriodSettingIds) {
+        if (contObjects == null)
+            return null;
+        return contObjects.stream().filter(i -> {
+            if (meterPeriodSettingIds == null)
+                return true;
+            List<Long> checkIds = i.getMeterPeriodSettings().values().stream().map(s -> s.getId()).collect(Collectors.toList());
+            List<Long> filerM = new ArrayList<>(meterPeriodSettingIds);
+            filerM.retainAll(checkIds);
+            return !checkIds.isEmpty();
+        }).collect(Collectors.toList());
+    }
 
 
 

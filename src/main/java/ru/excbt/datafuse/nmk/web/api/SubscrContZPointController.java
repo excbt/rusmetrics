@@ -63,6 +63,9 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@Autowired
 	protected OrganizationService organizationService;
 
+	@Autowired
+	protected SubscrContObjectService subscrContObjectService;
+
 	/**
 	 *
 	 * @param contObjectId

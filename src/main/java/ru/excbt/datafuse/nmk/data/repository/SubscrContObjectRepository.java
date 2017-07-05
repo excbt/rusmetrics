@@ -1,20 +1,17 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Tuple;
-
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
+
+import javax.persistence.Tuple;
+import java.util.List;
 
 /**
  * Repository для SubscrContObject
@@ -28,17 +25,6 @@ public interface SubscrContObjectRepository
 		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
 
 
-//	/**
-//	 *
-//	 * @param subscriberId
-//	 * @param subscrDate
-//	 * @return
-//	 */
-//	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
-//			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
-//			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
-//	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId,
-//			@Param("subscrDate") Date subscrDate);
 
 	/**
 	 *
@@ -48,7 +34,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
 			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
 			+ " AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
-	public List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId);
+	List<Long> selectRmaSubscribersContObjectIds(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 *
@@ -58,7 +44,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
 			+ " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
-	public List<ContObject> selectContObjects(@Param("subscriberId") Long subscriberId);
+	List<ContObject> selectContObjects(@Param("subscriberId") Long subscriberId);
 
 
 	/**
@@ -70,7 +56,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
 			+ " AND sco.contObjectId IN (:contObjectIds) " + " ORDER BY sco.contObject.fullAddress, sco.contObject.id")
-	public List<ContObject> selectContObjectsByIds(@Param("subscriberId") Long subscriberId,
+	List<ContObject> selectContObjectsByIds(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectIds") List<Long> contObjectIds);
 
 	/**
@@ -92,7 +78,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL "
 			+ " AND sco.deleted = 0")
-	public List<Long> selectContObjectIds(@Param("subscriberId") Long subscriberId);
+	List<Long> selectContObjectIds(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 *
@@ -103,7 +89,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.contObjectId = :contObjectId "
 			+ " AND sco.deleted = 0 AND sco.subscrEndDate IS NULL")
-	public List<Long> selectContObjectId(@Param("subscriberId") Long subscriberId,
+	List<Long> selectContObjectId(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") long contObjectId);
 
 	/**
@@ -126,7 +112,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT zp FROM ContZPoint zp WHERE zp.contObjectId IN "
 			+ " (SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL)")
-	public List<ContZPoint> selectContZPoints(@Param("subscriberId") Long subscriberId);
+	List<ContZPoint> selectContZPoints(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 *
@@ -147,7 +133,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT zp.id " + " FROM ContZPoint zp INNER JOIN zp.contServiceType st WHERE zp.contObjectId IN "
 			+ " (SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.deleted = 0 AND sco.subscrEndDate IS NULL) AND zp.deleted = 0")
-	public List<Long> selectContZPointIds(@Param("subscriberId") Long subscriberId);
+	List<Long> selectContZPointIds(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 *
@@ -158,14 +144,14 @@ public interface SubscrContObjectRepository
 			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL AND sco.deleted = 0)"
 			+ " ORDER BY do.contObject.fullAddress, do.contObject.id ")
-	public List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
+	List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 *
 	 * @param subscriberId
 	 * @return
 	 */
-	public List<SubscrContObject> findBySubscriberId(Long subscriberId);
+	List<SubscrContObject> findBySubscriberId(Long subscriberId);
 
 	/**
 	 *
@@ -176,7 +162,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT rco.contObject FROM SubscrContObject rco WHERE rco.subscriberId = :rmaSubscriberId AND rco.contObjectId NOT IN "
 			+ " (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId=:subscriberId AND sco.subscrEndDate IS NULL AND sco.deleted = 0) "
 			+ " ORDER BY rco.contObject.fullAddress, rco.contObject.id ")
-	public List<ContObject> selectRmaAvailableContObjects(@Param("subscriberId") Long subscriberId,
+	List<ContObject> selectRmaAvailableContObjects(@Param("subscriberId") Long subscriberId,
                                                           @Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
@@ -187,7 +173,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco.contObjectId, COUNT(sco.contObjectId) as cnt FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId AND s.isChild = true)"
 			+ " GROUP BY sco.contObjectId")
-	public List<Object[]> selectChildSubscrCabinetContObjectsStats(
+	List<Object[]> selectChildSubscrCabinetContObjectsStats(
 			@Param("parentSubscriberId") Long parentSubscriberId);
 
 	/**
@@ -199,7 +185,7 @@ public interface SubscrContObjectRepository
 	@Query("SELECT sco.subscriberId FROM SubscrContObject sco "
 			+ " WHERE sco.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId) AND sco.contObjectId = :contObjectId "
 			+ " AND sco.deleted = 0 AND sco.subscrEndDate IS NULL ")
-	public List<Long> selectContObjectSubscriberIdsByRma(@Param("rmaSubscriberId") Long rmaSubscriberId,
+	List<Long> selectContObjectSubscriberIdsByRma(@Param("rmaSubscriberId") Long rmaSubscriberId,
 			@Param("contObjectId") Long contObjectId);
 
 	/**
@@ -211,7 +197,7 @@ public interface SubscrContObjectRepository
 			+ " FROM SubscrContObject sco, ContZPoint zp INNER JOIN zp.deviceObjects d LEFT JOIN d.deviceObjectDataSources ds"
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL AND zp.contObjectId= "
 			+ " sco.contObjectId AND d.number IN (:deviceObjectNumbers) AND ds.isActive = true")
-	public List<Tuple> selectSubscrDeviceObjectByNumber(@Param("subscriberId") Long subscriberId,
+	List<Tuple> selectSubscrDeviceObjectByNumber(@Param("subscriberId") Long subscriberId,
 			@Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
 
 }

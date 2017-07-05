@@ -26,8 +26,11 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 	@Autowired
 	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+//	@Autowired
+//	private SubscrContObjectService subscrContObjectService;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	/**
 	 * Test ignored due to deleting of subscrObjectTree ID = 64166466L
@@ -44,8 +47,8 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 				512111663L);
 		assertNotNull(contObjectIds);
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(64166466L,
-				contObjectIds);
+		List<ContObject> contObjects = objectAccessService.findContObjectsExcludingIds(64166466L,
+            contObjectIds);
 
 		assertNotNull(contObjects);
 

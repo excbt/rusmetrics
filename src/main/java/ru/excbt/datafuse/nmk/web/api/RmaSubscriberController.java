@@ -1,35 +1,25 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы абонентами для РМА
@@ -45,13 +35,17 @@ public class RmaSubscriberController extends SubscriberController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberController.class);
 
-	@Autowired
-	private OrganizationService organizationService;
+	private final OrganizationService organizationService;
 
-	@Autowired
-	private RmaSubscriberService rmaSubscriberService;
+	private final RmaSubscriberService rmaSubscriberService;
 
-	/**
+    public RmaSubscriberController(ObjectAccessService objectAccessService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService) {
+        super(objectAccessService);
+        this.organizationService = organizationService;
+        this.rmaSubscriberService = rmaSubscriberService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */

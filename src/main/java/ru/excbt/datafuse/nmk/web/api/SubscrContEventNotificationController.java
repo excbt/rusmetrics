@@ -78,6 +78,9 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	@Autowired
 	private SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
 
+    @Autowired
+	private ObjectAccessService objectAccessService;
+
 	/**
 	 *
 	 * @return
@@ -367,7 +370,8 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
+		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
+            //subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 
 		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventNotificationStatusCollapse(getSubscriberParam(), contObjects,
@@ -399,8 +403,9 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 					String.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
-				contGroupId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
+            //subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
+			//	contGroupId);
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
 				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
@@ -432,8 +437,9 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 					String.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
-				contGroupId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
+            //subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
+			//	contGroupId);
 
 		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
 				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,

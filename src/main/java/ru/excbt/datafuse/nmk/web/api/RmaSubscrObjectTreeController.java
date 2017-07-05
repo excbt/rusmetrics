@@ -9,14 +9,7 @@ import ru.excbt.datafuse.nmk.data.service.*;
 @RequestMapping(value = "/api/rma")
 public class RmaSubscrObjectTreeController extends SubscrObjectTreeController {
 
-    @Autowired
-    public RmaSubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService,
-                                         SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
-                                         SubscrContObjectService subscrContObjectService,
-                                         SubscrContEventNotificationService subscrContEventNotificationService,
-                                         SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService,
-                                         SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service,
-                                         ContObjectService contObjectService) {
-        super(subscrObjectTreeService, subscrObjectTreeContObjectService, subscrContObjectService, subscrContEventNotificationService, subscrContEventNotifiicationStatusService, subscrContEventNotifiicationStatusV2Service, contObjectService);
+    public RmaSubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrContEventNotificationService subscrContEventNotificationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ContObjectService contObjectService, ObjectAccessService objectAccessService) {
+        super(subscrObjectTreeService, subscrObjectTreeContObjectService, subscrContEventNotificationService, subscrContEventNotifiicationStatusService, subscrContEventNotifiicationStatusV2Service, contObjectService, objectAccessService);
     }
 }

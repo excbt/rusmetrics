@@ -18,8 +18,7 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -32,14 +31,12 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	@Autowired
 	private SubscrContEventNotificationRepository subscrContEventNotificationRepository;
 
-	@Autowired
-	private SubscriberService subscriberService;
-
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private ObjectAccessService objectAccessService;
 
 	private Long subscriberId() {
 		return currentSubscriberService.getSubscriberId();
@@ -52,8 +49,9 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	@Test
 	public void testSelectContObjectsNotificationsCountList() throws Exception {
 
-		List<Long> vList = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
+		List<Long> vList = objectAccessService.findContObjectIds(currentSubscriberService.getSubscriberId());
+//            subscrContObjectService
+				//.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<?> resultList = subscrContEventNotificationRepository.selectNotificatoinsCountList(
@@ -70,7 +68,8 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	@Test
 	public void testSelectContObjectsNotificationsNewCountList() throws Exception {
 
-		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
+		List<Long> vList = objectAccessService.findContObjectIds(subscriberId());
+
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<?> resultList = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId(), vList,
@@ -82,7 +81,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 
 	@Test
 	public void testSelectContObjectsContTypes() throws Exception {
-		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
+		List<Long> vList = objectAccessService.findContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<Object[]> resultList = subscrContEventNotificationRepository
@@ -101,7 +100,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 
 	@Test
 	public void testSelectContObjectsContTypesCollapse() throws Exception {
-		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
+		List<Long> vList = objectAccessService.findContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<Object[]> resultList = subscrContEventNotificationRepository

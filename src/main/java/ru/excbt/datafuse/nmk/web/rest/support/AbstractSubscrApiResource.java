@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -15,6 +16,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +44,10 @@ public abstract class AbstractSubscrApiResource {
 	protected SubscrServiceAccessService subscrServiceAccessService;
 
 	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
+	private SubscrContObjectService subscrContObjectService;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	/**
 	 *
@@ -51,8 +56,7 @@ public abstract class AbstractSubscrApiResource {
 	 */
 	protected boolean canAccessContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
-		Long[] contObjectIds = new Long[] { contObjectId };
-		return canAccessContObject(contObjectIds);
+		return objectAccessService.checkContObjectId(getSubscriberId(), contObjectId);
 	}
 
 	/**
@@ -61,20 +65,17 @@ public abstract class AbstractSubscrApiResource {
 	 * @return
 	 */
 	protected boolean canAccessContObject(Long[] contObjectIds) {
-		if (currentSubscriberService.isSystemUser()) {
-			return true;
-		}
-		return subscrContObjectService.canAccessContObjects(currentSubscriberService.getSubscriberId(), contObjectIds);
+	    checkNotNull(contObjectIds);
+	    return objectAccessService.checkContObjectIds(currentSubscriberService.getSubscriberId(), Arrays.asList(contObjectIds));
 	}
 
+    /**
+     *
+     * @param contObjectIds
+     * @return
+     */
 	protected boolean canAccessContObject(List<Long> contObjectIds) {
-		if (currentSubscriberService.isSystemUser()) {
-			return true;
-		}
-		if (contObjectIds == null)
-			return false;
-
-		return subscrContObjectService.canAccessContObjects(currentSubscriberService.getSubscriberId(), contObjectIds.toArray(new Long[]{}));
+        return objectAccessService.checkContObjectIds(currentSubscriberService.getSubscriberId(), contObjectIds);
 	}
 
 	/**
@@ -209,7 +210,7 @@ public abstract class AbstractSubscrApiResource {
 	}
 
     /**
-     * 
+     *
      * @param objectList
      * @param subscriberParam
      * @param <T>

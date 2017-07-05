@@ -28,7 +28,6 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -65,8 +64,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private final TimezoneDefService timezoneDefService;
 
-	private final SubscrContObjectService subscrContObjectService;
-
 	private final ContManagementService contManagementService;
 
 	private final FiasService fiasService;
@@ -85,6 +82,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private final SubscriberAccessService subscriberAccessService;
 
+	private final ObjectAccessService objectAccessService;
+
     public ContObjectService(ContObjectRepository contObjectRepository,
                              ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository,
                              SubscriberService subscriberService,
@@ -92,14 +91,13 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
                              ContObjectGeoPosRepository contObjectGeoPosRepository,
                              ContObjectDaDataService contObjectDaDataService,
                              TimezoneDefService timezoneDefService,
-                             SubscrContObjectService subscrContObjectService,
                              ContManagementService contManagementService,
                              FiasService fiasService,
                              LocalPlaceService localPlaceService,
                              ContEventMonitorV2Service contEventMonitorV2Service,
                              WeatherForecastService weatherForecastService,
                              MeterPeriodSettingRepository meterPeriodSettingRepository,
-                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService) {
+                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
         this.contObjectRepository = contObjectRepository;
         this.contObjectSettingModeTypeRepository = contObjectSettingModeTypeRepository;
         this.subscriberService = subscriberService;
@@ -107,7 +105,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         this.contObjectGeoPosRepository = contObjectGeoPosRepository;
         this.contObjectDaDataService = contObjectDaDataService;
         this.timezoneDefService = timezoneDefService;
-        this.subscrContObjectService = subscrContObjectService;
         this.contManagementService = contManagementService;
         this.fiasService = fiasService;
         this.localPlaceService = localPlaceService;
@@ -117,6 +114,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         this.contObjectMapper = contObjectMapper;
         this.contObjectFiasService = contObjectFiasService;
         this.subscriberAccessService = subscriberAccessService;
+        this.objectAccessService = objectAccessService;
     }
 
 
@@ -448,7 +446,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
         contObjectFiasService.saveContObjectFias(resultContObject.getId(), contObjectFias);
 
-		//subscrContObjectService.createSubscrContObjectLink(resultContObject, subscriber, subscrBeginDate);
 		subscriberAccessService.grantContObjectAccess(subscriber, resultContObject, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
 
 		if (cmOrganizationId != null) {
@@ -595,7 +592,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		List<Long> updateCandidateIds = Arrays.asList(contObjectIds);
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
+            //subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
 		List<ContObject> updateCandidate = contObjects.stream().filter((i) -> updateCandidateIds.contains(i.getId()))
 				.collect(Collectors.toList());

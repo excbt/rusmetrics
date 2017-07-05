@@ -2,11 +2,21 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by kovtonyk on 04.07.2017.
@@ -21,10 +31,12 @@ public class ObjectAccessService {
 
     private final ContObjectAccessRepository contObjectAccessRepository;
 
+    private final ContGroupService contGroupService;
 
-    public ObjectAccessService(SubscrContObjectRepository subscrContObjectRepository, ContObjectAccessRepository contObjectAccessRepository) {
+    public ObjectAccessService(SubscrContObjectRepository subscrContObjectRepository, ContObjectAccessRepository contObjectAccessRepository, ContGroupService contGroupService) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.contObjectAccessRepository = contObjectAccessRepository;
+        this.contGroupService = contGroupService;
     }
 
 
@@ -40,7 +52,26 @@ public class ObjectAccessService {
         } else {
             result = subscrContObjectRepository.selectContObjects(subscriberId);
         }
-        return result;
+        return ObjectFilters.deletedFilter(result);
+    }
+
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
+    public List<ContObject> findContObjects(Long subscriberId, Long contObjectGroupId) {
+        List<ContObject> result;
+        if (contObjectGroupId == null) {
+            return findContObjects(subscriberId);
+        }
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findContObjectsBySubscriberGroup(subscriberId,contObjectGroupId);
+        } else {
+            result = contGroupService.selectContGroupObjects(SubscriberParam.builder().subscriberId(subscriberId).build(),
+                contObjectGroupId);
+        }
+        return ObjectFilters.deletedFilter(result);
     }
 
     /**
@@ -112,6 +143,16 @@ public class ObjectAccessService {
         }
     }
 
+    public boolean checkContObjectIds(Long subscriberId, List<Long> contObjectIds) {
+        if (contObjectIds == null || contObjectIds.isEmpty()) {
+            return false;
+        }
+        List<Long> subscrContObjectIds = findContObjectIds(subscriberId);
+        return AbstractService.checkIds(contObjectIds, subscrContObjectIds);
+    }
+
+
+
     public List<ContObject> findRmaAvailableContObjects (Long subscriberId, Long rmaSubscriberId) {
         List<ContObject> result;
         if (NEW_ACCESS) {
@@ -122,5 +163,29 @@ public class ObjectAccessService {
         return result;
 
     }
+
+    public List<Object[]> findChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
+        List<Object[]> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findChildSubscrCabinetContObjectsStats(parentSubscriberId);
+        } else {
+            result = subscrContObjectRepository.selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
+        }
+        return result;
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public void readContObjectAccess(Long subscriberId, List<? extends ContObjectDTO> contObjectDTOS) {
+        List<ContObjectAccess> accesses = contObjectAccessRepository.findBySubscriberId(subscriberId);
+        Map<Long, ContObjectAccess> accessMap = new HashMap<>();
+        accesses.forEach((i) -> accessMap.put(i.getContObjectId(), i));
+        contObjectDTOS.forEach((co) -> {
+            Optional.ofNullable(accessMap.get(co.getId())).ifPresent((a) -> {
+                if (a.getAccessTtl() != null)
+                    co.objectAccess(ObjectAccessDTO.AccessType.TRIAL, a.getAccessTtl().toLocalDate());
+            });
+        });
+    }
+
 
 }
