@@ -148,7 +148,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         if (mainSvc.checkUndefinedNull(doc) || mainSvc.checkUndefinedNull(doc.id)) {
             var defer = $q.defer();
             defer.reject("Update: document id is undefined or null!");
-            return defer;
+            return defer.promise;
         }
         var url = PASSPORT_URL + "/" + doc.id;
         var docBody = prepareDocumentToSaving(doc);
@@ -159,7 +159,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         if (mainSvc.checkUndefinedNull(doc) || mainSvc.checkUndefinedNull(doc.id)) {
             var defer = $q.defer();
             defer.reject("Update: document id is undefined or null!");
-            return defer;
+            return defer.promise;
         }
         var url = CONT_OBJECT_PASSPORT_URL + "/" + contObjectId;
         var docBody = prepareDocumentToSaving(doc);
@@ -178,7 +178,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         if (mainSvc.checkUndefinedNull(id)) {
             var defer = $q.defer();
             defer.reject("Delete: document id is undefined or null!");
-            return defer;
+            return defer.promise;
         }
         var url = PASSPORT_URL + "/" + id;
         
@@ -195,7 +195,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         } else {
             var defer = $q.defer();
             defer.reject("Passport id is undefined or null!");
-            return defer;
+            return defer.promise;
         }
         
     }
@@ -208,7 +208,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         } else {
             var defer = $q.defer();
             defer.reject("Entry data is undefined or null!");
-            return defer;
+            return defer.promise;
         }
     }
     
@@ -220,7 +220,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         } else {
             var defer = $q.defer();
             defer.reject("Entry data is undefined or null!");
-            return defer;
+            return defer.promise;
         }
     }
     
@@ -232,7 +232,7 @@ app.service('energoPassportSvc', ['mainSvc', '$http', '$q', '$timeout', function
         } else {
             var defer = $q.defer();
             defer.reject("Passport data is undefined or null!");
-            return defer;
+            return defer.promise;
         }
     }
     
