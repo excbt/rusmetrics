@@ -1528,6 +1528,11 @@
                                                                   ng-class = "{'nmc-distinguish': passport.isActive}">
                                                                 <span ng-bind="passport.passportName"></span>
                                                             </span>
+                                                            <i ng-if = "isSystemuser()"
+                                                               title = "Удалить паспорт"
+                                                               ng-click = "deletePassport(passport.id)"
+                                                               class = "btn btn-xs glyphicon glyphicon-trash pull-right">
+                                                            </i>
                                                         </td>        
 <!--
                                                         <td>
