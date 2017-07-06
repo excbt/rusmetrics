@@ -607,31 +607,33 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         return result;
     };
 
-    function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
+//    function isNumeric(n) {
+//        return !isNaN(parseFloat(n)) && isFinite(n);
+//    }
 
     $scope.checkNumericValue = function (numvalue) {
-        var result = true;
-        if ($scope.checkEmptyNullValue(numvalue)) {
-            return result;
-        }
-        if (!isNumeric(numvalue)) {
-            result = false;
-            return result;
-        }
-        return result;
+        return mainSvc.checkNumericValue(numvalue);
+//        var result = true;
+//        if ($scope.checkEmptyNullValue(numvalue)) {
+//            return result;
+//        }
+//        if (!isNumeric(numvalue)) {
+//            result = false;
+//            return result;
+//        }
+//        return result;
     };
 
     $scope.checkPositiveNumberValue = function (numvalue) {
-        var result = true;
-        result = $scope.checkNumericValue(numvalue);
-        if (!result) {
-            //if numvalue is not number -> return false
-            return result;
-        }
-        result = parseInt(numvalue, 10) >= 0 ? true : false;
-        return result;
+        return mainSvc.checkPositiveNumberValue(numvalue);
+//        var result = true;
+//        result = $scope.checkNumericValue(numvalue);
+//        if (!result) {
+//            //if numvalue is not number -> return false
+//            return result;
+//        }
+//        result = parseInt(numvalue, 10) >= 0 ? true : false;
+//        return result;
     };
     
     $scope.checkDateIntervalWithRightNull = function (left, right) {

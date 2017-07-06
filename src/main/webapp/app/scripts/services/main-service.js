@@ -303,16 +303,21 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         return angular.copy(datePickerSettingsFullView);
     }
     
-    var hasMapSettings = function (userInfo) {
-        var result = false;
-        result = !checkUndefinedNull(userInfo.subscriber);
-        result = result && !checkUndefinedNull(userInfo.subscriber.mapCenterLat);
-    };
+//    var hasMapSettings = function (userInfo) {
+//        var result = false;
+//        result = !checkUndefinedNull(userInfo.subscriber);
+//        result = result && !checkUndefinedNull(userInfo.subscriber.mapCenterLat);
+//    };
     
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl, httpOptions)
         .success(function (data, satus, headers, config) {
+            if (checkUndefinedNull(data) || !data.hasOwnProperty("userName") || checkUndefinedNull(data.subscriber)) {
+                console.warn("FullUserInfo is incorrect!", data);
+                $rootScope.userInfo = null;
+                return false;
+            }
             var tmp = angular.copy(data);
 //                tmp.userName = "Администратор Всея Руси";
 //                tmp.subscriber.subscriberName = "Большая и Малая, Белая и остальная Русь"
@@ -380,6 +385,10 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     function loadMapSettings() {
         var url = prefUrl + "?subscrPrefKeyname=" + MAP_PREF;
         $http.get(url, httpOptions).then(function (resp) {
+            if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data)) {
+                console.warn("Subscriber map preference is empty!", resp);
+                return false;
+            }
             var mapPref = resp.data;
             if (mapPref.isActive === true) {
                 $rootScope.$broadcast('mainSvc:loadMapCenterLat');
@@ -402,39 +411,24 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     
     var getProp = function (obj, propName) {
         var result = false;
-        if (angular.isDefined(obj)) {
+        if (angular.isDefined(obj) && obj !== null && obj.hasOwnProperty(propName)) {
             result = obj[propName];
         }
         return result;
     };
         //check user: system? - true/false
     var isSystemuser = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo._system;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "_system");
     };
     
             //check user: rma? - true/false
     var isRma = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo.isRma;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "isRma");
     };
     
                 //check user: admin? - true/false
     var isAdmin = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo.isAdmin;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "isAdmin");
     };
     
     var isCabinet = function () {
@@ -443,21 +437,12 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     
                     //check user rights: read only?:  - true/false
     var isReadonly = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo.isReadonly;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "isReadonly");
     };
     
             //check test user
     function isTestUser() {
-        var result = true;
-        if (!checkUndefinedNull($rootScope.userInfo)) {
-            result = (getProp($rootScope.userInfo, "subscrType") === "TEST_CERTIFICATE");
-        }
-        return result;
+        return (getProp($rootScope.userInfo, "subscrType") === "TEST_CERTIFICATE");
     }
     
     var externalAllow = [
@@ -479,6 +464,10 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         var targetUrl = mainSvcSettings.servicePermissionUrl;
         mainSvcSettings.loadedServicePermission = $http.get(targetUrl, httpOptions)
             .then(function (response) {
+                if (checkUndefinedNull(response) || checkUndefinedNull(response.data)) {
+                    console.warn("Loaded service permissions is empty or null!", response);
+                    return false;
+                }
                 var tmp = response.data;
                 contextIds = tmp;
                 if (!isCabinet()) {
@@ -552,16 +541,17 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         return result;
     };
     
-    function isPositiveNumberValue(val) {
-        if (checkUndefinedNull(val)) {
-            return false;
-        } else {
-            return checkPositiveNumberValue(val);
-        }
-    }
+//    function isPositiveNumberValue(val) {
+//        if (checkUndefinedNull(val)) {
+//            return false;
+//        } else {
+//            return checkPositiveNumberValue(val);
+//        }
+//    }
     
     var checkHHmm = function (hhmmValue) {
         if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
+//        if (/(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]){1}/.test(hhmmValue)) {
             return true;
         }
         return false;
@@ -1028,7 +1018,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         isAdmin: isAdmin,
         isCabinet: isCabinet,
         isNumeric: isNumeric,
-        isPositiveNumberValue: isPositiveNumberValue,
+        /*isPositiveNumberValue: isPositiveNumberValue,*/
         isRma: isRma,
         isReadonly: isReadonly,
         isSystemuser: isSystemuser,

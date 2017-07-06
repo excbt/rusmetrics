@@ -1897,36 +1897,38 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         return result;
     };
 
-    function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
+//    function isNumeric(n) {
+//        return !isNaN(parseFloat(n)) && isFinite(n);
+//    }
 
     $scope.checkNumericValue = function (numvalue) {
-        var result = true;
-        if ($scope.checkEmptyNullValue(numvalue)) {
-            return result;
-        }
-        if (!isNumeric(numvalue)) {
-            result = false;
-            return result;
-        }
-        return result;
+        return mainSvc.checkNumericValue(numvalue);
+//        var result = true;
+//        if ($scope.checkEmptyNullValue(numvalue)) {
+//            return result;
+//        }
+//        if (!isNumeric(numvalue)) {
+//            result = false;
+//            return result;
+//        }
+//        return result;
     };
                 
     $scope.checkPositiveNumberValue = function (numvalue) {
-        var result = true;
-        result = $scope.checkNumericValue(numvalue);
-        if (!result) {
-            //if numvalue is not number -> return false
-            return result;
-        }
-        result = parseInt(numvalue, RADIX) >= 0 ? true : false;
-        return result;
+        return mainSvc.checkPositiveNumberValue(numvalue);
+//        var result = true;
+//        result = $scope.checkNumericValue(numvalue);
+//        if (!result) {
+//            //if numvalue is not number -> return false
+//            return result;
+//        }
+//        result = parseInt(numvalue, RADIX) >= 0 ? true : false;
+//        return result;
     };
 
-    $scope.isPositiveNumberValue = function (val) {
-        return mainSvc.isPositiveNumberValue(val);
-    };
+//    $scope.isPositiveNumberValue = function (val) {
+//        return mainSvc.isPositiveNumberValue(val);
+//    };
                 
     $scope.checkNumericInterval = function (leftBorder, rightBorder) {
         if ($scope.checkEmptyNullValue(leftBorder) || $scope.checkEmptyNullValue(rightBorder)) {
@@ -1942,11 +1944,12 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     };
 
     $scope.checkHHmm = function (hhmmValue) {
+        return mainSvc.checkHHmm(hhmmValue);
 //console.log(hhmmValue);                    
-        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
-            return true;
-        }
-        return false;
+//        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
+//            return true;
+//        }
+//        return false;
     };
                 
     $scope.checkZpointSettingsFrom = function (zpointSettings) {

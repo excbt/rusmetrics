@@ -2125,20 +2125,21 @@ app.directive('crudGridObjects', function () {
                     return result;
                 };
                 
-                function isNumeric(n) {
-                    return !isNaN(parseFloat(n)) && isFinite(n);
-                }
+//                function isNumeric(n) {
+//                    return !isNaN(parseFloat(n)) && isFinite(n);
+//                }
                 
                 $scope.checkNumericValue = function (numvalue) {
-                    var result = true;
-                    if ($scope.checkEmptyNullValue(numvalue)) {
-                        return result;
-                    }
-                    if (!isNumeric(numvalue)) {
-                        result = false;
-                        return result;
-                    }
-                    return result;
+                    return mainSvc.checkNumericValue(numvalue);
+//                    var result = true;
+//                    if ($scope.checkEmptyNullValue(numvalue)) {
+//                        return result;
+//                    }
+//                    if (!isNumeric(numvalue)) {
+//                        result = false;
+//                        return result;
+//                    }
+//                    return result;
                 };
                 
                 $scope.checkPositiveNumberValue = function (numvalue) {
@@ -2609,6 +2610,7 @@ app.directive('crudGridObjects', function () {
     //                    }
     //                });
                     var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+                    mainSvc.sortNumericItemsBy(resp.data, "passportDate2");
                     activePassport.isActive = true;
                     mainSvc.sortItemsBy(resp.data, "isActive");
                     resp.data.reverse();

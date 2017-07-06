@@ -45,8 +45,8 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
 //            }
 //        });
         var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
-console.log(activePassport);        
-console.log($routeParams);        
+console.log(activePassport);
+console.log($routeParams);
         if (activePassport !== null && activePassport.id === Number($routeParams.param)) {
             $scope.isActivePassport = true;
         }

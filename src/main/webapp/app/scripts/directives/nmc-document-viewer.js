@@ -206,7 +206,11 @@ app.directive('nmcDocumentViewer', function () {
             $scope.calcInlineWidth = function (first, elm, count) {
                 var result = "inherit";
                 if (count > 2) {
-                    result = (first ? FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? (elm.hasOwnProperty("caption") && elm.caption.length > 0 ? (elm.cellStyle.widthClass === "SHORT_STATIC_ELEM" ? SHORT_STATIC_ELEM : STATIC_ELEM) : EMPTY_STATIC_ELEM) : (elm.__type === 'Boolean' ? BOOLEAN_ELEM : VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+                    if (elm.hasOwnProperty("caption") && elm.caption === "количество") {
+                        result = SHORT_STATIC_ELEM + $scope.ctrlSettings.cssMeasureUnit;
+                    } else {
+                        result = (first ? FIRST_STATIC_ELEM : (elm.cellType === 'STATIC' ? (elm.hasOwnProperty("caption") && elm.caption.length > 0 ? (elm.cellStyle.widthClass === "SHORT_STATIC_ELEM" ? SHORT_STATIC_ELEM : STATIC_ELEM) : EMPTY_STATIC_ELEM) : (elm.__type === 'Boolean' ? BOOLEAN_ELEM : VALUE_ELEM))) + $scope.ctrlSettings.cssMeasureUnit;
+                    }
                 } else {
                     result = first ? FIRST_STATIC_ELEM  + $scope.ctrlSettings.cssMeasureUnit : "95%";
                 }
