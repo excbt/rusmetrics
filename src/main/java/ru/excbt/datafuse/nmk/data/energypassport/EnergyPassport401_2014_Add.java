@@ -1059,14 +1059,47 @@ public class EnergyPassport401_2014_Add {
             PDTableCellValueBoolean.class,
             PDTableCellValueString.class);
 
-        section_helper1(topTable, "9.8.",
-            null,
-            new String[] {"Офисная, бытовая и специальная техника (по профилю объекта), класс энергетической эффективности (есть/нет)"},
-            PartCreators.create1EmptyStaticF,
-            new String[]{"A", "B", "C", "D", "E", "F", "G"},
-            null,
-            PDTableCellValueBoolean.class,
-            PDTableCellValueBoolean.class);
+//        Consumer<PDTablePart> createStaticAligmentRight = (p) -> p.cellStyle(PDCellStyle._makeHAligmentRight());
+//        section_helper1(topTable, "9.8.",
+//            null,
+//            new String[] {"Офисная, бытовая и специальная техника (по профилю объекта), класс энергетической эффективности (есть/нет)"},
+//            PartCreators.create1EmptyStaticF,
+//            new String[]{"A", "B", "C", "D", "E", "F", "G"},
+//            null,
+//            PDTableCellValueBoolean.class,
+//            PDTableCellValueBoolean.class);
+
+        topTable.createPartLine("9.8.")
+            .and().createStaticElement("Офисная, бытовая и специальная техника (по профилю объекта), класс энергетической эффективности (есть/нет)")
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8a","")
+            .and().createStaticElement("A").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8b","")
+            .and().createStaticElement("B").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8c","")
+            .and().createStaticElement("C").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8d","")
+            .and().createStaticElement("D").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8e","")
+            .and().createStaticElement("E").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8f","")
+            .and().createStaticElement("F").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
+
+        topTable.createPartLine("9.8g","")
+            .and().createStaticElement("G").cellStyle(PDCellStyle._makeHAligmentRight())
+            .and().createBooleanValueElement();
 
         itemCreator(topTable, "9.8.",
             PartCreators.create1EmptyStaticF,
