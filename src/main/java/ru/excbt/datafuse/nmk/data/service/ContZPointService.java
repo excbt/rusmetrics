@@ -380,7 +380,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectContZPointIds(long contObjectId) {
-		return contZPointRepository.selectContZPointIds(contObjectId);
+		return contZPointRepository.findContZPointIds(contObjectId);
 	}
 
 	/**
@@ -408,7 +408,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointStatInfo> selectContZPointStatInfo(Long contObjectId) {
 		List<ContZPointStatInfo> resultList = new ArrayList<>();
-		List<Long> contZPointIds = contZPointRepository.selectContZPointIds(contObjectId);
+		List<Long> contZPointIds = contZPointRepository.findContZPointIds(contObjectId);
 
 		// Date fromDateTime = null;
 

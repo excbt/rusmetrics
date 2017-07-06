@@ -95,5 +95,9 @@ public class ContZPointAccess {
         return this;
     }
 
+    public void clearAccessTTL(){
+        this.accessTtl = null;
+        this.accessTtlTz = null;
+    }
 
 }
