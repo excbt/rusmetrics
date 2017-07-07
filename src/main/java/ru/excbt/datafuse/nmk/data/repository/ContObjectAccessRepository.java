@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 
 import java.util.Date;
 import java.util.List;
@@ -88,8 +89,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId AND s.isChild = true"
         + " AND s.deleted = 0 )"
         + " GROUP BY a.contObjectId")
-    List<Object[]> findChildSubscrCabinetContObjectsStats(
-        @Param("parentSubscriberId") Long parentSubscriberId);
+    List<Object[]> findChildSubscrCabinetContObjectsStats(@Param("parentSubscriberId") Long parentSubscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.contObjectId IN "
@@ -99,5 +99,10 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
     List<ContObject> findContObjectsBySubscriberGroup(@Param("subscriberId") long subscriberId,
                                                         @Param("contGroupId") long contGroupId);
 
+    @Query("SELECT do FROM DeviceObject do "
+        + " WHERE do.contObject.id IN (SELECT a.contObjectId FROM ContObjectAccess a "
+        + " WHERE a.subscriberId = :subscriberId )"
+        + " ORDER BY do.contObject.fullAddress, do.contObject.id ")
+    List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 }

@@ -67,6 +67,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final SubscrDataSourceRepository subscrDataSourceRepository;
 
+	private final ObjectAccessService objectAccessService;
 
     @Autowired
     public DeviceObjectService(DeviceObjectRepository deviceObjectRepository,
@@ -79,7 +80,7 @@ public class DeviceObjectService implements SecuredRoles {
                                DeviceMetadataService deviceMetadataService,
                                DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService,
                                V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
-                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository) {
+                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository, ObjectAccessService objectAccessService) {
         this.deviceObjectRepository = deviceObjectRepository;
         this.deviceModelService = deviceModelService;
         this.deviceObjectMetaVzletRepository = deviceObjectMetaVzletRepository;
@@ -92,6 +93,7 @@ public class DeviceObjectService implements SecuredRoles {
         this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
         this.deviceObjectMapper = deviceObjectMapper;
         this.subscrDataSourceRepository = subscrDataSourceRepository;
+        this.objectAccessService = objectAccessService;
     }
 
 
@@ -551,7 +553,7 @@ public class DeviceObjectService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsBySubscriber(Long subscriberId) {
-		List<DeviceObject> result = subscrContObjectService.selectDeviceObjects(subscriberId);
+		List<DeviceObject> result = objectAccessService.findAllContZPointDeviceObjects(subscriberId);
 		result.forEach(i -> {
 			i.loadLazyProps();
 		});

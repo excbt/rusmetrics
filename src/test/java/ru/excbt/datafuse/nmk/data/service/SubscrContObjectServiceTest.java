@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -29,11 +30,6 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectServiceTest.class);
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
-
-	@Autowired
-	private SubscrContObjectRepository subscrContObjectRepository;
 
     @Autowired
 	private ObjectAccessService objectAccessService;
@@ -79,14 +75,18 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
     @Transactional
 	public void testSubscrDeviceObjects() throws Exception {
 
-		List<Tuple> resultRows = subscrContObjectRepository
-				.selectSubscrDeviceObjectByNumber(getSubscriberParam().getSubscriberId(), Arrays.asList("104115"));
 
-		List<Tuple> resultRows2 = subscrContObjectService.selectSubscriberDeviceObjectByNumber(getSubscriberParam(),
-				Arrays.asList("104115"));
+        logger.info("CurrentSubscriber: {}", getSubscriberParam().getSubscriberId());
 
-		for (Tuple t : resultRows) {
-			logger.info("subscriberId: {}", t.get("subscriberId"));
+//        List<Tuple> resultRows = subscrContObjectRepository
+//				.selectSubscrDeviceObjectByNumber(getSubscriberParam().getSubscriberId(), Arrays.asList("104115"));
+
+		List<Tuple> resultRows2 = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), Arrays.asList("111214"));
+
+		assertFalse(resultRows2.isEmpty());
+
+		for (Tuple t : resultRows2) {
+			logger.info("\nsubscriberId: {}, deviceObjectId:{}", t.get("subscriberId"), t.get("deviceObjectId"));
 
 		}
 

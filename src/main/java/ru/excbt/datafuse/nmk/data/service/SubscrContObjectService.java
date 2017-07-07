@@ -385,33 +385,33 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 //		return result;
 //	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<DeviceObject> selectDeviceObjects(Long subscriberId) {
-		checkNotNull(subscriberId);
-		return subscrContObjectRepository.selectDeviceObjects(subscriberId);
-	}
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @return
+//	 */
+//	@Transactional(value = TxConst.TX_DEFAULT)
+//	public List<DeviceObject> selectDeviceObjects(Long subscriberId) {
+//		checkNotNull(subscriberId);
+//		return subscrContObjectRepository.selectDeviceObjects(subscriberId);
+//	}
+//
+//
 
-
-
-	/**
-	 * TODO ObjectAccessService upgrade
-	 * @param subscriberParam
-	 * @param deviceObjectNumbers
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Tuple> selectSubscriberDeviceObjectByNumber(SubscriberParam subscriberParam,
-			List<String> deviceObjectNumbers) {
-		checkNotNull(deviceObjectNumbers);
-
-		return deviceObjectNumbers.isEmpty() ? new ArrayList<>()
-				: subscrContObjectRepository.selectSubscrDeviceObjectByNumber(subscriberParam.getSubscriberId(),
-						deviceObjectNumbers);
-	}
+//	/**
+//	 * TODO ObjectAccessService upgrade
+//	 * @param subscriberParam
+//	 * @param deviceObjectNumbers
+//	 * @return
+//	 */
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public List<Tuple> selectSubscriberDeviceObjectByNumber(SubscriberParam subscriberParam,
+//			List<String> deviceObjectNumbers) {
+//		checkNotNull(deviceObjectNumbers);
+//
+//		return deviceObjectNumbers.isEmpty() ? new ArrayList<>()
+//				: subscrContObjectRepository.selectSubscrDeviceObjectByNumber(subscriberParam.getSubscriberId(),
+//						deviceObjectNumbers);
+//	}
 
 }

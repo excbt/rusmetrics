@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
@@ -7,6 +8,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
@@ -19,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
+import javax.persistence.Tuple;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -342,6 +345,7 @@ public class ObjectAccessService {
         return result;
     }
 
+
     public boolean checkContZPointIds(Long subscriberId, List<Long> ContZPointIds) {
         if (ContZPointIds == null || ContZPointIds.isEmpty()) {
             return false;
@@ -351,5 +355,37 @@ public class ObjectAccessService {
     }
 
 
+    public List<DeviceObject> findAllContZPointDeviceObjects(Long subscriberId) {
+
+        List<DeviceObject> result;
+        if (NEW_ACCESS) {
+            result = contZPointAccessRepository.findAllDeviceObjects(subscriberId);
+        } else {
+            result = subscrContObjectRepository.selectDeviceObjects(subscriberId);
+        }
+
+        result.forEach(i -> {
+            i.loadLazyProps();
+        });
+
+        return result;
+    }
+
+
+
+    public List<Tuple> findAllContZPointDeviceObjectsEx (Long subscriberId, List<String> deviceObjectNumbers) {
+
+        if (deviceObjectNumbers.isEmpty()) {
+            return Lists.emptyList();
+        }
+
+        List<Tuple> result;
+        if (NEW_ACCESS) {
+            result = contZPointAccessRepository.findAllDeviceObjectsEx(subscriberId, deviceObjectNumbers);
+        } else {
+            result = subscrContObjectRepository.selectSubscrDeviceObjectByNumber(subscriberId,deviceObjectNumbers);
+        }
+        return result;
+    }
 
 }
