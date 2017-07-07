@@ -895,7 +895,7 @@ tr.nmc-tr-striped:nth-of-type(odd) > td, .nmc-div-module-info:nth-of-type(odd) {
 
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
 .nmc-td-for-button-checkbox, .nmc-td-for-button-object-control {
-    min-width: 45px;
+    min-width: 46px;
     width: 3%;
 }
 
@@ -1011,8 +1011,12 @@ tr.nmc-main-table-header-indicator > th {
     margin-bottom: 0px !important;
 }
 
-.nmc-parent-table > tbody > tr>td {
+.nmc-parent-table > tbody > tr > td {
     border: none;
+}
+
+.nmc-list-object-table {
+    min-width: 1350px;
 }
 
 .nmc-parent-object-table > tbody > tr>td {

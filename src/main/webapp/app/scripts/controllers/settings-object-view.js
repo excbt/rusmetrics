@@ -654,6 +654,7 @@ angular.module('portalNMC')
                 $scope.treeLoading = false;
                 $scope.objectCtrlSettings.isPassportsLoading = false;
                 $scope.objectCtrlSettings.isDocumentSaving = false;
+                $scope.objectCtrlSettings.energyDocumentPropsSaving = false;
                 var errorObj = mainSvc.errorCallbackHandler(e);
                 notificationFactory.errorInfo(errorObj.caption, errorObj.description);
             };
@@ -3198,6 +3199,7 @@ angular.module('portalNMC')
             }
 
             function successCreatePassportCallback(resp) {
+                $scope.objectCtrlSettings.energyDocumentPropsSaving = false;
                 if (successSavePassportCallback(resp) === false) {
                     return false;
                 }
@@ -3254,6 +3256,7 @@ angular.module('portalNMC')
             }
 
             function successUpdatePassportCallback(resp) {
+                $scope.objectCtrlSettings.energyDocumentPropsSaving = false;
                 if (successSavePassportCallback(resp) === false) {
                     return false;
                 }
@@ -3266,17 +3269,10 @@ angular.module('portalNMC')
                 }
             }
                 
-            function successDeleteContObjectPassportCallback(resp) {
-                if (successSavePassportCallback(resp) === false) {
-                    return false;
-                }
-                notificationFactory.success();
-                //find and delete doc in doc array
-                var deleteItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
-                var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(deleteItem);
-                if (docIndexAtArr > -1) {
-                    $scope.data.currentContObjectPassports.splice(docIndexAtArr, 1);
-                }
+            function successDeleteContObjectPassportCallback(resp) {                
+                notificationFactory.success();                
+                //refresh contObject passport list.
+                loadContObjectPassports($scope.currentObject.id);
             }
                 
             function loadContObjectPassports(contObject) {
@@ -3377,8 +3373,13 @@ angular.module('portalNMC')
                 }
                 return checkFlag;
             }
+                
+            $scope.saveBtnDisabled = function () {
+                return $scope.objectCtrlSettings.energyDocumentPropsSaving;
+            };
 
             $scope.saveDocument = function (doc) {
+                $scope.objectCtrlSettings.energyDocumentPropsSaving = true;
         //console.log(doc);
                 if (checkDoc(doc) === false) {
                     return false;

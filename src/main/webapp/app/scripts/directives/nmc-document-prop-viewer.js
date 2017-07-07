@@ -8,7 +8,8 @@ angular.module('portalNMC').directive('nmcDocumentPropViewer', function () {
         scope: {
             currentDocument: '=',
             btnClick: '&',
-            isReadOnly: '&'
+            isReadOnly: '&',
+            saveBtnDisabled: '&'
         },
         templateUrl: 'scripts/directives/templates/nmc-document-prop-viewer.html',
         controller: ['$scope', 'energoPassportSvc', 'mainSvc', function ($scope, energoPassportSvc, mainSvc) {
