@@ -8,13 +8,11 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
@@ -25,12 +23,10 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.Tuple;
-import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -356,66 +352,38 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 //		return result;
 //	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPoint> selectSubscriberContZPoints(Long subscriberId) {
-		checkNotNull(subscriberId);
-		List<ContZPoint> result = subscrContObjectRepository.selectContZPoints(subscriberId);
-		result.forEach(i -> {
-			i.getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
-		});
-		return result;
-	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectSubscriberContZPointIds(Long subscriberId) {
-		checkNotNull(subscriberId);
-		List<Long> result = subscrContObjectRepository.selectContZPointIds(subscriberId);
-		return result;
-	}
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointShortInfo> selectSubscriberContZPointShortInfo(Long subscriberId) {
-		checkNotNull(subscriberId);
-		List<ContZPointShortInfo> result = new ArrayList<>();
-
-		String[] QUERY_COLUMNS = new String[] { "id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
-				"caption" };
-
-		ColumnHelper columnHelper = new ColumnHelper(QUERY_COLUMNS);
-
-		List<Object[]> queryResult = subscrContObjectRepository.selectContZPointShortInfo(subscriberId);
-
-		for (Object[] row : queryResult) {
-
-			Long contZPointId = columnHelper.getResultAsClass(row, "id", Long.class);
-			Long contObjectId = columnHelper.getResultAsClass(row, "contObjectId", Long.class);
-			String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
-			String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
-			String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
-			ContZPointShortInfo info = new ContZPointShortInfo(contZPointId, contObjectId, customServiceName,
-					contServiceType, contServiceTypeCaption);
-			result.add(info);
-		}
-
-		return result;
-	}
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @return
+//	 */
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public List<ContZPointShortInfo> selectSubscriberContZPointShortInfo(Long subscriberId) {
+//		checkNotNull(subscriberId);
+//		List<ContZPointShortInfo> result = new ArrayList<>();
+//
+//		String[] QUERY_COLUMNS = new String[] { "id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
+//				"caption" };
+//
+//		ColumnHelper columnHelper = new ColumnHelper(QUERY_COLUMNS);
+//
+//		List<Object[]> queryResult = subscrContObjectRepository.selectContZPointShortInfo(subscriberId);
+//
+//		for (Object[] row : queryResult) {
+//
+//			Long contZPointId = columnHelper.getResultAsClass(row, "id", Long.class);
+//			Long contObjectId = columnHelper.getResultAsClass(row, "contObjectId", Long.class);
+//			String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
+//			String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
+//			String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
+//			ContZPointService.ShortInfo info = new ContZPointService.ShortInfo(contZPointId, contObjectId, customServiceName,
+//					contServiceType, contServiceTypeCaption);
+//			result.add(info);
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 *
@@ -429,22 +397,6 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	}
 
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param contZPointIds
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean canAccessContZPoint(Long subscriberId, Long[] contZPointIds) {
-		if (contZPointIds == null || contZPointIds.length == 0) {
-			return false;
-		}
-
-		List<Long> availableIds = selectSubscriberContZPointIds(subscriberId);
-
-		return checkIds(contZPointIds, availableIds);
-	}
 
 	/**
 	 * TODO ObjectAccessService upgrade

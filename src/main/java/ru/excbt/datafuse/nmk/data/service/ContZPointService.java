@@ -31,9 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
-import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
+import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
@@ -101,15 +99,17 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @since 17.03.2016
 	 *
 	 */
-	public static class ContZPointShortInfo {
+	public static class ShortInfo implements ContZPointShortInfo{
 		private final Long contZPointId;
 		private final Long contObjectId;
 		private final String customServiceName;
 		private final String contServiceType;
 		private final String contServiceTypeCaption;
 
-		public ContZPointShortInfo(Long contZPointId, Long contObjectId, String customServiceName,
-				String contServiceType, String contServiceTypeCaption) {
+		public ShortInfo(Long contZPointId, Long contObjectId, String customServiceName,
+				String contServiceType, String contServiceTypeCaption)
+
+        {
 			this.contZPointId = contZPointId;
 			this.contObjectId = contObjectId;
 			this.customServiceName = customServiceName;
@@ -494,16 +494,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
-	/**
-	 *
-	 * @param contObjectId
-	 * @param contServiceTypeKey
-	 * @param startDate
-	 * @param tsNumber
-	 * @param isDoublePipe
-	 * @param deviceObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPoint
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public ContZPoint createOne(Long contObjectId, ContZPoint contZPoint) {

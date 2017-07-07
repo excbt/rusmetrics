@@ -12,9 +12,13 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -42,9 +46,6 @@ public abstract class AbstractSubscrApiResource {
 
 	@Autowired
 	protected SubscrServiceAccessService subscrServiceAccessService;
-
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
 
     @Autowired
 	private ObjectAccessService objectAccessService;
@@ -87,7 +88,7 @@ public abstract class AbstractSubscrApiResource {
 		if (currentSubscriberService.isSystemUser()) {
 			return true;
 		}
-		return subscrContObjectService.canAccessContZPoint(getCurrentSubscriberId(), contZPointIds);
+		return objectAccessService.checkContZPointIds(getCurrentSubscriberId(), Arrays.asList(contZPointIds));
 	}
 
     /**
@@ -169,18 +170,19 @@ public abstract class AbstractSubscrApiResource {
 	 *
 	 * @return
 	 */
-	protected Date getCurrentSubscriberDate() {
-		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
-		return d;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
 	protected ZonedDateTime getSubscriberZonedDateTime() {
 		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
 		return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()) : ZonedDateTime.now();
+	}
+
+	protected ZonedDateTime getSubscriberZonedDateTime2() {
+		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+        Long duration = 0L;
+		if (d != null) {
+            LocalDateTime sd = LocalDateUtils.asLocalDateTime(d);
+            duration = Duration.between(sd, LocalDateTime.now()).toNanos();
+        }
+		return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).plusNanos(duration) : ZonedDateTime.now();
 	}
 
 	/**

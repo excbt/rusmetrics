@@ -11,9 +11,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 import javax.persistence.Tuple;
@@ -49,8 +48,7 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	@Test
     @Transactional
 	public void testContZPointInfo() throws Exception {
-		List<ContZPointShortInfo> result = subscrContObjectService
-				.selectSubscriberContZPointShortInfo(EXCBT_RMA_SUBSCRIBER_ID);
+		List<ContZPointShortInfo> result = objectAccessService.findContZPointShortInfo(EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(result.size() > 0);
 	}
 

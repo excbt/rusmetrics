@@ -68,7 +68,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
 
     @Query("SELECT a.subscriberId FROM ContObjectAccess a "
-        + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId) "
+        + " WHERE a.subscriberId IN (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId AND s.deleted = 0) "
         + " AND a.contObjectId = :contObjectId "
         + " AND a.accessTtl IS NULL "
     )

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -37,7 +38,12 @@ public class RmaContZPointController extends SubscrContZPointController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointController.class);
 
-	/**
+    public RmaContZPointController(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService) {
+        super(contZPointService, contServiceDataHWaterService, contServiceDataElService, contZPointMetadataService, measureUnitService, organizationService, objectAccessService);
+    }
+
+
+    /**
 	 *
 	 */
 	@Override
