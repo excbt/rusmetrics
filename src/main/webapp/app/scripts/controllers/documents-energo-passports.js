@@ -212,6 +212,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     
     function errorCallback(e) {
         $scope.ctrlSettings.loading = false;
+        $scope.ctrlSettings.energyDocumentSaving = false;
         var errorObj = mainSvc.errorCallbackHandler(e);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     }
@@ -234,6 +235,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successCreatePassportCallback(resp) {
+        $scope.ctrlSettings.energyDocumentSaving = false;
         if (successSavePassportCallback(resp) === false) {
             return false;
         }
@@ -241,6 +243,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successUpdatePassportCallback(resp) {
+        $scope.ctrlSettings.energyDocumentSaving = false;
         if (successSavePassportCallback(resp) === false) {
             return false;
         }
@@ -289,7 +292,12 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         return checkFlag;
     }
     
+    $scope.saveBtnDisabled = function () {
+        return $scope.ctrlSettings.energyDocumentSaving;
+    };
+    
     $scope.saveEnergyDocument = function (doc) {
+        $scope.ctrlSettings.energyDocumentSaving = true;
 //console.log(doc);
         if (checkDoc(doc) === false) {
             return false;
