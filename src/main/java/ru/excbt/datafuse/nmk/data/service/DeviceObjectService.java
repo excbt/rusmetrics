@@ -51,8 +51,6 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectDataSourceService deviceObjectDataSourceService;
 
-	private final SubscrContObjectService subscrContObjectService;
-
 	private final DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
 
 	private final DeviceObjectMetadataService deviceObjectMetadataService;
@@ -74,7 +72,6 @@ public class DeviceObjectService implements SecuredRoles {
                                DeviceModelService deviceModelService,
                                DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository,
                                DeviceObjectDataSourceService deviceObjectDataSourceService,
-                               SubscrContObjectService subscrContObjectService,
                                DeviceObjectDataSourceRepository deviceObjectDataSourceRepository,
                                DeviceObjectMetadataService deviceObjectMetadataService,
                                DeviceMetadataService deviceMetadataService,
@@ -85,7 +82,6 @@ public class DeviceObjectService implements SecuredRoles {
         this.deviceModelService = deviceModelService;
         this.deviceObjectMetaVzletRepository = deviceObjectMetaVzletRepository;
         this.deviceObjectDataSourceService = deviceObjectDataSourceService;
-        this.subscrContObjectService = subscrContObjectService;
         this.deviceObjectDataSourceRepository = deviceObjectDataSourceRepository;
         this.deviceObjectMetadataService = deviceObjectMetadataService;
         this.deviceMetadataService = deviceMetadataService;

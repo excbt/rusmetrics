@@ -387,8 +387,6 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectId);
 
 		if (!objectAccessService.checkContObjectId(getSubscriberId(),contObjectId)
-		//    !subscrContObjectService.checkContObjectSubscription(currentSubscriberService.getSubscriberId(),
-		//		contObjectId)
         ) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -467,7 +465,6 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		for (Long id : contObjectIds) {
 			if (!objectAccessService.checkContObjectId(getSubscriberId(), id)
-                //subscrContObjectService.checkContObjectSubscription(currentSubscriberService.getSubscriberId(), id)
                 ) {
 				return ResponseEntity.badRequest().build();
 			}

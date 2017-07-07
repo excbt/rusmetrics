@@ -371,7 +371,6 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		}
 
 		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
-            //subscrContObjectService.selectSubscriberContObjects(getSubscriberParam());
 
 		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationStatusService
 				.selectMonitorContEventNotificationStatusCollapse(getSubscriberParam(), contObjects,
@@ -404,8 +403,6 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		}
 
 		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
-            //subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
-			//	contGroupId);
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
 				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
@@ -438,8 +435,6 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		}
 
 		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
-            //subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(),
-			//	contGroupId);
 
 		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
 				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,

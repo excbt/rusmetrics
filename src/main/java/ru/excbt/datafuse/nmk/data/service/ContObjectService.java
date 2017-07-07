@@ -539,7 +539,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		softDelete(contObject);
 
 		subscriberAccessService.revokeContObjectAccess(new ContObject().id(contObjectId));
-        //subscrContObjectService.old().purgeSubscrContObject(new ContObject().id(contObjectId), subscrEndDate);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {
@@ -593,7 +592,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		List<Long> updateCandidateIds = Arrays.asList(contObjectIds);
 
 		List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
-            //subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
 		List<ContObject> updateCandidate = contObjects.stream().filter((i) -> updateCandidateIds.contains(i.getId()))
 				.collect(Collectors.toList());

@@ -69,8 +69,6 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 			Boolean noGreenColor) {
 
 		List<ContObject> contObjects = objectAccessService.findContObjects(subscriberParam.getSubscriberId(), contGroupId);
-            //subscrContObjectService.selectSubscriberContObjects(subscriberParam,
-			//	contGroupId);
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
 				subscriberParam, contObjects, datePeriod, noGreenColor);

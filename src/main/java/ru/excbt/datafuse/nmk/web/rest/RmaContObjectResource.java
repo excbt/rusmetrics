@@ -174,7 +174,6 @@ public class RmaContObjectResource extends SubscrContObjectResource {
             @Override
             public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findContObjects(subscriberId);
-                    //subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
             }
@@ -196,8 +195,6 @@ public class RmaContObjectResource extends SubscrContObjectResource {
             @Override
             public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findRmaAvailableContObjects(subscriberId, getCurrentSubscriberId());
-//                    subscrContObjectService.selectAvailableContObjects(subscriberId,
-//                    getCurrentSubscriberId());
 
                 return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
             }

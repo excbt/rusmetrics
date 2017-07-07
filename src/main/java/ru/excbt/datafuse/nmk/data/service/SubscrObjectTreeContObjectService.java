@@ -40,9 +40,6 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@PersistenceContext(unitName = "nmk-p")
 	protected EntityManager em;
 
-	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
-
     @Autowired
 	protected ObjectAccessService objectAccessService;
 

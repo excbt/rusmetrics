@@ -87,8 +87,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private final ContServiceDataHWaterDeltaService contObjectHWaterDeltaService;
 
-	private final SubscrContObjectService subscrContObjectService;
-
 	private final ContServiceDataHWaterImportService contServiceDataHWaterImportService;
 
 	private final SubscrDataSourceService subscrDataSourceService;
@@ -102,7 +100,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
                                                  CurrentSubscriberService currentSubscriberService,
                                                  ContServiceDataHWaterService contServiceDataHWaterService,
                                                  ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
-                                                 SubscrContObjectService subscrContObjectService,
                                                  ContServiceDataHWaterImportService contServiceDataHWaterImportService,
                                                  SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService) {
         this.contZPointService = contZPointService;
@@ -111,7 +108,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
         this.currentSubscriberService = currentSubscriberService;
         this.contServiceDataHWaterService = contServiceDataHWaterService;
         this.contObjectHWaterDeltaService = contObjectHWaterDeltaService;
-        this.subscrContObjectService = subscrContObjectService;
         this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
         this.subscrDataSourceService = subscrDataSourceService;
         this.objectAccessService = objectAccessService;
@@ -725,8 +721,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
-//            subscrContObjectService.selectSubscriberDeviceObjectByNumber(
-//				getSubscriberParam(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));

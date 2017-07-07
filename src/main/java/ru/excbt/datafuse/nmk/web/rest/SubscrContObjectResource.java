@@ -75,27 +75,6 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
     }
 
-//    /**
-//	 *
-//	 * @param contGroupId
-//	 * @return
-//	 */
-//	protected List<ContObject> selectRmaContObjects(Long contGroupId, boolean isHaveSubscrFiltered, List<Long> meterPeriodSettingIds) {
-//		List<ContObject> contObjectList = null;
-//
-//		contObjectList = subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
-//
-//		subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), contObjectList);
-//
-//		if (isHaveSubscrFiltered) {
-//
-//			return ObjectFilters.filterToList(contObjectList, i -> Boolean.TRUE.equals(i.get_haveSubscr()));
-//
-//		}
-//
-//		return contObjectList;
-//	}
-
     /**
      *
      * @param contGroupId
@@ -121,17 +100,6 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
         return contObjectList;
     }
 
-
-//	/**
-//	 *
-//	 * @param contGroupId
-//	 * @return
-//	 */
-//	protected List<ContObject> selectSubscrContObjects(Long contGroupId, List<Long> meterPeriodSettingIds) {
-//		return subscrContObjectService.selectSubscriberContObjects(getSubscriberParam(), contGroupId, meterPeriodSettingIds);
-//
-//	}
-
 	/**
 	 *
 	 * @return
@@ -146,9 +114,6 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
                 boolean isRma = currentSubscriberService.isRma();
                 List<ContObject> resultList = findContObjectsByAccess(contGroupId, isRma, true, meterPeriodSettingIds);
 
-//                List<ContObject> resultList3 = currentSubscriberService.isRma() ? selectRmaContObjects(contGroupId, true, meterPeriodSettingIds)
-//                    : selectSubscrContObjects(contGroupId, meterPeriodSettingIds);
-
                 List<? extends ContObjectDTO> result = contObjectService.wrapContObjectsMonitorDTO(resultList);
                 objectAccessService.readContObjectAccess(getSubscriberId(), result);
                 return result;
@@ -157,8 +122,6 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 		return ApiActionTool.processResponceApiActionOk(action);
 
-		//return responseOK(contObjectService.wrapContObjectsStats(resultList));
-		//return responseOK(contObjectService.wrapContObjectsMonitorVO(resultList));
 	}
 
 	/**
@@ -232,7 +195,6 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 				ContObject result = contObjectService.automationUpdate(contObject, cmOrganizationId);
 
 				objectAccessService.setupRmaHaveSubscr(getSubscriberParam(), Arrays.asList(result));
-                //subscrContObjectService.rmaInitHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
 				return contObjectService.wrapContObjectMonitorDTO(result,false);
 			}

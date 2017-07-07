@@ -196,8 +196,6 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
         subscriberAccessService.updateContObjectIdsAccess(newSubscriber , Arrays.asList(contObjectIds), null);
-		//List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
-		//		Arrays.asList(contObjectIds), LocalDate.now());
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
@@ -220,7 +218,6 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		}
 
         List<ContObject> contObjects = objectAccessService.findContObjects(newSubscriber.getId());
-            //subscrContObjectService.selectSubscriberContObjects(newSubscriber.getId());
 
 		List<ContObjectShortInfo> subscrObjectSHortInfoList = contObjects.stream().map(i -> i.getContObjectShortInfo())
 				.collect(Collectors.toList());
@@ -253,11 +250,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
-//		List<SubscrContObject> subscrContObjects = subscrContObjectService
-//				.selectSubscrContObjects(cabinetSubscriber.getId());
-
 		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Lists.emptyList(), LocalDateTime.now());
-		//subscrContObjectService.old().deleteSubscrContObjectPermanent(subscrContObjects);
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 
@@ -287,12 +280,6 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		List<ContObjectShortInfo> contObjectShortInfoList = objectAccessService.findContObjects(parentSubscriberId)
             .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
-//            subscrContObjectService
-//				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
-
-//		List<ContObjectShortInfo> contObjectShortInfoList = subscrContObjectService
-//				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
-//
 		List<Subscriber> childSubscribers = subscriberService.selectChildSubscribers(parentSubscriberId);
 
 		Map<Long, List<Long>> childContObjectIdMap = new HashMap<>();
@@ -303,15 +290,10 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		for (Subscriber s : childSubscribers) {
 			List<Long> childContObjectIds = objectAccessService.findContObjectIds(s.getId());
-                //subscrContObjectService.selectSubscriberContObjectIds(s.getId());
 			allChildContObjectIds.addAll(childContObjectIds);
 
 			List<ContObjectShortInfo> childContObjects = objectAccessService.findContObjects(s.getId())
                     .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
-//                subscrContObjectService
-//					.selectSubscriberContObjectsShortInfo(s.getId());
-//			List<ContObjectShortInfo> childContObjects = subscrContObjectService
-//					.selectSubscriberContObjectsShortInfo(s.getId());
 			if (!childContObjectIds.isEmpty()) {
 				childContObjectIdMap.put(s.getId(), childContObjectIds);
 			}
