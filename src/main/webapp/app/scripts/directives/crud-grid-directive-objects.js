@@ -461,10 +461,12 @@ app.directive('crudGridObjects', function () {
                 }
                 
                 var successGetObjectsCallback = function (response) {
-                    console.time("Object perform");
-                    $scope.messages.noObjects = "Объектов нет.";
+                    console.time("Object perform");                    
                     var tempArr = response.data;
                     if (mainSvc.checkUndefinedNull(tempArr) || !angular.isArray(tempArr) || tempArr.length === 0) {
+                        $scope.messages.noObjects = "Объектов нет.";
+                        $scope.objects = [];
+                        $scope.objectsOnPage = [];
                         $scope.loading = false;
                         $rootScope.$broadcast('objectSvc:loaded');
                         return false;
