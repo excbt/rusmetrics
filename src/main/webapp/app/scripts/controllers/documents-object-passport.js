@@ -8,6 +8,7 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
     var passportRequestCanceller = null;
     
     $scope.isActivePassport = false;
+    $scope.passportsLoading = true;
     
     $scope.extraValues = [];
     
@@ -22,12 +23,13 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
     };
     
     var errorCallback = function (e) {
-        $scope.treeLoading = false;
+        $scope.passportsLoading = false;
         var errorObj = mainSvc.errorCallbackHandler(e);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
     function successLoadPassportsCallback(resp) {
+        $scope.passportsLoading = false;
         if (!angular.isArray(resp.data) || resp.data.length <= 0) {
             //console.warn("Response from server is incorrect:", resp);
             return false;
@@ -53,7 +55,7 @@ console.log($routeParams);
     }
     
     function loadContObjectPassports(contObjectId) {
-        
+        $scope.passportsLoading = true;
         if (passportRequestCanceller !== null) {
             passportRequestCanceller.resolve();
         }

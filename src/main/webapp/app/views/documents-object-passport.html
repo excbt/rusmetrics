@@ -1,4 +1,7 @@
-<nmc-document-viewer
+<div ng-show = "passportsLoading" class = "nmc-loading">
+    <i class = "fa fa-spinner fa-spin"></i> Загрузка паспорта... 
+</div>
+<nmc-document-viewer ng-show = "!passportsLoading"
                      is-read-only = "isReadOnly()"
                      close-document = "cancelObjectPassportEdit()"
                      extra-values = "extraValues">
