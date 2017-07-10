@@ -68,7 +68,7 @@ public class ObjectAccessService {
     public List<ContObject> findContObjects(Long subscriberId) {
         List<ContObject> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findAllContObjectsTtl(subscriberId);
+            result = contObjectAccessRepository.findAllContObjects(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContObjects(subscriberId);
         }
@@ -102,7 +102,7 @@ public class ObjectAccessService {
     public List<Long> findContObjectIds(Long subscriberId) {
         List<Long> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findAllContObjectIdsTtl(subscriberId);
+            result = contObjectAccessRepository.findAllContObjectIds(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContObjectIds(subscriberId);
         }
@@ -113,7 +113,7 @@ public class ObjectAccessService {
     public List<ContObject> findContObjectsExcludingIds (Long subscriberId, List<Long> idList) {
         List<ContObject> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectsExcludingIds(subscriberId, idList);
+            result = contObjectAccessRepository.findContObjectsExcludingIdsNoTtl(subscriberId, idList);
         } else {
             result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId,idList);
         }
@@ -123,7 +123,7 @@ public class ObjectAccessService {
     public List<Long> findRmaSubscribersContObjectIds(Long rmaSubscriberId) {
         List<Long> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findRmaSubscribersContObjectIds(rmaSubscriberId);
+            result = contObjectAccessRepository.findRmaSubscribersContObjectIdsNoTtl(rmaSubscriberId);
         } else {
             result = subscrContObjectRepository.selectRmaSubscribersContObjectIds(rmaSubscriberId);
         }
@@ -134,7 +134,7 @@ public class ObjectAccessService {
     public List<ContObject> findContObjectsByIds(Long subscriberId, List<Long> idList) {
         List<ContObject> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectsByIds(subscriberId, idList);
+            result = contObjectAccessRepository.findContObjectsByIdsNoTtl(subscriberId, idList);
         } else {
             result = subscrContObjectRepository.selectContObjectsByIds(subscriberId,
                 idList);

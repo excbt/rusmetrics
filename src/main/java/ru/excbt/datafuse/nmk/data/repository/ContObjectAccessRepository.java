@@ -18,19 +18,19 @@ import java.util.Optional;
 public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK> {
 
     @Query("SELECT distinct a.subscriber.id FROM ContObjectAccess a WHERE a.accessTtl IS NULL")
-    List<Long> findAllSubscriberIds();
+    List<Long> findAllSubscriberIdsNoTtl();
 
     @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL")
-    List<Long> findContObjectIdsBySubscriber (@Param("subscriberId") Long subscriberId);
+    List<Long> findAllContObjectIdsNoTtl (@Param("subscriberId") Long subscriberId);
 
     @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId ")
-    List<Long> findAllContObjectIdsTtl (@Param("subscriberId") Long subscriberId);
+    List<Long> findAllContObjectIds (@Param("subscriberId") Long subscriberId);
 
-    @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId")
-    List<Long> findContObjectIdsBySubscriberTTL (@Param("subscriberId") Long subscriberId);
+//    @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId")
+//    List<Long> findContObjectIdsBySubscriberTTL (@Param("subscriberId") Long subscriberId);
 
     @Query("SELECT distinct a.subscriberId FROM ContObjectAccess a WHERE a.contObjectId = :contObjectId AND a.accessTtl IS NULL")
-    List<Long> findSubscriberByContObject(@Param("contObjectId") Long contObjectId);
+    List<Long> findSubscriberByContObjectNoTtl(@Param("contObjectId") Long contObjectId);
 
     @Query("SELECT count(a) FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.contObjectId = :contObjectId AND a.accessTtl IS NULL")
     Optional<Long> findByPK(@Param("subscriberId") Long subscriberId, @Param("contObjectId") Long contObjectId);
@@ -41,15 +41,15 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
     /// Queries for ContObject
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId "
-        + " AND a.accessTtl IS NULL "
-        + " ORDER BY a.contObject.fullAddress, a.contObject.id")
-    List<ContObject> findContObjectsBySubscriberId(@Param("subscriberId") Long subscriberId);
+//    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId "
+//        + " AND a.accessTtl IS NULL "
+//        + " ORDER BY a.contObject.fullAddress, a.contObject.id")
+//    List<ContObject> findContObjectsBySubscriberId(@Param("subscriberId") Long subscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId "
         + " ORDER BY a.contObject.fullAddress, a.contObject.id")
-    List<ContObject> findAllContObjectsTtl(@Param("subscriberId") Long subscriberId);
+    List<ContObject> findAllContObjects(@Param("subscriberId") Long subscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a "
@@ -57,7 +57,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " AND a.contObjectId NOT IN (:idList)"
         + " AND a.accessTtl IS NULL "
         + " ORDER BY a.contObject.fullAddress, a.contObject.id")
-    List<ContObject> findContObjectsExcludingIds(@Param("subscriberId") Long subscriberId,
+    List<ContObject> findContObjectsExcludingIdsNoTtl(@Param("subscriberId") Long subscriberId,
                                                  @Param("idList") List<Long> idList);
 
 
@@ -65,7 +65,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId AND s.deleted = 0) "
         + " AND a.accessTtl IS NULL "
     )
-    List<Long> findRmaSubscribersContObjectIds(@Param("rmaSubscriberId") Long rmaSubscriberId);
+    List<Long> findRmaSubscribersContObjectIdsNoTtl(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a "
@@ -73,7 +73,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " AND a.contObjectId IN (:contObjectIds) AND a.contObject.deleted = 0"
         + " AND a.accessTtl IS NULL"
         + " ORDER BY a.contObject.fullAddress, a.contObject.id")
-    List<ContObject> findContObjectsByIds(@Param("subscriberId") Long subscriberId,
+    List<ContObject> findContObjectsByIdsNoTtl(@Param("subscriberId") Long subscriberId,
                                           @Param("contObjectIds") List<Long> contObjectIds);
 
 

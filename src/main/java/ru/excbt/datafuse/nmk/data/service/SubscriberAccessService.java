@@ -85,12 +85,12 @@ public class SubscriberAccessService implements SecuredRoles {
      */
     @Transactional(readOnly = true)
     public List<Long> findContObjectIds(Long subscriberId) {
-        return contObjectAccessRepository.findContObjectIdsBySubscriber(subscriberId);
+        return contObjectAccessRepository.findAllContObjectIdsNoTtl(subscriberId);
     }
 
     @Transactional(readOnly = true)
     public List<Long> findAllContObjectSubscriberIds() {
-        return contObjectAccessRepository.findAllSubscriberIds();
+        return contObjectAccessRepository.findAllSubscriberIdsNoTtl();
     }
 
     /*
@@ -180,7 +180,7 @@ public class SubscriberAccessService implements SecuredRoles {
     @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void revokeContObjectAccess(ContObject contObject) {
         final ZonedDateTime currDateTime = ZonedDateTime.now();
-        contObjectAccessRepository.findSubscriberByContObject(contObject.getId()).forEach((i) ->
+        contObjectAccessRepository.findSubscriberByContObjectNoTtl(contObject.getId()).forEach((i) ->
             finishContObjectAccess(new Subscriber().id(i), contObject, currDateTime.toLocalDateTime(), currDateTime)
         );
 //        contObjectAccessRepository.findByContObjectId(contObject.getId()).forEach((i)->
@@ -316,7 +316,7 @@ public class SubscriberAccessService implements SecuredRoles {
     public void updateContObjectIdsAccess(final Subscriber subscriber, final List<Long> newContObjectIds,
                                           final LocalDateTime subscriberDateTime) {
 
-        List<Long> existingContObjectIds = contObjectAccessRepository.findContObjectIdsBySubscriber(subscriber.getId());
+        List<Long> existingContObjectIds = contObjectAccessRepository.findAllContObjectIdsNoTtl(subscriber.getId());
 
         List<Long> addContObjectIds = new ArrayList<>();
         List<Long> delContObjectIds = new ArrayList<>();
