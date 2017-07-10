@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSelectContObjectsNotificationsCountList() throws Exception {
 
 		List<Long> vList = subscrContObjectService
@@ -68,6 +70,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSelectContObjectsNotificationsNewCountList() throws Exception {
 
 		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
@@ -81,6 +84,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Ignore
 	public void testSelectContObjectsContTypes() throws Exception {
 		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
@@ -100,6 +104,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Ignore
 	public void testSelectContObjectsContTypesCollapse() throws Exception {
 		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
