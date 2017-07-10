@@ -68,7 +68,7 @@ public class ObjectAccessService {
     public List<ContObject> findContObjects(Long subscriberId) {
         List<ContObject> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectsBySubscriberId(subscriberId);
+            result = contObjectAccessRepository.findAllContObjectsTtl(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContObjects(subscriberId);
         }
@@ -102,7 +102,7 @@ public class ObjectAccessService {
     public List<Long> findContObjectIds(Long subscriberId) {
         List<Long> result;
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectIdsBySubscriber(subscriberId);
+            result = contObjectAccessRepository.findAllContObjectIdsTtl(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContObjectIds(subscriberId);
         }

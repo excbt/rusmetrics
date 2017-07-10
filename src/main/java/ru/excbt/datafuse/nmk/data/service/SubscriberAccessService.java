@@ -1,9 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import com.google.common.base.Preconditions;
+import org.joda.time.Minutes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,10 +43,13 @@ public class SubscriberAccessService implements SecuredRoles {
     private final ContZPointRepository contZPointRepository;
 
     private final static int ACCESS_TTL_WEEKS = 1;
-    private final static TemporalAmount ACCESS_TTL = Period.ofWeeks(ACCESS_TTL_WEEKS);
+    //private final static TemporalAmount ACCESS_TTL = Period.ofWeeks(ACCESS_TTL_WEEKS);
+    private final static TemporalAmount ACCESS_TTL = Duration.ofMinutes(5);
 
-    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
-    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
+//    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
+    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> LocalDateTime.now().plus(ACCESS_TTL);
+//    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
+    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> ZonedDateTime.now().plus(ACCESS_TTL);
 
     @Autowired
     public SubscriberAccessService(ContZPointAccessRepository contZPointAccessRepository,
@@ -337,5 +343,32 @@ public class SubscriberAccessService implements SecuredRoles {
 
     }
 
+    @Scheduled(cron = "0 */2 * * * ?")
+    @Transactional
+    public void cleanupAccessByTtl() {
+        cleanupContObjectAccess();
+        cleanupContZPointAccess();
+    }
+
+
+    @Transactional
+    public void cleanupContObjectAccess() {
+        log.info("\nCONT_OBJECT END OF ACCESS");
+        contObjectAccessRepository.findAllAccessTtl(LocalDateTime.now()).forEach( a -> {
+                log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getAccessTtl());
+                contObjectAccessRepository.delete(a);
+            }
+        );
+    }
+
+    @Transactional
+    public void cleanupContZPointAccess() {
+        log.info("\nCONT_ZPOINT END OF ACCESS");
+        contZPointAccessRepository.findAllAccessTtl(LocalDateTime.now()).forEach( a -> {
+                log.info("Subscriber {}, ContZPoint {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getAccessTtl());
+                contZPointAccessRepository.delete(a);
+            }
+        );
+    }
 
 }

@@ -7,6 +7,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,9 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
     @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL")
     List<Long> findContObjectIdsBySubscriber (@Param("subscriberId") Long subscriberId);
+
+    @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId ")
+    List<Long> findAllContObjectIdsTtl (@Param("subscriberId") Long subscriberId);
 
     @Query("SELECT distinct a.contObject.id FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId")
     List<Long> findContObjectIdsBySubscriberTTL (@Param("subscriberId") Long subscriberId);
@@ -41,6 +45,11 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " AND a.accessTtl IS NULL "
         + " ORDER BY a.contObject.fullAddress, a.contObject.id")
     List<ContObject> findContObjectsBySubscriberId(@Param("subscriberId") Long subscriberId);
+
+
+    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId "
+        + " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    List<ContObject> findAllContObjectsTtl(@Param("subscriberId") Long subscriberId);
 
 
     @Query("SELECT a.contObject FROM ContObjectAccess a "
@@ -104,5 +113,10 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " WHERE a.subscriberId = :subscriberId )"
         + " ORDER BY do.contObject.fullAddress, do.contObject.id ")
     List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
+
+
+    @Query("SELECT a FROM #{#entityName} a WHERE a.accessTtl <= :ttl")
+    List<ContObjectAccess> findAllAccessTtl(@Param("ttl") LocalDateTime ttl);
+
 
 }
